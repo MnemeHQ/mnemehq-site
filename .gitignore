@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment / credentials — deploy_site.py reads .env at the repo root
+.env
+.env.*
+
+# Working / scratch files (ADR-003: working copies never live under site/)
+scratch/
+
+# Stale processed assets — cache-busting is by rename (ADR-003;
+# current assets: site/logo-v3.png, site/favicon-v2.png)
+site/logo.png
+site/logo-v2.png
+site/favicon.png
+
+# Agent session data
+.claude/
+
+# OS
+.DS_Store
+Thumbs.db
