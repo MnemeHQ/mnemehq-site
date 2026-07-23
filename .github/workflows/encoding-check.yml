@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   check-encoding:
-    name: Scan site/docs/scripts for mojibake + BOM
+    name: Scan site/scripts for mojibake + BOM
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,4 +31,5 @@ jobs:
           python-version: '3.12'
 
       - name: Run encoding check
-        run: python scripts/check_encoding.py
+        # Scoped to the roots that exist in this repository (no docs/ here).
+        run: python scripts/check_encoding.py site scripts
