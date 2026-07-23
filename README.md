@@ -32,14 +32,18 @@ python scripts/check_supported_languages.py
 python scripts/test_deploy_verify.py
 ```
 
-Each check also runs as a path-filtered PR workflow.
+Each check has a path-filtered PR workflow. These workflows remain inactive
+until GitHub Actions is enabled during the later repository-validation step.
 
 ## Deployment
 
 `scripts/deploy_site.py` — invoked by the manual **Deploy site to mnemehq.com**
 workflow — delta-uploads `site/` via the cPanel API (delta = `git diff
-site-deployed..HEAD`), purges the Cloudflare cache, strictly verifies changed
-URLs, advances the `site-deployed` tag, and submits IndexNow.
+site-deployed..HEAD`), purges the Cloudflare cache, strictly
+fingerprint-verifies each changed **HTML page**, runs a best-effort
+(status-only) health probe over the rest of the sitemap, advances the
+`site-deployed` tag, and submits IndexNow. Non-HTML assets — CSS, JS, fonts,
+images — are uploaded without content verification.
 
 Deployment ownership is being cut over from the core repository in stages:
 GitHub Actions is currently **disabled** on this repository, the deploy
@@ -53,6 +57,7 @@ Asset regeneration (OG images, demo GIFs, screenshots) additionally needs:
 
 ```
 pip install -r requirements.txt   # Pillow, Playwright
+python -m playwright install chromium
 ```
 
 ## Licence
