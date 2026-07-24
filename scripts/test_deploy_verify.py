@@ -111,3 +111,5 @@ def _run():
 
 if __name__ == "__main__":
     _run()
+
+# CI smoke validation (branch validation/actions-smoke) — no-op comment; PR closed unmerged, branch deleted.
