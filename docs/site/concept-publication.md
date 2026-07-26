@@ -17,8 +17,20 @@ Create `site/concepts/{slug}/index.html`.
 - Link back to the hub: breadcrumb `Concepts → {Concept Name}`.
 - Add at least one related-concept link in the body (see step 5).
 
-OG image: the publishing script generates `og.png` automatically — do not create
-it by hand.
+OG image: there is no auto-discovery. Add an entry to `TEMPLATES` in
+`scripts/ensure_og_coverage.py` (an `og-concepts-{slug}.html` filename plus its tag, heading,
+subtitle, and a `url_path` of `concepts/{slug}`), then run:
+
+```bash
+python scripts/ensure_og_coverage.py   # materializes site/og-concepts-{slug}.html and patches TEMPLATE_MAP in scripts/generate_og_images.py
+python scripts/generate_og_images.py   # renders every mapped og-<slug>.html to its og.png at 1200x630 via Playwright
+```
+
+`generate_og_images.py` requires `playwright` and a chromium install
+(`pip install playwright && playwright install chromium`); it starts a local server and renders
+each template listed in `TEMPLATE_MAP`. A concept without a `TEMPLATES` / `TEMPLATE_MAP` entry gets
+no `og.png`. (Alternatively, create `site/og-concepts-{slug}.html` by hand and add its
+`TEMPLATE_MAP` entry directly in `scripts/generate_og_images.py`, then run the generator.)
 
 ---
 

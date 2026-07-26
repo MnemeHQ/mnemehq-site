@@ -52,8 +52,10 @@ PUBLISHING.md             this document
 ```
 
 All rules below reference these current paths. Site assets that belong on mnemehq.com live **only**
-under `site/`; `scripts/deploy_site.py` walks `site/` recursively, skips `.md` files, and uploads
-everything else. Assets placed anywhere other than `site/` are not deployed.
+under `site/`, and `scripts/deploy_site.py` uploads from `site/`: a full deployment walks `site/`
+and uploads the files present there, and a delta deployment uploads the added, copied, or modified
+`site/` paths since the `site-deployed` tag (`git diff --diff-filter=ACM site-deployed..HEAD`).
+Assets placed anywhere other than `site/` are not deployed.
 
 ---
 
@@ -117,10 +119,12 @@ repository and are made only by editing the workflow and `scripts/deploy_site.py
   breadcrumb nav carry one `ListItem` per URL segment, in order (a page at `/for/cto/` has
   `Home -> For -> For CTOs`). When a hub page is added, every subpage's breadcrumb is updated to
   route through it in the same change.
-- **[CI] CSS class hygiene.** Every `class="..."` on an element inside `<body>` must resolve to a
+- **[OP/ED] CSS class hygiene.** Every `class="..."` on an element inside `<body>` must resolve to a
   CSS rule on the same page (inline `<style>`) or an allowlisted state class (`active`, `open`,
   `hidden`, `selected`, `current`, `sr-only`). Typos in `class=` produce silent layout failures. The
-  `style.classes` rule in `scripts/seo_check.py` enforces this and is a publishing gate.
+  `style.classes` rule in `scripts/seo_check.py` surfaces violations, but `seo_check.py` runs
+  **warn-only** inside `scripts/deploy_site.py` and does not block the PR or the deploy. Treat class
+  hygiene as a mandatory review item at publish time.
 - **[OP] Delta-deploy and file renames.** `scripts/deploy_site.py` computes its upload delta with
   `git diff --name-only --diff-filter=ACM site-deployed..HEAD`. Git-detected renames (`R`) are
   excluded by that filter and will not upload. When a rename is part of a deploy (for example
@@ -249,7 +253,8 @@ words carry a single mid-document Roadmap CTA panel (`.mid-cta-wrap` / `.mid-cta
 
 **[CI/ED] Structure.** Every `/for/<role>/` subpage and the `/for/` hub render a visible breadcrumb
 above the hero (in addition to the JSON-LD `BreadcrumbList`); the `/for/` cohort schema is checked by
-`scripts/check_for.py`, and layout-class hygiene by `scripts/seo_check.py`. The `/for/cto/` page must
+`scripts/check_for.py` (CI), while layout-class hygiene is a warn-only `scripts/seo_check.py` finding
+reviewed at publish time. The `/for/cto/` page must
 contain, in order: Hero, The Problem (review capacity vs AI throughput), Why Existing Approaches Do
 Not Scale (comparison table), How It Works (high-level, no engineering primitives), Business Outcomes
 (ROI cards), mid-document Roadmap CTA, Proof, CTA footer. Content review for persona pages is a

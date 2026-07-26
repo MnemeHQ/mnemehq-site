@@ -39,23 +39,28 @@ python scripts/check_supported_languages.py
 python scripts/test_deploy_verify.py
 ```
 
-Each check has a path-filtered PR workflow. These workflows remain inactive
-until GitHub Actions is enabled during the later repository-validation step.
+Each check runs as a path-filtered PR workflow. GitHub Actions is enabled on
+this repository and the applicable workflows run on every relevant PR.
 
 ## Deployment
 
-`scripts/deploy_site.py` — invoked by the manual **Deploy site to mnemehq.com**
-workflow — delta-uploads `site/` via the cPanel API (delta = `git diff
-site-deployed..HEAD`), purges the Cloudflare cache, strictly
-fingerprint-verifies each changed **HTML page**, runs a best-effort
+`scripts/deploy_site.py` — run by the **Deploy site to mnemehq.com**
+workflow — uploads `site/` via the cPanel API (a delta deploy uploads the
+added/copied/modified `site/` paths since the `site-deployed` tag,
+`git diff --diff-filter=ACM site-deployed..HEAD`; a full deploy uploads the
+files present under `site/` when no tag exists), purges the Cloudflare cache,
+strictly fingerprint-verifies each changed **HTML page**, runs a best-effort
 (status-only) health probe over the rest of the sitemap, advances the
 `site-deployed` tag, and submits IndexNow. Non-HTML assets — CSS, JS, fonts,
 images — are uploaded without content verification.
 
-Deployment ownership is being cut over from the core repository in stages:
-GitHub Actions is currently **disabled** on this repository, the deploy
-workflow is **manual-only**, and no deploy secrets or runner are configured —
-this repository cannot deploy until the cutover step completes.
+MnemeHQ/mnemehq-site owns production deployment of mnemehq.com. `deploy-site.yml`
+runs on a path-filtered push to `main` (touching `site/**` or
+`scripts/deploy_site.py`), on manual `workflow_dispatch`, and on a daily
+schedule at 06:00 UTC. Deploys run on the dedicated `mnemehq-site-deploy`
+self-hosted runner; the required cPanel and Cloudflare credentials are supplied
+from configured repository secrets and variables (values are never committed).
+See [PUBLISHING.md](PUBLISHING.md#deployment-ownership).
 
 ## Dependencies
 
