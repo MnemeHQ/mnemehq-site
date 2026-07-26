@@ -8,6 +8,13 @@ enforcement engine, benchmarks and agent integrations — lives in
 the website and its deployment/validation tooling, extracted from that
 repository with filtered history.
 
+## Publishing governance
+
+[`PUBLISHING.md`](PUBLISHING.md) is the canonical source of publishing and deployment
+governance for mnemehq.com: the current rules for insights, concepts, persona pages, OG
+images, deployment, and asset conventions. Step-by-step operational runbooks live under
+[`docs/site/`](docs/site/).
+
 ## Layout
 
 ```
