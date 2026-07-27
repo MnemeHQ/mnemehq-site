@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Runtime Verification Is Not Architectural Verification &mdash; Mneme HQ</title>
+  <title>When AI Agents Degrade, Architectural Intent Should Not &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="Sandboxes, approvals, traces, and policy enforcement protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category." />
+  <meta name="description" content="Model downgrades, truncated context, dropped MCP servers, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit so the operator decides." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/" />
+  <link rel="canonical" href="https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Runtime Verification Is Not Architectural Verification" />
-  <meta property="og:description" content="Sandboxes, approvals, traces, and policy enforcement protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category." />
-  <meta property="og:url" content="https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/" />
-  <meta property="og:image" content="https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/og.png" />
+  <meta property="og:title" content="When AI Agents Degrade, Architectural Intent Should Not" />
+  <meta property="og:description" content="Model downgrades, truncated context, dropped MCP servers, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit so the operator decides." />
+  <meta property="og:url" content="https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Runtime Verification Is Not Architectural Verification" />
-  <meta name="twitter:description" content="Sandboxes, approvals, traces, and policy enforcement protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category." />
-  <meta name="twitter:image" content="https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/og.png" />
+  <meta name="twitter:title" content="When AI Agents Degrade, Architectural Intent Should Not" />
+  <meta name="twitter:description" content="Model downgrades, truncated context, dropped MCP servers, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit so the operator decides." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/og.png" />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-05-26T00:00:00Z" />
+  <meta property="article:published_time" content="2026-07-27T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Engineering" />
 
@@ -126,23 +126,24 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
         "itemListElement": [
           {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
           {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"},
-          {"@type": "ListItem", "position": 3, "name": "Runtime Verification Is Not Architectural Verification", "item": "https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/"}
+          {"@type": "ListItem", "position": 3, "name": "When AI Agents Degrade, Architectural Intent Should Not", "item": "https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/"}
         ]
       },
       {
         "@type": "TechArticle",
-        "headline": "Runtime Verification Is Not Architectural Verification",
-        "description": "Sandboxes, approvals, traces, and policy enforcement protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category.",
-        "url": "https://mnemehq.com/insights/runtime-verification-is-not-architectural-verification/",
-        "datePublished": "2026-05-26",
+        "headline": "When AI Agents Degrade, Architectural Intent Should Not",
+        "description": "Model downgrades, truncated context, dropped MCP servers, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit so the operator decides.",
+        "url": "https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/",
+        "datePublished": "2026-07-27",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"}
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
+        "isBasedOn": {"@type": "WebPage", "name": "Model deprecations (Anthropic)", "url": "https://docs.anthropic.com/en/docs/about-claude/model-deprecations"}
       }
     ]
   }
   </script>
 
-  <style>
+    <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
@@ -204,51 +205,100 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
     .breadcrumb a:hover { color: var(--text); }
     .breadcrumb [aria-current="page"] { color: var(--text); }
 
+    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+
+    @media (max-width: 640px) {
+      nav { padding: 1rem 1.25rem; }
+      .article-wrap { padding: 3rem 1.25rem 5rem; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; gap: 0; background: rgba(12,12,13,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.5rem 1.25rem 1.25rem; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.88rem; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+      .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
+    }
+
     .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline a:hover { color: var(--text); }
     .byline .sep { color: var(--border2); margin: 0 0.5rem; }
 
+    /* === Nav upgrade === */
     .nav-hamburger {
-      display: none; background: none; border: 1px solid var(--border2); color: var(--text);
-      width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0;
-      flex-shrink: 0; align-items: center; justify-content: center;
-      flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s;
+      display: none;
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.15s, background 0.15s;
     }
     .nav-hamburger:hover { border-color: var(--accent); }
     .nav-hamburger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .nav-hamburger span { display: block; width: 18px; height: 2px; background: currentColor; border-radius: 1px; transition: transform 0.25s ease, opacity 0.18s ease; transform-origin: center; }
+    .nav-hamburger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: currentColor;
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.18s ease;
+      transform-origin: center;
+    }
     .nav-hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
     .nav-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
     .nav-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
     @media (max-width: 900px) {
-      html, body { overflow-x: hidden; }
+      html, body { overflow-x: clip; }
       body.menu-open { overflow: hidden; }
       nav, nav.site-nav { padding: 1rem 1.25rem; }
       .nav-hamburger { display: flex; }
       .nav-links {
-        display: flex !important; flex-direction: column; position: absolute;
-        top: 100%; left: 0; right: 0; gap: 0;
-        background: rgba(12,12,13,0.98); backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99;
-        max-height: 0; overflow: hidden; opacity: 0; visibility: hidden;
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        gap: 0;
+        background: rgba(12,12,13,0.98);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.25rem;
+        z-index: 99;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
         transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
       }
       .nav-links.open {
-        max-height: 80vh; opacity: 1; visibility: visible;
+        max-height: 80vh;
+        opacity: 1;
+        visibility: visible;
         padding: 0.5rem 1.25rem 1.25rem;
         transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
         overflow-y: auto;
       }
       .nav-links a:not(.btn-nav-cta) {
-        display: block; color: var(--text); font-size: 0.92rem;
-        padding: 0.85rem 0; border-bottom: 1px solid var(--border);
+        display: block;
+        color: var(--text);
+        font-size: 0.92rem;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border);
       }
       .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
       .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
     }
 
+    /* === Related reading === */
     .related-panel { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
     .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
     .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
@@ -263,6 +313,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
 
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
 
+    /* === Diagram styles === */
     .diag-box { fill: #141416; stroke: #2e2e34; }
     .diag-box-active { fill: rgba(200,240,96,0.05); stroke: #c8f060; stroke-width: 1.5; }
     .diag-box-teal { fill: rgba(139,224,200,0.05); stroke: #8be0c8; stroke-width: 1.2; }
@@ -270,6 +321,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
     .diag-meta { fill: #88889a; font-family: 'DM Mono', monospace; font-size: 10px; }
     .diag-accent-text { fill: #c8f060; }
     .diag-teal-text { fill: #8be0c8; }
+    .diag-mono { font-family: 'DM Mono', monospace; }
     .diag-arrow { stroke: #2e2e34; stroke-width: 1; fill: none; }
     .diag-arrow-active { stroke: #c8f060; stroke-width: 1.5; fill: none; }
     .diag-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2.5rem 0; }
@@ -291,6 +343,8 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
     .context-cta-secondary { color: #8be0c8; font-family: 'DM Mono', monospace; font-size: 0.82rem; text-decoration: none; border-bottom: 1px solid rgba(139,224,200,0.4); transition: border-color 0.15s; }
     .context-cta-secondary:hover { border-bottom-color: #8be0c8; }
   </style>
+  <link rel="stylesheet" href="/assets/css/video.css">
+</head>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -316,207 +370,106 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
-    <li aria-current="page">Runtime Verification Is Not Architectural Verification</li>
+    <li aria-current="page">When AI Agents Degrade, Architectural Intent Should Not</li>
   </ol>
 </nav>
 
 <article class="article-wrap">
   <header class="article-header">
     <div class="article-eyebrow">
-      <span class="eyebrow-tag">Infrastructure</span>
+      <span class="eyebrow-tag">Analysis</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">13 min read</span>
+      <span class="eyebrow-meta">8 min read</span>
     </div>
-    <h1>Runtime Verification Is Not Architectural Verification</h1>
-    <p class="article-lede">The AI infrastructure market is converging on runtime verification &mdash; sandboxes, traces, approvals, permissions, observability, policy enforcement. These protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different problem and it needs a different layer.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-26">May 2026</time></p>
+    <h1>When AI Agents Degrade, Architectural Intent Should Not</h1>
+    <p class="article-lede">Two years of AI-assisted development taught teams to distrust fallbacks in generated code: the silent try/except, the default return, the five execution paths where one would do. The larger fallbacks now happen above the code. The model downgrades. The context truncates. An MCP server drops. A hook is disabled. Each one silently changes what the developer originally asked for. The principle that fixes it is intent-preserving degradation.</p>
+    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-07-27">July 2026</time></p>
   </header>
 
   <div class="article-body">
 
-    <h2>The three problems agent infrastructure is solving</h2>
-    <p>The first generation of agent infrastructure focused on getting agents to work. Tool calling, reasoning, retrieval, basic orchestration. The second generation, where most of the market is now, is focused on making agents safe to operate. Sandboxes, traces, approvals, permissions, observability, lifecycle frameworks, telemetry, policy enforcement.</p>
-    <p>That is the right work. Treating agents as production software infrastructure rather than experimental assistants is the correct maturity arc. Prompting matured into orchestration. Orchestration is now maturing into operationalization.</p>
-    <p>But a third problem is already appearing underneath the second one. Even when agents execute safely, systems can still degrade architecturally. A multi-agent workflow can pass every runtime check while slowly accumulating duplicated patterns, broken boundaries, inconsistent abstractions, undocumented decisions, and quiet governance fragmentation.</p>
-    <p>The result is not catastrophic failure. It is slow structural decay. And runtime verification does not catch it.</p>
-    <div class="callout"><p><strong>An agent can pass every safety check and still degrade the system it operates on.</strong> Runtime verification protects the run. Architectural verification protects the system.</p></div>
+    <h2>The first fallback was in the code</h2>
+    <p>Developers spent two years fighting AI assistants that wrapped everything in defensive recovery. Instead of failing clearly, generated code recovered. Instead of one execution path, it produced several. This was not robustness. It was intent drift, hidden inside a passing test.</p>
+    <p>That problem is now well understood. Linters flag bare exception handlers. Reviewers reject silent defaults. The industry has largely agreed that hidden recovery in code is an anti-pattern because it turns a loud failure into a quiet wrong answer.</p>
+    <div class="callout"><p><strong>The same anti-pattern moved up the stack.</strong> The recovery that used to hide inside a function now hides inside the execution environment.</p></div>
 
-    <h2>What runtime verification actually checks</h2>
-    <p>Runtime verification, as currently practised, answers a tightly scoped set of questions about a single agent run:</p>
+    <h2>The bigger fallbacks happen above the code</h2>
+    <p>Today's agents do not just write fallback code. The entire environment falls back, and usually without telling anyone.</p>
     <ul>
-      <li>Did the agent behave safely?</li>
-      <li>Did it access only the tools it was permitted to access?</li>
-      <li>Did it follow the permissions and approval rules?</li>
-      <li>Did execution complete within the expected boundaries?</li>
+      <li><strong>Model downgrade.</strong> A session that started on a frontier model continues on a smaller one after a limit or a safety reroute.</li>
+      <li><strong>Context truncation.</strong> The window overflows and older, more authoritative instructions are dropped first.</li>
+      <li><strong>Tool substitution.</strong> An MCP server is unavailable, so the agent continues without the tool it was supposed to call.</li>
+      <li><strong>Disabled enforcement.</strong> A pre-commit hook or policy check is skipped, and generation proceeds unchecked.</li>
+      <li><strong>Missing memory.</strong> The architectural decision store is unreachable, so the agent builds without the constraints it was meant to honor.</li>
     </ul>
-    <p>These questions are necessary. They are also local. They are answered with full context about <em>this run</em> and almost no context about how this run changes <em>the system over time</em>.</p>
+    <p>A developer asked the system to build a feature using the team's architectural standards. What the agent receives later might be: build this, with a different model, without the project's decisions, without the database rules, without the design constraints. That is no longer the same request. The intent changed, and nobody chose the change.</p>
 
-    <h2>What architectural verification has to check</h2>
-    <p>Architectural verification answers a different class of question. It is concerned with the trajectory of the system, not the safety of any individual run.</p>
-    <ul>
-      <li>Did the system evolve correctly?</li>
-      <li>Did the agent violate architectural invariants?</li>
-      <li>Did the change preserve long-term engineering decisions?</li>
-      <li>Did sub-agents introduce contradictory patterns?</li>
-      <li>Did autonomous changes increase architectural entropy?</li>
-    </ul>
-    <p>These questions are not answerable from a single trace. They require a model of what the system is supposed to look like &mdash; the invariants, the decisions, the boundaries &mdash; and a deterministic comparison of the proposed change against that model.</p>
+    <h2>Silent degradation is an architectural problem</h2>
+    <p>Fallbacks are not wrong. Silent fallbacks are. When a change of this size happens without a signal, the operator loses the one thing they need: the ability to decide whether the degraded run is acceptable. A model swap mid-session deserves the same treatment as switching compilers or changing languages. It is a material change to how the software is produced.</p>
+    <p>There is a good example of the opposite discipline. Anthropic's <a href="https://docs.anthropic.com/en/docs/about-claude/model-deprecations" target="_blank" rel="noopener">model deprecation policy</a> does not quietly substitute one model for another when a version is retired. It publishes a lifecycle (active, legacy, deprecated, retired), names a recommended replacement, gives at least 60 days of notice, and notifies affected customers by email. In their words, requests to retired models fail rather than silently rerouting. A model change is a versioned, announced, fail-loud event.</p>
+    <div class="callout"><p><strong>Explicit degradation is achievable engineering practice, not an idealist's wish.</strong> The API layer already treats a model change as a governed, announced transition. The gap is that the discipline stops at the API boundary.</p></div>
 
-    <div style="overflow-x:auto;margin:2rem 0;">
+    <h2>What breaks when it stays silent</h2>
+    <p>The failure is not that the model got worse. It may not have. The failure is that the operator cannot tell the difference between a coherent run and a degraded one. Bugs get attributed to the wrong cause. Architecture drifts because the constraints that should have traveled with the request were quietly absent. Review queues absorb the cost, one confusing diff at a time.</p>
     <table class="gov-table">
-      <thead><tr><th>Layer</th><th>Asks</th><th>Failure mode</th></tr></thead>
+      <thead><tr><th>Fallback</th><th>What silently changes</th><th>What the operator needs</th></tr></thead>
       <tbody>
-        <tr><td>Runtime verification</td><td>Did the agent behave safely <em>this run</em>?</td><td>An unsafe action was permitted</td></tr>
-        <tr class="accent-row"><td>Architectural verification</td><td>Did the system evolve correctly <em>over time</em>?</td><td>The system slowly drifted while every run passed</td></tr>
+        <tr><td>Model downgrade</td><td>Reasoning depth, code style, defaults</td><td>"Using a different model"</td></tr>
+        <tr><td>Context truncation</td><td>Which constraints survive</td><td>"Older decisions were dropped"</td></tr>
+        <tr><td>Tool unavailable</td><td>Whether a required check ran</td><td>"Policy enforcement disabled"</td></tr>
+        <tr class="accent-row"><td>Memory unreachable</td><td>Whether architecture was loaded</td><td>"Architectural intent unavailable"</td></tr>
       </tbody>
     </table>
-    </div>
 
-    <p>An agent can pass runtime policies, generate syntactically correct code, stay within permissions, and produce successful outputs while still degrading the system. The two layers fail in different ways, and they protect against different things.</p>
+    <h2>Intent-preserving degradation</h2>
+    <p>The design principle is simple to state. When the environment degrades, the intent must not degrade with it silently. Either the constraints still apply, or the system announces that they no longer do. Good systems make degradation explicit: architecture unavailable, different model in use, enforcement disabled, memory missing. Now a person can decide.</p>
+    <p>This is where an independent governance layer matters. Architectural intent should not disappear because the model changed, the window overflowed, an MCP server disconnected, or the agent switched vendors. Intent should survive degradation, or the degradation should be surfaced. That is the whole job of a guardrail layer that lives outside the model rather than inside it.</p>
 
-    <h2>Multi-agent systems make this worse</h2>
-    <p>One coding assistant produces localized mistakes. A fleet of autonomous sub-agents produces coordination risk. Each agent may optimize locally while degrading globally.</p>
-    <p>The concrete failure modes are familiar to anyone who has watched a large codebase fragment over time:</p>
+    <h2>What teams should do</h2>
     <ul>
-      <li>competing abstractions for the same concept</li>
-      <li>inconsistent data access patterns introduced by different agents</li>
-      <li>duplicated orchestration layers</li>
-      <li>mixed architectural paradigms inside one service</li>
-      <li>incompatible dependency choices across modules</li>
-      <li>erosion of previously established standards</li>
+      <li><strong>Treat model changes as versioned events.</strong> Log the model actually used per run, and surface a downgrade the way you would surface a failed build.</li>
+      <li><strong>Make enforcement independent of the model.</strong> Architectural constraints should produce the same verdict whether the run used a frontier model or a fallback.</li>
+      <li><strong>Fail loud on missing constraints.</strong> If the architecture store or a required hook is unreachable, block or annotate the run instead of proceeding as if nothing changed.</li>
+      <li><strong>Keep governance outside the model.</strong> A control plane that sits above inference is the only place degradation can be detected consistently across vendors.</li>
     </ul>
-    <p>None of these are runtime failures. Each individual agent run is fine. The system degrades on the time axis, between runs, across handoffs, in the cumulative effect of thousands of locally rational decisions.</p>
-    <div class="callout"><p><strong>The scaling bottleneck shifts from generation quality to coordination integrity.</strong> The more scalable agent systems become, the more architectural governance becomes mandatory.</p></div>
-
-    <h2>What architectural verification is not</h2>
-    <p>It is worth being precise about the category. Architectural verification is not:</p>
-    <ul>
-      <li><strong>Content moderation</strong> &mdash; that operates on text safety, not system structure</li>
-      <li><strong>Access control</strong> &mdash; that decides which tools an agent may invoke, not whether an invocation respects architecture</li>
-      <li><strong>Runtime policy checks</strong> &mdash; those decide whether <em>this action</em> is allowed, not whether the resulting system is structurally coherent</li>
-      <li><strong>Semantic memory retrieval</strong> &mdash; that surfaces information; it does not enforce constraints</li>
-      <li><strong>Post-hoc PR review</strong> &mdash; that detects violations after they exist in the codebase</li>
-    </ul>
-    <p>Architectural verification is deterministic structural enforcement. The same constraint, against the same codebase state, produces the same verdict on every run, regardless of which agent, harness, or session emitted the change.</p>
-
-    <h2>The agent infrastructure stack, in layers</h2>
-    <p>It helps to lay out the layers explicitly. Most companies today are building infrastructure between layers 1 and 4. The long-term reliability problem emerges at layers 5 and 6.</p>
-
-    <div class="diag-wrap">
-      <svg viewBox="0 0 700 460" role="img" aria-label="The six-layer agent infrastructure stack" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:0 auto;">
-        <rect x="125" y="0" width="450" height="58" rx="8" class="diag-box"/>
-        <text x="155" y="22" class="diag-meta">L1</text>
-        <text x="200" y="26" class="diag-text">Orchestration</text>
-        <text x="200" y="44" class="diag-meta">workflows, sub-agents, planning</text>
-
-        <rect x="125" y="70" width="450" height="58" rx="8" class="diag-box"/>
-        <text x="155" y="92" class="diag-meta">L2</text>
-        <text x="200" y="96" class="diag-text">Runtime</text>
-        <text x="200" y="114" class="diag-meta">sandboxes, execution environments, tool calling</text>
-
-        <rect x="125" y="140" width="450" height="58" rx="8" class="diag-box"/>
-        <text x="155" y="162" class="diag-meta">L3</text>
-        <text x="200" y="166" class="diag-text">Observability</text>
-        <text x="200" y="184" class="diag-meta">traces, telemetry, debugging, evals</text>
-
-        <rect x="125" y="210" width="450" height="58" rx="8" class="diag-box"/>
-        <text x="155" y="232" class="diag-meta">L4</text>
-        <text x="200" y="236" class="diag-text">Runtime Verification</text>
-        <text x="200" y="254" class="diag-meta">permissions, approvals, safety policies</text>
-
-        <rect x="125" y="280" width="450" height="58" rx="8" class="diag-box-active"/>
-        <text x="155" y="302" class="diag-meta diag-accent-text">L5</text>
-        <text x="200" y="306" class="diag-text diag-accent-text">Architectural Verification</text>
-        <text x="200" y="324" class="diag-meta">invariants, ADR enforcement, structural governance</text>
-
-        <rect x="125" y="350" width="450" height="58" rx="8" class="diag-box-active"/>
-        <text x="155" y="372" class="diag-meta diag-accent-text">L6</text>
-        <text x="200" y="376" class="diag-text diag-accent-text">Organizational Memory</text>
-        <text x="200" y="394" class="diag-meta">decisions, rationale, governance provenance</text>
-
-        <text x="350" y="440" text-anchor="middle" class="diag-meta">Most current investment lives in L1&ndash;L4. The reliability problem at scale lives in L5&ndash;L6.</text>
-      </svg>
-      <p class="diag-caption">The six-layer agent infrastructure stack</p>
-    </div>
-
-    <h2>Why architectural verification has to be deterministic</h2>
-    <p>One subtlety: architectural verification cannot be implemented as another probabilistic agent reviewing the work. A reviewer agent inherits the same failure modes &mdash; local optimization, context dilution, inconsistent verdicts &mdash; that produced the drift in the first place.</p>
-    <p>Architectural verification has to be deterministic structural enforcement. The properties that matter:</p>
-    <ul>
-      <li><strong>Same input, same verdict</strong> &mdash; identical codebase state, identical compiled constraint set, identical result</li>
-      <li><strong>Repository-native</strong> &mdash; constraints live with the code they govern</li>
-      <li><strong>ADR-aligned</strong> &mdash; compiled from architecture decision records the team has explicitly made</li>
-      <li><strong>Provenance-aware</strong> &mdash; every verdict traceable to the originating decision</li>
-      <li><strong>Cross-session continuity</strong> &mdash; the same constraint fires whether the work is being done by an agent today or a different agent next quarter</li>
-    </ul>
-    <div class="callout"><p><strong>Runtime verification protects execution.</strong> Architectural verification protects system integrity across time.</p></div>
-
-    <h2>Why this matters now</h2>
-    <p>The market is currently treating agent reliability as a runtime problem. That framing is correct as far as it goes. It also has a ceiling. Once runtime verification is mature &mdash; sandboxes hardened, approvals in place, policies enforced &mdash; the remaining failure mode is not bad runs. It is good runs accumulating into a structurally weaker system.</p>
-    <p>That failure mode does not show up in any individual trace. It shows up in the codebase over weeks and months. By the time it is visible, remediation is expensive: large rewrites, broad architectural cleanup, and the kind of debt that compounds quietly until something finally breaks.</p>
-
-    <h2>Conclusion</h2>
-    <p>The future of agent engineering is not just better generation. It is controlled system evolution. The real challenge is no longer &ldquo;can agents write code?&rdquo; It is &ldquo;can autonomous systems scale without fragmenting architecture?&rdquo;</p>
-    <p>That requires a new category of infrastructure. Not better sandboxes. Not better traces. A different layer entirely: architectural verification, sitting between runtime safety and organizational memory, enforcing the structural decisions a team has already made.</p>
+    <div class="callout"><p><strong>The next layer is not a smarter model. It is a system where architectural integrity survives the moment the environment quietly gets weaker.</strong></p></div>
 
   </div><!-- /.article-body -->
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See Mneme enforce an architectural decision against AI-generated code, deterministically, in the live demo.</p>
+    <p class="context-cta-copy">Watch Mneme keep architectural constraints enforced even when the model, context, or tooling underneath changes.</p>
     <div class="context-cta-actions">
-      <a href="/demo/" class="context-cta-primary">See the live demo &rarr;</a>
+      <a href="/demo/architectural-drift/" class="context-cta-primary">See the architectural-drift demo &rarr;</a>
       <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
     </div>
   </aside>
 
-  <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
-    <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
-    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Isn&rsquo;t architectural verification just static analysis with a fancier name?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Static analysis is one of the tools, but the category is broader. Static analyzers encode generic best practices. Architectural verification encodes the specific decisions a team has made &mdash; this storage layer, this dependency boundary, this abstraction, this pattern is canonical and that one is forbidden. The constraint set is sourced from the architecture decision records of the project, not from a generic ruleset.</div>
-    </details>
-    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Can&rsquo;t a reviewer agent do this work?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">A reviewer agent can flag suspected violations, but it cannot serve as the enforcement layer because it inherits the same probabilistic failure modes that produced the drift in the first place. Architectural verification has to be deterministic: same codebase state, same constraint, same verdict, every run. Otherwise constraints become advisory and quietly stop firing.</div>
-    </details>
-    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Where does architectural verification run?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">At every surface the workflow touches: pre-tool hooks inside the agent harness, pre-commit hooks on the developer machine, pre-PR checks in CI, and runtime gates before deployment. The compiled constraint set is the same across all of them. Different surfaces, identical verdicts.</div>
-    </details>
-    <details style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does runtime verification become less important?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Runtime verification remains necessary. The argument is not that it is the wrong investment &mdash; it is that it is incomplete. Sandboxes and approvals protect individual runs from doing unsafe things. Architectural verification protects the system from accumulating structurally damaging changes across many safe runs. Both layers are needed; they fail in different ways.</div>
-    </details>
-  </section>
 
   <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:3rem;">
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
-      <li><a href="/concepts/agent-verification/"><div class="rel-title">Agent Verification</div><p class="rel-desc">Determining whether an agent run produced an architecturally valid outcome &mdash; not just a safe one.</p></a></li>
-      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification Contracts</div><p class="rel-desc">Predefined checks that prove architectural intent survived the agent run.</p></a></li>
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The gradual divergence between a system&rsquo;s actual state and its documented architectural intent.</p></a></li>
-      <li><a href="/concepts/governance-provenance/"><div class="rel-title">Governance Provenance</div><p class="rel-desc">Every enforcement verdict traceable to the originating architectural decision.</p></a></li>
+      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance Infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, and enforces decisions independently of the model.</p></a></li>
+      <li><a href="/concepts/enforcement-provenance/"><div class="rel-title">Enforcement Provenance</div><p class="rel-desc">Every verdict traceable to the decision it came from, regardless of which model ran.</p></a></li>
+      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The gradual divergence between a system's actual state and its documented intent.</p></a></li>
     </ul>
   </aside>
 
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:1.5rem;padding-top:0;border-top:none;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/insights/verification-starts-before-generation/"><div class="rel-title">Verification Starts Before Generation</div><p class="rel-desc">The earliest verification point is before an agent writes code.</p></a></li>
-      <li><a href="/insights/emerging-ai-agent-infrastructure-stack/"><div class="rel-title">The Emerging AI Agent Infrastructure Stack</div><p class="rel-desc">A layered view of where governance and verification fit in the agent stack.</p></a></li>
-      <li><a href="/insights/why-observability-is-not-governance/"><div class="rel-title">Why Observability Is Not Governance</div><p class="rel-desc">Traces tell you what happened. They do not prevent it.</p></a></li>
-      <li><a href="/insights/long-running-agents-need-governance/"><div class="rel-title">Long-Running Agents Need Governance</div><p class="rel-desc">Extended autonomy increases the time axis of drift; runtime checks are not enough.</p></a></li>
-      <li><a href="/insights/agents-of-chaos-and-the-governance-gap/"><div class="rel-title">Agents of Chaos and the Governance Gap</div><p class="rel-desc">Multi-agent coordination magnifies architectural inconsistency.</p></a></li>
-          <li><a href="/insights/morph-reflexes-agent-observability-engineering-governance/"><div class="rel-title">Morph Reflexes: Observability Is Not Governance</div><p class="rel-desc">Behavioral agent observability catches what the trace can&rsquo;t see, but it does not govern what agents build.</p></a></li>
-</ul>
+      <li><a href="/insights/models-are-temporary-architectural-intent-is-not/"><div class="rel-title">Models Are Temporary. Architectural Intent Is Not.</div><p class="rel-desc">The case for keeping governance outside the model as models change underneath.</p></a></li>
+      <li><a href="/insights/ai-agent-orchestration-is-not-governance/"><div class="rel-title">AI Agent Orchestration Is Not Software Engineering Governance</div><p class="rel-desc">Coordinating agent work is not the same as constraining what they may build.</p></a></li>
+      <li><a href="/insights/memory-is-not-governance/"><div class="rel-title">Memory Is Not Governance</div><p class="rel-desc">Context persistence cannot enforce architectural invariants. Recall is not constraint.</p></a></li>
+      <li><a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/"><div class="rel-title">Why Context Alone Doesn't Prevent Architectural Drift</div><p class="rel-desc">Better recall does not guarantee architectural correctness. The missing layer is governance.</p></a></li>
+    </ul>
   </aside>
 
   <footer class="article-footer">
     <a href="/insights/" class="back-link">&larr; Back to Insights</a>
     <div class="cta-block">
-      <h3>Add architectural verification to your stack</h3>
-      <p>Mneme compiles architecture decision records into deterministic constraints that fire across agent harnesses, commits, PRs, and CI. Open source.</p>
+      <h3>Keep intent enforced when the stack degrades</h3>
+      <p>Mneme encodes architectural decisions as machine-evaluable constraints and enforces them outside the model, so a downgrade or a dropped tool cannot silently change what gets built. Open source.</p>
       <a href="/pilot/" class="btn-primary">Request a pilot &rarr;</a>
       <a href="/demo/" style="display:inline-block;margin-right:1.25rem;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.85rem;text-decoration:none;">See the live demo &rarr;</a>
       <a href="https://github.com/MnemeHQ/mneme" style="display:inline-block;margin-right:1.25rem;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.85rem;text-decoration:none;">View on GitHub &rarr;</a>
@@ -698,5 +651,6 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
 <!-- mneme:marketing-body:end -->
 
 
+<script src="/assets/js/video.js" defer></script>
 </body>
 </html>
