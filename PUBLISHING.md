@@ -188,6 +188,15 @@ developers. Do not publish merely because a company announcement can be reframed
 governance." House voice: concrete and declarative; never the word "bottleneck"; no em dashes as
 connective tissue; the domain is always `mnemehq.com`.
 
+## Video structured data
+
+**[CI] VideoObject scope.** `VideoObject` JSON-LD is reserved for dedicated, video-first demo pages
+under `/demo/` where a visible player or click-to-load video facade is part of the page experience.
+Concept and insight pages may embed a supporting video, but they must not advertise that video as the
+page's primary structured result. Do not create video-first pages solely for Google Video unless
+Google Video is an approved acquisition channel. The validator is
+[`scripts/check_video_markup.py`](scripts/check_video_markup.py).
+
 ---
 
 ## OG images

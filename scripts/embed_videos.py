@@ -4,8 +4,8 @@
 Mirrors the shared-asset pattern of ``site/assets/css/diagrams.css``: each page
 gets a ``<link>`` to ``/assets/css/video.css``, a ``<script>`` to
 ``/assets/js/video.js``, and a facade ``<div>`` inserted mid-``.article-body``.
-Extension pages (``is_core=False``) additionally get a ``VideoObject`` JSON-LD
-block (the core 15 already carry one).
+VideoObject JSON-LD is intentionally reserved for dedicated video-first demo
+pages; concept and insight pages receive the player facade only.
 
 Every insertion helper no-ops when its marker is already present, so re-running
 the script is safe.
@@ -17,16 +17,15 @@ from __future__ import annotations
 
 import argparse
 import html as _html
-import json
 import re
 from pathlib import Path
 
 try:
-    from scripts.video_map import VIDEO_MAP, EXTENSION_META
+    from scripts.video_map import VIDEO_MAP
 except ImportError:  # allow running as a plain script (python scripts/embed_videos.py)
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from video_map import VIDEO_MAP, EXTENSION_META
+    from video_map import VIDEO_MAP
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -161,49 +160,6 @@ def replace_video_wrap(html: str, facade: str):
 
 
 # --------------------------------------------------------------------------- #
-# VideoObject schema (extension pages only)
-# --------------------------------------------------------------------------- #
-def video_object_schema(video_id: str, meta: dict) -> str:
-    """Return a ``<script type="application/ld+json" data-video-schema="...">``
-    block matching the shape of the existing 15 core schemas. ``duration`` is
-    emitted only when present and truthy (the YouTube MCP does not expose it)."""
-    schema = {
-        "@context": "https://schema.org",
-        "@type": "VideoObject",
-        "name": meta["name"],
-        "description": meta["description"],
-        "thumbnailUrl": THUMB_URL % video_id,
-        "uploadDate": meta["uploadDate"],
-    }
-    if meta.get("duration"):
-        schema["duration"] = meta["duration"]
-    schema["embedUrl"] = "https://www.youtube.com/embed/%s" % video_id
-    schema["contentUrl"] = "https://www.youtube.com/watch?v=%s" % video_id
-    schema["publisher"] = {
-        "@type": "Organization",
-        "name": "Mneme HQ",
-        "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/og.png"},
-    }
-    key = re.sub(r"[^a-z0-9]+", "_", video_id.lower()).strip("_")
-    body = json.dumps(schema, indent=2, ensure_ascii=False)
-    return (
-        '<script type="application/ld+json" data-video-schema="%s">\n%s\n</script>'
-        % (key, body)
-    )
-
-
-def insert_video_schema(html: str, video_id: str, meta: dict) -> str:
-    """Insert the VideoObject JSON-LD block just before </head>.
-    No-op if a data-video-schema block is already present."""
-    if "data-video-schema" in html:
-        return html
-    block = video_object_schema(video_id, meta)
-    if "</head>" in html:
-        return html.replace("</head>", block + "\n</head>", 1)
-    return html + "\n" + block
-
-
-# --------------------------------------------------------------------------- #
 # Page processing
 # --------------------------------------------------------------------------- #
 def _page_title(html: str, fallback: str) -> str:
@@ -216,10 +172,12 @@ def _page_title(html: str, fallback: str) -> str:
     return fallback
 
 
-def process_page(path: Path, video_id: str, is_core: bool, meta: dict | None) -> dict:
-    """Apply head link + facade + body script to the page at ``path``. For
-    extension pages (``is_core=False``), also insert the VideoObject schema.
-    Idempotent: re-running makes no further change. Returns a per-page summary.
+def process_page(path: Path, video_id: str, is_core: bool) -> dict:
+    """Apply head link + facade + body script to the page at ``path``.
+
+    VideoObject JSON-LD is intentionally not generated here. The site uses
+    facades on supporting concept/insight pages, but structured video data is
+    reserved for dedicated video-first demo pages.
     """
     original = path.read_text(encoding="utf-8")
     html = original
@@ -248,14 +206,6 @@ def process_page(path: Path, video_id: str, is_core: bool, meta: dict | None) ->
 
     html = insert_body_script(html)
 
-    schema_added = False
-    if not is_core:
-        if meta is None:
-            raise ValueError("extension page %s missing EXTENSION_META" % path)
-        before = html
-        html = insert_video_schema(html, video_id, meta)
-        schema_added = html != before
-
     changed = html != original
     return {
         "path": path,
@@ -264,7 +214,6 @@ def process_page(path: Path, video_id: str, is_core: bool, meta: dict | None) ->
         "exists": True,
         "changed": changed,
         "facade_added": facade_added,
-        "schema_added": schema_added,
         "_new_html": html,
     }
 
@@ -296,14 +245,11 @@ def main(argv=None) -> int:
             print("  MISSING  %s (%s)" % (slug, path))
             skipped_missing += 1
             continue
-        meta = None if is_core else EXTENSION_META.get(video_id)
-        result = process_page(path, video_id, is_core, meta)
+        result = process_page(path, video_id, is_core)
         tag = "core" if is_core else "ext "
         flags = []
         if result["facade_added"]:
             flags.append("facade")
-        if result["schema_added"]:
-            flags.append("schema")
         if not result["changed"]:
             unchanged += 1
             print("  ok       [%s] %s (already current)" % (tag, slug))
