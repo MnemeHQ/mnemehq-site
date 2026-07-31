@@ -21,6 +21,7 @@ def load(name):
 
 NAV_HTML      = load("nav.html")
 FOOTER_HTML   = load("footer.html")
+FOOTER_CSS    = load("footer.css")
 HAMBURGER_CSS = load("nav-hamburger.css")
 HAMBURGER_JS  = load("nav-hamburger.js")
 ACTIVE_JS     = load("nav-active.js")
@@ -91,6 +92,16 @@ for html in sorted(SITE.rglob("*.html")):
             text = text.replace("</style>", css_block + "\n  </style>", 1)
         else:
             print(f"  WARN: no </style> in {html.relative_to(SITE)} — hamburger CSS not injected")
+
+    # 2b. Inject canonical footer link styling where a page-local rule is absent.
+    # Keeping this in the shared sync path prevents default browser blue/purple
+    # links on pages whose templates predate the footer CSS convention.
+    if "footer a {" not in text:
+        if "</style>" in text:
+            css_block = adapt("\n    " + FOOTER_CSS.replace("\n", "\n    "))
+            text = text.replace("</style>", css_block + "\n  </style>", 1)
+        else:
+            print(f"  WARN: no </style> in {html.relative_to(SITE)} — footer CSS not injected")
 
     # 3. Inject hamburger JS if missing — check for any toggle handler, not just our exact block
     if "classList.toggle" not in text:
