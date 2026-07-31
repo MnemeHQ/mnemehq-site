@@ -1,0 +1,31 @@
+name: check video markup
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'scripts/check_video_markup.py'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'scripts/check_video_markup.py'
+
+permissions:
+  contents: read
+
+jobs:
+  check-video-markup:
+    name: check_video_markup.py
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run video markup validator
+        run: python scripts/check_video_markup.py
