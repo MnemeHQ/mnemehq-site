@@ -1,0 +1,42 @@
+name: install command check
+
+# ADR-005 (core repo, docs/adr/): the PyPI distribution is `mneme-hq`.
+# `pip install mneme` resolves to an unrelated, abandoned third-party package
+# this project does not own.
+#
+# ADR-005 has forbidden this since 2026-05-04 but went unenforced, and the
+# violation reached production: three pages on mnemehq.com served the wrong
+# command, three occurrences of them inside JSON-LD where it was syndicated to
+# search rich results and AI answer engines (fixed in #7). This repository is
+# separate from core since the website extraction and does not inherit core's
+# gate, so it carries its own.
+#
+# Runs on every PR to main and on direct pushes to main as a safety net in
+# case anything bypasses PR review.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-install-command:
+    name: Verify install commands name mneme-hq
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify the matcher itself
+        run: python scripts/check_install_command.py --self-test
+
+      - name: Run install-command gate
+        run: python scripts/check_install_command.py
