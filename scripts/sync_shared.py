@@ -8,7 +8,7 @@ import os
 import re
 from pathlib import Path
 try:
-    from dotenv import load_dotenv   # RB2B_PIXEL_ID lives in .env (not committed)
+    from dotenv import load_dotenv
     load_dotenv()
 except Exception:
     pass
@@ -32,30 +32,11 @@ FOOTER_PAT = re.compile(r"<footer>(.*?)</footer>", re.DOTALL)
 HAMBURGER_JS_BLOCK = f"<script>\n{HAMBURGER_JS}\n</script>"
 ACTIVE_JS_BLOCK    = f"<script><!-- nav-active -->\n{ACTIVE_JS}\n</script>"
 
-# ── Marketing pixels (RB2B only for now; Google Ads + LinkedIn are GTM-managed) ───────────────
-MK_HEAD = load("marketing-head.html")
-MK_BODY = load("marketing-body.html")
-
-# The RB2B pixel key is a PUBLIC client-side id (same situation as the IndexNow key in
-# deploy_site.py): committed as the default so CI deploys — which don't carry .env — still
-# inject it instead of stripping the block. Override via RB2B_PIXEL_ID in .env; set it to
-# "off" to disable RB2B entirely.
-RB2B_DEFAULT = "46DJ4HG0DG61"
-RB2B_ID = os.environ.get("RB2B_PIXEL_ID", "").strip()
-if not RB2B_ID:
-    RB2B_ID = RB2B_DEFAULT
-elif RB2B_ID.lower() == "off":
-    RB2B_ID = ""
-RB2B_OK = bool(re.fullmatch(r"[A-Za-z0-9]{4,}", RB2B_ID))
-if RB2B_ID and not RB2B_OK:
-    print(f"  WARN: RB2B_PIXEL_ID={RB2B_ID!r} is not [A-Za-z0-9]{{4,}} — RB2B disabled")
-
-if RB2B_OK:
-    MK_HEAD_BLOCK = "<!-- mneme:marketing-head:start -->\n" + MK_HEAD.replace("__RB2B_PIXEL_ID__", RB2B_ID) + "\n<!-- mneme:marketing-head:end -->"
-    MK_BODY_BLOCK = "<!-- mneme:marketing-body:start -->\n" + MK_BODY + "\n<!-- mneme:marketing-body:end -->"
-else:
-    MK_HEAD_BLOCK = MK_BODY_BLOCK = ""   # nothing to consent to -> inject nothing / clean up existing
-    print("  RB2B disabled (RB2B_PIXEL_ID unset/invalid) — consent head + banner not injected")
+# ── Marketing pixels ─────────────────────────────────────────────────────────
+# REMOVED: RB2B visitor identification + its consent banner.
+# The patterns below are retained so the previously-injected blocks are stripped
+# from any page that still carries them. Nothing is injected.
+MK_HEAD_BLOCK = MK_BODY_BLOCK = ""
 
 MK_HEAD_PAT = re.compile(r"\n?<!-- mneme:marketing-head:start -->.*?<!-- mneme:marketing-head:end -->", re.DOTALL)
 MK_BODY_PAT = re.compile(r"<!-- mneme:marketing-body:start -->.*?<!-- mneme:marketing-body:end -->\n?", re.DOTALL)
@@ -120,7 +101,7 @@ for html in sorted(SITE.rglob("*.html")):
     # 5. Replace footer (plain <footer> only, not <footer class=...>)
     text = FOOTER_PAT.sub(adapt(FOOTER_HTML), text)
 
-    # 6. Consent controller + RB2B — after GTM in <head>, idempotent via markers.
+    # 6. Strip any previously-injected consent/pixel blocks (idempotent via markers).
     #    lambda repl avoids re's backslash interpretation of the snippet JS.
     if MK_HEAD_PAT.search(text):
         text = MK_HEAD_PAT.sub((lambda _m: "\n" + adapt(MK_HEAD_BLOCK)) if MK_HEAD_BLOCK else (lambda _m: ""), text)
