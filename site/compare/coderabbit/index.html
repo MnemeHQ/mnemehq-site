@@ -48,7 +48,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; }
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
     .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
@@ -202,6 +203,7 @@
     border-bottom: 1px solid var(--border);
   }
   .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
   .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
 }
       /* === Related reading === */
@@ -307,12 +309,12 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -673,12 +675,14 @@
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>

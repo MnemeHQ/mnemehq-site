@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="AI governance use cases for coding agents and AI-assisted development. Mneme HQ enforces architectural decisions before generation across Cursor, Claude Code, Copilot, and SDK agents." />
+  <meta name="description" content="AI governance use cases for coding agents and AI-assisted development. Mneme HQ enforces architectural decisions before generation across Cursor, Claude Code, Google Antigravity, Copilot, and SDK agents." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/use-cases/" />
@@ -15,12 +15,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="AI Governance Use Cases for Coding Agents — Mneme HQ" />
-  <meta property="og:description" content="Architectural governance use cases for AI coding workflows. Enforce ADRs, security boundaries, and engineering standards across Cursor, Claude Code, Copilot, LangGraph, and CrewAI." />
+  <meta property="og:description" content="Architectural governance use cases for AI coding workflows. Enforce ADRs, security boundaries, and engineering standards across Cursor, Claude Code, Google Antigravity, Copilot, LangGraph, and CrewAI." />
   <meta property="og:url" content="https://mnemehq.com/use-cases/" />
   <meta property="og:image" content="https://mnemehq.com/use-cases/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="AI Governance Use Cases for Coding Agents — Mneme HQ" />
-  <meta name="twitter:description" content="Architectural governance use cases for AI coding workflows. Enforce ADRs, security boundaries, and engineering standards across Cursor, Claude Code, Copilot, LangGraph, and CrewAI." />
+  <meta name="twitter:description" content="Architectural governance use cases for AI coding workflows. Enforce ADRs, security boundaries, and engineering standards across Cursor, Claude Code, Google Antigravity, Copilot, LangGraph, and CrewAI." />
   <meta name="twitter:image" content="https://mnemehq.com/use-cases/og.png" />
 
     <!-- Consent defaults -->
@@ -134,7 +134,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; }
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
     .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     .hero { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 4rem; text-align: center; }
@@ -339,6 +340,16 @@
     .doc-figure { max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
     .doc-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; }
     .doc-figure figcaption { margin-top: 0.85rem; color: var(--muted); font-size: 0.85rem; line-height: 1.6; font-style: italic; }
+  
+    /* cross-link to the audience page */
+    .forteams-banner { max-width: 1080px; margin: 3.5rem auto 0; padding: 0 2rem; }
+    .forteams-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; padding: 1.75rem 1.9rem; background: linear-gradient(180deg, rgba(200,240,96,0.05), rgba(200,240,96,0.015)); border: 1px solid var(--border2); border-radius: 12px; }
+    .forteams-banner-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+    .forteams-banner h2 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); margin: 0 0 0.5rem; letter-spacing: -0.01em; }
+    .forteams-banner p { color: var(--muted); font-size: 0.86rem; line-height: 1.6; margin: 0; max-width: 60ch; }
+    .forteams-banner-cta { display: inline-flex; align-items: center; white-space: nowrap; padding: 0.75rem 1.35rem; border: 1px solid var(--accent); border-radius: 8px; background: rgba(200,240,96,0.1); color: var(--accent); font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; text-decoration: none; transition: background 0.15s, color 0.15s; }
+    .forteams-banner-cta:hover { background: var(--accent); color: #0c0c0d; }
+    @media (max-width: 700px) { .forteams-banner-inner { flex-direction: column; align-items: flex-start; } }
   </style>
 </head>
 <body>
@@ -346,12 +357,12 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -534,7 +545,8 @@
     <div class="ecosystem-strip">
       <a href="/integrations/cursor/" class="ecosystem-chip">Cursor</a>
       <a href="/integrations/claude-code/" class="ecosystem-chip">Claude Code</a>
-      <span class="ecosystem-chip static">GitHub Copilot</span>
+      <a href="/integrations/antigravity/" class="ecosystem-chip">Google Antigravity</a>
+      <a href="/integrations/copilot/" class="ecosystem-chip">GitHub Copilot</a>
       <a href="/integrations/github-actions/" class="ecosystem-chip">GitHub Actions</a>
       <span class="ecosystem-chip static">LangGraph</span>
       <span class="ecosystem-chip static">CrewAI</span>
@@ -626,6 +638,18 @@
       </a>
     </div>
   </section>
+
+
+<aside class="forteams-banner" aria-labelledby="forteams-banner-title">
+  <div class="forteams-banner-inner">
+    <div>
+      <div class="forteams-banner-eyebrow">Not sure which of these is you?</div>
+      <h2 id="forteams-banner-title">See which teams Mneme fits &mdash; and which it does not.</h2>
+      <p>The team profiles, the scenarios worth enforcing, and an honest list of situations where a pilot will not pay for itself yet.</p>
+    </div>
+    <a class="forteams-banner-cta" href="/for/">Who Mneme is for &rarr;</a>
+  </div>
+</aside>
 
   <div class="faq-wrap">
     <h2>Common questions</h2>
@@ -747,12 +771,14 @@
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>

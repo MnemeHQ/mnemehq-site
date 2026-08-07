@@ -269,6 +269,7 @@
       .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: 0.5rem 1.25rem 1.25rem; transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s; overflow-y: auto; }
       .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.92rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
       .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
       .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
       main { padding: 3rem 1.25rem 4rem; }
     }
@@ -277,7 +278,28 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    /* ── SECTION BEAT ──
+       9 of 11 sections were transparent and fell through to the body colour, so
+       the page read as one uninterrupted black slab with no section boundaries.
+       Alternate bands plus hairlines give the eye somewhere to break. */
+    main > section { position: relative; }
+    main > section:nth-of-type(even)::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 0 auto 0 50%;
+      width: 100vw;
+      transform: translateX(-50%);
+      background: #131717;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    main > section > * { position: relative; }
+    @media (prefers-reduced-motion: no-preference) {
+      main > section { transition: background .2s; }
+    }
+  </style>
 </head>
 <body>
   <!-- Google Tag Manager (noscript) -->
@@ -285,12 +307,12 @@
   <!-- End Google Tag Manager (noscript) -->
 
   <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -704,14 +726,16 @@
   </script>
   <script>
     (function(){
-      var path = window.location.pathname;
-      document.querySelectorAll('.nav-links a').forEach(function(a){
-        var href = a.getAttribute('href');
-        if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-          a.classList.add('active');
-        }
-      });
-    })();
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
   </script>
   <script>
     (function(){
@@ -743,19 +767,5 @@
       });
     })();
   </script>
-<script><!-- nav-active -->
-(function(){
-  var path = window.location.pathname;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
-    }
-  });
-})();
-</script>
-
-
-
 </body>
 </html>

@@ -318,12 +318,12 @@ body.home-v2 {
   width: 104px;
   height: 82%;
   overflow: hidden;
-  border: 1px solid rgba(234,115,94,.28);
+  border: 0;
   border-radius: 38px;
   background-image: url('/assets/images/photo-sketch-flow.webp');
   background-repeat: no-repeat;
   background-size: auto 100%;
-  filter: grayscale(1) sepia(.12) contrast(1.07);
+  filter: contrast(1.05);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
 }
 
@@ -1005,8 +1005,8 @@ body.home-v2 {
 .hm-team-mask::after {
   content: '';
   position: absolute;
-  inset: 0 -30px 0 35%;
-  background: linear-gradient(90deg, transparent, var(--bg));
+  inset: 0 -30px 0 48%;
+  background: linear-gradient(90deg, transparent, #0b1110);
   pointer-events: none;
 }
 
@@ -1901,3 +1901,64 @@ a.hm-logo-pill:hover { color: var(--text); border-color: var(--accent); }
 .hm-backed a:hover { color: var(--text); }
 .hm-backed-oss { color: var(--quiet); opacity: .8; }
 @media (max-width: 640px) { .hm-backed { gap: .7rem; font-size: .62rem; } }
+
+
+/* explore section figure (moved out of the activation block) */
+.hm-explore-figure { margin: 0 0 2.2rem; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; line-height: 0; }
+.hm-explore-figure img { display: block; width: 100%; height: auto; max-height: 300px; object-fit: cover; object-position: center 40%; }
+@media (max-width: 900px) { .hm-explore-figure img { max-height: 200px; } }
+
+
+/* Install is the first rung: one copyable line, high on the page, for the
+   reader who already understands the product. The two-path activation block
+   below is the detailed version; the close belongs to the pilot. */
+.hm-install { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+.hm-install-inner { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 1.15rem 0; }
+.hm-install-label { color: var(--quiet); font-family: var(--mono); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; }
+.hm-install-cmd { flex: 1 1 auto; min-width: 220px; padding: .6rem .9rem; border: 1px solid var(--border2); border-radius: 4px; background: var(--bg); color: var(--teal); font-family: var(--mono); font-size: .84rem; }
+.hm-install-copy { padding: .6rem 1rem; border: 1px solid var(--border2); border-radius: 4px; background: var(--surface2); color: var(--muted); font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; transition: color .15s, border-color .15s; }
+.hm-install-copy:hover { color: var(--accent); border-color: var(--accent); }
+.hm-install-alt { color: var(--quiet); font-family: var(--mono); font-size: .68rem; text-decoration: none; white-space: nowrap; }
+.hm-install-alt:hover { color: var(--accent); }
+@media (max-width: 640px) { .hm-install-cmd { font-size: .74rem; } }
+
+
+/* the consequence line: converts "a rule matched" into "a breach was prevented" */
+.hm-result-stake {
+  margin-top: .85rem;
+  padding-top: .8rem;
+  border-top: 1px dashed rgba(255,107,88,.35);
+  color: #e4c9c2;
+  font-size: .82rem;
+  line-height: 1.6;
+}
+.hm-result-stake span {
+  display: block;
+  margin-bottom: .25rem;
+  color: var(--error);
+  font-family: var(--mono);
+  font-size: .6rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* install banner: coral, matching the activation CTAs rather than sitting grey */
+.hm-install { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(234,115,94,.07), rgba(234,115,94,.02)); }
+.hm-install-label { color: var(--coral-soft); }
+.hm-install-cmd { border-color: rgba(234,115,94,.32); background: rgba(9,10,10,.75); }
+.hm-install-copy { border-color: var(--coral); background: rgba(234,115,94,.12); color: var(--coral-soft); }
+.hm-install-copy:hover { background: var(--coral); color: #16100e; border-color: var(--coral); }
+.hm-install-alt { color: var(--coral-soft); }
+.hm-install-alt:hover { color: var(--coral); }
+
+
+/* install banner: neutral, matching the works-with pills. Stated last so it
+   beats the earlier coral variant. */
+.hm-install { background: var(--surface); }
+.hm-install-label { color: var(--quiet); }
+.hm-install-cmd { border-color: var(--border2); background: var(--bg); color: var(--teal); }
+.hm-install-copy { border-color: var(--border2); background: var(--surface2); color: var(--muted); }
+.hm-install-copy:hover { border-color: var(--accent); color: var(--accent); background: var(--surface3); }
+.hm-install-alt { color: var(--quiet); }
+.hm-install-alt:hover { color: var(--accent); }

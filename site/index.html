@@ -881,6 +881,7 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+      .nav-links a.active { color: var(--accent); }
   </style>
   <link rel="stylesheet" href="/assets/css/home-v2.css?v=4">
 <script type="application/ld+json">
@@ -991,12 +992,12 @@
 
 <!-- NAV -->
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -1088,6 +1089,7 @@ trackCheckout(event) {
           <div class="hm-result">
             <strong>BLOCKED</strong>
             <p>ADR-017 forbids a data-platform client in the frontend checkout service.</p>
+            <p class="hm-result-stake"><span>Had it shipped</span> Warehouse credentials bundled into the browser, and a customer-data path nobody reviewed.</p>
           </div>
           <div class="hm-result-remedy">REMEDIATION<br>Call the approved backend analytics service instead.<br><br>SOURCE<br>ADR-017 · Data access boundary</div>
         </article>
@@ -1096,15 +1098,22 @@ trackCheckout(event) {
     </div>
   </section>
 
+  <!-- INSTALL: first rung of the ladder -->
+  <aside class="hm-install" aria-label="Install Mneme">
+    <div class="hm-shell hm-install-inner">
+      <span class="hm-install-label">Install</span>
+      <code class="hm-install-cmd" id="install-cmd">pip install mneme-hq</code>
+      <button class="hm-install-copy" type="button"
+              onclick="navigator.clipboard.writeText('pip install mneme-hq');this.textContent='Copied';setTimeout(()=>this.textContent='Copy',1600);">Copy</button>
+      <a class="hm-install-alt" href="/docs/">Quickstart →</a>
+    </div>
+  </aside>
+
   <!-- ACTIVATION -->
   <section class="hm-section hm-activation" id="get-started" aria-labelledby="activation-title">
     <div class="hm-shell">
       <div class="hm-section-label">Get to a verdict, not just an install</div>
       <h2 class="hm-title" id="activation-title">Run the demo, or run it on your code.</h2>
-      <figure class="hm-activation-figure">
-        <img src="/assets/images/photo-decisions-table.webp" width="1200" height="634" loading="lazy" decoding="async"
-             alt="A table covered in written decisions, one held in the hand and picked out in colour">
-      </figure>
 
       <div class="hm-activation-grid">
         <article class="hm-path">
@@ -1185,22 +1194,6 @@ Result: fail</code></pre>
     </div>
   </section>
 
-  <!-- CRAWLABLE PATHWAYS -->
-  <section class="hm-section hm-pathways" aria-labelledby="explore-title">
-    <div class="hm-shell">
-      <div class="hm-section-label">Explore</div>
-      <h2 class="hm-title" id="explore-title">One clear home for every layer of the story.</h2>
-      <div class="hm-pathway-grid">
-        <a class="hm-pathway" href="/docs/how-enforcement-works/"><span>Product</span><strong>How Mneme works</strong></a>
-        <a class="hm-pathway" href="/architecture/"><span>Architecture</span><strong>Decision and enforcement pipeline</strong></a>
-        <a class="hm-pathway" href="/integrations/"><span>Integrations</span><strong>Authoritative support matrix</strong></a>
-        <a class="hm-pathway" href="/compare/"><span>Comparisons</span><strong>Where each tool belongs</strong></a>
-        <a class="hm-pathway" href="/demo/"><span>Demos</span><strong>Runnable product evidence</strong></a>
-        <a class="hm-pathway" href="/benchmark/"><span>Evidence</span><strong>Benchmark and methodology</strong></a>
-      </div>
-    </div>
-  </section>
-
   <!-- THREE-QUESTION FAQ -->
   <section class="hm-section hm-faq" id="faq" aria-labelledby="faq-title">
     <div class="hm-shell hm-faq-grid">
@@ -1221,6 +1214,26 @@ Result: fail</code></pre>
           <summary>How is Mneme different from context, auditing, and code review tools?</summary>
           <p>Context systems help agents understand. Auditing tools show how agents behaved. Code review evaluates completed output. Mneme enforces the approved engineering intent the agent must follow, while linking every verdict to its source.</p>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRAWLABLE PATHWAYS -->
+  <section class="hm-section hm-pathways" aria-labelledby="explore-title">
+    <div class="hm-shell">
+      <div class="hm-section-label">Explore</div>
+      <figure class="hm-explore-figure">
+        <img src="/assets/images/photo-decisions-table.webp" width="1200" height="634" loading="lazy" decoding="async"
+             alt="A table covered in written decisions, one held in the hand and picked out in colour">
+      </figure>
+      <h2 class="hm-title" id="explore-title">One clear home for every layer of the story.</h2>
+      <div class="hm-pathway-grid">
+        <a class="hm-pathway" href="/docs/how-enforcement-works/"><span>Product</span><strong>How Mneme works</strong></a>
+        <a class="hm-pathway" href="/architecture/"><span>Architecture</span><strong>Decision and enforcement pipeline</strong></a>
+        <a class="hm-pathway" href="/integrations/"><span>Integrations</span><strong>Authoritative support matrix</strong></a>
+        <a class="hm-pathway" href="/compare/"><span>Comparisons</span><strong>Where each tool belongs</strong></a>
+        <a class="hm-pathway" href="/demo/"><span>Demos</span><strong>Runnable product evidence</strong></a>
+        <a class="hm-pathway" href="/benchmark/"><span>Evidence</span><strong>Benchmark and methodology</strong></a>
       </div>
     </div>
   </section>
@@ -1267,6 +1280,16 @@ Result: fail</code></pre>
       </div>
     </div>
   </section>
+
+  <!-- INSTALL, second pass: after the tools, before the pilot close -->
+  <aside class="hm-install hm-install-slim" aria-label="Install Mneme">
+    <div class="hm-shell hm-install-inner">
+      <span class="hm-install-label">Install</span>
+      <code class="hm-install-cmd">pip install mneme-hq</code>
+      <button class="hm-install-copy" type="button"
+              onclick="navigator.clipboard.writeText('pip install mneme-hq');this.textContent='Copied';setTimeout(()=>this.textContent='Copy',1600);">Copy</button>
+    </div>
+  </aside>
 
   <section class="hm-final" aria-labelledby="final-title">
     <div class="hm-shell">
@@ -1435,12 +1458,14 @@ Result: fail</code></pre>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>

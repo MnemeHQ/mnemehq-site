@@ -76,7 +76,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; }
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
     .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
@@ -271,6 +272,12 @@
     .doc-figure { max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
     .doc-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; }
     .doc-figure figcaption { margin-top: 0.85rem; color: var(--muted); font-size: 0.85rem; line-height: 1.6; font-style: italic; }
+  
+    /* thesis chart, moved off the homepage: this argues why the category
+       exists, which suits the audience page more than the product page */
+    .thesis-chart { max-width: 900px; margin: 0 auto 2.5rem; padding: 0 1.5rem; }
+    .thesis-chart figure { max-width: 100% !important; }
+    .thesis-note { color: var(--muted); font-size: 0.85rem; line-height: 1.65; margin: 1rem 0 0; font-style: italic; }
   </style>
 </head>
 <body>
@@ -278,12 +285,12 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -341,10 +348,37 @@
       </div>
     </section>
 
-<figure class="doc-figure">
-  <img src="/assets/images/photo-pairing.webp" width="1200" height="723" loading="lazy" decoding="async" alt="Two colleagues working through a problem together at a shared desk">
-  <figcaption>The decisions worth enforcing are the ones your team already argued about.</figcaption>
-</figure>
+<div class="thesis-chart">
+    <figure style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.5rem 1rem;margin:0 0 2.5rem;max-width:740px;">
+      <figcaption style="font-family:'DM Mono',monospace;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;">Throughput vs. review capacity &middot; 2023&ndash;2026</figcaption>
+      <svg viewBox="0 0 600 320" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="prob-chart-title prob-chart-desc" style="width:100%;height:auto;display:block;">
+        <title id="prob-chart-title">AI code generation throughput diverges from review capacity, 2023 to 2026</title>
+        <desc id="prob-chart-desc">An illustrative chart showing AI code generation throughput rising exponentially while review capacity stays roughly flat. The widening gap is the governance opportunity.</desc>
+        <!-- Y-axis label (rotated) -->
+        <text x="20" y="150" fill="#55555f" font-family="DM Mono, monospace" font-size="10" transform="rotate(-90 20 150)" text-anchor="middle">throughput &rarr;</text>
+        <!-- Axes -->
+        <line x1="60" y1="280" x2="580" y2="280" stroke="#2e2e34" stroke-width="1"></line>
+        <line x1="60" y1="20" x2="60" y2="280" stroke="#2e2e34" stroke-width="1"></line>
+        <!-- Gap shading between curves -->
+        <path d="M60,260 Q260,250 360,200 T580,40 L580,260 Z" fill="rgba(255,112,112,0.08)"></path>
+        <!-- Review capacity line (flat, muted) -->
+        <line x1="60" y1="260" x2="580" y2="260" stroke="#88889a" stroke-width="2"></line>
+        <!-- AI generation curve (red, exponential) -->
+        <path d="M60,260 Q260,250 360,200 T580,40" fill="none" stroke="#ff7070" stroke-width="2.5" stroke-linecap="round"></path>
+        <!-- End-point markers -->
+        <circle cx="580" cy="40" r="4" fill="#ff7070"></circle>
+        <circle cx="580" cy="260" r="4" fill="#88889a"></circle>
+        <!-- Labels -->
+        <text x="68" y="38" fill="#ff7070" font-family="DM Mono, monospace" font-size="11" font-weight="500">AI code generation</text>
+        <text x="68" y="252" fill="#88889a" font-family="DM Mono, monospace" font-size="11">Review capacity (linear in headcount)</text>
+        <text x="370" y="158" fill="rgba(255,180,180,0.85)" font-family="Instrument Serif, serif" font-size="14" font-style="italic">the gap is governance</text>
+        <!-- X-axis labels -->
+        <text x="60" y="302" fill="#55555f" font-family="DM Mono, monospace" font-size="10">2023</text>
+        <text x="580" y="302" fill="#55555f" font-family="DM Mono, monospace" font-size="10" text-anchor="end">2026</text>
+      </svg>
+    </figure>
+  <p class="thesis-note">Review capacity grows with headcount. Generation does not. The gap is where architectural decisions stop being enforced.</p>
+</div>
 
     <!-- Section 2: Example scenarios -->
     <section class="for-section" aria-labelledby="scenarios-heading">
@@ -377,6 +411,11 @@
     </section>
 
     <!-- Section 3: Less ideal fits -->
+<figure class="doc-figure">
+  <img src="/assets/images/photo-pairing.webp" width="1200" height="723" loading="lazy" decoding="async" alt="Two colleagues working through a problem together at a shared desk">
+  <figcaption>The decisions worth enforcing are the ones your team already argued about.</figcaption>
+</figure>
+
     <section class="for-section" aria-labelledby="notfit-heading">
       <div class="for-section-eyebrow is-quiet">Less ideal</div>
       <h2 id="notfit-heading">Where Mneme is the wrong tool</h2>
@@ -561,12 +600,14 @@
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>
