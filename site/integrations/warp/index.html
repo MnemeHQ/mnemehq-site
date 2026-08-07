@@ -361,7 +361,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
     <p>Warp Agent Mode coordinates parallel agents in dedicated panes. Each agent eventually writes to disk through a tool call. Mneme operates at that boundary:</p>
 
     <ul>
-      <li>If the agent is <strong>Claude Code</strong>, the Mneme PreToolUse hook intercepts every <code>Edit</code>, <code>Write</code>, and <code>MultiEdit</code> before disk &mdash; violations exit 2 with the decision id, and Claude Code adjusts.</li>
+      <li>If the agent is <strong>Claude Code</strong>, the Mneme PreToolUse hook intercepts <code>Edit</code> and <code>Write</code> calls before disk &mdash; violations exit 2 with the decision id, and Claude Code adjusts.</li>
       <li>If the agent is <strong>Cursor</strong> running inside or alongside a Warp pane, the Mneme-generated <code>.cursor/rules/mneme.mdc</code> file is what the session reads as context.</li>
       <li>If the agent is <strong>any other tool</strong> that writes to the repo, the CI gate catches the diff at PR time.</li>
     </ul>

@@ -341,7 +341,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
           {"@type": "Question", "name": "Does Mneme HQ govern Copilot suggestions in VS Code today?", "acceptedAnswer": {"@type": "Answer", "text": "Not yet. Copilot inline suggestions land in the editor through a different surface than Claude Code's tool calls, so the PreToolUse hook does not intercept them. Mneme catches Copilot-generated code at the next layer: the GitHub Actions enforcement gate on every PR diff. A native Copilot integration is on the roadmap; until then, CI is the enforcement point for Copilot output."}},
           {"@type": "Question", "name": "Do I install a VS Code extension to enable Mneme?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme runs as a Claude Code PreToolUse hook configured in .claude/settings.json — the hook fires regardless of whether Claude Code is launched from the VS Code integrated terminal, the standalone terminal, or any other host. There is no Mneme VS Code extension to install."}},
           {"@type": "Question", "name": "Does the hook work in WSL or remote VS Code sessions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The hook runs wherever Claude Code runs. In WSL or a VS Code Remote-SSH session, install mneme inside the remote environment (the same one Claude Code is invoked from) and the hook works identically. The .mneme/project_memory.json file lives in the repo, so it travels with the project."}},
-          {"@type": "Question", "name": "Why route enforcement through Claude Code instead of VS Code directly?", "acceptedAnswer": {"@type": "Answer", "text": "VS Code does not generate code on its own — humans and AI agents do. Mneme governs the agent. Claude Code exposes a PreToolUse hook that intercepts every Edit, Write, and MultiEdit before disk; that is the deterministic enforcement point. A VS Code-level extension would only see what the user types directly, missing the bulk of AI-generated change."}}
+          {"@type": "Question", "name": "Why route enforcement through Claude Code instead of VS Code directly?", "acceptedAnswer": {"@type": "Answer", "text": "VS Code does not generate code on its own — humans and AI agents do. Mneme governs the agent. Claude Code exposes a PreToolUse hook that intercepts Edit and Write calls before disk; that is the deterministic enforcement point. A VS Code-level extension would only see what the user types directly, missing the bulk of AI-generated change."}}
         ]
       }
     ]
@@ -450,7 +450,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
     <ol>
       <li>
         <strong>Install the package</strong>
-        <pre><code>pip install mneme-hq</code></pre>
+        <pre><code>pipx install "mneme-hq&gt;=0.5.1"</code></pre>
       </li>
       <li>
         <strong>Initialise project memory (if you don't have one yet)</strong>
@@ -458,11 +458,10 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
 # Create .mneme/project_memory.json &mdash; see examples/project_memory.json for the schema.</code></pre>
       </li>
       <li>
-        <strong>Run the installer</strong>
-        <p>Project-scoped (recommended &mdash; only affects this project):</p>
-        <pre><code>python scripts/install_claude_code.py</code></pre>
-        <p>User-scoped (applies to all Claude Code sessions, including those launched from any VS Code window):</p>
-        <pre><code>python scripts/install_claude_code.py --user</code></pre>
+        <strong>Load the plugin</strong>
+        <pre><code>claude --plugin-dir ./integrations/claude-code-plugin</code></pre>
+        <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). Applies to Claude Code sessions launched from any VS Code window.</p>
+        <p>A legacy flat installer (<code>python scripts/install_claude_code.py</code>, with hyphenated <code>/mneme-check</code> commands) still works from a git clone, but <code>scripts/</code> is not shipped in the PyPI wheel.</p>
       </li>
       <li>
         <strong>Verify inside VS Code</strong>
@@ -507,7 +506,7 @@ window.__mnemePixels.push({ done:false, cat:'visitor_id', fn:function () {
 
       <details class="faq-item">
         <summary>Why route enforcement through Claude Code instead of VS Code directly?</summary>
-        <div class="faq-body">VS Code does not generate code on its own &mdash; humans and AI agents do. Mneme governs the agent. Claude Code exposes a PreToolUse hook that intercepts every Edit, Write, and MultiEdit before disk; that is the deterministic enforcement point. A VS Code-level extension would only see what the user types directly, missing the bulk of AI-generated change.</div>
+        <div class="faq-body">VS Code does not generate code on its own &mdash; humans and AI agents do. Mneme governs the agent. Claude Code exposes a PreToolUse hook that intercepts Edit and Write calls before disk; that is the deterministic enforcement point. A VS Code-level extension would only see what the user types directly, missing the bulk of AI-generated change.</div>
       </details>
     </div>
 
