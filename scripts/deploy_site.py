@@ -369,7 +369,7 @@ else:
 
 import time as _time
 if CF_TOKEN and CF_ZONE_ID:
-    _time.sleep(3)  # brief pause for CF edge nodes to propagate the purge
+    _time.sleep(15)  # let CF edge nodes propagate the purge before verifying
 
 # ── Post-deploy verification ──────────────────────────────────────────────────
 # Two tiers, so a slow unrelated page can never fail a clean delta deploy:
@@ -384,10 +384,17 @@ if CF_TOKEN and CF_ZONE_ID:
 #      non-200 is reported as a WARNING only. (A single slow /demo/ page used to
 #      abort an otherwise-perfect deploy.)
 VERIFY_TIMEOUT = 30
-VERIFY_RETRIES = 3
+VERIFY_RETRIES = 4
 
 def _verify_fetch(url):
-    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    # Ask the edge to revalidate rather than serve its cached copy. Without this
+    # the check races Cloudflare propagation and reports "stale 200" on a deploy
+    # that actually succeeded - a red run that means nothing.
+    req = urllib.request.Request(url, headers={
+        'User-Agent': 'Mozilla/5.0',
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+    })
     with urllib.request.urlopen(req, timeout=VERIFY_TIMEOUT) as r:
         return r.status, r.read()
 
@@ -419,7 +426,7 @@ for url, needle in changed_fp.items():
             break
         if verdict == 'fail' and status in (404, 410):
             break  # definitively missing; retrying will not help
-        _time.sleep(2 + attempt * 2)  # retry 5xx; re-check a stale 200 after cache propagation
+        _time.sleep(5 + attempt * 8)  # retry 5xx; re-check a stale 200 after cache propagation
     if verdict == 'ok':
         print(f'OK    {url}')
     elif verdict == 'fail':
