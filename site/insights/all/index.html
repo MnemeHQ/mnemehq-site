@@ -205,7 +205,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; }
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
     .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
@@ -217,9 +218,9 @@
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
     .hero-sub { font-size: 0.95rem; color: var(--muted); max-width: 520px; margin: 0 auto; }
 
-    .cards-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
+    .cards-wrap { max-width: 1240px; margin: 0 auto; padding: 0 2rem 6rem; }
     .hub-intro { font-size: 0.88rem; color: var(--muted); line-height: 1.8; max-width: 660px; margin: 0 auto 3rem; }
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
 
     .insight-card-link { display: block; text-decoration: none; color: inherit; }
     .insight-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 0.65rem; transition: border-color 0.15s, transform 0.18s ease, background 0.15s; }
@@ -377,12 +378,12 @@
       border-bottom: 1px solid var(--border);
     }
     .section-nav-inner {
-      max-width: 900px;
+      max-width: 1240px;
       margin: 0 auto;
       display: flex;
-      gap: 1.75rem;
+      flex-wrap: wrap;
+      gap: 0.55rem 1.75rem;
       padding: 0.85rem 2rem;
-      overflow-x: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
     }
@@ -418,12 +419,12 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -538,6 +539,10 @@
           <div class="card-meta"><span class="card-tag">Reference</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
           <h3>AI Coding-Agent Guardrails: A Field Guide to What Actually Holds</h3>
           <p>A reference taxonomy of AI coding-agent guardrails: runtime, prompt, policy, architectural, and engineering-standards. What each layer catches, what it misses, and why architecture needs enforcement at edit time.</p>
+          <div class="card-footer"><span class="read-pill">Read insight</span></div>
+        </div>
+      </a>
+
       <a href="/insights/smart-routing-ai-coding-agents/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
@@ -552,6 +557,10 @@
           <div class="card-meta"><span class="card-tag">Guide</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>How AI Coding Agents Use ADRs (Architecture Decision Records)</h3>
           <p>An ADR records one architectural decision, its context, and its consequences. Here is how AI coding agents actually interact with ADRs today &mdash; ignored, advisory, or enforced &mdash; and how to make them executable.</p>
+          <div class="card-footer"><span class="read-pill">Read insight</span></div>
+        </div>
+      </a>
+
       <a href="/insights/loop-engineering-ai-coding-agents/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
@@ -566,6 +575,10 @@
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>AI Coding-Agent Architecture: The Layers Between a Model and Production</h3>
           <p>A coding agent is not a model. It is a stack: the model, the harness, the governance layer, and the intent it enforces. Here is what each layer does, and which one most tools leave out.</p>
+          <div class="card-footer"><span class="read-pill">Read insight</span></div>
+        </div>
+      </a>
+
       <a href="/insights/github-spec-kit-who-enforces-architecture/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
@@ -580,6 +593,10 @@
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Not All AI Guardrails Are the Same: The Five Layers of Enterprise AI</h3>
           <p>AI guardrails is an umbrella term. IBM maps four layers &mdash; data, model, application, infrastructure. AI-assisted software delivery needs a fifth: architectural guardrails.</p>
+          <div class="card-footer"><span class="read-pill">Read insight</span></div>
+        </div>
+      </a>
+
       <a href="/insights/google-spec-driven-development-not-enough/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Report Response</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
@@ -2125,7 +2142,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li><a href="/pilot/" style="color:var(--accent);">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -2180,12 +2197,14 @@
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>
@@ -2221,25 +2240,15 @@
 <script><!-- section-nav-active -->
 (function(){
   var nav = document.querySelector('.section-nav');
-  if (!nav || !('IntersectionObserver' in window)) return;
-  var links = Array.from(nav.querySelectorAll('a'));
-  var sections = links
-    .map(function(a){ return document.querySelector(a.getAttribute('href')); })
-    .filter(Boolean);
-  if (!sections.length) return;
-  function setActive(id){
-    var hash = '#' + id;
-    links.forEach(function(a){
-      a.classList.toggle('active', a.getAttribute('href') === hash);
-    });
-  }
-  var io = new IntersectionObserver(function(entries){
-    var visible = entries
-      .filter(function(e){ return e.isIntersecting; })
-      .sort(function(a,b){ return a.target.getBoundingClientRect().top - b.target.getBoundingClientRect().top; });
-    if (visible[0]) setActive(visible[0].target.id);
-  }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
-  sections.forEach(function(s){ io.observe(s); });
+  if (!nav) return;
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  Array.prototype.forEach.call(nav.querySelectorAll('a'), function(a){
+    var href = a.getAttribute('href') || '';
+    if (href.charAt(0) === '#') return;
+    if (path.indexOf(href) === 0 && href.length > bestLen) { best = a; bestLen = href.length; }
+  });
+  if (best) best.classList.add('active');
 })();
 </script>
 

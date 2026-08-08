@@ -558,15 +558,28 @@ _CSS_CLASS_ALLOWLIST = {
 
 
 def rule_css_class_hygiene(html: str, ctx: PageContext) -> RuleResult:
-    """Flag HTML class names that are not defined in any inline <style> block.
+    """Flag HTML class names that are not defined in page-owned CSS.
 
     Catches typos like class="section" when only .section-wrap is defined —
     invisible to other SEO rules but breaks layout silently.
     """
-    # Collect class selectors defined in inline <style> blocks.
+    # Collect class selectors defined inline and in same-site stylesheets.
     styles = re.findall(r"<style\b[^>]*>(.*?)</style>", html, flags=re.S | re.I)
+    page_dir = (SITE / ctx.rel_path).parent
+    for tag in re.findall(r"<link\b[^>]*>", html, flags=re.I):
+        if not re.search(r'\brel\s*=\s*["\'][^"\']*\bstylesheet\b[^"\']*["\']', tag, flags=re.I):
+            continue
+        href_match = re.search(r'\bhref\s*=\s*["\']([^"\']+)["\']', tag, flags=re.I)
+        if not href_match:
+            continue
+        href = urllib.parse.urlsplit(href_match.group(1)).path
+        if not href or href.startswith("//"):
+            continue
+        css_path = SITE / href.lstrip("/") if href.startswith("/") else page_dir / href
+        if css_path.is_file():
+            styles.append(css_path.read_text(encoding="utf-8", errors="replace"))
     if not styles:
-        return PASS, ""  # no inline CSS -> can't make claims
+        return PASS, ""  # no page-owned CSS -> can't make claims
     style_text = "\n".join(styles)
     # Strip CSS comments to avoid false positives.
     style_text = re.sub(r"/\*.*?\*/", " ", style_text, flags=re.S)

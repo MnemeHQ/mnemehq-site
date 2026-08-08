@@ -135,7 +135,8 @@
     .logo { display: flex; align-items: center; text-decoration: none; }
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--accent); }
     .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
@@ -255,6 +256,7 @@
     border-bottom: 1px solid var(--border);
   }
   .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
   .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
 }
   
@@ -294,6 +296,23 @@
     .faq-body { padding-top: 0.85rem; font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
     .faq-body a { color: var(--accent); text-decoration: none; }
     .faq-body a:hover { color: var(--accent-dim); }
+  
+    /* ── ported: the distinct-layer framing ── */
+    .layer-section { max-width: 900px; margin: 4rem auto 0; padding: 0 1.5rem; }
+    .layer-title { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(1.6rem, 3vw, 2.15rem); font-weight: 400; line-height: 1.22; letter-spacing: -0.02em; color: var(--text); margin: 0.6rem 0 0; }
+    .layer-lede { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin: 1rem 0 2rem; max-width: 660px; }
+    .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
+    .layer-card { background: var(--surface); padding: 1.5rem 1.35rem; }
+    .layer-card h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin: 0.55rem 0 0.6rem; letter-spacing: -0.01em; }
+    .layer-card p { color: var(--muted); font-size: 0.87rem; line-height: 1.65; margin: 0; }
+    .layer-micro { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .layer-card-mneme { background: rgba(200, 240, 96, 0.04); }
+    .layer-card-mneme .layer-micro { color: var(--accent); }
+  
+    /* ported photography */
+    .doc-figure { max-width: 900px; margin: 3rem auto 2.5rem; padding: 0 1.5rem; }
+    .doc-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; }
+    .doc-figure figcaption { margin-top: 0.85rem; color: var(--muted); font-size: 0.85rem; line-height: 1.6; font-style: italic; }
   </style>
 </head>
 <body>
@@ -302,12 +321,12 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <nav>
-  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" height="36" style="display:block;"></a>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
   <div class="nav-links">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
-    <a href="/concepts/">Concepts</a>
+    <a href="/demo/">Demo</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -523,6 +542,35 @@
 
   </div>
 
+
+<figure class="doc-figure">
+  <img src="/assets/images/photo-notes-glass.webp" width="1200" height="868" loading="lazy" decoding="async"
+       alt="Written notes on a glass wall, one picked out in colour, with colleagues talking behind it">
+</figure>
+
+<section class="layer-section" aria-labelledby="layer-title">
+  <div class="section-eyebrow">A distinct layer, not a replacement for everything</div>
+  <h2 id="layer-title" class="layer-title">Context helps agents understand. Auditing tells you how they behaved. Mneme enforces the approved engineering intent they must follow.</h2>
+  <p class="layer-lede">These tools can work together. The distinction is when they act, and whether the approved decision is optional context or an enforceable boundary.</p>
+  <div class="layer-grid">
+    <article class="layer-card">
+      <span class="layer-micro">Understand</span>
+      <h3>Context and memory</h3>
+      <p>Project wikis, RAG, rules files, and memory systems help an agent retrieve relevant knowledge. The model may still choose not to follow it.</p>
+    </article>
+    <article class="layer-card">
+      <span class="layer-micro">Observe</span>
+      <h3>Auditing and review</h3>
+      <p>Agent auditing, observability, linters, and code review show what happened or evaluate output after it exists.</p>
+    </article>
+    <article class="layer-card layer-card-mneme">
+      <span class="layer-micro">Enforce</span>
+      <h3>Mneme</h3>
+      <p>Mneme applies the relevant approved intent to the change, produces a guide, warn, or block verdict, and points back to the governing source.</p>
+    </article>
+  </div>
+</section>
+
   <section class="glance-wrap" aria-labelledby="glance-heading" style="margin-top: 4rem;">
     <h2 id="glance-heading" class="glance-eyebrow">At a glance &middot; how Mneme HQ compares</h2>
     <div class="glance-table-scroll">
@@ -685,7 +733,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li><a href="/pilot/" style="color:var(--accent);">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -740,12 +788,14 @@
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
+  var best = null, bestLen = 0;
   document.querySelectorAll('.nav-links a').forEach(function(a){
     var href = a.getAttribute('href');
-    if (href && href.startsWith('/') && href !== '/' && path.startsWith(href)) {
-      a.classList.add('active');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
     }
   });
+  if (best) best.classList.add('active');
 })();
 </script>
 <script>
