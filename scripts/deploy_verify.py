@@ -26,7 +26,19 @@ _RAW_EMAIL = re.compile(rb'[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}')
 # Scope the normalization to the exact boundary so whitespace in page content,
 # scripts, <pre>, and <textarea> remains significant to freshness checks.
 _LITESPEED_GTM_GAP = re.compile(
-    rb'(<!-- End Google Tag Manager -->)[ \t]*\r?\n(?:[ \t]*\r?\n)+',
+    rb'(<!-- End Google Tag Manager -->)[ \t]*\n(?:[ \t]*\n)+',
+    re.I,
+)
+# Some templates receive the same blank-only insertion at the end of <head>
+# instead. Whitespace directly before the closing tag is not page content.
+_LITESPEED_HEAD_END_GAP = re.compile(
+    rb'\n(?:[ \t]*\n)+(?=[ \t]*</head>)',
+    re.I,
+)
+# Video-enabled templates can receive the insertion immediately before their
+# shared stylesheet. Keep this exact so whitespace elsewhere remains strict.
+_LITESPEED_VIDEO_CSS_GAP = re.compile(
+    rb'\n(?:[ \t]*\n)+(?=[ \t]*<link rel="stylesheet" href="/assets/css/video\.css">)',
     re.I,
 )
 
@@ -48,8 +60,13 @@ def norm(b: bytes) -> bytes:
     Cloudflare's serve-time email rewriting) registering as changes.
     """
     b = _neutralize_email_obfuscation(b)
+    # Canonicalize first so mixed CR + CRLF sequences produced by legacy
+    # templates are visible to the boundary-specific gap rules below.
+    b = b.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
     b = _LITESPEED_GTM_GAP.sub(rb'\1\n', b)
-    return b"\n".join(line.rstrip() for line in b.replace(b"\r\n", b"\n").split(b"\n")).strip()
+    b = _LITESPEED_HEAD_END_GAP.sub(b'\n', b)
+    b = _LITESPEED_VIDEO_CSS_GAP.sub(b'\n', b)
+    return b"\n".join(line.rstrip() for line in b.split(b"\n")).strip()
 
 
 def content_needle(local_bytes: bytes) -> bytes:
