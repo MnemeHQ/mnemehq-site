@@ -157,6 +157,15 @@ core ADR record. The step-by-step registration procedure lives in
 7. A `TechArticle`/`Article` JSON-LD entry with matching `url` and non-empty `headline`.
 8. A `CollectionPage` `hasPart` entry in the archive (or homepage) hub.
 
+The same workflow runs `scripts/sync_insights_catalog.py --check` so every archive card's derived
+`data-published` value and static `<time datetime>` element stay synchronized with its article's
+canonical `article:published_time` metadata. Run the script without `--check` after adding or
+updating an archive card.
+
+When archive membership, card copy, schema, or catalogue UI changes materially, update the
+`CollectionPage.dateModified` value and the `/insights/all/` sitemap `<lastmod>` to the same truthful
+ISO date. Do not auto-bump either value during a routine or no-op catalogue date sync.
+
 **[OP]** Required `<head>` scaffolding for every article (not all fully machine-checked): canonical
 meta tags (`<title>` ending ` — Mneme HQ`, a 150-160 char `description`, `robots`, `canonical`,
 `author`), `og:type=article` with the `article:*` properties (`published_time`, `author` -> the
@@ -360,6 +369,7 @@ blocks the PR. All are standard-library-only Python.
 | `scripts/check_nav_footer.py` | `nav-footer-check.yml` | shared nav/footer consistency |
 | `scripts/check_sticky_nav.py` | `sticky-nav-check.yml` | mobile sticky/hamburger nav |
 | `scripts/check_insights.py` | `check-insights.yml` | insight registration (sitemap, cards, OG, breadcrumb, schema, hub) |
+| `scripts/sync_insights_catalog.py --check` | `check-insights.yml` | archive-card sortable and static publication dates match canonical article metadata |
 | `scripts/check_compare.py` | `check-compare.yml` | `/compare/` hub invariants |
 | `scripts/check_concepts_schema.py` | `check-concepts-schema.yml` | `/concepts/` schema graph |
 | `scripts/check_for.py` | `check-for.yml` | `/for/` persona-cohort schema |

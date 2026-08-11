@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All Insights &mdash; AI Coding Governance &amp; Architecture &mdash; Mneme HQ</title>
+  <title>All Insights — AI Coding Governance &amp; Architecture — Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
@@ -47,6 +47,7 @@
         "name": "All Insights — Mneme HQ",
         "description": "The complete archive of Mneme HQ insights on architectural governance, AI coding drift, and constraint enforcement in LLM-assisted development.",
         "url": "https://mnemehq.com/insights/all/",
+        "dateModified": "2026-08-11",
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
           {"@type": "Article", "name": "When AI Agents Degrade, Architectural Intent Should Not", "url": "https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/"},
@@ -176,10 +177,10 @@
           {"@type": "Article", "name": "The Verification Tax of AI Coding Agents: Why Faster Code Creates More Review Work", "url": "https://mnemehq.com/insights/ai-coding-agent-verification-tax/"},
           {"@type": "Article", "name": "Stanford AI Index 2026: AI Coding Is Becoming Solved. Engineering Governance Has Not.", "url": "https://mnemehq.com/insights/stanford-ai-index-2026-engineering-governance/"},
           {"@type": "Article", "name": "How to Enforce Engineering Standards Across AI-Assisted Teams", "url": "https://mnemehq.com/insights/enforce-engineering-standards-across-ai-assisted-teams/"},
-          {"@type": "Article", "name": "The Strongest AI Engineering Teams Won&rsquo;t Be Built From Bigger Agents", "url": "https://mnemehq.com/insights/agent-formation-engineering-performance-metrics/"},
+          {"@type": "Article", "name": "The Strongest AI Engineering Teams Won't Be Built From Bigger Agents", "url": "https://mnemehq.com/insights/agent-formation-engineering-performance-metrics/"},
           {"@type": "Article", "name": "Agentic Resource Discovery: Why Agent Discovery Still Needs Governance", "url": "https://mnemehq.com/insights/agentic-resource-discovery-agent-governance/"},
           {"@type": "Article", "name": "Builderbot Proves the Next AI Engineering Layer Is Coordination, Not Coding", "url": "https://mnemehq.com/insights/block-builderbot-coordination-governance/"},
-          {"@type": "Article", "name": "You Can&rsquo;t Govern What You Can&rsquo;t See: The Visibility Gap in Agentic Engineering", "url": "https://mnemehq.com/insights/agentic-workforce-visibility-crisis/"},
+          {"@type": "Article", "name": "You Can't Govern What You Can't See: The Visibility Gap in Agentic Engineering", "url": "https://mnemehq.com/insights/agentic-workforce-visibility-crisis/"},
           {"@type": "Article", "name": "Anthropic's When AI Builds Itself: Recursive Self-Improvement Makes Engineering Governance Inevitable", "url": "https://mnemehq.com/insights/anthropic-recursive-self-improvement-engineering-governance/"},
           {"@type": "Article", "name": "Morph Reflexes Watches How AI Agents Behave. Who Governs What They Build?", "url": "https://mnemehq.com/insights/morph-reflexes-agent-observability-engineering-governance/"},
           {"@type": "Article", "name": "NVIDIA NeMo Agent Toolkit Optimizes AI Agent Workflows. Who Governs the Code They Produce?", "url": "https://mnemehq.com/insights/nvidia-nemo-agent-toolkit-engineering-governance/"},
@@ -239,7 +240,7 @@
 
     .cards-section { margin-bottom: 3.5rem; }
     .section-divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
-    .section-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
     .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
     footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
@@ -411,6 +412,109 @@
       .section-nav-inner { padding: 0.7rem 1.25rem; gap: 1.25rem; }
       .cards-section { scroll-margin-top: 124px; }
     }
+
+    /* Enhanced archive catalogue. The original grouped card markup remains as
+       a complete no-JavaScript and crawler-readable fallback. */
+    .catalog-shell { display: none; max-width: 1040px; margin: 0 auto; padding: 0 2rem 6rem; scroll-margin-top: 92px; }
+    .catalog-ready .catalog-shell { display: block; }
+    .catalog-ready .section-nav,
+    .catalog-ready .cards-wrap { display: none; }
+    .catalog-ready .hero { padding: 3.5rem 2rem 2.5rem; }
+    .catalog-ready .hero h1 { margin-bottom: 0.85rem; }
+    .catalog-ready .hero-sub { max-width: 610px; }
+
+    .catalog-intro { display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 1.4rem; }
+    .catalog-intro h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin-bottom: 0.3rem; }
+    .catalog-intro p { color: var(--muted); font-size: 0.86rem; }
+    .catalog-count { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+
+    .catalog-controls { display: grid; grid-template-columns: minmax(260px, 2fr) repeat(3, minmax(145px, 1fr)); gap: 0.75rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+    .catalog-control { display: flex; flex-direction: column; gap: 0.38rem; min-width: 0; }
+    .catalog-control > span { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.09em; text-transform: uppercase; }
+    .catalog-control input,
+    .catalog-control select { width: 100%; min-height: 44px; border: 1px solid var(--border2); border-radius: 7px; background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.84rem; padding: 0.68rem 0.78rem; }
+    .catalog-control input::placeholder { color: #777785; }
+    .catalog-control input:hover,
+    .catalog-control select:hover { border-color: #44444d; }
+    .catalog-control input:focus-visible,
+    .catalog-control select:focus-visible { border-color: var(--accent); outline: 2px solid rgba(200,240,96,0.2); outline-offset: 1px; }
+
+    .catalog-status-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.4rem; padding: 0.85rem 0; }
+    .catalog-status { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
+    .catalog-status:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .catalog-status-actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; }
+    .catalog-clear { border: 0; background: transparent; color: var(--teal); cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.7rem; padding: 0.45rem 0; text-decoration: underline; text-underline-offset: 3px; }
+    .catalog-clear:hover { color: var(--text); }
+    .catalog-clear:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    .catalog-results { border-top: 1px solid var(--border); }
+    .catalog-results .insight-card-link { display: block; margin: 0 -1rem; border-radius: 10px; }
+    .catalog-results .insight-card-link[hidden] { display: none; }
+    .catalog-results .insight-card { position: relative; min-height: 0; padding: 1.35rem 4rem 1.35rem 1rem; gap: 0.42rem; border: 0; border-bottom: 1px solid var(--border); border-radius: 0; background: transparent; }
+    .catalog-results .insight-card::after { content: '\2192'; position: absolute; top: 50%; right: 1.15rem; color: var(--muted); font-size: 1.2rem; transform: translateY(-50%); transition: color 0.15s, transform 0.15s; }
+    .catalog-results .insight-card-link:hover .insight-card { border-color: var(--border2); background: var(--surface); transform: none; }
+    .catalog-results .insight-card-link:hover .insight-card::after { color: var(--accent); transform: translate(3px, -50%); }
+    .catalog-results .insight-card-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .catalog-results .insight-card h3 { max-width: 820px; font-size: 1.05rem; line-height: 1.35; }
+    .catalog-results .insight-card p { display: -webkit-box; max-width: 820px; overflow: hidden; color: var(--muted); font-size: 0.8rem; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .catalog-results .card-meta { flex-wrap: wrap; gap: 0.42rem; }
+    .catalog-results .card-meta > span,
+    .catalog-results .card-meta > time { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.045em; }
+    .catalog-results .card-topic { color: var(--teal); text-transform: uppercase; }
+    .catalog-results .card-tag { color: var(--muted); }
+    .catalog-results .card-date { color: var(--muted); }
+    .catalog-results .card-footer { display: none; }
+
+    .catalog-empty { padding: 4rem 1.5rem; border: 1px dashed var(--border2); border-radius: 12px; text-align: center; }
+    .catalog-empty h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; margin-bottom: 0.5rem; }
+    .catalog-empty p { color: var(--muted); font-size: 0.84rem; }
+
+    .catalog-pagination { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 2rem; }
+    .catalog-pagination[hidden] { display: none; }
+    .catalog-page-numbers { display: flex; align-items: center; justify-content: center; gap: 0.35rem; }
+    .catalog-page-number,
+    .catalog-page-step { min-width: 44px; min-height: 44px; border: 1px solid var(--border2); border-radius: 7px; background: transparent; color: var(--muted); cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 0.55rem 0.75rem; }
+    .catalog-page-step { min-width: 96px; }
+    .catalog-page-number:hover:not(:disabled),
+    .catalog-page-step:hover:not(:disabled) { border-color: var(--accent); color: var(--text); }
+    .catalog-page-number:focus-visible,
+    .catalog-page-step:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .catalog-page-number[aria-current="page"] { border-color: var(--accent); background: rgba(200,240,96,0.08); color: var(--accent); }
+    .catalog-page-number:disabled,
+    .catalog-page-step:disabled { cursor: not-allowed; opacity: 0.35; }
+    .catalog-page-ellipsis { min-width: 24px; color: var(--muted); text-align: center; }
+    .catalog-pagination--compact { justify-content: flex-end; gap: 0.35rem; margin-top: 0; }
+    .catalog-pagination--compact .catalog-page-step { min-width: 36px; min-height: 36px; padding: 0.35rem; }
+    .catalog-page-summary { min-width: 72px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.64rem; text-align: center; white-space: nowrap; }
+
+    @media (max-width: 800px) {
+      .catalog-controls { grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(0, 1fr)); }
+      .catalog-control--search { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 640px) {
+      .catalog-ready .hero { padding: 2.4rem 1.25rem 1.8rem; }
+      .catalog-ready .hero h1 { font-size: 2.35rem; }
+      .catalog-ready .hero-sub { font-size: 0.88rem; }
+      .catalog-shell { padding: 0 1.25rem 4rem; scroll-margin-top: 76px; }
+      .catalog-intro { align-items: start; flex-direction: column; gap: 0.45rem; margin-bottom: 1rem; }
+      .catalog-intro h2 { font-size: 1.08rem; }
+      .catalog-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 0.85rem; }
+      .catalog-control--search,
+      .catalog-control--sort { grid-column: 1 / -1; }
+      .catalog-status-row { align-items: stretch; flex-direction: column; gap: 0.35rem; }
+      .catalog-status-actions { justify-content: space-between; width: 100%; }
+      .catalog-pagination--compact { margin-left: auto; }
+      .catalog-results .insight-card-link { margin: 0 -0.65rem; }
+      .catalog-results .insight-card { padding: 1.2rem 2.65rem 1.2rem 0.65rem; }
+      .catalog-results .insight-card::after { right: 0.75rem; }
+      .catalog-results .insight-card h3 { font-size: 1rem; }
+      .catalog-results .card-meta > span,
+      .catalog-results .card-meta > time { font-size: 0.59rem; }
+      .catalog-pagination { gap: 0.4rem; }
+      .catalog-page-step { min-width: 44px; padding: 0.5rem; }
+      .pagination-label { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -432,7 +536,7 @@
   </div>
 </nav>
 
-<div class="section-nav" aria-label="Insights sections">
+<nav class="section-nav" aria-label="Insight collections">
   <div class="section-nav-inner">
     <a href="#ai-native">Intent</a>
     <a href="#governance-problem">Governance</a>
@@ -440,7 +544,7 @@
     <a href="#mneme-in-practice">Mneme</a>
     <a href="#reference">Reference</a>
   </div>
-</div>
+</nav>
 
 <main>
 <div class="answer-capsule">
@@ -450,8 +554,66 @@
 <div class="hero">
   <div class="section-eyebrow"><a href="/insights/" style="color:inherit;text-decoration:none;">Insights</a> / All</div>
   <h1>All insights</h1>
-  <p class="hero-sub">The complete archive. Every Mneme HQ essay, report response, and category note on architectural governance for AI-assisted software development. For a curated entry point, start at the <a href="/insights/" style="color:var(--teal);">Insights homepage</a>.</p>
+  <p class="hero-sub">Search and browse every Mneme HQ essay, report response, and implementation note. For a curated entry point, start at the <a href="/insights/" style="color:var(--teal);">Insights homepage</a>.</p>
 </div>
+
+<section class="catalog-shell" aria-labelledby="catalog-heading">
+  <div class="catalog-intro">
+    <div>
+      <h2 id="catalog-heading">Browse the complete archive</h2>
+      <p>Find an article by subject, collection, or format.</p>
+    </div>
+    <p class="catalog-count">137 articles</p>
+  </div>
+
+  <form class="catalog-controls" id="catalog-controls" role="search" aria-label="Filter insights">
+    <label class="catalog-control catalog-control--search">
+      <span>Search</span>
+      <input id="catalog-search" type="search" placeholder="Search titles and summaries" autocomplete="off" spellcheck="false">
+    </label>
+    <label class="catalog-control">
+      <span>Collection</span>
+      <select id="catalog-collection">
+        <option value="all">All collections</option>
+        <option value="ai-native">Architectural intent</option>
+        <option value="governance-problem">Governance</option>
+        <option value="market-context">Industry &amp; market</option>
+        <option value="mneme-in-practice">Mneme in practice</option>
+        <option value="reference">Reference</option>
+        <option value="latest-analysis">Latest analysis</option>
+      </select>
+    </label>
+    <label class="catalog-control">
+      <span>Content type</span>
+      <select id="catalog-type">
+        <option value="all">All types</option>
+      </select>
+    </label>
+    <label class="catalog-control catalog-control--sort">
+      <span>Sort</span>
+      <select id="catalog-sort">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="title">Title A–Z</option>
+      </select>
+    </label>
+  </form>
+
+  <div class="catalog-status-row">
+    <p class="catalog-status" id="catalog-status" role="status" aria-live="polite" tabindex="-1">Preparing the archive…</p>
+    <div class="catalog-status-actions">
+      <button class="catalog-clear" id="catalog-clear" type="button" hidden>Clear filters</button>
+      <nav class="catalog-pagination catalog-pagination--compact" id="catalog-pagination-top" aria-label="Insights catalogue pages, top" hidden></nav>
+    </div>
+  </div>
+
+  <div class="catalog-results" id="catalog-results"></div>
+  <div class="catalog-empty" id="catalog-empty" hidden>
+    <h3>No matching insights</h3>
+    <p>Try a broader search or clear one of the filters.</p>
+  </div>
+  <nav class="catalog-pagination" id="catalog-pagination" aria-label="Insights catalogue pages, bottom"></nav>
+</section>
 
 <div class="cards-wrap">
   <h2 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin: 0 auto 1rem; max-width: 660px;">Research, analysis, and implementation notes on architectural governance for AI-assisted software development.</h2>
@@ -459,166 +621,168 @@
 
   <!-- Section: AI-native engineering & intent governance -->
   <div class="cards-section" id="ai-native">
-    <div class="section-divider"><span class="section-label">AI-native engineering &amp; intent governance</span></div>
+    <div class="section-divider"><h2 class="section-label">AI-native engineering &amp; intent governance</h2></div>
     <div class="cards-grid">
 
-      <a href="/insights/when-ai-agents-degrade-architectural-intent-should-not/" class="insight-card-link">
+      <a href="/insights/when-ai-agents-degrade-architectural-intent-should-not/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>When AI Agents Degrade, Architectural Intent Should Not</h3>
           <p>Model downgrades, truncated context, dropped tools, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/bcg-four-pillars-agentic-ai-need-architectural-intent/" class="insight-card-link">
+      <a href="/insights/bcg-four-pillars-agentic-ai-need-architectural-intent/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Report response</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Report response</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>BCG's Four Pillars for Scaling Agentic AI Need a Fifth: Architectural Intent</h3>
           <p>BCG's 2026 report names agent sprawl and guardrails-as-code at machine speed. The gap it leaves open is architectural intent, enforced before code is written.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/using-ibm-bob-with-architectural-guardrails/" class="insight-card-link">
+      <a href="/insights/using-ibm-bob-with-architectural-guardrails/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Integration</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Integration</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Using IBM Bob with Architectural Guardrails</h3>
           <p>IBM Bob accelerates enterprise delivery with agentic planning, subagents, and MCP. Architectural guardrails keep that speed inside your architecture.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-agent-orchestration-is-not-governance/" class="insight-card-link">
+      <a href="/insights/ai-agent-orchestration-is-not-governance/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>AI Agent Orchestration Is Not Software Engineering Governance</h3>
           <p>Orchestration decides what runs next. Governance decides what must remain true. A perfectly orchestrated workflow can still violate an ADR.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/sovereign-ai-needs-sovereign-engineering/" class="insight-card-link">
+      <a href="/insights/sovereign-ai-needs-sovereign-engineering/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Sovereign AI Needs Sovereign Engineering</h3>
           <p>Sovereign AI is about where models run. The next problem is how AI builds software. Architectural intent keeps engineering consistent across every model and region.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-makes-software-more-ambitious/" class="insight-card-link">
+      <a href="/insights/ai-makes-software-more-ambitious/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Perspective</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Perspective</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>AI Won't Just Write More Software. It Will Make Software More Ambitious.</h3>
           <p>AI shifts the economic boundary of what teams can attempt. As implementation stops being the limiting cost, keeping hundreds of agent-made changes coherent becomes the hard problem.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/verification-starts-before-generation/" class="insight-card-link">
+      <a href="/insights/verification-starts-before-generation/" class="insight-card-link" data-published="2026-07-27">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-27">Jul 27, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Verification Starts Before Generation</h3>
           <p>Moving verification earlier is not just faster review. The earliest point is before generation, when architectural context becomes executable constraints.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/how-to-maintain-architectural-intent-with-ai-coding-agents/" class="insight-card-link">
+      <a href="/insights/how-to-maintain-architectural-intent-with-ai-coding-agents/" class="insight-card-link" data-published="2026-07-08">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Guide</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Guide</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-08">Jul 8, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>How to Maintain Architectural Intent with AI Coding Agents</h3>
           <p>A practical loop for agent-first teams: record decisions as constraints, retrieve them at generation, check changes before the pull request, and review violations instead of diffs.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-agent-guardrails/" class="insight-card-link">
+      <a href="/insights/ai-coding-agent-guardrails/" class="insight-card-link" data-published="2026-07-06">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Reference</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Reference</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-06">Jul 6, 2026</time><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
           <h3>AI Coding-Agent Guardrails: A Field Guide to What Actually Holds</h3>
           <p>A reference taxonomy of AI coding-agent guardrails: runtime, prompt, policy, architectural, and engineering-standards. What each layer catches, what it misses, and why architecture needs enforcement at edit time.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/smart-routing-ai-coding-agents/" class="insight-card-link">
+      <a href="/insights/smart-routing-ai-coding-agents/" class="insight-card-link" data-published="2026-07-06">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-06">Jul 6, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Smart Routing for AI Coding Agents: What Happens After You&rsquo;ve Chosen the Right Model?</h3>
           <p>Smart routing decides which model handles a request. It optimizes execution, not architecture &mdash; every correctly routed agent can still bypass your ADRs. Here is the layer routing leaves out.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/how-ai-coding-agents-use-adrs/" class="insight-card-link">
+      <a href="/insights/how-ai-coding-agents-use-adrs/" class="insight-card-link" data-published="2026-07-06">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Guide</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Guide</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-06">Jul 6, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>How AI Coding Agents Use ADRs (Architecture Decision Records)</h3>
           <p>An ADR records one architectural decision, its context, and its consequences. Here is how AI coding agents actually interact with ADRs today &mdash; ignored, advisory, or enforced &mdash; and how to make them executable.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/loop-engineering-ai-coding-agents/" class="insight-card-link">
+      <a href="/insights/loop-engineering-ai-coding-agents/" class="insight-card-link" data-published="2026-07-04">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-04">Jul 4, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Loop Engineering for AI Coding Agents: Benefits and Limitations</h3>
           <p>Loops make coding agents persistent and self-correcting. They do not make them architecturally consistent: an agent can iterate twenty times and still violate the ADR it never questioned.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-agent-architecture/" class="insight-card-link">
+      <a href="/insights/ai-coding-agent-architecture/" class="insight-card-link" data-published="2026-07-06">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-06">Jul 6, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>AI Coding-Agent Architecture: The Layers Between a Model and Production</h3>
           <p>A coding agent is not a model. It is a stack: the model, the harness, the governance layer, and the intent it enforces. Here is what each layer does, and which one most tools leave out.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/github-spec-kit-who-enforces-architecture/" class="insight-card-link">
+      <a href="/insights/github-spec-kit-who-enforces-architecture/" class="insight-card-link" data-published="2026-07-03">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-03">Jul 3, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>GitHub Spec Kit Defines the Plan. Who Enforces the Architecture?</h3>
           <p>GitHub Spec Kit gives AI-assisted development a real spine. But its constitution is a document the agent is asked to honor &mdash; structuring intent and independently enforcing it are two different jobs.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/enterprise-ai-guardrails-five-layers/" class="insight-card-link">
+      <a href="/insights/enterprise-ai-guardrails-five-layers/" class="insight-card-link" data-published="2026-07-06">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-07-06">Jul 6, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Not All AI Guardrails Are the Same: The Five Layers of Enterprise AI</h3>
           <p>AI guardrails is an umbrella term. IBM maps four layers &mdash; data, model, application, infrastructure. AI-assisted software delivery needs a fifth: architectural guardrails.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/google-spec-driven-development-not-enough/" class="insight-card-link">
+      <a href="/insights/google-spec-driven-development-not-enough/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Report Response</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Report Response</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-30">Jun 30, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Spec-Driven Development Is Not Enough: Why AI Coding Needs Engineering Governance</h3>
           <p>Google&rsquo;s spec-driven development paper gets the diagnosis right: code is disposable, the spec is the asset. Its answer to trust leans on AI reviewing AI. Architectural compliance should be deterministic.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agentic-ai-governance-closer-to-execution/" class="insight-card-link">
+      <a href="/insights/agentic-ai-governance-closer-to-execution/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Report Response</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Report Response</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-30">Jun 30, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>As AI Agents Gain Autonomy, Governance Moves Closer to Execution</h3>
           <p>The Bank of England is rethinking oversight for autonomous agents. Different domain, same principle: once systems act at machine speed, governance has to move in front of execution, not behind it.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/future-of-software-engineering-after-vibe-coding/" class="insight-card-link">
+      <a href="/insights/future-of-software-engineering-after-vibe-coding/" class="insight-card-link" data-published="2026-06-01">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-01">Jun 1, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
@@ -630,10 +794,12 @@
         </div>
       </a>
 
-      <a href="/insights/spec-driven-development-still-needs-governance/" class="insight-card-link">
+      <a href="/insights/spec-driven-development-still-needs-governance/" class="insight-card-link" data-published="2026-05-31">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-31">May 31, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -645,10 +811,12 @@
         </div>
       </a>
 
-      <a href="/insights/ai-native-engineering-intent-debt/" class="insight-card-link">
+      <a href="/insights/ai-native-engineering-intent-debt/" class="insight-card-link" data-published="2026-05-17">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-17">May 17, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -660,10 +828,12 @@
         </div>
       </a>
 
-      <a href="/insights/review-is-not-governance/" class="insight-card-link">
+      <a href="/insights/review-is-not-governance/" class="insight-card-link" data-published="2026-05-07">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-07">May 7, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">3 min read</span>
           </div>
@@ -675,10 +845,12 @@
         </div>
       </a>
 
-      <a href="/insights/memory-is-not-governance/" class="insight-card-link">
+      <a href="/insights/memory-is-not-governance/" class="insight-card-link" data-published="2026-05-13">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-13">May 13, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -690,10 +862,12 @@
         </div>
       </a>
 
-      <a href="/insights/prompt-engineering-is-not-governance/" class="insight-card-link">
+      <a href="/insights/prompt-engineering-is-not-governance/" class="insight-card-link" data-published="2026-05-05">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-05">May 5, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">6 min read</span>
           </div>
@@ -710,13 +884,15 @@
 
   <!-- Section: The governance problem -->
   <div class="cards-section" id="governance-problem">
-    <div class="section-divider"><span class="section-label">The governance problem</span></div>
+    <div class="section-divider"><h2 class="section-label">The governance problem</h2></div>
     <div class="cards-grid">
 
-      <a href="/insights/agentic-workforce-visibility-crisis/" class="insight-card-link">
+      <a href="/insights/agentic-workforce-visibility-crisis/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -729,10 +905,12 @@
       </a>
 
 
-      <a href="/insights/enforce-engineering-standards-across-ai-assisted-teams/" class="insight-card-link">
+      <a href="/insights/enforce-engineering-standards-across-ai-assisted-teams/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Technical Deep Dive</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -745,10 +923,12 @@
       </a>
 
 
-      <a href="/insights/governance-perimeter-is-moving-to-the-endpoint/" class="insight-card-link">
+      <a href="/insights/governance-perimeter-is-moving-to-the-endpoint/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Infrastructure</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
@@ -760,10 +940,12 @@
         </div>
       </a>
 
-      <a href="/insights/html-is-not-the-point-structure-is/" class="insight-card-link">
+      <a href="/insights/html-is-not-the-point-structure-is/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
@@ -775,10 +957,12 @@
         </div>
       </a>
 
-      <a href="/insights/runtime-verification-is-not-architectural-verification/" class="insight-card-link">
+      <a href="/insights/runtime-verification-is-not-architectural-verification/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Infrastructure</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">13 min read</span>
           </div>
@@ -790,10 +974,12 @@
         </div>
       </a>
 
-      <a href="/insights/ai-roi-problem-is-about-systems-not-models/" class="insight-card-link">
+      <a href="/insights/ai-roi-problem-is-about-systems-not-models/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Economics</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">14 min read</span>
           </div>
@@ -805,10 +991,12 @@
         </div>
       </a>
 
-      <a href="/insights/anthropic-research-system-coordination-infrastructure/" class="insight-card-link">
+      <a href="/insights/anthropic-research-system-coordination-infrastructure/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">14 min read</span>
           </div>
@@ -820,10 +1008,12 @@
         </div>
       </a>
 
-      <a href="/insights/pr-review-is-becoming-incident-response/" class="insight-card-link">
+      <a href="/insights/pr-review-is-becoming-incident-response/" class="insight-card-link" data-published="2026-05-26">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Operations</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-26">May 26, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
@@ -835,10 +1025,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/" class="insight-card-link">
+      <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/" class="insight-card-link" data-published="2026-05-20">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-20">May 20, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
@@ -850,10 +1042,12 @@
         </div>
       </a>
 
-      <a href="/insights/agent-skills-vs-architectural-governance/" class="insight-card-link">
+      <a href="/insights/agent-skills-vs-architectural-governance/" class="insight-card-link" data-published="2026-05-20">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Comparison</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-20">May 20, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -865,10 +1059,12 @@
         </div>
       </a>
 
-      <a href="/insights/goal-driven-agents-architectural-governance/" class="insight-card-link">
+      <a href="/insights/goal-driven-agents-architectural-governance/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Agentic Development</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -880,10 +1076,12 @@
         </div>
       </a>
 
-      <a href="/insights/llm-wiki-library-not-law/" class="insight-card-link">
+      <a href="/insights/llm-wiki-library-not-law/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Distinction</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -895,10 +1093,12 @@
         </div>
       </a>
 
-      <a href="/insights/ai-is-becoming-the-operating-layer-for-software-execution/" class="insight-card-link">
+      <a href="/insights/ai-is-becoming-the-operating-layer-for-software-execution/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Worldview</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
@@ -910,10 +1110,12 @@
         </div>
       </a>
 
-      <a href="/insights/models-are-temporary-architectural-intent-is-not/" class="insight-card-link">
+      <a href="/insights/models-are-temporary-architectural-intent-is-not/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Worldview</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -925,10 +1127,12 @@
         </div>
       </a>
 
-      <a href="/insights/emerging-ai-agent-infrastructure-stack/" class="insight-card-link">
+      <a href="/insights/emerging-ai-agent-infrastructure-stack/" class="insight-card-link" data-published="2026-05-20">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Map</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-20">May 20, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -940,10 +1144,12 @@
         </div>
       </a>
 
-      <a href="/insights/harness-engineering-still-needs-governance/" class="insight-card-link">
+      <a href="/insights/harness-engineering-still-needs-governance/" class="insight-card-link" data-published="2026-05-16">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-16">May 16, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
@@ -955,10 +1161,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-claude-md-stops-scaling/" class="insight-card-link">
+      <a href="/insights/why-claude-md-stops-scaling/" class="insight-card-link" data-published="2026-05-14">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-14">May 14, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -970,10 +1178,12 @@
         </div>
       </a>
 
-      <a href="/insights/datadog-state-of-ai-engineering-governance-crisis/" class="insight-card-link">
+      <a href="/insights/datadog-state-of-ai-engineering-governance-crisis/" class="insight-card-link" data-published="2026-05-14">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-14">May 14, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -985,10 +1195,12 @@
         </div>
       </a>
 
-      <a href="/insights/openclaw-and-the-limits-of-autonomous-coding/" class="insight-card-link">
+      <a href="/insights/openclaw-and-the-limits-of-autonomous-coding/" class="insight-card-link" data-published="2026-05-14">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-14">May 14, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1000,10 +1212,12 @@
         </div>
       </a>
 
-      <a href="/insights/agents-of-chaos-and-the-governance-gap/" class="insight-card-link">
+      <a href="/insights/agents-of-chaos-and-the-governance-gap/" class="insight-card-link" data-published="2026-05-14">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-14">May 14, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1015,10 +1229,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-code-review-cannot-scale-with-ai-output/" class="insight-card-link">
+      <a href="/insights/why-code-review-cannot-scale-with-ai-output/" class="insight-card-link" data-published="2026-05-05">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-05">May 5, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1030,10 +1246,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-prompt-memory-fails-at-scale/" class="insight-card-link">
+      <a href="/insights/why-prompt-memory-fails-at-scale/" class="insight-card-link" data-published="2026-05-08">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-08">May 8, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1045,10 +1263,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-observability-is-not-governance/" class="insight-card-link">
+      <a href="/insights/why-observability-is-not-governance/" class="insight-card-link" data-published="2026-05-15">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-15">May 15, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1060,10 +1280,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-architectural-governance-needs-precedence-semantics/" class="insight-card-link">
+      <a href="/insights/why-architectural-governance-needs-precedence-semantics/" class="insight-card-link" data-published="2026-05-13">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-13">May 13, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
@@ -1075,10 +1297,12 @@
         </div>
       </a>
 
-      <a href="/insights/why-rag-fails-for-architectural-governance/" class="insight-card-link">
+      <a href="/insights/why-rag-fails-for-architectural-governance/" class="insight-card-link" data-published="2026-05-05">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-05">May 5, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1090,10 +1314,12 @@
         </div>
       </a>
 
-      <a href="/insights/long-running-agents-need-governance/" class="insight-card-link">
+      <a href="/insights/long-running-agents-need-governance/" class="insight-card-link" data-published="2026-05-15">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-15">May 15, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1105,10 +1331,12 @@
         </div>
       </a>
 
-      <a href="/insights/autonomous-code-remediation-requires-architectural-governance/" class="insight-card-link">
+      <a href="/insights/autonomous-code-remediation-requires-architectural-governance/" class="insight-card-link" data-published="2026-05-13">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-13">May 13, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1120,10 +1348,12 @@
         </div>
       </a>
 
-      <a href="/insights/agentic-infrastructure-attack-surface/" class="insight-card-link">
+      <a href="/insights/agentic-infrastructure-attack-surface/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -1135,10 +1365,12 @@
         </div>
       </a>
 
-      <a href="/insights/rag-is-not-memory/" class="insight-card-link">
+      <a href="/insights/rag-is-not-memory/" class="insight-card-link" data-published="2026-05-21">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-21">May 21, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1155,13 +1387,15 @@
 
   <!-- Section: Market context -->
   <div class="cards-section" id="market-context">
-    <div class="section-divider"><span class="section-label">Market context</span></div>
+    <div class="section-divider"><h2 class="section-label">Market context</h2></div>
     <div class="cards-grid">
 
-      <a href="/insights/block-builderbot-coordination-governance/" class="insight-card-link">
+      <a href="/insights/block-builderbot-coordination-governance/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1174,10 +1408,12 @@
       </a>
 
 
-      <a href="/insights/agentic-resource-discovery-agent-governance/" class="insight-card-link">
+      <a href="/insights/agentic-resource-discovery-agent-governance/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -1190,10 +1426,12 @@
       </a>
 
 
-      <a href="/insights/agent-formation-engineering-performance-metrics/" class="insight-card-link">
+      <a href="/insights/agent-formation-engineering-performance-metrics/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Research</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
@@ -1206,10 +1444,12 @@
       </a>
 
 
-      <a href="/insights/stanford-ai-index-2026-engineering-governance/" class="insight-card-link">
+      <a href="/insights/stanford-ai-index-2026-engineering-governance/" class="insight-card-link" data-published="2026-06-22">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-22">Jun 22, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1222,46 +1462,48 @@
       </a>
 
 
-      <a href="/insights/mckinsey-agentic-software-delivery-governance/" class="insight-card-link">
+      <a href="/insights/mckinsey-agentic-software-delivery-governance/" class="insight-card-link" data-published="2026-06-01">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-01">Jun 1, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>McKinsey Rewired Software Delivery for the Agentic Era. The Enforcement Layer Isn&rsquo;t in the Org Chart.</h3>
           <p>McKinsey&rsquo;s 2026 report rewires the software-delivery operating model around agents. But an operating model is an org-design artifact, and nothing in it executes at the moment an agent writes code &mdash; the enforcement substrate is a layer the org chart cannot contain.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/zero-trust-for-ai-agents-architectural-governance/" class="insight-card-link">
+      <a href="/insights/zero-trust-for-ai-agents-architectural-governance/" class="insight-card-link" data-published="2026-06-01">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-01">Jun 1, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Anthropic&rsquo;s Zero Trust Stops at the Agent. Architectural Zero Trust Verifies the Diff.</h3>
           <p>Anthropic&rsquo;s Zero Trust for AI Agents secures what an agent is allowed to do. But &ldquo;never trust, always verify&rdquo; doesn&rsquo;t end at the agent&rsquo;s identity &mdash; the diff it produces is the last untrusted packet, and a permission grant is not a conformance guarantee.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/github-ai-agent-validation-trust-layer/" class="insight-card-link">
+      <a href="/insights/github-ai-agent-validation-trust-layer/" class="insight-card-link" data-published="2026-06-01">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-01">Jun 1, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>GitHub&rsquo;s Trust Layer Validates Agent Behavior. It Doesn&rsquo;t Validate Your Architecture.</h3>
           <p>GitHub&rsquo;s Trust Layer grades whether an agent run behaved acceptably despite nondeterminism. But the diff it produced is fixed, and whether that diff still conforms to your ratified decisions is a deterministic verdict the Trust Layer never renders.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/google-cloud-agent-registry-agent-fleet-governance/" class="insight-card-link">
+      <a href="/insights/google-cloud-agent-registry-agent-fleet-governance/" class="insight-card-link" data-published="2026-06-01">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-01">Jun 1, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Google Cloud Agent Registry Governs Which Agents Run, Not Whether Their Output Stays Aligned</h3>
           <p>Google Cloud&rsquo;s Agent Registry catalogs and governs a fleet of agents, tools, and MCP servers. But a registry draws a perimeter around the actor; it says nothing about whether the diff that agent produced still matches the architecture it changed.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/what-is-the-ai-sdlc/" class="insight-card-link">
+      <a href="/insights/what-is-the-ai-sdlc/" class="insight-card-link" data-published="2026-05-12">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-12">May 12, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">5 min read</span>
           </div>
@@ -1273,10 +1515,12 @@
         </div>
       </a>
 
-      <a href="/insights/generative-ai-software-engineering-stack/" class="insight-card-link">
+      <a href="/insights/generative-ai-software-engineering-stack/" class="insight-card-link" data-published="2026-05-10">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-10">May 10, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -1288,10 +1532,12 @@
         </div>
       </a>
 
-      <a href="/insights/openai-compatible-apis-are-commoditizing-models/" class="insight-card-link">
+      <a href="/insights/openai-compatible-apis-are-commoditizing-models/" class="insight-card-link" data-published="2026-05-10">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-10">May 10, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -1303,10 +1549,12 @@
         </div>
       </a>
 
-      <a href="/insights/deployment-quality-will-define-the-ai-era/" class="insight-card-link">
+      <a href="/insights/deployment-quality-will-define-the-ai-era/" class="insight-card-link" data-published="2026-05-08">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-08">May 8, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1318,10 +1566,12 @@
         </div>
       </a>
 
-      <a href="/insights/acceleration-whiplash-governance-gap/" class="insight-card-link">
+      <a href="/insights/acceleration-whiplash-governance-gap/" class="insight-card-link" data-published="2026-05-13">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-13">May 13, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1338,13 +1588,15 @@
 
   <!-- Section: Mneme in practice -->
   <div class="cards-section" id="mneme-in-practice">
-    <div class="section-divider"><span class="section-label">Mneme in practice</span></div>
+    <div class="section-divider"><h2 class="section-label">Mneme in practice</h2></div>
     <div class="cards-grid">
 
-      <a href="/insights/ai-coding-governance-should-be-reviewable/" class="insight-card-link">
+      <a href="/insights/ai-coding-governance-should-be-reviewable/" class="insight-card-link" data-published="2026-05-12">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Architecture</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-12">May 12, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1356,10 +1608,12 @@
         </div>
       </a>
 
-      <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" class="insight-card-link">
+      <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" class="insight-card-link" data-published="2026-05-09">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Category Education</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-09">May 9, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
@@ -1371,10 +1625,12 @@
         </div>
       </a>
 
-      <a href="/insights/mneme-vs-cursor-rules/" class="insight-card-link">
+      <a href="/insights/mneme-vs-cursor-rules/" class="insight-card-link" data-published="2026-05-05">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Comparative</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-05">May 5, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">5 min read</span>
           </div>
@@ -1386,10 +1642,12 @@
         </div>
       </a>
 
-      <a href="/insights/productivity-paradox-perception-vs-measurement/" class="insight-card-link">
+      <a href="/insights/productivity-paradox-perception-vs-measurement/" class="insight-card-link" data-published="2026-05-20">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-20">May 20, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1401,10 +1659,12 @@
         </div>
       </a>
 
-      <a href="/insights/ai-code-review-does-not-scale-linearly/" class="insight-card-link">
+      <a href="/insights/ai-code-review-does-not-scale-linearly/" class="insight-card-link" data-published="2026-05-07">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Thought Leadership</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-07">May 7, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1416,10 +1676,12 @@
         </div>
       </a>
 
-      <a href="/insights/github-copilot-space-framework/" class="insight-card-link">
+      <a href="/insights/github-copilot-space-framework/" class="insight-card-link" data-published="2026-05-12">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Productivity</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-12">May 12, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
@@ -1436,7 +1698,7 @@
 
   <!-- Section: Reference -->
   <div class="cards-section" id="reference">
-    <div class="section-divider"><span class="section-label">Reference</span></div>
+    <div class="section-divider"><h2 class="section-label">Reference</h2></div>
     <div class="cards-grid">
 
       <a href="/standards/" class="insight-card-link">
@@ -1454,10 +1716,12 @@
         </div>
       </a>
 
-      <a href="/insights/rise-of-agentic-engineering-education/" class="insight-card-link">
+      <a href="/insights/rise-of-agentic-engineering-education/" class="insight-card-link" data-published="2026-05-10">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Industry Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-05-10">May 10, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">14 min read</span>
           </div>
@@ -1475,12 +1739,14 @@
 
   <!-- Section: Latest analysis -->
   <div class="cards-section" id="latest-analysis">
-    <h2 class="section-heading" style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin: 0 0 1.25rem;">Latest analysis</h2>
+    <h2 style="font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin: 0 0 1.25rem;">Latest analysis</h2>
     <div class="cards-grid">
-      <a href="/insights/anthropic-recursive-self-improvement-engineering-governance/" class="insight-card-link">
+      <a href="/insights/anthropic-recursive-self-improvement-engineering-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Report Response</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1491,10 +1757,12 @@
           </div>
         </div>
       </a>
-      <a href="/insights/morph-reflexes-agent-observability-engineering-governance/" class="insight-card-link">
+      <a href="/insights/morph-reflexes-agent-observability-engineering-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Launch Response</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1505,10 +1773,12 @@
           </div>
         </div>
       </a>
-      <a href="/insights/nvidia-nemo-agent-toolkit-engineering-governance/" class="insight-card-link">
+      <a href="/insights/nvidia-nemo-agent-toolkit-engineering-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Tooling Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1519,10 +1789,12 @@
           </div>
         </div>
       </a>
-      <a href="/insights/palantir-agentic-governance-engineering-governance/" class="insight-card-link">
+      <a href="/insights/palantir-agentic-governance-engineering-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Report Response</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
@@ -1533,10 +1805,12 @@
           </div>
         </div>
       </a>
-      <a href="/insights/databricks-omnigent-agent-infrastructure-governance/" class="insight-card-link">
+      <a href="/insights/databricks-omnigent-agent-infrastructure-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Launch Response</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
@@ -1547,10 +1821,12 @@
           </div>
         </div>
       </a>
-      <a href="/insights/gartner-ai-governance-engineering-governance/" class="insight-card-link">
+      <a href="/insights/gartner-ai-governance-engineering-governance/" class="insight-card-link" data-published="2026-06-30">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Report Response</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-06-30">Jun 30, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
@@ -1562,531 +1838,531 @@
         </div>
       </a>
 
-      <a href="/insights/ai-race-wont-be-won-on-infrastructure-alone/" class="insight-card-link">
+      <a href="/insights/ai-race-wont-be-won-on-infrastructure-alone/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Why the AI Race Won&rsquo;t Be Won on Infrastructure Alone</h3>
           <p>The 2026 consensus says infrastructure, not algorithms, wins the AI race. Infrastructure decides how much intelligence you can access &mdash; governance decides how much you can safely deploy.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/governance-layers-for-ai-coding-assistants/" class="insight-card-link">
+      <a href="/insights/governance-layers-for-ai-coding-assistants/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Thought Leadership</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Thought Leadership</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Building Governance Layers for AI Coding Assistants</h3>
           <p>AI coding assistants are becoming agents that modify codebases, open PRs, and deploy. The missing enterprise infrastructure is a governance layer: policy, memory, enforcement, and auditability.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/open-knowledge-format-vs-governance/" class="insight-card-link">
+      <a href="/insights/open-knowledge-format-vs-governance/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Open Knowledge Format vs Governance: Why Structured Memory Is Not Enough for AI Agents</h3>
           <p>Google Cloud&rsquo;s Open Knowledge Format standardizes how AI agents find organizational knowledge. But finding a decision is not following it &mdash; discovery is memory, adherence is governance.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/recursive-self-improvement-orchestration-problem/" class="insight-card-link">
+      <a href="/insights/recursive-self-improvement-orchestration-problem/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Thought Leadership</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Thought Leadership</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Recursive Self-Improvement Is Becoming an Orchestration Problem</h3>
           <p>Recursive self-improvement is framed as a model capability, but the fastest feedback loops are in the orchestration layer around the model. That makes it a governance problem, not an intelligence one.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/governance-control-plane-after-agent-frameworks/" class="insight-card-link">
+      <a href="/insights/governance-control-plane-after-agent-frameworks/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>The Next Layer After Agent Frameworks Is a Governance Control Plane</h3>
           <p>Databricks open-sourced Omnigent, a meta-harness that governs many agents with runtime policy. Frameworks coordinate execution and meta-harnesses coordinate agents &mdash; neither enforces architectural intent.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-governance-for-regulated-industries/" class="insight-card-link">
+      <a href="/insights/ai-governance-for-regulated-industries/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>AI Governance for Regulated Industries</h3>
           <p>In regulated industries the cost of architectural drift and uncontrolled agent actions is highest. AI coding agents there need decision provenance, auditability, and validation histories, not just better context.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-agents-life-sciences-governance/" class="insight-card-link">
+      <a href="/insights/ai-coding-agents-life-sciences-governance/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>AI Coding Agents in Life Sciences: Governance Before Autonomy</h3>
           <p>FDA computer software assurance, GxP, and validation demand traceability and documented rationale. In life sciences, AI coding agents need validation histories and governance before autonomy.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-agents-financial-services-audit-trail/" class="insight-card-link">
+      <a href="/insights/ai-coding-agents-financial-services-audit-trail/" class="insight-card-link" data-published="2026-06-17">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Industry Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-17">Jun 17, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>AI Coding Agents in Financial Services: The Audit Trail Problem</h3>
           <p>In banking, insurance, and fintech, architectural drift is a compliance risk. AI coding agents create governance debt unless every change carries an audit trail: who approved it, and why.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/shared-memory-is-not-shared-intent/" class="insight-card-link">
+      <a href="/insights/shared-memory-is-not-shared-intent/" class="insight-card-link" data-published="2026-06-13">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-13">Jun 13, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Shared Memory Is Not Shared Intent: Why AI Coding Teams Need Governance</h3>
           <p>AI coding teams are getting a shared memory layer so every agent reads the same context. That solves distribution, not governance &mdash; and better shared memory can amplify architectural drift.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/loop-engineering-is-not-new/" class="insight-card-link">
+      <a href="/insights/loop-engineering-is-not-new/" class="insight-card-link" data-published="2026-06-13">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-13">Jun 13, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Loop Engineering Is Not New: The History of Loops as the Building Block of Software</h3>
           <p>The AI world talks about loop engineering as a new discipline. Loops have been computing's core abstraction for seventy years &mdash; what's new is a probabilistic generator inside the loop, which shifts the problem to governance.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-productivity-gains-rework/" class="insight-card-link">
+      <a href="/insights/ai-coding-productivity-gains-rework/" class="insight-card-link" data-published="2026-06-13">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-13">Jun 13, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Why AI Coding Productivity Gains Often Lead to More Rework</h3>
           <p>Faros AI's 2026 telemetry shows throughput up 33.7% &mdash; and bugs per developer up 54%, code churn up 861%. Much of that churn is rework correcting AI changes that violated system-level decisions.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/github-copilot-usage-based-billing-review-economics/" class="insight-card-link">
+      <a href="/insights/github-copilot-usage-based-billing-review-economics/" class="insight-card-link" data-published="2026-06-13">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-13">Jun 13, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>GitHub Just Turned AI Code Review Into a Budget Line Item</h3>
           <p>GitHub Copilot moved to usage-based AI Credits on June 1, 2026, and code review now burns Actions minutes per PR. When review is metered, ungoverned output becomes a finance problem &mdash; governance economics.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-coding-agent-verification-tax/" class="insight-card-link">
+      <a href="/insights/ai-coding-agent-verification-tax/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>The Verification Tax of AI Coding Agents: Why Faster Code Creates More Review Work</h3>
           <p>Glean finds workers reclaim 11 hours a week from AI and hand 6.4 back in botsitting. For engineering teams the bill lands as a verification tax &mdash; and the refund is executable architectural constraints, not more review.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-adoption-maturity-model-engineering-analysis/" class="insight-card-link">
+      <a href="/insights/ai-adoption-maturity-model-engineering-analysis/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>AI Adoption Maturity Model: A Technical Analysis for Engineering Leaders</h3>
           <p>CMU SEI and Accenture's new maturity model defines five levels and eight dimensions, with Risk and Governance among them. The question the model leaves open is how governance decisions actually reach coding agents.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/bcg-ai-era-operating-models-governance/" class="insight-card-link">
+      <a href="/insights/bcg-ai-era-operating-models-governance/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>BCG's To Thrive in the AI Era Report: AI Operating Models Create a Governance Problem</h3>
           <p>BCG tells tech leaders to flatten hierarchies and hand outcomes to autonomous teams and agents. The layers being removed were doing governance work &mdash; and the redesign rarely replaces them.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ibm-2026-tech-leader-study-agent-governance/" class="insight-card-link">
+      <a href="/insights/ibm-2026-tech-leader-study-agent-governance/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
           <h3>IBM 2026 Tech Leader Study: 77% Say AI Adoption Is Outpacing Governance</h3>
           <p>IBM surveyed 2,000 CIOs and CTOs: enterprises expect 1,661 agents by 2027, while only 11% feel prepared. IBM's answer is governance by design &mdash; and code generation is on its high-risk list.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/github-agent-pull-requests-review-wrong-layer/" class="insight-card-link">
+      <a href="/insights/github-agent-pull-requests-review-wrong-layer/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Agent Pull Requests Are Everywhere: GitHub's Review Fix Targets the Wrong Layer</h3>
           <p>GitHub finds reviewers feel safer approving agent PRs that carry more technical debt, and prescribes a sharper review checklist. Detection at review time is the wrong layer for a governance failure created at generation time.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/claude-code-skills-organizational-knowledge/" class="insight-card-link">
+      <a href="/insights/claude-code-skills-organizational-knowledge/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Claude Code Skills Validate a Bigger Shift: Organizational Knowledge Is Leaving the Prompt</h3>
           <p>Anthropic's own teams stopped packing knowledge into prompts and moved it into versioned, executable skills. Once knowledge becomes executable, the next question is governance: which skills are approved, and which decisions do they encode?</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/bain-ai-development-lifecycle-governance/" class="insight-card-link">
+      <a href="/insights/bain-ai-development-lifecycle-governance/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Bain's AI Development Lifecycle Report Reveals the Next Challenge: Governance</h3>
           <p>Bain says leaders now expect 5-10x engineering productivity as AI spreads across the whole lifecycle &mdash; and names risk a first-class constraint. The AI-DLC creates governance surfaces traditional delivery never had.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/microsoft-project-solara-post-app-governance/" class="insight-card-link">
+      <a href="/insights/microsoft-project-solara-post-app-governance/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Microsoft Project Solara: If Agents Replace Apps, Where Does Governance Live?</h3>
           <p>At Build 2026 Microsoft unveiled a platform for devices that run agents instead of applications &mdash; not on Windows. For fifty years governance attached to the app. The post-app computer needs governance that follows the agent.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/microsoft-agent-platform-governance-layer/" class="insight-card-link">
+      <a href="/insights/microsoft-agent-platform-governance-layer/" class="insight-card-link" data-published="2026-06-10">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-10">Jun 10, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Microsoft's Agent Platform Reveals the Next AI Infrastructure Layer: Governance</h3>
           <p>Agent HQ's control plane, Build 2026's agent stack, and the Agent Control Specification all name governance as an explicit layer. Platform governance covers access and audit. Architectural governance is the layer no platform ships.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/rule-files-vs-retrieval-memory/" class="insight-card-link">
+      <a href="/insights/rule-files-vs-retrieval-memory/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Rule Files vs Retrieval Memory: Why Static Instructions Stop Scaling</h3>
           <p>Cursor Rules and CLAUDE.md load your conventions into every prompt. That is the right first answer and the wrong long-term one. Token budget, precedence, and scope are the three ceilings &mdash; and retrieval is the way past them.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/beyond-security-by-design-governance-by-design/" class="insight-card-link">
+      <a href="/insights/beyond-security-by-design-governance-by-design/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Beyond Security by Design: The Rise of Governance by Design</h3>
           <p>Software designs security, privacy, and safety in rather than bolting them on. Autonomous agents make governance the next &lsquo;by design&rsquo; discipline &mdash; enforced in the architecture, not reviewed after deployment.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/when-agents-launch-the-database/" class="insight-card-link">
+      <a href="/insights/when-agents-launch-the-database/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>When Agents Launch the Database: Why AI Governance Has to Move Beyond the Repository</h3>
           <p>Most new databases on some platforms are launched by an agent, not a person. When AI provisions infrastructure directly, repository-level governance can no longer see the change.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/microsoft-execution-containers-ai-agent-runtime-governance/" class="insight-card-link">
+      <a href="/insights/microsoft-execution-containers-ai-agent-runtime-governance/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Microsoft Execution Containers Show Why AI Agent Governance Is Moving to the Runtime</h3>
           <p>Microsoft Execution Containers bring OS-enforced isolation to AI agents. Runtime containment is a real layer &mdash; and exactly why architectural governance becomes the layer above it.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agent-governance-in-the-sdlc/" class="insight-card-link">
+      <a href="/insights/agent-governance-in-the-sdlc/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Agent Governance in the SDLC: From a Generation Problem to a Governance Problem</h3>
           <p>Multi-agent orchestration moves delivery past single coding agents. Subagents parallelize execution and inconsistency &mdash; shifting software delivery from a generation problem to a governance problem.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/cloud-agents-need-architectural-governance/" class="insight-card-link">
+      <a href="/insights/cloud-agents-need-architectural-governance/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Cloud Agents Need More Than Durable Execution. They Need Architectural Governance.</h3>
           <p>Cloud agents need durable execution. But durable execution keeps the agent running; it does not keep the architecture coherent. Once agents run unattended, governance is the missing layer.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/latent-space-agent-communication-governance/" class="insight-card-link">
+      <a href="/insights/latent-space-agent-communication-governance/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Latent-Space Agent Communication: What Happens When AI Agents Stop Talking in Natural Language?</h3>
           <p>If agents stop coordinating in natural language, we lose the surface we inspect and audit them through. Governance has to attach to the change agents make, not the conversation.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/runtime-harnesses-for-ai-agents/" class="insight-card-link">
+      <a href="/insights/runtime-harnesses-for-ai-agents/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Runtime Harnesses for AI Agents: Why Better Models Are Not Enough</h3>
           <p>Agent reliability lives in the harness around the model, not the model alone. For software agents, that harness has to enforce architectural invariants, not just wire up tools.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/search-as-code-agent-execution-surface/" class="insight-card-link">
+      <a href="/insights/search-as-code-agent-execution-surface/" class="insight-card-link" data-published="2026-06-05">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-05">Jun 5, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Search as Code Turns Agent Search Into an Execution Surface</h3>
           <p>When agents write code to orchestrate search instead of calling tools, tool governance becomes code-execution governance &mdash; and the audit question shifts from which tool to what code.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agentic-convergence-trap-architectural-governance/" class="insight-card-link">
+      <a href="/insights/agentic-convergence-trap-architectural-governance/" class="insight-card-link" data-published="2026-06-03">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-03">Jun 3, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>The Agentic Convergence Trap Is an Architecture Problem Too</h3>
           <p>HBR warns that when rivals run the same AI on the same defaults, their decisions collapse into sameness. The same trap runs one layer down, in the codebase &mdash; and enforced architectural governance is the way out.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/mckinsey-ai-table-stakes-to-advantage/" class="insight-card-link">
+      <a href="/insights/mckinsey-ai-table-stakes-to-advantage/" class="insight-card-link" data-published="2026-06-03">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-03">Jun 3, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>From AI Table Stakes to AI Advantage: The Engineering Moat McKinsey Doesn&rsquo;t Name</h3>
           <p>McKinsey finds rewired firms lift EBITDA 10 to 30 percent, yet the models are table stakes. The moats are trust, proprietary data, and velocity &mdash; and in engineering all three live in the architecture you enforce.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-agents-are-not-employees-governance/" class="insight-card-link">
+      <a href="/insights/ai-agents-are-not-employees-governance/" class="insight-card-link" data-published="2026-06-03">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-06-03">Jun 3, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Why You Shouldn&rsquo;t Treat AI Agents Like Employees: The Coding-Agent Corollary</h3>
           <p>A BCG and HBR experiment finds humanizing agents erodes accountability and degrades oversight. For coding agents, the replacement for employee-style trust is deterministic enforcement.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/cursor-developer-habits-report-governance-infrastructure/" class="insight-card-link">
+      <a href="/insights/cursor-developer-habits-report-governance-infrastructure/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Cursor Developer Habits Report 2026: Why AI Coding Needs Governance Infrastructure</h3>
           <p>Cursor&rsquo;s Developer Habits Report proves the velocity curve: more code, larger PRs, deeper agent sessions, and agent changes reaching commits without manual review (7% to 36.3%). The open problem is the governance curve.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/dora-metrics-insufficient-for-agentic-development/" class="insight-card-link">
+      <a href="/insights/dora-metrics-insufficient-for-agentic-development/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
           <h3>DORA Metrics Are Necessary But Insufficient For Agentic Development</h3>
           <p>DORA measures delivery-system behavior and still matters, but it cannot see whether an autonomous engineering system stays architecturally coherent as autonomy rises. Governance metrics are the missing third layer.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/what-is-harness-engineering/" class="insight-card-link">
+      <a href="/insights/what-is-harness-engineering/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Concept</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Concept</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>What Is Harness Engineering? The Execution Layer Between Models and Production</h3>
           <p>Harness engineering is the emerging discipline of building the execution layer between a model and production &mdash; the runtime that coordinates tool calls, retries, state, and multi-step agent work. Where it sits in the stack, and why governance is the layer above it.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/prompt-engineering-vs-harness-engineering/" class="insight-card-link">
+      <a href="/insights/prompt-engineering-vs-harness-engineering/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Prompt Engineering Was About Inputs. Harness Engineering Is About Systems.</h3>
           <p>Prompt engineering optimized a single input. Harness engineering designs the runtime system around the model &mdash; tools, state, retries, coordination. But a reliable system is not an architecturally correct one, and that gap is where governance begins.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/harness-engineering-verification-layer/" class="insight-card-link">
+      <a href="/insights/harness-engineering-verification-layer/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>The Missing Layer in Harness Engineering Is Verification</h3>
           <p>Harness engineering optimizes for successful execution. Enterprises need verifiable execution &mdash; runs proven to stay correct and compliant. The missing layer is verification: pre-registered contracts, explainable provenance, and deterministic enforcement.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-agent-governance-two-markets/" class="insight-card-link">
+      <a href="/insights/ai-agent-governance-two-markets/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>AI Agent Governance Is Splitting Into Two Markets</h3>
           <p>The industry is converging on agent governance, but the term is splitting into two markets: runtime governance protects systems from agent actions, while architectural governance protects systems from the architectural entropy autonomous iteration creates over time.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/google-gemini-deep-research-agent-governance/" class="insight-card-link">
+      <a href="/insights/google-gemini-deep-research-agent-governance/" class="insight-card-link" data-published="2026-05-30">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-30">May 30, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Google Gemini Deep Research Agent Shows Why Managed AI Agents Need Governance</h3>
           <p>Google&rsquo;s Gemini Deep Research Agent packages planning, search, reading, and synthesis into a managed, long-running runtime reached through the Interactions API. That removes orchestration boilerplate but moves the governance problem closer to runtime rather than away.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-infrastructure-governance-category/" class="insight-card-link">
+      <a href="/insights/ai-infrastructure-governance-category/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
           <h3>The Next AI Infrastructure Category Is Governance</h3>
           <p>Every major infrastructure wave creates a governance layer once the systems become autonomous enough. Cloud, CI/CD, data platforms &mdash; AI coding is next.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/barbara-liskov-python-encapsulation-ai-governance/" class="insight-card-link">
+      <a href="/insights/barbara-liskov-python-encapsulation-ai-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Barbara Liskov's Critique of Python Predicts the Governance Problem in AI Coding</h3>
           <p>Liskov's argument was about enforceability, not syntax. In the AI coding era, advisory boundaries stop holding the line.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/microsoft-agentic-transformation-playbook-ai-agent-governance/" class="insight-card-link">
+      <a href="/insights/microsoft-agentic-transformation-playbook-ai-agent-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Microsoft's Agentic Transformation Playbook: AI Agent Governance</h3>
           <p>Microsoft's playbook reframes agentic AI as an operating-model shift. Once agents execute work, governance becomes infrastructure.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/microsoft-agent-forge-enterprise-ai-infrastructure/" class="insight-card-link">
+      <a href="/insights/microsoft-agent-forge-enterprise-ai-infrastructure/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Microsoft Agent Forge Signals the Next Layer of Enterprise AI Infrastructure</h3>
           <p>Once orchestration becomes standardized infrastructure, differentiation moves upward into governance, verification, and architectural integrity.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agent-runtime-governance/" class="insight-card-link">
+      <a href="/insights/agent-runtime-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Agent Runtime Governance: The Next AI Infrastructure Layer</h3>
           <p>What Google Managed Agents signals about the runtime &mdash; and the governance layer the marketplace does not yet name.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/anthropic-claude-marketplace-ai-engineering-control-plane/" class="insight-card-link">
+      <a href="/insights/anthropic-claude-marketplace-ai-engineering-control-plane/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>The Emerging AI Engineering Control Plane</h3>
           <p>What Anthropic's Claude Marketplace reveals about the post-Copilot stack &mdash; generation, memory, orchestration, verification, and the layer above them.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/devin-ai-software-engineer-governance/" class="insight-card-link">
+      <a href="/insights/devin-ai-software-engineer-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>Devin Reveals the Next Layer of AI Infrastructure: Architectural Governance</h3>
           <p>The industry solved generation velocity before architectural coordination. Autonomous software engineers make that gap visible.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/antigravity-solves-coordination-not-governance/" class="insight-card-link">
+      <a href="/insights/antigravity-solves-coordination-not-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Google Antigravity Solves Agent Coordination. It Does Not Solve Governance.</h3>
           <p>Antigravity makes agent work visible. The next layer has to make agent work governable.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/snowflake-ai-data-engineering-governance-infrastructure/" class="insight-card-link">
+      <a href="/insights/snowflake-ai-data-engineering-governance-infrastructure/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Snowflake's AI Data Engineering Report Signals a Shift Toward Governance Infrastructure</h3>
           <p>MIT/Snowflake report: data engineers' time on AI is tripling toward 61% by 2027. Data engineering is evolving into governance engineering.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/mistral-vibe-ai-coding-enterprise-infrastructure/" class="insight-card-link">
+      <a href="/insights/mistral-vibe-ai-coding-enterprise-infrastructure/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">7 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">7 min read</span></div>
           <h3>Mistral Vibe Shows AI Coding Is Becoming Enterprise Infrastructure</h3>
           <p>Coding agents are becoming multi-surface execution systems. Architectural governance becomes a platform concern, not a prompt-file problem.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/coordination-governance-multi-agent-systems/" class="insight-card-link">
+      <a href="/insights/coordination-governance-multi-agent-systems/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>The Next AI Infrastructure Layer Is Coordination Governance</h3>
           <p>Subagents parallelize execution. They also parallelize inconsistency. Multi-agent systems need shared architectural invariants.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agent-manager-control-plane-governance/" class="insight-card-link">
+      <a href="/insights/agent-manager-control-plane-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>The Agent Manager Is the New Control Plane</h3>
           <p>Manager views without policy are dashboards. Manager views with policy are control planes.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/agent-first-ides-need-architectural-invariants/" class="insight-card-link">
+      <a href="/insights/agent-first-ides-need-architectural-invariants/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Why Agent-First IDEs Need Architectural Invariants</h3>
           <p>Delegated tasks need shared constraints. Invariants need to be encoded, retrieved, and enforced.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/artifacts-are-not-governance/" class="insight-card-link">
+      <a href="/insights/artifacts-are-not-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
           <h3>Artifacts Are Not Governance</h3>
           <p>A screenshot can prove the agent opened the browser. It cannot prove the agent respected your architecture.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/machine-readable-pull-requests-agentic-development/" class="insight-card-link">
+      <a href="/insights/machine-readable-pull-requests-agentic-development/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
           <h3>The Next Frontier Is Machine-Readable Pull Requests</h3>
           <p>Human-readable PRs explain. Machine-readable PRs allow verification. The future PR is dual-format.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/long-context-windows-governance-infrastructure/" class="insight-card-link">
+      <a href="/insights/long-context-windows-governance-infrastructure/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Architecture</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Architecture</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>Long Context Does Not Eliminate Governance Infrastructure</h3>
           <p>The reranker became optional. Retrieval did not. 1M context windows create an observability problem, not a governance solution.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-stack-determinism-probabilistic-models/" class="insight-card-link">
+      <a href="/insights/ai-stack-determinism-probabilistic-models/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>The AI Stack Is Rebuilding Determinism Around Probabilistic Models</h3>
           <p>n8n moved business logic out of prompts. The same argument extends to architectural decisions.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/constraint-decay-coding-agents-architectural-governance/" class="insight-card-link">
+      <a href="/insights/constraint-decay-coding-agents-architectural-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Research</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Research</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
           <h3>Constraint Decay Is Why Coding Agents Need Architectural Governance</h3>
           <p>A new arXiv paper quantifies it: agents satisfy loose specs but lose ORM rules, framework conventions, and architectural fidelity as structural requirements accumulate.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
       </a>
 
-      <a href="/insights/ai-peer-review-context-loss-governance/" class="insight-card-link">
+      <a href="/insights/ai-peer-review-context-loss-governance/" class="insight-card-link" data-published="2026-05-28">
         <div class="insight-card">
-          <div class="card-meta"><span class="card-tag">Research</span><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
+          <div class="card-meta"><span class="card-tag">Research</span><span class="card-dot"></span><time class="card-date" datetime="2026-05-28">May 28, 2026</time><span class="card-dot"></span><span class="card-read-time">10 min read</span></div>
           <h3>AI Peer Review Study: GPT-5.2 and Context Loss</h3>
           <p>GPT-5.2 outperformed top human reviewers on Nature-family papers &mdash; while still missing context already in the source. The governance lesson for enterprise AI.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
@@ -2251,6 +2527,8 @@
   if (best) best.classList.add('active');
 })();
 </script>
+
+<script src="/assets/js/insights-catalog-v1.js" defer></script>
 
 
 
