@@ -22,6 +22,13 @@ _CF_EMAIL_SPAN = re.compile(rb'<span[^>]*\bclass=["\']__cf_email__["\'][^>]*>.*?
 _CF_EMAIL_HREF = re.compile(rb'href=["\']/cdn-cgi/l/email-protection[^"\']*["\']', re.I)
 _MAILTO = re.compile(rb'mailto:[^"\'>\s]+', re.I)
 _RAW_EMAIL = re.compile(rb'[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}')
+# LiteSpeed inserts one blank line immediately after this marker on production.
+# Scope the normalization to the exact boundary so whitespace in page content,
+# scripts, <pre>, and <textarea> remains significant to freshness checks.
+_LITESPEED_GTM_GAP = re.compile(
+    rb'(<!-- End Google Tag Manager -->)[ \t]*\r?\n(?:[ \t]*\r?\n)+',
+    re.I,
+)
 
 
 def _neutralize_email_obfuscation(b: bytes) -> bytes:
@@ -34,14 +41,14 @@ def _neutralize_email_obfuscation(b: bytes) -> bytes:
 
 
 def norm(b: bytes) -> bytes:
-    """Normalize newlines, per-line trailing whitespace, and Cloudflare email
-    obfuscation.
+    """Normalize newlines, known edge rewrites, and trailing whitespace.
 
     Lets us compare a local file against the served response without benign
-    differences (CRLF vs LF, trailing spaces, Cloudflare's serve-time email
-    rewriting) registering as changes.
+    differences (CRLF vs LF, LiteSpeed's post-GTM gap, trailing spaces, or
+    Cloudflare's serve-time email rewriting) registering as changes.
     """
     b = _neutralize_email_obfuscation(b)
+    b = _LITESPEED_GTM_GAP.sub(rb'\1\n', b)
     return b"\n".join(line.rstrip() for line in b.replace(b"\r\n", b"\n").split(b"\n")).strip()
 
 
