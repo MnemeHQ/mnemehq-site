@@ -76,6 +76,16 @@ Add a card to **`site/insights/all/index.html`** (the archive) in the most thema
 
 **Also append a matching entry to the `hasPart` array** in the `CollectionPage` JSON-LD of `site/insights/all/index.html`. The visible card and the `hasPart` entry are checked independently — both are required.
 
+After adding the archive card, synchronize its derived publication date from the article's canonical `article:published_time` metadata:
+
+```bash
+python scripts/sync_insights_catalog.py
+```
+
+The catalogue uses `data-published` for newest/oldest sorting and a synchronized static `<time datetime>` element for the visible date, including the no-JavaScript fallback. Do not maintain either derived date by hand.
+
+When archive membership, card copy, schema, or catalogue UI changes materially, update the archive `CollectionPage.dateModified` and its `site/sitemap.xml` `<lastmod>` to the same truthful ISO date. Do not bump them for a routine or no-op date synchronization.
+
 ```json
 {"@type": "Article", "name": "Your Title", "url": "https://mnemehq.com/insights/<slug>/"}
 ```
@@ -117,6 +127,7 @@ Editorial pattern for every piece:
 ## Running the check locally
 
 ```bash
+python scripts/sync_insights_catalog.py --check
 python scripts/check_insights.py
 ```
 
