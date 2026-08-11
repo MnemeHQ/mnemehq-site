@@ -9,18 +9,46 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from deploy_verify import norm, content_needle, classify  # noqa: E402
 
-PAGE = b"<!DOCTYPE html>\n<html>\n<head><title>X</title></head>\n<body>\n<p>fresh content</p>\n</body>\n</html>\n"
+GTM_END = b"<!-- End Google Tag Manager -->"
+PAGE = (
+    b"<!DOCTYPE html>\n<html>\n<head><title>X</title>\n"
+    + GTM_END
+    + b"\n<link rel=\"icon\" href=\"/favicon.png\">\n</head>\n"
+    b"<body>\n<p>fresh content</p>\n</body>\n</html>\n"
+)
 # What Cloudflare actually serves: identical page with the analytics beacon
 # injected just before </body>.
 LIVE_OK = PAGE.replace(
     b"</body>",
     b'<script defer src="https://static.cloudflareinsights.com/beacon.min.js"></script>\n</body>',
 )
+# LiteSpeed inserts a blank-only line after the tag-manager marker on production.
+LIVE_WITH_SERVER_GTM_GAP_LF = PAGE.replace(GTM_END + b"\n", GTM_END + b"\n \t\n")
+LIVE_WITH_SERVER_GTM_GAP_CRLF = PAGE.replace(
+    GTM_END + b"\n", GTM_END + b"\r\n\t\r\n\r\n"
+)
 LIVE_STALE = b"<!DOCTYPE html>\n<html>\n<head><title>X</title></head>\n<body>\n<p>OLD content</p>\n</body>\n</html>\n"
 
 
 def test_norm_tolerates_crlf_and_trailing_ws():
     assert norm(b"a \r\nb\t\r\n") == norm(b"a\nb")
+
+
+def test_fresh_page_with_server_inserted_gtm_gap_is_ok():
+    needle = content_needle(PAGE)
+    assert classify(200, LIVE_WITH_SERVER_GTM_GAP_LF, needle) == ("ok", "")
+    assert classify(200, LIVE_WITH_SERVER_GTM_GAP_CRLF, needle) == ("ok", "")
+
+
+def test_server_inserted_gtm_gap_does_not_mask_stale_content():
+    needle = content_needle(PAGE)
+    stale_with_gap = LIVE_WITH_SERVER_GTM_GAP_LF.replace(b"fresh content", b"OLD content")
+    assert classify(200, stale_with_gap, needle)[0] == "fail"
+
+
+def test_meaningful_blank_lines_remain_significant():
+    assert norm(b"<pre>a\n\nb</pre>") != norm(b"<pre>a\nb</pre>")
+    assert norm(b"<textarea>a\n\nb</textarea>") != norm(b"<textarea>a\nb</textarea>")
 
 
 def test_needle_is_content_before_body():
