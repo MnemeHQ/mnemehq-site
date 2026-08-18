@@ -163,6 +163,15 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 # url_path is the path segment after mnemehq.com/ in the OG card URL line.
 
 TEMPLATES = [
+    # === CONCEPTS ===
+    (
+        "og-concepts-architectural-drift-prevention.html",
+        "Concepts",
+        "Architectural Drift Prevention",
+        "52px",
+        "The discipline of keeping generated code inside decisions already made.",
+        "concepts/architectural-drift-prevention",
+    ),
     # === INSIGHTS ===
     (
         "og-insights-anthropic-rsi.html",
@@ -768,6 +777,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",
