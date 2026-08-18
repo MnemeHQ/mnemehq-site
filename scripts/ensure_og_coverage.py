@@ -163,6 +163,15 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 # url_path is the path segment after mnemehq.com/ in the OG card URL line.
 
 TEMPLATES = [
+    # === TOP-LEVEL LANDING PAGES ===
+    (
+        "og-oss-governance-landing.html",
+        "Category Map",
+        "Open-Source Governance Tools for AI Coding Agents",
+        "40px",
+        "Memory, retrieval, docs, and enforcement -- what each project actually does.",
+        "open-source-ai-coding-agent-governance",
+    ),
     # === INSIGHTS ===
     (
         "og-insights-anthropic-rsi.html",
@@ -768,6 +777,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",

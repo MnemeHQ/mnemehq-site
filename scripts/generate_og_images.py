@@ -286,6 +286,9 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
+
+    # Misc
+    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
 }
 
 PORT = 8765
