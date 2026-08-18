@@ -291,6 +291,9 @@ TEMPLATE_MAP = {
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
+
+    # Insights — new
+    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
 }
 
 PORT = 8765

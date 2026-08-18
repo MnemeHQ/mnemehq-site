@@ -165,6 +165,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 TEMPLATES = [
     # === INSIGHTS ===
     (
+        "og-insights-lost-in-compaction.html",
+        "Insights",
+        "Architecture Cannot Be a Prompt",
+        "52px",
+        "COMPINT: context compactors retain only 17% of standing constraints.",
+        "insights/architecture-cannot-be-a-prompt-context-compaction",
+    ),
+    (
         "og-insights-gartner-arch-debt.html",
         "Insights",
         "Architectural Technical Debt From AI Coding Agents",
@@ -792,6 +800,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
