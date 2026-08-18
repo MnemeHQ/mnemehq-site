@@ -286,6 +286,11 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
+
+    # Insights — new
+    "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
+    "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
+    "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
 }
 
 PORT = 8765

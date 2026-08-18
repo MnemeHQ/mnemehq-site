@@ -165,6 +165,30 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 TEMPLATES = [
     # === INSIGHTS ===
     (
+        "og-insights-gartner-arch-debt.html",
+        "Insights",
+        "Architectural Technical Debt From AI Coding Agents",
+        "44px",
+        "Gartner: architectural debt reaches 80% of all technical debt by 2027.",
+        "insights/gartner-architectural-technical-debt-ai-coding-agents",
+    ),
+    (
+        "og-insights-constraint-survival.html",
+        "Insights",
+        "What Happens to an Architectural Decision After Ten Agent Turns",
+        "40px",
+        "Three 2026 benchmarks measure what long trajectories do to compliance.",
+        "insights/architectural-constraint-survival-long-running-coding-agents",
+    ),
+    (
+        "og-insights-programmable-policy.html",
+        "Insights",
+        "Programmable AI Policy Is Not Enough for Coding Agents",
+        "42px",
+        "Real-time policy assumes the policy exists. Architecture rarely does.",
+        "insights/programmable-ai-policy-executable-architectural-intent",
+    ),
+    (
         "og-insights-anthropic-rsi.html",
         "Insights",
         "Recursive Self-Improvement Makes Engineering Governance Inevitable",
@@ -768,6 +792,9 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
+    "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
+    "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",
