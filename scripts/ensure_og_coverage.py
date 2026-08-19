@@ -163,15 +163,7 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 # url_path is the path segment after mnemehq.com/ in the OG card URL line.
 
 TEMPLATES = [
-    # === INSIGHTS ===
-    (
-        "og-insights-lost-in-compaction.html",
-        "Insights",
-        "Architecture Cannot Be a Prompt",
-        "52px",
-        "COMPINT: context compactors retain only 17% of standing constraints.",
-        "insights/architecture-cannot-be-a-prompt-context-compaction",
-    ),
+    # === INSIGHTS (Aug wave) ===
     (
         "og-insights-gartner-arch-debt.html",
         "Insights",
@@ -196,6 +188,15 @@ TEMPLATES = [
         "Real-time policy assumes the policy exists. Architecture rarely does.",
         "insights/programmable-ai-policy-executable-architectural-intent",
     ),
+    (
+        "og-insights-lost-in-compaction.html",
+        "Insights",
+        "Architecture Cannot Be a Prompt",
+        "52px",
+        "COMPINT: context compactors retain only 17% of standing constraints.",
+        "insights/architecture-cannot-be-a-prompt-context-compaction",
+    ),
+    # === INSIGHTS ===
     (
         "og-insights-anthropic-rsi.html",
         "Insights",
@@ -792,6 +793,12 @@ TEMPLATES = [
     ("og-insights-agentic-governance-execution.html", "Insights", "Governance Moves Closer to Execution", "50px", "As AI agents gain autonomy, from central banks to software teams, constraints move in front of execution.", "insights/agentic-ai-governance-closer-to-execution"),
     # === July 2026: architectural-intent cluster ===
     ("og-insights-how-to-maintain-intent.html", "Guide", "How to Maintain Architectural Intent with AI Coding Agents", "40px", "Record decisions as constraints, retrieve them at generation, and check agent changes before the pull request.", "insights/how-to-maintain-architectural-intent-with-ai-coding-agents"),
+    # === August 2026: governance scope wave ===
+    ("og-insights-prompt-graph-engineering.html", "Research", "What Makes Prompts a Graph", "50px", "Prompt graph engineering makes execution explicit. Architectural governance constrains what the graph may change.", "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance"),
+    ("og-insights-claude-self-hosted.html", "Insights", "Claude Code Self-Hosted Environments", "46px", "Self-hosting controls where the agent acts. Governance controls whether its changes conform.", "insights/claude-code-self-hosted-environments-architectural-governance"),
+    ("og-insights-agent-swarms.html", "Security Analysis", "AI Agent Swarms Need Deterministic Guardrails", "42px", "OpenAI and Hugging Face reconstructed roughly 17,600 actions across an autonomous intrusion.", "insights/ai-agent-swarms-deterministic-guardrails"),
+    ("og-insights-mckinsey-adoption-gap.html", "Report Analysis", "How to Close the Agentic Adoption Gap", "44px", "McKinsey's Enforce stage meets software engineering governance and agent execution.", "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering"),
+    ("og-insights-openai-symphony.html", "Insights", "OpenAI Symphony", "58px", "The issue becomes durable. Architectural authority must outlive every disposable agent session.", "insights/openai-symphony-architectural-context"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -800,10 +807,15 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
-    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
+    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
+    "og-insights-prompt-graph-engineering.html": "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/og.png",
+    "og-insights-claude-self-hosted.html": "insights/claude-code-self-hosted-environments-architectural-governance/og.png",
+    "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
+    "og-insights-mckinsey-adoption-gap.html": "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/og.png",
+    "og-insights-openai-symphony.html": "insights/openai-symphony-architectural-context/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",

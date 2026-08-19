@@ -288,11 +288,16 @@ TEMPLATE_MAP = {
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
 
     # Insights — new
+    "og-insights-prompt-graph-engineering.html": "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/og.png",
+    "og-insights-claude-self-hosted.html": "insights/claude-code-self-hosted-environments-architectural-governance/og.png",
+    "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
+    "og-insights-mckinsey-adoption-gap.html": "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/og.png",
+    "og-insights-openai-symphony.html": "insights/openai-symphony-architectural-context/og.png",
+
+    # Insights — new
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
-
-    # Insights — new
     "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
 }
 

@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Agent Orchestration Is Not Software Engineering Governance &mdash; Mneme HQ</title>
+  <title>OpenAI Symphony Needs Architectural Context | Mneme</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="Orchestration decides what an agent runs next. Governance decides what must remain true. Even a perfectly orchestrated multi-agent workflow can violate an ADR. Here is why the two are different layers." />
+  <meta name="description" content="OpenAI says Symphony lifted landed PRs 500% on some teams. Its issue-tracker control plane still needs durable architectural context and enforcement at scale." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/" />
+  <link rel="canonical" href="https://mnemehq.com/insights/openai-symphony-architectural-context/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="AI Agent Orchestration Is Not Software Engineering Governance" />
-  <meta property="og:description" content="Orchestration decides what an agent runs next. Governance decides what must remain true. Even a perfectly orchestrated multi-agent workflow can violate an ADR. Here is why the two are different layers." />
-  <meta property="og:url" content="https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/" />
-  <meta property="og:image" content="https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/og.png" />
+  <meta property="og:title" content="OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context" />
+  <meta property="og:description" content="OpenAI says Symphony lifted landed PRs 500% on some teams. Its issue-tracker control plane still needs durable architectural context and enforcement at scale." />
+  <meta property="og:url" content="https://mnemehq.com/insights/openai-symphony-architectural-context/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/openai-symphony-architectural-context/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AI Agent Orchestration Is Not Software Engineering Governance" />
-  <meta name="twitter:description" content="Orchestration decides what an agent runs next. Governance decides what must remain true. Even a perfectly orchestrated multi-agent workflow can violate an ADR. Here is why the two are different layers." />
-  <meta name="twitter:image" content="https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/og.png" />
+  <meta name="twitter:title" content="OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context" />
+  <meta name="twitter:description" content="OpenAI says Symphony lifted landed PRs 500% on some teams. Its issue-tracker control plane still needs durable architectural context and enforcement at scale." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/openai-symphony-architectural-context/og.png" />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-07-27T00:00:00Z" />
+  <meta property="article:published_time" content="2026-08-11T00:00:00Z" />
+  <meta property="article:modified_time" content="2026-08-11T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Engineering" />
 
@@ -37,32 +38,60 @@
   <link rel="icon" href="/favicon-v2.png" type="image/png">
 
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"},
-          {"@type": "ListItem", "position": 3, "name": "AI Agent Orchestration Is Not Software Engineering Governance", "item": "https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/"}
-        ]
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mnemehq.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Insights",
+          "item": "https://mnemehq.com/insights/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context",
+          "item": "https://mnemehq.com/insights/openai-symphony-architectural-context/"
+        }
+      ]
+    },
+    {
+      "@type": "TechArticle",
+      "headline": "OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context",
+      "description": "OpenAI says Symphony lifted landed PRs 500% on some teams. Its issue-tracker control plane still needs durable architectural context and enforcement at scale.",
+      "url": "https://mnemehq.com/insights/openai-symphony-architectural-context/",
+      "datePublished": "2026-08-11",
+      "dateModified": "2026-08-11",
+      "author": {
+        "@type": "Person",
+        "name": "Theo Valmis",
+        "url": "https://mnemehq.com/founder/"
       },
-      {
-        "@type": "TechArticle",
-        "headline": "AI Agent Orchestration Is Not Software Engineering Governance",
-        "description": "Orchestration decides what an agent runs next. Governance decides what must remain true. Even a perfectly orchestrated multi-agent workflow can violate an ADR. Here is why the two are different layers.",
-        "url": "https://mnemehq.com/insights/ai-agent-orchestration-is-not-governance/",
-        "datePublished": "2026-07-27",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
-        "isBasedOn": {"@type": "WebPage", "name": "LangGraph (orchestration framework)", "url": "https://langchain-ai.github.io/langgraph/"}
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/"
+      },
+      "isBasedOn": {
+        "@type": "WebPage",
+        "name": "An open-source spec for Codex orchestration: Symphony",
+        "url": "https://openai.com/index/open-source-codex-orchestration-symphony/"
       }
-    ]
-  }
+    }
+  ]
+}
   </script>
 
-    <style>
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
@@ -266,7 +295,6 @@
   </style>
   <link rel="stylesheet" href="/assets/css/video.css">
 </head>
-</head>
 <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -291,7 +319,7 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
-    <li aria-current="page">AI Agent Orchestration Is Not Software Engineering Governance</li>
+    <li aria-current="page">OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context</li>
   </ol>
 </nav>
 
@@ -300,102 +328,148 @@
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Analysis</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">9 min read</span>
+      <span class="eyebrow-meta">8 min read</span>
     </div>
-    <h1>AI Agent Orchestration Is Not Software Engineering Governance</h1>
-    <p class="article-lede">Orchestration is becoming a default capability in agent frameworks. Many engineering leaders still assume it also provides governance. It does not. Orchestration answers what should happen next. Governance answers whether a change should be allowed at all. Those are different problems, and conflating them leaves architecture unprotected.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-07-27">July 2026</time></p>
+    <h1>OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context</h1>
+    <p class="article-lede">OpenAI Symphony makes the issue, not the coding session, the durable unit of work. That solves orchestration continuity while making a separate requirement clearer: architectural authority must outlive every disposable agent run.</p>
+    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-11">August 2026</time></p>
   </header>
 
   <div class="article-body">
-
-    <h2>Everyone is adding orchestration</h2>
-    <p>Agent frameworks now emphasize multiple agents, planning, delegation, retries, and long-running workflows. Tools like <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph</a>, along with CrewAI, AutoGen, and task delegation inside coding agents, make it straightforward to sequence work across specialized agents. Orchestration has quietly become table stakes.</p>
-    <p>That is a genuine advance. It is also the source of a common category error: treating the thing that coordinates agent work as if it also constrains what that work is allowed to produce.</p>
-
-    <h2>What orchestration actually does</h2>
-    <p>Orchestration manages execution. It handles task sequencing and dependencies, retries and approvals, routing, and execution state. It makes a workflow efficient and resumable. A well-orchestrated system gets the right agent to the right step at the right time.</p>
-    <div class="callout"><p><strong>Orchestration optimizes the flow of work. It does not evaluate whether the work is architecturally correct.</strong></p></div>
-
-    <h2>What orchestration does not do</h2>
-    <p>Even a perfectly orchestrated workflow can violate an architecture decision record, introduce a forbidden dependency, ignore an engineering standard, bypass a service boundary, or duplicate a service that already exists. Each agent can execute its assigned task correctly while the overall system becomes less consistent. The orchestrator sees success at every step. The architecture still drifted.</p>
-
-    <h2>A concrete example</h2>
-    <p>Consider a routine pipeline:</p>
-    <div class="diag-wrap">
-      <svg viewBox="0 0 700 320" role="img" aria-label="A multi-agent pipeline where the database agent violates an ADR while orchestration reports success" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
-        <rect x="210" y="0" width="280" height="40" rx="8" class="diag-box"/><text x="350" y="25" text-anchor="middle" class="diag-text">Planner Agent</text>
-        <line x1="350" y1="40" x2="350" y2="66" class="diag-arrow"/>
-        <rect x="210" y="66" width="280" height="40" rx="8" class="diag-box"/><text x="350" y="91" text-anchor="middle" class="diag-text">Backend Agent</text>
-        <line x1="350" y1="106" x2="350" y2="132" class="diag-arrow"/>
-        <rect x="210" y="132" width="280" height="40" rx="8" class="diag-box-teal"/><text x="350" y="151" text-anchor="middle" class="diag-text diag-teal-text">Database Agent</text><text x="350" y="165" text-anchor="middle" class="diag-meta">switches SQLite to PostgreSQL</text>
-        <line x1="350" y1="172" x2="350" y2="198" class="diag-arrow"/>
-        <rect x="210" y="198" width="280" height="40" rx="8" class="diag-box"/><text x="350" y="223" text-anchor="middle" class="diag-text">Reviewer Agent</text>
-        <line x1="350" y1="238" x2="350" y2="264" class="diag-arrow-active"/>
-        <rect x="210" y="264" width="280" height="40" rx="8" class="diag-box-active"/><text x="350" y="289" text-anchor="middle" class="diag-text diag-accent-text">Governance: blocked by ADR-014</text>
-      </svg>
-      <p class="diag-caption">Every step succeeded. The architectural decision was still violated.</p>
-    </div>
-    <p>The database agent switches from the approved store to another. The orchestrator sees a completed task. Governance blocks it because a decision record specifies otherwise. Everything worked. The architecture would have drifted without a separate layer that evaluated the change against intent.</p>
-
-    <h2>Orchestration and governance work together</h2>
-    <table class="gov-table">
-      <thead><tr><th>Orchestration</th><th>Engineering governance</th></tr></thead>
-      <tbody>
-        <tr><td>Coordinates work</td><td>Protects architecture</td></tr>
-        <tr><td>Decides execution order</td><td>Validates engineering decisions</td></tr>
-        <tr><td>Routes tasks and retries</td><td>Prevents architectural drift</td></tr>
-        <tr class="accent-row"><td>Optimizes the workflow</td><td>Keeps the system coherent</td></tr>
-      </tbody>
-    </table>
-    <p>The point is not that orchestration is flawed. It is that governance is a different control plane. Orchestration decides what runs next. Governance decides what must remain true no matter what runs.</p>
-
-    <h2>What teams should do</h2>
+    <p>OpenAI's <a href="https://openai.com/index/open-source-codex-orchestration-symphony/" target="_blank" rel="noopener">Symphony announcement</a> reports a 500% increase in landed pull requests on some teams; the <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener">service specification</a> defines the scheduler, workspace, retry, and workflow boundaries.</p>
+    <h2>What OpenAI Symphony changes</h2>
+    <p>OpenAI describes Symphony as an agent orchestrator that turns a project-management board such as Linear into a control plane for coding agents. The motivation was practical. Engineers could comfortably manage roughly three to five interactive sessions before context switching erased the benefit.</p>
+    <p>The <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener">Symphony specification</a> makes the model concrete. A conforming service:</p>
     <ul>
-      <li><strong>Do not buy orchestration expecting governance.</strong> Confirm whether your framework evaluates changes against architectural decisions, or only sequences them.</li>
-      <li><strong>Insert a pre-generation check.</strong> Constraints should run before an agent's change is applied, not only in a downstream review step.</li>
-      <li><strong>Keep governance vendor-neutral.</strong> As you add agents and orchestration wrappers, the constraint layer should stay constant across all of them.</li>
+      <li>reads eligible work from an issue tracker;</li>
+      <li>creates deterministic per-issue workspaces;</li>
+      <li>dispatches agents with bounded concurrency;</li>
+      <li>owns retries and reconciliation;</li>
+      <li>loads workflow behavior from a repository-owned <code>WORKFLOW.md</code>; and</li>
+      <li>exposes operator-visible state for concurrent runs.</li>
     </ul>
-    <div class="callout"><p><strong>As enterprises adopt dozens of coding agents, orchestration becomes standard infrastructure. The differentiator is whether those agents consistently follow architectural intent.</strong></p></div>
-
+    <p>OpenAI presents Symphony as a minimal orchestration layer and reference implementation, not a standalone product it plans to maintain indefinitely. That boundary is useful. It keeps the system focused on scheduling and running work.</p>
+    <p>It also shows exactly where architectural governance is still needed.</p>
+    <h2>Work context is not architectural context</h2>
+    <p>An issue can retain what a team wants done. It may contain requirements, acceptance criteria, comments, review feedback, and links to prior work.</p>
+    <p>Those are valuable forms of context. They are not the same as the architectural decisions governing the repository.</p>
+    <p>Consider a ticket that says:</p>
+    <div class="callout"><p><strong>Add persistence for customer preferences.</strong></p></div>
+    <p>The issue can describe the feature perfectly and still leave consequential constraints implicit:</p>
+    <ul>
+      <li>Which database is approved?</li>
+      <li>May this service access the database directly?</li>
+      <li>Which module owns persistence?</li>
+      <li>Are new infrastructure dependencies prohibited?</li>
+      <li>Does an accepted ADR require an existing abstraction?</li>
+      <li>Has the team already rejected an otherwise reasonable implementation?</li>
+    </ul>
+    <p>A capable agent can produce a technically valid solution while contradicting any of those decisions.</p>
+    <p>The problem is not necessarily poor ticket writing. Work intent and architectural intent are different artifacts.</p>
+    <p>The issue tracker should remain authoritative for what the organization wants changed. A project decision corpus should remain authoritative for the engineering decisions that govern that change.</p>
+    <h2>Symphony's boundary is explicit</h2>
+    <p>The specification describes Symphony as principally a scheduler, runner, and tracker reader. It does not prescribe one universal sandbox, approval, or operator-confirmation policy. Implementations are expected to document their own trust posture.</p>
+    <p>That is a sensible boundary for an orchestrator.</p>
+    <p>It also prevents a common category error. Orchestration answers:</p>
+    <ul>
+      <li>Which agent runs?</li>
+      <li>What task does it receive?</li>
+      <li>Where does it run?</li>
+      <li>What happens when it stalls or fails?</li>
+    </ul>
+    <p>Software engineering governance answers:</p>
+    <ul>
+      <li>Which architectural decisions apply?</li>
+      <li>Which constraints must survive retries and agent replacement?</li>
+      <li>What proposed changes require a warning, exception, or hard failure?</li>
+      <li>What evidence proves the decision was evaluated?</li>
+    </ul>
+    <p>The existing Mneme article on <a href="/insights/ai-agent-orchestration-is-not-governance/">agent orchestration and governance</a> defines that category boundary. Symphony provides a named, concrete instance of why it matters.</p>
+    <h2>Disposable sessions increase the cost of drift</h2>
+    <p>With one engineer supervising one agent, architectural mistakes can often be corrected conversationally. The developer notices the wrong dependency or service boundary and redirects the session.</p>
+    <p>That does not scale cleanly when an orchestrator runs many isolated issues.</p>
+    <p>One agent reads the current ADR. Another finds an outdated example first. A third retrieves the right decision but treats it as optional guidance. A fourth never encounters it because the issue appears unrelated based on filenames or semantic similarity.</p>
+    <p>Each run may compile and pass its local tests. The repository can still accumulate architectural drift.</p>
+    <p>The scaling question is therefore not only how many agents can execute concurrently. It is whether the same architectural constraints propagate reliably across those executions.</p>
+    <h2>Retrieval helps; enforcement is different</h2>
+    <p>Symphony works best with agent-friendly repositories, explicit workflows, strong tests, and clear instructions. Its version-controlled <code>WORKFLOW.md</code> is an important engineering practice.</p>
+    <p>But a retrieved instruction and an enforced constraint have different failure semantics.</p>
+    <p>An ADR might say:</p>
+    <div class="callout"><p><strong>Application services must use PostgreSQL through the persistence adapter.</strong></p></div>
+    <p>An agent can retrieve that sentence and still bypass the adapter. It may decide direct SQL is simpler, or it may modify a component without recognizing that the rule applies.</p>
+    <p>A stronger model separates the layers:</p>
+    <ol>
+      <li>Maintain a durable decision corpus.</li>
+      <li>Resolve which decisions apply to the proposed work.</li>
+      <li>Propagate those constraints into the agent workflow.</li>
+      <li>Evaluate the plan and resulting change against a verification contract.</li>
+      <li>Deterministically enforce the rules that can be expressed safely.</li>
+      <li>Preserve human review for ambiguity and legitimate exceptions.</li>
+    </ol>
+    <p>The objective is not to replace agent reasoning. It is to prevent architectural authority from depending entirely on one temporary session.</p>
+    <h2>Isolated workspaces make propagation visible</h2>
+    <p>Symphony's deterministic per-issue workspaces are operationally valuable. They separate tasks, retain issue state across retries, and give the orchestrator an authoritative lifecycle surface.</p>
+    <p>Isolation also creates a clear governance boundary.</p>
+    <p>If a decision applies in the main repository but never reaches an isolated run, the workspace does not preserve architectural intent. The same issue appears when teams use more than one coding agent:</p>
+    <ul>
+      <li>Codex through Symphony;</li>
+      <li>Claude Code in an interactive or hosted environment;</li>
+      <li>another agent triggered from CI;</li>
+      <li>human developers changing the same repository.</li>
+    </ul>
+    <p>The execution paths differ. The architecture should not.</p>
+    <p>That is <a href="/concepts/governance-propagation/">governance propagation</a>: carrying authoritative decisions to every surface where they apply without turning copied prompts into competing sources of truth.</p>
+    <h2>What engineering leaders should separate</h2>
+    <p>Teams evaluating Symphony-style workflows should design four distinct control surfaces:</p>
+    <ol>
+      <li><strong>Work persistence.</strong> The issue tracker records the requested outcome and its state.</li>
+      <li><strong>Agent orchestration.</strong> Symphony or an equivalent system dispatches work, manages workspaces, and handles retries.</li>
+      <li><strong>Architectural authority.</strong> A versioned decision corpus records what the software must continue to preserve.</li>
+      <li><strong>Compliance evidence.</strong> A <a href="/concepts/verification-contracts/">verification contract</a> defines which properties are checked and what happens when they fail.</li>
+    </ol>
+    <p>Collapsing those concerns into one prompt works only while the workflow is small enough for a human to reconstruct the missing boundaries.</p>
+    <h2>Disposable agents need durable architectural authority</h2>
+    <p>Symphony makes an important architectural principle visible: the agent does not have to be the durable object.</p>
+    <p>The work can outlive the session. The workspace can be recreated. The orchestrator can retry execution. A different model can eventually perform the task.</p>
+    <p>Architectural intent therefore needs to live somewhere more durable than any of them.</p>
+    <p>Mneme's role is complementary to Symphony. The orchestrator determines what an agent should work on now. Mneme is building the architectural governance layer that determines which project decisions apply and which explicit constraints can be enforced before incompatible changes become drift.</p>
+    <p>OpenAI Symphony advances the orchestration layer. The next enterprise question is whether architectural authority can propagate across autonomous runs with the same reliability.</p>
   </div><!-- /.article-body -->
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See governance evaluate an agent's change against your architectural decisions, independent of the orchestrator.</p>
+    <p class="context-cta-copy">See how architectural decisions can remain authoritative across isolated workspaces, retries, and replacement agent sessions.</p>
     <div class="context-cta-actions">
       <a href="/demo/architectural-drift/" class="context-cta-primary">See the architectural-drift demo &rarr;</a>
       <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
     </div>
   </aside>
 
-
-  <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:3rem;">
+  <aside class="related-panel" aria-labelledby="related-concepts-label">
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
-      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance Infrastructure</div><p class="rel-desc">The control plane that enforces decisions across agents and CI.</p></a></li>
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance Before Generation</div><p class="rel-desc">Constraints applied before a change is allowed, not after.</p></a></li>
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The gradual divergence between a system's state and its intent.</p></a></li>
+      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance Infrastructure</div><p class="rel-desc">The separate control plane that protects architecture while orchestration manages execution.</p></a></li>
+      <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance Propagation</div><p class="rel-desc">How one authoritative decision reaches isolated runs and heterogeneous agents.</p></a></li>
+      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification Contracts</div><p class="rel-desc">The explicit conditions that determine whether an agent change may continue.</p></a></li>
     </ul>
   </aside>
 
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:1.5rem;padding-top:0;border-top:none;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/insights/programmable-ai-policy-executable-architectural-intent/"><div class="rel-title">Programmable AI Policy Is Not Enough for Coding Agents</div><p class="rel-desc">Real-time policy assumes the policy exists. Architecture rarely does.</p></a></li>
-      <li><a href="/insights/openai-symphony-architectural-context/"><div class="rel-title">OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context</div><p class="rel-desc">A named orchestration system that makes the need for durable architectural authority concrete.</p></a></li>
-      <li><a href="/insights/coordination-governance-multi-agent-systems/"><div class="rel-title">Coordination Is Not Governance in Multi-Agent Systems</div><p class="rel-desc">Coordinating agents is not the same as constraining them.</p></a></li>
-      <li><a href="/insights/antigravity-solves-coordination-not-governance/"><div class="rel-title">Antigravity Solves Coordination, Not Governance</div><p class="rel-desc">A concrete case of the coordination-versus-governance gap.</p></a></li>
-      <li><a href="/insights/when-ai-agents-degrade-architectural-intent-should-not/"><div class="rel-title">When AI Agents Degrade, Architectural Intent Should Not</div><p class="rel-desc">Intent must survive silent fallbacks in the execution environment.</p></a></li>
-      <li><a href="/insights/emerging-ai-agent-infrastructure-stack/"><div class="rel-title">The Emerging AI Agent Infrastructure Stack</div><p class="rel-desc">Where orchestration, governance, and verification sit as distinct layers.</p></a></li>
+      <li><a href="/insights/ai-agent-orchestration-is-not-governance/"><div class="rel-title">AI Agent Orchestration Is Not Software Engineering Governance</div><p class="rel-desc">The category boundary between coordinating work and constraining its architectural outcome.</p></a></li>
+      <li><a href="/insights/emerging-ai-agent-infrastructure-stack/"><div class="rel-title">The Emerging AI Agent Infrastructure Stack</div><p class="rel-desc">Where orchestration, governance, verification, and observability sit as separate layers.</p></a></li>
+      <li><a href="/insights/verification-starts-before-generation/"><div class="rel-title">Verification Starts Before Generation</div><p class="rel-desc">Why architectural checks should run before an autonomous workflow commits to an invalid path.</p></a></li>
+      <li><a href="/insights/agentic-resource-discovery-agent-governance/"><div class="rel-title">Agentic Resource Discovery Still Needs Governance</div><p class="rel-desc">Discovering a trusted tool does not prove that using it preserves architectural intent.</p></a></li>
+      <li><a href="/insights/block-builderbot-coordination-governance/"><div class="rel-title">Builderbot Makes Coordination the Next Engineering Layer</div><p class="rel-desc">Repository-scale agent execution shows why orchestration and governance must remain distinct.</p></a></li>
     </ul>
   </aside>
 
   <footer class="article-footer">
     <a href="/insights/" class="back-link">&larr; Back to Insights</a>
     <div class="cta-block">
-      <h3>Coordinate agents. Protect your architecture.</h3>
-      <p>Mneme evaluates every agent change against your architectural decisions, independent of whichever orchestrator sequences the work. Open source.</p>
+      <h3>Orchestrate disposable agents. Preserve durable intent.</h3>
+      <p>Mneme complements agent orchestration with a project decision corpus, governance propagation, and deterministic enforcement.</p>
       <a href="/pilot/" class="btn-primary">Request a pilot &rarr;</a>
       <a href="/demo/" style="display:inline-block;margin-right:1.25rem;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.85rem;text-decoration:none;">See the live demo &rarr;</a>
       <a href="https://github.com/MnemeHQ/mneme" style="display:inline-block;margin-right:1.25rem;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.85rem;text-decoration:none;">View on GitHub &rarr;</a>
