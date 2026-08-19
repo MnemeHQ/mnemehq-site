@@ -286,6 +286,9 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
+
+    # Insights — new
+    "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
 }
 
 PORT = 8765

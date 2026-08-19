@@ -165,6 +165,15 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 TEMPLATES = [
     # === INSIGHTS ===
     (
+        "og-insights-kodekloud-devops-guide.html",
+        "Insights",
+        "The Definitive Guide to AI for DevOps",
+        "48px",
+        "KodeKloud, 2026: guardrails, not gates. One of six takeaways.",
+        "insights/kodekloud-definitive-guide-ai-for-devops",
+    ),
+    # === INSIGHTS ===
+    (
         "og-insights-anthropic-rsi.html",
         "Insights",
         "Recursive Self-Improvement Makes Engineering Governance Inevitable",
@@ -768,6 +777,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",
