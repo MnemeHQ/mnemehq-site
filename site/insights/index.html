@@ -49,12 +49,12 @@
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
           {"@type": "Article", "name": "The Emerging AI Agent Infrastructure Stack", "url": "https://mnemehq.com/insights/emerging-ai-agent-infrastructure-stack/"},
-          {"@type": "Article", "name": "AI Governance for Regulated Industries", "url": "https://mnemehq.com/insights/ai-governance-for-regulated-industries/"},
-          {"@type": "Article", "name": "AI Coding Agents in Life Sciences: Governance Before Autonomy", "url": "https://mnemehq.com/insights/ai-coding-agents-life-sciences-governance/"},
-          {"@type": "Article", "name": "AI Coding Agents in Financial Services: The Audit Trail Problem", "url": "https://mnemehq.com/insights/ai-coding-agents-financial-services-audit-trail/"},
-          {"@type": "Article", "name": "Shared Memory Is Not Shared Intent: Why AI Coding Teams Need Governance", "url": "https://mnemehq.com/insights/shared-memory-is-not-shared-intent/"},
-          {"@type": "Article", "name": "GitHub Just Turned AI Code Review Into a Budget Line Item", "url": "https://mnemehq.com/insights/github-copilot-usage-based-billing-review-economics/"},
-          {"@type": "Article", "name": "DORA Metrics Are Necessary But Insufficient For Agentic Development", "url": "https://mnemehq.com/insights/dora-metrics-insufficient-for-agentic-development/"},
+          {"@type": "Article", "name": "What Makes Prompts a Graph: Why Prompt Graph Engineering Needs Architectural Governance", "url": "https://mnemehq.com/insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/"},
+          {"@type": "Article", "name": "Claude Code Self-Hosted Environments: Why Enterprise Agents Need Architectural Governance", "url": "https://mnemehq.com/insights/claude-code-self-hosted-environments-architectural-governance/"},
+          {"@type": "Article", "name": "AI Agent Swarms Need Deterministic Guardrails", "url": "https://mnemehq.com/insights/ai-agent-swarms-deterministic-guardrails/"},
+          {"@type": "Article", "name": "How to Close the Agentic Adoption Gap: What Enforce Means for Software Engineering", "url": "https://mnemehq.com/insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/"},
+          {"@type": "Article", "name": "OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context", "url": "https://mnemehq.com/insights/openai-symphony-architectural-context/"},
+          {"@type": "Article", "name": "When AI Agents Degrade, Architectural Intent Should Not", "url": "https://mnemehq.com/insights/when-ai-agents-degrade-architectural-intent-should-not/"},
           {"@type": "Article", "name": "Review Is Not Governance", "url": "https://mnemehq.com/insights/review-is-not-governance/"},
           {"@type": "Article", "name": "Prompt Engineering Is Not Governance", "url": "https://mnemehq.com/insights/prompt-engineering-is-not-governance/"},
           {"@type": "Article", "name": "Models Are Temporary. Architectural Intent Is Not.", "url": "https://mnemehq.com/insights/models-are-temporary-architectural-intent-is-not/"}
@@ -101,7 +101,7 @@
     .card-meta { display: flex; align-items: center; gap: 0.6rem; }
     .card-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; }
     .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
-    .card-read-time { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .card-read-time, .card-date { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .insight-card h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
     .insight-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.75; flex: 1; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
@@ -111,8 +111,11 @@
 
     .cards-section { margin-bottom: 3.5rem; }
     .section-divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
-    .section-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+    .section-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
     .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .hub-actions { display: flex; justify-content: center; margin: -1.4rem 0 3rem; }
+    .hub-archive-cta { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.75rem 1.25rem; border-radius: 7px; background: var(--accent); color: #0c0c0d; font-family: 'DM Mono', monospace; font-size: 0.8rem; font-weight: 500; text-decoration: none; transition: background 0.15s, transform 0.15s; }
+    .hub-archive-cta:hover { background: var(--accent-dim); transform: translateY(-1px); }
 
     footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
     footer a { color: var(--muted); text-decoration: none; }
@@ -273,6 +276,8 @@
       transition: color 0.15s, border-color 0.15s;
     }
     .section-nav-inner a:hover { color: var(--text); }
+    .section-nav-inner a.section-nav-archive { color: var(--accent); border: 1px solid rgba(200,240,96,0.3); border-radius: 999px; padding: 0.25rem 0.65rem; }
+    .section-nav-inner a.section-nav-archive:hover { color: var(--accent); border-color: var(--accent); background: rgba(200,240,96,0.06); }
     .section-nav-inner a.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
@@ -312,7 +317,7 @@
     <a href="/insights/topics/ai-coding-agents/">AI coding agents</a>
     <a href="/insights/topics/agent-infrastructure/">Agent infrastructure</a>
     <a href="/insights/topics/engineering-performance/">Engineering performance</a>
-    <a href="/insights/all/">All</a>
+    <a href="/insights/all/" class="section-nav-archive">All</a>
   </div>
 </div>
 
@@ -328,10 +333,13 @@
 </div>
 
 <div class="cards-wrap">
-  <p class="hub-intro">Start with the latest analysis, jump to a topic, or browse the full archive. New essays land most weeks; the four topic hubs collect the cornerstone and supporting pieces for each area.</p>
+  <p class="hub-intro">Start with the latest analysis, jump to a topic, or browse the full archive. New essays land most weeks; the five topic hubs collect the cornerstone and supporting pieces for each area.</p>
+  <div class="hub-actions">
+    <a href="/insights/all/" class="hub-archive-cta">Browse all insights <span aria-hidden="true">&rarr;</span></a>
+  </div>
 
   <div class="cards-section" id="featured">
-    <div class="section-divider"><span class="section-label">Featured</span></div>
+    <div class="section-divider"><h2 class="section-label">Featured</h2></div>
     <div class="cards-grid">
 
       <a href="/insights/emerging-ai-agent-infrastructure-stack/" class="insight-card-link">
@@ -353,93 +361,105 @@
   </div>
 
   <div class="cards-section" id="latest">
-    <div class="section-divider"><span class="section-label">Latest analysis</span></div>
+    <div class="section-divider"><h2 class="section-label">Latest analysis</h2></div>
     <div class="cards-grid">
 
-      <a href="/insights/stanford-ai-index-2026-engineering-governance/" class="insight-card-link">
-        <div class="insight-card">
-          <div class="card-meta">
-            <span class="card-tag">Industry Analysis</span>
-            <span class="card-dot"></span>
-            <span class="card-read-time">9 min read</span>
-          </div>
-          <h3>Stanford AI Index 2026: AI Coding Is Becoming Solved. Engineering Governance Has Not.</h3>
-          <p>The Stanford AI Index 2026 shows coding benchmarks near saturation and adoption mainstream. If generation is solved, the unsolved layer is keeping agent output aligned with architectural decisions.</p>
-          <div class="card-footer">
-            <span class="read-pill">Read insight</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="/insights/agentic-resource-discovery-agent-governance/" class="insight-card-link">
-        <div class="insight-card">
-          <div class="card-meta">
-            <span class="card-tag">Industry Analysis</span>
-            <span class="card-dot"></span>
-            <span class="card-read-time">10 min read</span>
-          </div>
-          <h3>Agentic Resource Discovery: Why Agent Discovery Still Needs Governance</h3>
-          <p>Google&rsquo;s Agentic Resource Discovery lets agents find and verify tools across the web. Discovery and identity are necessary but not sufficient: a trusted capability can still be used in an untrusted way.</p>
-          <div class="card-footer">
-            <span class="read-pill">Read insight</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="/insights/agent-formation-engineering-performance-metrics/" class="insight-card-link">
+      <a href="/insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta">
             <span class="card-tag">Research</span>
             <span class="card-dot"></span>
-            <span class="card-read-time">11 min read</span>
-          </div>
-          <h3>The Strongest AI Engineering Teams Won&rsquo;t Be Built From Bigger Agents</h3>
-          <p>A DevOps study found collaborative team structures beat both silos and full integration. Applied to AI agents, the missing variable is a governance layer &mdash; with the metrics to prove it.</p>
-          <div class="card-footer">
-            <span class="read-pill">Read insight</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="/insights/enforce-engineering-standards-across-ai-assisted-teams/" class="insight-card-link">
-        <div class="insight-card">
-          <div class="card-meta">
-            <span class="card-tag">Technical Deep Dive</span>
+            <time class="card-date" datetime="2026-08-11">Aug 11, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
-          <h3>How to Enforce Engineering Standards Across AI-Assisted Teams</h3>
-          <p>AI multiplies code output but not architectural oversight. A four-layer model &mdash; decisions, standards, team context, verification &mdash; for enforcing engineering standards across human-agent teams.</p>
+          <h3>What Makes Prompts a Graph: Why Prompt Graph Engineering Needs Architectural Governance</h3>
+          <p>A July 2026 paper defines prompt graph engineering through four conditions. Explicit execution graphs still need architectural constraints at the nodes that change software.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
         </div>
       </a>
 
-      <a href="/insights/agentic-workforce-visibility-crisis/" class="insight-card-link">
+      <a href="/insights/claude-code-self-hosted-environments-architectural-governance/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta">
-            <span class="card-tag">Thought Leadership</span>
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-08-11">Aug 11, 2026</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">9 min read</span>
+          </div>
+          <h3>Claude Code Self-Hosted Environments: Why Enterprise Agents Need Architectural Governance</h3>
+          <p>Self-hosting controls where Claude Code executes. Architectural governance controls whether an authorized change still conforms to the decisions governing the repository.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/ai-agent-swarms-deterministic-guardrails/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Security Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-08-11">Aug 11, 2026</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">10 min read</span>
+          </div>
+          <h3>AI Agent Swarms Need Deterministic Guardrails</h3>
+          <p>An agent-driven intrusion spanned roughly 17,600 actions. Long-horizon swarms need constraints that survive delegation and remain authoritative at execution time.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Report Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-08-11">Aug 11, 2026</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">10 min read</span>
+          </div>
+          <h3>How to Close the Agentic Adoption Gap: What &ldquo;Enforce&rdquo; Means for Software Engineering</h3>
+          <p>McKinsey&rsquo;s adoption playbook ends with Enforce. For software engineering, accepted architectural decisions also need to reach and constrain agent execution.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/openai-symphony-architectural-context/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-08-11">Aug 11, 2026</time>
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>You Can&rsquo;t Govern What You Can&rsquo;t See: The Visibility Gap in Agentic Engineering</h3>
-          <p>Claude Code pricing and Copilot billing reveal a deeper problem: leaders have little visibility into an emerging agentic workforce. Costs are a symptom; governance starts with visibility.</p>
+          <h3>OpenAI Symphony: Why Agent Orchestration Still Needs Architectural Context</h3>
+          <p>Symphony turns the issue tracker into a control plane for coding agents. Durable work still needs durable architectural authority across disposable sessions.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
         </div>
       </a>
 
-      <a href="/insights/block-builderbot-coordination-governance/" class="insight-card-link">
+      <a href="/insights/when-ai-agents-degrade-architectural-intent-should-not/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta">
-            <span class="card-tag">Industry Analysis</span>
+            <span class="card-tag">Analysis</span>
             <span class="card-dot"></span>
-            <span class="card-read-time">9 min read</span>
+            <time class="card-date" datetime="2026-07-27">Jul 27, 2026</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">8 min read</span>
           </div>
-          <h3>Builderbot Proves the Next AI Engineering Layer Is Coordination, Not Coding</h3>
-          <p>Block&rsquo;s Builderbot operates across the company&rsquo;s repos and workflows at scale. It shows the next AI engineering challenge is organizational coordination, and why coordination still needs governance.</p>
+          <h3>When AI Agents Degrade, Architectural Intent Should Not</h3>
+          <p>Model downgrades, truncated context, dropped tools, and disabled hooks all change intent silently. The answer is intent-preserving degradation: make every fallback explicit.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
@@ -450,7 +470,7 @@
   </div>
 
   <div class="cards-section" id="topics">
-    <div class="section-divider"><span class="section-label">Browse by topic</span></div>
+    <div class="section-divider"><h2 class="section-label">Browse by topic</h2></div>
     <div class="cards-grid">
 
       <a href="/insights/topics/architectural-governance/" class="insight-card-link">
@@ -522,7 +542,7 @@
   </div>
 
   <div class="cards-section" id="start-here">
-    <div class="section-divider"><span class="section-label">Start here</span></div>
+    <div class="section-divider"><h2 class="section-label">Start here</h2></div>
     <div class="cards-grid">
 
       <a href="/insights/review-is-not-governance/" class="insight-card-link">
@@ -574,7 +594,7 @@
   </div>
 
   <div style="text-align: center; margin: 3rem 0 1rem;">
-    <a href="/insights/all/" class="read-pill" style="display: inline-block; padding: 0.7rem 1.6rem; font-size: 0.9rem;">View all insights &rarr;</a>
+    <a href="/insights/all/" class="hub-archive-cta">Browse all insights <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
 <aside aria-label="Mneme HQ newsletter" style="max-width:760px;margin:3rem auto;padding:1.5rem 1.75rem;border:1px solid var(--border2);border-radius:10px;background:rgba(200,240,96,0.03);">

@@ -288,6 +288,13 @@ TEMPLATE_MAP = {
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
 
     # Insights — new
+    "og-insights-prompt-graph-engineering.html": "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/og.png",
+    "og-insights-claude-self-hosted.html": "insights/claude-code-self-hosted-environments-architectural-governance/og.png",
+    "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
+    "og-insights-mckinsey-adoption-gap.html": "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/og.png",
+    "og-insights-openai-symphony.html": "insights/openai-symphony-architectural-context/og.png",
+
+    # Insights — new
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
 }
 

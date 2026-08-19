@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Synchronize archive-card publication dates with insight article metadata.
+"""Synchronize archive-card metadata with canonical insight article data.
 
 The full insights archive remains authored as static HTML so it satisfies the
 publishing validator and provides a complete no-JavaScript fallback. The
 catalogue enhancement uses ``data-published`` on each archive card for
 deterministic sorting, while a static ``<time>`` element exposes the same date
-to users and crawlers without JavaScript. This script keeps both derived values
-in sync with the canonical ``article:published_time`` value on each article.
+to users and crawlers without JavaScript. This script keeps both derived date
+values and the visible catalogue count in sync with the article collection.
 """
 
 from __future__ import annotations
@@ -42,6 +42,10 @@ READ_TIME_SLOT_RE = re.compile(
 ATTRIBUTE_RE_TEMPLATE = r"\b{attribute}\s*=\s*([\"'])(?P<value>.*?)\1"
 PUBLISHED_RE = re.compile(
     r"<meta\s+property=([\"'])article:published_time\1\s+content=([\"'])(?P<value>.*?)\2\s*/?>",
+    re.IGNORECASE,
+)
+CATALOG_COUNT_RE = re.compile(
+    r'(?P<open><p\s+class="catalog-count">)\d+(?P<close>\s+articles</p>)',
     re.IGNORECASE,
 )
 
@@ -107,6 +111,20 @@ def display_date(value: str) -> str:
         "Dec",
     )[published.month - 1]
     return f"{month} {published.day}, {published.year}"
+
+
+def synchronized_catalogue_count(source: str, article_count: int) -> str:
+    matches = list(CATALOG_COUNT_RE.finditer(source))
+    if len(matches) != 1:
+        raise ValueError(
+            "archive must contain exactly one <p class=\"catalog-count\"> element"
+        )
+
+    return CATALOG_COUNT_RE.sub(
+        rf"\g<open>{article_count}\g<close>",
+        source,
+        count=1,
+    )
 
 
 def synchronized_archive(
@@ -197,6 +215,7 @@ def main() -> int:
         source_bytes = ARCHIVE_PATH.read_bytes()
         source = source_bytes.decode("utf-8")
         synchronized, synchronized_urls, static_time_urls = synchronized_archive(source, dates)
+        synchronized = synchronized_catalogue_count(synchronized, len(dates))
     except (OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
@@ -220,19 +239,19 @@ def main() -> int:
     synchronized_bytes = synchronized.encode("utf-8")
 
     if synchronized_bytes == source_bytes:
-        print(f"Insights catalogue dates are in sync ({len(synchronized_urls)} articles).")
+        print(f"Insights catalogue metadata is in sync ({len(synchronized_urls)} articles).")
         return 0
 
     if args.check:
         print(
-            "ERROR: insights catalogue dates are out of sync. "
+            "ERROR: insights catalogue metadata is out of sync. "
             "Run: python scripts/sync_insights_catalog.py",
             file=sys.stderr,
         )
         return 1
 
     ARCHIVE_PATH.write_bytes(synchronized_bytes)
-    print(f"Updated insights catalogue dates ({len(synchronized_urls)} articles).")
+    print(f"Updated insights catalogue metadata ({len(synchronized_urls)} articles).")
     return 0
 
 
