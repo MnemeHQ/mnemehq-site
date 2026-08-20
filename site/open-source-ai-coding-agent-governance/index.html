@@ -46,13 +46,27 @@
         ]
       },
       {
-        "@type": "TechArticle",
+        "@type": "CollectionPage",
+        "name": "Open-Source Governance Tools for AI Coding Agents",
         "headline": "Open-Source Governance Tools for AI Coding Agents",
-        "description": "A category map of open-source, repo-native governance and memory tools for AI coding agents, compared on what each actually enforces versus retrieves.",
+        "description": "A category map of open-source governance tools for AI coding agents, segmented by the layer each one governs: context, architecture discovery, runtime tool execution, and architectural compliance.",
         "url": "https://mnemehq.com/open-source-ai-coding-agent-governance/",
+        "mainEntityOfPage": "https://mnemehq.com/open-source-ai-coding-agent-governance/",
+        "image": "https://mnemehq.com/open-source-ai-coding-agent-governance/og.png",
         "datePublished": "2026-08-18",
+        "dateModified": "2026-08-20",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"}
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
+        "hasPart": {
+          "@type": "ItemList",
+          "name": "Governance layers in agentic software development",
+          "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Context and memory", "description": "What the agent knows. OpenViking, Letta Context Repositories, MemClaw."},
+            {"@type": "ListItem", "position": 2, "name": "Architecture discovery", "description": "What the system looks like. RepoSwarm."},
+            {"@type": "ListItem", "position": 3, "name": "Runtime and tool governance", "description": "Which commands and tool calls the agent may execute. Knox."},
+            {"@type": "ListItem", "position": 4, "name": "Architectural governance", "description": "Whether generated changes respect architectural intent. Mneme."}
+          ]
+        }
       },
       {
         "@type": "FAQPage",
@@ -80,7 +94,7 @@
           {
             "@type": "Question",
             "name": "What open-source tools provide architectural guardrails for coding agents?",
-            "acceptedAnswer": {"@type": "Answer", "text": "As of this writing, the open-source projects most often surfaced for repo-native context and memory are OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, compared below. None of the four perform deterministic enforcement of architectural rules; each focuses on memory, retrieval, or documentation generation. Mneme is built specifically for the enforcement layer: it evaluates a proposed agent action against a decision corpus and returns a verdict."}
+            "acceptedAnswer": {"@type": "Answer", "text": "It depends which layer you mean. OpenViking, Letta's Context Repositories, RepoSwarm and MemClaw are memory, retrieval and documentation systems, and none of them enforce architectural rules. Knox does enforce, with an allow/review/block pipeline over agent tool calls and an immutable audit log, but it governs whether a command may execute rather than whether the resulting code respects an architectural decision. Mneme is built for that last layer: it evaluates a proposed change against a decision corpus and returns a deterministic verdict. The layers are complementary, so the useful question is which one your failure mode sits in."}
           }
         ]
       }
@@ -291,14 +305,14 @@
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Category Map</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">7 min read &nbsp;&middot;&nbsp; August 2026</span>
+      <span class="eyebrow-meta">Updated August 2026</span>
     </div>
     <h1>Open-Source Governance Tools for AI Coding Agents</h1>
-    <p class="article-lede">"Context governance for AI coding agents" gets used to describe at least four different mechanisms: memory, retrieval, documentation, and enforcement. The open-source projects usually recommended for it are strong at the first three. This maps what each actually does, verified against its own repository.</p>
+    <p class="article-lede">Open-source AI coding agent governance tools control different parts of the agentic development stack: context, memory, tool execution, security, and architectural compliance. They get grouped together in the same searches and recommendations, but they provide fundamentally different guarantees. This maps what each one actually governs, verified against its own source.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
       <span class="sep">&middot;</span>
-      <time datetime="2026-08-18">Published August 2026</time>
+      <time datetime="2026-08-20">Updated August 2026</time>
     </p>
   </header>
 
@@ -306,7 +320,7 @@
 
     <div class="verdict-box">
       <div class="verdict-label">Category map</div>
-      <p><strong>Context governance for AI coding agents splits into two different jobs: retrieval and enforcement.</strong> Retrieval determines what an agent knows before it acts. Enforcement determines what it is allowed to do. The open-source projects most commonly recommended for repo-native "governance," OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, are strong at the first job and do not attempt the second. That is not a criticism; it is a scope boundary worth being explicit about before choosing a tool.</p>
+      <p><strong>"AI coding agent governance" is not one category. It is separating into four layers, and tools in different layers are not substitutes for each other.</strong> Context and memory systems determine what an agent knows. Architecture discovery tools describe what the system looks like. Runtime governance decides which commands and tool calls may execute. Architectural governance decides whether a generated change respects the decisions the team already made. Most recommendation lists mix all four, which is why they produce confusing shortlists.</p>
     </div>
 
     <h2>Context governance is not one thing</h2>
@@ -347,6 +361,26 @@
 
     <p>Every tool below is genuinely useful at the layer it targets. None of them cross into the fourth row, and knowing that in advance saves an evaluation cycle.</p>
 
+    <h2>The four layers</h2>
+
+    <p>Sorting the field by what each tool governs makes the shortlist obvious, because most of the confusion comes from comparing tools that were never alternatives:</p>
+
+    <div style="overflow-x:auto;">
+    <table class="answer-table">
+      <thead>
+        <tr><th>Layer</th><th>Examples</th><th>What it governs</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Context and memory</td><td>OpenViking, Letta, MemClaw</td><td>What the agent knows</td></tr>
+        <tr><td>Architecture discovery</td><td>RepoSwarm</td><td>What the system looks like</td></tr>
+        <tr><td>Runtime and tool governance</td><td>Knox</td><td>Which commands and tool calls may execute</td></tr>
+        <tr><td>Architectural governance</td><td>Mneme</td><td>Whether a change respects architectural intent</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <p>The runtime layer is the newest of the four and the one growing fastest. It is also where the term "AI coding agent governance" is being used commercially: Endor Labs now markets under exactly that phrase, governing shell commands, file access, MCP tool calls and prompt injection from a security posture rather than an architectural one. That is a real category forming, not a phrase Mneme invented.</p>
+
     <h2>The open-source landscape</h2>
 
     <p>Four projects come up repeatedly when engineers search for open-source, repo-native alternatives to a generic vector database for agent context. Verified against each project's own repository rather than inferred from a search summary:</p>
@@ -381,6 +415,12 @@
           <td>No &mdash; produces documentation, not a checkable constraint</td>
         </tr>
         <tr>
+          <td><a href="https://qoris.ai/developers" target="_blank" rel="noopener">Knox</a></td>
+          <td>Runtime governance layer that intercepts agent tool calls before execution</td>
+          <td>Allow / review / block pipeline on every tool call; safe actions run, risky ones pause for approval, dangerous ones are blocked; immutable audit log. Works with Claude Code, Cursor, Codex and Aider</td>
+          <td>Yes &mdash; at the tool-call layer, not the architectural one</td>
+        </tr>
+        <tr>
           <td><a href="https://github.com/Felo-Inc/memclaw" target="_blank" rel="noopener">MemClaw</a></td>
           <td>Persistent, project-isolated memory with a review dashboard</td>
           <td>One workspace per project to prevent context bleed between projects; MCP-native; web dashboard to inspect what an agent remembers</td>
@@ -390,13 +430,15 @@
     </table>
     </div>
 
-    <p>Read literally, that last column is the whole finding. Every project solves a real problem, and none of them solve the one this page is titled after. That is not a gap in the research; it is the shape of the current open-source landscape.</p>
+    <p>That last column is the finding, and it is more interesting than a straight yes or no. The four memory and documentation projects do not attempt enforcement at all. Knox does enforce, deterministically and with an audit trail, but on a different object: it governs whether a command or tool call is permitted to run, not whether the resulting code respects an architectural decision.</p>
+
+    <p>Knox will stop an agent running <code>rm -rf</code> or reading a credentials file. It will not stop an agent introducing a direct database call in a component that architecture says must go through the repository layer, because that is a legal tool call producing legal code. Both are enforcement. They are enforcing different things.</p>
 
     <h2>Where Mneme fits</h2>
 
-    <p>Mneme occupies the row the table above leaves empty. It keeps architectural decisions in a durable corpus outside the agent's conversation, selects the ones applicable to a specific change, and evaluates a proposed edit against them deterministically before it lands, guide, warn, or block, with the same input producing the same verdict on every run.</p>
+    <p>Mneme occupies the fourth layer. It keeps architectural decisions in a durable corpus outside the agent's conversation, selects the ones applicable to a specific change, and evaluates a proposed edit against them deterministically before it lands, guide, warn, or block, with the same input producing the same verdict on every run.</p>
 
-    <p>That makes it complementary to the four projects above rather than a substitute for any of them. A team could reasonably run OpenViking or Letta for context and memory, RepoSwarm for architecture documentation, and Mneme for the enforcement layer none of the others attempt. They answer different questions.</p>
+    <p>That makes it complementary to everything above rather than a substitute for any of it. A mature setup could reasonably run Letta or OpenViking for context, RepoSwarm for architecture documentation, Knox for runtime tool safety, and Mneme for architectural compliance. Four layers, four different questions, and no reason a team should have to pick one.</p>
 
     <div class="callout"><p><strong>The distinction that matters:</strong> retrieval determines what an agent knows. Enforcement determines what it is allowed to do. A tool can excel at the first and still let a violation through, because knowing a rule and being prevented from breaking it are different system properties.</p></div>
 
@@ -406,7 +448,8 @@
       <li><strong>Choose a memory or retrieval system</strong> (OpenViking, Letta) when the problem is an agent forgetting prior context between sessions, or needing to browse a large project's history efficiently.</li>
       <li><strong>Choose architecture documentation</strong> (RepoSwarm) when the problem is onboarding agents, or humans, to an unfamiliar or sprawling multi-repo codebase.</li>
       <li><strong>Choose isolated project memory</strong> (MemClaw) when multiple projects share an agent and context bleed between them is the failure mode.</li>
-      <li><strong>Choose deterministic enforcement</strong> (Mneme) when the failure mode is not that the agent lacked context, but that it had the context and violated the decision anyway.</li>
+      <li><strong>Choose runtime governance</strong> (Knox) when the failure mode is an agent executing something it should not have been allowed to run at all.</li>
+      <li><strong>Choose architectural governance</strong> (Mneme) when the failure mode is not that the agent lacked context or ran a dangerous command, but that it had the context and still produced code that violates a decision the team already made.</li>
     </ul>
 
     <p>That last case is more common than it sounds. Research on context compaction has found standing constraints retained at low rates even while the surrounding task survives intact, which means a rule can be available at the start of a session and gone by the time it matters. <a href="/insights/architecture-cannot-be-a-prompt-context-compaction/">Availability is not the same property as enforcement</a>, and no amount of better retrieval closes that gap on its own.</p>
@@ -435,9 +478,28 @@
       </details>
       <details class="faq-item">
         <summary>What open-source tools provide architectural guardrails for coding agents?</summary>
-        <div class="faq-body">As of this writing, the open-source projects most often surfaced for repo-native context and memory are OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, compared below. None of the four perform deterministic enforcement of architectural rules; each focuses on memory, retrieval, or documentation generation. Mneme is built specifically for the enforcement layer: it evaluates a proposed agent action against a decision corpus and returns a verdict.</div>
+        <div class="faq-body">It depends which layer you mean. OpenViking, Letta's Context Repositories, RepoSwarm and MemClaw are memory, retrieval and documentation systems, and none of them enforce architectural rules. Knox does enforce, with an allow/review/block pipeline over agent tool calls and an immutable audit log, but it governs whether a command may execute rather than whether the resulting code respects an architectural decision. Mneme is built for that last layer: it evaluates a proposed change against a decision corpus and returns a deterministic verdict. The layers are complementary, so the useful question is which one your failure mode sits in.</div>
       </details>
   </section>
+
+  <h2 style="font-family:'Inter',sans-serif;font-size:1.25rem;font-weight:600;letter-spacing:-0.015em;margin:3rem 0 0.5rem;">Explore AI coding agent governance</h2>
+  <p style="font-size:0.9rem;color:var(--muted);margin-bottom:1.25rem;">The layers above in depth, and the evidence underneath them.</p>
+  <div style="overflow-x:auto;">
+  <table class="answer-table">
+    <tbody>
+      <tr><td><a href="/concepts/architectural-governance/">Architectural Governance</a></td><td>The mechanism that turns decisions into machine-evaluable constraints.</td></tr>
+      <tr><td><a href="/concepts/architectural-drift-prevention/">Architectural Drift Prevention</a></td><td>The discipline this category map sits inside, and its eight-step lifecycle.</td></tr>
+      <tr><td><a href="/concepts/executable-architectural-intent/">Executable Architectural Intent</a></td><td>What a decision needs before it can function as a control.</td></tr>
+      <tr><td><a href="/concepts/autonomous-software-engineering-governance/">Autonomous Software Engineering Governance</a></td><td>Governing agents that operate without a person initiating each action.</td></tr>
+      <tr><td><a href="/compare/rag-vs-governance/">RAG vs Governance</a></td><td>Why retrieval and enforcement are different layers, in detail.</td></tr>
+      <tr><td><a href="/insights/memory-is-not-governance/">Memory Is Not Governance</a></td><td>Recall and enforcement optimise for different things.</td></tr>
+      <tr><td><a href="/insights/how-ai-coding-agents-use-adrs/">How AI Coding Agents Use ADRs</a></td><td>What happens to a decision record once an agent reads it.</td></tr>
+      <tr><td><a href="/insights/architecture-cannot-be-a-prompt-context-compaction/">Architecture Cannot Be a Prompt</a></td><td>COMPINT: compactors retain only 17% of standing constraints.</td></tr>
+      <tr><td><a href="/benchmark/">Governance Benchmark</a></td><td>How the enforcement claims are measured.</td></tr>
+      <tr><td><a href="/demo/">Live Governance Demo</a></td><td>A violation attempted and blocked, end to end.</td></tr>
+    </tbody>
+  </table>
+  </div>
 
   <aside class="related-panel" aria-labelledby="related-panel-label">
     <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
