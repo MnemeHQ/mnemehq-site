@@ -163,6 +163,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 # url_path is the path segment after mnemehq.com/ in the OG card URL line.
 
 TEMPLATES = [
+    (
+        "og-concepts-architectural-drift-prevention.html",
+        "Concepts",
+        "Architectural Drift Prevention",
+        "52px",
+        "The discipline of keeping generated code inside decisions already made.",
+        "concepts/architectural-drift-prevention",
+    ),
     # === INSIGHTS (Aug wave) ===
     (
         "og-insights-gartner-arch-debt.html",
@@ -807,6 +815,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
