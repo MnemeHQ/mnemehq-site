@@ -164,6 +164,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-oss-governance-landing.html",
+        "Category Map",
+        "Open-Source Governance Tools for AI Coding Agents",
+        "40px",
+        "Memory, retrieval, docs, and enforcement -- what each project actually does.",
+        "open-source-ai-coding-agent-governance",
+    ),
+    (
         "og-concepts-architectural-drift-prevention.html",
         "Concepts",
         "Architectural Drift Prevention",
@@ -815,6 +823,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",

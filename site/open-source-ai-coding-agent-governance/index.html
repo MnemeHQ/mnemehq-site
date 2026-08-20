@@ -3,38 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mneme HQ vs RAG-based Governance &mdash; Mneme HQ</title>
+  <title>Open-Source Governance Tools for AI Coding Agents &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="RAG retrieves relevant context. Mneme HQ enforces architectural constraints. Retrieval and enforcement are different layers — and confusing them is the most common governance mistake in AI engineering." />
+  <meta name="description" content="A category map of open-source, repo-native governance and memory tools for AI coding agents, compared on what each actually enforces versus retrieves." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/compare/rag-vs-governance/" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <link rel="canonical" href="https://mnemehq.com/open-source-ai-coding-agent-governance/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Mneme HQ vs RAG-based Governance" />
-  <meta property="og:description" content="RAG retrieves relevant context. Mneme HQ enforces architectural constraints. Retrieval and enforcement are different layers — and confusing them is the most common governance mistake in AI engineering." />
-  <meta property="og:url" content="https://mnemehq.com/compare/rag-vs-governance/" />
-  <meta property="og:image" content="https://mnemehq.com/compare/rag-vs-governance/og.png" />
+  <meta property="og:title" content="Open-Source Governance Tools for AI Coding Agents" />
+  <meta property="og:description" content="A category map of open-source, repo-native governance and memory tools for AI coding agents, compared on what each actually enforces versus retrieves." />
+  <meta property="og:url" content="https://mnemehq.com/open-source-ai-coding-agent-governance/" />
+  <meta property="og:image" content="https://mnemehq.com/open-source-ai-coding-agent-governance/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Mneme HQ vs RAG-based Governance" />
-  <meta name="twitter:description" content="RAG retrieves relevant context. Mneme HQ enforces architectural constraints. Retrieval and enforcement are different layers." />
-  <meta name="twitter:image" content="https://mnemehq.com/compare/rag-vs-governance/og.png" />
+  <meta name="twitter:title" content="Open-Source Governance Tools for AI Coding Agents" />
+  <meta name="twitter:description" content="A category map of open-source, repo-native governance and memory tools for AI coding agents, compared on what each actually enforces versus retrieves." />
+  <meta name="twitter:image" content="https://mnemehq.com/open-source-ai-coding-agent-governance/og.png" />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-05-14T00:00:00Z" />
+  <meta property="article:published_time" content="2026-08-18T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Engineering" />
 
-    <!-- Consent defaults -->
+  <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <!-- End Google Tag Manager -->
-
   <link rel="icon" href="/favicon-v2.png" type="image/png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Open-Source Governance Tools for AI Coding Agents", "item": "https://mnemehq.com/open-source-ai-coding-agent-governance/"}
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Open-Source Governance Tools for AI Coding Agents",
+        "description": "A category map of open-source, repo-native governance and memory tools for AI coding agents, compared on what each actually enforces versus retrieves.",
+        "url": "https://mnemehq.com/open-source-ai-coding-agent-governance/",
+        "datePublished": "2026-08-18",
+        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"}
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is context governance for AI coding agents?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Context governance is the umbrella term for keeping AI coding agents aligned with a project's memory, rules, and architecture as they generate code. It splits into two different jobs that are often conflated: giving the agent the right information (memory, retrieval, instructions) and constraining what the agent is allowed to do with it (deterministic enforcement). Most open-source tools in this space do the first. Very few do the second."}
+          },
+          {
+            "@type": "Question",
+            "name": "Is AI agent memory the same as governance?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. Memory and retrieval systems, such as a virtual filesystem of past context or a git-backed history of what an agent has learned, improve what an agent knows when it starts a task. They do not evaluate the action the agent is about to take against a rule and block it if it violates one. A tool can have excellent memory and zero enforcement, which is the case for every memory-focused project in the comparison below."}
+          },
+          {
+            "@type": "Question",
+            "name": "Can coding agents be forced to follow ADRs?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Only by a layer that evaluates a proposed change against the ADR's scope and constraint, and returns a verdict before the change lands. Putting an ADR in a retrieval index or an instruction file makes it available to the agent; it does not make it binding. Forcing compliance requires the constraint to be checked at the point of action, independent of whether the agent chose to consult the ADR."}
+          },
+          {
+            "@type": "Question",
+            "name": "Are CLAUDE.md and AGENTS.md sufficient for governance?",
+            "acceptedAnswer": {"@type": "Answer", "text": "They are a necessary and insufficient first layer. Instruction files communicate intent cheaply and are genuinely useful for onboarding an agent to a codebase. Their effect on a specific implementation depends on the file being loaded, the relevant section reaching active context, surviving whatever context compaction the harness performs, being interpreted correctly, and the model then choosing to comply. That is a long chain with no guarantee at the end of it, which is why instruction files sit at the availability layer rather than the enforcement layer."}
+          },
+          {
+            "@type": "Question",
+            "name": "What open-source tools provide architectural guardrails for coding agents?",
+            "acceptedAnswer": {"@type": "Answer", "text": "As of this writing, the open-source projects most often surfaced for repo-native context and memory are OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, compared below. None of the four perform deterministic enforcement of architectural rules; each focuses on memory, retrieval, or documentation generation. Mneme is built specifically for the enforcement layer: it evaluates a proposed agent action against a decision corpus and returns a verdict."}
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -201,71 +254,13 @@
     .bestfor-card .bf-tag.yes { color: var(--accent); }
     .bestfor-card .bf-tag.no { color: #e08b8b; }
     @media (max-width: 640px) { .bestfor-grid { grid-template-columns: 1fr; } }
+
+    .article-body a { color: #8be0c8; text-decoration: none; border-bottom: 1px solid rgba(139,224,200,0.4); }
+    .article-body a:hover { border-bottom-color: #8be0c8; }
+    .comparison-table td:first-child { white-space: normal; min-width: 11ch; }
+    .comparison-table a { color: #8be0c8; }
   </style>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Compare", "item": "https://mnemehq.com/compare/"},
-          {"@type": "ListItem", "position": 3, "name": "Mneme HQ vs RAG-based Governance", "item": "https://mnemehq.com/compare/rag-vs-governance/"}
-        ]
-      },
-      {
-        "@type": "Article",
-        "headline": "Mneme HQ vs RAG-based Governance",
-        "description": "RAG retrieves relevant context. Mneme HQ enforces architectural constraints. Retrieval and enforcement are different layers — and confusing them is the most common governance mistake in AI engineering.",
-        "url": "https://mnemehq.com/compare/rag-vs-governance/",
-        "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/compare/rag-vs-governance/og.png",
-        "mainEntityOfPage": "https://mnemehq.com/compare/rag-vs-governance/"
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Is Mneme HQ an alternative to RAG?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Not in the way it sounds — they are different layers. RAG retrieves context at query time; Mneme HQ enforces constraints at generation time, blocking a violating Edit or Write before it lands. If you are searching for RAG alternatives because retrieval-based governance keeps letting violations through, the fix is deterministic enforcement on top, not a different retrieval system. Mneme HQ is not a memory or RAG system; it governs generated code."}
-          },
-          {
-            "@type": "Question",
-            "name": "When should a team switch from RAG to Mneme HQ?",
-            "acceptedAnswer": {"@type": "Answer", "text": "You do not switch — you keep RAG for recall and add Mneme HQ for enforcement. Add it when a constraint must hold deterministically at generation time rather than depend on whether the right context was retrieved, when rules differ by path, or when more than one agent touches the code. RAG informs the model; Mneme HQ makes the decision non-negotiable."}
-          },
-          {
-            "@type": "Question",
-            "name": "Can RAG enforce architectural constraints?",
-            "acceptedAnswer": {"@type": "Answer", "text": "RAG can surface relevant constraints as context for the model to consider. It cannot prevent the model from violating those constraints. A model given a RAG-retrieved rule can still generate code that breaks it — especially under task completion pressure or when the rule competes with other signals in a long context window. Enforcement requires a blocking layer, not a retrieval layer."}
-          },
-          {
-            "@type": "Question",
-            "name": "Does Mneme HQ use RAG internally?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme uses deterministic retrieval: given a file path or edit operation, it looks up which architectural decisions apply based on scope rules and precedence semantics. This is not probabilistic embedding search — it is structured lookup against a typed decision corpus. The retrieval is exact and reproducible, not approximate."}
-          },
-          {
-            "@type": "Question",
-            "name": "Should we use both RAG and Mneme HQ?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Yes, at different layers. RAG is appropriate for surfacing documentation, historical context, and relevant examples to improve generation quality. Mneme is appropriate for enforcing architectural decisions that must not be violated regardless of generation quality. The two operate on different problems: RAG improves what the model produces, Mneme constrains what the model is allowed to produce."}
-          },
-          {
-            "@type": "Question",
-            "name": "Why does retrieval quality matter less than enforcement for governance?",
-            "acceptedAnswer": {"@type": "Answer", "text": "A governance system must be correct every time, not most of the time. RAG retrieval is probabilistic: the right rule may not be in the top-k results, and even when it is, the model may not apply it under competing task signals. Governance infrastructure must be deterministic — the violation either happens or it does not. That property requires enforcement, not retrieval."}
-          }
-        ]
-      }
-    ]
-  }
-  </script>
-</head>
-<body>
+  <body>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
@@ -288,270 +283,181 @@
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
-    <li><a href="/compare/">Compare</a></li>
-    <li aria-current="page">Mneme HQ vs RAG-based Governance</li>
+    <li aria-current="page">Open-Source Governance Tools for AI Coding Agents</li>
   </ol>
 </nav>
 <article class="article-wrap">
   <header class="article-header">
     <div class="article-eyebrow">
-      <span class="eyebrow-tag">Comparative</span>
+      <span class="eyebrow-tag">Category Map</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">5 min read &nbsp;&middot;&nbsp; May 2026</span>
+      <span class="eyebrow-meta">7 min read &nbsp;&middot;&nbsp; August 2026</span>
     </div>
-    <h1>Mneme HQ vs RAG-based Governance</h1>
-    <p class="article-lede">RAG retrieves relevant context at query time. Mneme HQ enforces architectural constraints at generation time. These are different layers of the same problem &mdash; and confusing them is the most common governance mistake teams make when scaling AI engineering.</p>
+    <h1>Open-Source Governance Tools for AI Coding Agents</h1>
+    <p class="article-lede">"Context governance for AI coding agents" gets used to describe at least four different mechanisms: memory, retrieval, documentation, and enforcement. The open-source projects usually recommended for it are strong at the first three. This maps what each actually does, verified against its own repository.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
       <span class="sep">&middot;</span>
-      <time datetime="2026-05-14">Published May 2026</time>
-      <span class="sep">&middot;</span>
-      <time datetime="2026-05-14">Updated May 2026</time>
+      <time datetime="2026-08-18">Published August 2026</time>
     </p>
   </header>
 
   <div class="article-body">
 
     <div class="verdict-box">
-      <div class="verdict-label">Verdict</div>
-      <p><strong>RAG and Mneme HQ solve different layers of the problem, so they belong together rather than in competition.</strong> RAG retrieves relevant context at query time to help the model recall; Mneme HQ enforces architectural constraints at generation time, blocking a violating Edit or Write before it lands on disk regardless of what was retrieved. Keep RAG for search and recall; use Mneme HQ for enforcement. The common mistake is treating RAG as governance &mdash; retrieval is probabilistic, and enforcement has to be deterministic. Mneme HQ is not a memory or retrieval system; it is an enforcement layer.</p>
+      <div class="verdict-label">Category map</div>
+      <p><strong>Context governance for AI coding agents splits into two different jobs: retrieval and enforcement.</strong> Retrieval determines what an agent knows before it acts. Enforcement determines what it is allowed to do. The open-source projects most commonly recommended for repo-native "governance," OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, are strong at the first job and do not attempt the second. That is not a criticism; it is a scope boundary worth being explicit about before choosing a tool.</p>
     </div>
 
-    <h2>Mneme HQ vs RAG</h2>
+    <h2>Context governance is not one thing</h2>
 
-    <p>At a glance &mdash; what each layer is best for, where it falls short, and the point at which teams add Mneme HQ:</p>
+    <p>The phrase gets used to cover a wide range of mechanisms: a filesystem an agent can browse, a git-tracked memory that survives across sessions, generated architecture documentation, a workspace that isolates one project's context from another's, a rules file, a retrieval index, and a layer that blocks a prohibited file edit before it happens. These are not interchangeable, and treating them as one category is why "AI coding agent governance" searches surface tools that solve completely different problems.</p>
+
+    <p>A useful way to sort them is by what they actually guarantee:</p>
 
     <div style="overflow-x:auto;">
     <table class="answer-table">
       <thead>
-        <tr><th>Approach</th><th>Best for</th><th>Weakness</th><th>When to use Mneme HQ</th></tr>
+        <tr><th>Layer</th><th>Question it answers</th><th>Guarantee</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td>RAG (retrieval)</td>
-          <td>Surfacing relevant prior context, docs, and examples at query time so the model recalls them</td>
-          <td>Probabilistic &mdash; retrieval can miss or rank wrong; it informs the model but cannot block a violation; not deterministic enforcement</td>
-          <td>When a constraint must actually hold at generation time rather than depend on whether the right chunk was retrieved</td>
+          <td>Memory / retrieval</td>
+          <td>What does the agent already know?</td>
+          <td>Probabilistic &mdash; the right context may or may not surface</td>
         </tr>
         <tr>
-          <td>Mneme HQ</td>
-          <td>Enforcing architectural decisions at Edit/Write time across Claude Code and CI; deterministic precedence</td>
-          <td>Governs, does not generate or retrieve; native hooks are Claude Code today (other agents governed via CI export)</td>
-          <td>Add it alongside RAG the moment a decision must be enforced rather than merely recalled</td>
+          <td>Instructions (CLAUDE.md, AGENTS.md)</td>
+          <td>What should the agent be told?</td>
+          <td>Probabilistic &mdash; depends on the model reading and complying</td>
+        </tr>
+        <tr>
+          <td>Architecture documentation</td>
+          <td>What does this system look like?</td>
+          <td>Descriptive &mdash; informs, does not constrain</td>
+        </tr>
+        <tr>
+          <td>Deterministic enforcement</td>
+          <td>Is this specific action allowed?</td>
+          <td>Guaranteed &mdash; same input, same verdict, every time</td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <div class="bestfor-grid">
-      <div class="bestfor-card">
-        <div class="bf-tool">RAG (retrieval)</div>
-        <div class="bf-row"><span class="bf-tag yes">Best for</span> recall &mdash; surfacing relevant context, docs, and prior decisions at query time.</div>
-        <div class="bf-row"><span class="bf-tag no">Not for</span> deterministic enforcement &mdash; it cannot block a violation, only make the model more likely to avoid one.</div>
-      </div>
-      <div class="bestfor-card">
-        <div class="bf-tool">Mneme HQ</div>
-        <div class="bf-row"><span class="bf-tag yes">Best for</span> making a decision actually hold &mdash; hook-level enforcement, deterministic precedence, CI gating.</div>
-        <div class="bf-row"><span class="bf-tag no">Not for</span> retrieval or search &mdash; it is not a memory system; it enforces, it does not recall.</div>
-      </div>
-    </div>
+    <p>Every tool below is genuinely useful at the layer it targets. None of them cross into the fourth row, and knowing that in advance saves an evaluation cycle.</p>
 
-    <div class="callout"><p><strong>The bottom line.</strong> Retrieval surfaces relevant context probabilistically; governance enforces architectural decisions deterministically. RAG improves what the model sees; Mneme constrains what it is allowed to produce. They are complementary layers, not alternatives.</p></div>
+    <h2>The open-source landscape</h2>
 
-    <h2>What RAG-based governance does</h2>
-
-    <p>RAG (retrieval-augmented generation) applied to governance typically works like this: a vector store is indexed with ADRs, coding standards, architecture docs, or decision records. When a developer asks the AI to generate code, the relevant documents are retrieved and injected into the context window alongside the task.</p>
-
-    <p>The premise is sound: better context produces better output. If the model has the relevant architectural decision in front of it, it is more likely to comply with it.</p>
-
-    <ul>
-      <li>Improves context relevance by surfacing applicable rules at query time</li>
-      <li>Reduces the noise of injecting every rule into every session</li>
-      <li>Works with existing vector infrastructure (Pinecone, pgvector, Chroma, etc.)</li>
-      <li>Scales to large decision corpora without blowing context windows</li>
-      <li>Produces better average-case compliance than flat instruction files</li>
-    </ul>
-
-    <p>RAG-based approaches are a genuine improvement over stuffing every rule into a CLAUDE.md file. They solve the context quality problem. They do not solve the enforcement problem.</p>
-
-    <div class="callout">
-      <p><strong>The retrieval ceiling:</strong> A governance system that depends on probabilistic retrieval and model compliance is not a governance system. It is a better suggestion system. The model can still violate a retrieved rule. The violation is just slightly less likely.</p>
-    </div>
-
-    <h2>Where RAG ends and enforcement begins</h2>
+    <p>Four projects come up repeatedly when engineers search for open-source, repo-native alternatives to a generic vector database for agent context. Verified against each project's own repository rather than inferred from a search summary:</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="comparison-table">
       <thead>
         <tr>
-          <th>Dimension</th>
-          <th>RAG-based approach</th>
-          <th>Mneme HQ</th>
+          <th>Project</th>
+          <th>What it actually does</th>
+          <th>Mechanism</th>
+          <th>Enforcement?</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>Mechanism</td>
-          <td>Retrieves and injects context</td>
-          <td>Blocks Edit/Write at violation point</td>
+          <td><a href="https://github.com/volcengine/OpenViking" target="_blank" rel="noopener">OpenViking</a></td>
+          <td>Self-evolving context database unifying agent memory, retrieval, and skills</td>
+          <td>Virtual filesystem under a <code>viking://</code> protocol; three-tier (L0/L1/L2) hierarchical loading; agent browses context with <code>ls</code>/<code>tree</code>/<code>find</code> instead of a vector query</td>
+          <td>No &mdash; retrieval and organization only</td>
         </tr>
         <tr>
-          <td>Enforcement model</td>
-          <td>Probabilistic &mdash; model may comply</td>
-          <td>Deterministic &mdash; violation is blocked</td>
+          <td><a href="https://www.letta.com/blog/context-repositories/" target="_blank" rel="noopener">Letta Context Repositories</a></td>
+          <td>Git-backed memory for coding agents, versioned like code</td>
+          <td>Agent context stored as local files under git; progressive disclosure by reorganizing the file hierarchy; multi-agent collaboration through standard git operations</td>
+          <td>No &mdash; permission modes exist for tool-call approval, not architectural rule checking</td>
         </tr>
         <tr>
-          <td>Rule application</td>
-          <td>Top-k retrieved, model-interpreted</td>
-          <td>Scope-matched, precedence-resolved</td>
+          <td><a href="https://github.com/royosherove/repo-swarm" target="_blank" rel="noopener">RepoSwarm</a></td>
+          <td>Multi-repo architecture discovery and documentation generation</td>
+          <td>Analyzes a repo portfolio and generates standardized <code>.arch.md</code> files per repository as agent context and onboarding material</td>
+          <td>No &mdash; produces documentation, not a checkable constraint</td>
         </tr>
         <tr>
-          <td>Failure mode</td>
-          <td>Wrong rule retrieved; model ignores rule</td>
-          <td>Override requires explicit decision record</td>
-        </tr>
-        <tr>
-          <td>Conflict resolution</td>
-          <td>Model interprets conflicts implicitly</td>
-          <td>Precedence engine resolves explicitly</td>
-        </tr>
-        <tr>
-          <td>Audit trail</td>
-          <td>No native provenance</td>
-          <td>Every enforcement event is traceable</td>
-        </tr>
-        <tr>
-          <td>Autonomous agent support</td>
-          <td>Rules dilute over long context</td>
-          <td>Hook fires per operation regardless of context length</td>
+          <td><a href="https://github.com/Felo-Inc/memclaw" target="_blank" rel="noopener">MemClaw</a></td>
+          <td>Persistent, project-isolated memory with a review dashboard</td>
+          <td>One workspace per project to prevent context bleed between projects; MCP-native; web dashboard to inspect what an agent remembers</td>
+          <td>No &mdash; storage and visibility, not a policy layer</td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <h2>The layer model</h2>
+    <p>Read literally, that last column is the whole finding. Every project solves a real problem, and none of them solve the one this page is titled after. That is not a gap in the research; it is the shape of the current open-source landscape.</p>
 
-    <p>RAG and governance enforcement are not competing tools. They operate at different layers of the AI engineering stack. The confusion arises because both involve &ldquo;making the model aware of architectural decisions.&rdquo; But awareness and compliance are different properties.</p>
+    <h2>Where Mneme fits</h2>
 
-    <div class="layer-stack">
-      <div class="layer-row layer-row--dim">
-        <span>LLM generation</span>
-        <span class="layer-desc">produces output</span>
-      </div>
-      <div class="layer-row layer-row--rag">
-        <span>RAG / context retrieval</span>
-        <span class="layer-desc">improves context quality</span>
-      </div>
-      <div class="layer-row layer-row--mneme">
-        <span>Governance enforcement (Mneme)</span>
-        <span class="layer-desc">blocks violations deterministically</span>
-      </div>
-      <div class="layer-row layer-row--dim">
-        <span>ADRs / decision corpus</span>
-        <span class="layer-desc">source of truth</span>
-      </div>
-    </div>
+    <p>Mneme occupies the row the table above leaves empty. It keeps architectural decisions in a durable corpus outside the agent's conversation, selects the ones applicable to a specific change, and evaluates a proposed edit against them deterministically before it lands, guide, warn, or block, with the same input producing the same verdict on every run.</p>
 
-    <p>RAG improves the quality of what the model produces by surfacing relevant context. Mneme constrains what the model is permitted to produce by enforcing typed architectural decisions. These are complementary operations on the same underlying corpus.</p>
+    <p>That makes it complementary to the four projects above rather than a substitute for any of them. A team could reasonably run OpenViking or Letta for context and memory, RepoSwarm for architecture documentation, and Mneme for the enforcement layer none of the others attempt. They answer different questions.</p>
 
-    <p>A team that uses RAG without Mneme has better-informed generations that can still violate constraints. A team that uses Mneme without RAG has enforced constraints against a baseline context that may be less targeted. The combination provides both quality and compliance.</p>
+    <div class="callout"><p><strong>The distinction that matters:</strong> retrieval determines what an agent knows. Enforcement determines what it is allowed to do. A tool can excel at the first and still let a violation through, because knowing a rule and being prevented from breaking it are different system properties.</p></div>
 
-    <h2>Why enforcement cannot be probabilistic</h2>
-
-    <p>The core argument for governance infrastructure over RAG-only approaches comes down to a single property: <strong>determinism.</strong></p>
-
-    <p>A governance system must be correct every time, not most of the time. RAG retrieval is approximate by design: the right rule may not appear in the top-k results, and even when it does, the model applies it under competing task signals in a context window that is filling with tool outputs, prior turns, and intermediate reasoning.</p>
-
-    <p>Consider what happens with a RAG-based approach in an autonomous agent workflow with retries and multi-step orchestration. The rule was retrieved in step 1. By step 8, the context has grown. The model&rsquo;s attention to the retrieved constraint has shifted. A violation in step 10 is not caught because nothing blocked it &mdash; the context just drifted.</p>
-
-    <p>Mneme hooks into every Edit and Write operation. The governance check runs per operation, not per session. There is no context drift. The enforcement surface does not dilute as the context window fills.</p>
-
-    <h2>When teams reach the RAG ceiling</h2>
-
-    <p>Teams typically hit the RAG ceiling for governance in one of three ways:</p>
+    <h2>How to choose</h2>
 
     <ul>
-      <li><strong>Multi-model drift.</strong> Different models retrieve the same rule and apply it differently. Switching from one model to another changes compliance behavior even with identical context. Enforcement that runs independently of model behavior is insulated from this.</li>
-      <li><strong>Autonomous agent violations.</strong> Rules retrieved at session start lose influence over long agent runs. A violation in step 12 of an orchestrated workflow is invisible to a rule read in step 1.</li>
-      <li><strong>Contested decisions.</strong> When a rule is ambiguous or in conflict with another, RAG surfaces both and the model picks. A precedence engine resolves the conflict deterministically based on scope and authority.</li>
+      <li><strong>Choose a memory or retrieval system</strong> (OpenViking, Letta) when the problem is an agent forgetting prior context between sessions, or needing to browse a large project's history efficiently.</li>
+      <li><strong>Choose architecture documentation</strong> (RepoSwarm) when the problem is onboarding agents, or humans, to an unfamiliar or sprawling multi-repo codebase.</li>
+      <li><strong>Choose isolated project memory</strong> (MemClaw) when multiple projects share an agent and context bleed between them is the failure mode.</li>
+      <li><strong>Choose deterministic enforcement</strong> (Mneme) when the failure mode is not that the agent lacked context, but that it had the context and violated the decision anyway.</li>
     </ul>
 
-    <p>None of these are fixable by improving retrieval quality. They are structural properties of probabilistic enforcement. The fix is a layer below retrieval: a hook that evaluates the actual edit against the actual rules and blocks before the violation reaches the codebase.</p>
+    <p>That last case is more common than it sounds. Research on context compaction has found standing constraints retained at low rates even while the surrounding task survives intact, which means a rule can be available at the start of a session and gone by the time it matters. <a href="/insights/architecture-cannot-be-a-prompt-context-compaction/">Availability is not the same property as enforcement</a>, and no amount of better retrieval closes that gap on its own.</p>
 
-    <h2>Can Mneme HQ and RAG be used together?</h2>
+    <h2>What "architectural governance" specifically requires</h2>
 
-    <p>Yes &mdash; they operate on different layers, and using both is the recommended setup. The right architecture uses RAG and governance enforcement at their respective layers:</p>
+    <p><a href="/concepts/executable-architectural-intent/">Executable architectural intent</a> is the slice of project knowledge that has been promoted from documentation into a form something can evaluate: a decision, the paths or constructs it governs, and the constraint that follows. None of the four memory-focused projects above produce that artifact, because producing it was never their goal. It is worth stating plainly rather than implying by omission, since the gap is exactly what makes the category interesting.</p>
 
-    <ol>
-      <li><strong>Build a typed decision corpus</strong> (ADRs, governance decisions, scope rules). This is the shared source of truth for both systems.</li>
-      <li><strong>Use RAG to surface relevant context</strong> at generation time, improving the model&rsquo;s awareness of applicable decisions. Better context produces better average-case output.</li>
-      <li><strong>Use Mneme to enforce the hard constraints</strong> at operation time. When the model generates an Edit or Write, Mneme checks it against the decision corpus deterministically and blocks violations.</li>
-      <li><strong>Track overrides explicitly.</strong> When a developer overrides a governance decision, the override is itself a decision record &mdash; with rationale, scope, and provenance. RAG can surface override history in future sessions.</li>
-    </ol>
-
-    <p>Mneme runs as the enforcement step on whatever the model produces, independent of what RAG retrieved into context. The same command evaluates the edit against the decision corpus and blocks violations deterministically:</p>
-    <pre class="cmd-snippet"><span class="cp">$</span> mneme check --memory .mneme/project_memory.json --input changed_file.py --query "architectural constraints"</pre>
-
-    <p>In this architecture, RAG and Mneme are not substitutes. They are sequential layers operating on the same corpus. Retrieval improves generation quality. Enforcement guarantees architectural integrity. A codebase governed by both has better outputs and harder compliance guarantees than either provides alone.</p>
-
-    <h2>When should a team switch from RAG to Mneme HQ?</h2>
-
-    <p>Strictly, this is not a switch: RAG and Mneme HQ do different jobs. You keep RAG for retrieval and recall, and you stop relying on it for something it was never built to do &mdash; blocking violations. Add Mneme HQ when a constraint must hold deterministically at generation time rather than depend on whether the right context was retrieved, when different parts of the codebase carry different rules, or when more than one agent touches the code. RAG makes the model better informed; Mneme HQ makes the decision non-negotiable.</p>
-
-    <h2>RAG alternatives for architectural governance</h2>
-
-    <p>If you are evaluating <strong>RAG alternatives</strong> for governance, the important distinction is layer, not vendor. Other retrieval and memory approaches &mdash; vector search, prompt memory, rules files &mdash; share RAG&rsquo;s ceiling: they inform generation but cannot enforce it. The only category that changes that is deterministic enforcement, and Mneme HQ is built for it: it turns an architectural decision into a hook that blocks the Edit/Write call. If the failure you are trying to fix is &ldquo;the model generated something that violates our architecture,&rdquo; the fix is enforcement, not better retrieval.</p>
-
-    <section class="faq-list" aria-labelledby="faq-heading">
-      <h2 id="faq-heading" style="font-family:'Inter',sans-serif;font-size:1.25rem;font-weight:600;letter-spacing:-0.015em;margin-bottom:1.25rem;">Frequently asked questions</h2>
+  <section class="faq-list" aria-labelledby="faq-heading">
+    <h2 id="faq-heading" style="font-family:'Inter',sans-serif;font-size:1.25rem;font-weight:600;letter-spacing:-0.015em;margin-bottom:1.25rem;">Frequently asked questions</h2>
       <details class="faq-item">
-        <summary>Is Mneme HQ an alternative to RAG?</summary>
-        <div class="faq-body">Not in the way it sounds &mdash; they are different layers. RAG retrieves context at query time; Mneme HQ enforces constraints at generation time, blocking a violating Edit or Write before it lands. If you are searching for &ldquo;RAG alternatives&rdquo; because retrieval-based governance keeps letting violations through, the fix is deterministic enforcement on top, not a different retrieval system. Mneme HQ is not a memory or RAG system; it governs generated code.</div>
+        <summary>What is context governance for AI coding agents?</summary>
+        <div class="faq-body">Context governance is the umbrella term for keeping AI coding agents aligned with a project's memory, rules, and architecture as they generate code. It splits into two different jobs that are often conflated: giving the agent the right information (memory, retrieval, instructions) and constraining what the agent is allowed to do with it (deterministic enforcement). Most open-source tools in this space do the first. Very few do the second.</div>
       </details>
       <details class="faq-item">
-        <summary>When should a team switch from RAG to Mneme HQ?</summary>
-        <div class="faq-body">You do not switch &mdash; you keep RAG for recall and add Mneme HQ for enforcement. Add it when a constraint must hold deterministically at generation time rather than depend on whether the right context was retrieved, when rules differ by path, or when more than one agent touches the code. RAG informs the model; Mneme HQ makes the decision non-negotiable.</div>
+        <summary>Is AI agent memory the same as governance?</summary>
+        <div class="faq-body">No. Memory and retrieval systems, such as a virtual filesystem of past context or a git-backed history of what an agent has learned, improve what an agent knows when it starts a task. They do not evaluate the action the agent is about to take against a rule and block it if it violates one. A tool can have excellent memory and zero enforcement, which is the case for every memory-focused project in the comparison below.</div>
       </details>
       <details class="faq-item">
-        <summary>Can RAG enforce architectural constraints?</summary>
-        <div class="faq-body">RAG can surface relevant constraints as context for the model to consider. It cannot prevent the model from violating those constraints. A model given a RAG-retrieved rule can still generate code that breaks it &mdash; especially under task completion pressure or when the rule competes with other signals in a long context window. Enforcement requires a blocking layer, not a retrieval layer.</div>
+        <summary>Can coding agents be forced to follow ADRs?</summary>
+        <div class="faq-body">Only by a layer that evaluates a proposed change against the ADR's scope and constraint, and returns a verdict before the change lands. Putting an ADR in a retrieval index or an instruction file makes it available to the agent; it does not make it binding. Forcing compliance requires the constraint to be checked at the point of action, independent of whether the agent chose to consult the ADR.</div>
       </details>
       <details class="faq-item">
-        <summary>Does Mneme HQ use RAG internally?</summary>
-        <div class="faq-body">Mneme uses deterministic retrieval: given a file path or edit operation, it looks up which architectural decisions apply based on scope rules and precedence semantics. This is not probabilistic embedding search &mdash; it is structured lookup against a typed decision corpus. The retrieval is exact and reproducible, not approximate.</div>
+        <summary>Are CLAUDE.md and AGENTS.md sufficient for governance?</summary>
+        <div class="faq-body">They are a necessary and insufficient first layer. Instruction files communicate intent cheaply and are genuinely useful for onboarding an agent to a codebase. Their effect on a specific implementation depends on the file being loaded, the relevant section reaching active context, surviving whatever context compaction the harness performs, being interpreted correctly, and the model then choosing to comply. That is a long chain with no guarantee at the end of it, which is why instruction files sit at the availability layer rather than the enforcement layer.</div>
       </details>
       <details class="faq-item">
-        <summary>Should we use both RAG and Mneme HQ?</summary>
-        <div class="faq-body">Yes, at different layers. RAG is appropriate for surfacing documentation, historical context, and relevant examples to improve generation quality. Mneme is appropriate for enforcing architectural decisions that must not be violated regardless of generation quality. The two operate on different problems: RAG improves what the model produces, Mneme constrains what the model is allowed to produce.</div>
+        <summary>What open-source tools provide architectural guardrails for coding agents?</summary>
+        <div class="faq-body">As of this writing, the open-source projects most often surfaced for repo-native context and memory are OpenViking, Letta's Context Repositories, RepoSwarm, and MemClaw, compared below. None of the four perform deterministic enforcement of architectural rules; each focuses on memory, retrieval, or documentation generation. Mneme is built specifically for the enforcement layer: it evaluates a proposed agent action against a decision corpus and returns a verdict.</div>
       </details>
-      <details class="faq-item">
-        <summary>Why does retrieval quality matter less than enforcement for governance?</summary>
-        <div class="faq-body">A governance system must be correct every time, not most of the time. RAG retrieval is probabilistic: the right rule may not be in the top-k results, and even when it is, the model may not apply it under competing task signals. Governance infrastructure must be deterministic &mdash; the violation either happens or it does not. That property requires enforcement, not retrieval.</div>
-      </details>
-    </section>
+  </section>
 
   <aside class="related-panel" aria-labelledby="related-panel-label">
     <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
     <ul class="related-list">
-      <li><a href="/open-source-ai-coding-agent-governance/"><div class="rel-title">Open-Source Governance Tools for AI Coding Agents</div><p class="rel-desc">How OpenViking, Letta, RepoSwarm and MemClaw compare on retrieval versus enforcement.</p></a></li>
-      <li><a href="/concepts/architectural-compiler/"><div class="rel-title">Architectural compiler</div><p class="rel-desc">The pipeline that converts documentation-form decisions into machine-evaluable constraint records.</p></a></li>
-      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence semantics</div><p class="rel-desc">Ordered rules that resolve overlapping decisions deterministically — supersession, scope, recency.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
-      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
-      <li><a href="/architecture/decision-memory-vs-documentation/"><div class="rel-title">Decision memory: where architectural authority lives</div><p class="rel-desc">The canonical definition of decision memory and why retrieval, documentation, and generic memory cannot store authority.</p></a></li>
+      <li><a href="/concepts/executable-architectural-intent/"><div class="rel-title">Executable Architectural Intent</div><p class="rel-desc">Project knowledge promoted from documentation into evaluable constraints.</p></a></li>
+      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic Enforcement</div><p class="rel-desc">Same input, same verdict, every run, every agent.</p></a></li>
+      <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural Drift Prevention</div><p class="rel-desc">The discipline this category map sits inside.</p></a></li>
     </ul>
   </aside>
 
   </div>
 
   <footer class="article-footer">
-    <a href="/compare/" class="back-link">&larr; Back to Compare</a>
+    <a href="/" class="back-link">&larr; Back to home</a>
     <div class="cta-block">
-      <h3>Deterministic enforcement, not better retrieval</h3>
-      <p>Mneme HQ hooks into your AI coding agent&rsquo;s Edit and Write operations and blocks architectural violations before they reach the codebase. Open source, self-hosted, model-agnostic.</p>
+      <h3>The enforcement layer the category is missing</h3>
+      <p>Mneme keeps architectural decisions in a durable corpus, selects the ones that apply to each change, and enforces them deterministically before it lands. Open source, works alongside your existing memory or retrieval layer.</p>
       <a href="/pilot/" class="btn-primary" style="margin-right:0.5rem;">Request a pilot &rarr;</a>
       <a href="https://github.com/MnemeHQ/mneme" class="btn-primary" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">View on GitHub &rarr;</a>
-      <a href="/insights/why-rag-fails-for-architectural-governance/" class="cta-secondary">Read: Why RAG fails for architectural governance &rarr;</a>
+      <a href="/compare/rag-vs-governance/" class="cta-secondary">Read: RAG vs governance &rarr;</a>
     </div>
   </footer>
 </article>
