@@ -36,12 +36,43 @@
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "Organization",
+        "@id": "https://mnemehq.com/#organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://mnemehq.com/logo-v3.png"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://mnemehq.com/#website",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "publisher": {
+          "@id": "https://mnemehq.com/#organization"
+        }
+      },
+      {
         "@type": "WebPage",
-        "@id": "https://mnemehq.com/pilot/",
+        "@id": "https://mnemehq.com/pilot/#webpage",
         "url": "https://mnemehq.com/pilot/",
-        "name": "Request a Mneme Pilot",
+        "name": "Request a Mneme Pilot | Mneme HQ",
         "description": "Request a Mneme pilot for your engineering team.",
-        "isPartOf": { "@type": "WebSite", "name": "Mneme HQ", "url": "https://mnemehq.com/" }
+        "datePublished": "2026-05-01",
+        "dateModified": "2026-08-20",
+        "author": {
+          "@type": "Person",
+          "name": "Theo Valmis",
+          "url": "https://mnemehq.com/founder/"
+        },
+        "isPartOf": {
+          "@id": "https://mnemehq.com/#website"
+        },
+        "mainEntity": {
+          "@id": "https://mnemehq.com/#product"
+        }
       },
       {
         "@type": "BreadcrumbList",
@@ -52,38 +83,47 @@
       },
       {
         "@type": "Product",
-        "@id": "https://mnemehq.com/#mneme-pilot-product",
-        "name": "Mneme HQ Pilot",
-        "description": "A guided pilot program applying Mneme's deterministic architectural governance across your repositories, ADRs, and AI coding agent workflows (Cursor, Claude Code, GitHub Copilot, and custom agents).",
+        "@id": "https://mnemehq.com/#product",
+        "name": "Mneme HQ",
+        "description": "Deterministic architectural governance engine for AI coding agents, with a native Claude Code hook, tested Cursor Rules and CI workflows, and model-independent decision enforcement.",
         "brand": { "@type": "Brand", "name": "Mneme HQ" },
         "category": "Developer tools / Engineering governance",
-        "url": "https://mnemehq.com/pilot/",
-        "offers": {
-          "@type": "Offer",
-          "name": "Mneme Pilot Program",
-          "description": "Hands-on pilot with ADR compilation, hook integration, CI gate setup, and team onboarding.",
-          "availability": "https://schema.org/InStock",
-          "price": "0",
-          "priceCurrency": "USD",
-          "priceSpecification": {
-            "@type": "PriceSpecification",
+        "url": "https://mnemehq.com/",
+        "offers": [
+          {
+            "@type": "Offer",
+            "name": "Community / Open Source",
+            "description": "Open-source CLI, local repository governance, hook enforcement, and MIT core.",
+            "url": "https://github.com/MnemeHQ/mneme",
             "price": "0",
             "priceCurrency": "USD",
-            "description": "Pilot is complimentary for qualified teams. Contact for scope."
+            "availability": "https://schema.org/InStock",
+            "seller": {
+              "@id": "https://mnemehq.com/#organization"
+            }
           },
-          "seller": { "@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/" }
-        },
-        "audience": {
-          "@type": "BusinessAudience",
-          "name": "Engineering teams using AI coding agents",
-          "audienceType": "Platform engineering, backend/data/infrastructure, AI-native product, architecture guilds"
-        }
+          {
+            "@type": "Offer",
+            "name": "Pilot Program",
+            "description": "Hands-on guided pilot with ADR compilation, hook integration, CI gate setup, and team onboarding. Complimentary for qualified engineering teams.",
+            "url": "https://mnemehq.com/pilot/",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "seller": {
+              "@id": "https://mnemehq.com/#organization"
+            }
+          }
+        ]
       },
       {
         "@type": "Service",
+        "@id": "https://mnemehq.com/pilot/#service",
         "name": "Mneme Architectural Governance Pilot",
         "serviceType": "Architectural governance for AI-assisted engineering teams",
-        "provider": { "@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/" },
+        "provider": {
+          "@id": "https://mnemehq.com/#organization"
+        },
         "url": "https://mnemehq.com/pilot/",
         "description": "A hands-on pilot that applies Mneme's deterministic architectural governance across a team's repositories, ADRs, and AI coding agent workflows."
       },
