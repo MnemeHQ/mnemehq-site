@@ -164,6 +164,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-supabase-startups.html",
+        "Insights",
+        "61% of Startup Codebases Are Majority AI-Written",
+        "44px",
+        "Supabase State of Startups 2026. Review budgets were priced for the opposite ratio.",
+        "insights/supabase-state-of-startups-2026-ai-written-codebases",
+    ),
+    (
         "og-insights-kodekloud-devops-guide.html",
         "Insights",
         "The Definitive Guide to AI for DevOps",
@@ -831,6 +839,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
