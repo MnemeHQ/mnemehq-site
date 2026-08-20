@@ -299,6 +299,14 @@ TEMPLATE_MAP = {
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
     "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
+
+    # Insights — new
+    "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
+    "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    # Concepts
+    "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
+    # Misc
+    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
 }
 
 PORT = 8765
