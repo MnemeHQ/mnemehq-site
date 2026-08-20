@@ -164,6 +164,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-kodekloud-devops-guide.html",
+        "Insights",
+        "The Definitive Guide to AI for DevOps",
+        "48px",
+        "KodeKloud, 2026: guardrails, not gates. One of six takeaways.",
+        "insights/kodekloud-definitive-guide-ai-for-devops",
+    ),
+    (
         "og-oss-governance-landing.html",
         "Category Map",
         "Open-Source Governance Tools for AI Coding Agents",
@@ -823,6 +831,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
