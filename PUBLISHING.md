@@ -20,6 +20,14 @@ the core repository or names the core repository as the deploy owner, that frami
 The [Provenance](#provenance) section maps every source ADR to the section here that carries its
 rules forward. No rule from those seven ADRs was dropped, and none was weakened.
 
+Unchanged local mirrors of those records live under [`docs/adr/history/`](docs/adr/history/).
+They retain `status: superseded` and are excluded from the site's active compiled ADR set.
+
+The site repository later adopted its own active ADR corpus for Mneme dogfooding; see
+[`docs/adr/ADR-001-site-repository-governance.md`](docs/adr/ADR-001-site-repository-governance.md).
+That repository-level decision does not copy, reactivate, or replace the seven historical records.
+This document remains the canonical source for their current publishing rules.
+
 ---
 
 ## How these rules are enforced
@@ -48,6 +56,7 @@ site/                     the static site exactly as deployed to mnemehq.com
 scripts/                  deploy, validation and asset tooling
 .github/workflows/        PR validators + the manual/scheduled deploy workflow
 docs/site/                operational runbooks (see Related runbooks)
+docs/adr/                 active site-repository decisions compiled by Mneme
 PUBLISHING.md             this document
 ```
 

@@ -23,5 +23,28 @@
     }
   ],
   "examples": [],
-  "decisions": []
+  "decisions": [
+    {
+      "id": "ADR-001",
+      "decision": "The website repository dogfoods Mneme governance",
+      "rationale": "# ADR-001: The website repository dogfoods Mneme governance\n\n## Status\n\nAccepted \u2014 2026-08-20\n\n## Context\n\nThe mnemehq.com source and deployment path moved from `MnemeHQ/mneme` into\nthis repository in July 2026. The transfer was recorded by core ADR-016. Seven\nolder core ADRs (ADR-003, ADR-006, ADR-007, ADR-008, ADR-011, ADR-012, and\nADR-015) remain there as immutable, superseded historical records. Exact\ncopies also live under `docs/adr/history/` so the website repository carries\nits provenance locally without making those records active again.\n\nTheir current rules were migrated into this repository's `PUBLISHING.md`,\nwhich is the canonical and maintained publishing-governance document. Copying\nthe superseded records here as active ADRs would create a second copy of those\nrules and allow it to drift from `PUBLISHING.md`.\n\nThe website repository nevertheless needs to exercise Mneme's released\ninstallation, ADR compiler, decision memory, retrieval, and strict preflight\non its own changes. That is the most direct dogfood path for the product the\nsite documents.\n\n## Decision\n\n1. `PUBLISHING.md` remains the canonical source for detailed website\n   publishing and deployment governance.\n2. The superseded site ADRs remain in `MnemeHQ/mneme/docs/adr/` as historical\n   records and are mirrored unchanged under `docs/adr/history/`. They are not\n   deleted, modified, or reactivated.\n3. This repository owns an active ADR corpus under `docs/adr/` for current\n   repository-level governance decisions. This decision supersedes only the\n   earlier transfer plan's statement that the site would not run the compiler;\n   it does not reactivate any superseded core ADR.\n4. The Mneme ADR compiler produces the native entries in\n   `.mneme/project_memory.json`. The compiled file is committed so agent and CI\n   consumers all see the same deterministic decision.\n5. CI installs the published `mneme-hq` distribution, recompiles the corpus to\n   detect stale memory, and runs `mneme check --mode strict` against the change\n   surface on every pull request and push to `main`.\n6. Purpose-built website validators remain authoritative for structural rules\n   that Mneme's current lexical preflight cannot evaluate, including nav/footer\n   synchronization, schemas, sitemap registration, and install-command safety.\n\n## Constraints\n\n- REQUIRE_PATH: site/**\n- REQUIRE_PATH: PUBLISHING.md\n- REQUIRE_PATH: .mneme/project_memory.json\n- FORBID_PATH: scratch/**\n\n## Consequences\n\n- The website now exercises the same install, compile, memory, retrieval, and\n  enforcement path recommended to Mneme users.\n- The historical rationale is locally available without admitting the stale\n  ADR bodies into the active website corpus.\n- Future website governance decisions can be added here and compiled normally;\n  detailed publishing procedures continue to live in `PUBLISHING.md`.\n\n## Related\n\n- `PUBLISHING.md`\n- `MnemeHQ/mneme/docs/adr/ADR-016-site-governance-transfer.md`\n- `MnemeHQ/mneme/docs/adr/ADR-003`, `ADR-006`, `ADR-007`, `ADR-008`,\n  `ADR-011`, `ADR-012`, and `ADR-015` (superseded historical records)\n",
+      "scope": [
+        "repo.website_governance"
+      ],
+      "constraints": [
+        "REQUIRE_PATH site/**",
+        "REQUIRE_PATH PUBLISHING.md",
+        "REQUIRE_PATH .mneme/project_memory.json",
+        "FORBID_PATH scratch/**"
+      ],
+      "anti_patterns": [],
+      "created_at": "2026-08-20",
+      "updated_at": "2026-08-20",
+      "source": {
+        "type": "adr",
+        "path": "../docs/adr/ADR-001-site-repository-governance.md",
+        "sha256": "ac42f7ccac4efd1b3e5482e27131d00fbbfe37fcaf3de40322dcb31c42025b7a"
+      }
+    }
+  ]
 }

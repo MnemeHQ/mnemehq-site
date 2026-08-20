@@ -42,6 +42,28 @@ python scripts/test_deploy_verify.py
 Each check runs as a path-filtered PR workflow. GitHub Actions is enabled on
 this repository and the applicable workflows run on every relevant PR.
 
+## Mneme dogfooding
+
+This repository uses Mneme to govern its own changes. The active decisions in
+[`docs/adr/`](docs/adr/) compile into the tracked
+[`project_memory.json`](.mneme/project_memory.json); detailed publishing rules
+remain canonical in [`PUBLISHING.md`](PUBLISHING.md). The seven original
+website ADRs are mirrored unchanged under [`docs/adr/history/`](docs/adr/history/)
+for local provenance and remain superseded, so they are not compiled. The
+**Mneme governance preflight** workflow installs the published `mneme-hq`
+distribution, recompiles the ADR corpus to catch stale memory, and applies
+`mneme check --mode strict` to each pull request and push-to-main change set.
+Run the same local preflight with:
+
+```
+python -m pip install "mneme-hq>=0.5.0"
+mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+git diff --name-only HEAD^ HEAD > .mneme/changed-paths.txt
+mneme check --memory .mneme/project_memory.json --input .mneme/changed-paths.txt --query "Assess these changed paths against Mneme HQ website publishing, shared site chrome, deployment, and validation governance." --top 10 --mode strict
+```
+
+`mneme-hq` is the distribution name; the installed CLI remains `mneme`.
+
 ## Deployment
 
 `scripts/deploy_site.py` — run by the **Deploy site to mnemehq.com**
