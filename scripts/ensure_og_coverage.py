@@ -163,7 +163,6 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 # url_path is the path segment after mnemehq.com/ in the OG card URL line.
 
 TEMPLATES = [
-    # === INSIGHTS ===
     (
         "og-insights-kodekloud-devops-guide.html",
         "Insights",
@@ -171,6 +170,55 @@ TEMPLATES = [
         "48px",
         "KodeKloud, 2026: guardrails, not gates. One of six takeaways.",
         "insights/kodekloud-definitive-guide-ai-for-devops",
+    ),
+    (
+        "og-oss-governance-landing.html",
+        "Category Map",
+        "Open-Source Governance Tools for AI Coding Agents",
+        "40px",
+        "Memory, retrieval, docs, and enforcement -- what each project actually does.",
+        "open-source-ai-coding-agent-governance",
+    ),
+    (
+        "og-concepts-architectural-drift-prevention.html",
+        "Concepts",
+        "Architectural Drift Prevention",
+        "52px",
+        "The discipline of keeping generated code inside decisions already made.",
+        "concepts/architectural-drift-prevention",
+    ),
+    # === INSIGHTS (Aug wave) ===
+    (
+        "og-insights-gartner-arch-debt.html",
+        "Insights",
+        "Architectural Technical Debt From AI Coding Agents",
+        "44px",
+        "Gartner: architectural debt reaches 80% of all technical debt by 2027.",
+        "insights/gartner-architectural-technical-debt-ai-coding-agents",
+    ),
+    (
+        "og-insights-constraint-survival.html",
+        "Insights",
+        "What Happens to an Architectural Decision After Ten Agent Turns",
+        "40px",
+        "Three 2026 benchmarks measure what long trajectories do to compliance.",
+        "insights/architectural-constraint-survival-long-running-coding-agents",
+    ),
+    (
+        "og-insights-programmable-policy.html",
+        "Insights",
+        "Programmable AI Policy Is Not Enough for Coding Agents",
+        "42px",
+        "Real-time policy assumes the policy exists. Architecture rarely does.",
+        "insights/programmable-ai-policy-executable-architectural-intent",
+    ),
+    (
+        "og-insights-lost-in-compaction.html",
+        "Insights",
+        "Architecture Cannot Be a Prompt",
+        "52px",
+        "COMPINT: context compactors retain only 17% of standing constraints.",
+        "insights/architecture-cannot-be-a-prompt-context-compaction",
     ),
     # === INSIGHTS ===
     (
@@ -784,6 +832,12 @@ TEMPLATES = [
 
 NEW_MAP_ENTRIES = {
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
+    "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
+    "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
+    "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
+    "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
+    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
     "og-insights-prompt-graph-engineering.html": "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/og.png",
     "og-insights-claude-self-hosted.html": "insights/claude-code-self-hosted-environments-architectural-governance/og.png",
     "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
