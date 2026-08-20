@@ -1,0 +1,59 @@
+name: Mneme governance preflight
+
+# Dogfood Mneme against this repository: every change is evaluated with the
+# tracked site decisions before merge. The action installs the published
+# distribution, so CI exercises the same install path documented for users.
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mneme-preflight:
+    name: Apply repository memory to changed paths
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Mneme
+        run: python -m pip install "mneme-hq>=0.5.0"
+
+      - name: Compile ADRs and verify tracked repository memory
+        shell: bash
+        run: |
+          mneme adr import docs/adr \
+            --memory .mneme/project_memory.json \
+            --apply \
+            --update-existing
+          git diff --exit-code -- .mneme/project_memory.json
+          mneme list_decisions --memory .mneme/project_memory.json
+
+      - name: Apply Mneme preflight to changed paths
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="HEAD^"
+          fi
+          git diff --name-only "$base" HEAD > .mneme/changed-paths.txt
+          mneme check \
+            --memory .mneme/project_memory.json \
+            --input .mneme/changed-paths.txt \
+            --query "Assess these changed paths against Mneme HQ website publishing, shared site chrome, deployment, and validation governance." \
+            --top 10 \
+            --mode strict
