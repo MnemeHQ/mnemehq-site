@@ -229,7 +229,7 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+</style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -423,18 +423,20 @@ async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
         </div>
       </div>
 
-      <h2>The runnable example</h2>
+      <h2>The worked example</h2>
 
-      <p>The repo ships a Python script that runs the full two-phase scenario against the real Mneme pipeline. The agent is simulated as a scripted diff producer &mdash; no live LLM call is required. The hook, corpus check, violation raise, remediation inject, and post-execution scan are the actual Mneme code paths.</p>
+      <p>The two-phase scenario above describes the hook contract as designed. A dedicated Agent SDK example script is <a href="/roadmap/" style="color:var(--accent);">on the roadmap</a> and does not ship yet.</p>
+
+      <p>The same governance property &mdash; intercept, surface the decision, retry, verify &mdash; already runs today against the real Mneme pipeline in the multi-agent example. The agent is simulated as a scripted diff producer, so no live LLM call is required, and the verdict trace uses the same structured <code>PASS</code> / <code>WARN</code> / <code>FAIL</code> format as <code>mneme check</code> in CI:</p>
 
       <pre><code>git clone https://github.com/MnemeHQ/mneme
-cd mneme/examples/agent-sdk-governance
+cd mneme/examples/multi-agent-governance
 python run.py</code></pre>
 
-      <p>The script prints the without-governance trajectory first (Redis lands, no signal), then the with-governance trajectory (intercept fires, retry succeeds, post-exec PASS). The verdict trace is the same structured <code>PASS</code> / <code>WARN</code> / <code>FAIL</code> format as <code>mneme check</code> in CI.</p>
+      <p>See the <a href="/demo/multi-agent-governance/" style="color:var(--accent);">multi-agent governance walkthrough</a> for the annotated version of that run.</p>
 
       <div class="callout purple">
-        <p><strong>Honest framing.</strong> This is a forward-looking demo. The hook mechanism and corpus check are real Mneme code. The Claude Agent SDK integration &mdash; registering the hook at SDK initialization and wiring it to the tool dispatch layer &mdash; reflects the direction the SDK's extension model is heading. The runnable example proves the governance property using the existing pipeline; the full SDK integration is on the <a href="/roadmap/" style="color:var(--accent);">roadmap</a>.</p>
+        <p><strong>Honest framing.</strong> This is a forward-looking demo. The hook mechanism and corpus check are real Mneme code. The Claude Agent SDK integration &mdash; registering the hook at SDK initialization and wiring it to the tool dispatch layer &mdash; reflects the direction the SDK's extension model is heading. The multi-agent example proves the governance property using the existing pipeline; the full SDK integration and its own example script are on the <a href="/roadmap/" style="color:var(--accent);">roadmap</a>.</p>
       </div>
 
   <aside class="related-panel" aria-labelledby="related-panel-label">

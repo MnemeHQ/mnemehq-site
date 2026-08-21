@@ -5,24 +5,24 @@
   <link rel="icon" type="image/png" href="/favicon-v2.png" />
   <link rel="apple-touch-icon" href="/favicon-v2.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blocking AI-generated code that violates an ADR | Mneme HQ</title>
+  <title>Catching AI-generated code that violates an ADR | Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, blocks the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta name="description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/demo/governed-python-agent/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Blocking AI-generated code that violates an ADR" />
-  <meta property="og:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, blocks the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta property="og:title" content="Catching AI-generated code that violates an ADR" />
+  <meta property="og:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
   <meta property="og:url" content="https://mnemehq.com/demo/governed-python-agent/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Blocking AI-generated code that violates an ADR" />
-  <meta name="twitter:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, blocks the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta name="twitter:title" content="Catching AI-generated code that violates an ADR" />
+  <meta name="twitter:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
   <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -42,8 +42,8 @@
       },
       {
         "@type": "Article",
-        "headline": "Blocking AI-generated code that violates an ADR",
-        "description": "A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, blocks the namespace violation, and the agent retries with compliant code.",
+        "headline": "Catching AI-generated code that violates an ADR",
+        "description": "A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code.",
         "url": "https://mnemehq.com/demo/governed-python-agent/",
         "datePublished": "2026-05-15",
         "dateModified": "2026-05-15",
@@ -201,7 +201,7 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+</style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -236,8 +236,8 @@
         <span class="eyebrow-dot"></span>
         <span class="verdict-pill">RUNNABLE</span>
       </div>
-      <h1>Blocking AI-generated code that violates an <em>ADR</em>.</h1>
-      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR, blocks the violation, injects the decision context, and the agent retries with correct code. <strong>This is the product loop in full.</strong></p>
+      <h1>Catching AI-generated code that violates an <em>ADR</em>.</h1>
+      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR, flags the violation, injects the decision context, and the agent retries with correct code. <strong>This is the product loop in full.</strong></p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -472,7 +472,7 @@ Result: WARN</code></pre>
       { t: 400,  html: '<div class="out-muted">Compiler emits decisions...</div>' },
       { t: 900,  html: '<div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&nbsp;&nbsp;&#8627; ADR-005: Brand vs Package Namespace Enforcement<br>&nbsp;&nbsp;&#8627; FORBID_DEPENDENCY: MnemeHQ</div>' },
       { t: 1500, html: '<br>' },
-      { t: 1600, html: '<div><span class="label-badge badge-fail">FAIL</span> <span style="color:var(--fail)">[ADR-005] forbidden dependency: MnemeHQ</span></div>' },
+      { t: 1600, html: '<div><span class="label-badge badge-warn">WARN</span> <span style="color:var(--warn)">[ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq</span></div>' },
       { t: 2000, html: '<div class="out-muted" style="font-size:0.72rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand vs Package Namespace Enforcement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use package namespace: mneme</div>' },
       { t: 2600, html: '<br><div class="out-muted">Retry context injected to agent...</div>' },
     ];

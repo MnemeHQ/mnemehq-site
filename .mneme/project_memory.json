@@ -45,6 +45,26 @@
         "path": "../docs/adr/ADR-001-site-repository-governance.md",
         "sha256": "ac42f7ccac4efd1b3e5482e27131d00fbbfe37fcaf3de40322dcb31c42025b7a"
       }
+    },
+    {
+      "id": "ADR-002",
+      "decision": "Demo claims must match their executable path",
+      "rationale": "# ADR-002: Demo claims must match their executable path\n\n## Status\n\nAccepted \u2014 2026-08-20\n\n## Context\n\nA UX audit of `/demo/` in August 2026 found four defects that share one root\ncause: the website's narrative had drifted away from the product's executable\nstate. These were not styling problems. They were evidence-chain problems.\n\n1. The homepage advertised `python demo.py --dry-run` printing\n   `BLOCKED \u00b7 decision rule-001`. That script is a context-injection\n   before/after comparison. It skips alignment evaluation entirely in\n   `--dry-run`, and the string `rule-001` does not exist anywhere in the\n   product. The surrounding card labelled the experience \"Reproducible\".\n2. The ADR-005 centerpiece asserted three different severities for one\n   scenario: prose said \"blocks\", the animation rendered `FAIL`, and the\n   page's own expected-output block said `Result: WARN`.\n3. `/demo/agent-sdk-governance/` told visitors to run\n   `cd mneme/examples/agent-sdk-governance && python run.py` and claimed\n   \"the repo ships a Python script\". That directory does not exist.\n4. `/demo/` cited \"117 passing benchmark scenarios\". 117 was a stale test\n   count from a May 2026 planning document; the benchmark suite has 7\n   scenarios, and the test suite had grown to 447.\n\nA governance product cannot afford demos whose claims drift from their\nsource. Fixing the four instances without fixing the mechanism would let an\nequivalent set accumulate again.\n\n## Decision\n\nEvery severity or capability claim on a demo surface must correspond to an\nexecutable path that produces it, or be explicitly marked illustrative.\n\n### Canonical evidence contract \u2014 ADR-005 centerpiece\n\n| Field | Value |\n| --- | --- |\n| Scenario | ADR-005 brand-vs-package namespace rule |\n| Canonical command | `python examples/demo-adr-import.py` |\n| Actual verdict | `WARN [ADR-005] constraint \"no MnemeHQ\" -- trigger: mnemehq` |\n| Actual capability | Deterministically detects the violation before the compliant retry |\n| Claims allowed | detects, flags, warns, catches |\n| Claims not allowed | blocks, prevents, stops execution |\n\nThe homepage, the `/demo/` hub, the flagship page, and the runnable command\nall derive their story from this contract. Changing the verdict requires\nchanging the contract first.\n\n### Illustrative examples\n\nA surface may show a `BLOCK` or `FAIL` verdict that no shipped command\nproduces **only** when it is scoped to the reader's own hypothetical\nrepository and names no clonable path. The homepage typed-rule example\n(`IF path = frontend/** AND dependency = @google-cloud/bigquery THEN BLOCK`)\nand its `ADR-017` verdict qualify. They describe the enforcement model, not a\nreproducible run.\n\nThis ADR does not narrow Mneme's positioning. Genuine deterministic block\npaths may be claimed wherever they are demonstrably true. What is forbidden is\nclaim-to-evidence mismatch on a surface that invites the reader to reproduce it.\n\n### Badging\n\n`Runnable` may be applied only to a command that exists in the published\nrepository and whose on-page output matches the real run. Anything else is\n`Walkthrough` or `On the roadmap`.\n\n## Constraints\n\n- FORBID_DEPENDENCY: rule-001\n- REQUIRE_PATH: site/demo/**\n\n## Consequences\n\n- The fabricated `rule-001` identifier cannot re-enter a checked surface\n  without the preflight firing, so the specific regression is enforced by the\n  product the site sells rather than by review attention.\n- Demo severity language is now derivable from one table instead of being\n  restated independently on each page.\n- Shipping a real blocking path for ADR-005, or a genuine\n  `examples/agent-sdk-governance`, is a contract change followed by a copy\n  change \u2014 in that order.\n",
+      "scope": [
+        "site.demo_evidence"
+      ],
+      "constraints": [
+        "no rule-001",
+        "REQUIRE_PATH site/demo/**"
+      ],
+      "anti_patterns": [],
+      "created_at": "2026-08-20",
+      "updated_at": "2026-08-20",
+      "source": {
+        "type": "adr",
+        "path": "../docs/adr/ADR-002-demo-evidence-contract.md",
+        "sha256": "5d5fb5c72ed6590e20b7c6f5ac9a82f4f3f62cb94a60e07adb67df3e21de043c"
+      }
     }
   ]
 }
