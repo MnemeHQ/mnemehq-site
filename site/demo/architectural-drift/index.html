@@ -9,19 +9,19 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="A six-step timeline. An agent proposes reasonable-looking code that violates an ADR. Downstream changes amplify the divergence. A reviewer would plausibly miss it. Mneme blocks the first divergence upstream and the system converges." />
+  <meta name="description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before three downstream changes are built on top of it. Runnable in one command." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/demo/architectural-drift/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Preventing architectural drift from AI coding agents" />
-  <meta property="og:description" content="A six-step timeline. An agent proposes reasonable-looking code that violates an ADR. Downstream changes amplify the divergence. A reviewer would plausibly miss it. Mneme blocks the first divergence upstream and the system converges." />
+  <meta property="og:description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before three downstream changes are built on top of it. Runnable in one command." />
   <meta property="og:url" content="https://mnemehq.com/demo/architectural-drift/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Preventing architectural drift from AI coding agents" />
-  <meta name="twitter:description" content="A six-step timeline showing how drift compounds without a governance layer, and how Mneme blocks the first divergence upstream." />
+  <meta name="twitter:description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before downstream changes build on it." />
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
   <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -258,6 +258,19 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
+
+    /* Lean demo CTA band - ADR-002 phase 3 */
+    .cta-snippet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.75rem; margin-top: 3.5rem; text-align: center; }
+    .cta-snippet h3 { font-family: 'Instrument Serif', serif; font-size: 1.35rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
+    .cta-snippet > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
+    .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .cta-primary { background: var(--accent); color: #0c0c0d; padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .cta-primary:hover { background: var(--accent-dim); }
+    .cta-secondary { border: 1px solid var(--border2); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .cta-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .cta-tertiary { margin-top: 1.1rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+    .cta-tertiary a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
+    .cta-tertiary a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -287,14 +300,13 @@
   <main>
     <header>
       <div class="article-eyebrow">
-        <span class="eyebrow-tag">Flagship 02</span>
+        <span class="eyebrow-tag">Runnable demo</span>
         <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">6 min read</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNNABLE</span>
+        <span class="verdict-pill">RUNS LOCALLY</span>
+        <span class="verdict-pill">AGENTS SCRIPTED</span>
       </div>
       <h1>Preventing architectural drift from <em>AI coding agents</em>.</h1>
-      <p class="lede">AI accelerates entropy. Each agent-produced change is locally reasonable. The system as a whole still drifts because each change silently relaxes an invariant the team had already encoded. <strong>Without a governance layer, drift compounds faster than review can absorb it.</strong> This page walks the failure mode end-to-end and shows what changes when the first divergence is blocked upstream.</p>
+      <p class="lede">Three agents work across a week. Every change is locally reasonable, and the architecture still drifts, because each one quietly relaxes an invariant the team already encoded. <strong>Mneme fails the first divergence before the rest are built on top of it.</strong></p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -305,7 +317,6 @@
     </header>
 
     <div class="body">
-
       <div class="adr-primer">
         <span class="primer-key">The decisions at stake</span>
         <div class="primer-rules">
@@ -364,229 +375,40 @@ Reason:
 No files changed.
 Agent halted before architectural drift.</code></pre>
       </details>
-      <p class="term-sim-note">Simulated demo based on Mneme&rsquo;s governance check flow.</p>
 
-      <h2>The scenario</h2>
+      <h2>What happened</h2>
 
-      <p>A small platform team maintains a single-binary Python service. The architectural truth is documented:</p>
-
-      <ul style="list-style: none; padding: 0; margin: 0 0 1.25rem; display: flex; flex-direction: column; gap: 0.45rem; font-size: 0.88rem; color: var(--muted);">
-        <li>&rarr; <code>ADR-001</code> &mdash; JSON storage only. No external database. No Redis.</li>
-        <li>&rarr; <code>ADR-003</code> &mdash; No ORM in v1. Direct module access.</li>
-        <li>&rarr; <code>ADR-004</code> &mdash; All persistence flows through a Repository abstraction.</li>
+      <ul>
+        <li>Agent A proposed a Redis cache. ADR-001 forbids external databases, so the check returned <code>FAIL</code> and the change did not proceed.</li>
+        <li>Agent A retried with the decision injected and passed against the same corpus.</li>
+        <li>Agent B built on the corrected primitive, so the divergence never reached agent C.</li>
       </ul>
 
-      <p>Three agents touch the codebase over the course of a week. Each one produces a reasonable-looking PR. Review is busy. By Friday the architecture has silently forked.</p>
-
-      <h2>Without a governance layer</h2>
-
-      <div class="timeline-divider">
-        <span class="td-label">Drift propagation</span>
-        <div class="td-line"></div>
-      </div>
-
-      <div class="timeline">
-        <div class="timeline-step bad">
-          <div class="timeline-num">1</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Monday &middot; Agent A</div>
-            <h4>Introduces Redis "for caching"</h4>
-            <p>Asked to "speed up the user lookup endpoint." Adds <code>redis-py</code>, wires a cache layer, ships a 60-line PR. Locally reasonable. Silently violates <code>ADR-001</code>.</p>
-          </div>
-        </div>
-        <div class="timeline-step bad">
-          <div class="timeline-num">2</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Monday &middot; Reviewer</div>
-            <h4>PR lands. ADR-001 not reread.</h4>
-            <p>Reviewer focused on the cache invalidation logic. The decision corpus is a separate file no one opens during review. Approved in 4 minutes.</p>
-          </div>
-        </div>
-        <div class="timeline-step bad">
-          <div class="timeline-num">3</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Wednesday &middot; Agent B</div>
-            <h4>Builds infrastructure around the new Redis dependency</h4>
-            <p>Asked to "add session storage." Discovers Redis is now in the codebase and uses it. Adds connection pooling, retry logic, a health check. The divergence is now load-bearing.</p>
-          </div>
-        </div>
-        <div class="timeline-step bad">
-          <div class="timeline-num">4</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Thursday &middot; Agent C</div>
-            <h4>Adds infra YAML for Redis</h4>
-            <p>Asked to "make the staging deploy reproducible." Generates a Redis container, a service definition, a backup policy. None of this should exist per <code>ADR-001</code>. None of it is flagged.</p>
-          </div>
-        </div>
-        <div class="timeline-step bad">
-          <div class="timeline-num">5</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Friday &middot; Architect</div>
-            <h4>Notices. Too late.</h4>
-            <p>Architecture has silently forked. Rolling back means three PRs, a deploy revert, and a conversation about why the decision corpus exists. The team eats the cost.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout">
-        <p><strong>This is the failure mode.</strong> No single agent did anything outrageous. Each PR was reviewed by a human. Each change was locally reasonable. The drift emerged from the <em>composition</em> of changes none of which individually triggered a review escalation.</p>
-      </div>
-
-      <h2>With Mneme's governance layer</h2>
-
-      <div class="timeline-divider">
-        <span class="td-label">Upstream block + convergence</span>
-        <div class="td-line"></div>
-      </div>
-
-      <div class="timeline">
-        <div class="timeline-step block">
-          <div class="timeline-num">1</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Monday &middot; Agent A &middot; pre-generation</div>
-            <h4>Hook intercepts the proposed change</h4>
-            <p>Before the diff lands, the Claude Code / Cursor hook scores the proposal against <code>project_memory.json</code> and surfaces <code>ADR-001</code> into the model's context. The agent reroutes to extending the existing JSON cache instead.</p>
-            <div class="ts-trace"><strong>trace</strong> &middot; PreToolUse hook &middot; matched ADR-001 &middot; injected 3 constraints</div>
-          </div>
-        </div>
-        <div class="timeline-step warn">
-          <div class="timeline-num">2</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Monday &middot; CI &middot; post-generation</div>
-            <h4>mneme check fires WARN on residual signal</h4>
-            <p>A leftover <code>import redis</code> survives in a draft commit. The CI gate emits a structured WARN with the decision id, so review sees the violation in the PR comments, not buried in a 200-line diff.</p>
-            <div class="ts-trace"><strong>WARN</strong> [ADR-001] no external db &mdash; trigger: redis</div>
-          </div>
-        </div>
-        <div class="timeline-step good">
-          <div class="timeline-num">3</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Monday &middot; Agent A &middot; retry</div>
-            <h4>Retry converges within constraints</h4>
-            <p>The hook re-runs with the violated decisions explicit in the prompt. The agent regenerates against the JSON cache abstraction. The new diff passes.</p>
-            <div class="ts-trace"><strong>PASS</strong> &middot; storage_violation_count = 0 &middot; retries = 1</div>
-          </div>
-        </div>
-        <div class="timeline-step good">
-          <div class="timeline-num">4</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Wednesday &middot; Agent B</div>
-            <h4>Session storage built on the correct primitive</h4>
-            <p>Asked to "add session storage." The hook surfaces <code>ADR-001</code>, <code>ADR-004</code>. Output uses the Repository abstraction over JSON. Compliant by construction.</p>
-            <div class="ts-trace"><strong>PASS</strong> &middot; ADR-001, ADR-004 satisfied</div>
-          </div>
-        </div>
-        <div class="timeline-step good">
-          <div class="timeline-num">5</div>
-          <div class="timeline-content">
-            <div class="timeline-actor">Friday &middot; Architect</div>
-            <h4>No drift to clean up</h4>
-            <p>The decision corpus stayed authoritative all week. Three PRs landed. None of them silently relaxed an invariant. The architect spends Friday on the next ADR, not on remediation.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout teal">
-        <p><strong>Same agents. Same prompts. Same model.</strong> The only difference is that <code>ADR-001</code> reaches the model before generation, and the verdict reaches CI after it. Drift gets blocked at the first divergence, not the third.</p>
-      </div>
-
-      <h2>Why this is the AI SDLC entropy problem</h2>
-
-      <p>Human-authored drift is bounded by human throughput. A team produces maybe ten meaningful PRs a day. An architect can read all of them. A reviewer can flag the one that smells wrong.</p>
-
-      <p>Agent-authored drift is not bounded by human throughput. The same architect now sees ten PRs per hour. Each one was generated by an agent that pattern-matched against training data, not against the project's decision corpus. Most of them are fine. The one that isn't is invisible because it looks like all the others.</p>
-
-      <p>This is why review-based governance starts to fail at AI velocity. The reviewer is doing the right thing &mdash; reading the diff &mdash; but the failure mode has moved upstream of the diff. The decisions that matter are now in the agent's context window, not in a comment thread. Governance has to be wherever the decisions are made.</p>
-
-      <h3>Two paths through the same week</h3>
-
-      <div class="paths">
-        <div class="path-card bad">
-          <h3>Without governance</h3>
-          <div class="pc-meta">Drift compounds</div>
-          <ul>
-            <li>3 PRs land that contradict ADR-001</li>
-            <li>Each one looks locally reasonable</li>
-            <li>Reviewer load: 12 PRs that week</li>
-            <li>Drift detected post-deploy</li>
-            <li>Remediation: revert + ADR rewrite + meeting</li>
-          </ul>
-        </div>
-        <div class="path-card good">
-          <h3>With Mneme</h3>
-          <div class="pc-meta">System converges</div>
-          <ul>
-            <li>First divergence blocked pre-generation</li>
-            <li>Retry converges within 1 round</li>
-            <li>Downstream agents see the corrected codebase</li>
-            <li>CI gate enforces on every PR</li>
-            <li>Architect time freed for the next decision</li>
-          </ul>
-        </div>
-      </div>
-
-      <h2>Run the reproducible example</h2>
-
-      <p>The repo ships a Python walkthrough that simulates the timeline above against the Mneme pipeline. Three sequential "agents" produce diff hunks. The same Mneme conflict detector and enforcer that drive the editor hook and the CI gate evaluate each step:</p>
+      <h2>Run it yourself</h2>
 
       <pre><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme/examples/architectural-drift
 python run.py</code></pre>
 
-      <p>The script prints the without-governance timeline first (drift propagation), then the with-governance timeline (upstream block and retry convergence). Same decision corpus on disk for both runs. The script does not call any LLM; the architectural divergences are scripted so that the enforcement output is deterministic and reproducible.</p>
+      <p>Step 1 is the first divergence. It prints exactly this:</p>
 
-      <div class="callout teal">
-        <p><strong>What this proves.</strong> The runnable example does not claim to demonstrate sophisticated autonomous agents. It demonstrates that <em>the governance layer stays coherent across multiple proposed changes</em>. That is the proof surface that matters for this category, and it is small enough to be deterministic.</p>
-      </div>
+      <pre><code>FAIL  [ADR-001] anti_pattern "redis-py" -- trigger: redis
+WARN  [ADR-001] constraint "no redis" -- trigger: redis
 
-      <h2>Where the governance lives</h2>
+Result: FAIL</code></pre>
 
-      <p>The enforcement output above is generated by the same three artifacts that drive every other Mneme integration:</p>
+      <p>The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved. The conflict detector and enforcer are the same ones behind the editor hook and the CI gate.</p>
 
-      <ul style="list-style: none; margin: 1rem 0 1.5rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; color: var(--muted); font-size: 0.9rem;">
-        <li>&rarr; <a href="/demo/adr-compiler/">The ADR compiler</a> emits the <code>project_memory.json</code> the timeline reads against.</li>
-        <li>&rarr; <a href="/integrations/claude-code/">Claude Code integration</a> intercepts the pre-generation step.</li>
-        <li>&rarr; <a href="/integrations/github-actions/">GitHub Actions integration</a> runs <code>mneme check</code> in CI.</li>
-      </ul>
+      <section class="cta-snippet" id="try">
+        <h3>Ready to try it?</h3>
+        <p>Install the CLI and check your first decision in under a minute.</p>
+        <div class="cta-actions">
+          <a class="cta-primary" href="/docs/">Install the CLI</a>
+          <a class="cta-secondary" href="/pilot/">Request a pilot</a>
+        </div>
+        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
+      </section>
 
-      <p>The drift demo is what happens when those three artifacts are missing. The convergent timeline is what happens when they are wired up.</p>
-
-      <h2>Video walkthrough</h2>
-      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Prefer video? Watch drift compound across agents — and the governance layer that stops it.</p>
-      <div style="max-width:720px;aspect-ratio:16/9;position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/xkXJqSnXBJ8"
-          title="AI Agents Break Architecture at Speed. Mneme Catches the Drift."
-          loading="lazy"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
-      </div>
-
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/ai-agent-drift/"><div class="rel-title">AI agent drift</div><p class="rel-desc">The agent-side phenomenon where coding agents diverge from intended architecture across sessions.</p></a></li>
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural drift</div><p class="rel-desc">The compound degradation in codebase coherence when AI generation outpaces governance.</p></a></li>
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
-    </ul>
-  </aside>
-
-      <div class="next-bar">
-        <a class="next-card" href="/demo/governed-python-agent/">
-          <div class="nc-label">Flagship 01 &middot; Centerpiece</div>
-          <h4>Catching AI-generated code that violates an ADR</h4>
-          <p>The full product loop: a Python agent proposes a violating import, Mneme flags it, the agent retries with compliant output.</p>
-          <span class="nc-arrow">See the product demo &rarr;</span>
-        </a>
-        <a class="next-card" href="/demo/multi-agent-governance/">
-          <div class="nc-label">Flagship 03</div>
-          <h4>Keeping architecture consistent across multiple AI agents</h4>
-          <p>The same timeline, scaled up: multiple agents acting on a shared invariant set. The category insight at the limit.</p>
-          <span class="nc-arrow">See the trace &rarr;</span>
-        </a>
-      </div>
     </div>
   </main>
 

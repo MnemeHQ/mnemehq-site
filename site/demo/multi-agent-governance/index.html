@@ -30,40 +30,57 @@
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <script type="application/ld+json">
   {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
-          {"@type": "ListItem", "position": 3, "name": "Keeping architecture consistent across multiple AI agents", "item": "https://mnemehq.com/demo/multi-agent-governance/"}
-        ]
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mnemehq.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Demo",
+          "item": "https://mnemehq.com/demo/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Keeping architecture consistent across multiple AI agents",
+          "item": "https://mnemehq.com/demo/multi-agent-governance/"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "headline": "Keeping architecture consistent across multiple AI agents",
+      "description": "As AI execution becomes distributed and persistent, governance becomes the coordination layer. Three agents act on the same codebase against a shared invariant set.",
+      "url": "https://mnemehq.com/demo/multi-agent-governance/",
+      "datePublished": "2026-05-13",
+      "dateModified": "2026-05-13",
+      "author": {
+        "@type": "Person",
+        "name": "Theo Valmis",
+        "url": "https://mnemehq.com/founder/"
       },
-      {
-        "@type": "Article",
-        "headline": "Keeping architecture consistent across multiple AI agents",
-        "description": "As AI execution becomes distributed and persistent, governance becomes the coordination layer. Three agents act on the same codebase against a shared invariant set.",
-        "url": "https://mnemehq.com/demo/multi-agent-governance/",
-        "datePublished": "2026-05-13",
-        "dateModified": "2026-05-13",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/demo/og.png",
-        "mainEntityOfPage": "https://mnemehq.com/demo/multi-agent-governance/"
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://mnemehq.com/logo-v3.png"
+        }
       },
-      {
-        "@type": "VideoObject",
-        "name": "From ADR to CI: Enforcing Architecture in GitHub Actions",
-        "description": "Walkthrough of governance continuity across multiple actors. Three agents act on the same codebase against a shared invariant set, and architectural decisions hold from ADR through CI enforcement.",
-        "thumbnailUrl": "https://i.ytimg.com/vi/LaJqeJrKkgg/maxresdefault.jpg",
-        "uploadDate": "2026-05-13",
-        "contentUrl": "https://www.youtube.com/watch?v=LaJqeJrKkgg",
-        "embedUrl": "https://www.youtube-nocookie.com/embed/LaJqeJrKkgg",
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
-      }
-    ]
-  }
+      "image": "https://mnemehq.com/demo/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/demo/multi-agent-governance/"
+    }
+  ]
+}
   </script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -230,6 +247,19 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
+
+    /* Lean demo CTA band - ADR-002 phase 3 */
+    .cta-snippet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.75rem; margin-top: 3.5rem; text-align: center; }
+    .cta-snippet h3 { font-family: 'Instrument Serif', serif; font-size: 1.35rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
+    .cta-snippet > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
+    .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .cta-primary { background: var(--accent); color: #0c0c0d; padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .cta-primary:hover { background: var(--accent-dim); }
+    .cta-secondary { border: 1px solid var(--border2); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .cta-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .cta-tertiary { margin-top: 1.1rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+    .cta-tertiary a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
+    .cta-tertiary a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -259,14 +289,13 @@
   <main>
     <header>
       <div class="article-eyebrow">
-        <span class="eyebrow-tag">Flagship 03</span>
+        <span class="eyebrow-tag">Runnable demo</span>
         <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">7 min read</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">FORWARD-LOOKING</span>
+        <span class="verdict-pill">RUNS LOCALLY</span>
+        <span class="verdict-pill">AGENTS SCRIPTED</span>
       </div>
       <h1>Keeping architecture consistent across <em>multiple AI agents</em>.</h1>
-      <p class="lede">As AI execution becomes distributed and persistent, the question is no longer "can one agent be guided?" It is "do our architectural invariants stay coherent across actors, sessions, and retries?" <strong>The point is not multi-agent runtime sophistication. The point is that the invariants live outside any single actor &mdash; in a governance layer that survives them.</strong></p>
+      <p class="lede">Three actors touch the same service in three separate sessions, sharing no memory with each other. They share one thing: the compiled decision corpus. <strong>The invariants hold because they live outside every actor, not inside any of them.</strong></p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -277,15 +306,6 @@
     </header>
 
     <div class="body">
-
-      <h2>What this demo is &mdash; and is not</h2>
-
-      <p>This page does not claim a multi-agent runtime, an orchestration platform, or an autonomous coordination framework. Those are different categories. They are evolving rapidly, and most of them are out of Mneme's scope.</p>
-
-      <p>What this page <em>does</em> demonstrate is the shape of the problem those frameworks expose: <strong>once multiple actors touch the same codebase against shared architectural invariants, the governance layer becomes the coordination layer.</strong> If the invariants are encoded somewhere the actors can answer to, the system stays coherent. If they aren't, every actor reasons against its own context and drift becomes inevitable.</p>
-
-      <h2>The invariants the actors share</h2>
-
       <div class="adr-primer">
         <span class="primer-key">The decisions at stake</span>
         <div class="primer-rules">
@@ -295,45 +315,6 @@
         </div>
         <p class="primer-what">The demo shows how three independent actors stay aligned because they all evaluate against this same <strong>compiled corpus</strong> &mdash; not against each other.</p>
       </div>
-
-      <p>Three actors will touch the same Python service over the course of one workflow. They share exactly one thing: the compiled decision corpus emitted by the <a href="/demo/adr-compiler/">ADR compiler</a>.</p>
-
-      <div class="invariants">
-        <div class="inv-title">Shared invariant set &middot; project_memory.json</div>
-        <ul>
-          <li>
-            <span class="inv-id">ADR-001</span>
-            <span class="inv-text"><strong>JSON storage only.</strong> No external database. No Redis. Persistence stays in-process.</span>
-          </li>
-          <li>
-            <span class="inv-id">ADR-003</span>
-            <span class="inv-text"><strong>No ORM in v1.</strong> Direct module access. Migrations are deferred until a usage threshold is crossed.</span>
-          </li>
-          <li>
-            <span class="inv-id">ADR-004</span>
-            <span class="inv-text"><strong>Repository pattern.</strong> All persistence flows through a Repository abstraction. No leakage of storage primitives into service layers.</span>
-          </li>
-        </ul>
-      </div>
-
-      <p>None of the three actors have memory of each other. They run in separate sessions. The invariants do not live in any of them &mdash; they live in the corpus the governance layer enforces against.</p>
-
-      <h2>Without the governance layer</h2>
-
-      <p>For contrast, run the scenario without Mneme. Each actor pattern-matches against training data, not against the invariants. The trajectory is unambiguous:</p>
-
-      <ul style="list-style: none; padding: 0; margin: 1rem 0 1.5rem; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.88rem; color: var(--muted);">
-        <li>&rarr; Actor A introduces a Redis dependency to "speed up lookups."</li>
-        <li>&rarr; Actor B sees Redis present and builds session storage on top of it.</li>
-        <li>&rarr; Actor C generates infra YAML for the new Redis service.</li>
-        <li>&rarr; All three changes are locally reasonable. <code>ADR-001</code> is silently dead.</li>
-      </ul>
-
-      <p>The full unconstrained walkthrough is on the <a href="/demo/architectural-drift/">drift prevention page</a> &mdash; that flagship covers the single-codebase failure mode end-to-end. This page extends the same logic to the case where the three actors are not the same agent.</p>
-
-      <h2>With the governance layer</h2>
-
-      <p>Same three actors. Same three tasks. The only difference is that every proposed change is evaluated against the shared invariant set before it lands, and the verdict trace persists across actors.</p>
 
       <div class="actor-step">
         <div class="actor-header a">
@@ -388,86 +369,40 @@
         </div>
       </div>
 
-      <div class="callout">
-        <p><strong>What stayed coherent.</strong> Three actors. Zero shared memory. One shared corpus. The invariants held because they live outside the actors &mdash; in the artifact the governance layer evaluates against.</p>
-      </div>
 
-      <h2>Why this matters at the limit</h2>
+      <h2>What happened</h2>
 
-      <p>The market is moving toward parallel, persistent, semi-autonomous execution. Claude flows, OpenAI agents, autonomous retries, scheduled coding tasks &mdash; the shape varies, but the underlying property is the same: multiple actors touching the same codebase against constraints no single actor reliably remembers.</p>
+      <ul>
+        <li>Actor A proposed Redis. ADR-001 returned <code>FAIL</code>; the retry passed against the same corpus.</li>
+        <li>Actor B, in a fresh session with no memory of A, built on the corrected primitive and passed.</li>
+        <li>Actor C's remediation reached for an ORM. ADR-003 returned <code>FAIL</code>; the compliant remediation passed.</li>
+      </ul>
 
-      <p>When this becomes routine, the bottleneck stops being "can a single agent produce good code?" The bottleneck becomes "do the constraints stay coherent across the actors?" Prompt files cannot answer that question. Vector stores cannot answer that question. A precedence-aware decision corpus with deterministic enforcement can.</p>
-
-      <div class="compare-bar">
-        <div class="compare-card bad">
-          <h4>Coordination via prompt files</h4>
-          <p>Each actor reads a slightly different version of the same text. The "rules" drift between sessions. There is no audit trace. There is no precedence model. Conflict resolution is whoever wrote the most recent prompt.</p>
-        </div>
-        <div class="compare-card good">
-          <h4>Coordination via governance layer</h4>
-          <p>Every actor evaluates against the same compiled corpus. Conflicts surface as structured verdicts with decision IDs. The trace persists across sessions. The invariants survive any individual actor.</p>
-        </div>
-      </div>
-
-      <h2>The runnable example</h2>
-
-      <p>The repo ships a Python script that simulates the three-actor workflow against the real Mneme pipeline. The "actors" are scripted diff producers &mdash; the script does not call any LLM. The enforcement, retrieval, and conflict-detection steps are the actual Mneme code that drives the editor hook and CI gate.</p>
+      <h2>Run it yourself</h2>
 
       <pre><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme/examples/multi-agent-governance
 python run.py</code></pre>
 
-      <p>Output prints the without-governance trajectory first (drift accumulates across actors), then the with-governance trajectory (invariants hold). The verdict trace is the same structured PASS / WARN / FAIL format as <code>mneme check</code>.</p>
+      <p>Actor C is the interesting one &mdash; a genuine architectural conflict surfaced explicitly rather than silently resolved:</p>
 
-      <div class="callout purple">
-        <p><strong>Honest framing.</strong> This is a forward-looking demo. The category insight &mdash; governance becomes the coordination layer as actors multiply &mdash; is real today. The full operational version, with persistent traces across long-running workflows, is on the <a href="/roadmap/" style="color:var(--accent);">roadmap</a>. The runnable example proves the invariant-persistence property using the existing pipeline.</p>
-      </div>
+      <pre><code>FAIL  [ADR-003] anti_pattern "sqlalchemy" -- trigger: sqlalchemy
+WARN  [ADR-003] constraint "no sqlalchemy" -- trigger: sqlalchemy
 
-      <h2>Where the rest of the picture lives</h2>
+Result: FAIL</code></pre>
 
-      <ul style="list-style: none; margin: 1rem 0 1.5rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; color: var(--muted); font-size: 0.9rem;">
-        <li>&rarr; <a href="/demo/adr-compiler/">The ADR compiler</a> &mdash; how the invariant set the actors share is produced.</li>
-        <li>&rarr; <a href="/demo/architectural-drift/">Architectural drift prevention</a> &mdash; the single-actor version of the same problem, end-to-end.</li>
-        <li>&rarr; <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/">Architectural governance across heterogeneous AI coding agents</a> &mdash; the longer-form argument for why the layer must live outside any one tool.</li>
-        <li>&rarr; <a href="/benchmark/">Governance Benchmark v1.1</a> &mdash; the deterministic scenario suite this enforcement is measured against.</li>
-      </ul>
+      <p>The actors are scripted so the enforcement output stays deterministic. This is not a multi-agent runtime and does not claim to be one &mdash; it shows that one corpus keeps three independent sessions coherent.</p>
 
-      <h2>Video walkthrough</h2>
-      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Prefer video? Watch governance hold across multiple actors and CI — from ADR to enforcement gate.</p>
-      <div style="max-width:720px;aspect-ratio:16/9;position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/LaJqeJrKkgg"
-          title="From ADR to CI: Enforcing Architecture in GitHub Actions"
-          loading="lazy"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
-      </div>
+      <section class="cta-snippet" id="try">
+        <h3>Ready to try it?</h3>
+        <p>Install the CLI and check your first decision in under a minute.</p>
+        <div class="cta-actions">
+          <a class="cta-primary" href="/docs/">Install the CLI</a>
+          <a class="cta-secondary" href="/pilot/">Request a pilot</a>
+        </div>
+        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
+      </section>
 
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/multi-agent-continuity/"><div class="rel-title">Multi-agent continuity</div><p class="rel-desc">Decisions persist across agents, sessions, and time. Decision-side memory, not agent-side memory.</p></a></li>
-      <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance propagation</div><p class="rel-desc">One compiled decision reaches every agent, every developer, every CI run with identical semantics.</p></a></li>
-      <li><a href="/concepts/enforcement-provenance/"><div class="rel-title">Enforcement provenance</div><p class="rel-desc">Every verdict traceable back to the authoring ADR. Opaque enforcement is theater.</p></a></li>
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
-    </ul>
-  </aside>
-
-      <div class="next-bar">
-        <a class="next-card" href="/demo/governed-python-agent/">
-          <div class="nc-label">Flagship 01 &middot; Centerpiece</div>
-          <h4>Catching AI-generated code that violates an ADR</h4>
-          <p>The full product loop: a Python agent proposes a violating import, Mneme flags it, the agent retries with compliant output.</p>
-          <span class="nc-arrow">See the product demo &rarr;</span>
-        </a>
-        <a class="next-card" href="/demo/architectural-drift/">
-          <div class="nc-label">Flagship 02</div>
-          <h4>Preventing architectural drift from AI coding agents</h4>
-          <p>The single-codebase version of this story. Read it for the timeline of what drift looks like end-to-end.</p>
-          <span class="nc-arrow">Walk the timeline &rarr;</span>
-        </a>
-      </div>
     </div>
   </main>
 
