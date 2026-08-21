@@ -37,7 +37,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Check archive catalogue metadata
+      - name: Test insights catalogue synchronizer
+        run: python scripts/test_sync_insights_catalog.py
+
+      - name: Check archive and homepage catalogue metadata
         run: python scripts/sync_insights_catalog.py --check
 
       - name: Run insight publishing validator
