@@ -6,7 +6,7 @@ Adding a new article under `site/insights/<slug>/index.html` is **not enough on 
 
 The Insights section has three kinds of index surface:
 
-- **`/insights/`** — a **curated editorial homepage**: one featured article, ~6 latest, the four topic-hub cards, a few foundational pieces, and a "View all insights" CTA. It is *not* required to card every article.
+- **`/insights/`** — a **curated editorial homepage**: one manually selected featured article, six automatically synchronized latest articles, the four topic-hub cards, a few foundational pieces, and a "View all insights" CTA. It is *not* required to card every article.
 - **`/insights/all/`** — the **canonical full archive**. Every article has a card here, and the authoritative `CollectionPage.hasPart` (the complete list) lives here.
 - **`/insights/topics/<hub>/`** — four **topic hubs** (`architectural-governance`, `ai-coding-agents`, `agent-infrastructure`, `engineering-performance`), each with an intro, a cornerstone, and a curated supporting set.
 
@@ -72,7 +72,7 @@ Append a `<url>` block to `site/sitemap.xml`:
 
 ### 3. Index card(s) and `hasPart`
 
-Add a card to **`site/insights/all/index.html`** (the archive) in the most thematically appropriate `cards-section`, **and** to the relevant topic hub under `site/insights/topics/<hub>/index.html`. Mirror the structure of neighboring cards: eyebrow tag, read time, `<h3>` title, summary `<p>`, and the `read-pill` footer. Optionally feature it on the curated homepage (`site/insights/index.html`) under Featured or Latest.
+Add a card to **`site/insights/all/index.html`** (the archive) in the most thematically appropriate `cards-section`, **and** to the relevant topic hub under `site/insights/topics/<hub>/index.html`. Mirror the structure of neighboring cards: eyebrow tag, read time, `<h3>` title, summary `<p>`, and the `read-pill` footer. The curated homepage's six Latest cards are derived from the archive; only its single Featured card is selected manually.
 
 **Also append a matching entry to the `hasPart` array** in the `CollectionPage` JSON-LD of `site/insights/all/index.html`. The visible card and the `hasPart` entry are checked independently — both are required.
 
@@ -82,7 +82,7 @@ After adding the archive card, synchronize its derived publication date from the
 python scripts/sync_insights_catalog.py
 ```
 
-The catalogue uses `data-published` for newest/oldest sorting and a synchronized static `<time datetime>` element for the visible date, including the no-JavaScript fallback. Do not maintain either derived date by hand.
+The catalogue uses `data-published` for newest/oldest sorting and a synchronized static `<time datetime>` element for the visible date, including the no-JavaScript fallback. The same command copies the six newest archive cards into the homepage between its `sync:latest` markers and rebuilds the homepage `CollectionPage.hasPart` list from Featured, Latest, and Start here. Archive order is the deterministic tie-breaker for articles published on the same date. Do not maintain these derived surfaces by hand.
 
 When archive membership, card copy, schema, or catalogue UI changes materially, update the archive `CollectionPage.dateModified` and its `site/sitemap.xml` `<lastmod>` to the same truthful ISO date. Do not bump them for a routine or no-op date synchronization.
 
