@@ -201,6 +201,19 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
+
+    /* Lean demo CTA band - ADR-002 phase 3 */
+    .cta-snippet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.75rem; margin-top: 3.5rem; text-align: center; }
+    .cta-snippet h3 { font-family: 'Instrument Serif', serif; font-size: 1.35rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
+    .cta-snippet > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
+    .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .cta-primary { background: var(--accent); color: #0c0c0d; padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .cta-primary:hover { background: var(--accent-dim); }
+    .cta-secondary { border: 1px solid var(--border2); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .cta-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .cta-tertiary { margin-top: 1.1rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
+    .cta-tertiary a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
+    .cta-tertiary a:hover { color: var(--accent); border-bottom-color: var(--accent); }
 </style>
 </head>
 <body>
@@ -230,11 +243,9 @@
   <main>
     <header>
       <div class="article-eyebrow">
-        <span class="eyebrow-tag">Flagship 01 &middot; Centerpiece</span>
+        <span class="eyebrow-tag">Runnable demo</span>
         <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">5 min read</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNNABLE</span>
+        <span class="verdict-pill">RUNS LOCALLY</span>
       </div>
       <h1>Catching AI-generated code that violates an <em>ADR</em>.</h1>
       <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR, flags the violation, injects the decision context, and the agent retries with correct code. <strong>This is the product loop in full.</strong></p>
@@ -248,23 +259,6 @@
     </header>
 
     <div class="body">
-
-      <h2>The product loop</h2>
-
-      <p>Governance is only useful if it fires before bad code reaches review. The loop below is how Mneme closes that gap: the constraint lives in a compiled ADR, surfaces at generation time, and the agent corrects itself without human intervention.</p>
-
-      <ol>
-        <li>Agent proposes code</li>
-        <li>Mneme checks against compiled governance corpus</li>
-        <li>ADR-005 fires &mdash; decision ID and rationale surface</li>
-        <li>Retry context injected to agent</li>
-        <li>Agent retries &mdash; <code>mneme check --mode strict</code> passes</li>
-      </ol>
-
-      <h2>See it live &mdash; namespace violation caught and corrected</h2>
-
-      <p>The animation below runs a real governance scenario: the agent writes an import that looks correct from its training data but violates ADR-005. Mneme catches it, surfaces the decision, and the agent retries with compliant code.</p>
-
       <div class="adr-primer"><span class="primer-key">ADR-005</span> separates brand identity from package namespace. <code>MnemeHQ</code> is the GitHub org, the website, and the LinkedIn page &mdash; so an agent confidently writes <code>from MnemeHQ.memory_store import &hellip;</code>. The decision declares <code>MnemeHQ</code> a forbidden dependency; the installable package namespace is <code>mneme</code>.</div>
 
       <div class="demo-wrap">
@@ -296,18 +290,16 @@
           <div class="panel-body" id="correct-out"></div>
         </div>
       </div>
-      <button class="replay-btn" type="button" id="replay-btn" onclick="startDemo(true)">&larr; Replay</button>
+      <button class="replay-btn" type="button" id="replay-btn">&larr; Replay</button>
       <p class="retry-note">Retry context contains: ADR-005 decision ID &middot; forbidden token (<code>MnemeHQ</code>) &middot; compliant alternative (<code>mneme</code>) &middot; constraint rationale from the compiled corpus.</p>
 
-      <h2>Why this matters</h2>
+      <h2>What happened</h2>
 
-      <p>AI agents infer from training data. <code>MnemeHQ</code> appears everywhere as the brand &mdash; the GitHub org, the website, the LinkedIn page. When asked to work with the Mneme library, an agent confidently writes <code>from MnemeHQ.memory_store import MemoryStore</code>. It is a locally reasonable guess. It is also architecturally invalid.</p>
-
-      <p>Mneme separates brand identity from package namespace through ADR-005: an enforceable architectural decision compiled into <code>project_memory.json</code>. The constraint is not a linting rule. It fires before the code reaches review, surfaces the decision ID and rationale, and the agent corrects itself. The result is governed output &mdash; not probabilistic compliance.</p>
-
-      <div class="callout">
-        <p><strong>The governance loop works because ADR-005 was compiled.</strong> The ADR compiler reads <code>docs/adr/</code>, parses the <code>## Constraints</code> section of ADR-005, and emits the <code>FORBID_DEPENDENCY: MnemeHQ</code> directive into <code>project_memory.json</code>. Without that step, the namespace constraint is documentation. With it, the constraint is infrastructure. <a href="/demo/adr-compiler/">See how ADRs become the governance corpus &rarr;</a></p>
-      </div>
+      <ul>
+        <li>The agent proposed <code>from MnemeHQ.memory_store import MemoryStore</code> &mdash; the brand name, not the package.</li>
+        <li>ADR-005 fired with its decision ID, the forbidden token, and the compliant alternative.</li>
+        <li>The agent retried against that context and the corrected import passed.</li>
+      </ul>
 
       <h2>Run it yourself</h2>
 
@@ -316,53 +308,22 @@ cd mneme
 pip install -e .
 python examples/demo-adr-import.py</code></pre>
 
-      <h3>Expected output (abbreviated)</h3>
+      <p>Step 4 is the enforcement check. It prints exactly this:</p>
 
-      <pre><code>-- Step 4: Enforcement check (namespace violation)
-
-WARN  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
+      <pre><code>WARN  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
       Brand vs Package Namespace Enforcement
 
 Result: WARN</code></pre>
 
-      <p>The walkthrough runs the ADR compiler, applies decisions to a fresh memory file, then enforces against a namespace violation so ADR-005 fires on the wrong import path.</p>
-
-      <h2>Video walkthrough</h2>
-      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Prefer video? The animation above covers the mechanism; the walkthrough below narrates the full scenario end-to-end.</p>
-      <div style="max-width:720px;aspect-ratio:16/9;position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;">
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/4Yg43V9amao"
-          title="An AI Agent Writes Python Code. Mneme Keeps It Governed."
-          loading="lazy"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
-      </div>
-
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
-      <li><a href="/concepts/enforcement-provenance/"><div class="rel-title">Enforcement provenance</div><p class="rel-desc">Every verdict traceable back to the authoring ADR. Opaque enforcement is theater.</p></a></li>
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
-    </ul>
-  </aside>
-
-      <div class="next-bar">
-        <a class="next-card" href="/demo/architectural-drift/">
-          <div class="nc-label">Flagship 02</div>
-          <h4>Preventing architectural drift from AI coding agents</h4>
-          <p>The failure mode a governance layer exists to prevent. A six-step timeline of compounding divergence without enforcement.</p>
-          <span class="nc-arrow">Walk the timeline &rarr;</span>
-        </a>
-        <a class="next-card" href="/demo/multi-agent-governance/">
-          <div class="nc-label">Flagship 03</div>
-          <h4>Keeping architecture consistent across multiple AI agents</h4>
-          <p>Where enforcement has to hold once AI execution becomes parallel and persistent. Invariants across actors, sessions, and retries.</p>
-          <span class="nc-arrow">See the trace &rarr;</span>
-        </a>
-      </div>
+      <section class="cta-snippet" id="try">
+        <h3>Ready to try it?</h3>
+        <p>Install the CLI and check your first decision in under a minute.</p>
+        <div class="cta-actions">
+          <a class="cta-primary" href="/docs/">Install the CLI</a>
+          <a class="cta-secondary" href="/pilot/">Request a pilot</a>
+        </div>
+        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
+      </section>
 
     </div>
   </main>
@@ -543,6 +504,9 @@ Result: WARN</code></pre>
         });
       }, 150));
     }
+    var _replayBtn = document.getElementById('replay-btn');
+    if (_replayBtn) _replayBtn.addEventListener('click', function(){ startDemo(true); });
+
     if ('IntersectionObserver' in window) {
       var _agentIo = new IntersectionObserver(function(entries) {
         if (entries[0].isIntersecting) { _agentIo.disconnect(); startDemo(); }

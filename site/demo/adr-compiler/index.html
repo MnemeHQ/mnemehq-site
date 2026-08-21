@@ -355,7 +355,7 @@
           <div class="panel-body" id="check-body"></div>
         </div>
       </div>
-      <button class="replay-btn" type="button" id="replay-btn" onclick="startDemo()">&larr; Replay</button>
+      <button class="replay-btn" type="button" id="replay-btn">&larr; Replay</button>
     </div>
   </div>
 
@@ -673,6 +673,9 @@ Result: WARN</code></pre>
         });
       }, 150));
     }
+
+    var _replayBtn = document.getElementById('replay-btn');
+    if (_replayBtn) _replayBtn.addEventListener('click', function(){ startDemo(); });
 
     if ('IntersectionObserver' in window) {
       var _adrIo = new IntersectionObserver(function(entries) {
