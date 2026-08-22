@@ -63,7 +63,7 @@
           {
             "@type": "Question",
             "name": "Is Mneme itself an agent inside the SDK?",
-            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: UserPromptSubmit injects the decisions relevant to your task before work starts, and PreToolUse evaluates every proposed Write, Edit, or MultiEdit against your decision corpus and returns a structured allow or deny verdict. The agents answer to it architecturally; it is not one of them."}
+            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: UserPromptSubmit injects the decisions relevant to your task before work starts, and PreToolUse evaluates proposed Write, Edit, or MultiEdit mutations and returns the appropriate allow, deny, warning, or visible unevaluated outcome according to Mneme's configured mode. The agents answer to it architecturally; it is not one of them."}
           },
           {
             "@type": "Question",
@@ -361,7 +361,7 @@
 
     <p><strong>Guidance.</strong> When your task prompt is submitted, Mneme retrieves the decisions relevant to that task and injects them into the model's context before any work starts. The model begins from your recorded architecture instead of training defaults.</p>
 
-    <p><strong>Enforcement.</strong> Before a Write, Edit, or MultiEdit reaches disk, the adapter reconstructs exactly what the edit introduces and evaluates it via <code>mneme check</code>, passing the real target path separately for typed-rule applicability. A trusted PASS allows; WARN or FAIL denies with the violated decision id and reason attached &mdash; enough for the model to revise its approach without human intervention. Shell commands are not governed: their file mutations cannot be reconstructed reliably, so they are out of scope rather than falsely claimed as covered.</p>
+    <p><strong>Enforcement.</strong> Before a Write, Edit, or MultiEdit reaches disk, the adapter reconstructs exactly what the edit introduces and evaluates it via <code>mneme check</code>, passing the real target path separately for typed-rule applicability. A trusted PASS allows. In strict mode, trusted WARN/FAIL results deny the mutation with the Mneme reason attached &mdash; enough for the model to revise its approach without human intervention. In warn mode, the mutation is not blocked; the warning is injected into agent context. Operational or incomplete evaluations fail open visibly as UNEVALUATED. Shell commands are not governed: their file mutations cannot be reconstructed reliably, so they are out of scope rather than falsely claimed as covered.</p>
 
     <p>Wiring it into your application is three lines:</p>
 
@@ -526,7 +526,7 @@ jobs:
     <div class="faq-list">
       <details class="faq-item">
         <summary>Is Mneme itself an agent inside the SDK?</summary>
-        <div class="faq-body">No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: <code>UserPromptSubmit</code> injects the decisions relevant to your task before work starts, and <code>PreToolUse</code> evaluates every proposed Write, Edit, or MultiEdit against your decision corpus and returns a structured allow-or-deny verdict with the violated decision id attached. The agents answer to it architecturally; it is not one of them.</div>
+        <div class="faq-body">No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: <code>UserPromptSubmit</code> injects the decisions relevant to your task before work starts, and <code>PreToolUse</code> evaluates proposed Write, Edit, or MultiEdit mutations and returns the appropriate allow, deny, warning, or visible unevaluated outcome according to Mneme's configured mode &mdash; strict mode denies on trusted WARN/FAIL; warn mode injects the warning without blocking. The agents answer to it architecturally; it is not one of them.</div>
       </details>
 
       <details class="faq-item">
