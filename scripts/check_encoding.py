@@ -36,8 +36,10 @@ BOM = b"\xef\xbb\xbf"
 # re-encoded as UTF-8. Plain non-ASCII text never produces these byte
 # adjacencies organically.
 #
-#   1. 'â' (\xc3\xa2) followed by a cp1252-specific glyph — the original
-#      fingerprint from commit 999f531.
+#   1. 'a-circumflex' (\xc3\xa2) — the mangled lead byte of any U+2xxx
+#      symbol — followed by a cp1252 high character. Catches arrows, minus
+#      signs, subscripts and math symbols, e.g. U+25B6 PLAY arriving as
+#      b'\xc3\xa2\xe2\x80\x93\xc2\xb6' and rendering as three junk glyphs.
 #   2. 'Â' (\xc3\x82) followed by NBSP or middot.
 #   3. Any Latin-1 accented char (\xc3[\xa0-\xbf]) followed by a C1 control
 #      (\xc2[\x80-\x9f]). C1 controls are never legitimate in web text, so
@@ -47,7 +49,8 @@ BOM = b"\xef\xbb\xbf"
 #      The BOM check above only looks at offset 0; snippet concatenation can
 #      strand one mid-document where it renders as literal garbage.
 MOJIBAKE = re.compile(
-    rb"(?:\xc3\xa2(?:\xe2\x80\xa0|\xe2\x82\xac))"
+    rb"(?:\xc3\xa2(?:\xe2[\x80-\x84][\x80-\xbf]|\xc2[\x80-\xbf]"
+    rb"|\xc3[\x80-\xbf]|\xc5[\x80-\xbf]|\xc6\x92|\xcb[\x86\x9c]))"
     rb"|(?:\xc3\x82\xc2[\xa0\xb7])"
     rb"|(?:\xc3[\xa0-\xbf]\xc2[\x80-\x9f])"
     rb"|(?:\xc3\xaf\xc2\xbb\xc2\xbf)"

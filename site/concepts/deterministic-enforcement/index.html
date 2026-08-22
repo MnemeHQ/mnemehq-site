@@ -100,7 +100,7 @@
     .article-faq summary { padding: 1rem 1.25rem; cursor: pointer; font-size: 0.88rem; color: var(--text); background: var(--surface); list-style: none; }
     .article-faq summary::-webkit-details-marker { display: none; }
     .article-faq summary::before { content: '+ '; color: var(--accent); }
-    .article-faq details[open] summary::before { content: 'âˆ’ '; }
+    .article-faq details[open] summary::before { content: '− '; }
     .article-faq details[open] summary { border-bottom: 1px solid var(--border); }
     .article-faq .faq-body { padding: 1.25rem; font-size: 0.86rem; color: var(--muted); line-height: 1.85; }
     .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
@@ -381,11 +381,11 @@
         <desc id="de-diag-desc">Two parallel columns. The deterministic column shows three identical runs with the same input producing the same verdict. The probabilistic column shows three runs producing different verdicts.</desc>
         <g>
           <!-- Deterministic column -->
-          <text x="40" y="32" class="diag-accent-text">â–² DETERMINISTIC ENFORCEMENT</text>
+          <text x="40" y="32" class="diag-accent-text">▲ DETERMINISTIC ENFORCEMENT</text>
           <text x="40" y="50" class="diag-meta">same input · same corpus · same verdict · every run</text>
 
           <rect x="40" y="64" width="120" height="38" rx="6" class="diag-box-active"/>
-          <text x="100" y="88" text-anchor="middle" class="diag-mono">query = qâ‚</text>
+          <text x="100" y="88" text-anchor="middle" class="diag-mono">query = q₁</text>
 
           <line x1="160" y1="83" x2="200" y2="83" class="diag-arrow-active"/>
           <line x1="160" y1="83" x2="200" y2="135" class="diag-arrow-active"/>
@@ -413,16 +413,16 @@
           <path d="M 360 83 Q 370 83 380 116" class="diag-arrow-active"/>
           <path d="M 360 187 Q 370 187 380 154" class="diag-arrow-active"/>
 
-          <text x="510" y="140" class="diag-accent-text">â‰¡ same record · auditable</text>
+          <text x="510" y="140" class="diag-accent-text">≡ same record · auditable</text>
 
           <!-- Divider -->
           <line x1="40" y1="232" x2="760" y2="232" stroke="#222226"/>
 
           <!-- Probabilistic column -->
-          <text x="40" y="258" class="diag-bad-text">â–¼ PROBABILISTIC SUGGESTION · embedding retrieval, LLM-judge</text>
+          <text x="40" y="258" class="diag-bad-text">▼ PROBABILISTIC SUGGESTION · embedding retrieval, LLM-judge</text>
 
           <rect x="40" y="270" width="120" height="38" rx="6" class="diag-box"/>
-          <text x="100" y="294" text-anchor="middle" class="diag-mono">query = qâ‚</text>
+          <text x="100" y="294" text-anchor="middle" class="diag-mono">query = q₁</text>
 
           <line x1="160" y1="289" x2="200" y2="289" class="diag-arrow"/>
 

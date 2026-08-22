@@ -102,7 +102,7 @@
     .article-faq summary { padding: 1rem 1.25rem; cursor: pointer; font-size: 0.88rem; color: var(--text); background: var(--surface); list-style: none; }
     .article-faq summary::-webkit-details-marker { display: none; }
     .article-faq summary::before { content: '+ '; color: var(--accent); }
-    .article-faq details[open] summary::before { content: 'âˆ’ '; }
+    .article-faq details[open] summary::before { content: '− '; }
     .article-faq details[open] summary { border-bottom: 1px solid var(--border); }
     .article-faq .faq-body { padding: 1.25rem; font-size: 0.86rem; color: var(--muted); line-height: 1.85; }
     .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
@@ -382,7 +382,7 @@
         <desc id="gbg-diag-desc">Two parallel pipelines: the upper one places enforcement before generation and produces shaped output. The lower one places enforcement after generation as review and accumulates rework.</desc>
         <g>
           <!-- Top pipeline: BEFORE -->
-          <text x="40" y="32" class="diag-accent-text">â–² ENFORCEMENT BEFORE GENERATION · shapes output</text>
+          <text x="40" y="32" class="diag-accent-text">▲ ENFORCEMENT BEFORE GENERATION · shapes output</text>
 
           <rect x="40" y="48" width="110" height="54" rx="6" class="diag-box"/>
           <text x="95" y="72" text-anchor="middle" class="diag-text">Intent</text>
@@ -417,7 +417,7 @@
           <line x1="40" y1="148" x2="760" y2="148" stroke="#222226"/>
 
           <!-- Bottom pipeline: AFTER -->
-          <text x="40" y="178" class="diag-bad">â–¼ ENFORCEMENT AFTER GENERATION · reacts to output, accumulates rework</text>
+          <text x="40" y="178" class="diag-bad">▼ ENFORCEMENT AFTER GENERATION · reacts to output, accumulates rework</text>
 
           <rect x="40" y="194" width="110" height="54" rx="6" class="diag-box"/>
           <text x="95" y="218" text-anchor="middle" class="diag-text">Intent</text>
