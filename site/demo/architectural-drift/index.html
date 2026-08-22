@@ -43,7 +43,7 @@
       {
         "@type": "Article",
         "headline": "Preventing architectural drift from AI coding agents",
-        "description": "Six-step timeline showing how drift compounds without a governance layer, and how Mneme blocks the first divergence upstream so the system converges.",
+        "description": "Timeline showing how drift compounds without a governance layer, and how Mneme fails the first divergence upstream so the system converges.",
         "url": "https://mnemehq.com/demo/architectural-drift/",
         "datePublished": "2026-05-13",
         "dateModified": "2026-05-13",
@@ -247,7 +247,7 @@
           <div>&rarr; <code>ADR-001</code> prohibits external databases. Redis is forbidden.</div>
           <div>&rarr; <code>ADR-004</code> requires all persistence to go through a Repository abstraction.</div>
         </div>
-        <p class="primer-what">The demo shows how three agents accidentally violate these decisions over a week &mdash; and how <strong>Mneme blocks the first divergence</strong> before it propagates.</p>
+        <p class="primer-what">The demo shows how three agents accidentally violate these decisions over a week &mdash; and how <strong>Mneme fails the first divergence</strong> before it propagates.</p>
       </div>
 
       <!-- ── TERMINAL DEMO ── swap .demo-terminal-sim for <video> when VHS recording is ready -->
@@ -275,37 +275,28 @@
       <!-- Accessible static transcript -->
       <details class="term-transcript">
         <summary>Full terminal transcript</summary>
-        <pre aria-label="Terminal transcript"><code>$ claude "Simplify the check command by loading .mneme/project_memory.json directly inside check.py"
+        <pre aria-label="Terminal transcript"><code>$ mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn
 
-↳ Mneme evaluating proposed change...
+↳ Agent A -- Monday: "speed up the user lookup endpoint"
 
-[MNEME] Architectural violation detected
+Diff:
+  import redis
+  _cache = redis.Redis(host="localhost", port=6379)
 
-Decision:  ADR-001 — Retrieval architecture
+FAIL  [ADR-001] anti_pattern "redis-py" -- trigger: redis
+      JSON storage only -- no external database.
+WARN  [ADR-001] constraint "no redis" -- trigger: redis
+      JSON storage only -- no external database.
 
-Rule:
-  CLI commands must use the MemoryStore and Retriever pipeline.
-
-Violation:
-  check.py would load governance decisions directly from JSON.
-
-Action:
-  BLOCKED
-
-Reason:
-  Direct file access breaks provenance, freshness checks,
-  and centralized enforcement.
-
-No files changed.
-Agent halted before architectural drift.</code></pre>
+Result: FAIL</code></pre>
       </details>
 
       <h2>What happened</h2>
 
       <ul>
-        <li>Agent A proposed a Redis cache. ADR-001 forbids external databases, so the check returned <code>FAIL</code> and the change did not proceed.</li>
-        <li>Agent A retried with the decision injected and passed against the same corpus.</li>
-        <li>Agent B built on the corrected primitive, so the divergence never reached agent C.</li>
+        <li>Agent A proposed a Redis cache. ADR-001 forbids external databases, so the check returned <code>FAIL</code>.</li>
+        <li>A second, corrected file using the existing JSON cache module was checked independently and passed.</li>
+        <li>Agent B, working from the corrected codebase, produced a compliant diff that also passed &mdash; a fourth check confirms Agent B's original Redis-based approach would have returned the same <code>FAIL</code>.</li>
       </ul>
 
       <h2>Run it yourself</h2>
@@ -321,7 +312,7 @@ python run.py</code></pre>
 
 Result: <span class="v-fail">FAIL</span></code></pre>
 
-      <p>The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved. The conflict detector and enforcer are the same ones behind the editor hook and the CI gate.</p>
+      <p>The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved. The script runs in warn mode, which always exits 0; a strict-mode CI gate maps this same FAIL to a non-zero exit and blocks the merge.</p>
 
       <section class="cta-snippet" id="try">
         <h3>Ready to try it?</h3>
@@ -454,33 +445,22 @@ Result: <span class="v-fail">FAIL</span></code></pre>
 <script>
   (function(){
     /* ── Terminal demo animation ── */
-    var CMD = 'claude "Simplify the check command by loading .mneme/project_memory.json directly inside check.py"';
+    var CMD = 'mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn';
 
     var LINES = [
       [600,  '',                                                          'term-blank'],
-      [0,    '↳ Mneme evaluating proposed change...',               'term-muted'],
+      [0,    '↳ Agent A -- Monday: "speed up the user lookup endpoint"', 'term-muted'],
       [1100, '',                                                          'term-blank'],
-      [0,    '[MNEME] Architectural violation detected',                  'term-header'],
+      [0,    'Diff:',                                                     'term-key'],
+      [180,  '  import redis',                                            'term-value'],
+      [120,  '  _cache = redis.Redis(host="localhost", port=6379)',     'term-value'],
       [500,  '',                                                          'term-blank'],
-      [0,    'Decision:  ADR-001 — Retrieval architecture',         'term-key'],
+      [0,    'FAIL  [ADR-001] anti_pattern "redis-py" -- trigger: redis', 'term-blocked'],
+      [180,  '      JSON storage only -- no external database.',         'term-value'],
+      [0,    'WARN  [ADR-001] constraint "no redis" -- trigger: redis', 'term-key'],
+      [180,  '      JSON storage only -- no external database.',         'term-value'],
       [500,  '',                                                          'term-blank'],
-      [0,    'Rule:',                                                     'term-key'],
-      [180,  '  CLI commands must use the MemoryStore',                  'term-value'],
-      [120,  '  and Retriever pipeline.',                                 'term-value'],
-      [500,  '',                                                          'term-blank'],
-      [0,    'Violation:',                                                'term-key'],
-      [180,  '  check.py would load governance decisions',               'term-value'],
-      [120,  '  directly from JSON.',                                     'term-value'],
-      [500,  '',                                                          'term-blank'],
-      [0,    'Action:',                                                   'term-key'],
-      [180,  '  BLOCKED',                                                 'term-blocked'],
-      [500,  '',                                                          'term-blank'],
-      [0,    'Reason:',                                                   'term-key'],
-      [180,  '  Direct file access breaks provenance,',                  'term-value'],
-      [120,  '  freshness checks, and centralized enforcement.',          'term-value'],
-      [700,  '',                                                          'term-blank'],
-      [0,    'No files changed.',                                         'term-end'],
-      [220,  'Agent halted before architectural drift.',                  'term-end']
+      [0,    'Result: FAIL',                                              'term-blocked']
     ];
 
     var cmdEl    = document.getElementById('term-cmd');

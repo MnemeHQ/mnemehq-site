@@ -9,7 +9,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <meta name="description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta name="description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005 and flags the namespace violation; a second, corrected file checks clean against the same corpus." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/demo/governed-python-agent/" />
@@ -17,12 +17,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Catching AI-generated code that violates an ADR" />
-  <meta property="og:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta property="og:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005 and flags the namespace violation; a second, corrected file checks clean against the same corpus." />
   <meta property="og:url" content="https://mnemehq.com/demo/governed-python-agent/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Catching AI-generated code that violates an ADR" />
-  <meta name="twitter:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code. The full product loop in one demo." />
+  <meta name="twitter:description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005 and flags the namespace violation; a second, corrected file checks clean against the same corpus." />
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
   <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -43,7 +43,7 @@
       {
         "@type": "Article",
         "headline": "Catching AI-generated code that violates an ADR",
-        "description": "A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005, flags the namespace violation, and the agent retries with compliant code.",
+        "description": "A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005 and flags the namespace violation; a second, corrected file checks clean against the same corpus.",
         "url": "https://mnemehq.com/demo/governed-python-agent/",
         "datePublished": "2026-05-15",
         "dateModified": "2026-05-15",
@@ -223,7 +223,7 @@
         <span class="verdict-pill">RUNS LOCALLY</span>
       </div>
       <h1>Catching AI-generated code that violates an <em>ADR</em>.</h1>
-      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR, flags the violation, injects the decision context, and the agent retries with correct code. <strong>This is the product loop in full.</strong></p>
+      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR and flags the violation. A second file using the corrected import checks clean against the same corpus. <strong>The animation below illustrates the intended retry loop; the runnable script performs the two checks, not the regeneration in between.</strong></p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -250,7 +250,7 @@
         <div class="panel">
           <div class="panel-header neutral">
             <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            mneme check --mode strict
+            mneme check --mode warn
           </div>
           <div class="panel-body" id="enforce-body">
             <div class="prompt-line" id="enforce-prompt"></div>
@@ -260,20 +260,20 @@
         <div class="correct-panel hidden" id="correct-panel">
           <div class="panel-header good">
             <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            Corrected output &mdash; agent retry
+            Corrected file &mdash; checked separately
           </div>
           <div class="panel-body" id="correct-out"></div>
         </div>
       </div>
       <button class="replay-btn" type="button" id="replay-btn">&larr; Replay</button>
-      <p class="retry-note">Retry context contains: ADR-005 decision ID &middot; forbidden token (<code>MnemeHQ</code>) &middot; compliant alternative (<code>mneme</code>) &middot; constraint rationale from the compiled corpus.</p>
+      <p class="retry-note">Illustrative: the runnable script does not inject this context or regenerate the file. It writes a second, already-corrected file and checks it independently.</p>
 
       <h2>What happened</h2>
 
       <ul>
         <li>The agent proposed <code>from MnemeHQ.memory_store import MemoryStore</code> &mdash; the brand name, not the package.</li>
         <li>ADR-005 fired with its decision ID, the forbidden token, and the compliant alternative.</li>
-        <li>The agent retried against that context and the corrected import passed.</li>
+        <li>A second file using the corrected import (<code>from mneme.memory_store import MemoryStore</code>) was checked independently and passed.</li>
       </ul>
 
       <h2>Run it yourself</h2>

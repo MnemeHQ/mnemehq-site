@@ -131,29 +131,6 @@
     .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
     .body pre { background: var(--term-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
     .body pre code { background: transparent; border: none; padding: 0; font-size: 0.78rem; line-height: 1.7; color: var(--text); }
-    /* ── AGENT TRANSCRIPT ── */
-    .actor-step { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin: 1.5rem 0; overflow: hidden; }
-    .actor-header { padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
-    .actor-header.a { background: rgba(167,139,250,0.06); }
-    .actor-header.b { background: rgba(245,158,11,0.06); }
-    .actor-header.c { background: rgba(139,224,200,0.06); }
-    .actor-name { font-family: 'DM Mono', monospace; font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    .actor-header.a .actor-name { color: var(--agent-a); }
-    .actor-header.b .actor-name { color: var(--agent-b); }
-    .actor-header.c .actor-name { color: var(--agent-c); }
-    .actor-task { font-size: 0.85rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .actor-task::before { content: '> '; opacity: 0.5; }
-    .actor-body { padding: 1.1rem 1.5rem; }
-    .actor-body h4 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
-    .actor-body p { font-size: 0.86rem; color: var(--muted); margin-bottom: 0.85rem; line-height: 1.7; }
-    .actor-body p:last-child { margin-bottom: 0; }
-    .governance-trace { background: var(--term-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.74rem; line-height: 1.85; margin: 0.75rem 0; }
-    .governance-trace .gt-label { color: var(--teal); margin-right: 0.5rem; }
-    .governance-trace .gt-pass { color: var(--accent); }
-    .governance-trace .gt-warn { color: var(--warn); }
-    .governance-trace .gt-fail { color: var(--fail); }
-    .governance-trace .gt-info { color: var(--muted); }
-    .governance-trace strong { color: var(--text); font-weight: 500; }
     /* ── ADR PRIMER ── */
     .adr-primer { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 0 1.5rem; }
     .primer-key { display: block; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #a78bfa; margin-bottom: 0.6rem; }
@@ -196,12 +173,11 @@
     .cta-tertiary { margin-top: 1.1rem; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
     .cta-snippet .cta-tertiary a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
     .cta-snippet .cta-tertiary a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-  
     /* The verdict is the point of the page - let it read that way. */
     .body pre code .v-warn { color: var(--warn); font-weight: 500; }
     .body pre code .v-fail { color: var(--fail); font-weight: 500; }
     .body pre code .v-pass { color: var(--pass); font-weight: 500; }
-</style>
+  </style>
 
 </head>
 <body>
@@ -253,69 +229,14 @@
         <div class="primer-rules">
           <div>&rarr; <code>ADR-001</code> forbids external databases. Redis is forbidden.</div>
           <div>&rarr; <code>ADR-003</code> forbids ORMs in v1.</div>
-          <div>&rarr; <code>ADR-004</code> enforces the Repository pattern for all persistence.</div>
         </div>
         <p class="primer-what">The demo shows how three independent actors stay aligned because they all evaluate against this same <strong>compiled corpus</strong> &mdash; not against each other.</p>
       </div>
 
-      <div class="actor-step">
-        <div class="actor-header a">
-          <span class="actor-name">Actor A &middot; pre-generation hook</span>
-          <span class="actor-task">"speed up the user lookup endpoint"</span>
-        </div>
-        <div class="actor-body">
-          <h4>Proposes Redis &middot; blocked by ADR-001</h4>
-          <p>The agent's first draft adds <code>redis-py</code>. The pre-generation hook scores the proposal against the corpus, surfaces <code>ADR-001</code>, and reroutes the agent to extending the JSON cache module that already exists. The diff that reaches CI uses the in-process abstraction.</p>
-          <div class="governance-trace">
-            <div><span class="gt-label">trace</span> <span class="gt-info">retriever.score(query, corpus) &rarr; <strong>ADR-001 [0.81]</strong>, ADR-004 [0.42]</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-warn">conflict</span> <strong>redis-py</strong> <span class="gt-info">violates "no external db"</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-info">retry.inject(ADR-001) &rarr; agent regenerates against JSON cache</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-pass">PASS</span> <span class="gt-info">storage_violation_count = 0 &middot; retries = 1</span></div>
-          </div>
-          <p>The corpus is unchanged. The verdict is appended to a structured trace that the next actor will inherit.</p>
-        </div>
-      </div>
-
-      <div class="actor-step">
-        <div class="actor-header b">
-          <span class="actor-name">Actor B &middot; new session, no shared memory with A</span>
-          <span class="actor-task">"add session storage"</span>
-        </div>
-        <div class="actor-body">
-          <h4>Builds on the correct primitive &middot; PASS by construction</h4>
-          <p>Actor B starts from a clean session. It does not "remember" what Actor A did. But the codebase it reads <em>does</em> &mdash; the JSON cache abstraction is now the obvious primitive to extend. The hook surfaces <code>ADR-001</code> and <code>ADR-004</code> alongside the prompt. Output uses the Repository abstraction over JSON.</p>
-          <div class="governance-trace">
-            <div><span class="gt-label">trace</span> <span class="gt-info">retriever.score(query, corpus) &rarr; <strong>ADR-001 [0.73]</strong>, ADR-004 [0.79]</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-info">context.inject(ADR-001, ADR-004)</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-pass">PASS</span> <span class="gt-info">repository_pattern_intact &middot; no new dependencies</span></div>
-          </div>
-          <p>Continuity here is not behavioral &mdash; it is structural. Actor B does not need to know what Actor A did. The corpus carries the invariant, and the codebase carries the compliant primitive.</p>
-        </div>
-      </div>
-
-      <div class="actor-step">
-        <div class="actor-header c">
-          <span class="actor-name">Actor C &middot; remediation pass</span>
-          <span class="actor-task">"reduce duplicated cache logic between user and session"</span>
-        </div>
-        <div class="actor-body">
-          <h4>Refactors across A and B's work &middot; conflict detector flags ambiguity</h4>
-          <p>Actor C is a remediation pass. It sees both cache layers and proposes consolidating them. The conflict detector notices the proposed refactor would change the Repository contract that <code>ADR-004</code> pins down, and emits a structured WARN. The verdict is not a rejection &mdash; it is an explicit decision point that requires either ADR amendment or a tracked override.</p>
-          <div class="governance-trace">
-            <div><span class="gt-label">trace</span> <span class="gt-info">refactor scope: <strong>user.cache</strong> + <strong>session.cache</strong></span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-info">contract.check(Repository) &rarr; signature drift detected</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-warn">WARN</span> <span class="gt-info">[ADR-004] repository contract would change &middot; requires ADR amendment OR --approve-override</span></div>
-            <div><span class="gt-label">trace</span> <span class="gt-info">trace.persist(workflow_id) &middot; auditable across actors</span></div>
-          </div>
-          <p>This is the case the multi-actor demo exists to illustrate. The refactor is not wrong &mdash; it is architecturally consequential. The governance layer's job is to make that visible to a human, not to block silently.</p>
-        </div>
-      </div>
-
-
       <h2>What happened</h2>
 
       <ul>
-        <li>Actor A proposed Redis. ADR-001 returned <code>FAIL</code>; the retry passed against the same corpus.</li>
+        <li>Actor A proposed Redis. ADR-001 returned <code>FAIL</code>; a second, corrected file checked independently and passed.</li>
         <li>Actor B, in a fresh session with no memory of A, built on the corrected primitive and passed.</li>
         <li>Actor C's remediation reached for an ORM. ADR-003 returned <code>FAIL</code>; the compliant remediation passed.</li>
       </ul>
