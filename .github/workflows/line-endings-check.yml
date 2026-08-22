@@ -1,0 +1,41 @@
+name: line endings check
+
+# Catches a change that rewrites a file's newline convention without meaning
+# to. The usual cause is a helper script doing:
+#
+#     text = path.read_text(encoding="utf-8")   # universal newlines: CRLF -> LF
+#     path.write_bytes(text.encode("utf-8"))    # persists LF
+#
+# The content edit is correct, but every line of a CRLF file is rewritten, so
+# a handful of changed characters arrive as a whole-file diff and review
+# cannot see the actual change. This happened twice during the August 2026
+# demo work -- once across 29 files, and once to site/index.html, which showed
+# 411 insertions and 411 deletions with no content change at all.
+#
+# The check does not impose a convention. site/index.html is legitimately
+# mixed. It only asserts that a file's existing convention survives an edit,
+# and it exempts new files.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-line-endings:
+    name: Scan changed files for newline-convention drift
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run line endings check
+        run: python scripts/check_line_endings.py "${{ github.event.pull_request.base.sha }}"

@@ -57,3 +57,25 @@ jobs:
             --query "Assess these changed paths against Mneme HQ website publishing, shared site chrome, deployment, and validation governance." \
             --top 10 \
             --mode strict
+
+      - name: Apply Mneme preflight to changed file contents
+        shell: bash
+        run: |
+          # The step above evaluates path names. Content-level decisions --
+          # an ADR-002 FORBID_LITERAL, for instance -- cannot fire against a
+          # list of paths, so feed the files themselves.
+          status=0
+          while read -r path; do
+            case "$path" in site/*) ;; *) continue ;; esac
+            [ -f "$path" ] || continue
+            if ! mneme check \
+                --memory .mneme/project_memory.json \
+                --input "$path" \
+                --query "Assess this page against Mneme HQ demo evidence and publishing governance." \
+                --top 10 \
+                --mode strict; then
+              echo "::error file=$path::Mneme preflight failed for $path"
+              status=1
+            fi
+          done < .mneme/changed-paths.txt
+          exit $status

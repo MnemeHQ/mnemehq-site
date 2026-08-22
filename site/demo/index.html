@@ -32,7 +32,7 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -66,7 +66,7 @@
         "url": "https://mnemehq.com/",
         "downloadUrl": "https://github.com/MnemeHQ/mneme",
         "license": "https://opensource.org/licenses/MIT",
-        "softwareVersion": "0.4.0",
+        "softwareVersion": "0.5.1",
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"}
       },
@@ -74,7 +74,7 @@
         "@type": "ItemList",
         "name": "Mneme HQ flagship demos",
         "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Blocking AI-generated code that violates an ADR", "url": "https://mnemehq.com/demo/governed-python-agent/"},
+          {"@type": "ListItem", "position": 1, "name": "Catching AI-generated code that violates an ADR", "url": "https://mnemehq.com/demo/governed-python-agent/"},
           {"@type": "ListItem", "position": 2, "name": "Preventing architectural drift from AI coding agents", "url": "https://mnemehq.com/demo/architectural-drift/"},
           {"@type": "ListItem", "position": 3, "name": "Keeping architecture consistent across multiple AI agents", "url": "https://mnemehq.com/demo/multi-agent-governance/"}
         ]
@@ -82,7 +82,7 @@
       {
         "@type": "VideoObject",
         "name": "Mneme HQ — Governed Python Agent Demo",
-        "description": "Hero walkthrough of the Mneme HQ governed Python agent demo. A Python agent proposes a violating import, Mneme blocks it at the pre-generation stage, and the agent retries with a compliant implementation. End-to-end product loop across three flagship demos.",
+        "description": "Hero walkthrough of the Mneme HQ governed Python agent demo. A Python agent proposes a violating import, Mneme flags it against ADR-005 before the change lands, and the agent retries with a compliant implementation. End-to-end product loop across three flagship demos.",
         "thumbnailUrl": "https://i.ytimg.com/vi/4Yg43V9amao/maxresdefault.jpg",
         "uploadDate": "2026-05-15",
         "contentUrl": "https://www.youtube.com/watch?v=4Yg43V9amao",
@@ -333,7 +333,7 @@
         <time datetime="2026-05-15">Restructured May 2026</time>
       </p>
       <p style="margin-top:0.9rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.04em;">
-        Open source &middot; Mneme dogfoods this on its own repo &middot; 117 passing benchmark scenarios
+        Open source &middot; Mneme dogfoods this on its own repo &middot; 7/7 benchmark scenarios caught
       </p>
     </header>
 
@@ -397,8 +397,8 @@
             <span class="flagship-tag centerpiece">Runnable</span>
             <span class="flagship-tag runnable">Mneme dogfoods this</span>
           </div>
-          <h3>Blocking AI-generated code that violates an ADR</h3>
-          <p class="fc-lede">A Python coding agent proposes <code style="font-family:'DM Mono',monospace;font-size:0.85em;background:var(--surface2);border-radius:3px;padding:0.05em 0.35em;">from MnemeHQ.memory_store import MemoryStore</code>. Locally reasonable &mdash; MnemeHQ is the brand name the agent has seen everywhere. Architecturally invalid &mdash; it violates ADR-005 (Brand vs Package Namespace Enforcement). Mneme retrieves the compiled decision, blocks the violation, injects the context, and the agent retries with <code style="font-family:'DM Mono',monospace;font-size:0.85em;background:var(--surface2);border-radius:3px;padding:0.05em 0.35em;">from mneme.memory_store import MemoryStore</code>. This is the product loop in full.</p>
+          <h3>Catching AI-generated code that violates an ADR</h3>
+          <p class="fc-lede">A Python coding agent proposes <code style="font-family:'DM Mono',monospace;font-size:0.85em;background:var(--surface2);border-radius:3px;padding:0.05em 0.35em;">from MnemeHQ.memory_store import MemoryStore</code>. Locally reasonable &mdash; MnemeHQ is the brand name the agent has seen everywhere. Architecturally invalid &mdash; it violates ADR-005 (Brand vs Package Namespace Enforcement). Mneme retrieves the compiled decision, flags the violation, injects the context, and the agent retries with <code style="font-family:'DM Mono',monospace;font-size:0.85em;background:var(--surface2);border-radius:3px;padding:0.05em 0.35em;">from mneme.memory_store import MemoryStore</code>. This is the product loop in full.</p>
           <div class="fc-evidence">
             <div class="fc-evidence-item"><strong>EVIDENCE</strong> Live animation + full enforcement trace</div>
             <div class="fc-evidence-item"><strong>RUNS</strong> <code style="font-family:'DM Mono',monospace;font-size:0.82em;">python examples/demo-adr-import.py</code></div>
@@ -452,7 +452,7 @@
     <!-- ===== 02b - TOOL-SPECIFIC COMPANION DEMO ===== -->
     <section class="section" id="agent-runtimes">
       <div class="section-header">
-        <span class="section-num">Also runnable &middot; Tool-specific</span>
+        <span class="section-num">Forward-looking &middot; Tool-specific</span>
         <h2>The same governed loop, inside a specific agent runtime</h2>
       </div>
       <p class="section-lede">The flagships above are framework-agnostic. This one wires the identical enforcement loop into a concrete runtime &mdash; useful if you're evaluating Mneme for a specific agent stack.</p>
@@ -461,7 +461,7 @@
         <a class="flagship-card" href="/demo/agent-sdk-governance/">
           <div class="flagship-meta">
             <span class="flagship-num">Claude Agent SDK</span>
-            <span class="flagship-tag forward">Runnable</span>
+            <span class="flagship-tag forward">On the roadmap</span>
           </div>
           <h3>Enforcing architectural decisions in Claude Agent SDK workflows</h3>
           <p class="fc-lede">An autonomous Claude Agent SDK agent tasked with adding caching introduces Redis &mdash; violating ADR-001. Mneme's pre-execution hook catches the violation before the file write executes and reroutes the agent to the compliant primitive. The governed loop, applied to a specific agent framework instead of a category narrative.</p>
@@ -547,7 +547,7 @@
         <a class="evidence-block" href="/benchmark/">
           <div class="eb-label">Benchmark</div>
           <h3>Governance Benchmark v1.1</h3>
-          <p>Deterministic scenario suite, structured-output verification, pre-registered thresholds. 18 drift scenarios. 117 passing tests in v0.3.0.</p>
+          <p>Deterministic scenario suite, structured-output verification, pre-registered thresholds. 7/7 enforcement scenarios caught. 447 passing tests in v0.5.1.</p>
           <span class="eb-arrow">Methodology &rarr;</span>
         </a>
         <a class="evidence-block" href="/integrations/">

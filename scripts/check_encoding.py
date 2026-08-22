@@ -32,13 +32,25 @@ TEXT_SUFFIXES = {".html", ".css", ".js", ".xml", ".txt", ".md", ".json", ".svg"}
 
 BOM = b"\xef\xbb\xbf"
 
-# Two anchored byte patterns. Both start with UTF-8 'â' (\xc3\xa2) or 'Â'
-# (\xc3\x82) followed by another high-byte UTF-8 sequence — the canonical
-# fingerprint of UTF-8 misinterpreted as cp1252 and re-encoded as UTF-8.
-# Plain non-ASCII text never produces these byte adjacencies organically.
+# Anchored byte patterns for UTF-8 misinterpreted as cp1252/latin-1 and
+# re-encoded as UTF-8. Plain non-ASCII text never produces these byte
+# adjacencies organically.
+#
+#   1. 'â' (\xc3\xa2) followed by a cp1252-specific glyph — the original
+#      fingerprint from commit 999f531.
+#   2. 'Â' (\xc3\x82) followed by NBSP or middot.
+#   3. Any Latin-1 accented char (\xc3[\xa0-\xbf]) followed by a C1 control
+#      (\xc2[\x80-\x9f]). C1 controls are never legitimate in web text, so
+#      this catches the whole double-encoded family — e.g. U+23F8 PAUSE
+#      arriving as b'\xc3\xa2\xc2\x8f\xc2\xb8' ('â\x8f¸').
+#   4. A UTF-8 BOM that was itself double-encoded into visible 'ï»¿' text.
+#      The BOM check above only looks at offset 0; snippet concatenation can
+#      strand one mid-document where it renders as literal garbage.
 MOJIBAKE = re.compile(
     rb"(?:\xc3\xa2(?:\xe2\x80\xa0|\xe2\x82\xac))"
     rb"|(?:\xc3\x82\xc2[\xa0\xb7])"
+    rb"|(?:\xc3[\xa0-\xbf]\xc2[\x80-\x9f])"
+    rb"|(?:\xc3\xaf\xc2\xbb\xc2\xbf)"
 )
 
 

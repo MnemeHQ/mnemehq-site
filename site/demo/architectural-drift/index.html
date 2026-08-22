@@ -324,7 +324,7 @@
           <span class="dtc-title">mneme-demo — bash</span>
           <div class="dtc-controls">
             <button class="dtc-btn" id="term-pause-btn" aria-label="Pause animation" aria-pressed="false">
-              <span class="dtc-pause-icon" aria-hidden="true">â¸</span>
+              <span class="dtc-pause-icon" aria-hidden="true">⏸</span>
             </button>
             <button class="dtc-btn" id="term-replay-btn" aria-label="Replay animation">
               <span aria-hidden="true">↺</span> Replay
@@ -576,8 +576,8 @@ python run.py</code></pre>
       <div class="next-bar">
         <a class="next-card" href="/demo/governed-python-agent/">
           <div class="nc-label">Flagship 01 &middot; Centerpiece</div>
-          <h4>Blocking AI-generated code that violates an ADR</h4>
-          <p>The full product loop: a Python agent proposes a violating import, Mneme blocks it, the agent retries with compliant output.</p>
+          <h4>Catching AI-generated code that violates an ADR</h4>
+          <p>The full product loop: a Python agent proposes a violating import, Mneme flags it, the agent retries with compliant output.</p>
           <span class="nc-arrow">See the product demo &rarr;</span>
         </a>
         <a class="next-card" href="/demo/multi-agent-governance/">
@@ -785,7 +785,7 @@ python run.py</code></pre>
       clearTimers();
       done = false; paused = false;
       pauseBtn.setAttribute('aria-pressed', 'false');
-      pauseBtn.querySelector('.dtc-pause-icon').textContent = 'â¸';
+      pauseBtn.querySelector('.dtc-pause-icon').textContent = '⏸';
       cmdEl.textContent = '';
       cursor.classList.remove('hidden');
       var promptLine = document.getElementById('term-prompt-line');
@@ -800,7 +800,7 @@ python run.py</code></pre>
       if (done) return;
       paused = !paused;
       pauseBtn.setAttribute('aria-pressed', String(paused));
-      pauseBtn.querySelector('.dtc-pause-icon').textContent = paused ? 'â–¶' : 'â¸';
+      pauseBtn.querySelector('.dtc-pause-icon').textContent = paused ? 'â–¶' : '⏸';
       if (!paused && remaining.length) { var next = remaining.shift(); schedule(next.fn, next.delay); }
     });
 

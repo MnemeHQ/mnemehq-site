@@ -1119,16 +1119,18 @@ trackCheckout(event) {
         <article class="hm-path">
           <div class="hm-path-tag">Path 01 · runnable proof</div>
           <h3>Try the demo.</h3>
-          <p>Clone the open-source repository and run the dry-run comparison without an API key.</p>
+          <p>Clone the open-source repository and watch an architectural violation get caught before generation &mdash; no API key required.</p>
           <div class="hm-terminal">
             <div class="hm-terminal-head">Terminal · demo path</div>
             <pre><code><span class="hm-prompt">$</span> git clone https://github.com/MnemeHQ/mneme
 <span class="hm-prompt">$</span> cd mneme
 <span class="hm-prompt">$</span> pip install -e .
-<span class="hm-prompt">$</span> python demo.py --dry-run
+<span class="hm-prompt">$</span> python examples/demo-adr-import.py
 
-<span class="hm-block">BLOCKED</span> · decision rule-001
-Use the approved storage module.</code></pre>
+<span class="hm-warn">WARN</span>  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
+      Brand vs Package Namespace Enforcement
+
+Result: WARN</code></pre>
           </div>
           <div class="hm-requirements"><span>No API key</span><span>Open source</span><span>Reproducible</span></div>
           <a class="hm-path-cta" href="/demo/">Walk the full demo</a>
@@ -1150,7 +1152,7 @@ Created .mneme/project_memory.json
   --query "checkout analytics"
 
 <span class="hm-block">FAIL</span> · ADR-017 · exit 2
-Result: fail</code></pre>
+Result: FAIL</code></pre>
           </div>
           <div class="hm-requirements"><span>Python 3.10+</span><span>macOS · Linux · Windows</span><span>Local CLI</span></div>
           <a class="hm-path-cta" href="/docs/">Read the quickstart</a>

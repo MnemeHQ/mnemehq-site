@@ -232,7 +232,7 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+</style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -479,8 +479,8 @@ Result: WARN</code></pre>
       <div class="next-bar">
           <a class="next-card" href="/demo/governed-python-agent/">
             <div class="nc-label">Flagship 01 &middot; Centerpiece</div>
-            <h4>Blocking AI-generated code that violates an ADR</h4>
-            <p>See the full product loop: a Python agent proposes a violating import, Mneme blocks it using this compiled corpus, the agent retries with correct code.</p>
+            <h4>Catching AI-generated code that violates an ADR</h4>
+            <p>See the full product loop: a Python agent proposes a violating import, Mneme flags it against this compiled corpus, the agent retries with correct code.</p>
             <span class="nc-arrow">See the product demo &rarr;</span>
           </a>
           <a class="next-card" href="/demo/multi-agent-governance/">
@@ -613,8 +613,8 @@ Result: WARN</code></pre>
       { t: 900,  html: '<div><span class="label-badge badge-pass">PASS</span> <span style="color:var(--text)">ADR metadata parsed</span> <span class="out-muted">&mdash; accepted / foundational / code</span></div>' },
       { t: 1400, html: '<div><span class="label-badge badge-pass">PASS</span> <span style="color:var(--text)">Constraints emitted</span> <span class="out-muted">&mdash; dependency and path rules available</span></div>' },
       { t: 1900, html: '<div><span class="label-badge badge-warn">WARN</span> <span style="color:var(--text)">Namespace trigger matched</span> <span class="out-muted">&mdash; MnemeHQ import detected</span></div>' },
-      { t: 2400, html: '<div><span class="label-badge badge-fail">FAIL</span> <span style="color:var(--text)">Violates ADR-005</span> <span class="out-muted">&mdash; from MnemeHQ.memory_store import MemoryStore</span></div>' },
-      { t: 3000, html: '<br><div class="out-muted">2 passed &middot; 1 warning &middot; 1 failure &middot; source: ADR-005</div>' },
+      { t: 2400, html: '<div class="out-muted" style="font-size:0.72rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from MnemeHQ.memory_store import MemoryStore<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand vs Package Namespace Enforcement</div>' },
+      { t: 3000, html: '<br><div class="out-muted">2 passed &middot; 1 warning &middot; source: ADR-005</div>' },
     ];
 
     let timers = [];
