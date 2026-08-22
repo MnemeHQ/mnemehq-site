@@ -2,9 +2,10 @@
 """Fail CI when a change rewrites a file's newline convention.
 
 Line endings are a byte-level property, so no Mneme constraint expresses
-them: `mneme check` matches text tokens in the input it is handed, and the
-CI preflight hands it a list of changed *paths*, not file contents. This is
-the byte-level counterpart to check_encoding.py.
+them at any version. `mneme check` matches text tokens in the file contents
+it is handed -- the governance workflow now feeds those contents as well as
+the changed-path list -- but a newline convention is not a token in the text.
+This is the byte-level counterpart to check_encoding.py.
 
 The failure mode this catches is silent and expensive. A Python helper that
 does:
