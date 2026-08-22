@@ -49,6 +49,7 @@
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
           {"@type": "WebPage", "name": "Claude Code", "url": "https://mnemehq.com/integrations/claude-code/"},
+          {"@type": "WebPage", "name": "Claude Agent SDK", "url": "https://mnemehq.com/integrations/claude-agent-sdk/"},
           {"@type": "WebPage", "name": "Cursor", "url": "https://mnemehq.com/integrations/cursor/"},
           {"@type": "WebPage", "name": "VS Code", "url": "https://mnemehq.com/integrations/vscode/"},
           {"@type": "WebPage", "name": "GitHub Actions", "url": "https://mnemehq.com/integrations/github-actions/"},
@@ -258,6 +259,20 @@
         <h3>Governing Claude Code Workflows</h3>
         <p>Hook-level enforcement for every Edit, Write, and MultiEdit Claude Code attempts. Violations block before they reach disk — no PR required.</p>
         <code style="display:block; font-family:'DM Mono',monospace; font-size:0.74rem; color:var(--teal); background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0.5rem 0.65rem; margin-top:0.4rem; overflow-x:auto; white-space:nowrap;">claude --plugin-dir ./integrations/claude-code-plugin</code>
+        <div class="card-footer">
+          <span class="read-link">Learn more →</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/integrations/claude-agent-sdk/" class="compare-card-link">
+      <div class="compare-card">
+        <div class="card-meta">
+          <span class="card-tag">Native integration</span>
+        </div>
+        <h3>Governing Claude Agent SDK Workflows</h3>
+        <p><code>UserPromptSubmit</code> context injection + <code>PreToolUse</code> enforcement for Write/Edit/MultiEdit. Relevant decisions reach the model before work starts; proposed mutations are checked before they land. Proven end-to-end: deny &rarr; autonomous correction &rarr; PASS.</p>
+        <code style="display:block; font-family:'DM Mono',monospace; font-size:0.74rem; color:var(--teal); background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:0.5rem 0.65rem; margin-top:0.4rem; overflow-x:auto; white-space:nowrap;">pip install mneme-hq claude-agent-sdk</code>
         <div class="card-footer">
           <span class="read-link">Learn more →</span>
         </div>

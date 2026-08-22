@@ -49,13 +49,13 @@
         "description": "Claude Agent SDK handles execution and orchestration. Mneme handles architectural invariants and enforcement. A deterministic governance policy layer around your agent workflows.",
         "url": "https://mnemehq.com/integrations/claude-agent-sdk/",
         "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-08-22",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/claude-agent-sdk/og.png",
         "mainEntityOfPage": "https://mnemehq.com/integrations/claude-agent-sdk/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "Python 3.10+, anthropic SDK, mneme"
+        "dependencies": "Python 3.11+, claude-agent-sdk, mneme-hq"
       },
       {
         "@type": "FAQPage",
@@ -63,17 +63,17 @@
           {
             "@type": "Question",
             "name": "Is Mneme itself an agent inside the SDK?",
-            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It runs as a governance layer around the workflow: a Python function or subprocess you call before and after tool execution. It evaluates proposed file writes against your decision corpus and returns a structured verdict. The agents answer to it architecturally; it is not one of them."}
+            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: UserPromptSubmit injects the decisions relevant to your task before work starts, and PreToolUse evaluates every proposed Write, Edit, or MultiEdit against your decision corpus and returns a structured allow or deny verdict. The agents answer to it architecturally; it is not one of them."}
           },
           {
             "@type": "Question",
             "name": "Does the governance hook add meaningful latency to agent tool calls?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. For typical projects with a corpus under 200 decisions, per-check latency is in the low milliseconds. The check runs in-process with a subprocess call, not over a network. Retrieval is bounded by K=3 — the top three decisions by score are returned regardless of corpus size."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. For typical projects with a corpus under 200 decisions, per-check latency is in the low milliseconds. The check runs as a local subprocess call, not over a network. Retrieval bounds which decisions are injected as guidance (top three by score); enforcement of typed literal rules is corpus-wide and independent of retrieval score."}
           },
           {
             "@type": "Question",
-            "name": "What if my agent uses non-file tools — API calls, shell commands?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The pre-execution hook pattern applies to any tool call, not just file writes. You can intercept tool calls by name and run mneme check against the proposed operation text. The check is most precise when the proposed change involves identifiable architectural surface (file paths, dependency names, module patterns). For generic API calls, you can still inject relevant decisions as context so the agent reasons from the corpus rather than from training defaults."}
+            "name": "What if my agent uses non-file tools - API calls, shell commands?",
+            "acceptedAnswer": {"@type": "Answer", "text": "The shipped integration governs Write, Edit, and MultiEdit tool calls - the surfaces where proposed content can be deterministically reconstructed. Shell commands are not covered: their file mutations cannot be reconstructed reliably enough to check. The whole-file audit path (mneme check) and a CI gate on the resulting diff are the backstop for anything outside the governed tools. Relevant decisions are still injected as context for every task, so the model reasons from your corpus regardless of which tool it reaches for."}
           },
           {
             "@type": "Question",
@@ -282,16 +282,18 @@
 <article class="article-wrap">
   <header class="article-header">
     <div class="article-eyebrow">
-      <span class="eyebrow-tag">Integration &middot; Claude Agent SDK</span>
+      <span class="eyebrow-tag">Native integration &middot; Claude Agent SDK</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">8 min read &nbsp;&middot;&nbsp; May 2026</span>
+      <span class="eyebrow-meta">8 min read &nbsp;&middot;&nbsp; Updated Aug 2026</span>
     </div>
     <h1>Govern architectural constraints in Claude Agent SDK workflows</h1>
-    <p class="article-lede">The Claude Agent SDK is a harness &mdash; it gives you execution, tool use, and orchestration. It does not give you architectural governance. <strong>Mneme is the governance layer that runs alongside your agent workflows</strong> &mdash; evaluating proposed changes against your decision corpus before they reach the codebase, and producing deterministic traces your CI can gate on. The two are different layers of the runtime stack, not competing tools.</p>
+    <p class="article-lede">The Claude Agent SDK is a harness &mdash; it gives you execution, tool use, and orchestration. It does not give you architectural governance. <strong>Mneme is the governance layer that runs alongside your agent workflows</strong> &mdash; injecting relevant decisions before work starts, evaluating proposed file mutations before they reach the codebase, and producing deterministic traces your CI can gate on. Shipped and proven end-to-end: in a live session, Mneme denied a violating write, the model corrected itself from the block reason, and only the compliant file landed. The two are different layers of the runtime stack, not competing tools.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
       <span class="sep">&middot;</span>
       <time datetime="2026-05-14">Published May 2026</time>
+      <span class="sep">&middot;</span>
+      <time datetime="2026-08-22">Updated Aug 2026</time>
     </p>
   </header>
 
@@ -322,7 +324,7 @@
         <ul>
           <li>Architectural decision corpus (project_memory.json)</li>
           <li>Pre-execution governance checks</li>
-          <li>Deterministic keyword retrieval (K=3, no embeddings)</li>
+          <li>Deterministic keyword retrieval for guidance (top-3, no embeddings); typed literal rules enforced corpus-wide</li>
           <li>Structured PASS / WARN / FAIL verdicts with decision IDs</li>
           <li>Post-execution verification against invariant set</li>
           <li>CI-gateable enforcement trace output</li>
@@ -332,112 +334,79 @@
 
     <p>Mneme is not "another agent." It does not call the model. It does not generate text. It scores proposed changes against a pre-registered decision corpus and returns a verdict. The agents answer to it; it does not answer to the agents.</p>
 
-    <h2>Pre-execution governance</h2>
+    <h2>How the integration works</h2>
 
-    <p>The most direct integration point is a governance hook you call before your agent writes any file. Wrap the SDK's tool execution callback to intercept file-write operations, run <code>mneme check</code> against the proposed content, and allow or abort based on the verdict.</p>
+    <p>Mneme ships a native adapter for the Claude Agent SDK: <code>MnemeAgentSdk</code>, in the <code>mneme-hq</code> package. It registers on two SDK lifecycle hooks and implements no governance logic of its own &mdash; retrieval and enforcement are the same deterministic machinery the CLI uses.</p>
 
-    <p>Below is a complete Python hook that intercepts a <code>write_file</code> tool call before it executes:</p>
+    <pre><code>Claude Agent SDK
+       |
+       +- UserPromptSubmit
+       |      |
+       |      v
+       |  DecisionRetriever (existing)
+       |      |
+       |      v
+       |  relevant decisions injected as additionalContext
+       |
+       +- PreToolUse
+              |
+              v
+        Write / Edit / MultiEdit
+              |
+              v
+          mneme check
+              |
+              v
+     allow / deny / visible unevaluated</code></pre>
 
-    <pre><code>import subprocess, json, sys
-from anthropic import Anthropic
+    <p><strong>Guidance.</strong> When your task prompt is submitted, Mneme retrieves the decisions relevant to that task and injects them into the model's context before any work starts. The model begins from your recorded architecture instead of training defaults.</p>
 
-client = Anthropic()
+    <p><strong>Enforcement.</strong> Before a Write, Edit, or MultiEdit reaches disk, the adapter reconstructs exactly what the edit introduces and evaluates it via <code>mneme check</code>, passing the real target path separately for typed-rule applicability. A trusted PASS allows; WARN or FAIL denies with the violated decision id and reason attached &mdash; enough for the model to revise its approach without human intervention. Shell commands are not governed: their file mutations cannot be reconstructed reliably, so they are out of scope rather than falsely claimed as covered.</p>
 
-def mneme_check(file_path: str, content: str) -> dict:
-    result = subprocess.run(
-        ["mneme", "check", "--file", file_path, "--mode", "warn"],
-        input=content,
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    try:
-        return json.loads(result.stdout)
-    except Exception:
-        return {"verdict": "PASS", "decisions": []}
+    <p>Wiring it into your application is three lines:</p>
 
-def governance_hook(tool_name: str, tool_input: dict) -> dict | None:
-    if tool_name != "write_file":
-        return None
+    <pre><code>from claude_agent_sdk import ClaudeAgentOptions
+from mneme.integrations.agent_sdk import MnemeAgentSdk
 
-    path = tool_input.get("path", "")
-    content = tool_input.get("content", "")
-    verdict = mneme_check(path, content)
+mneme = MnemeAgentSdk(project_dir=".")
 
-    if verdict.get("verdict") == "FAIL":
-        decision_id = verdict.get("decisions", [{}])[0].get("id", "unknown")
-        return {
-            "type": "tool_result",
-            "is_error": True,
-            "content": (
-                f"[mneme] Governance violation: {decision_id}. "
-                f"Rationale: {verdict.get('decisions', [{}])[0].get('rationale', '')}. "
-                f"Revise the approach to comply with this decision."
-            ),
-        }
-    return None
-
-tools = [
-    {
-        "name": "write_file",
-        "description": "Write content to a file path.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "path": {"type": "string"},
-                "content": {"type": "string"},
-            },
-            "required": ["path", "content"],
-        },
-    }
-]
-
-messages = [{"role": "user", "content": "Implement the storage module."}]
-
-while True:
-    response = client.messages.create(
-        model="claude-opus-4-5",
-        max_tokens=4096,
-        tools=tools,
-        messages=messages,
-    )
-    messages.append({"role": "assistant", "content": response.content})
-
-    if response.stop_reason == "end_turn":
-        break
-
-    tool_results = []
-    for block in response.content:
-        if block.type != "tool_use":
-            continue
-        blocked = governance_hook(block.name, block.input)
-        if blocked:
-            tool_results.append({"type": "tool_result", "tool_use_id": block.id, **blocked})
-        else:
-            result_content = execute_tool(block.name, block.input)
-            tool_results.append({"type": "tool_result", "tool_use_id": block.id, "content": result_content})
-
-    messages.append({"role": "user", "content": tool_results})
-</code></pre>
-
-    <p>The hook intercepts at the <code>tool_use</code> block boundary, before <code>execute_tool</code> is called. A FAIL verdict returns an error tool result that re-enters the agent loop &mdash; the agent reads the decision id and rationale, revises its approach, and retries without human intervention. A PASS or WARN verdict allows execution to proceed normally.</p>
+options = ClaudeAgentOptions(
+    cwd=".",
+    hooks=mneme.hooks(),
+    permission_mode="acceptEdits",
+)</code></pre>
 
     <div class="callout">
-      <p><strong>Fail-open by design.</strong> If <code>mneme</code> is not found on <code>$PATH</code>, if the JSON parse fails, or if the subprocess times out (10 s hard limit), the hook returns <code>None</code> and the tool call is allowed. A broken governance layer should not lock an agent workflow. Hard-blocking lives in CI.</p>
+      <p><strong>Fail-open, but never silently.</strong> If the check subprocess fails, times out, or returns an unparseable verdict, the mutation proceeds &mdash; a broken governance layer must not lock an agent workflow. But the outcome is never reported as PASS: the adapter injects an explicit <em>unevaluated</em> marker into the agent's context stating that this specific mutation was not checked. Only a complete, trusted verdict can allow or deny.</p>
     </div>
 
-    <p>A sample governance trace from the pre-execution check, printed to stderr alongside your agent log:</p>
+    <h2 id="proven-run">A proven end-to-end run</h2>
+
+    <p>This is not a hypothetical wiring diagram. The following loop was executed against a live Claude Agent SDK session with an isolated decision corpus whose single rule is <em>"Use SQLite for local storage"</em> (<code>store_001</code>, forbidding psycopg2):</p>
 
     <div class="governance-trace">
-      <div><span class="gt-label">mneme</span> <span class="gt-info">query &rarr; "write_file storage/db.py"</span></div>
-      <div><span class="gt-label">mneme</span> <span class="gt-info">retriever.score(query, corpus, K=3) &rarr; <strong>ADR-001 [0.84]</strong>, ADR-004 [0.61], ADR-003 [0.38]</span></div>
-      <div><span class="gt-label">mneme</span> <span class="gt-info">check ADR-001 &rarr; anti_pattern: "external database dependency"</span></div>
-      <div><span class="gt-label">mneme</span> <span class="gt-warn">FAIL</span> <span class="gt-info">content contains "import redis" &middot; violates ADR-001</span></div>
-      <div><span class="gt-label">mneme</span> <span class="gt-info">decision_id: ADR-001 &middot; rationale: "JSON storage only, no external db in v1"</span></div>
-      <div><span class="gt-label">mneme</span> <span class="gt-info">verdict returned to agent loop as tool_result error</span></div>
+      <div><span class="gt-label">mneme</span> <span class="gt-info">context_injection &middot; query "add database persistence" &rarr; injected: store_001</span></div>
+      <div><span class="gt-label">model</span> <span class="gt-info">proposes db.py &middot; import psycopg2 &middot; Write tool</span></div>
+      <div><span class="gt-label">mneme</span> <span class="gt-warn">DENY</span> <span class="gt-info">[store_001] FAIL "psycopg2" - trigger: psycopg2 &middot; evaluation_complete: true</span></div>
+      <div><span class="gt-label">model</span> <span class="gt-info">reads the block reason, revises autonomously - no human input</span></div>
+      <div><span class="gt-label">model</span> <span class="gt-info">second proposal db.py &middot; import sqlite3 &middot; Write tool</span></div>
+      <div><span class="gt-label">mneme</span> <span class="gt-pass">PASS</span> <span class="gt-info">write lands &middot; compliant file on disk</span></div>
     </div>
 
-    <div class="verdict-bar"><span class="verdict-pill fail">FAIL</span><span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.72rem;">ADR-001 &middot; storage/db.py &middot; blocked before disk write</span></div>
+    <div class="verdict-bar">
+      <span class="verdict-pill fail">DENY</span>
+      <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.72rem;">store_001 &middot; db.py &middot; blocked before disk write</span>
+      <span class="verdict-pill pass">PASS</span>
+      <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.72rem;">db.py &middot; corrected proposal &middot; allowed</span>
+    </div>
+
+    <p>The full evidence trail &mdash; deterministic tests, the live session transcript, and the trace separating context injection from enforcement &mdash; is public:</p>
+
+    <ul>
+      <li><a href="https://github.com/MnemeHQ/mneme/pull/293" style="color:var(--accent);text-decoration:none;">PR #293</a> &mdash; the integration implementation and evidence record</li>
+      <li><a href="https://github.com/MnemeHQ/mneme/blob/main/docs/integrations/agent-sdk.md" style="color:var(--accent);text-decoration:none;">docs/integrations/agent-sdk.md</a> &mdash; architecture and policy reference</li>
+      <li><a href="https://github.com/MnemeHQ/mneme/tree/main/examples/claude-agent-sdk" style="color:var(--accent);text-decoration:none;">examples/claude-agent-sdk/</a> &mdash; runnable demo (deterministic mode needs no API key)</li>
+    </ul>
 
     <h2>Post-execution verification</h2>
 
@@ -450,7 +419,11 @@ def verify_outputs(changed_files: list[str]) -> list[dict]:
     for path in changed_files:
         content = pathlib.Path(path).read_text()
         result = subprocess.run(
-            ["mneme", "check", "--file", path, "--mode", "strict"],
+            ["mneme", "check",
+             "--memory", ".mneme/project_memory.json",
+             "--input", path,
+             "--query", f"audit {path}",
+             "--mode", "strict"],
             input=content,
             capture_output=True,
             text=True,
@@ -533,41 +506,37 @@ jobs:
 
       - name: Governance gate
         run: |
-          mneme check \
-            --files-changed $(git diff --name-only HEAD~1) \
-            --mode strict \
-            --output-format json \
-            --trace-file governance-trace.json
+          set -e
+          for f in $(git diff --name-only HEAD~1 -- '*.py' '*.js' '*.ts'); do
+            mneme check \
+              --memory .mneme/project_memory.json \
+              --input "$f" \
+              --query "audit $f" \
+              --mode strict
+          done
         shell: bash
-
-      - name: Upload governance trace
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: governance-trace
-          path: governance-trace.json
 </code></pre>
 
-    <p>The <code>--mode strict</code> flag means any WARN in the trace causes a non-zero exit and fails the step. The <code>--trace-file</code> flag writes the structured JSON trace as a CI artifact, giving you a per-run record of which decisions were evaluated and what the verdicts were. Use <code>--mode warn</code> during development iterations to surface signals without blocking merges.</p>
+    <p>The <code>--mode strict</code> flag means any WARN in the trace causes a non-zero exit and fails the step, giving you a per-run record of which files were evaluated and what the verdicts were. Use <code>--mode warn</code> during development iterations to surface signals without blocking merges.</p>
 
-    <p>For the GitHub Actions integration with finer-grained control over which file patterns trigger governance checks, see the <a href="/integrations/github-actions/" style="color:var(--accent);text-decoration:none;">GitHub Actions integration page</a>.</p>
+    <p>For the maintained GitHub Actions workflow with finer-grained control over which file patterns trigger governance checks, see the <a href="/integrations/github-actions/" style="color:var(--accent);text-decoration:none;">GitHub Actions integration page</a>.</p>
 
     <h2>FAQ</h2>
 
     <div class="faq-list">
       <details class="faq-item">
         <summary>Is Mneme itself an agent inside the SDK?</summary>
-        <div class="faq-body">No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It runs as a governance layer around the workflow: a Python function or subprocess you call before and after tool execution. It evaluates proposed file writes against your decision corpus and returns a structured verdict. The agents answer to it architecturally; it is not one of them.</div>
+        <div class="faq-body">No. Mneme does not run as an agent, a tool, or a subagent inside your Claude Agent SDK workflow. It registers two lifecycle hooks: <code>UserPromptSubmit</code> injects the decisions relevant to your task before work starts, and <code>PreToolUse</code> evaluates every proposed Write, Edit, or MultiEdit against your decision corpus and returns a structured allow-or-deny verdict with the violated decision id attached. The agents answer to it architecturally; it is not one of them.</div>
       </details>
 
       <details class="faq-item">
         <summary>Does the governance hook add meaningful latency to agent tool calls?</summary>
-        <div class="faq-body">Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. For typical projects with a corpus under 200 decisions, per-check latency is in the low milliseconds. The check runs as a local subprocess call, not over a network. Retrieval is bounded by K=3 &mdash; the top three decisions by score are returned regardless of corpus size. The dominant cost in your agent loop remains model inference, not governance checks.</div>
+        <div class="faq-body">Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. For typical projects with a corpus under 200 decisions, per-check latency is in the low milliseconds. The check runs as a local subprocess call, not over a network. Retrieval bounds which decisions are injected as guidance &mdash; the top three by score; enforcement of typed literal rules is corpus-wide and independent of retrieval score. The dominant cost in your agent loop remains model inference, not governance checks.</div>
       </details>
 
       <details class="faq-item">
         <summary>What if my agent uses non-file tools &mdash; API calls, shell commands?</summary>
-        <div class="faq-body">The pre-execution hook pattern applies to any tool call, not just file writes. You can intercept tool calls by name and run <code>mneme check</code> against the proposed operation text. The check is most precise when the proposed change involves identifiable architectural surface (file paths, dependency names, module patterns). For generic API calls, you can still inject relevant decisions as context at the start of the agent loop so the agent reasons from the corpus rather than from training defaults. Use <code>mneme context --query "api call to external service"</code> to retrieve the relevant decisions for injection.</div>
+        <div class="faq-body">The shipped integration governs Write, Edit, and MultiEdit tool calls &mdash; the surfaces where proposed content can be deterministically reconstructed and checked before execution. Shell commands are not covered: their file mutations cannot be reconstructed reliably enough to check, and claiming them as governed would be false assurance. The whole-file audit path (<code>mneme check</code>) and a CI gate on the resulting diff are the backstop for anything outside the governed tools. Relevant decisions are still injected as context for every task, so the model reasons from your corpus regardless of which tool it reaches for.</div>
       </details>
 
       <details class="faq-item">
