@@ -80,42 +80,49 @@ repository and whose on-page output matches the real run. Anything else is
 ## Constraints
 
 - REQUIRE_PATH: site/demo/**
-- FORBID_LITERAL:
-    value: rule-001
-    include_paths:
-      - site/**
 
 ### What Mneme does and does not enforce here
 
 An earlier draft carried `FORBID_DEPENDENCY: rule-001` and claimed the
 fabricated identifier could not re-enter the site without the preflight
-firing. Testing that claim against the CLI showed two faults, recorded here
-rather than quietly fixed, because this ADR exists to stop exactly that kind
-of unverified assertion.
+firing. Testing that claim produced three findings, recorded here rather than
+quietly fixed, because this ADR exists to stop exactly that kind of
+unverified assertion.
 
-1. `FORBID_DEPENDENCY` tokenises its value. `rule-001` reduced to the trigger
-   `rule`, which fires on any page containing the word — 235 files here,
-   including this repository's own governance copy. `FORBID_LITERAL` matches
-   the exact string and is path-scopable, so it fires on `rule-001` and stays
-   silent on "typed rules compile into enforceable constraints".
-2. The preflight ran `mneme check` against `.mneme/changed-paths.txt`, a file
-   listing changed *path names*. No content directive can fire against a list
-   of paths. A second step now feeds the contents of changed `site/` files, so
-   content-level decisions are actually evaluated.
+1. Wrong directive. `FORBID_DEPENDENCY` tokenises its value, so `rule-001`
+   reduced to the trigger `rule` and fired on any page containing the word --
+   235 files here, including this repository's own governance copy.
+2. Wrong input. The preflight ran `mneme check` against
+   `.mneme/changed-paths.txt`, a file listing changed *path names*. No content
+   directive can fire against a list of paths. A second CI step now feeds the
+   contents of changed `site/` files, so content decisions become evaluable.
+3. The right directive is not released yet. `FORBID_LITERAL` matches an exact
+   string and takes `include_paths`; verified locally, it returns
+   `FAIL [ADR-002] FORBID_LITERAL "rule-001"` on the literal and `PASS` on
+   "typed rules compile into enforceable constraints". But it landed after the
+   `v0.5.1` tag and PyPI's newest release is 0.5.1, so the published
+   distribution silently drops the rule. This repository installs
+   `mneme-hq>=0.5.0` from PyPI on purpose, to exercise the same path
+   documented for users, so pinning CI to a git ref to gain the directive
+   would defeat the point of dogfooding.
 
-What decision constraints still cannot express is a byte-level property.
-Newline convention and character encoding are not text tokens, so they are
-guarded by repository checks instead:
+So `rule-001` is **not** machine-enforced today. Add the `FORBID_LITERAL`
+directive to the Constraints section above once a release containing it ships,
+and re-run `mneme adr import` to compile it.
 
-- `scripts/check_encoding.py` — mojibake and stray BOMs.
-- `scripts/check_line_endings.py` — a change that rewrites a file's newline
+What decision constraints cannot express at any version is a byte-level
+property. Newline convention and character encoding are not text tokens, so
+they stay with repository checks:
+
+- `scripts/check_encoding.py` -- mojibake and stray BOMs.
+- `scripts/check_line_endings.py` -- a change that rewrites a file's newline
   convention.
 
 ## Consequences
 
-- Reintroducing `rule-001` anywhere under `site/` now fails the preflight
-  with `FAIL [ADR-002] FORBID_LITERAL "rule-001"`, so that regression is
-  enforced by the product the site sells rather than by review attention.
+- Reintroducing `rule-001` still passes CI. That regression depends on review
+  attention until a `mneme-hq` release carries `FORBID_LITERAL`; the CI step
+  that feeds file contents is already in place to evaluate it when it does.
 - Demo severity language is now derivable from one table instead of being
   restated independently on each page.
 - Shipping a real blocking path for ADR-005, or a genuine
