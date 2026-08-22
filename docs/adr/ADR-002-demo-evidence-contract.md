@@ -79,14 +79,43 @@ repository and whose on-page output matches the real run. Anything else is
 
 ## Constraints
 
-- FORBID_DEPENDENCY: rule-001
 - REQUIRE_PATH: site/demo/**
+- FORBID_LITERAL:
+    value: rule-001
+    include_paths:
+      - site/**
+
+### What Mneme does and does not enforce here
+
+An earlier draft carried `FORBID_DEPENDENCY: rule-001` and claimed the
+fabricated identifier could not re-enter the site without the preflight
+firing. Testing that claim against the CLI showed two faults, recorded here
+rather than quietly fixed, because this ADR exists to stop exactly that kind
+of unverified assertion.
+
+1. `FORBID_DEPENDENCY` tokenises its value. `rule-001` reduced to the trigger
+   `rule`, which fires on any page containing the word — 235 files here,
+   including this repository's own governance copy. `FORBID_LITERAL` matches
+   the exact string and is path-scopable, so it fires on `rule-001` and stays
+   silent on "typed rules compile into enforceable constraints".
+2. The preflight ran `mneme check` against `.mneme/changed-paths.txt`, a file
+   listing changed *path names*. No content directive can fire against a list
+   of paths. A second step now feeds the contents of changed `site/` files, so
+   content-level decisions are actually evaluated.
+
+What decision constraints still cannot express is a byte-level property.
+Newline convention and character encoding are not text tokens, so they are
+guarded by repository checks instead:
+
+- `scripts/check_encoding.py` — mojibake and stray BOMs.
+- `scripts/check_line_endings.py` — a change that rewrites a file's newline
+  convention.
 
 ## Consequences
 
-- The fabricated `rule-001` identifier cannot re-enter a checked surface
-  without the preflight firing, so the specific regression is enforced by the
-  product the site sells rather than by review attention.
+- Reintroducing `rule-001` anywhere under `site/` now fails the preflight
+  with `FAIL [ADR-002] FORBID_LITERAL "rule-001"`, so that regression is
+  enforced by the product the site sells rather than by review attention.
 - Demo severity language is now derivable from one table instead of being
   restated independently on each page.
 - Shipping a real blocking path for ADR-005, or a genuine
