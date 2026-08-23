@@ -68,6 +68,9 @@ jobs:
           while read -r path; do
             case "$path" in site/*) ;; *) continue ;; esac
             [ -f "$path" ] || continue
+            # Skip binary artifacts (og.png, fonts, images): preflight
+            # evaluates text content only and cannot decode them as UTF-8.
+            if ! grep -Iq . "$path"; then continue; fi
             if ! mneme check \
                 --memory .mneme/project_memory.json \
                 --input "$path" \
