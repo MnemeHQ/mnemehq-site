@@ -88,7 +88,7 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -171,15 +171,25 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -190,7 +200,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -230,7 +240,7 @@
   <div class="violation">
     <div class="vh"><h3>Direct resource instead of the approved module</h3><span class="vtag">Module discipline</span></div>
     <p class="rule"><strong>Rule.</strong> Production infrastructure must use approved modules, not raw resource declarations.</p>
-<pre><span class="cm"># AI-generated in prod/network.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in prod/network.tf</span>
 <span class="kw">resource</span> <span class="kw">"aws_vpc"</span> <span class="kw">"main"</span> {   <span class="cm"># module "vpc" { source = "app.terraform.io/acme/vpc/aws" } expected</span>
   cidr_block = <span class="kw">"10.0.0.0/16"</span>
 }</pre>
@@ -241,7 +251,7 @@
   <div class="violation">
     <div class="vh"><h3>Public network exposure</h3><span class="vtag">Network exposure</span></div>
     <p class="rule"><strong>Rule.</strong> No <code>0.0.0.0/0</code> ingress to admin or database ports. Internet-facing resources require review.</p>
-<pre><span class="cm"># AI-generated in prod/security.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in prod/security.tf</span>
 <span class="kw">resource</span> <span class="kw">"aws_security_group_rule"</span> <span class="kw">"db"</span> {
   type        = <span class="kw">"ingress"</span>
   from_port   = 5432
@@ -255,7 +265,7 @@
   <div class="violation">
     <div class="vh"><h3>Unpinned provider and unapproved region</h3><span class="vtag">Provider &amp; region</span></div>
     <p class="rule"><strong>Rule.</strong> Providers are version-pinned. Resources stay in approved regions (<code>us-east-1</code>, <code>eu-west-1</code>).</p>
-<pre><span class="cm"># AI-generated in providers.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in providers.tf</span>
 <span class="kw">provider</span> <span class="kw">"aws"</span> {
   region = <span class="kw">"ap-southeast-2"</span>   <span class="cm"># outside the approved region list</span>
 }                          <span class="cm"># no required_providers version constraint</span></pre>
@@ -266,7 +276,7 @@
   <div class="violation">
     <div class="vh"><h3>Missing required tags and naming</h3><span class="vtag">Tagging &amp; naming</span></div>
     <p class="rule"><strong>Rule.</strong> Every resource carries <code>owner</code>, <code>env</code>, and <code>cost-center</code> tags and follows the naming convention.</p>
-<pre><span class="cm"># AI-generated in prod/storage.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in prod/storage.tf</span>
 <span class="kw">resource</span> <span class="kw">"aws_s3_bucket"</span> <span class="kw">"data"</span> {
   bucket = <span class="kw">"my-bucket-123"</span>   <span class="cm"># non-conforming name, no tags block</span>
 }</pre>
@@ -277,7 +287,7 @@
   <div class="violation">
     <div class="vh"><h3>Encryption disabled on a stored resource</h3><span class="vtag">Encryption</span></div>
     <p class="rule"><strong>Rule.</strong> Storage at rest is encrypted. No resource may opt out of the encryption requirement.</p>
-<pre><span class="cm"># AI-generated in prod/storage.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in prod/storage.tf</span>
 <span class="kw">resource</span> <span class="kw">"aws_ebs_volume"</span> <span class="kw">"cache"</span> {
   size      = 100
   encrypted = <span class="kw">false</span>   <span class="cm"># encryption explicitly disabled</span>
@@ -289,7 +299,7 @@
   <div class="violation">
     <div class="vh"><h3>State backend and locking weakened</h3><span class="vtag">State &amp; locking</span></div>
     <p class="rule"><strong>Rule.</strong> Remote backend with locking and state encryption. No reverting to a local backend.</p>
-<pre><span class="cm"># AI-generated in backend.tf</span>
+<pre tabindex="0"><span class="cm"># AI-generated in backend.tf</span>
 <span class="kw">terraform</span> {
   <span class="kw">backend</span> <span class="kw">"local"</span> {}   <span class="cm"># remote S3 backend with DynamoDB lock + encrypt=true expected</span>
 }</pre>
@@ -376,6 +386,11 @@
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -412,7 +427,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

@@ -31,7 +31,8 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
+
   <link rel="icon" href="/favicon-v2.png" type="image/png">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -882,6 +883,14 @@
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
       .nav-links a.active { color: var(--accent); }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
   <link rel="stylesheet" href="/assets/css/home-v2.css?v=4">
 <script type="application/ld+json">
@@ -991,10 +1000,11 @@
 <!-- End Google Tag Manager (noscript) -->
 
 <!-- NAV -->
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -1005,7 +1015,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 
   <!-- HERO: one problem, one solution, one system -->
   <section class="hm-hero hm-hero-minimal" aria-labelledby="home-title">
@@ -1122,7 +1132,7 @@ trackCheckout(event) {
           <p>Clone the open-source repository and watch an architectural violation get caught before generation &mdash; no API key required.</p>
           <div class="hm-terminal">
             <div class="hm-terminal-head">Terminal · demo path</div>
-            <pre><code><span class="hm-prompt">$</span> git clone https://github.com/MnemeHQ/mneme
+            <pre tabindex="0"><code><span class="hm-prompt">$</span> git clone https://github.com/MnemeHQ/mneme
 <span class="hm-prompt">$</span> cd mneme
 <span class="hm-prompt">$</span> pip install -e .
 <span class="hm-prompt">$</span> python examples/demo-adr-import.py
@@ -1142,7 +1152,7 @@ Result: WARN</code></pre>
           <p>Install the owned package, initialize the decision corpus, add one approved decision, and check the first proposed change.</p>
           <div class="hm-terminal">
             <div class="hm-terminal-head">Terminal · project path</div>
-            <pre><code><span class="hm-prompt">$</span> pip install mneme-hq
+            <pre tabindex="0"><code><span class="hm-prompt">$</span> pip install mneme-hq
 <span class="hm-prompt">$</span> mneme init
 Created .mneme/project_memory.json
 
@@ -1309,6 +1319,11 @@ Result: FAIL</code></pre>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -1345,7 +1360,7 @@ Result: FAIL</code></pre>
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

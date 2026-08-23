@@ -28,7 +28,8 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
+
   <link rel="icon" href="/favicon-v2.png" type="image/png">
   <script type="application/ld+json">
   {
@@ -71,8 +72,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -242,15 +243,24 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -261,7 +271,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -300,7 +310,7 @@
     <h2>Install</h2>
     <p class="sub">Python 3.10+. MIT-licensed. No vector store, no ML runtime.</p>
     <div class="cmd-card">
-<pre><span class="cp">$</span> pip install mneme-hq</pre>
+<pre tabindex="0"><span class="cp">$</span> pip install mneme-hq</pre>
       <p class="cdesc">Installs the <code>mneme</code> entry point on your PATH. Every subcommand requires <code>--memory</code> pointing at a <code>project_memory.json</code> file. An example corpus ships at <code>examples/project_memory.json</code>.</p>
       <p class="cdesc" style="margin-bottom:0;">From source (contributors): <code>git clone https://github.com/MnemeHQ/mneme &amp;&amp; cd mneme &amp;&amp; pip install -e .</code></p>
     </div>
@@ -313,7 +323,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme list_decisions</span><span class="ctag">Read</span></div>
       <p class="cdesc">Lists every decision in the corpus with id, summary, scope, and constraints. Read-only.</p>
-<pre><span class="cp">$</span> mneme list_decisions --memory examples/project_memory.json</pre>
+<pre tabindex="0"><span class="cp">$</span> mneme list_decisions --memory examples/project_memory.json</pre>
       <div class="flags-title">Flags</div>
       <table class="flags">
         <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
@@ -331,7 +341,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme add_decision</span><span class="ctag">Write</span></div>
       <p class="cdesc">Writes a new decision directly to the JSON file. The Pipeline runtime is never mutated &mdash; this is a file operation only. Fails with exit code 2 if the id already exists.</p>
-<pre><span class="cp">$</span> mneme add_decision --memory examples/project_memory.json \
+<pre tabindex="0"><span class="cp">$</span> mneme add_decision --memory examples/project_memory.json \
     --id mneme_042 \
     --decision <span class="ck">"Use JSON storage"</span> \
     --scope storage \
@@ -360,7 +370,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme test_query</span><span class="ctag">Read</span></div>
       <p class="cdesc">Useful for debugging which decisions are surfaced for a given task description before you wire enforcement into a workflow. Prints every decision ranked by score, plus the top-N context packet that would actually be injected.</p>
-<pre><span class="cp">$</span> mneme test_query --memory examples/project_memory.json \
+<pre tabindex="0"><span class="cp">$</span> mneme test_query --memory examples/project_memory.json \
     --query <span class="ck">"should I add postgres?"</span></pre>
       <div class="flags-title">Flags</div>
       <table class="flags">
@@ -381,7 +391,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme check</span><span class="ctag">Enforce</span></div>
       <p class="cdesc">Reads an input file (a prompt, a generated diff, a draft), retrieves the relevant decisions for <code>--query</code>, and runs the enforcer. Prints any violations and exits with a code that reflects the verdict.</p>
-<pre><span class="cp">$</span> mneme check --memory examples/project_memory.json \
+<pre tabindex="0"><span class="cp">$</span> mneme check --memory examples/project_memory.json \
     --input draft.md \
     --query <span class="ck">"working on storage layer"</span> \
     --mode strict</pre>
@@ -410,7 +420,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme cursor generate</span><span class="ctag">Export</span></div>
       <p class="cdesc">Generates a Cursor-compatible rules file scoped to the supplied query. Writes the corpus into a format the Cursor agent reads directly, so the same decisions are surfaced to the IDE agent as to the rest of the toolchain. See the <a href="/integrations/cursor/">Cursor integration page</a> for end-to-end setup.</p>
-<pre><span class="cp">$</span> mneme cursor generate --memory examples/project_memory.json \
+<pre tabindex="0"><span class="cp">$</span> mneme cursor generate --memory examples/project_memory.json \
     --query <span class="ck">"working on storage layer"</span> \
     --output .cursor/rules/mneme.mdc</pre>
       <div class="flags-title">Flags</div>
@@ -433,7 +443,7 @@
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme benchmark</span><span class="ctag">Measure</span></div>
       <p class="cdesc">Runs every scenario in the supplied directory against the decision corpus and prints a terminal report. Optional <code>--json</code> and <code>--markdown</code> flags emit machine- and human-readable reports for CI artifacts. Scenario categories map onto the <a href="/docs/governance-violations/">governance violation hierarchy</a>; the benchmark methodology is documented at <a href="/benchmark/">/benchmark/</a>.</p>
-<pre><span class="cp">$</span> mneme benchmark examples/benchmarks/ \
+<pre tabindex="0"><span class="cp">$</span> mneme benchmark examples/benchmarks/ \
     --memory examples/project_memory.json \
     --json reports/bench.json \
     --markdown reports/bench.md</pre>
@@ -499,7 +509,7 @@
     <div class="ci-block">
       <h3>GitHub Actions &mdash; PR diff gate</h3>
       <p>Run <code>mneme check</code> against the PR diff in strict mode. Exit code 1 (WARN) or 2 (FAIL) blocks the merge.</p>
-<pre>name: governance
+<pre tabindex="0">name: governance
 on: [pull_request]
 jobs:
   governance:
@@ -524,7 +534,7 @@ jobs:
     <div class="ci-block">
       <h3>Pre-commit &mdash; local warn-mode</h3>
       <p>Run in <code>warn</code> mode locally so the developer sees friction without blocking the commit. Pair with strict-mode CI for the actual gate.</p>
-<pre><span class="cc"># .git/hooks/pre-commit</span>
+<pre tabindex="0"><span class="cc"># .git/hooks/pre-commit</span>
 <span class="cp">$</span> mneme check \
     --memory .mneme/project_memory.json \
     --input <span class="ck">"$(git diff --cached)"</span> \
@@ -555,6 +565,11 @@ jobs:
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -591,7 +606,7 @@ jobs:
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

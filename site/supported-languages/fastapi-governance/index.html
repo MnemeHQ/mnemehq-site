@@ -88,7 +88,7 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -171,15 +171,25 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -190,7 +200,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -230,7 +240,7 @@
   <div class="violation">
     <div class="vh"><h3>Business logic in a route handler</h3><span class="vtag">Architecture</span></div>
     <p class="rule"><strong>Rule.</strong> Route handlers must stay thin. Pricing, tax, and inventory logic belong in service modules.</p>
-<pre><span class="cm"># AI-generated in routers/checkout.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routers/checkout.py</span>
 <span class="kw">@router</span>.post(<span class="kw">"/checkout"</span>)
 <span class="kw">async def</span> checkout(payload: CheckoutIn):
     subtotal = <span class="kw">sum</span>(i.price * i.qty <span class="kw">for</span> i <span class="kw">in</span> payload.items)
@@ -244,7 +254,7 @@
   <div class="violation">
     <div class="vh"><h3>Database access inside the router</h3><span class="vtag">Layer boundary</span></div>
     <p class="rule"><strong>Rule.</strong> Persistence goes through repository modules. No raw queries or sessions in route handlers.</p>
-<pre><span class="cm"># AI-generated in routers/users.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routers/users.py</span>
 <span class="kw">@router</span>.get(<span class="kw">"/users/{user_id}"</span>)
 <span class="kw">async def</span> get_user(user_id: int, db: Session = Depends(get_db)):
     <span class="kw">return</span> db.execute(
@@ -257,7 +267,7 @@
   <div class="violation">
     <div class="vh"><h3>Ad hoc construction instead of dependency injection</h3><span class="vtag">Dependency injection</span></div>
     <p class="rule"><strong>Rule.</strong> Clients and sessions arrive through <code>Depends</code>. No module-level singletons constructed in handlers.</p>
-<pre><span class="cm"># AI-generated in routers/reports.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routers/reports.py</span>
 <span class="kw">@router</span>.get(<span class="kw">"/reports"</span>)
 <span class="kw">async def</span> reports():
     client = StorageClient(API_KEY)   <span class="cm"># built inline, not injected</span>
@@ -270,7 +280,7 @@
   <div class="violation">
     <div class="vh"><h3>Protected router missing its auth dependency</h3><span class="vtag">Security</span></div>
     <p class="rule"><strong>Rule.</strong> Routers under <code>/admin</code> must declare the auth dependency. No unauthenticated admin surface.</p>
-<pre><span class="cm"># AI-generated in routers/admin.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routers/admin.py</span>
 router = APIRouter(prefix=<span class="kw">"/admin"</span>)  <span class="cm"># dependencies=[Depends(require_admin)] dropped</span>
 
 <span class="kw">@router</span>.delete(<span class="kw">"/users/{user_id}"</span>)
@@ -283,7 +293,7 @@ router = APIRouter(prefix=<span class="kw">"/admin"</span>)  <span class="cm"># 
   <div class="violation">
     <div class="vh"><h3>Inconsistent response serialization</h3><span class="vtag">Schema discipline</span></div>
     <p class="rule"><strong>Rule.</strong> Endpoints declare a <code>response_model</code>. No returning ORM objects or untyped dicts.</p>
-<pre><span class="cm"># AI-generated in routers/orders.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routers/orders.py</span>
 <span class="kw">@router</span>.get(<span class="kw">"/orders/{order_id}"</span>)  <span class="cm"># response_model omitted</span>
 <span class="kw">async def</span> get_order(order_id: int):
     <span class="kw">return</span> order_repo.get(order_id)  <span class="cm"># leaks the ORM model + internal fields</span></pre>
@@ -365,6 +375,11 @@ router = APIRouter(prefix=<span class="kw">"/admin"</span>)  <span class="cm"># 
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -401,7 +416,7 @@ router = APIRouter(prefix=<span class="kw">"/admin"</span>)  <span class="cm"># 
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

@@ -84,8 +84,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .breadcrumb-nav { max-width: 880px; margin: 1.5rem auto 0; padding: 0 2rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
@@ -245,14 +245,18 @@
       }
       html { scroll-behavior: auto; }
     }
-</style>
+
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <nav>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -263,7 +267,9 @@
   </div>
 </nav>
 
-  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <main id="main-content" tabindex="-1">
+
+<nav aria-label="Breadcrumb" class="breadcrumb-nav">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/demo/">Demo</a></li>
@@ -380,7 +386,7 @@
 
       <p>The compiler reads YAML frontmatter for metadata, free-form Markdown for rationale, and an optional <code>## Constraints</code> section for machine-readable directives. The example below is one of Mneme's own ADRs:</p>
 
-      <pre><code>---
+      <pre tabindex="0"><code>---
 id: ADR-005
 title: Brand vs Package Namespace Enforcement
 status: accepted
@@ -411,7 +417,7 @@ These must never be conflated in code-bearing surfaces.
 
       <p>The repo ships a Python walkthrough that runs the compiler end-to-end against Mneme's own architectural decisions. No API key. No external services. Local Mneme pipeline:</p>
 
-      <pre><code>git clone https://github.com/MnemeHQ/mneme
+      <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme
 pip install -e .
 python examples/demo-adr-import.py</code></pre>
@@ -420,7 +426,7 @@ python examples/demo-adr-import.py</code></pre>
 
       <h3>Expected output (abbreviated)</h3>
 
-      <pre><code>-- Step 2: Preview (dry-run -- no writes)
+      <pre tabindex="0"><code>-- Step 2: Preview (dry-run -- no writes)
 
 ADR import preview
 ============================================================
@@ -508,7 +514,14 @@ Result: WARN</code></pre>
     </div>
   </div>
 
-  <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  </main>
+
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -545,7 +558,7 @@ Result: WARN</code></pre>
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -748,5 +761,18 @@ Result: WARN</code></pre>
       window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
     })();
   </script>
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
 </body>
 </html>

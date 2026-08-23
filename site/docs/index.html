@@ -66,8 +66,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -124,15 +124,25 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
-  </style>
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -150,7 +160,7 @@
   </ol>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 
 <div class="answer-capsule"><strong>Mneme is an open-source CLI that governs AI coding agents.</strong> These docs cover installation, the <code>mneme check</code> enforcement flow, the governance violations Mneme blocks before generation, supported languages, and the deterministic benchmark methodology.</div>
 
@@ -163,7 +173,7 @@
 <div class="wrap quickstart">
   <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:0 0 1.25rem;">Quick start</h2>
   <p style="font-size:0.92rem;color:var(--muted);line-height:1.75;max-width:780px;margin:0;">Zero to a governed check in two commands. Python 3.10+.</p>
-<pre><span class="cp">$</span> pip install mneme-hq
+<pre tabindex="0"><span class="cp">$</span> pip install mneme-hq
 <span class="cp">$</span> mneme check --memory .mneme/project_memory.json --input prompt.txt --query "storage backend"</pre>
   <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:0 0 1rem;">Exit code <code>0</code> = pass, <code>1</code> = warn, <code>2</code> = fail. To enforce on Claude Code <code>Edit</code> and <code>Write</code> calls, load the plugin: <code>claude --plugin-dir ./integrations/claude-code-plugin</code>. To generate a Cursor rules file: <code>mneme cursor generate --memory .mneme/project_memory.json --query "storage backend"</code>.</p>
 
@@ -201,12 +211,17 @@
   <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:3.5rem 0 1.25rem;">How to read these docs</h2>
   <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:0 0 1.25rem;">The CLI reference is the operational entrypoint: every governance action — listing decisions, adding them, running a check, generating Cursor rules, executing the benchmark — flows through one of the documented commands. Pair it with the governance violations doc to understand <em>what</em> the <code style="font-family:'DM Mono',monospace;font-size:0.85em;background:var(--surface2);padding:0.05rem 0.4rem;border-radius:4px;border:1px solid var(--border);">check</code> command is actually surfacing in practice.</p>
   <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:0 0 1.25rem;">The supported languages page is the canonical coverage matrix — Tier 1 (Python, TypeScript, JavaScript) gets native depth; Tier 2 (Go, Java, C#, Rust) gets repository-level governance through architectural and dependency rules. Mneme is language-agnostic by design; that page documents where the depth lives today and what is on the roadmap.</p>
-  <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:0;">The benchmark methodology page is the methodology specification, not a results dashboard. It describes layered retrieval and enforcement scoring, structured-output verification, pre-registered thresholds, and the anti-gaming protocol — methodology before metrics. Cross-link: see the <a href="/insights/" style="color:var(--accent);text-decoration:none;">Insights</a> hub for essays on the underlying architectural-governance category, and the <a href="https://github.com/MnemeHQ/mneme" style="color:var(--accent);text-decoration:none;">source repository</a> for everything the docs do not cover.</p>
+  <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:0;">The benchmark methodology page is the methodology specification, not a results dashboard. It describes layered retrieval and enforcement scoring, structured-output verification, pre-registered thresholds, and the anti-gaming protocol — methodology before metrics. Cross-link: see the <a href="/insights/" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">Insights</a> hub for essays on the underlying architectural-governance category, and the <a href="https://github.com/MnemeHQ/mneme" style="color:var(--accent);text-decoration:underline;text-underline-offset:3px;">source repository</a> for everything the docs do not cover.</p>
 </div>
 
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -243,7 +258,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

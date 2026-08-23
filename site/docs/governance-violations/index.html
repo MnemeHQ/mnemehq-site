@@ -28,7 +28,8 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
+
   <link rel="icon" href="/favicon-v2.png" type="image/png">
   <script type="application/ld+json">
   {
@@ -72,8 +73,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -235,15 +236,24 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -254,7 +264,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -313,7 +323,7 @@
     <div class="violation" id="v1">
       <div class="vh"><span class="vnum">01</span><h3>Forbidden architecture patterns</h3></div>
       <p class="rule"><strong>Rule.</strong> Do not access BigQuery directly from frontend routes.</p>
-      <pre><span class="comment">// AI generates inside a Next.js API route</span>
+      <pre tabindex="0"><span class="comment">// AI generates inside a Next.js API route</span>
 const client = new BigQuery();</pre>
       <div class="flags">
         <span class="flag">forbidden dependency</span>
@@ -321,7 +331,7 @@ const client = new BigQuery();</pre>
         <span class="flag">architectural boundary breach</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The frontend route calls a backend service over HTTP; only the backend holds the BigQuery client.</p>
-      <pre class="resolution"><span class="comment">// compliant - the route fetches from a backend endpoint, no DB client in the frontend</span>
+      <pre class="resolution" tabindex="0"><span class="comment">// compliant - the route fetches from a backend endpoint, no DB client in the frontend</span>
 export async function GET() {
   const res = await fetch(`${process.env.API_URL}/reports/summary`);
   return Response.json(await res.json());
@@ -331,7 +341,7 @@ export async function GET() {
     <div class="violation" id="v2">
       <div class="vh"><span class="vnum">02</span><h3>Layer boundary violations</h3></div>
       <p class="rule"><strong>Rule.</strong> Controllers must not contain business logic.</p>
-      <pre>@app.post("/checkout")
+      <pre tabindex="0">@app.post("/checkout")
 def checkout():
     <span class="comment"># pricing logic</span>
     <span class="comment"># tax logic</span>
@@ -341,7 +351,7 @@ def checkout():
         <span class="flag">missing service abstraction</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The controller stays thin and delegates pricing, tax, and inventory to a service.</p>
-      <pre class="resolution"><span class="comment"># compliant - business logic lives in the service layer</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - business logic lives in the service layer</span>
 @app.post("/checkout")
 def checkout(cart: Cart):
     return checkout_service.place_order(cart)</pre>
@@ -350,13 +360,13 @@ def checkout(cart: Cart):
     <div class="violation" id="v3">
       <div class="vh"><span class="vnum">03</span><h3>Unauthorized framework introduction</h3></div>
       <p class="rule"><strong>Rule.</strong> React app standardized on Zustand. No Redux.</p>
-      <pre>import { createStore } from "redux";</pre>
+      <pre tabindex="0">import { createStore } from "redux";</pre>
       <div class="flags">
         <span class="flag">non-approved state management</span>
         <span class="flag">stack divergence</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> State management uses the approved library, Zustand.</p>
-      <pre class="resolution"><span class="comment">// compliant - uses the standardized Zustand store</span>
+      <pre class="resolution" tabindex="0"><span class="comment">// compliant - uses the standardized Zustand store</span>
 import { create } from "zustand";
 const useStore = create((set) => ({ count: 0 }));</pre>
     </div>
@@ -373,14 +383,14 @@ const useStore = create((set) => ({ count: 0 }));</pre>
     <div class="violation" id="v4">
       <div class="vh"><span class="vnum">04</span><h3>Monorepo scope violations</h3></div>
       <p class="rule"><strong>Rule.</strong> Billing agent cannot modify the auth package.</p>
-      <pre><span class="comment"># AI agent edits</span>
+      <pre tabindex="0"><span class="comment"># AI agent edits</span>
 packages/auth/*</pre>
       <div class="flags">
         <span class="flag">scoped ownership breach</span>
         <span class="flag">out-of-domain modification</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The billing agent edits only its own package and consumes auth through its published interface.</p>
-      <pre class="resolution"><span class="comment"># compliant - edits stay inside the owned package</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - edits stay inside the owned package</span>
 packages/billing/*
 <span class="comment"># auth is imported, never modified</span>
 import { verifyToken } from "@org/auth";</pre>
@@ -389,14 +399,14 @@ import { verifyToken } from "@org/auth";</pre>
     <div class="violation" id="v10">
       <div class="vh"><span class="vnum">10</span><h3>Agent workflow violations</h3></div>
       <p class="rule"><strong>Rule.</strong> Codegen agents cannot write directly to production migration folders.</p>
-      <pre><span class="comment"># Agent modifies</span>
+      <pre tabindex="0"><span class="comment"># Agent modifies</span>
 db/prod/migrations/*</pre>
       <div class="flags">
         <span class="flag">restricted execution scope</span>
         <span class="flag">protected path mutation</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The agent writes proposed migrations to a staging directory; promotion to the production path is a human-gated step.</p>
-      <pre class="resolution"><span class="comment"># compliant - agent writes to the reviewable staging path only</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - agent writes to the reviewable staging path only</span>
 db/staging/migrations/*
 <span class="comment"># a maintainer promotes to db/prod/migrations/ after review</span></pre>
     </div>
@@ -404,14 +414,14 @@ db/staging/migrations/*
     <div class="violation" id="v11">
       <div class="vh"><span class="vnum">11</span><h3>Prompt-level governance</h3></div>
       <p class="rule"><strong>Rule.</strong> Do not generate mock auth implementations.</p>
-      <pre><span class="comment"># User prompt</span>
+      <pre tabindex="0"><span class="comment"># User prompt</span>
 "Just create a quick fake JWT validator."</pre>
       <div class="flags">
         <span class="flag">policy conflict before generation</span>
         <span class="flag">governance-before-generation</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The agent declines the mock and wires in the vetted auth library to verify real tokens.</p>
-      <pre class="resolution"><span class="comment"># compliant - real verification, no fake validator</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - real verification, no fake validator</span>
 from app.auth import verify_jwt
 
 def authenticate(token: str) -> User:
@@ -430,13 +440,13 @@ def authenticate(token: str) -> User:
     <div class="violation" id="v5">
       <div class="vh"><span class="vnum">05</span><h3>Security policy violations</h3></div>
       <p class="rule"><strong>Rule.</strong> No raw SQL string concatenation.</p>
-      <pre>query = f"SELECT * FROM users WHERE id = {user_id}"</pre>
+      <pre tabindex="0">query = f"SELECT * FROM users WHERE id = {user_id}"</pre>
       <div class="flags">
         <span class="flag">unsafe query construction</span>
         <span class="flag">secure coding rule breach</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The user input is bound as a parameter, never interpolated into the SQL string.</p>
-      <pre class="resolution"><span class="comment"># compliant - parameterized query, no string interpolation</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - parameterized query, no string interpolation</span>
 cursor.execute(
     "SELECT * FROM users WHERE id = %s",
     (user_id,),
@@ -455,28 +465,28 @@ cursor.execute(
     <div class="violation" id="v8">
       <div class="vh"><span class="vnum">08</span><h3>Dependency licensing</h3></div>
       <p class="rule"><strong>Rule.</strong> No GPL dependencies.</p>
-      <pre><span class="comment">// AI adds to package.json</span>
+      <pre tabindex="0"><span class="comment">// AI adds to package.json</span>
 "some-gpl-library": "^2.1.0"</pre>
       <div class="flags">
         <span class="flag">licensing policy violation</span>
         <span class="flag">approved-list deviation</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The dependency is swapped for an approved permissively-licensed (MIT or Apache-2.0) equivalent.</p>
-      <pre class="resolution"><span class="comment">// compliant - MIT-licensed library from the approved list</span>
+      <pre class="resolution" tabindex="0"><span class="comment">// compliant - MIT-licensed library from the approved list</span>
 "some-mit-library": "^3.0.0"</pre>
     </div>
 
     <div class="violation" id="v9">
       <div class="vh"><span class="vnum">09</span><h3>ADR supersession violations</h3></div>
       <p class="rule"><strong>Rule.</strong> ADR-002: all async jobs use Pub/Sub. (Supersedes an older ADR that allowed Celery.)</p>
-      <pre>from celery import Celery</pre>
+      <pre tabindex="0">from celery import Celery</pre>
       <div class="flags">
         <span class="flag">superseded decision</span>
         <span class="flag">outdated architecture pattern</span>
         <span class="flag">precedence-aware enforcement</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> Async work is dispatched through Pub/Sub, the decision that supersedes Celery.</p>
-      <pre class="resolution"><span class="comment"># compliant - ADR-002: publish to Pub/Sub instead of Celery</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - ADR-002: publish to Pub/Sub instead of Celery</span>
 from google.cloud import pubsub_v1
 
 publisher = pubsub_v1.PublisherClient()
@@ -495,13 +505,13 @@ publisher.publish(topic_path, payload)</pre>
     <div class="violation" id="v6">
       <div class="vh"><span class="vnum">06</span><h3>Infra governance violations</h3></div>
       <p class="rule"><strong>Rule.</strong> All infrastructure changes must use Terraform modules.</p>
-      <pre>gcloud compute instances create ...</pre>
+      <pre tabindex="0">gcloud compute instances create ...</pre>
       <div class="flags">
         <span class="flag">bypassing approved infra workflow</span>
         <span class="flag">untracked change surface</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The instance is declared in a Terraform module and applied through the reviewed pipeline, not an imperative CLI call.</p>
-      <pre class="resolution"><span class="comment"># compliant - declarative Terraform, applied via CI</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - declarative Terraform, applied via CI</span>
 module "api_instance" {
   source        = "./modules/compute"
   machine_type  = "e2-standard-2"
@@ -511,20 +521,20 @@ module "api_instance" {
     <div class="violation" id="v7">
       <div class="vh"><span class="vnum">07</span><h3>API contract violations</h3></div>
       <p class="rule"><strong>Rule.</strong> Internal APIs must version under <code>/v1/</code>.</p>
-      <pre>@app.route("/users")</pre>
+      <pre tabindex="0">@app.route("/users")</pre>
       <div class="flags">
         <span class="flag">routing convention breach</span>
         <span class="flag">API governance mismatch</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The route is namespaced under the required <code>/v1/</code> version prefix.</p>
-      <pre class="resolution"><span class="comment"># compliant - versioned under /v1/</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - versioned under /v1/</span>
 @app.route("/v1/users")</pre>
     </div>
 
     <div class="violation" id="v12">
       <div class="vh"><span class="vnum">12</span><h3>Organizational consistency violations</h3></div>
       <p class="rule"><strong>Rule.</strong> All services must emit OpenTelemetry traces.</p>
-      <pre><span class="comment"># AI creates a new service with no tracing middleware</span>
+      <pre tabindex="0"><span class="comment"># AI creates a new service with no tracing middleware</span>
 def create_app():
     app = FastAPI()
     return app</pre>
@@ -533,7 +543,7 @@ def create_app():
         <span class="flag">platform compliance failure</span>
       </div>
       <p class="rule" style="margin-top:1rem;"><strong>Enforced pattern.</strong> The service is instrumented with OpenTelemetry before it is returned.</p>
-      <pre class="resolution"><span class="comment"># compliant - emits OpenTelemetry traces</span>
+      <pre class="resolution" tabindex="0"><span class="comment"># compliant - emits OpenTelemetry traces</span>
 def create_app():
     app = FastAPI()
     FastAPIInstrumentor.instrument_app(app)
@@ -568,6 +578,11 @@ def create_app():
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -604,7 +619,7 @@ def create_app():
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

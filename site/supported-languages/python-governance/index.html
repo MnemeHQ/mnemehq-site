@@ -88,7 +88,7 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -161,15 +161,25 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -180,7 +190,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -207,7 +217,7 @@
   <div class="violation">
     <div class="vh"><h3>Forbidden ORM introduction</h3><span class="vtag">Architecture</span></div>
     <p class="rule"><strong>Rule.</strong> ADR-003 standardized on raw SQL + connection pooling. No SQLAlchemy in v1.</p>
-<pre><span class="cm"># AI-generated in services/user_repository.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in services/user_repository.py</span>
 <span class="kw">from</span> sqlalchemy.orm <span class="kw">import</span> Session
 <span class="kw">from</span> sqlalchemy <span class="kw">import</span> create_engine
 
@@ -222,7 +232,7 @@ engine = create_engine(DATABASE_URL)
   <div class="violation">
     <div class="vh"><h3>Business logic in FastAPI route</h3><span class="vtag">Architecture</span></div>
     <p class="rule"><strong>Rule.</strong> Routes must delegate to services. No pricing, tax, or inventory logic in route handlers.</p>
-<pre><span class="cm"># AI-generated in routes/checkout.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in routes/checkout.py</span>
 <span class="kw">@app</span>.post("/checkout")
 <span class="kw">async def</span> checkout(payload: CheckoutIn):
     <span class="cm"># pricing logic</span>
@@ -237,7 +247,7 @@ engine = create_engine(DATABASE_URL)
   <div class="violation">
     <div class="vh"><h3>Raw SQL string concatenation</h3><span class="vtag">Security</span></div>
     <p class="rule"><strong>Rule.</strong> No f-string SQL. Parameterized queries only.</p>
-<pre><span class="cm"># AI-generated in services/user_service.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in services/user_service.py</span>
 <span class="kw">def</span> find_user(user_id: str) -> dict:
     query = <span class="kw">f</span>"SELECT * FROM users WHERE id = {user_id}"
     <span class="kw">return</span> db.execute(query).fetchone()</pre>
@@ -248,7 +258,7 @@ engine = create_engine(DATABASE_URL)
   <div class="violation">
     <div class="vh"><h3>Async job framework regression</h3><span class="vtag">ADR supersession</span></div>
     <p class="rule"><strong>Rule.</strong> ADR-007 superseded ADR-002. All async jobs use Cloud Pub/Sub. Celery deprecated.</p>
-<pre><span class="cm"># AI-generated in jobs/email_tasks.py</span>
+<pre tabindex="0"><span class="cm"># AI-generated in jobs/email_tasks.py</span>
 <span class="kw">from</span> celery <span class="kw">import</span> Celery
 
 app = Celery(<span class="kw">'tasks'</span>, broker=<span class="kw">'redis://localhost:6379'</span>)
@@ -263,7 +273,7 @@ app = Celery(<span class="kw">'tasks'</span>, broker=<span class="kw">'redis://l
   <div class="violation">
     <div class="vh"><h3>Mock auth in production path</h3><span class="vtag">Prompt-level policy</span></div>
     <p class="rule"><strong>Rule.</strong> No mock JWT validators in non-test paths. Even when the prompt asks for "just a quick one."</p>
-<pre><span class="cm"># Prompt: "Add a quick fake JWT validator so I can test the route"</span>
+<pre tabindex="0"><span class="cm"># Prompt: "Add a quick fake JWT validator so I can test the route"</span>
 <span class="kw">def</span> validate_jwt(token: str) -> dict:
     <span class="kw">return</span> {<span class="kw">"sub"</span>: <span class="kw">"test-user"</span>, <span class="kw">"role"</span>: <span class="kw">"admin"</span>}  <span class="cm"># TODO: real validation</span></pre>
     <div class="flags"><span class="flag">policy conflict before generation</span><span class="flag">pre-generation block</span></div>
@@ -273,7 +283,7 @@ app = Celery(<span class="kw">'tasks'</span>, broker=<span class="kw">'redis://l
   <div class="violation">
     <div class="vh"><h3>Missing observability middleware</h3><span class="vtag">Platform</span></div>
     <p class="rule"><strong>Rule.</strong> All FastAPI services must register the OpenTelemetry middleware before the app is returned.</p>
-<pre><span class="cm"># AI creates a new FastAPI service</span>
+<pre tabindex="0"><span class="cm"># AI creates a new FastAPI service</span>
 <span class="kw">def</span> create_app() -> FastAPI:
     app = FastAPI()
     app.include_router(users_router)
@@ -334,6 +344,11 @@ app = Celery(<span class="kw">'tasks'</span>, broker=<span class="kw">'redis://l
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -370,7 +385,7 @@ app = Celery(<span class="kw">'tasks'</span>, broker=<span class="kw">'redis://l
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

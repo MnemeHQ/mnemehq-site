@@ -43,8 +43,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-primary:hover { background: var(--accent-dim); }
     .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
@@ -74,7 +74,7 @@
     .pipeline { display: flex; gap: 0; margin: 2rem 0; flex-wrap: wrap; }
     .pipeline-stage { flex: 1; min-width: 140px; background: var(--surface); border: 1px solid var(--border); padding: 1.25rem 1rem; position: relative; }
     .pipeline-stage:not(:last-child)::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 1rem; z-index: 1; }
-    .pipeline-stage h4 { font-family: 'Instrument Serif', serif; font-size: 0.95rem; font-weight: 400; margin-bottom: 0.4rem; color: var(--text); }
+    .pipeline-stage h3 { font-family: 'Instrument Serif', serif; font-size: 0.95rem; font-weight: 400; margin-bottom: 0.4rem; color: var(--text); }
     .pipeline-stage p { font-size: 0.74rem; color: var(--muted); line-height: 1.6; }
     .pipeline-badge { font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
     .rag-table-wrap { overflow-x: auto; margin: 2rem 0; }
@@ -88,7 +88,7 @@
     .steps { display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; }
     .step { display: flex; gap: 1.25rem; align-items: flex-start; }
     .step-num { flex-shrink: 0; width: 32px; height: 32px; border: 1px solid rgba(200,240,96,0.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--accent); }
-    .step-body h4 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .step-body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
     .step-body p { font-size: 0.82rem; color: var(--muted); }
     .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
     .code-block-label { padding: 0.6rem 1rem; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
@@ -212,6 +212,14 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 <script type="application/ld+json">
 {
@@ -270,14 +278,16 @@
     }
   ]
 }
-</script>
+</script>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -292,7 +302,7 @@
   <strong>Mneme HQ</strong> governs multi-step AI development workflows by acting as a shared governance layer that every agent in the pipeline can query. Whether a planner agent is scoping work, a coder agent is generating implementation, or a reviewer agent is evaluating output — all stages check the same decision store, ensuring architectural rules and anti-patterns are respected across the entire automated workflow. Memory tools recall context. Mneme governs implementation.
 </div>
 
-<main>
+<main id="main-content" tabindex="-1">
   <div class="breadcrumb">
     <a href="/">Home</a><span>/</span><a href="/use-cases/">Use cases</a><span>/</span>Multi-agent workflow governance
   </div>
@@ -371,22 +381,22 @@
     <div class="pipeline">
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 1</div>
-        <h4>Planner</h4>
+        <h3>Planner</h3>
         <p>Scopes tasks, picks approaches — no memory of past decisions</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 2</div>
-        <h4>Coder</h4>
+        <h3>Coder</h3>
         <p>Implements the plan — violates architecture rules it can't see</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 3</div>
-        <h4>Reviewer</h4>
+        <h3>Reviewer</h3>
         <p>Evaluates output — approves violations it has no context to catch</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 4</div>
-        <h4>Deployer</h4>
+        <h3>Deployer</h3>
         <p>Ships — architectural drift reaches production</p>
       </div>
     </div>
@@ -439,10 +449,10 @@
     <div class="section-eyebrow">How Mneme HQ Solves It</div>
     <h2 class="section-title">A shared architectural governance layer for every agent in the pipeline.</h2>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Build a shared decision store</h4><p>All architectural decisions, constraints, and anti-patterns live in one <code>decisions/</code> directory — a single source of truth every agent can query.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Gate each pipeline stage</h4><p>Add a <code>mneme check</code> call before invoking the next agent. If the plan violates decisions, stop before the coder runs. If code violates decisions, stop before the reviewer runs.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Inject decision context per stage</h4><p>Each agent receives only the decisions relevant to its stage — planners see architecture rules, coders see implementation constraints, reviewers see the full violation report.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Log violations for audit</h4><p>Every check is logged. You get a full audit trail of which decisions were evaluated, which violations were caught, and at which stage — across every pipeline run.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Build a shared decision store</h3><p>All architectural decisions, constraints, and anti-patterns live in one <code>decisions/</code> directory — a single source of truth every agent can query.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Gate each pipeline stage</h3><p>Add a <code>mneme check</code> call before invoking the next agent. If the plan violates decisions, stop before the coder runs. If code violates decisions, stop before the reviewer runs.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Inject decision context per stage</h3><p>Each agent receives only the decisions relevant to its stage — planners see architecture rules, coders see implementation constraints, reviewers see the full violation report.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Log violations for audit</h3><p>Every check is logged. You get a full audit trail of which decisions were evaluated, which violations were caught, and at which stage — across every pipeline run.</p></div></div>
     </div>
   </div>
 
@@ -452,7 +462,7 @@
 
     <div class="code-block">
       <div class="code-block-label">Pipeline orchestrator — Python pseudocode</div>
-      <pre><span class="cc"># Before invoking coder agent</span>
+      <pre tabindex="0"><span class="cc"># Before invoking coder agent</span>
 <span class="ck">plan</span> = planner_agent.run(task)
 
 <span class="cs">check</span> = mneme.check(plan, mode=<span class="cs">"strict"</span>, stage=<span class="cs">"plan"</span>)
@@ -471,7 +481,7 @@
 
     <div class="code-block">
       <div class="code-block-label">Terminal — stage-scoped check output</div>
-      <pre><span class="cc">$ </span><span class="ck">mneme check</span> <span class="cs">"plan: add search via raw SQL in handler"</span> --stage plan
+      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme check</span> <span class="cs">"plan: add search via raw SQL in handler"</span> --stage plan
 
 <span class="cc">Checking against 14 decisions (stage: plan)...</span>
 
@@ -525,6 +535,11 @@
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -561,7 +576,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

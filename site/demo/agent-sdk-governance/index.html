@@ -75,8 +75,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .breadcrumb-nav { max-width: 880px; margin: 1.5rem auto 0; padding: 0 2rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
@@ -135,7 +135,7 @@
     .actor-task { font-size: 0.85rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .actor-task::before { content: '> '; opacity: 0.5; }
     .actor-body { padding: 1.1rem 1.5rem; }
-    .actor-body h4 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
+    .actor-body h3 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.5rem; }
     .actor-body p { font-size: 0.86rem; color: var(--muted); margin-bottom: 0.85rem; line-height: 1.7; }
     .actor-body p:last-child { margin-bottom: 0; }
     .governance-trace { background: var(--term-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.74rem; line-height: 1.85; margin: 0.75rem 0; }
@@ -152,7 +152,7 @@
     .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.4rem; }
     .compare-card.bad { border-top: 2px solid var(--fail); }
     .compare-card.good { border-top: 2px solid var(--accent); }
-    .compare-card h4 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.55rem; }
+    .compare-card h3 { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 0.55rem; }
     .compare-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
 
     /* ── CALLOUT ── */
@@ -168,7 +168,7 @@
     .next-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.15s; display: block; }
     .next-card:hover { border-color: var(--border2); transform: translateY(-1px); }
     .next-card .nc-label { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
-    .next-card h4 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
+    .next-card h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
     .next-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.5rem; }
     .next-card .nc-arrow { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
 
@@ -229,14 +229,23 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
 </head>
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <nav>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -255,7 +264,7 @@
     </ol>
   </nav>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <header>
       <div class="article-eyebrow">
         <span class="eyebrow-tag teal-pill">Integration Demo &middot; Claude Agent SDK</span>
@@ -322,7 +331,7 @@
           <span class="code-block-label">Pre-execution governance hook</span>
           <span class="code-block-lang">python</span>
         </div>
-        <pre><code>import mneme
+        <pre tabindex="0"><code>import mneme
 
 @mneme.governance_hook(corpus="project_memory.json")
 async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
@@ -344,7 +353,7 @@ async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
           <span class="actor-task">"add caching to user lookup service"</span>
         </div>
         <div class="actor-body">
-          <h4>Agent proposes Redis &middot; blocked before write</h4>
+          <h3>Agent proposes Redis &middot; blocked before write</h3>
           <p>The agent's first draft writes <code>cache.py</code> with a Redis client. The pre-execution hook fires on the <code>str_replace_editor</code> call, scores the proposed diff against the corpus, and surfaces <code>ADR-001</code> as a binding conflict. The <code>GovernanceViolation</code> is raised before any file is touched. The agent receives a remediation prompt containing the violated ADR and the compliant alternative.</p>
           <div class="governance-trace">
             <div><span class="gt-label">trace</span> <span class="gt-info">hook.intercept(tool="str_replace_editor", file="cache.py")</span></div>
@@ -374,7 +383,7 @@ async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
           <span class="actor-task">verify session invariants after agent loop completes</span>
         </div>
         <div class="actor-body">
-          <h4>All invariants hold &middot; PASS</h4>
+          <h3>All invariants hold &middot; PASS</h3>
           <p>The post-execution check scans all files written or modified during the agent session. It confirms that no external dependency was introduced, that the cache layer sits behind the Repository abstraction, and that the service layer contains no direct references to the storage primitive. The verdict is clean.</p>
           <div class="governance-trace">
             <div><span class="gt-label">trace</span> <span class="gt-info">post-exec.scan(session_id="sdk-demo-001") &middot; files=3</span></div>
@@ -414,11 +423,11 @@ async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
 
       <div class="compare-bar">
         <div class="compare-card bad">
-          <h4>Without governance hook</h4>
+          <h3>Without governance hook</h3>
           <p>The agent produces a clean diff. Redis lands. ADR-001 is silent. The next CI run adds a Redis service to the infra YAML. The next agent adds session storage on top of it. There is no record of the original decision being overridden.</p>
         </div>
         <div class="compare-card good">
-          <h4>With governance hook</h4>
+          <h3>With governance hook</h3>
           <p>The tool call is intercepted before the write. The agent retries with the compliant primitive. The post-execution scan confirms session-level correctness. The trace is persisted with a decision ID, ready for CI and audit.</p>
         </div>
       </div>
@@ -429,7 +438,7 @@ async def before_tool_call(tool_name: str, tool_input: dict) -> dict:
 
       <p>The same governance property &mdash; intercept, surface the decision, retry, verify &mdash; already runs today against the real Mneme pipeline in the multi-agent example. The agent is simulated as a scripted diff producer, so no live LLM call is required, and the verdict trace uses the same structured <code>PASS</code> / <code>WARN</code> / <code>FAIL</code> format as <code>mneme check</code> in CI:</p>
 
-      <pre><code>git clone https://github.com/MnemeHQ/mneme
+      <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme/examples/multi-agent-governance
 python run.py</code></pre>
 
@@ -452,19 +461,19 @@ python run.py</code></pre>
       <div class="next-bar">
         <a class="next-card" href="/demo/multi-agent-governance/">
           <div class="nc-label">Related demo</div>
-          <h4>Keeping architecture consistent across multiple AI agents</h4>
+          <h3>Keeping architecture consistent across multiple AI agents</h3>
           <p>Three agents, zero shared memory, one shared corpus. The same invariant-persistence property applied to a distributed execution scenario.</p>
           <span class="nc-arrow">Walk the multi-agent demo &rarr;</span>
         </a>
         <a class="next-card" href="/integrations/claude-agent-sdk/">
           <div class="nc-label">Integration</div>
-          <h4>Claude Agent SDK integration</h4>
+          <h3>Claude Agent SDK integration</h3>
           <p>How Mneme hooks into the SDK tool dispatch layer, what the registration API looks like, and what the roadmap covers.</p>
           <span class="nc-arrow">See integration details &rarr;</span>
         </a>
         <a class="next-card" href="/concepts/governance-before-generation/">
           <div class="nc-label">Concept</div>
-          <h4>Governance before generation</h4>
+          <h3>Governance before generation</h3>
           <p>Why the enforcement gate belongs at the tool-call boundary, not in post-hoc review, and what that changes about the correction loop.</p>
           <span class="nc-arrow">Read the concept &rarr;</span>
         </a>
@@ -473,6 +482,11 @@ python run.py</code></pre>
   </main>
 
   <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -509,7 +523,7 @@ python run.py</code></pre>
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -587,5 +601,18 @@ python run.py</code></pre>
       window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
     })();
   </script>
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
 </body>
 </html>

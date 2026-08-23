@@ -28,7 +28,8 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
+
   <link rel="icon" href="/favicon-v2.png" type="image/png">
   <script type="application/ld+json">
   {
@@ -137,8 +138,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
@@ -160,7 +161,7 @@
     .card-meta { display: flex; align-items: center; gap: 0.6rem; }
     .card-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; }
     .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
-    .compare-card h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
+    .compare-card h2 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
     .compare-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.75; flex: 1; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
     .read-link { color: var(--accent); font-size: 0.82rem; text-decoration: none; }
@@ -303,7 +304,7 @@
     .layer-lede { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin: 1rem 0 2rem; max-width: 660px; }
     .layer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); }
     .layer-card { background: var(--surface); padding: 1.5rem 1.35rem; }
-    .layer-card h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin: 0.55rem 0 0.6rem; letter-spacing: -0.01em; }
+    .layer-card h2 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin: 0.55rem 0 0.6rem; letter-spacing: -0.01em; }
     .layer-card p { color: var(--muted); font-size: 0.87rem; line-height: 1.65; margin: 0; }
     .layer-micro { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
     .layer-card-mneme { background: rgba(200, 240, 96, 0.04); }
@@ -313,6 +314,14 @@
     .doc-figure { max-width: 900px; margin: 3rem auto 2.5rem; padding: 0 1.5rem; }
     .doc-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--border); border-radius: 10px; }
     .doc-figure figcaption { margin-top: 0.85rem; color: var(--muted); font-size: 0.85rem; line-height: 1.6; font-style: italic; }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 </head>
 <body>
@@ -320,10 +329,11 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -334,7 +344,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <div class="answer-capsule">
   <strong>Mneme HQ</strong> is the architectural governance layer for AI-assisted development. These pages compare it to tools that solve adjacent — but structurally different — problems: PR review, per-repo rules files, built-in memory, and retrieval-augmented context.
 </div>
@@ -364,7 +374,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">6 min read</span>
         </div>
-        <h3>Mneme HQ vs CodeRabbit</h3>
+        <h2>Mneme HQ vs CodeRabbit</h2>
         <p>CodeRabbit reviews code after it's written. Mneme HQ enforces architectural constraints before generation. They operate at different stages of the same problem — and they're not mutually exclusive.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -379,7 +389,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Cursor Rules</h3>
+        <h2>Mneme HQ vs Cursor Rules</h2>
         <p>Cursor Rules are plain text injected into Cursor sessions. Mneme HQ is structured enforcement with a precedence engine and hook-level blocking. One is configuration. The other is enforcement.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -394,7 +404,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Claude Code Memory</h3>
+        <h2>Mneme HQ vs Claude Code Memory</h2>
         <p>Claude Code&rsquo;s CLAUDE.md provides instructions the model may follow. Mneme HQ hooks into Claude Code&rsquo;s edit operations and blocks violations before they happen. Instructions vs enforcement.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -409,7 +419,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">6 min read</span>
         </div>
-        <h3>Mneme HQ vs CLAUDE.md</h3>
+        <h2>Mneme HQ vs CLAUDE.md</h2>
         <p>A CLAUDE.md tells the model your conventions; Mneme HQ enforces the ones that must hold. Not competitors &mdash; two layers of the same workflow. Keep the prose, promote the load-bearing rules.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -424,7 +434,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">6 min read</span>
         </div>
-        <h3>RAG Coding Memory vs Mneme</h3>
+        <h2>RAG Coding Memory vs Mneme</h2>
         <p>RAG is useful for contextual memory. It is weak as decision memory. When an AI coding agent has to recall architectural decisions across sessions, retrieval ranking, embedding decay, and scope collisions all surface.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -439,7 +449,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">6 min read</span>
         </div>
-        <h3>Mneme HQ vs GitHub Copilot</h3>
+        <h2>Mneme HQ vs GitHub Copilot</h2>
         <p>GitHub Copilot writes code. Mneme HQ enforces what that code is allowed to do. Copilot Instructions and Spaces steer the model with prose &mdash; Mneme blocks architectural violations at the Edit and Write boundary, regardless of which agent produced them.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -454,7 +464,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Aider</h3>
+        <h2>Mneme HQ vs Aider</h2>
         <p>Aider is one of the best open-source terminal AI coding tools. Its conventions file is great context for the model. Mneme sits underneath as the typed-decision layer that enforces architectural decisions on whatever edit Aider proposes.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -469,7 +479,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Continue.dev</h3>
+        <h2>Mneme HQ vs Continue.dev</h2>
         <p>Continue.dev rules are configuration the model interprets. Mneme is enforcement the system resolves &mdash; with a precedence engine that prose <code style="font-family:'DM Mono',monospace;font-size:0.88em;">config.yaml</code> ordering cannot give you.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -484,7 +494,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Windsurf</h3>
+        <h2>Mneme HQ vs Windsurf</h2>
         <p>Cascade can plan and execute multi-file edits autonomously. The longer the run, the higher the architectural drift risk. Mneme is the per-edit enforcement layer that holds whether Cascade is one step in or twenty.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -499,7 +509,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>Mneme HQ vs Sourcegraph Cody</h3>
+        <h2>Mneme HQ vs Sourcegraph Cody</h2>
         <p>Cody&rsquo;s code graph gives AI agents grounded enterprise retrieval. Mneme enforces architectural decisions at Edit/Write. Cody answers what the code is; Mneme answers what the edit is allowed to do.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -514,7 +524,7 @@
           <span class="card-dot"></span>
           <span class="card-tag">5 min read</span>
         </div>
-        <h3>RAG vs Governance</h3>
+        <h2>RAG vs Governance</h2>
         <p>Retrieval-augmented generation can surface relevant context. It cannot enforce it. Governance enforces architectural constraints before generation &mdash; deterministically, without retrieval drift.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
@@ -525,7 +535,7 @@
     <a href="/compare/devin-vs-architectural-governance/" class="compare-card-link">
       <div class="compare-card">
         <div class="card-meta"><span class="card-tag">Autonomous Agents</span><span class="card-dot"></span><span class="card-tag">9 min read</span></div>
-        <h3>Devin vs Architectural Governance</h3>
+        <h2>Devin vs Architectural Governance</h2>
         <p>Devin executes. Mneme governs. Autonomous coding agents increase the need for deterministic governance &mdash; execution capability is not the same as governance capability.</p>
         <div class="card-footer"><span class="read-link">Compare &rarr;</span></div>
       </div>
@@ -534,7 +544,7 @@
     <a href="/compare/google-antigravity-vs-mneme/" class="compare-card-link">
       <div class="compare-card">
         <div class="card-meta"><span class="card-tag">Agentic IDE</span><span class="card-dot"></span><span class="card-tag">8 min read</span></div>
-        <h3>Google Antigravity vs Mneme</h3>
+        <h2>Google Antigravity vs Mneme</h2>
         <p>Antigravity is an agent-first development environment. Mneme is an architectural governance layer for those environments. Different layers; they compose.</p>
         <div class="card-footer"><span class="read-link">Compare &rarr;</span></div>
       </div>
@@ -555,17 +565,17 @@
   <div class="layer-grid">
     <article class="layer-card">
       <span class="layer-micro">Understand</span>
-      <h3>Context and memory</h3>
+      <h2>Context and memory</h2>
       <p>Project wikis, RAG, rules files, and memory systems help an agent retrieve relevant knowledge. The model may still choose not to follow it.</p>
     </article>
     <article class="layer-card">
       <span class="layer-micro">Observe</span>
-      <h3>Auditing and review</h3>
+      <h2>Auditing and review</h2>
       <p>Agent auditing, observability, linters, and code review show what happened or evaluate output after it exists.</p>
     </article>
     <article class="layer-card layer-card-mneme">
       <span class="layer-micro">Enforce</span>
-      <h3>Mneme</h3>
+      <h2>Mneme</h2>
       <p>Mneme applies the relevant approved intent to the change, produces a guide, warn, or block verdict, and points back to the governing source.</p>
     </article>
   </div>
@@ -689,14 +699,19 @@
 
   <h2 style="font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin: 3rem auto 1rem; max-width: 660px;">Related reading</h2>
 
-  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">For the broader argument that no single AI coding tool can carry architectural governance on its own, see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color: var(--accent); text-decoration: none;">architectural governance across heterogeneous AI coding agents</a>. For the operational case that review tooling cannot absorb the AI generation rate, see <a href="/insights/why-code-review-cannot-scale-with-ai-output/" style="color: var(--accent); text-decoration: none;">why code review cannot scale with AI output</a>. For the standards landscape that any of these tools will eventually have to align with, see <a href="/standards/" style="color: var(--accent); text-decoration: none;">the standards page</a>.</p>
+  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">For the broader argument that no single AI coding tool can carry architectural governance on its own, see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">architectural governance across heterogeneous AI coding agents</a>. For the operational case that review tooling cannot absorb the AI generation rate, see <a href="/insights/why-code-review-cannot-scale-with-ai-output/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">why code review cannot scale with AI output</a>. For the standards landscape that any of these tools will eventually have to align with, see <a href="/standards/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">the standards page</a>.</p>
 
-  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">A note on which comparison to read first: if your team is currently using Cursor or evaluating Cursor Rules, start with the <a href="/compare/cursor-rules/" style="color: var(--accent); text-decoration: none;">Cursor Rules comparison</a> &mdash; it includes the migration path from a per-repo rules file to a structured decision corpus, with the <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> steps shipped as schema.org structured data. If your team uses CodeRabbit or similar AI PR review, start with the <a href="/compare/coderabbit/" style="color: var(--accent); text-decoration: none;">CodeRabbit comparison</a> &mdash; it covers the dual-stack pattern most teams settle on, where pre-generation enforcement (Mneme) and post-generation review (CodeRabbit) operate as complementary layers rather than alternatives.</p>
+  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">A note on which comparison to read first: if your team is currently using Cursor or evaluating Cursor Rules, start with the <a href="/compare/cursor-rules/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">Cursor Rules comparison</a> &mdash; it includes the migration path from a per-repo rules file to a structured decision corpus, with the <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> steps shipped as schema.org structured data. If your team uses CodeRabbit or similar AI PR review, start with the <a href="/compare/coderabbit/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">CodeRabbit comparison</a> &mdash; it covers the dual-stack pattern most teams settle on, where pre-generation enforcement (Mneme) and post-generation review (CodeRabbit) operate as complementary layers rather than alternatives.</p>
 
 </div>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -733,7 +748,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

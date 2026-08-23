@@ -27,10 +27,33 @@ HAMBURGER_JS  = load("nav-hamburger.js")
 ACTIVE_JS     = load("nav-active.js")
 
 NAV_PAT    = re.compile(r"<nav>(.*?)</nav>", re.DOTALL)
-FOOTER_PAT = re.compile(r"<footer>(.*?)</footer>", re.DOTALL)
+# Canonical site footers carry an inline style signature; article/section
+# footers use class attributes and must NOT be caught by this pattern.
+FOOTER_PAT = re.compile(
+    r'<footer style="border-top: 1px solid var\(--border\); padding: 3rem 2rem 1\.5rem; text-align: left;">(.*?)</footer>',
+    re.DOTALL,
+)
 
 HAMBURGER_JS_BLOCK = f"<script>\n{HAMBURGER_JS}\n</script>"
 ACTIVE_JS_BLOCK    = f"<script><!-- nav-active -->\n{ACTIVE_JS}\n</script>"
+
+# ── Accessibility primitives ────────────────────────────────────────────────
+SKIP_LINK_HTML = (
+    '<a href="#main-content" class="skip-link">Skip to content</a>'
+)
+SKIP_LINK_CSS = (
+    ".skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; "
+    "background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; "
+    "border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; "
+    "text-decoration: none; }\n"
+    "    .skip-link:focus { left: 0; }"
+)
+REDUCED_MOTION_CSS = (
+    "@media (prefers-reduced-motion: reduce) {\n"
+    "      html { scroll-behavior: auto !important; }\n"
+    "      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }\n"
+    "    }"
+)
 
 # ── Marketing pixels ─────────────────────────────────────────────────────────
 # REMOVED: RB2B visitor identification + its consent banner.
@@ -83,6 +106,34 @@ for html in sorted(SITE.rglob("*.html")):
             text = text.replace("</style>", css_block + "\n  </style>", 1)
         else:
             print(f"  WARN: no </style> in {html.relative_to(SITE)} — footer CSS not injected")
+
+    # 2c. Skip link: markup before the first nav, target id on main, CSS.
+    # Sentinel is the raw attribute value — '.skip-link' with a dot only
+    # exists in the CSS rule, not the markup, and using it here made this
+    # step re-insert on every sync run.
+    if 'class="skip-link"' not in text and "<body" in text:
+        m = re.search(r"<nav[ >]", text)
+        if m:
+            text = text[:m.start()] + adapt(SKIP_LINK_HTML) + "\n" + text[m.start():]
+        if re.search(r"<main(\s|>)", text):
+            text = re.sub(r'<main(?![^>]*\bid=)', '<main id="main-content" tabindex="-1"', text, count=1)
+        else:
+            print(f"  WARN: no <main> in {html.relative_to(SITE)} — skip link target missing")
+
+    # 2d. Skip-link CSS.
+    if 'class="skip-link"' in text and ".skip-link {" not in text and "</style>" in text:
+        css_block = adapt("\n    " + SKIP_LINK_CSS.replace("\n", "\n    "))
+        text = text.replace("</style>", css_block + "\n  </style>", 1)
+
+    # 2e. Reduced-motion guard for templates without one (home-v2 has its own).
+    if "prefers-reduced-motion" not in text and "</style>" in text:
+        css_block = adapt("\n    " + REDUCED_MOTION_CSS.replace("\n", "\n    "))
+        text = text.replace("</style>", css_block + "\n  </style>", 1)
+
+    # 2f. Pages whose site nav wrapper is <nav class="site"> never match the
+    # plain-<nav> replacement above; patch the links container by attribute.
+    if '<div class="nav-links">' in text and 'id="primary-nav"' not in text:
+        text = text.replace('<div class="nav-links">', '<div class="nav-links" id="primary-nav">', 1)
 
     # 3. Inject hamburger JS if missing — check for any toggle handler, not just our exact block
     if "classList.toggle" not in text:

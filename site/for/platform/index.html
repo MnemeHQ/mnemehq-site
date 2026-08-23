@@ -28,7 +28,8 @@
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <!-- End Google Tag Manager -->
+
   <link rel="icon" href="/favicon-v2.png" type="image/png">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -46,8 +47,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
     .btn-primary:hover { background: var(--accent-dim); }
     .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
@@ -78,20 +79,20 @@
     .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0; }
     .pain-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
     .pain-card-num { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--accent); margin-bottom: 0.6rem; letter-spacing: 0.06em; }
-    .pain-card h4 { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; line-height: 1.4; }
+    .pain-card h3 { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; line-height: 1.4; }
     .pain-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
 
     /* Capability cards */
     .cap-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0; }
     .cap-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
-    .cap-card h4 { font-size: 0.95rem; font-weight: 600; color: var(--teal); margin-bottom: 0.35rem; line-height: 1.4; }
+    .cap-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--teal); margin-bottom: 0.35rem; line-height: 1.4; }
     .cap-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
 
     /* Use case linked cards */
     .use-case-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 2rem 0; }
     .use-case-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; text-decoration: none; transition: border-color 0.15s; display: block; }
     .use-case-card:hover { border-color: var(--border2); }
-    .use-case-card h4 { font-size: 0.92rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; line-height: 1.4; }
+    .use-case-card h3 { font-size: 0.92rem; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; line-height: 1.4; }
     .use-case-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.7; }
     .use-case-card .card-arrow { font-size: 0.78rem; color: var(--muted); margin-top: 0.75rem; display: block; }
 
@@ -243,6 +244,14 @@
 }
 
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
   <script type="application/ld+json">
   {
@@ -284,10 +293,11 @@
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -298,7 +308,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
     <nav class="breadcrumb-nav" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
@@ -332,22 +342,22 @@
     <div class="pain-grid">
       <div class="pain-card">
         <div class="pain-card-num">01</div>
-        <h4>Every team maintains separate Cursor Rules, CLAUDE.md, and system prompts</h4>
+        <h3>Every team maintains separate Cursor Rules, CLAUDE.md, and system prompts</h3>
         <p>Fragmented rule files multiply across repos and teams. No team knows what the others have defined.</p>
       </div>
       <div class="pain-card">
         <div class="pain-card-num">02</div>
-        <h4>No single source of truth for what the AI "knows" about your architecture</h4>
+        <h3>No single source of truth for what the AI "knows" about your architecture</h3>
         <p>Each agent operates on a different subset of standards. Outputs diverge in ways that are hard to trace back.</p>
       </div>
       <div class="pain-card">
         <div class="pain-card-num">03</div>
-        <h4>Prompt templates diverge over time: no versioning, no conflict resolution</h4>
+        <h3>Prompt templates diverge over time: no versioning, no conflict resolution</h3>
         <p>Templates are copied, modified, and forgotten. There is no audit trail and no way to know which version is current.</p>
       </div>
       <div class="pain-card">
         <div class="pain-card-num">04</div>
-        <h4>Onboarding new teams to AI coding means re-documenting the same standards</h4>
+        <h3>Onboarding new teams to AI coding means re-documenting the same standards</h3>
         <p>Platform teams repeat the same setup work for every new team. There is no reusable distribution mechanism.</p>
       </div>
     </div>
@@ -360,19 +370,19 @@
 
     <div class="cap-grid">
       <div class="cap-card">
-        <h4>Single source of truth</h4>
+        <h3>Single source of truth</h3>
         <p><code>project_memory.json</code> is the canonical architecture source, queried by all agents. One file to maintain. One place to update.</p>
       </div>
       <div class="cap-card">
-        <h4>Scoped rules</h4>
+        <h3>Scoped rules</h3>
         <p>Payments team gets payments rules, analytics team gets analytics rules. Per-file pattern matching ensures each agent sees exactly what it needs.</p>
       </div>
       <div class="cap-card">
-        <h4>Conflict resolution</h4>
+        <h3>Conflict resolution</h3>
         <p>The precedence engine resolves org-level vs team-level exceptions automatically. No manual arbitration. No ambiguity about which rule wins.</p>
       </div>
       <div class="cap-card">
-        <h4>Universal enforcement</h4>
+        <h3>Universal enforcement</h3>
         <p>Claude Code hook integration means you install once and enforce everywhere. Standards propagate to every team without any per-team setup.</p>
       </div>
     </div>
@@ -385,12 +395,12 @@
 
     <div class="use-case-grid">
       <a href="/use-cases/coding-assistant-governance/" class="use-case-card">
-        <h4>AI Coding Assistant Governance</h4>
+        <h3>AI Coding Assistant Governance</h3>
         <p>Enforce architectural standards across every AI coding assistant in your organization from a single decision corpus.</p>
         <span class="card-arrow">Read use case &rarr;</span>
       </a>
       <a href="/use-cases/multi-agent-workflow-governance/" class="use-case-card">
-        <h4>Multi-Agent Workflow Governance</h4>
+        <h3>Multi-Agent Workflow Governance</h3>
         <p>Maintain consistent standards across orchestrated multi-agent pipelines where multiple models collaborate on the same codebase.</p>
         <span class="card-arrow">Read use case &rarr;</span>
       </a>
@@ -437,6 +447,11 @@
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -473,7 +488,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

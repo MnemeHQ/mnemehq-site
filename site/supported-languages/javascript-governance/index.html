@@ -87,7 +87,7 @@
     .nav-links { display: flex; gap: 1.5rem; align-items: center; }
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; }
     .nav-links a:hover { color: var(--text); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; }
 
     .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
@@ -160,15 +160,25 @@
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-  </style>
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav class="site-nav">
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -179,7 +189,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -206,7 +216,7 @@
   <div class="violation">
     <div class="vh"><h3>CommonJS / ESM module-system drift</h3><span class="vtag">Architecture</span></div>
     <p class="rule"><strong>Rule.</strong> ADR-012 migrated <code>services/</code> to ESM. No <code>require()</code> in that subtree.</p>
-<pre><span class="cm">// AI-generated in services/billing/invoice.js</span>
+<pre tabindex="0"><span class="cm">// AI-generated in services/billing/invoice.js</span>
 <span class="kw">const</span> Stripe = require(<span class="kw">"stripe"</span>);
 <span class="kw">const</span> { db } = require(<span class="kw">"../db"</span>);
 
@@ -220,7 +230,7 @@ module.exports = <span class="kw">async function</span> chargeInvoice(invoice) {
   <div class="violation">
     <div class="vh"><h3>Business logic inside Express route handler</h3><span class="vtag">Layer boundary</span></div>
     <p class="rule"><strong>Rule.</strong> Express handlers must delegate to services. No pricing, tax, or inventory logic inline.</p>
-<pre><span class="cm">// AI-generated in routes/checkout.js</span>
+<pre tabindex="0"><span class="cm">// AI-generated in routes/checkout.js</span>
 app.post(<span class="kw">"/checkout"</span>, async (req, res) =&gt; {
   <span class="cm">// pricing logic</span>
   <span class="kw">const</span> subtotal = req.body.items.reduce((s, i) =&gt; s + i.price * i.qty, 0);
@@ -236,7 +246,7 @@ app.post(<span class="kw">"/checkout"</span>, async (req, res) =&gt; {
   <div class="violation">
     <div class="vh"><h3>Raw SQL string concatenation</h3><span class="vtag">Security</span></div>
     <p class="rule"><strong>Rule.</strong> No template-literal SQL. Use parameterized queries via the approved DB client.</p>
-<pre><span class="cm">// AI-generated in services/user.js</span>
+<pre tabindex="0"><span class="cm">// AI-generated in services/user.js</span>
 <span class="kw">async function</span> findUser(userId) {
   <span class="kw">const</span> query = <span class="kw">`SELECT * FROM users WHERE id = ${userId}`</span>;
   <span class="kw">return</span> db.query(query);
@@ -248,7 +258,7 @@ app.post(<span class="kw">"/checkout"</span>, async (req, res) =&gt; {
   <div class="violation">
     <div class="vh"><h3>Cron job written outside the approved scheduler</h3><span class="vtag">Platform</span></div>
     <p class="rule"><strong>Rule.</strong> ADR-018 standardized on Cloud Scheduler + Pub/Sub. No <code>node-cron</code> for new scheduled work.</p>
-<pre><span class="cm">// AI-generated in jobs/cleanup.js</span>
+<pre tabindex="0"><span class="cm">// AI-generated in jobs/cleanup.js</span>
 <span class="kw">const</span> cron = require(<span class="kw">"node-cron"</span>);
 
 cron.schedule(<span class="kw">"0 3 * * *"</span>, <span class="kw">async</span> () =&gt; {
@@ -309,6 +319,11 @@ cron.schedule(<span class="kw">"0 3 * * *"</span>, <span class="kw">async</span>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -345,7 +360,7 @@ cron.schedule(<span class="kw">"0 3 * * *"</span>, <span class="kw">async</span>
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

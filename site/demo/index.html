@@ -175,8 +175,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     /* ── LAYOUT ── */
     main { max-width: 1080px; margin: 0 auto; padding: 4.5rem 2rem 6rem; }
     .hero { text-align: center; margin-bottom: 5rem; }
@@ -201,8 +201,8 @@
     .flagship-tag.runnable { background: rgba(200,240,96,0.1); color: var(--accent); border: 1px solid rgba(200,240,96,0.25); }
     .flagship-tag.centerpiece { background: rgba(139,224,200,0.1); color: var(--teal); border: 1px solid rgba(139,224,200,0.25); }
     .flagship-tag.forward { background: rgba(167,139,250,0.1); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
-    .flagship-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; line-height: 1.25; letter-spacing: -0.01em; }
-    .flagship-card.featured h3 { font-size: 1.85rem; }
+    .flagship-card h2 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; line-height: 1.25; letter-spacing: -0.01em; }
+    .flagship-card.featured h2 { font-size: 1.85rem; }
     .flagship-card p.fc-lede { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 1rem; }
     .flagship-card.featured p.fc-lede { font-size: 0.98rem; }
     .flagship-card .fc-evidence { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 1.1rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
@@ -212,7 +212,7 @@
     .flagship-card:hover .fc-cta { color: var(--accent-dim); }
     /* ── CTA SNIPPET ── */
     .cta-snippet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.75rem; margin-top: 4rem; text-align: center; }
-    .cta-snippet h3 { font-family: 'Instrument Serif', serif; font-size: 1.3rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
+    .cta-snippet h2 { font-family: 'Instrument Serif', serif; font-size: 1.3rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
     .cta-snippet p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
     /* Lean demo selector - ADR-002 phase 3 */
     .selector-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
@@ -267,6 +267,9 @@
     }
     main > section > * { position: relative; }
     @media (prefers-reduced-motion: no-preference) {main > section { transition: background .2s; }}
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 </head>
 <body>
@@ -274,10 +277,11 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <nav>
+  <a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -288,7 +292,7 @@
   </div>
 </nav>
 
-  <main>
+  <main id="main-content" tabindex="-1">
     <header class="hero">
       <div class="hero-eyebrow">Runnable demos</div>
       <h1>Watch Mneme catch a change that <em>would have merged</em>.</h1>
@@ -315,7 +319,7 @@
           <div class="flagship-meta">
             <span class="flagship-tag runnable">Runs locally</span>
           </div>
-          <h3>ADR enforcement</h3>
+          <h2>ADR enforcement</h2>
           <p class="fc-lede">An agent imports from the brand namespace instead of the package namespace. Mneme retrieves ADR-005 and flags the violation; a second, corrected file checks clean against the same corpus.</p>
           <span class="fc-cta">View demo &rarr;</span>
         </a>
@@ -325,7 +329,7 @@
             <span class="flagship-tag runnable">Runs locally</span>
             <span class="flagship-tag forward">Agents scripted</span>
           </div>
-          <h3>Architectural drift</h3>
+          <h2>Architectural drift</h2>
           <p class="fc-lede">One reasonable-looking change violates ADR-001. Three downstream edits amplify it. Mneme catches the divergence upstream, before it compounds.</p>
           <span class="fc-cta">View demo &rarr;</span>
         </a>
@@ -335,7 +339,7 @@
             <span class="flagship-tag runnable">Runs locally</span>
             <span class="flagship-tag forward">Agents scripted</span>
           </div>
-          <h3>Multi-agent consistency</h3>
+          <h2>Multi-agent consistency</h2>
           <p class="fc-lede">Three agents, no shared memory, one decision corpus. The same invariants hold across every actor, session, and retry.</p>
           <span class="fc-cta">View demo &rarr;</span>
         </a>
@@ -352,7 +356,7 @@
     </section>
 
     <section class="cta-snippet" id="try">
-      <h3>Ready to try it?</h3>
+      <h2>Ready to try it?</h2>
       <p>Install the CLI and check your first decision in under a minute.</p>
       <div class="cta-actions">
         <a class="cta-primary" href="/docs/">Install the CLI</a>
@@ -362,6 +366,11 @@
   </main>
 
   <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -398,7 +407,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -493,5 +502,18 @@
       });
     })();
   </script>
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
 </body>
 </html>

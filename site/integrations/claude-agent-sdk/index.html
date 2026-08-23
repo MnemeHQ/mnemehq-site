@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Govern architectural constraints in Claude Agent SDK workflows — Mneme HQ</title>
+  <title>Govern architectural constraints in Claude Agent SDK workflows â€” Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
@@ -78,7 +78,7 @@
           {
             "@type": "Question",
             "name": "Does Mneme support long-running or multi-turn agent sessions?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The governance corpus is stateless and idempotent — each check is independent. For long-running sessions, the enforcement trace (PASS / WARN / FAIL records with decision IDs) is designed to be persisted alongside the agent's run log, giving you an auditable record of which decisions were evaluated at each tool call. Persistent trace support across workflow IDs is on the roadmap."}
+            "acceptedAnswer": {"@type": "Answer", "text": "The governance corpus is stateless and idempotent â€” each check is independent. For long-running sessions, the enforcement trace (PASS / WARN / FAIL records with decision IDs) is designed to be persisted alongside the agent's run log, giving you an auditable record of which decisions were evaluated at each tool call. Persistent trace support across workflow IDs is on the roadmap."}
           }
         ]
       }
@@ -104,8 +104,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s; }
     .nav-hamburger:hover { border-color: var(--accent); }
@@ -251,15 +251,25 @@
   
     footer a { color: var(--muted); text-decoration: none; }
     footer a:hover { color: var(--text); }
-</style>
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
+  </style>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -270,7 +280,7 @@
   </div>
 </nav>
 
-<main>
+<main id="main-content" tabindex="-1">
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
@@ -338,7 +348,7 @@
 
     <p>Mneme ships a native adapter for the Claude Agent SDK: <code>MnemeAgentSdk</code>, in the <code>mneme-hq</code> package. It registers on two SDK lifecycle hooks and implements no governance logic of its own &mdash; retrieval and enforcement are the same deterministic machinery the CLI uses.</p>
 
-    <pre><code>Claude Agent SDK
+    <pre tabindex="0"><code>Claude Agent SDK
        |
        +- UserPromptSubmit
        |      |
@@ -365,7 +375,7 @@
 
     <p>Wiring it into your application is three lines:</p>
 
-    <pre><code>from claude_agent_sdk import ClaudeAgentOptions
+    <pre tabindex="0"><code>from claude_agent_sdk import ClaudeAgentOptions
 from mneme.integrations.agent_sdk import MnemeAgentSdk
 
 mneme = MnemeAgentSdk(project_dir=".")
@@ -412,7 +422,7 @@ options = ClaudeAgentOptions(
 
     <p>Pre-execution checks stop violations before they land. Post-execution verification catches what slipped through &mdash; partial matches, composite violations, or changes that look compliant per-file but drift when read as a whole. Run a verification pass after your agent workflow completes:</p>
 
-    <pre><code>import subprocess, json, pathlib
+    <pre tabindex="0"><code>import subprocess, json, pathlib
 
 def verify_outputs(changed_files: list[str]) -> list[dict]:
     violations = []
@@ -487,7 +497,7 @@ if any(v["verdict"] == "FAIL" for v in violations):
 
     <p>Add a governance gate step in your agent workflow's CI configuration. The step runs after your agent produces output and before the PR is opened or the deploy proceeds:</p>
 
-    <pre><code>name: agent-governance-gate
+    <pre tabindex="0"><code>name: agent-governance-gate
 on: [push, pull_request]
 
 jobs:
@@ -588,6 +598,11 @@ jobs:
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -624,7 +639,7 @@ jobs:
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
@@ -717,6 +732,19 @@ jobs:
   window.addEventListener('resize', function(){
     if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
   });
+})();
+</script>
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
 })();
 </script>
 </body>

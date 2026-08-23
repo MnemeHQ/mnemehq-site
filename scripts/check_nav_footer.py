@@ -54,7 +54,7 @@ EXCLUDED_DIR_PARTS = ("_snippets",)
 EXPECTED_FOOTER_HEADINGS = ["Product", "Developers", "Learn", "Company", "Connect"]
 EXPECTED_CTA_HREF = "/pilot/"
 
-NAV_LINKS_RE = re.compile(r'<div class="nav-links">.*?</div>', re.S)
+NAV_LINKS_RE = re.compile(r'<div class="nav-links"[^>]*>.*?</div>', re.S)
 # The site footer is the block carrying the border-top inline style. A page may
 # also have an earlier <footer class="article-footer"> CTA block, which this
 # pattern deliberately does not match.

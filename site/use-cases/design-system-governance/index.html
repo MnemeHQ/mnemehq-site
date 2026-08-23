@@ -43,8 +43,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
     .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
     .btn-primary:hover { background: var(--accent-dim); }
     .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
@@ -82,7 +82,7 @@
     .steps { display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; }
     .step { display: flex; gap: 1.25rem; align-items: flex-start; }
     .step-num { flex-shrink: 0; width: 32px; height: 32px; border: 1px solid rgba(200,240,96,0.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--accent); }
-    .step-body h4 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .step-body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
     .step-body p { font-size: 0.82rem; color: var(--muted); }
     .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
     .code-block-label { padding: 0.6rem 1rem; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
@@ -206,6 +206,14 @@
 }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 <script type="application/ld+json">
 {
@@ -264,14 +272,16 @@
     }
   ]
 }
-</script>
+</script>
+
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -286,7 +296,7 @@
   <strong>Mneme HQ</strong> preserves design system decisions for AI-assisted UI development by surfacing design tokens, component hierarchy rules, and accessibility requirements at prompt time. When an LLM generates frontend code that invents a non-approved color, bypasses a required component, or ignores WCAG guidelines, Mneme HQ flags the violation before the code reaches review. Rules files document standards. Mneme enforces them.
 </div>
 
-<main>
+<main id="main-content" tabindex="-1">
   <div class="breadcrumb">
     <a href="/">Home</a><span>/</span><a href="/use-cases/">Use cases</a><span>/</span>Design system governance
   </div>
@@ -398,10 +408,10 @@
     <div class="section-eyebrow">How Mneme HQ Solves It</div>
     <h2 class="section-title">Design constraints enforced before the first JSX line.</h2>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h4>Encode design system rules as decisions</h4><p>Capture approved tokens, required components, spacing rules, and accessibility requirements as structured YAML decisions.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h4>Check before generating UI code</h4><p>Run <code>mneme check</code> against your UI prompt. Relevant design decisions are retrieved and any violations flagged immediately.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h4>Inject design rules into assistant context</h4><p>Generate a rules file for Cursor or Claude Code that includes your design system constraints — so every UI generation session is token-aware.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h4>Gate frontend PRs on design compliance</h4><p>Add <code>mneme check --mode strict --tags design-system</code> to CI. PRs introducing unapproved tokens or missing accessibility attributes fail automatically.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Encode design system rules as decisions</h3><p>Capture approved tokens, required components, spacing rules, and accessibility requirements as structured YAML decisions.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Check before generating UI code</h3><p>Run <code>mneme check</code> against your UI prompt. Relevant design decisions are retrieved and any violations flagged immediately.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Inject design rules into assistant context</h3><p>Generate a rules file for Cursor or Claude Code that includes your design system constraints — so every UI generation session is token-aware.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Gate frontend PRs on design compliance</h3><p>Add <code>mneme check --mode strict --tags design-system</code> to CI. PRs introducing unapproved tokens or missing accessibility attributes fail automatically.</p></div></div>
     </div>
   </div>
 
@@ -411,7 +421,7 @@
 
     <div class="code-block">
       <div class="code-block-label">decisions/design-tokens.yml</div>
-      <pre><span class="ck">id</span>: no-hardcoded-colors
+      <pre tabindex="0"><span class="ck">id</span>: no-hardcoded-colors
 <span class="ck">title</span>: All colors must reference design tokens
 <span class="ck">status</span>: accepted
 <span class="ck">rule</span>: No hardcoded hex, rgb, or hsl values in component code.
@@ -424,7 +434,7 @@
 
     <div class="code-block">
       <div class="code-block-label">decisions/accessibility.yml</div>
-      <pre><span class="ck">id</span>: destructive-actions-require-aria
+      <pre tabindex="0"><span class="ck">id</span>: destructive-actions-require-aria
 <span class="ck">title</span>: Destructive action modals require ARIA alertdialog role
 <span class="ck">status</span>: accepted
 <span class="ck">rule</span>: Any modal confirming a destructive action must have role="alertdialog",
@@ -436,7 +446,7 @@
 
     <div class="code-block">
       <div class="code-block-label">Terminal — checking a UI generation prompt</div>
-      <pre><span class="cc">$ </span><span class="ck">mneme check</span> <span class="cs">"add a delete account confirmation modal"</span> --tags design-system
+      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme check</span> <span class="cs">"add a delete account confirmation modal"</span> --tags design-system
 
 <span class="cc">Checking against 12 design-system decisions...</span>
 
@@ -488,6 +498,11 @@
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -524,7 +539,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>

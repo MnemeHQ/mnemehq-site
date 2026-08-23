@@ -88,8 +88,8 @@
     .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
     .nav-links a:hover { color: var(--text); }
     .nav-links a.active { color: var(--accent); }
-    .btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+    .nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
 
     .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
@@ -111,7 +111,7 @@
     .card-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; }
     .card-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .card-read-time { font-size: 0.68rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .insight-card h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
+    .insight-card h2 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.35; }
     .insight-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.75; flex: 1; }
     .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
     .read-pill { display: inline-block; border: 1px solid var(--border2); border-radius: 20px; padding: 0.28rem 0.85rem; font-size: 0.72rem; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 0.03em; transition: border-color 0.15s, color 0.15s; }
@@ -292,6 +292,14 @@
       .section-nav-inner { padding: 0.7rem 1.25rem; gap: 1.25rem; }
       .cards-section { scroll-margin-top: 124px; }
     }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+        .skip-link:focus { left: 0; }
   </style>
 </head>
 <body>
@@ -299,10 +307,11 @@
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
-  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
-  <div class="nav-links">
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
@@ -324,7 +333,7 @@
   </div>
 </div>
 
-<main>
+<main id="main-content" tabindex="-1">
 <div class="answer-capsule">
   <strong>Architectural governance</strong> &mdash; Architecture is the set of decisions that must hold while code is written. These essays cover what architectural governance is, why intent decays as agents generate, and what deterministic enforcement looks like before a change lands.
 </div>
@@ -346,7 +355,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">6 min read</span>
           </div>
-          <h3>The Definitive Guide to AI for DevOps: Guardrails, Not Gates</h3>
+          <h2>The Definitive Guide to AI for DevOps: Guardrails, Not Gates</h2>
           <p>KodeKloud's 2026 guide names guardrails, not gates as one of six takeaways, drawn from 29 practitioners. My contribution argues intent must become machine-readable.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -360,7 +369,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>Architecture Cannot Be a Prompt: What Context Compaction Silently Drops</h3>
+          <h2>Architecture Cannot Be a Prompt: What Context Compaction Silently Drops</h2>
           <p>New COMPINT research finds context compactors retain only 17% of standing session constraints. An agent can keep the task and lose the rule that governed it.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -374,7 +383,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>Architectural Technical Debt From AI Coding Agents</h3>
+          <h2>Architectural Technical Debt From AI Coding Agents</h2>
           <p>Gartner expects architectural technical debt to reach 80% of all technical debt by 2027. Code that passes review can still move a system off its architecture.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -385,7 +394,7 @@
       <a href="/insights/ai-infrastructure-governance-category/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Market Context</span><span class="card-dot"></span><span class="card-read-time">12 min read</span></div>
-          <h3>The Next AI Infrastructure Category Is Governance</h3>
+          <h2>The Next AI Infrastructure Category Is Governance</h2>
           <p>Every major infrastructure wave creates a governance layer once the systems become autonomous enough. Cloud, CI/CD, data platforms &mdash; AI coding is next.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
@@ -405,7 +414,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">3 min read</span>
           </div>
-          <h3>Review Is Not Governance</h3>
+          <h2>Review Is Not Governance</h2>
           <p>CodeRabbit helps review AI-generated code. Mneme helps govern what the AI generates in the first place. Two different layers of the same problem.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -420,7 +429,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
-          <h3>Memory Is Not Governance</h3>
+          <h2>Memory Is Not Governance</h2>
           <p>The category conflates memory, context, retrieval, and governance into one word. Memory systems optimize recall. Governance systems optimize constraint enforcement. Different jobs, different math, different failure modes.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -435,7 +444,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">7 min read</span>
           </div>
-          <h3>Why Observability Is Not Governance</h3>
+          <h2>Why Observability Is Not Governance</h2>
           <p>Observability tells you the agent violated architecture. Governance helps prevent the violation from being proposed in the first place. Visibility is not control &mdash; and dashboards without enforcement are operational archaeology.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -450,7 +459,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>Why RAG Fails for Architectural Governance</h3>
+          <h2>Why RAG Fails for Architectural Governance</h2>
           <p>Retrieval-augmented generation works well for documentation lookup. It breaks down entirely when you need authoritative, precedence-aware constraint enforcement. Here&rsquo;s why.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -465,7 +474,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">12 min read</span>
           </div>
-          <h3>Why Context Alone Doesn&rsquo;t Prevent Architectural Drift</h3>
+          <h2>Why Context Alone Doesn&rsquo;t Prevent Architectural Drift</h2>
           <p>Context engineering improves recall. It does not enforce architectural constraints. Better retrieval, larger windows, and richer memory layers help agents remember more &mdash; but architectural drift is caused by local optimization, not forgetting.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -476,7 +485,7 @@
 <a href="/insights/constraint-decay-coding-agents-architectural-governance/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Research</span><span class="card-dot"></span><span class="card-read-time">9 min read</span></div>
-          <h3>Constraint Decay Is Why Coding Agents Need Architectural Governance</h3>
+          <h2>Constraint Decay Is Why Coding Agents Need Architectural Governance</h2>
           <p>A new arXiv paper quantifies it: agents satisfy loose specs but lose ORM rules, framework conventions, and architectural fidelity as structural requirements accumulate.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
@@ -489,7 +498,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
-          <h3>Why AI Architectural Governance Needs Precedence Semantics</h3>
+          <h2>Why AI Architectural Governance Needs Precedence Semantics</h2>
           <p>When two ADRs overlap, prompt rules resolve by attention, RAG resolves by retrieval score, and PR review resolves by whoever was looking. Precedence semantics &mdash; status, supersedes, scope, priority, time &mdash; is the missing layer that makes governance deterministic.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -504,7 +513,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">13 min read</span>
           </div>
-          <h3>Runtime Verification Is Not Architectural Verification</h3>
+          <h2>Runtime Verification Is Not Architectural Verification</h2>
           <p>The AI infrastructure market is converging on sandboxes, traces, approvals, and policy enforcement. Those protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -519,7 +528,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">9 min read</span>
           </div>
-          <h3>Autonomous Code Remediation Requires Architectural Governance</h3>
+          <h2>Autonomous Code Remediation Requires Architectural Governance</h2>
           <p>Autonomous remediation loops cannot stabilise without deterministic architectural constraints. Faster generation accelerates drift. Governance must become infrastructure.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -534,7 +543,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">11 min read</span>
           </div>
-          <h3>The Governance Perimeter Is Moving to the Endpoint</h3>
+          <h2>The Governance Perimeter Is Moving to the Endpoint</h2>
           <p>On-device agents are usually framed as a latency or privacy story. The deeper shift is architectural &mdash; as autonomous execution moves onto the endpoint, the centralized control plane that hosted-AI governance assumed quietly disappears. Enforcement has to collapse toward the repository.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -545,7 +554,7 @@
 <a href="/insights/beyond-security-by-design-governance-by-design/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Analysis</span><span class="card-dot"></span><span class="card-read-time">11 min read</span></div>
-          <h3>Beyond Security by Design: The Rise of Governance by Design</h3>
+          <h2>Beyond Security by Design: The Rise of Governance by Design</h2>
           <p>Software designs security, privacy, and safety in rather than bolting them on. Autonomous agents make governance the next &lsquo;by design&rsquo; discipline &mdash; enforced in the architecture, not reviewed after deployment.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
@@ -554,7 +563,7 @@
 <a href="/insights/artifacts-are-not-governance/" class="insight-card-link">
         <div class="insight-card">
           <div class="card-meta"><span class="card-tag">Engineering</span><span class="card-dot"></span><span class="card-read-time">8 min read</span></div>
-          <h3>Artifacts Are Not Governance</h3>
+          <h2>Artifacts Are Not Governance</h2>
           <p>A screenshot can prove the agent opened the browser. It cannot prove the agent respected your architecture.</p>
           <div class="card-footer"><span class="read-pill">Read insight</span></div>
         </div>
@@ -567,7 +576,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">6 min read</span>
           </div>
-          <h3>Prompt Engineering Is Not Governance</h3>
+          <h2>Prompt Engineering Is Not Governance</h2>
           <p>Prompt templates can nudge an LLM toward better output. They cannot enforce architectural invariants, resolve decision conflicts, or prevent drift across a multi-engineer codebase.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -582,7 +591,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">10 min read</span>
           </div>
-          <h3>Spec-Driven Development Still Needs Architectural Governance</h3>
+          <h2>Spec-Driven Development Still Needs Architectural Governance</h2>
           <p>Spec-driven development replaces vibe coding with a structured intent-to-spec-to-code workflow. But a feature spec does not define which architectural decisions must hold while the agent implements it. That missing layer is governance.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -597,7 +606,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>AI-Native Engineering Has an Intent Debt Problem</h3>
+          <h2>AI-Native Engineering Has an Intent Debt Problem</h2>
           <p>As agents write more code, the real risk is not just technical debt. It is stale, implicit, unenforced intent. The next bottleneck in AI-native engineering is intent enforcement.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -612,7 +621,7 @@
             <span class="card-dot"></span>
             <span class="card-read-time">8 min read</span>
           </div>
-          <h3>Models Are Temporary. Architectural Intent Is Not.</h3>
+          <h2>Models Are Temporary. Architectural Intent Is Not.</h2>
           <p>Models change. Agents change. IDEs change. Architectural intent should not. The case for keeping AI governance outside the model &mdash; and the second kind of lock-in (governance lock-in) that most teams discover too late.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
@@ -625,13 +634,18 @@
 </div>
 <aside aria-label="Mneme HQ newsletter" style="max-width:760px;margin:3rem auto;padding:1.5rem 1.75rem;border:1px solid var(--border2);border-radius:10px;background:rgba(200,240,96,0.03);">
   <div style="font-family:'DM Mono',monospace;font-size:0.66rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Newsletter</div>
-  <h3 style="font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);margin:0 0 0.4rem;">Engineering governance for AI-assisted development</h3>
+  <h2 style="font-family:'Inter',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);margin:0 0 0.4rem;">Engineering governance for AI-assisted development</h2>
   <p style="font-size:0.9rem;color:var(--muted);margin:0 0 1rem;line-height:1.5;">New essays on architectural intent, engineering standards, agent coordination, and knowledge continuity. Delivered as they publish.</p>
   <a href="https://mnemehq.substack.com/" target="_blank" rel="noopener" style="display:inline-block;padding:0.6rem 1.3rem;border:1px solid var(--accent);border-radius:6px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.82rem;text-decoration:none;">Subscribe on Substack &rarr;</a>
 </aside>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
@@ -668,7 +682,7 @@
     <div>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
-        <li style="margin-bottom:0.35rem;"><a href="/pilot/" style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s;" onmouseover="this.style.background='var(--accent)';this.style.color='#0b0d0c';" onmouseout="this.style.background='transparent';this.style.color='var(--accent)';">Request a pilot</a></li>
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
         <li><a href="/for/">For teams</a></li>
         <li><a href="/founder/">Founder</a></li>
         <li><a href="/about/">About</a></li>
