@@ -831,6 +831,7 @@ TEMPLATES = [
     ("og-insights-agent-swarms.html", "Security Analysis", "AI Agent Swarms Need Deterministic Guardrails", "42px", "OpenAI and Hugging Face reconstructed roughly 17,600 actions across an autonomous intrusion.", "insights/ai-agent-swarms-deterministic-guardrails"),
     ("og-insights-mckinsey-adoption-gap.html", "Report Analysis", "How to Close the Agentic Adoption Gap", "44px", "McKinsey's Enforce stage meets software engineering governance and agent execution.", "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering"),
     ("og-insights-openai-symphony.html", "Insights", "OpenAI Symphony", "58px", "The issue becomes durable. Architectural authority must outlive every disposable agent session.", "insights/openai-symphony-architectural-context"),
+    ("og-insights-ai-native-sdlc-arch-layer.html", "Insights", "The Architecture Layer the AI-Native SDLC Needs", "40px", "Anthropic's playbook validates governance in the loop. Architecture needs a policy layer on top.", "insights/ai-native-sdlc-architecture-layer"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -852,6 +853,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
     "og-insights-mckinsey-adoption-gap.html": "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/og.png",
     "og-insights-openai-symphony.html": "insights/openai-symphony-architectural-context/og.png",
+    "og-insights-ai-native-sdlc-arch-layer.html": "insights/ai-native-sdlc-architecture-layer/og.png",
     "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
     "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
     "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",
