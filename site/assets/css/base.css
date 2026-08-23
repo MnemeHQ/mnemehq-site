@@ -1,0 +1,142 @@
+/* base.css — shared design tokens and global chrome for all templates.
+ *
+ * Linked BEFORE each page's inline <style>, so any page-local rule still
+ * wins the cascade. This file owns only what is identical across the
+ * standard template family: reset, tokens, body defaults, nav (desktop +
+ * mobile + hamburger), footer link colours, skip link, reduced-motion.
+ *
+ * The homepage (body.home-v2) intentionally keeps its own inline tokens
+ * and coral nav-CTA override; its later-loaded home-v2.css continues to
+ * win where the designs differ.
+ *
+ * Maintained by scripts/sync_shared.py, which links this file into every
+ * page that lacks it.
+ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0c0c0d;
+  --surface: #141416;
+  --surface2: #1a1a1d;
+  --border: #222226;
+  --border2: #2e2e34;
+  --text: #e8e8ec;
+  --muted: #a8a8b8;
+  --accent: #c8f060;
+  --accent-dim: #a8d040;
+  --teal: #8be0c8;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── Skip link ── */
+.skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+.skip-link:focus { left: 0; }
+
+/* ── Nav ── */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
+.logo { display: flex; align-items: center; text-decoration: none; }
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
+.nav-links a:hover { color: var(--text); }
+.nav-links a.active { color: var(--accent); }
+.nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+.nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+
+/* ── Hamburger ── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.nav-hamburger:hover { border-color: var(--accent); }
+.nav-hamburger:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.nav-hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: transform 0.25s ease, opacity 0.18s ease;
+  transform-origin: center;
+}
+.nav-hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ── Mobile nav ── */
+@media (max-width: 900px) {
+  html, body { overflow-x: clip; }
+  body.menu-open { overflow: hidden; }
+  nav { padding: 1rem 1.25rem; }
+  .nav-hamburger { display: flex; }
+  .nav-links {
+    display: flex !important;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    gap: 0;
+    background: rgba(12,12,13,0.98);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.25rem;
+    z-index: 99;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
+  }
+  .nav-links.open {
+    max-height: 80vh;
+    opacity: 1;
+    visibility: visible;
+    padding: 0.5rem 1.25rem 1.25rem;
+    transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
+    overflow-y: auto;
+  }
+  .nav-links a:not(.btn-nav-cta) {
+    display: block;
+    color: var(--text);
+    font-size: 0.92rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+  .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
+}
+
+/* Legacy narrow menu block retained until page-local copies are removed. */
+
+/* ── Footer ── */
+footer a { color: var(--muted); text-decoration: none; }
+footer a:hover { color: var(--text); }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
