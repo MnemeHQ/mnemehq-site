@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 Sync canonical nav and footer snippets across all site HTML files.
 Skips og-*.html templates and site/_snippets/.
@@ -139,7 +139,28 @@ for html in sorted(SITE.rglob("*.html")):
     if '<div class="nav-links">' in text and 'id="primary-nav"' not in text:
         text = text.replace('<div class="nav-links">', '<div class="nav-links" id="primary-nav">', 1)
 
-    # 3. Inject hamburger JS if missing â€” check for any toggle handler, not just our exact block
+    # 2g. Stamp base.css onto pages that lack it. New pages spawned from old
+    # templates (article copies, generator output predating base.css) inherit
+    # the fat inline chrome; linking the shared stylesheet here starts every
+    # page on the shared system without touching its local rules. The
+    # homepage is excluded on purpose: its coral/home-v2 token system is
+    # self-contained and must not pick up the standard tokens.
+    if (
+        "/assets/css/base.css" not in text
+        and "</style>" in text
+        and 'class="home-v2"' not in text
+        and html.relative_to(SITE).as_posix() != "index.html"
+    ):
+        anchor_link = '<link rel="stylesheet" href="/assets/css/fonts.css">'
+        link_tag = '<link rel="stylesheet" href="/assets/css/base.css">'
+        if anchor_link in text:
+            text = text.replace(anchor_link, anchor_link + "\n  " + link_tag, 1)
+        else:
+            m2 = re.search(r"<style>", text)
+            if m2:
+                text = text[:m2.start()] + "  " + link_tag + "\n" + text[m2.start():]
+
+    # 3. Inject hamburger JS if missing — check for any toggle handler, not just our exact block
     if "classList.toggle" not in text:
         if "</body>" in text:
             text = text.replace("</body>", adapt(HAMBURGER_JS_BLOCK) + adapt("\n") + "</body>", 1)
