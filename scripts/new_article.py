@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import html
 import json
 import re
 import sys
@@ -40,7 +41,7 @@ FOUNDER_URL = "https://mnemehq.com/founder/"
 
 def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
                   date_iso: str, section: str, about_terms: list[str],
-                  faq_path: Path | None) -> str:
+                  faq_items: list | None) -> str:
     graph = [
         {
             "@type": "BreadcrumbList",
@@ -71,13 +72,14 @@ def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
     ]
     if about_terms:
         graph[1]["about"] = about_terms
-    if faq_path:
-        faq = json.loads(faq_path.read_text(encoding="utf-8"))
-        graph.append({"@type": "FAQPage", "mainEntity": faq})
+    if faq_items:
+        graph.append({"@type": "FAQPage", "mainEntity": faq_items})
     payload = {"@context": "https://schema.org", "@graph": graph}
+    # </script> inside any value would terminate the script element early;
+    # escape '<' at the serialization level (valid JSON escape).
     return (
         '<script type="application/ld+json">\n'
-        + json.dumps(payload, indent=2, ensure_ascii=False)
+        + json.dumps(payload, indent=2, ensure_ascii=False).replace("<", "\\u003c")
         + "\n</script>"
     )
 
@@ -123,6 +125,13 @@ def main(argv: list[str]) -> int:
     if not args.body_file.exists():
         print(f"FATAL: body file missing: {args.body_file}", file=sys.stderr)
         return 1
+    faq_data = None
+    if args.faq:
+        try:
+            faq_data = json.loads(args.faq.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as e:
+            print(f"FATAL: bad FAQ JSON ({args.faq}): {e}", file=sys.stderr)
+            return 1
 
     words = len(re.sub(r"<[^>]+>", " ", args.body_file.read_text(encoding="utf-8")).split())
     read_time = args.read_time or f"{max(1, round(words / 220))} min read"
@@ -132,36 +141,39 @@ def main(argv: list[str]) -> int:
     og_image = slug_url + "og.png"
     about_terms = [t.strip() for t in args.about_terms.split(",") if t.strip()]
 
-    html = TEMPLATE.read_text(encoding="utf-8")
+    html_text = TEMPLATE.read_text(encoding="utf-8")
+    # Plain-text fields are HTML-escaped for attribute/text contexts; pass
+    # entities via the body/lede fragments if you need markup.
+    esc = lambda s: html.escape(s, quote=True)
     replacements = {
-        "{{TITLE}}": args.title,
-        "{{DESCRIPTION}}": args.description,
+        "{{TITLE}}": esc(args.title),
+        "{{DESCRIPTION}}": esc(args.description),
         "{{SLUG_URL}}": slug_url,
         "{{OG_IMAGE_URL}}": og_image,
         "{{PUB_TIMESTAMP}}": date_iso + "T00:00:00Z",
         "{{PUB_DATE_ISO}}": date_iso,
         "{{PUB_DATE_HUMAN}}": date_human,
-        "{{SECTION}}": args.section,
-        "{{EYEBROW_TAG}}": args.eyebrow,
-        "{{READ_TIME}}": read_time,
+        "{{SECTION}}": esc(args.section),
+        "{{EYEBROW_TAG}}": esc(args.eyebrow),
+        "{{READ_TIME}}": esc(read_time),
         "{{LEDE}}": args.lede,
         "{{JSON_LD_BLOCK}}": render_jsonld(
             slug_url, og_image, args.title, args.description,
-            date_iso, args.section, about_terms, args.faq),
+            date_iso, args.section, about_terms, faq_data),
         "{{BODY_CONTENT}}": args.body_file.read_text(encoding="utf-8").strip(),
     }
     for token, value in replacements.items():
-        assert token in html, f"template lost token {token}"
-        html = html.replace(token, value)
+        assert token in html_text, f"template lost token {token}"
+        html_text = html_text.replace(token, value)
 
-    leftover = re.findall(r"\{\{[A-Z_]+\}\}", html)
+    leftover = re.findall(r"\{\{[A-Z_]+\}\}", html_text)
     if leftover:
         print(f"FATAL: unresolved tokens after render: {leftover}", file=sys.stderr)
         return 1
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_file.write_bytes(html.encode("utf-8"))
-    print(f"wrote {out_file} ({len(html)} bytes, ~{words} words)")
+    out_file.write_bytes(html_text.encode("utf-8"))
+    print(f"wrote {out_file} ({len(html_text)} bytes, ~{words} words)")
 
     print(
         "\nRegistration checklist (PUBLISHING.md):\n"
