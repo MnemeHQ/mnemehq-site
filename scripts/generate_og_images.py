@@ -308,6 +308,7 @@ TEMPLATE_MAP = {
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     # Misc
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
+    "og-insights-ai-native-sdlc-arch-layer.html": "insights/ai-native-sdlc-architecture-layer/og.png",
 }
 
 PORT = 8765
