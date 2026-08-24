@@ -234,6 +234,7 @@ TEMPLATE_MAP = {
     "og-insights-search-as-code.html": "insights/search-as-code-agent-execution-surface/og.png",
     # Misc
     "og-integration-opencode.html": "integrations/opencode/og.png",
+    "og-integration-paperclip.html": "integrations/paperclip/og.png",
 
     # Insights — new
     "og-insights-ai-adoption-maturity.html": "insights/ai-adoption-maturity-model-engineering-analysis/og.png",
