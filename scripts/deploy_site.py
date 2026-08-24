@@ -167,6 +167,43 @@ def _cpanel_request(method, path, body=None, extra_headers=None, attempts=4):
     raise ConnectionError(f'cPanel request failed after {attempts} attempts: {method} {path}')
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
+def delete_remote(rel):
+    """Delete one file on the host via cPanel API 2 Fileman::fileop unlink.
+
+    UAPI Fileman has no delete operation (read/utility only), so this uses
+    the legacy json-api/cpanel surface, same auth as the UAPI token.
+    Returns a status string; failures are non-fatal and surface in the
+    post-deploy verification if the file should have gone away.
+    """
+    params = urllib.parse.urlencode({
+        'cpanel_jsonapi_user': USER,
+        'cpanel_jsonapi_apiversion': '2',
+        'cpanel_jsonapi_module': 'Fileman',
+        'cpanel_jsonapi_func': 'fileop',
+        'op': 'unlink',
+        'sourcefiles': f'{BASE_REMOTE}/{rel}',
+        'doubledecode': '1',
+    }).encode('utf-8')
+    try:
+        raw = _cpanel_request(
+            'POST', '/json-api/cpanel', body=params,
+            extra_headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        )
+    except ConnectionError:
+        return 'SKIP (connection)'
+    try:
+        result = json.loads(raw)
+        data = (result.get('cpanelresult', {}).get('data') or [{}])[0]
+        # fileop reports warnings even on success; check the error field
+        if result.get('cpanelresult', {}).get('error'):
+            return f"FAIL ({result['cpanelresult']['error'][:80]})"
+        if data.get('error'):
+            return f"FAIL ({data['error'][:80]})"
+        return 'OK (deleted)'
+    except (ValueError, json.JSONDecodeError):
+        return 'FAIL (unparsable response)'
+
+
 def mkdir(remote_path):
     # Create one directory level via the modern UAPI Fileman::mkdir endpoint
     # (the same /execute/ surface upload_files uses). The legacy
@@ -282,7 +319,10 @@ def get_last_deployed_sha():
         return None
 
 def get_changed_site_files(since_sha):
-    out = _git(['diff', '--name-only', '--diff-filter=ACM', f'{since_sha}..HEAD', '--', ':(top)site/'], SCRIPT_DIR)
+    # ACM + D: deletions are included so the host copy can be removed.
+    # R (renames) stay excluded per PUBLISHING.md - the rename workaround
+    # is a content edit on the new path, which ACM already covers.
+    out = _git(['diff', '--name-only', '--diff-filter=ACMD', f'{since_sha}..HEAD', '--', ':(top)site/'], SCRIPT_DIR)
     return [l for l in out.splitlines() if l]
 
 def tag_deployed():
@@ -309,6 +349,7 @@ else:
 # Collect dirs and files to upload
 remote_dirs = set()
 files_to_upload = []
+deleted_remote = []
 
 if full_deploy:
     for dirpath, dirnames, filenames in os.walk(BASE_LOCAL):
@@ -327,7 +368,8 @@ else:
         rel = git_path[len('site/'):] if git_path.startswith('site/') else git_path
         local_path = os.path.join(BASE_LOCAL, rel.replace('/', os.sep))
         if not os.path.exists(local_path):
-            print(f'SKIP (deleted)  {rel}')
+            deleted_remote.append(rel)
+            print(f'DELETE          {rel}')
             continue
         rel_dir = os.path.dirname(rel).replace(os.sep, '/')
         if rel_dir:
@@ -345,17 +387,35 @@ for local_path, remote_subdir, label in files_to_upload:
     if result != 'OK':
         failures.append(label)
 
+# Remove host files that the delta deleted locally. Without this, removed
+# pages stay live forever (the upload delta can only add/overwrite).
+delete_failures = []
+for rel in deleted_remote:
+    result = delete_remote(rel)
+    print(f'{rel}: {result}')
+    if not result.startswith('OK'):
+        delete_failures.append(rel)
+
 if failures:
     print(f"\nDEPLOY FAILED - {len(failures)} upload(s) failed:")
     for f in failures:
         print(f'  FAIL  {f}')
     raise SystemExit(1)
 
-print(f"\n[OK] {len(files_to_upload)} files uploaded")
+if delete_failures:
+    print(f"\nDEPLOY FAILED - {len(delete_failures)} host deletion(s) failed:")
+    for f in delete_failures:
+        print(f'  FAIL  {f}')
+    raise SystemExit(1)
+
+if deleted_remote:
+    print(f"\n[OK] {len(deleted_remote)} host file(s) deleted")
 
 # Collect public URLs for targeted cache purge (delta only)
 if not full_deploy:
     purge_urls = [u for u in (label_to_url(label) for _, _, label in files_to_upload) if u]
+    # deleted pages must not keep serving stale 200s from the edge
+    purge_urls += [u for u in (label_to_url(rel) for rel in deleted_remote) if u]
 
 # ── Purge Cloudflare cache BEFORE verification ────────────────────────────────
 # Purge first so verification hits fresh server responses, not stale CF cache.
