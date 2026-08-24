@@ -7,20 +7,20 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Intent debt is the gap between the architectural decisions your team made and the code your AI agents write. What the 2026 data shows, why review can't catch it, and how drift prevention closes it." />
+  <meta name="description" content="Intent debt is the gap between architectural decisions and the code AI agents write. See why review misses it and how architectural drift prevention closes it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/insights/ai-native-engineering-intent-debt/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="State of AI-Native Engineering 2026: The Intent Debt Behind AI-Generated Code" />
-  <meta property="og:description" content="Intent debt is the gap between the decisions your team made and the code your agents write. What the State of AI-Native Engineering 2026 data shows, and how to close it." />
+  <meta property="og:title" content="Intent Debt: Why AI-Generated Code Drifts From Your Architecture" />
+  <meta property="og:description" content="Intent debt is the gap between architectural decisions and the code AI agents write. See why review misses it and how architectural drift prevention closes it." />
   <meta property="og:url" content="https://mnemehq.com/insights/ai-native-engineering-intent-debt/" />
   <meta property="og:image" content="https://mnemehq.com/insights/ai-native-engineering-intent-debt/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="State of AI-Native Engineering 2026: The Intent Debt Behind AI-Generated Code" />
-  <meta name="twitter:description" content="Intent debt is the gap between the decisions your team made and the code your agents write. What the State of AI-Native Engineering 2026 data shows, and how to close it." />
+  <meta name="twitter:title" content="Intent Debt: Why AI-Generated Code Drifts From Your Architecture" />
+  <meta name="twitter:description" content="Intent debt is the gap between architectural decisions and the code AI agents write. See why review misses it and how architectural drift prevention closes it." />
   <meta name="twitter:image" content="https://mnemehq.com/insights/ai-native-engineering-intent-debt/og.png" />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-05-17T00:00:00Z" />
@@ -238,43 +238,6 @@
           {"@type": "Thing", "name": "Intent debt"},
           {"@type": "Thing", "name": "AI coding governance"},
           {"@type": "Thing", "name": "Engineering governance"}
-        ]
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "What is intent debt?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Intent debt is the gap between the architectural decisions a team has made and the code its AI agents actually write. Unlike technical debt, which is about code quality, intent debt is architectural: the code works, but it quietly violates boundaries, patterns, and constraints the team already decided on."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How does AI-generated code create intent debt?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "AI coding agents optimize for local correctness — idiomatic syntax, passing tests, solving the immediate task. They lack durable access to architectural decisions like ADRs, service boundaries, and forbidden dependencies. At generation velocity, each agent session makes independent choices that accumulate into architectural drift."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can code review catch intent debt?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Partially, but not at AI velocity. By the time a large agent-authored change reaches review, the architectural choices inside it are already made. Review becomes an audit of decisions rather than a shaper of them, which is why drift prevention has to move to the point of authorship."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How do you prevent intent debt?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Encode architectural decisions as deterministic, machine-readable constraints and enforce them where the agent works — before incompatible changes land. This is architectural drift prevention: verdicts traced to their source decision, applied at generation time instead of review time."
-            }
-          }
         ]
       }
     ]
