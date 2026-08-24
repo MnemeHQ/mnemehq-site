@@ -100,3 +100,16 @@ python -m playwright install chromium
 - Editorial content, original visuals, logos and brand assets: all rights
   reserved — see [CONTENT-LICENSE.md](CONTENT-LICENSE.md).
 - Third-party fonts and services: see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Development workflow
+Each distinct development task gets a fresh task-owned worktree and dedicated branch created from current origin/main.
+- Do not start a new task by switching branches inside an existing task worktree.
+- Do not reuse another task's worktree, even if it appears idle.
+- Follow-up changes for the same PR stay in that PR's existing worktree.
+- Before beginning work and immediately before every commit, assert the expected repository root and branch with scripts/check_worktree_context.py.
+- After the PR merges or an experiment is formally closed, remove the worktree and prune stale worktree metadata.
+
+The model is:
+`one task → one branch → one worktree → one PR/outcome → teardown`
+
+This complements the publishing governance defined in PUBLISHING.md and the ADR corpus under docs/adr/.
