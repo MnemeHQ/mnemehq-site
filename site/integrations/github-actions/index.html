@@ -208,10 +208,10 @@
       {
         "@type": "Article",
         "headline": "Architectural Governance in GitHub Actions",
-        "description": "Run Mneme HQ's checks in your CI pipeline. Block pull requests that violate architectural decisions before they merge — direct enforcement after generation.",
+        "description": "Run mneme check against every PR diff with a reference workflow you own — a CLI-based CI gate pattern that blocks pull requests violating architectural decisions.",
         "url": "https://mnemehq.com/integrations/github-actions/",
         "datePublished": "2026-05-07",
-        "dateModified": "2026-05-07",
+        "dateModified": "2026-08-24",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/github-actions/og.png",
@@ -318,7 +318,12 @@ jobs:
       - name: Check changed files
         run: |
           git diff --name-only origin/main...HEAD | \
-            xargs -I{} mneme check {}</code></pre>
+            while read -r f; do
+              mneme check \
+                --memory .mneme/project_memory.json \
+                --input "$f" \
+                --query "PR diff: $f"
+            done</code></pre>
 
     <h2>Status</h2>
 
@@ -345,7 +350,7 @@ jobs:
 
     <ul>
       <li><strong>PASS</strong> &mdash; the diff respects the relevant decisions. Exit code 0, CI green.</li>
-      <li><strong>WARN</strong> &mdash; the diff introduces something the corpus flags as policy-bordering (an unapproved dependency, a scope-boundary edge case). Exit code 0 in default mode, surfaces a structured comment via the action's PR-comment step.</li>
+      <li><strong>WARN</strong> &mdash; the diff introduces something the corpus flags as policy-bordering (an unapproved dependency, a scope-boundary edge case). In <code>strict</code> mode (the default) WARN exits 1 and fails the step; in <code>warn</code> mode every verdict exits 0 and the finding surfaces as a structured PR comment instead.</li>
       <li><strong>FAIL</strong> &mdash; the diff violates a hard architectural decision. Exit code 2 in strict mode, fails the workflow, blocks the PR until resolved or explicitly overridden.</li>
     </ul>
 

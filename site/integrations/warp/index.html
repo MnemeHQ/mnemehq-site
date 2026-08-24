@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Warp AI terminal governance for autonomous coding workflows. Mneme HQ preserves the architectural invariants underneath Warp's Agent Mode and execution loops — enforced at the file-write boundary, not the terminal." />
+  <meta name="description" content="Warp orchestrates Agent Mode and autonomous execution in the terminal. There is no dedicated Mneme adapter for Warp; governance applies through underlying supported agent hooks or a CI gate on the resulting diff." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/warp/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Warp AI Terminal Governance — Mneme HQ" />
-  <meta property="og:description" content="Warp AI terminal governance for autonomous coding workflows. Mneme HQ preserves the architectural invariants underneath Warp's Agent Mode and execution loops — enforced at the file-write boundary, not the terminal." />
+  <meta property="og:description" content="Warp orchestrates Agent Mode and autonomous execution in the terminal. There is no dedicated Mneme adapter for Warp; governance applies through underlying supported agent hooks or a CI gate on the resulting diff." />
   <meta property="og:url" content="https://mnemehq.com/integrations/warp/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/warp/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Warp AI Terminal Governance — Mneme HQ" />
-  <meta name="twitter:description" content="Warp AI terminal governance for autonomous coding workflows. Mneme HQ preserves the architectural invariants underneath Warp's Agent Mode and execution loops — enforced at the file-write boundary, not the terminal." />
+  <meta name="twitter:description" content="Warp orchestrates Agent Mode and autonomous execution in the terminal. There is no dedicated Mneme adapter for Warp; governance applies through underlying supported agent hooks or a CI gate on the resulting diff." />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/warp/og.png" />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-05-26T00:00:00Z" />
@@ -179,10 +179,10 @@
       {
         "@type": "Article",
         "headline": "Warp AI Terminal Governance",
-        "description": "Warp AI terminal governance for autonomous coding workflows. Mneme HQ preserves the architectural invariants underneath Warp's Agent Mode and execution loops — enforced at the file-write boundary, not the terminal.",
+        "description": "Warp orchestrates Agent Mode and autonomous execution in the terminal. There is no dedicated Mneme adapter for Warp; governance applies through underlying supported agent hooks or a CI gate on the resulting diff.",
         "url": "https://mnemehq.com/integrations/warp/",
         "datePublished": "2026-05-26",
-        "dateModified": "2026-05-26",
+        "dateModified": "2026-08-24",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/warp/og.png",
@@ -191,8 +191,8 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          {"@type": "Question", "name": "Is this a native Warp integration?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme HQ does not hook into Warp itself. It governs the agents and processes Warp runs — Claude Code via its PreToolUse hook, CI runs via mneme check, and any tool that writes to disk via repo-level enforcement. Warp orchestrates execution; Mneme governs the architectural intent underneath."}},
-          {"@type": "Question", "name": "Does Mneme slow down Warp Agent Mode?", "acceptedAnswer": {"@type": "Answer", "text": "Enforcement runs at the file-write boundary, not on every terminal command. Latency is bounded by the agent's edit path, not Warp's orchestration speed. Most violations surface immediately as a blocked tool call with the decision id and rationale."}},
+          {"@type": "Question", "name": "Is this a native Warp integration?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme HQ does not hook into Warp itself. Governance reaches Warp-driven work only through an underlying supported agent's hook (Claude Code's PreToolUse) or a mneme check gate in CI. There is no Warp-side install."}},
+          {"@type": "Question", "name": "Does Mneme slow down Warp Agent Mode?", "acceptedAnswer": {"@type": "Answer", "text": "When a Warp-driven session runs Claude Code, Mneme's PreToolUse hook runs at the file-write boundary, not on every terminal command; latency is bounded by the agent's edit path, not Warp's orchestration speed. Violating mutations surface as a blocked tool call with the decision id and rationale. Work produced outside a hooked agent is caught only by a CI gate."}},
           {"@type": "Question", "name": "What about Warp workflows that don't use Claude Code?", "acceptedAnswer": {"@type": "Answer", "text": "The CI gate still applies. mneme check runs in GitHub Actions against every PR diff regardless of which agent or tool produced it. For interactive enforcement with non-Claude agents, the Cursor Rules export or repo-level conventions are the available surfaces today."}}
         ]
       }
@@ -250,16 +250,16 @@
 
     <p>Warp's strength is execution: an engineer issues intent, Warp orchestrates the agents, processes, and tool invocations that fulfill it. Agent Mode pushes that further &mdash; autonomous loops that read, plan, edit, and verify across many shells in parallel.</p>
 
-    <p>That orchestration is upstream of the file-write boundary. Mneme HQ enforces at the file-write boundary. The two compose: Warp coordinates how work happens; Mneme constrains what work is allowed to land in the codebase.</p>
+    <p>That orchestration is upstream of any enforcement point. Mneme does not hook into Warp itself: governance reaches Warp-driven work only when the underlying agent carries a Mneme hook (Claude Code) or when <code>mneme check</code> gates the resulting diff in CI.</p>
 
     <div class="callout">
-      <p><strong>This is not a native Warp integration.</strong> Mneme does not have a Warp-specific hook. It governs the agents Warp runs &mdash; Claude Code via its PreToolUse hook, CI runs via <code>mneme check</code>, and any tool that writes to disk via the repo-level decision corpus.</p>
+      <p><strong>This is not a native Warp integration.</strong> Mneme does not have a Warp-specific hook. Governance reaches Warp-driven work only when the underlying agent carries a Mneme hook (Claude Code) or when <code>mneme check</code> gates the resulting diff in CI.</p>
     </div>
 
     <h2>What gets enforced regardless of how Warp executes</h2>
 
     <ul>
-      <li><strong>ADRs and architectural decisions.</strong> Recorded in <code>.mneme/project_memory.json</code>, enforced at every edit attempt — whether the edit originates from Warp Agent Mode, an interactive Claude Code session inside a Warp pane, or a CLI tool a Warp workflow spawned.</li>
+      <li><strong>ADRs and architectural decisions.</strong> Recorded in <code>.mneme/project_memory.json</code>, enforced whenever a governed surface touches them — an interactive Claude Code session inside a Warp pane, or a CI gate on the diff.</li>
       <li><strong>Forbidden dependencies and approved patterns.</strong> Catalogued as anti-patterns and constraints; surfaced as feedback when an agent attempts a violating edit.</li>
       <li><strong>Path and boundary rules.</strong> Module-level constraints (e.g. "no direct database access from controllers") that hold regardless of which session produced the diff.</li>
       <li><strong>The CI gate.</strong> <code>mneme check</code> runs against every PR diff in GitHub Actions or GitLab CI &mdash; the final line of defense after generation, independent of which terminal launched the work.</li>
@@ -308,11 +308,11 @@ mneme check --mode warn   # try locally first</code></pre>
     <div class="faq-list">
       <details class="faq-item">
         <summary>Is this a native Warp integration?</summary>
-        <div class="faq-body">No. Mneme HQ does not hook into Warp itself. It governs the agents and processes Warp runs &mdash; Claude Code via its PreToolUse hook, CI runs via <code>mneme check</code>, and any tool that writes to disk via repo-level enforcement. Warp orchestrates execution; Mneme governs the architectural intent underneath.</div>
+        <div class="faq-body">No. Mneme HQ does not hook into Warp itself. Governance reaches Warp-driven work only through an underlying supported agent&rsquo;s hook (e.g. Claude Code&rsquo;s PreToolUse) or a <code>mneme check</code> gate in CI. There is no Warp-side install.</div>
       </details>
       <details class="faq-item">
         <summary>Does Mneme slow down Warp Agent Mode?</summary>
-        <div class="faq-body">Enforcement runs at the file-write boundary, not on every terminal command. Latency is bounded by the agent's edit path, not Warp's orchestration speed. Most violations surface immediately as a blocked tool call with the decision id and rationale.</div>
+        <div class="faq-body">When a Warp-driven session runs Claude Code, Mneme's PreToolUse hook runs at the file-write boundary, not on every terminal command; latency is bounded by the agent's edit path, not Warp's orchestration speed. Violating mutations surface as a blocked tool call with the decision id and rationale. Work produced outside a hooked agent is caught only by a CI gate.</div>
       </details>
       <details class="faq-item">
         <summary>What about Warp workflows that don't use Claude Code?</summary>
