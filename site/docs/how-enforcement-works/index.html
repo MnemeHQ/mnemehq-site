@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="How Mneme turns human-authored architectural decisions into deterministic enforcement rules checked before AI generation. ADR authoring, structured governance, explainable verdicts." />
+  <meta name="description" content="How Mneme turns human-authored architectural decisions into a structured corpus with deterministic enforcement across four workflow boundaries: guidance before generation, prevent before supported mutations, catch after mutation, verify in CI." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/how-enforcement-works/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="How Enforcement Works &mdash; Mneme HQ" />
-  <meta property="og:description" content="How Mneme turns human-authored architectural decisions into deterministic enforcement rules checked before AI generation." />
+  <meta property="og:description" content="How Mneme turns architectural decisions into a structured corpus enforced across four workflow boundaries: guidance, prevent, catch, verify." />
   <meta property="og:url" content="https://mnemehq.com/docs/how-enforcement-works/" />
   <meta property="og:image" content="https://mnemehq.com/docs/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="How Enforcement Works &mdash; Mneme HQ" />
-  <meta name="twitter:description" content="How Mneme turns human-authored architectural decisions into deterministic enforcement rules checked before AI generation." />
+  <meta name="twitter:description" content="How Mneme turns architectural decisions into a structured corpus enforced across four workflow boundaries: guidance, prevent, catch, verify." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/og.png" />
   <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -43,7 +43,7 @@
       {
         "@type": "TechArticle",
         "headline": "How Enforcement Works",
-        "description": "How Mneme turns human-authored architectural decisions into deterministic enforcement rules checked before AI generation.",
+        "description": "How Mneme turns architectural decisions into a structured corpus with deterministic enforcement across four workflow boundaries: guidance, prevent, catch, verify.",
         "url": "https://mnemehq.com/docs/how-enforcement-works/",
         "datePublished": "2026-05-12",
         "dateModified": "2026-05-12",
@@ -192,12 +192,12 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Mneme enforces architectural decisions at generation time.</strong> It retrieves the relevant decisions for the current edit, evaluates the staged change against them with a precedence engine, and returns a binary verdict before the code reaches review. Deterministic enforcement is Mneme&rsquo;s core mechanism within the architectural drift prevention stack.</div>
+<div class="answer-capsule"><strong>Mneme enforces architectural decisions at the earliest reliable workflow boundary.</strong> Human-authored decisions are compiled into a structured corpus; typed rules are enforced deterministically &mdash; preventing supported mutations before they land, catching what escapes prevention at a post-mutation or session boundary, and verifying the final tree in CI. Retrieval provides guidance. Retrieval is not enforcement.</div>
 
 <section class="hero">
   <div class="section-eyebrow">How it works</div>
   <h1>Human-readable decisions,<br>deterministic enforcement.</h1>
-  <p class="lede">Mneme lets teams author architectural decisions in plain language, then enforces them as structured rules at the moment an AI agent is about to generate code &mdash; before the output exists.</p>
+  <p class="lede">Mneme lets teams author architectural decisions as ADRs, compiles them into a structured corpus, and applies that corpus deterministically across the agentic workflow &mdash; guiding before generation where a harness allows it, preventing supported mutations before they land, catching what escapes prevention, and verifying at the repository boundary in CI.</p>
 </section>
 
 <div class="wrap">
@@ -217,13 +217,19 @@
 
   <div class="prose-section">
     <h2>The enforcement flow</h2>
-    <p>Every check Mneme runs follows the same path:</p>
+    <p>Decisions become enforcement through one pipeline, applied at four workflow boundaries:</p>
     <ol class="step-list">
-      <li><span class="num">01</span><div><strong>Author decisions in human-readable form.</strong> Write ADRs, policy documents, or team conventions as you normally would. Mneme provides a structured schema alongside them &mdash; each rule gets an id, a title, constraints, and the anti-patterns that should block generation.</div></li>
-      <li><span class="num">02</span><div><strong>Retrieve the relevant rules for the current task.</strong> When a developer or agent starts a task, Mneme surfaces the decisions most likely to apply. The retrieval is deterministic: same task description, same memory, same rules surface &mdash; every time.</div></li>
-      <li><span class="num">03</span><div><strong>Check the prompt against the retrieved rules.</strong> Before the model generates output, Mneme evaluates the prompt against the constraints and anti-patterns in the retrieved decisions. A match produces a structured verdict: <strong>PASS</strong>, <strong>WARN</strong>, or <strong>FAIL</strong>.</div></li>
-      <li><span class="num">04</span><div><strong>Record an auditable trace.</strong> Every verdict records which rule matched, which term in the prompt triggered it, and why that rule was surfaced. A human can reconstruct any verdict from the artifacts &mdash; no hidden scoring, no black box.</div></li>
+      <li><span class="num">01</span><div><strong>Author decisions in human-readable form.</strong> Write ADRs, policy documents, or team conventions as you normally would. Mneme provides a structured schema alongside them &mdash; each decision gets an id, a title, constraints, anti-patterns for guidance, and optionally typed rules with exact semantics.</div></li>
+      <li><span class="num">02</span><div><strong>Compile into a structured corpus.</strong> Mneme maintains a parallel structured representation that enforcement can reason against. Typed rules currently have one canonical form &mdash; <code style="font-family:'DM Mono',monospace;font-size:0.85em;">FORBID_LITERAL</code>, an exact, case-sensitive literal &mdash; plus optional path applicability (<code style="font-family:'DM Mono',monospace;font-size:0.85em;">include_paths</code>/<code style="font-family:'DM Mono',monospace;font-size:0.85em;">exclude_paths</code>) that determines where the rule applies (ADR-020).</div></li>
+      <li><span class="num">03</span><div><strong>Enforce at the earliest reliable boundary &mdash; four of them.</strong> <strong>(a) Guidance before generation,</strong> where a harness exposes context injection. <strong>(b) Prevent</strong> before supported mutations, where proposed content can be reconstructed deterministically. <strong>(c) Catch</strong> at a post-mutation or session boundary when prevention isn't technically possible. <strong>(d) Verify</strong> in CI at the repository boundary. A match produces a structured verdict: PASS, WARN, or FAIL &mdash; or an explicit INCOMPLETE when evaluation could not finish.</div></li>
+      <li><span class="num">04</span><div><strong>Record an auditable trace.</strong> Every verdict records which rule matched, which term triggered it, and &mdash; for path-scoped rules &mdash; the applicability outcome against the real target path. A human can reconstruct any verdict from the artifacts: no hidden scoring, no black box.</div></li>
     </ol>
+
+    <div class="callout">
+      <p><strong>Retrieval is not enforcement.</strong> Retrieval decides which decisions are injected as guidance and which legacy multi-term heuristics run for the current task. It does not bound typed-rule enforcement: literal rules operate corpus-wide regardless of retrieval score (ADR-017), filtered only by their own path selectors (ADR-020). A decision that was never retrieved can still block.</p>
+    </div>
+
+    <p>Claude Code implements the full arc &mdash; direct edits prevented pre-mutation, a narrowly reconstructable shell form checked pre-execution, a Stop audit catching the session delta that escaped prevention, then CI as final verification. Other integrations ship subsets of the arc; each integration page states exactly which boundaries it covers and which bypasses remain.</p>
   </div>
 
   <div class="prose-section">
@@ -238,20 +244,20 @@
       </div>
       <div class="ex-row">
         <span class="ex-arrow">&darr;</span>
-        <div class="ex-step"><strong>The structured rule</strong><span>Mneme holds this as a structured constraint: the anti-pattern is <code style="font-family:'DM Mono',monospace;font-size:0.82em;">litellm</code>; the constraint is <code style="font-family:'DM Mono',monospace;font-size:0.82em;">no second LLM provider</code>.</span></div>
+        <div class="ex-step"><strong>The structured rule</strong><span>Mneme holds the decision as guidance text (constraint, anti-pattern) for retrieval, and &mdash; when authored as a typed rule &mdash; as a mechanically enforceable rule: an exact, case-sensitive <code style="font-family:'DM Mono',monospace;font-size:0.82em;">FORBID_LITERAL</code> on <code style="font-family:'DM Mono',monospace;font-size:0.82em;">litellm</code>, optionally scoped with path selectors.</span></div>
       </div>
       <div class="ex-row">
         <span class="ex-arrow">&darr;</span>
-        <div class="ex-step"><strong>The prompt</strong><span>An agent's task reads: "Add litellm as the provider abstraction layer so we can swap models later."</span></div>
+        <div class="ex-step"><strong>The proposed change</strong><span>An agent proposes: "Add litellm as the provider abstraction layer so we can swap models later."</span></div>
       </div>
       <div class="ex-row">
         <span class="ex-arrow">&darr;</span>
-        <div class="ex-step"><strong>The verdict</strong><span><strong style="color:var(--accent);">FAIL</strong> &mdash; anti-pattern matched before generation. The decision that fired, the term that triggered it, and the rule text are all recorded in the output.</span></div>
+        <div class="ex-step"><strong>The verdict</strong><span><strong style="color:var(--accent);">FAIL</strong> &mdash; the typed literal matched at whichever boundary evaluated it. The decision that fired, the term that triggered it, and the applicability outcome are all recorded in the output.</span></div>
       </div>
     </div>
 
     <div class="callout">
-      <strong>The key distinction.</strong> This check runs before the model generates a single line of code. The violation is caught at the prompt boundary, not in a code review after the output already exists. That is the difference between governance and audit.
+      <strong>The defining property is mechanism, not timing.</strong> Preventing a mutation before it lands is the ideal &mdash; and where a harness exposes it, Mneme prevents. Where prevention is not technically possible, Mneme catches the change at the next reliable boundary instead of claiming coverage it does not have. Deterministic detection at an honest boundary beats probabilistic promises at an early one.
     </div>
   </div>
 
@@ -343,7 +349,7 @@
       <h4>The AI-assisted engineering stack</h4>
       <div class="stack-row">
         <div class="stack-stage is-mneme">Pre-generation governance</div>
-        <div class="stack-tool"><strong>Mneme.</strong> Compiles architectural intent into enforceable constraints before the agent generates code.</div>
+        <div class="stack-tool"><strong>Mneme.</strong> Compiles architectural intent into enforceable constraints and applies them at the earliest reliable workflow boundary.</div>
       </div>
       <div class="stack-row">
         <div class="stack-stage">Generation and runtime</div>
@@ -374,7 +380,7 @@
         A developer asks Claude Code to add analytics to a checkout route. The agent proposes importing the BigQuery client directly into the frontend service &mdash; violating your layered architecture decision that data-platform calls belong in a backend service only.
       </p>
       <p style="font-size:0.88rem;color:var(--teal);line-height:1.55;">
-        Mneme detects the cross-boundary call before generation completes. The violation is flagged and blocked &mdash; the agent never writes the code, and nothing reaches your PR queue.
+        At a boundary that supports prevention &mdash; the Claude Code edit hook, for example &mdash; the violating write is blocked before it lands and nothing reaches your PR queue. Where a surface escapes prevention, the session audit or the CI gate catches it instead; the boundary that fired is recorded either way.
       </p>
     </div>
 

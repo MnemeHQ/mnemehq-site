@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Twelve concrete examples of the architectural governance violations Mneme HQ enforces against, organized into five categories: architecture, security, workflow, dependency, and platform governance." />
+  <meta name="description" content="Twelve examples of the architectural governance policies Mneme HQ can operationalize through deterministic rules across five categories: architecture, security, workflow, dependency, and platform governance." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/governance-violations/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="What Mneme Prevents &mdash; Governance Violation Examples" />
-  <meta property="og:description" content="Concrete examples of architectural governance violations Mneme HQ catches before generation. Architecture, security, workflow, dependency, and platform categories." />
+  <meta property="og:description" content="Concrete examples of architectural governance policies Mneme can operationalize through deterministic rules and workflow boundaries. Architecture, security, workflow, dependency, and platform categories." />
   <meta property="og:url" content="https://mnemehq.com/docs/governance-violations/" />
   <meta property="og:image" content="https://mnemehq.com/docs/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="What Mneme Prevents &mdash; Governance Violation Examples" />
-  <meta name="twitter:description" content="Concrete examples of architectural governance violations Mneme HQ catches before generation." />
+  <meta name="twitter:description" content="Concrete examples of architectural governance policies Mneme can operationalize through deterministic rules." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/og.png" />
 
     <!-- Consent defaults -->
@@ -46,8 +46,8 @@
       },
       {
         "@type": "TechArticle",
-        "headline": "What Mneme Prevents &mdash; Governance Violation Examples",
-        "description": "Concrete examples of architectural governance violations Mneme HQ catches before generation.",
+        "headline": "What Mneme Operationalizes &mdash; Governance Policy Examples",
+        "description": "Concrete examples of architectural governance policies Mneme can operationalize through deterministic rules and workflow boundaries.",
         "url": "https://mnemehq.com/docs/governance-violations/",
         "datePublished": "2026-05-10",
         "dateModified": "2026-05-10",
@@ -244,19 +244,19 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Mneme blocks five classes of governance violation before code is generated:</strong> architecture, workflow, security, dependency, and platform. Each rule maps a forbidden pattern to a deterministic verdict, so AI agents cannot ship the violation in the first place.</div>
+<div class="answer-capsule"><strong>Mneme can operationalize five classes of architectural policy through deterministic rules at the earliest reliable workflow boundary.</strong> Architecture, workflow, security, dependency, and platform governance &mdash; each expressed as structured rules and enforced via prevention, catch, or verification depending on what the integration surface supports. The examples below show what policies look like in practice, not just what the rule engine matches mechanically.</div>
 
 <section class="hero">
   <div class="section-eyebrow">What Mneme prevents</div>
-  <h1>Governance violations Mneme catches before generation</h1>
-  <p class="lede">Concrete examples of the architectural decisions Mneme enforces against. These are not generic lint rules &mdash; they are organizational decisions encoded as structured constraints, injected into the agent's context, and checked at the file-write seam before the code exists.</p>
+<h1>Governance policies Mneme can operationalize</h1>
+    <p class="lede">Concrete examples of the architectural decisions Mneme enforces against. These are not generic lint rules &mdash; they are organizational decisions encoded as structured constraints, injected into the agent's context, and checked at the earliest reliable workflow boundary before the code exists.</p>
 </section>
 
 <div class="frame-note">
-  <div class="fn-inner">
-    <strong>The frame.</strong> Mneme injects your organization's architectural decisions into AI-assisted generation workflows. Each example below is a decision the team has already made &mdash; an ADR, a layering rule, a security policy, an ownership boundary &mdash; that Mneme keeps the agent honest about. The decision corpus is the source of truth; the violations below are what happens without it.
+    <div class="fn-inner">
+      <strong>The frame.</strong> Mneme injects your organization's architectural decisions into AI-assisted generation workflows. Each example below is a decision the team has already made &mdash; an ADR, a layering rule, a security policy, an ownership boundary &mdash; that Mneme keeps the agent honest about at the earliest reliable boundary. The decision corpus is the source of truth; the policies below show what enforcement looks like when expressed as deterministic rules and applied at supported boundaries.
+    </div>
   </div>
-</div>
 
 <div class="wrap">
 
@@ -524,7 +524,8 @@ def create_app():
 
   <div class="closer">
     <p><strong>The distinction that matters.</strong> Mneme injects organizational architectural decisions into AI-assisted generation workflows. The examples above are not static lint rules; they are decisions the team has already made, in the form the agent needs to see them, at the moment it is about to generate.</p>
-    <p>This is the difference between "we scan for bad code" and "we keep the agent honest about the decisions you've already made." The first is a check after the fact. The second is the layer that makes drift structurally harder.</p>
+    <p>This is the difference between "we scan for bad code" and "we keep the agent honest about the decisions you've already made." The first is a check after the fact. The second is the layer that makes drift structurally harder &mdash; and it operates at the earliest reliable boundary the integration surface supports.</p>
+    <p><strong>Mechanically detected today vs. illustrative policy semantics.</strong> The rule engine's mechanical contract is exact literal matching (FORBID_LITERAL) with optional path applicability. Some examples above describe richer semantic policies (layered architecture, agent identity, ADR supersession) that are operationalized by expressing them as typed rules and path selectors. Other semantics remain roadmap; the examples illustrate what teams govern, not what every rule engine parses natively.</p>
   </div>
 
   <div class="cross-links">

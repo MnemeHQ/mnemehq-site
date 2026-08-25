@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="An AI coding agent asked to refactor a storage backend proposes a Postgres migration. Mneme enforces ADR-001 — JSON-only storage, no external database — before generation, so the agent extends the existing module instead. Same prompt, same model, different answer." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -290,11 +289,12 @@
 
 <article class="article-wrap">
   <header>
-    <div class="demo-meta">
-      <span class="mt mt-type">Supporting example</span>
-      <span class="mt">Runnable locally</span>
-      <span class="mt mt-outcome-pass">Outcome: PASS</span>
-      <span class="mt">5 min read</span>
+    <div class="article-eyebrow">
+      <span class="eyebrow-tag">Supporting enforcement example &middot; ADR-001</span>
+      <span class="eyebrow-dot"></span>
+      <span class="eyebrow-meta">5 min read</span>
+      <span class="eyebrow-dot"></span>
+      <span class="verdict-pill pass">PASS</span>
     </div>
     <h1>Stopping an AI agent from swapping your storage backend</h1>
     <p class="lede">An AI coding agent is asked to refactor a storage backend "for scalability." Without governance it proposes a Postgres migration. With Mneme, ADR-001 is injected before generation and the agent extends the existing JSON storage module instead. Same prompt, same model, different answer.</p>
@@ -321,57 +321,64 @@
       <div class="panel-body" style="min-height:220px;"><div class="prompt">&gt; Refactor the storage backend for scalability.</div></div>
     </div>
 
-    <ol class="beat-flow">
-      <li class="beat beat-hit">
-        <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-001 &middot; project_memory.json</span></div>
-        <div class="beat-body"><strong>JSON storage only, no external database.</strong> The service runs on edge hardware where a separate database is operationally unacceptable. Postgres, Redis, and SQLite are out of scope until the usage threshold in <code>ADR-005</code>.</div>
-      </li>
-      <li class="beat beat-hit">
-        <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="beat-state">pre-generation injection</span></div>
-        <div class="beat-body">Mneme intercepts the same prompt before generation. The retriever scores it against <code>project_memory.json</code> and surfaces the relevant records:
-          <pre class="b-term" tabindex="0"><span class="t-dim">Injecting project decisions...</span>
-<span class="t-dim">&#8627;</span> <span class="t-teal">ADR-001:</span> <span class="t-val">JSON storage only &mdash; no external DB</span>
-<span class="t-dim">&#8627;</span> <span class="t-teal">ADR-003:</span> <span class="t-val">No ORM in v1</span>
-<span class="t-dim">&#8627;</span> <span class="t-teal">ADR-005:</span> <span class="t-val">Extend before rebuild</span>
+    <h2>Without Mneme</h2>
+    <p>The model has no project context. It pattern-matches the request against everything it has seen during training, where "refactor for scalability" almost always means a database migration. The output is fluent and confident:</p>
 
-<span class="t-pass">Storage decision enforced.</span> <span class="t-val">Per ADR-001, JSON storage is locked &mdash;</span>
-<span class="t-val">no Postgres, no Redis, no ORM in v1. Extend the current</span>
-<span class="t-val">storage module instead.</span></pre>
-        </div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="chip chip-na">counterfactual</span></div>
-        <div class="beat-body">Never proposed under governance. The counterfactual &mdash; the same prompt without Mneme &mdash; pattern-matches training priors and recommends a migration:
-          <pre class="b-term" tabindex="0"><span class="t-dim">I recommend migrating to a distributed database</span>
-<span class="t-dim">architecture. Consider replacing JSON storage with</span>
-<span class="t-dim">PostgreSQL or Redis. Add a migration layer and ORM</span>
-<span class="t-dim">for long-term scalability.</span></pre>
-        </div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-na">&mdash;</span></div>
-        <div class="beat-body">Nothing to block: guided generation complies on the first pass.</div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
-        <div class="beat-body">No retry needed &mdash; the first governed output already satisfies <code>ADR-001</code>, <code>ADR-003</code>, and <code>ADR-005</code>.</div>
-      </li>
-      <li class="beat beat-pass">
-        <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span><span class="beat-state">mneme check --mode strict</span></div>
-        <div class="beat-body">If the engineer commits the change anyway, the post-generation gate still evaluates the diff: <strong>Storage decision enforced</strong> &mdash; JSON only, no new databases. The verdict is structured (<code>PASS</code> / <code>WARN</code> / <code>FAIL</code> with the originating decision ID), so it can gate pull requests, feed dashboards, or block deploys via the <a href="/integrations/github-actions/">GitHub Actions enforcement gate</a>.</div>
-      </li>
-    </ol>
+    <div class="panel">
+      <div class="panel-header bad">
+        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
+        without mneme
+      </div>
+      <div class="panel-body" style="min-height:220px;">
+        <div class="out-bad">I recommend migrating to a distributed database</div>
+        <div class="out-bad">architecture. Consider replacing JSON storage with</div>
+        <div class="out-bad">PostgreSQL or Redis. Add a migration layer and ORM</div>
+        <div class="out-bad">for long-term scalability.</div>
+      </div>
+    </div>
 
-    <h2>Run it yourself</h2>
-    <pre tabindex="0"><code>pip install mneme-hq
-mneme init
-mneme check</code></pre>
+    <p>Three architectural decisions are silently violated: <code>ADR-001</code> (no external DB), <code>ADR-003</code> (no ORM in v1), and <code>ADR-005</code> (extend before rebuild). The diff that follows would survive review only if a reviewer happened to remember all three. At AI-assisted velocity, that is not a reliable filter.</p>
 
-    <h2>What happened</h2>
-    <p>The model is the same. The prompt is the same. Only the context changed. Without governance the output is fluent, confident, and silently violates three decisions at once: <code>ADR-001</code> (no external DB), <code>ADR-003</code> (no ORM in v1), and <code>ADR-005</code> (extend before rebuild). The diff that follows would survive review only if a reviewer happened to remember all three. At AI-assisted velocity, that is not a reliable filter. With the decisions injected before generation, the output respects the project's architectural truth on the first pass.</p>
+    <h2>With Mneme</h2>
+    <p>Mneme intercepts the same prompt before generation. The retriever scores the prompt against <code>project_memory.json</code> and surfaces the relevant decision records into the model's context:</p>
 
-    <h2>How to wire this up in your repo</h2>
-    <p><code>mneme init</code> seeds <code>project_memory.json</code> with placeholder ADRs. Replace them with your own decisions. The <a href="/integrations/claude-code/">Claude Code hook</a> picks up the file automatically; the <a href="/integrations/cursor/">Cursor integration</a> exports the same corpus into <code>.cursor/rules/</code> so your editor session sees identical constraints.</p>
+    <div class="panel">
+      <div class="panel-header good">
+        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
+        with mneme
+      </div>
+      <div class="panel-body" style="min-height:220px;">
+        <div class="out-muted">Injecting project decisions...</div>
+        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-001: JSON storage only &mdash; no external DB</div>
+        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-003: No ORM in v1</div>
+        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-005: Extend before rebuild</div>
+        <br>
+        <div class="out-good">Storage decision enforced. Per ADR-001, JSON</div>
+        <div class="out-good">storage is locked &mdash; no Postgres, no Redis, no</div>
+        <div class="out-good">ORM in v1. Extend the current storage module</div>
+        <div class="out-good">instead.</div>
+      </div>
+    </div>
+
+    <p>The model is the same. The prompt is the same. Only the context changed. The output now respects the project's architectural truth.</p>
+
+    <h2>What <code>mneme check</code> returns</h2>
+    <p>If the engineer commits the change anyway, the post-generation enforcement layer runs <code>mneme check --mode strict</code> against the diff and emits a structured verdict. For this scenario, the storage check returns <strong>PASS</strong>:</p>
+
+    <div class="check-results">
+      <div class="cr-title">mneme check &middot; storage row</div>
+      <div class="check-row">
+        <span class="verdict pass">PASS</span>
+        <div class="desc"><strong>Storage decision enforced</strong> &mdash; JSON only, no new databases.</div>
+      </div>
+    </div>
+
+    <p>The verdict is structured (<code>PASS</code> / <code>WARN</code> / <code>FAIL</code> with the originating decision ID), so it can gate pull requests, feed dashboards, or block deploys via the <a href="/integrations/github-actions/">GitHub Actions enforcement gate</a>.</p>
+
+<h2>How to wire this up in your repo</h2>
+    <p>Three lines of setup:</p>
+    <p><code>pipx install "mneme-hq>=0.5.1" && mneme init && mneme check</code></p>
+    <p><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty valid decision corpus &mdash; no placeholder content. Add your own decisions with <code>mneme add_decision</code>. The <a href="/integrations/claude-code/">Claude Code hook</a> picks up the file automatically; the <a href="/integrations/cursor/">Cursor integration</a> exports the same corpus into <code>.cursor/rules/</code> so your editor session sees identical constraints.</p>
 
     <p>For the architectural argument behind a single tool-agnostic decision store, see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/">architectural governance across heterogeneous AI coding agents</a>. For how Mneme aligns with NIST CAISI, MCP, and AGENTS.md, see <a href="/standards/">the standards landscape</a>.</p>
 
@@ -413,13 +420,13 @@ mneme check</code></pre>
         <p>Install the CLI and check your first decision in under a minute.</p>
         <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
           <div class="install-module-cmd">
-            <code>pip install mneme-hq</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                    onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
+            <code>pipx install "mneme-hq>=0.5.1"</code>
+            <button type="button" class="install-module-copy" data-code-copy data-copy-text='pipx install "mneme-hq>=0.5.1"'
+                    onclick="navigator.clipboard.writeText('pipx install \"mneme-hq>=0.5.1\"');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
           </div>
           <div class="install-module-meta">
             <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.10+</span>
+            <span>Python 3.11+</span>
             <span>MIT licensed</span>
           </div>
         </div>

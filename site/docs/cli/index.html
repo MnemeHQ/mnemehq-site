@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Reference for the mneme command-line interface — list_decisions, add_decision, test_query, check, cursor generate, and benchmark. Flags, exit codes, and CI usage patterns." />
+  <meta name="description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, cursor generate, benchmark, and adr import. Flags, exit codes, and CI usage patterns." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/cli/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme CLI Reference" />
-  <meta property="og:description" content="Reference for the mneme command-line interface — list_decisions, add_decision, test_query, check, cursor generate, and benchmark." />
+  <meta property="og:description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, cursor generate, benchmark, and adr import." />
   <meta property="og:url" content="https://mnemehq.com/docs/cli/" />
   <meta property="og:image" content="https://mnemehq.com/docs/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -245,7 +245,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>The <code>mneme</code> CLI</strong> exposes <code>list_decisions</code>, <code>add_decision</code>, <code>test_query</code>, <code>check</code>, and <code>cursor generate</code>. Every subcommand reads a <code>project_memory.json</code> corpus via <code>--memory</code> and returns Unix exit codes (0 pass, 1 warn, 2 fail).</div>
+<div class="answer-capsule"><strong>The <code>mneme</code> CLI</strong> exposes <code>init</code>, <code>list_decisions</code>, <code>add_decision</code>, <code>test_query</code>, <code>check</code>, <code>cursor generate</code>, <code>benchmark</code>, and <code>adr import</code>. Every subcommand reads a <code>project_memory.json</code> corpus via <code>--memory</code> and returns Unix exit codes (0 pass, 1 warn, 2 fail).</div>
 
 <section class="hero">
   <div class="section-eyebrow">CLI reference</div>
@@ -259,12 +259,14 @@
     <div class="toc-title">Reference</div>
     <ol>
       <li><a href="#install">Install</a></li>
+      <li><a href="#cmd-init">mneme init</a></li>
       <li><a href="#cmd-list">mneme list_decisions</a></li>
       <li><a href="#cmd-add">mneme add_decision</a></li>
       <li><a href="#cmd-test">mneme test_query</a></li>
       <li><a href="#cmd-check">mneme check</a></li>
       <li><a href="#cmd-cursor">mneme cursor generate</a></li>
       <li><a href="#cmd-benchmark">mneme benchmark</a></li>
+      <li><a href="#cmd-adr-import">mneme adr import</a></li>
       <li><a href="#exit-codes">Exit codes</a></li>
       <li><a href="#ci">CI usage</a></li>
     </ol>
@@ -273,11 +275,32 @@
   <!-- INSTALL -->
   <section class="section" id="install">
     <h2>Install</h2>
-    <p class="sub">Python 3.10+. MIT-licensed. No vector store, no ML runtime.</p>
+    <p class="sub">Python 3.11+. MIT-licensed. No vector store, no ML runtime.</p>
     <div class="cmd-card">
-<pre tabindex="0"><span class="cp">$</span> pip install mneme-hq</pre>
-      <p class="cdesc">Installs the <code>mneme</code> entry point on your PATH. Every subcommand requires <code>--memory</code> pointing at a <code>project_memory.json</code> file. An example corpus ships at <code>examples/project_memory.json</code>.</p>
+<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq&gt;=0.5.1"
+<span class="cc"># or: pip install mneme-hq</span></pre>
+      <p class="cdesc">Installs the <code>mneme</code> entry point on your PATH. Scaffold a new corpus with <code><a href="#cmd-init">mneme init</a></code>; every other subcommand requires <code>--memory</code> pointing at a <code>project_memory.json</code> file. An example corpus ships at <code>examples/project_memory.json</code>.</p>
       <p class="cdesc" style="margin-bottom:0;">From source (contributors): <code>git clone https://github.com/MnemeHQ/mneme &amp;&amp; cd mneme &amp;&amp; pip install -e .</code></p>
+    </div>
+  </section>
+
+  <!-- init -->
+  <section class="section" id="cmd-init">
+    <h2>init</h2>
+    <p class="sub">Scaffold an empty project memory corpus.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme init</span><span class="ctag">Write</span></div>
+      <p class="cdesc">Creates the memory file (including its parent directory) containing a valid, empty decision corpus &mdash; deliberately zero seeded decisions, because every recorded decision is enforceable and sample content would create phantom rules. Exits non-zero without writing if the target file already exists, unless <code>--force</code> is supplied.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme init
+Created .mneme/project_memory.json</pre>
+      <div class="flags-title">Flags</div>
+      <table class="flags">
+        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>--path</td><td>no</td><td>Output path. Defaults to <code>.mneme/project_memory.json</code>.</td></tr>
+          <tr><td>--force</td><td>no</td><td>Overwrite an existing file at <code>--path</code>.</td></tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
@@ -365,16 +388,23 @@
         <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
         <tbody>
           <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--input</td><td>yes</td><td>Path to the file to check.</td></tr>
-          <tr><td>--query</td><td>yes</td><td>Context query for retrieval. Determines which decisions are in scope.</td></tr>
-          <tr><td>--top</td><td>no</td><td>How many top decisions to retrieve. Defaults to the package default.</td></tr>
+          <tr><td>--input</td><td>yes</td><td>Path to the file to check. A filepath, not inline text &mdash; write generated content or a diff to a file first.</td></tr>
+          <tr><td>--query</td><td>yes</td><td>Provides retrieval context for relevance-scored decisions. Retrieval does not bound corpus-wide typed literal enforcement &mdash; those rules apply regardless of query relevance.</td></tr>
+          <tr><td>--target-path</td><td>no</td><td>Artifact path used for typed-rule path applicability when <code>--input</code> contains materialized or introduced content from another file (e.g. a hook checking staged edit content against the real target path).</td></tr>
+          <tr><td>--top</td><td>no</td><td>Size of the retrieval-gated tier: bounds how many decisions have their multi-term rules applied. Unambiguous literal rules are enforced across the whole corpus regardless (ADR-017).</td></tr>
           <tr><td>--mode</td><td>no</td><td><code>strict</code> (default) or <code>warn</code>. See <a href="#exit-codes">exit codes</a>.</td></tr>
+          <tr><td>--json</td><td>no</td><td>Emit a machine-readable verdict payload (<code>schema: mneme.check/v1</code>, includes <code>evaluation_complete</code>, per-rule applicability, and freshness) as the only stdout content. Exit codes unchanged.</td></tr>
+          <tr><td>--adr-dir</td><td>no</td><td>Directory of ADR markdown files checked for freshness drift. Warn-only diagnostics that never affect the exit code; defaults to <code>docs/adr</code>, skipped silently when absent.</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="callout">
       <p><strong>Mode semantics.</strong> <code>strict</code> exits non-zero on any violation, making it suitable as a merge gate. <code>warn</code> always exits zero, useful while a team is still shaping its decision corpus and does not want a noisy corpus to block work.</p>
+    </div>
+
+    <div class="callout">
+      <p><strong>Completeness and path diagnostics.</strong> A verdict is only trusted when the payload's <code>evaluation_complete</code> flag is true; an incomplete evaluation exits <code>2</code> and prints <code>Result: INCOMPLETE</code> rather than a verdict. Path-scoped typed rules also emit per-rule applicability lines (<code>PATH PASS/SKIP/UNKNOWN [decision_id] &hellip;</code>) showing how the target path resolved against the rule's selectors &mdash; an unresolvable path surfaces as <code>PATH_APPLICABILITY_UNKNOWN</code>, never as a silent pass. With <code>--json</code>, the same traces appear in the payload's <code>applicability</code> array.</p>
     </div>
   </section>
 
@@ -425,6 +455,34 @@
     </div>
   </section>
 
+  <!-- adr import -->
+  <section class="section" id="cmd-adr-import">
+    <h2>adr import</h2>
+    <p class="sub">Compile a directory of ADRs into the decision corpus.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme adr import</span><span class="ctag">Write</span></div>
+      <p class="cdesc">Parses every ADR markdown file in a directory (YAML frontmatter required), validates the corpus, resolves precedence, and writes compiled decisions into the target memory. Runs as a preview by default; nothing is written until <code>--apply</code>. Full walkthrough: <a href="/integrations/adr-import/">ADR import guide</a>.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme adr import docs/adr \
+    --memory .mneme/project_memory.json \
+    --dry-run
+<span class="cp">$</span> mneme adr import docs/adr \
+    --memory .mneme/project_memory.json \
+    --apply</pre>
+      <div class="flags-title">Arguments &amp; flags</div>
+      <table class="flags">
+        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>adr_dir</td><td>yes (positional)</td><td>Directory containing ADR markdown files.</td></tr>
+          <tr><td>--memory</td><td>yes</td><td>Path to the target <code>project_memory.json</code>.</td></tr>
+          <tr><td>--dry-run</td><td>no</td><td>Print the preview without writing (default).</td></tr>
+          <tr><td>--apply</td><td>no</td><td>Write imported decisions to <code>--memory</code>.</td></tr>
+          <tr><td>--update-existing</td><td>no</td><td>Allow same-id overwrite of existing decisions.</td></tr>
+          <tr><td>--approve-conflicts</td><td>no</td><td>Proceed with apply even if active-active contradictions exist.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
   <!-- exit codes -->
   <section class="section" id="exit-codes">
     <h2>Exit codes</h2>
@@ -436,8 +494,9 @@
         <thead><tr><th>Verdict</th><th>strict (default)</th><th>warn</th><th>Meaning</th></tr></thead>
         <tbody>
           <tr><td>PASS</td><td>0</td><td>0</td><td>No violations.</td></tr>
-          <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. Suggests friction but not a block in <code>warn</code> mode.</td></tr>
-          <tr><td>FAIL</td><td>2</td><td>0</td><td>Anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
+          <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. In <code>strict</code> mode the verdict stays WARN but the process exits non-zero; <code>warn</code> mode exits zero.</td></tr>
+          <tr><td>FAIL</td><td>2</td><td>0</td><td>Typed rule or anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
+          <tr><td>INCOMPLETE</td><td>2</td><td>2</td><td>Evaluation could not complete (<code>evaluation_complete: false</code>). Never reported as PASS &mdash; machine consumers should fail open on their own terms.</td></tr>
         </tbody>
       </table>
     </div>
@@ -448,7 +507,7 @@
         <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
         <tbody>
           <tr><td>0</td><td>All scenarios passed.</td></tr>
-          <tr><td>1</td><td>At least one scenario failed.</td></tr>
+          <tr><td>1</td><td>At least one scenario failed, or a benign scenario was blocked (<code>FALSE_POSITIVE</code>).</td></tr>
           <tr><td>2</td><td>Supplied <code>benchmarks_dir</code> is not a directory.</td></tr>
         </tbody>
       </table>
@@ -499,10 +558,11 @@ jobs:
     <div class="ci-block">
       <h3>Pre-commit &mdash; local warn-mode</h3>
       <p>Run in <code>warn</code> mode locally so the developer sees friction without blocking the commit. Pair with strict-mode CI for the actual gate.</p>
-<pre tabindex="0"><span class="cc"># .git/hooks/pre-commit</span>
+<pre tabindex="0"><span class="cc"># .git/hooks/pre-commit — --input expects a filepath, so write the diff first</span>
+<span class="cp">$</span> git diff --cached &gt; /tmp/mneme-staged.diff
 <span class="cp">$</span> mneme check \
     --memory .mneme/project_memory.json \
-    --input <span class="ck">"$(git diff --cached)"</span> \
+    --input /tmp/mneme-staged.diff \
     --query <span class="ck">"$(git log -1 --pretty=%B)"</span> \
     --mode warn</pre>
     </div>

@@ -229,7 +229,7 @@
         "name": "Import existing ADRs into Mneme HQ",
         "description": "Add a Constraints section to an ADR, run the import command, and verify enforcement with mneme check.",
         "step": [
-          {"@type": "HowToStep", "name": "Add a Constraints section", "text": "Add a ## Constraints block to any ADR with one or more FORBID_DEPENDENCY, FORBID_PATH, or REQUIRE_PATH directives."},
+          {"@type": "HowToStep", "name": "Add a Constraints section", "text": "Add a ## Constraints block to any ADR. FORBID_LITERAL is the canonical typed rule — exact, case-sensitive matching, with optional include_paths/exclude_paths applicability. Legacy FORBID_DEPENDENCY / FORBID_PATH / REQUIRE_PATH directives remain accepted."},
           {"@type": "HowToStep", "name": "Preview the import", "text": "Run mneme adr import docs/adr --memory .mneme/project_memory.json --dry-run to see the active decision set and parsed constraints without writing anything."},
           {"@type": "HowToStep", "name": "Apply the import", "text": "Run mneme adr import docs/adr --memory .mneme/project_memory.json --apply to write the compiled decisions to project memory."},
           {"@type": "HowToStep", "name": "Verify enforcement", "text": "Run mneme check against a file that violates a constraint. A WARN verdict confirms the guardrail is active."}
@@ -294,7 +294,7 @@
 
     <p>Most teams have ADRs. They sit in <code>docs/adr/</code>, written in good faith, referenced in onboarding, and then quietly ignored by every AI coding agent that touches the codebase. The agent has no access to them, no enforcement against them, and no way to know when code it generates violates a decision the team already made.</p>
 
-    <p><code>mneme adr import</code> closes that gap without requiring you to rewrite your ADRs or adopt a new format. Add a single section to flag machine-readable constraints, run the import, and those decisions enter the same enforcement pipeline as any other Mneme rule. Mneme catches the violation before it lands in review.</p>
+    <p><code>mneme adr import</code> closes that gap without requiring you to rewrite your ADRs or adopt a new format. Add a single section to flag machine-readable constraints, run the import, and those decisions enter the same enforcement pipeline as any other Mneme rule &mdash; applied at whichever workflow boundary your integration supports, from pre-mutation prevention to the CI gate.</p>
 
     <h2>Step 1: add a Constraints section</h2>
 
@@ -314,45 +314,68 @@ These must never be conflated in code-bearing surfaces.
 
 ## Constraints
 
-- FORBID_DEPENDENCY: MnemeHQ
-- FORBID_PATH: site/use-cases/**/Mneme HQ*</code></pre>
+- FORBID_LITERAL: pip install mneme</code></pre>
+
+    <p>The canonical, mechanically enforced directive is <strong><code>FORBID_LITERAL</code></strong>. Its value is matched as an exact, case-sensitive token sequence &mdash; no stemming, no synonyms, no regex. When a checked artifact contains the literal, the verdict is a deterministic FAIL.</p>
+
+    <h3>Typed rules with path applicability</h3>
+
+    <p>Where a rule applies is a separate question from what it matches. The structured form attaches explicit path selectors to the same typed rule:</p>
+
+    <pre tabindex="0"><code>## Constraints
+
+- FORBID_LITERAL:
+    value: install legacy-client
+    include_paths:
+      - "**/*.md"
+    exclude_paths:
+      - "docs/history/**"</code></pre>
+
+    <p><code>include_paths</code>/<code>exclude_paths</code> determine applicability only &mdash; they never loosen the exact-match semantics. Every check reports how each scoped rule resolved against the real target path, so you can see which rules applied, which were skipped, and why. Rules without selectors stay corpus-wide.</p>
 
     <div class="callout">
       <p><strong>YAML frontmatter is required.</strong> Nygard-style <code>**Status:** Accepted</code> headers are not parsed. Adding a 6-line frontmatter block per file is a one-time, scriptable conversion.</p>
     </div>
 
-    <p>Three directive kinds are supported:</p>
+    <h3>Legacy directives</h3>
+
+    <p>Three older directive kinds are still accepted for compatibility. They compile into decision constraints that feed retrieval guidance and audit visibility &mdash; but they are not typed rules and do not by themselves produce deterministic verdicts:</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="comparison-table">
       <thead>
         <tr>
-          <th>Directive</th>
-          <th>What it does</th>
-          <th>Enforced by <code>mneme check</code>?</th>
+          <th>Directive (legacy)</th>
+          <th>What it compiles to</th>
+          <th>Deterministically enforced?</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>FORBID_DEPENDENCY: X</td>
-          <td>Stored as <code>"no X"</code> in decision constraints</td>
-          <td>Yes &mdash; triggers WARN</td>
+          <td>Stored as <code>"no X"</code> in decision constraints (retrieval-gated heuristic)</td>
+          <td>No &mdash; guidance only</td>
         </tr>
         <tr>
           <td>FORBID_PATH: glob</td>
-          <td>Stored for visibility and audit</td>
-          <td>No (path enforcement is a follow-on)</td>
+          <td>Stored verbatim for visibility and audit</td>
+          <td>No</td>
         </tr>
         <tr>
           <td>REQUIRE_PATH: glob</td>
-          <td>Stored for visibility and audit</td>
-          <td>No (path enforcement is a follow-on)</td>
+          <td>Stored verbatim for visibility and audit</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>FORBID_LITERAL: value</td>
+          <td>A typed rule with exact semantics</td>
+          <td><strong>Yes</strong> &mdash; corpus-wide FAIL</td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <p>Unknown directive kinds raise a parse error rather than being silently dropped &mdash; a typo should not defeat governance.</p>
+    <p>New policies should author <code>FORBID_LITERAL</code> first. Unknown directive kinds raise a parse error rather than being silently dropped &mdash; a typo should not defeat governance.</p>
 
     <h2>Step 2: preview the import</h2>
 
@@ -369,7 +392,7 @@ Active set (4 ADRs):
   [ADR-001] status=active
       (no ## Constraints directives)
   [ADR-005] status=active
-      constraint: no MnemeHQ
+      rule: FORBID_LITERAL "pip install mneme"
       constraint: FORBID_PATH site/use-cases/**/Mneme HQ*</code></pre>
 
     <p>ADRs with status <code>proposed</code>, <code>deprecated</code>, or <code>superseded</code> are excluded from the active set. Explicit supersession via the <code>supersedes</code> frontmatter field is handled silently. Active-active contradictions (two accepted ADRs sharing the same scope, priority, and date) surface as diagnostics and block the apply step until resolved.</p>
@@ -386,24 +409,26 @@ Active set (4 ADRs):
 
     <h2>Step 4: verify enforcement</h2>
 
-    <p>Once imported, decisions enter the existing <code>MemoryStore &rarr; DecisionRetriever &rarr; check_prompt</code> pipeline without any changes to those components.</p>
+    <p>Once imported, typed rules enter the <code>MemoryStore &rarr; DecisionRetriever &rarr; check_prompt</code> pipeline unchanged &mdash; and unlike legacy constraints, they are enforced corpus-wide: the query does not need to retrieve the decision for the rule to fire.</p>
 
     <pre tabindex="0"><code>mneme check \
   --memory .mneme/project_memory.json \
-  --input agent-output.py \
-  --query "Python package imports code namespace" \
-  --mode warn</code></pre>
+  --input agent-output.sh \
+  --query "local development setup"</code></pre>
 
-    <p>If <code>agent-output.py</code> contains <code>from MnemeHQ.memory_store import MemoryStore</code>:</p>
+    <p>If <code>agent-output.sh</code> contains <code>pip install mneme</code>:</p>
 
-    <pre tabindex="0"><code>WARN  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
+    <pre tabindex="0"><code>FAIL  [ADR-005] FORBID_LITERAL "pip install mneme" -- trigger: pip install mneme
       Brand vs Package Namespace Enforcement
 
-Result: WARN</code></pre>
+Result: FAIL</code></pre>
 
-    <p>The correct import path passes cleanly:</p>
+    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH PASS / SKIP / UNKNOWN</code> lines), so scoped policies stay explainable:</p>
 
-    <pre tabindex="0"><code>Result: PASS</code></pre>
+    <pre tabindex="0"><code>PATH SKIP   [ADR-009] docs/history/** excluded by selector
+Result: PASS</code></pre>
+
+    <p>The same input without the forbidden literal passes cleanly with <code>Result: PASS</code>.</p>
 
     <h2>Conflict handling</h2>
 
@@ -413,7 +438,7 @@ Result: WARN</code></pre>
 
     <h2>Dogfooding</h2>
 
-    <p>Mneme HQ enforces its own ADRs this way. The <code>docs/adr/</code> directory in the public repo contains the team's architectural decisions, and <code>ADR-005</code> (namespace enforcement) is imported into the project's live memory. When an AI-assisted task generates code using the wrong package namespace, Mneme catches it before it lands in review.</p>
+    <p>Mneme HQ enforces its own ADRs this way. The <code>docs/adr/</code> directory in the public repo contains the team's architectural decisions, and <code>ADR-005</code> (namespace enforcement) is imported into the project's live memory with its <code>FORBID_LITERAL</code> typed rule active. When an AI-assisted task generates content using the wrong package namespace, Mneme catches it deterministically.</p>
 
     <p>The runnable demo is at <code>examples/demo-adr-import.py</code> in the repo. It imports the ADR corpus, applies it to a fresh memory file, and shows the WARN and PASS verdicts end-to-end.</p>
 

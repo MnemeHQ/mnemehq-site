@@ -64,6 +64,7 @@
           {"@type": "WebPage", "name": "VS Code", "url": "https://mnemehq.com/integrations/vscode/"},
           {"@type": "WebPage", "name": "Warp", "url": "https://mnemehq.com/integrations/warp/"},
           {"@type": "WebPage", "name": "OpenCode", "url": "https://mnemehq.com/integrations/opencode/"},
+          {"@type": "WebPage", "name": "Hermes Agent", "url": "https://mnemehq.com/integrations/hermes/"},
           {"@type": "WebPage", "name": "Perplexity Enterprise", "url": "https://mnemehq.com/integrations/perplexity/"},
           {"@type": "WebPage", "name": "Microsoft Agent Forge", "url": "https://mnemehq.com/integrations/microsoft-agent-forge/"}
         ]
@@ -308,7 +309,7 @@
 
   <section class="layer">
     <div class="layer-head"><span class="layer-num">04</span><h2>Experimental and planned</h2></div>
-    <p class="layer-desc">Nothing here ships today. Experimental means code exists behind a PR or validation is incomplete; planned means design work only.</p>
+    <p class="layer-desc">Nothing here carries production support yet. Experimental means code exists and specific boundaries are tested, but validation or coverage remains incomplete; planned means design work only.</p>
     <div class="layer-grid">
       <a class="int-card muted" href="/integrations/opencode/">
         <div class="int-status">Experimental</div>
@@ -320,11 +321,11 @@
         <h3>Kiro</h3>
         <p>Bounded PreToolUse hook adapter, contract-tested, pending review and merge.</p>
       </a>
-      <div class="int-card muted">
-        <div class="int-status">Plugin POC planned</div>
+      <a class="int-card muted" href="/integrations/hermes/">
+        <div class="int-status">Experimental</div>
         <h3>Hermes Agent</h3>
-        <p>Open-source CLI agent with a documented plugin contract: <code>pre_tool_call</code> can block execution, <code>pre_llm_call</code> injects decision context. Both Mneme boundaries map directly.</p>
-      </div>
+        <p>Context injection and pre-tool enforcement for supported mutations. Experimental against Hermes Agent 0.19.0; shell/process bypasses remain and no blocking Stop-equivalent is available.</p>
+      </a>
       <div class="int-card muted">
         <div class="int-status">Middleware POC planned</div>
         <h3>Deep Agents</h3>

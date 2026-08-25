@@ -158,7 +158,7 @@
 <main id="main-content" tabindex="-1">
 
 <div class="answer-capsule">
-  <strong>Mneme HQ</strong> provides architectural governance for AI-assisted development across languages, frameworks, and infrastructure ecosystems. The governance layer is language-agnostic by design; depth varies by ecosystem &mdash; deepest in Python, operationally strong in TypeScript and JavaScript, repo-level for Go, Java, C#, and Rust, and extended to frameworks (FastAPI, Spring Boot) and infrastructure as code (Terraform) through the same repo-native rules.
+  <strong>Mneme's deterministic rule engine is language-agnostic.</strong> It enforces exact, case-sensitive literal rules with optional path scoping over any text or code artifact. What varies by ecosystem is everything else: which integrations can carry enforcement into a workflow (see the <a href="/integrations/" style="color:var(--accent);text-decoration:none;">integration matrix</a>), and how much AST-, compiler-, or framework-aware semantics exists on top (today: none &mdash; that depth is roadmap, not shipped).
 </div>
 
 <section class="hero">
@@ -169,83 +169,83 @@
 
 <div class="wrap">
 
-  <h2 class="group-title">Strongest coverage</h2>
-  <p class="group-lede">Where Mneme has native runtime depth, benchmark coverage, and worked examples. These are the languages with the heaviest AI coding adoption and the easiest architectural drift demos.</p>
+<h2 class="group-title">Strongest coverage</h2>
+    <p class="group-lede">Where Mneme has native runtime depth, benchmark coverage, and worked examples. These are the languages with the heaviest AI coding adoption and the easiest architectural drift demos.</p>
 
-  <div class="lang-grid">
-    <a class="lang-card tier-1" href="/supported-languages/python-governance/">
-      <div class="lh"><span class="lname">Python</span><span class="ltag">Tier 1 &middot; production-grade</span></div>
-      <p>Native CLI, real benchmark coverage, dogfooded in production repos. Backend services, FastAPI / Django / Flask, AI/ML pipelines, CLI tooling.</p>
-      <span class="read">Python governance &rarr;</span>
-    </a>
-    <a class="lang-card tier-1" href="/supported-languages/typescript-governance/">
-      <div class="lh"><span class="lname">TypeScript</span><span class="ltag">Tier 1 &middot; operationally supported</span></div>
-      <p>React, Next.js, Node.js. Architectural boundary enforcement, forbidden-dependency checks, agent-workflow governance. Semantic/AST depth is roadmap.</p>
-      <span class="read">TypeScript governance &rarr;</span>
-    </a>
-    <a class="lang-card tier-1" href="/supported-languages/javascript-governance/">
-      <div class="lh"><span class="lname">JavaScript</span><span class="ltag">Tier 1 &middot; operationally supported</span></div>
-      <p>Vanilla JS, Node.js backends, legacy React/Vue codebases. Same repository-level governance as TypeScript without type-system assumptions.</p>
-      <span class="read">JavaScript governance &rarr;</span>
-    </a>
-  </div>
-
-  <h2 class="group-title">Compatible via repo-level governance</h2>
-  <p class="group-lede">Compatible today through architectural, dependency, and workflow rules &mdash; without ecosystem-specific policy packs yet. Roadmap items where benchmark coverage and demand justify the depth.</p>
-
-  <div class="lang-grid">
-    <div class="lang-card tier-2 passive">
-      <div class="lh"><span class="lname">Go</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
-      <p>cmd/, internal/, pkg/ boundaries. go.mod allow-listing. ADR enforcement. CI workflow governance.</p>
-      <span class="read">See full matrix &rarr;</span>
+    <div class="lang-grid">
+      <a class="lang-card tier-1" href="/supported-languages/python-governance/">
+        <div class="lh"><span class="lname">Python</span><span class="ltag">Tier 1 &middot; production-grade</span></div>
+        <p>Native CLI, real benchmark coverage, dogfooded in production repos. Backend services, FastAPI / Django / Flask, AI/ML pipelines, CLI tooling.</p>
+        <span class="read">Python governance &rarr;</span>
+      </a>
+      <a class="lang-card tier-1" href="/supported-languages/typescript-governance/">
+        <div class="lh"><span class="lname">TypeScript</span><span class="ltag">Tier 1 &middot; operationally supported</span></div>
+        <p>Exact literal rules with path scoping (forbidden imports, banned APIs), plus retrieval guidance from recorded decisions. Semantic/AST depth is roadmap.</p>
+        <span class="read">TypeScript governance &rarr;</span>
+      </a>
+      <a class="lang-card tier-1" href="/supported-languages/javascript-governance/">
+        <div class="lh"><span class="lname">JavaScript</span><span class="ltag">Tier 1 &middot; operationally supported</span></div>
+        <p>Vanilla JS, Node.js backends, legacy React/Vue codebases. Same repository-level governance as TypeScript without type-system assumptions.</p>
+        <span class="read">JavaScript governance &rarr;</span>
+      </a>
     </div>
-    <div class="lang-card tier-2 passive">
-      <div class="lh"><span class="lname">Java</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
-      <p>Layered architecture rules (controller / service / repository). Repo-level governance. CI integration. Spring-aware packs are roadmap.</p>
-      <span class="read">See full matrix &rarr;</span>
-    </div>
-    <div class="lang-card tier-2 passive">
-      <div class="lh"><span class="lname">C#</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
-      <p>.NET solution layout, namespace rules, NuGet allow-listing. Roslyn-assisted depth is roadmap.</p>
-      <span class="read">See full matrix &rarr;</span>
-    </div>
-    <div class="lang-card tier-2 passive">
-      <div class="lh"><span class="lname">Rust</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
-      <p>Workspace and crate-level rules. Architectural enforcement. AI agent governance. Clippy/rustc-assisted depth is roadmap.</p>
-      <span class="read">See full matrix &rarr;</span>
-    </div>
-  </div>
 
-  <h2 class="group-title">Frameworks &amp; ecosystems</h2>
-  <p class="group-lede">Framework-level governance pages. The same repo-native decision corpus, focused on the architectural surface of a specific ecosystem &mdash; no bespoke parser or framework plugin required.</p>
+<h2 class="group-title">Compatible via repo-level governance</h2>
+    <p class="group-lede">Compatible today through exact literal and path-scoped rules plus retrieval guidance &mdash; no ecosystem-specific policy packs yet. Roadmap items where benchmark coverage and demand justify the depth.</p>
 
-  <div class="lang-grid">
-    <a class="lang-card eco" href="/supported-languages/fastapi-governance/">
-      <div class="lh"><span class="lname">FastAPI</span><span class="ltag">Python ecosystem &middot; repo-native</span></div>
-      <p>Router, service, repository, and schema boundaries. Thin route handlers, dependency-injection discipline, and consistent auth dependencies in fast-moving Python APIs.</p>
-      <span class="read">FastAPI governance &rarr;</span>
-    </a>
-    <a class="lang-card eco" href="/supported-languages/spring-boot-governance/">
-      <div class="lh"><span class="lname">Spring Boot</span><span class="ltag">JVM ecosystem &middot; repo-native</span></div>
-      <p>Controller, service, repository, and domain boundaries. Approved starters, transaction boundaries, and Spring Security and Actuator policy across enterprise Java.</p>
-      <span class="read">Spring Boot governance &rarr;</span>
-    </a>
-  </div>
+    <div class="lang-grid">
+      <div class="lang-card tier-2 passive">
+        <div class="lh"><span class="lname">Go</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
+        <p>cmd/, internal/, pkg/ boundaries via path-scoped rules; forbidden imports and commands as exact literals. go.mod-aware depth is roadmap.</p>
+        <span class="read">See full matrix &rarr;</span>
+      </div>
+      <div class="lang-card tier-2 passive">
+        <div class="lh"><span class="lname">Java</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
+        <p>Path-scoped rules over controller/service/repository layouts; banned APIs and packages as exact literals. Spring-aware semantic packs are roadmap.</p>
+        <span class="read">See full matrix &rarr;</span>
+      </div>
+      <div class="lang-card tier-2 passive">
+        <div class="lh"><span class="lname">C#</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
+        <p>.NET solution layout via path scoping; namespace and package rules as exact literals. Roslyn-assisted depth is roadmap.</p>
+        <span class="read">See full matrix &rarr;</span>
+      </div>
+      <div class="lang-card tier-2 passive">
+        <div class="lh"><span class="lname">Rust</span><span class="ltag">Tier 2 &middot; repo-level</span></div>
+        <p>Workspace and crate paths via path-scoped rules; forbidden crates/APIs as exact literals. Clippy/rustc-assisted depth is roadmap.</p>
+        <span class="read">See full matrix &rarr;</span>
+      </div>
+    </div>
+
+    <h2 class="group-title">Frameworks & ecosystems</h2>
+    <p class="group-lede">Framework-level governance pages. The same repo-native decision corpus, focused on the architectural surface of a specific ecosystem &mdash; policies expressible as literal/path rules and retrieval guidance; no framework-aware analysis today.</p>
+
+<div class="lang-grid">
+      <a class="lang-card eco" href="/supported-languages/fastapi-governance/">
+        <div class="lh"><span class="lname">FastAPI</span><span class="ltag">Python ecosystem &middot; repo-native</span></div>
+        <p>Policies expressible as exact literal rules and path scoping over router/service/repository/schema layers. Thin route handlers, dependency-injection discipline, and consistent auth dependencies as recorded decisions.</p>
+        <span class="read">FastAPI governance &rarr;</span>
+      </a>
+      <a class="lang-card eco" href="/supported-languages/spring-boot-governance/">
+        <div class="lh"><span class="lname">Spring Boot</span><span class="ltag">JVM ecosystem &middot; repo-native</span></div>
+        <p>Policies expressible as exact literal rules and path scoping over controller/service/repository/domain layers. Approved starters, transaction boundaries, and Spring Security/Actuator policy as recorded decisions.</p>
+        <span class="read">Spring Boot governance &rarr;</span>
+      </a>
+    </div>
 
   <h2 class="group-title">Infrastructure as code</h2>
   <p class="group-lede">Agents don't only modify application code &mdash; they modify the infrastructure and configuration where architectural decisions become operational reality. Governed through the same repo-native corpus.</p>
 
   <div class="lang-grid">
-    <a class="lang-card eco" href="/supported-languages/terraform-governance/">
-      <div class="lh"><span class="lname">Terraform</span><span class="ltag">Infrastructure as code &middot; repo-native</span></div>
-      <p>Approved modules over direct resources, provider and region constraints, network-exposure and encryption rules, and protected state-backend and locking configuration.</p>
-      <span class="read">Terraform governance &rarr;</span>
-    </a>
+<a class="lang-card eco" href="/supported-languages/terraform-governance/">
+        <div class="lh"><span class="lname">Terraform</span><span class="ltag">Infrastructure as code &middot; repo-native</span></div>
+        <p>Policies expressible as exact literal rules and path scoping over approved modules, providers, regions, and protected configurations. Network-exposure and encryption rules as recorded decisions.</p>
+        <span class="read">Terraform governance &rarr;</span>
+      </a>
   </div>
 
-  <div class="compat-strip">
-    <p><strong>Integration-based compatibility.</strong> Mneme operates above the model and runtime layer. Any workflow using Claude Code, Cursor, GitHub Copilot, custom agent frameworks (LangGraph, AutoGen, CrewAI, OpenAI Agents SDK), or a CI pipeline inherits governance support &mdash; regardless of underlying language. See <a href="/works-with/" style="color:var(--accent);text-decoration:none;">Works With</a> for the full surface.</p>
-  </div>
+<div class="compat-strip">
+      <p><strong>Integration support and language semantics are separate questions.</strong> Mneme's deterministic rule engine works across any text or code language. <a href="/integrations/" style="color:var(--accent);text-decoration:none;">The integration matrix</a> documents which agent surfaces enforce the corpus today. AST-, compiler-, and framework-aware semantics are not currently provided &mdash; that depth is roadmap, not shipped.</p>
+    </div>
 
   <div class="position-block">
     <div class="pb-eyebrow">Strategic positioning</div>
