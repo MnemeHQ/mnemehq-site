@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Transparent pricing for Mneme HQ. Free and open-source for developers, complimentary guided pilots for engineering teams, and custom enterprise governance." />
+  <meta name="description" content="Mneme HQ pricing: free and open-source (MIT) for developers, plus a complimentary guided pilot for engineering teams. No commercial tiers yet." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/pricing/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Pricing — Deterministic AI Coding Governance | Mneme HQ" />
-  <meta property="og:description" content="Transparent pricing for Mneme HQ. Free and open-source for developers, complimentary guided pilots for engineering teams, and custom enterprise governance." />
+  <meta property="og:description" content="Mneme HQ pricing: free and open-source (MIT) for developers, plus a complimentary guided pilot for engineering teams. No commercial tiers yet." />
   <meta property="og:url" content="https://mnemehq.com/pricing/" />
   <meta property="og:image" content="https://mnemehq.com/pricing/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Pricing — Deterministic AI Coding Governance | Mneme HQ" />
-  <meta name="twitter:description" content="Transparent pricing for Mneme HQ. Free and open-source for developers, complimentary guided pilots for engineering teams, and custom enterprise governance." />
+  <meta name="twitter:description" content="Mneme HQ pricing: free and open-source (MIT) for developers, plus a complimentary guided pilot for engineering teams. No commercial tiers yet." />
   <meta name="twitter:image" content="https://mnemehq.com/pricing/og.png" />
 
   <!-- Consent defaults -->
@@ -154,7 +154,7 @@
             "name": "What can an Enterprise engagement include?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Enterprise scope is defined with each team and can include dedicated engineering support, private tool integration work, and multi-repository CI gate rollout. Centralized governance, organization-wide reporting, SSO, and cross-team audit trails remain roadmap capabilities."
+              "text": "No commercial enterprise tier exists yet. Enterprise-scale needs will be defined with pilot partners once the commercial model takes shape. Today, large organizations use the open-source core and can apply for the complimentary guided pilot."
             }
           },
           {
@@ -266,8 +266,8 @@
     .card-features li strong { color: var(--text); font-weight: 500; }
 
     .btn-card { display: block; text-align: center; padding: 0.75rem 1.25rem; border-radius: 8px; font-size: 0.86rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s, border-color 0.15s, color 0.15s; }
-    .btn-card-primary { background: var(--accent); color: #0c0c0d; }
-    .btn-card-primary:hover { background: var(--accent-dim); }
+.btn-card-primary { background: var(--action, #ea735e); color: #0c0c0d; }
+.btn-card-primary:hover { background: var(--action-dim, #c95a46); }
     .btn-card-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); }
     .btn-card-secondary:hover { border-color: var(--text); }
 
@@ -349,8 +349,8 @@
 <main id="main-content" class="container">
   <header class="pricing-hero">
     <div class="eyebrow">Pricing &amp; Tiers</div>
-    <h1>Transparent pricing for deterministic AI coding governance</h1>
-    <p>Open-source core for local developer workflows. Guided pilots and enterprise governance for engineering organizations scaling AI coding agents.</p>
+    <h1>Open source now. A complimentary validation pilot for teams.</h1>
+    <p>Mneme is MIT-licensed and self-hosted — install it any time. Teams evaluating it across real repositories can apply for a complimentary guided pilot. The commercial model will be defined later, together with pilot partners.</p>
   </header>
 
   <section class="pricing-grid" aria-label="Pricing tiers">
@@ -385,7 +385,7 @@
           <span>Community support &amp; GitHub discussions</span>
         </li>
       </ul>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-card btn-card-secondary" target="_blank" rel="noopener">Install via GitHub</a>
+      <a href="/docs/#quickstart" class="btn-card btn-card-secondary" data-cta-intent="install" data-cta-position="mid" data-cta-component="pricing_card">Install Mneme</a>
     </article>
 
     <!-- Pilot Program -->
@@ -420,33 +420,20 @@
           <span><strong>Architectural drift analysis</strong> on existing PRs</span>
         </li>
       </ul>
-      <a href="/pilot/" class="btn-card btn-card-primary">Request a pilot</a>
+      <a href="/pilot/" class="btn-card btn-card-primary" data-cta-intent="pilot" data-cta-position="mid" data-cta-component="pricing_card">Request a drift audit</a>
     </article>
 
-    <!-- Enterprise -->
+    <!-- Enterprise: roadmap, not a tier -->
     <article class="pricing-card">
       <div class="card-tier">Large Organizations</div>
-      <h2 class="card-title">Enterprise</h2>
+      <h2 class="card-title">Enterprise &mdash; later</h2>
       <div class="card-price">
-        <span class="amount">Custom</span>
-        <span class="detail">talk to our engineering team</span>
+        <span class="amount">TBD</span>
+        <span class="detail">defined with pilot partners</span>
       </div>
-      <p class="card-desc">For organizations requiring cross-repo governance, dedicated support SLAs, and private agent integrations.</p>
+      <p class="card-desc">No commercial enterprise tier exists yet. Cross-repo governance, support SLAs, and private integrations are on the roadmap and will be shaped by what pilot teams actually need.</p>
       <ul class="card-features">
-        <li class="subhead">Currently Available</li>
-        <li>
-          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-          <span><strong>Custom architectural rules</strong> &amp; precedence schemas</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-          <span><strong>Multi-repo CI/CD gating</strong> &amp; automated checks</span>
-        </li>
-        <li>
-          <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
-          <span><strong>Dedicated engineering support</strong> &amp; custom engagement scope</span>
-        </li>
-        <li class="subhead">Enterprise Roadmap</li>
+        <li class="subhead">Roadmap &mdash; not available today</li>
         <li>
           <span class="roadmap-icon" aria-hidden="true">&rarr;</span>
           <span>Organization-wide governance controls</span>
@@ -459,8 +446,17 @@
           <span class="roadmap-icon" aria-hidden="true">&rarr;</span>
           <span>Architectural audit trails across teams</span>
         </li>
+        <li class="subhead">Today, enterprise-scale teams use</li>
+        <li>
+          <span class="roadmap-icon" aria-hidden="true">&rarr;</span>
+          <span>The open-source core, self-hosted</span>
+        </li>
+        <li>
+          <span class="roadmap-icon" aria-hidden="true">&rarr;</span>
+          <span>The complimentary guided pilot</span>
+        </li>
       </ul>
-      <a href="/contact/" class="btn-card btn-card-secondary">Talk to us</a>
+      <a href="/pilot/" class="btn-card btn-card-secondary" data-cta-intent="pilot" data-cta-position="mid" data-cta-component="pricing_card">Start with a pilot</a>
     </article>
   </section>
 
@@ -477,7 +473,7 @@
             <th>Capability</th>
             <th>Community</th>
             <th>Pilot Program</th>
-            <th>Enterprise</th>
+            <th>Enterprise (roadmap)</th>
           </tr>
         </thead>
         <tbody>
@@ -600,7 +596,7 @@
       <details class="faq-item">
         <summary>What can an Enterprise engagement include?</summary>
         <div class="faq-body">
-          <p>Enterprise scope is defined with each team and can include dedicated engineering support, private tool integration work, and multi-repository CI gate rollout. Centralized governance, organization-wide reporting, SSO, and cross-team audit trails remain roadmap capabilities. <a href="/contact/">Talk to us</a> to define an engagement for your organization.</p>
+          <p>No commercial enterprise tier exists yet. Enterprise-scale needs — dedicated support, private tool integration work, multi-repository CI gate rollout — will be defined with pilot partners once the commercial model takes shape. Today, large organizations use the open-source core and can apply for the <a href="/pilot/">complimentary guided pilot</a>.</p>
         </div>
       </details>
       <details class="faq-item">

@@ -295,13 +295,36 @@
     }
 
     /* ── FIT LIST ── */
+    .pilot-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 5fr) 8fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .pilot-grid { grid-template-columns: 1fr; }
+    }
     .fit-section {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 1.5rem 1.75rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 0;
+      position: sticky;
+      top: 90px;
     }
+    @media (max-width: 900px) {
+      .fit-section { position: static; margin-bottom: 2rem; }
+    }
+    .fit-callout {
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .fit-callout strong { color: var(--text); font-weight: 500; }
     .fit-section-label {
       font-size: 0.7rem;
       letter-spacing: 0.08em;
@@ -412,18 +435,19 @@
       flex-wrap: wrap;
     }
     .btn-submit {
-      background: var(--accent);
+      background: var(--action, #ea735e);
       color: #0c0c0d;
       border: none;
       border-radius: 8px;
-      padding: 0.7rem 1.75rem;
+      padding: 0.85rem 1.75rem;
       font-family: 'DM Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 500;
+      font-size: 0.875rem;
+      font-weight: 600;
       cursor: pointer;
       transition: background 0.15s;
     }
-    .btn-submit:hover { background: var(--accent-dim); }
+    .btn-submit:hover { background: var(--action-dim, #c95a46); }
+    .btn-submit:focus-visible { outline: 2px solid var(--action, #ea735e); outline-offset: 3px; }
     .submit-note {
       font-size: 0.76rem;
       color: var(--muted);
@@ -559,6 +583,8 @@
   <h1>Request a Mneme Pilot</h1>
   <p class="page-sub">Mneme is currently working with engineering teams using AI coding tools who need deterministic architectural governance across repositories, ADRs, and agent workflows.</p>
 
+  <div class="pilot-grid">
+
   <div class="fit-section">
     <div class="fit-section-label">Good-fit pilots usually involve</div>
     <ul class="fit-list">
@@ -567,12 +593,13 @@
       <li>Architectural drift, review delays, or consistency issues appearing in AI-generated code</li>
       <li>Platform, backend, infrastructure, or data-heavy systems with non-trivial architectural constraints</li>
     </ul>
+    <div class="fit-callout"><strong>20-minute fit call.</strong> Complimentary for qualified teams. We respond within 1&ndash;2 business days.</div>
   </div>
 
   <div class="pilot-form-wrap">
     <div class="form-heading">Tell us about your team</div>
 
-    <form class="field-group" id="pilot-form" method="POST" action="https://formspree.io/f/meennlwj">
+    <form class="field-group" id="pilot-form" method="POST" action="https://formspree.io/f/meennlwj" novalidate>
 
       <div class="field-row">
         <div class="field">
@@ -591,9 +618,9 @@
           <input type="text" id="pilot-company" name="company" placeholder="Company or org name" autocomplete="organization" required />
         </div>
         <div class="field">
-          <label for="pilot-team-type">Team type<span class="req" aria-hidden="true"> *</span></label>
-          <select id="pilot-team-type" name="team_type" required>
-            <option value="" disabled selected>Select…</option>
+          <label for="pilot-team-type">Team type <span style="color:var(--muted);font-weight:400;">(optional)</span></label>
+          <select id="pilot-team-type" name="team_type">
+            <option value="" selected>Select…</option>
             <option value="platform">Platform engineering / IDP</option>
             <option value="data">Backend / data platform / infrastructure</option>
             <option value="ai-native">AI-native product engineering</option>
@@ -604,19 +631,19 @@
       </div>
 
       <div class="field">
-        <label for="pilot-tools">AI coding tools your team uses</label>
+        <label for="pilot-tools">AI coding tools your team uses <span style="color:var(--muted);">(optional)</span></label>
         <input type="text" id="pilot-tools" name="tools" placeholder="e.g. Cursor, Claude Code, Copilot, custom agents…" />
       </div>
 
       <div class="field">
-        <label for="pilot-challenge">What governance challenge are you trying to solve?</label>
-        <textarea id="pilot-challenge" name="challenge" placeholder="Describe the architectural drift, review delays, or consistency problem you're dealing with…"></textarea>
-        <span class="field-hint">No minimum length — a sentence is fine.</span>
+        <label for="pilot-challenge">Describe one architectural rule AI agents keep breaking<span class="req" aria-hidden="true"> *</span></label>
+        <textarea id="pilot-challenge" name="challenge" placeholder="e.g. “Data access must go through the service boundary” — agents keep importing the data platform client directly." required></textarea>
+        <span class="field-hint">No minimum length — a sentence is fine. This becomes the first rule we enforce together.</span>
       </div>
 
       <div class="submit-row">
         <button type="submit" class="btn-submit" id="pilot-submit">Submit pilot request</button>
-        <span class="submit-note">We respond within 1–2 business days.<br>Not sure if you fit? <a href="/for/" style="color: var(--muted); text-decoration: underline; text-decoration-color: var(--border2);">See who Mneme is for →</a></span>
+        <span class="submit-note">20-minute fit call &middot; complimentary for qualified teams &middot; we respond within 1&ndash;2 business days.<br>Not sure if you fit? <a href="/for/" style="color: var(--muted); text-decoration: underline; text-decoration-color: var(--border2);">See who Mneme is for →</a></span>
       </div>
 
     </form>
@@ -629,6 +656,8 @@
       <div style="font-family:'DM Mono',monospace;font-size:0.82rem;color:#ff7070;margin-bottom:0.4rem;">Submission failed</div>
       <p style="font-size:0.88rem;color:var(--muted);margin:0;line-height:1.6;">Something went wrong. Please email <a href="mailto:theo@mnemehq.com" style="color:var(--accent);">theo@mnemehq.com</a> directly.</p>
     </div>
+  </div>
+
   </div>
 
   <section class="faq-section">
@@ -814,8 +843,28 @@
   var success = document.getElementById('pilot-success');
   var error = document.getElementById('pilot-error');
   if (!form) return;
+
+  function track(event, extra){
+    var payload = { event: event, page_type: 'pilot', form_id: 'pilot-form' };
+    if (extra) for (var k in extra) payload[k] = extra[k];
+    (window.dataLayer = window.dataLayer || []).push(payload);
+  }
+
+  var started = false;
+  form.addEventListener('focusin', function(){
+    if (started) return;
+    started = true;
+    track('form_start');
+  }, true);
+
   form.addEventListener('submit', function(e){
     e.preventDefault();
+    if (!form.checkValidity()) {
+      track('form_error', { error_type: 'validation' });
+      form.reportValidity();
+      return;
+    }
+    track('form_submit');
     btn.disabled = true;
     btn.textContent = 'Submitting…';
     error.style.display = 'none';
@@ -828,6 +877,7 @@
         form.style.display = 'none';
         success.style.display = 'block';
         success.focus();
+        track('form_success');
         window.gtag = window.gtag || function(){(window.dataLayer = window.dataLayer||[]).push(arguments);};
         window.gtag('event', 'pilot_form_submitted');
       } else {
@@ -836,6 +886,7 @@
         });
       }
     }).catch(function(){
+      track('form_error', { error_type: 'network' });
       btn.disabled = false;
       btn.textContent = 'Submit pilot request';
       error.style.display = 'block';
