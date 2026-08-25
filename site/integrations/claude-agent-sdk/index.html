@@ -411,19 +411,18 @@ options = ClaudeAgentOptions(
 
     <p>Pre-execution checks stop violations before they land. Post-execution verification catches what slipped through &mdash; partial matches, composite violations, or changes that look compliant per-file but drift when read as a whole. Run a verification pass after your agent workflow completes:</p>
 
-    <pre tabindex="0"><code>import subprocess, json, pathlib
+    <pre tabindex="0"><code>import subprocess, json, sys
 
 def verify_outputs(changed_files: list[str]) -> list[dict]:
     violations = []
     for path in changed_files:
-        content = pathlib.Path(path).read_text()
         result = subprocess.run(
             ["mneme", "check",
              "--memory", ".mneme/project_memory.json",
              "--input", path,
              "--query", f"audit {path}",
-             "--mode", "strict"],
-            input=content,
+             "--mode", "strict",
+             "--json"],
             capture_output=True,
             text=True,
             timeout=10,
@@ -442,7 +441,7 @@ if any(v["verdict"] == "FAIL" for v in violations):
     sys.exit(1)
 </code></pre>
 
-    <p>The post-execution pass uses <code>--mode strict</code>, which treats WARN as FAIL. WARN in the pre-execution hook (to avoid blocking mid-loop on ambiguous signals) paired with strict post-execution verification gives you a two-stage gate: guide the agent while it works, then enforce cleanly when it finishes.</p>
+    <p>The <code>--json</code> flag is what makes <code>json.loads(result.stdout)</code> work: it suppresses the human-readable report and emits only the machine-readable verdict payload. The post-execution pass uses <code>--mode strict</code>: a WARN verdict stays a warning &mdash; it is not reclassified as FAIL &mdash; but strict mode makes it exit non-zero (exit 1), so any warning fails the gate. Pairing warn-in-hook with strict post-execution verification gives you a two-stage gate: guide the agent while it works, then enforce cleanly when it finishes.</p>
 
     <p>A post-execution enforcement trace:</p>
 
