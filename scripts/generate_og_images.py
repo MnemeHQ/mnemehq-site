@@ -236,6 +236,7 @@ TEMPLATE_MAP = {
     "og-integration-opencode.html": "integrations/opencode/og.png",
     "og-integration-paperclip.html": "integrations/paperclip/og.png",
     "og-integration-codex-cli.html": "integrations/codex-cli/og.png",
+    "og-integration-hermes.html": "integrations/hermes/og.png",
 
     # Insights — new
     "og-insights-ai-adoption-maturity.html": "insights/ai-adoption-maturity-model-engineering-analysis/og.png",

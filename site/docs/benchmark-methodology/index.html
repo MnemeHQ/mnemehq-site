@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Why the Mneme governance benchmark is deterministic, why recall@1 is reported but not optimized, and what Mneme intentionally does not solve. Layer 1 freeze framing." />
+  <meta name="description" content="Why the Mneme governance benchmark is deterministic, why recall@1 is reported but not optimized, and what Mneme intentionally does not solve. Layer 1 freeze framing + accepted amendments (ADR-017 retrieval≠enforcement, ADR-019 typed literal rule, ADR-020 path applicability)." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/benchmark-methodology/" />
@@ -350,7 +350,7 @@
       {
         "@type": "TechArticle",
         "headline": "Mneme Benchmark Methodology Philosophy",
-        "description": "Why the Mneme governance benchmark is deterministic, why recall@1 is reported but not optimized, what the benchmark proves, and what it explicitly does not prove. Layer 1 freeze framing.",
+        "description": "Why the Mneme governance benchmark is deterministic, why recall@1 is reported but not optimized, what the benchmark proves, and what it explicitly does not prove. Layer 1 freeze framing + accepted amendments.",
         "url": "https://mnemehq.com/docs/benchmark-methodology/",
         "mainEntityOfPage": "https://mnemehq.com/docs/benchmark-methodology/",
         "datePublished": "2026-05-10",
@@ -419,9 +419,9 @@
   <h1>Why the benchmark is intentionally constrained.</h1>
   <div class="doc-meta byline">
     <span><strong>Published</strong> <time datetime="2026-05-10">May 10, 2026</time></span>
-    <span><strong>Updated</strong> <time datetime="2026-05-10">May 10, 2026</time></span>
+    <span><strong>Updated</strong> <time datetime="2026-08-25">Aug 25, 2026</time></span>
     <span><strong>Phase</strong> Layer 1 — validation</span>
-    <span><strong>Anchor</strong> e73ff7d</span>
+    <span><strong>Anchor</strong> e73ff7d + amendments (ADR-017/019/020)</span>
   </div>
   <p class="doc-lede">
     Most AI infrastructure benchmarks compete on score inflation. This page exists to be honest about what Mneme's benchmark is and is not. The discipline is the differentiator.
@@ -432,7 +432,7 @@
 
   <h2 id="philosophy">Philosophy</h2>
   <p>
-    LLMs are nondeterministic. A benchmark whose numbers vary between runs cannot detect a regression in the part of the system that Mneme actually owns: retrieval and enforcement against governed decisions. So Mneme's benchmark deliberately collapses the nondeterminism. Canned responses replace live model calls. Retrieval is bag-of-tokens with stable sort and explicit tiebreak. Enforcement is rule-text matching against retrieved decisions. The same memory and the same query produce byte-identical retrieval order on every run.
+    LLMs are nondeterministic. A benchmark whose numbers vary between runs cannot detect a regression in the part of the system that Mneme actually owns: retrieval and enforcement against governed decisions. So Mneme's benchmark deliberately collapses the nondeterminism. Canned responses replace live model calls. Retrieval is bag-of-tokens with stable sort and explicit tiebreak. Typed literal rules are enforced corpus-wide regardless of retrieval (ADR-017); legacy multi-term rules remain retrieval-gated. The same memory and the same query produce byte-identical retrieval order on every run.
   </p>
   <p>
     The job of the benchmark is not to prove that Mneme is smart. It is to prove that every change to retrieval or enforcement is <em>visible</em> and <em>reproducible</em> — that a regression cannot land silently, that a PASS cannot be coincidence, and that the numbers reported externally cannot drift away from what the code actually does.
@@ -524,7 +524,7 @@
 
   <h2 id="layer-1">Layer 1 framing</h2>
   <p>
-    Mneme is currently in Layer 1 — local-repo, single-developer, project-scoped architectural governance. The mechanism is frozen at <em>e73ff7d</em>. The validation phase tests the mechanism in real repos with real users; it does not extend the mechanism. Layer 2 territory (multi-repo, team sync, org policy distribution) opens only after Layer 1 exit criteria are met.
+    Mneme is currently in Layer 1 — local-repo, single-developer, project-scoped architectural governance. The original mechanism freeze is at <em>e73ff7d</em>; accepted amendments since then include ADR-017 (retrieval ≠ enforcement), ADR-019 (typed literal rule), and ADR-020 (explicit path applicability). The validation phase tests the mechanism in real repos with real users; it does not extend the mechanism. Layer 2 territory (multi-repo, team sync, org policy distribution) opens only after Layer 1 exit criteria are met.
   </p>
   <p>
     This page is a public summary of the philosophy. The full architectural freeze artifact lives in the repo at <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/architecture/layer1-freeze-e73ff7d.md">docs/architecture/layer1-freeze-e73ff7d.md</a>. The full methodology specification with metric definitions, suite composition, verdict thresholds, and reproducibility protocol lives at <a href="/benchmark/">/benchmark/</a>.

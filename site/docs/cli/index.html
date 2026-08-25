@@ -389,9 +389,9 @@ Created .mneme/project_memory.json</pre>
         <tbody>
           <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
           <tr><td>--input</td><td>yes</td><td>Path to the file to check. A filepath, not inline text &mdash; write generated content or a diff to a file first.</td></tr>
-          <tr><td>--query</td><td>yes</td><td>Context query for retrieval. Determines which decisions are in scope.</td></tr>
+          <tr><td>--query</td><td>yes</td><td>Provides retrieval context for relevance-scored decisions. Retrieval does not bound corpus-wide typed literal enforcement &mdash; those rules apply regardless of query relevance.</td></tr>
           <tr><td>--target-path</td><td>no</td><td>Artifact path used for typed-rule path applicability when <code>--input</code> contains materialized or introduced content from another file (e.g. a hook checking staged edit content against the real target path).</td></tr>
-          <tr><td>--top</td><td>no</td><td>Size of the retrieval-gated tier. Defaults to the package default.</td></tr>
+          <tr><td>--top</td><td>no</td><td>Size of the retrieval-gated tier: bounds how many decisions have their multi-term rules applied. Unambiguous literal rules are enforced across the whole corpus regardless (ADR-017).</td></tr>
           <tr><td>--mode</td><td>no</td><td><code>strict</code> (default) or <code>warn</code>. See <a href="#exit-codes">exit codes</a>.</td></tr>
           <tr><td>--json</td><td>no</td><td>Emit a machine-readable verdict payload (<code>schema: mneme.check/v1</code>, includes <code>evaluation_complete</code>, per-rule applicability, and freshness) as the only stdout content. Exit codes unchanged.</td></tr>
           <tr><td>--adr-dir</td><td>no</td><td>Directory of ADR markdown files checked for freshness drift. Warn-only diagnostics that never affect the exit code; defaults to <code>docs/adr</code>, skipped silently when absent.</td></tr>
@@ -401,6 +401,10 @@ Created .mneme/project_memory.json</pre>
 
     <div class="callout">
       <p><strong>Mode semantics.</strong> <code>strict</code> exits non-zero on any violation, making it suitable as a merge gate. <code>warn</code> always exits zero, useful while a team is still shaping its decision corpus and does not want a noisy corpus to block work.</p>
+    </div>
+
+    <div class="callout">
+      <p><strong>Completeness and path diagnostics.</strong> A verdict is only trusted when the payload's <code>evaluation_complete</code> flag is true; an incomplete evaluation exits <code>2</code> and prints <code>Result: INCOMPLETE</code> rather than a verdict. Path-scoped typed rules also emit per-rule applicability lines (<code>PATH PASS/SKIP/UNKNOWN [decision_id] &hellip;</code>) showing how the target path resolved against the rule's selectors &mdash; an unresolvable path surfaces as <code>PATH_APPLICABILITY_UNKNOWN</code>, never as a silent pass. With <code>--json</code>, the same traces appear in the payload's <code>applicability</code> array.</p>
     </div>
   </section>
 
@@ -490,8 +494,9 @@ Created .mneme/project_memory.json</pre>
         <thead><tr><th>Verdict</th><th>strict (default)</th><th>warn</th><th>Meaning</th></tr></thead>
         <tbody>
           <tr><td>PASS</td><td>0</td><td>0</td><td>No violations.</td></tr>
-          <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. Suggests friction but not a block in <code>warn</code> mode.</td></tr>
-          <tr><td>FAIL</td><td>2</td><td>0</td><td>Anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
+          <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. In <code>strict</code> mode the verdict stays WARN but the process exits non-zero; <code>warn</code> mode exits zero.</td></tr>
+          <tr><td>FAIL</td><td>2</td><td>0</td><td>Typed rule or anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
+          <tr><td>INCOMPLETE</td><td>2</td><td>2</td><td>Evaluation could not complete (<code>evaluation_complete: false</code>). Never reported as PASS &mdash; machine consumers should fail open on their own terms.</td></tr>
         </tbody>
       </table>
     </div>
@@ -502,7 +507,7 @@ Created .mneme/project_memory.json</pre>
         <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
         <tbody>
           <tr><td>0</td><td>All scenarios passed.</td></tr>
-          <tr><td>1</td><td>At least one scenario failed.</td></tr>
+          <tr><td>1</td><td>At least one scenario failed, or a benign scenario was blocked (<code>FALSE_POSITIVE</code>).</td></tr>
           <tr><td>2</td><td>Supplied <code>benchmarks_dir</code> is not a directory.</td></tr>
         </tbody>
       </table>
