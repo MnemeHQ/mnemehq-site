@@ -22,7 +22,7 @@ def check(name, cond):
         failures.append(name)
 
 
-def main():
+def main(user_data_dir=None):
     handler = functools.partial(SimpleHTTPRequestHandler, directory=str(SITE))
     httpd = ThreadingHTTPServer(("127.0.0.1", PORT), handler)
     t = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -30,8 +30,12 @@ def main():
 
     SHOTS.mkdir(parents=True, exist_ok=True)
 
+    launch_args = {}
+    if user_data_dir:
+        launch_args["user_data_dir"] = user_data_dir
+
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        browser = p.chromium.launch(**launch_args)
 
         for label, url in [("home", f"http://127.0.0.1:{PORT}/"),
                            ("docs", f"http://127.0.0.1:{PORT}/docs/")]:

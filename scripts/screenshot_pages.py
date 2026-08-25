@@ -15,9 +15,12 @@ PAGES = [
     ('07-multi-agent-governance',     'https://mnemehq.com/use-cases/multi-agent-workflow-governance/'),
 ]
 
-async def main():
+async def main(user_data_dir=None):
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
+        launch_args = {}
+        if user_data_dir:
+            launch_args["user_data_dir"] = user_data_dir
+        browser = await p.chromium.launch(**launch_args)
         page = await browser.new_page(viewport={'width': 1440, 'height': 900})
         for name, url in PAGES:
             print(f'  {name} ...', end=' ', flush=True)

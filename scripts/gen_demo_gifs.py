@@ -136,11 +136,15 @@ async def capture_scroll(page, url: str, out: Path,
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
-async def main() -> None:
+async def main(user_data_dir=None) -> None:
     OUTDIR.mkdir(parents=True, exist_ok=True)
 
+    launch_args = {}
+    if user_data_dir:
+        launch_args["user_data_dir"] = user_data_dir
+
     async with async_playwright() as pw:
-        browser = await pw.chromium.launch()
+        browser = await pw.chromium.launch(**launch_args)
         page = await browser.new_page(viewport=VIEWPORT)
 
         # 1. Governed Python agent — animated

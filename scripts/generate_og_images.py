@@ -327,8 +327,12 @@ def start_server():
     return server
 
 
-async def generate():
+async def generate(user_data_dir=None):
     from playwright.async_api import async_playwright
+
+    launch_args = {}
+    if user_data_dir:
+        launch_args["user_data_dir"] = user_data_dir
 
     server = start_server()
     time.sleep(0.5)  # let server start
@@ -337,7 +341,7 @@ async def generate():
     failed = 0
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
+        browser = await p.chromium.launch(**launch_args)
         page = await browser.new_page(viewport={"width": 1200, "height": 630})
 
         for template, output_rel in TEMPLATE_MAP.items():
