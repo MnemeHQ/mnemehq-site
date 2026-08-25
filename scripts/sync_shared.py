@@ -25,6 +25,7 @@ FOOTER_CSS    = load("footer.css")
 HAMBURGER_CSS = load("nav-hamburger.css")
 HAMBURGER_JS  = load("nav-hamburger.js")
 ACTIVE_JS     = load("nav-active.js")
+CTA_ANALYTICS_JS = load("cta-analytics.js")
 
 NAV_PAT    = re.compile(r"<nav>(.*?)</nav>", re.DOTALL)
 # Canonical site footers carry an inline style signature; article/section
@@ -173,6 +174,18 @@ for html in sorted(SITE.rglob("*.html")):
             text = text.replace("</body>", adapt(ACTIVE_JS_BLOCK) + adapt("\n") + "</body>", 1)
         else:
             print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” active-link JS not injected")
+
+    # 4b. Inject/refresh CTA analytics handler (idempotent via marker)
+    CTA_JS_BLOCK = "<script><!-- cta-analytics -->\n" + CTA_ANALYTICS_JS + "\n</script>"
+    CTA_JS_PAT = re.compile(r"<script><!-- cta-analytics -->.*?</script>", re.DOTALL)
+    if "cta-analytics" in text:
+        text = CTA_JS_PAT.sub((lambda _m: adapt(CTA_JS_BLOCK)), text)
+    elif "dataLayer" not in text:
+        pass  # page has no dataLayer at all (non-GTM template); skip silently
+    elif "</body>" in text:
+        text = text.replace("</body>", adapt(CTA_JS_BLOCK) + adapt("\n") + "</body>", 1)
+    else:
+        print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” cta analytics not injected")
 
     # 5. Replace footer (plain <footer> only, not <footer class=...>)
     text = FOOTER_PAT.sub(adapt(FOOTER_HTML), text)

@@ -1,0 +1,113 @@
+<!-- cta-components.html — canonical CTA partials for the Mneme template family.
+     Styles: CTA primitives live in site/assets/css/base.css (no separate
+     stylesheet — avoid override layers). System doc: docs/site/cta-system.md.
+     Copy the block you need; replace {{...}} placeholders.
+
+     Rules (non-negotiable):
+       1. One primary INTENT per page; it may repeat at hero, mid-page, ending.
+       2. ONE filled coral button per CLUSTER (never two in the same view).
+       3. "Install" never links to GitHub — it scrolls to an install module
+          or opens /docs/#quickstart.
+       4. Lime (--accent) is evidence/status colour, not a button fill.
+
+     Analytics: structured data attributes consumed by
+     site/_snippets/cta-analytics.js (synced via sync_shared.py):
+       data-cta-intent="install|demo|pilot"
+       data-cta-position="nav|hero|mid|end"
+       data-cta-component="hero_cluster|install_module|cta_band|end_block"
+     Destination is captured from href. Copy controls emit code_copy,
+     not cta_click.
+-->
+
+<!-- ════════════════════════════════════════════════════════════════════
+     1. DEVELOPER HERO CLUSTER — homepage, demo hub, integration hub
+     Install is primary because installation is product activation;
+     the demo resolves uncertainty but is not the ask; GitHub demotes to text.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="cta-row">
+  <a href="#install" class="cta-btn-primary" data-cta-intent="install" data-cta-position="primary" data-cta-component="hero">Install Mneme</a>
+  <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="secondary" data-cta-component="hero">Run the 2-minute demo</a>
+  <a href="https://github.com/MnemeHQ/mneme" class="cta-link" target="_blank" rel="noopener"
+     data-cta-intent="github" data-cta-position="tertiary" data-cta-component="hero">View source on GitHub &rarr;</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     2. CANONICAL INSTALL MODULE — the one recognisable install pattern.
+     Place at #install on any developer page; hero primary scrolls here.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="install-module" id="install">
+  <div class="install-module-cmd">
+    <code>pip install mneme-hq</code>
+    <button type="button" class="install-module-copy"
+      onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);"
+      data-cta-intent="code_copy" data-cta-position="copy" data-cta-component="install-module">Copy</button>
+  </div>
+  <div class="install-module-meta">
+    <a href="/docs/" data-cta-intent="quickstart" data-cta-position="meta" data-cta-component="install-module">5-minute quickstart</a>
+    <span>Python 3.10+</span>
+    <span>MIT licensed</span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     3. INTEGRATION DETAIL CLUSTER — per shipped tool page.
+     Tool-specific intent is the highest-signal developer moment; the label
+     must name the tool so destination and expectation match exactly.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="cta-row">
+  <a href="/docs/#setup-{{TOOL_SLUG}}" class="cta-btn-primary"
+     data-cta-intent="setup" data-cta-position="primary" data-cta-component="integration-hero">Set up Mneme with {{TOOL_NAME}}</a>
+  <a href="{{EVIDENCE_URL}}" class="cta-btn-outline"
+     data-cta-intent="evidence" data-cta-position="secondary" data-cta-component="integration-hero">View evidence</a>
+  <a href="/pilot/" class="cta-link" data-cta-intent="pilot" data-cta-position="tertiary" data-cta-component="integration-hero">Running it across a team? Request a pilot &rarr;</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     4. MID-ARTICLE BAND — long insights/concepts/use cases at 45–60%.
+     Long-form readers hit proof density mid-article; end-only CTAs waste it.
+     Concept pages use variant B: soft "See this enforced" link only.
+     ════════════════════════════════════════════════════════════════════ -->
+<!-- Variant A: article band -->
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">{{EYEBROW}} &mdash; runnable in five minutes</div>
+  <h3>{{ONE_LINE_PROOF_HEADLINE}}</h3>
+  <p>{{WHY_THIS_MATTERS_FOR_THIS_ARTICLE}} No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="primary" data-cta-component="mid-article">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="secondary" data-cta-component="mid-article">See it enforced</a>
+  </div>
+</aside>
+
+<!-- Variant B: concept page soft link -->
+<p><a href="/demo/{{RELEVANT_DEMO_SLUG}}/" class="cta-link"
+      data-cta-intent="demo" data-cta-position="tertiary" data-cta-component="concept">See this enforced in the {{DEMO_NAME}} demo &rarr;</a></p>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     5. TEAM-INTENT HERO CLUSTER — /for/, role pages, team-heavy use cases,
+     pricing. Intent is already team-level, so pilot leads and install demotes.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="cta-row">
+  <a href="/pilot/" class="cta-btn-primary" data-cta-intent="pilot" data-cta-position="primary" data-cta-component="team-hero">Request a drift audit</a>
+  <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="secondary" data-cta-component="team-hero">Run the 2-minute demo</a>
+  <a href="/docs/#quickstart" class="cta-link" data-cta-intent="install" data-cta-position="tertiary" data-cta-component="team-hero">Or install it yourself &rarr;</a>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     6. END-OF-PAGE BLOCK — final cluster, max three destinations.
+     Developer pages: install + pilot text link. Newsletter stays outside.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="cta-block-end">
+  <h3>{{CLOSING_HEADLINE}}</h3>
+  <p>{{CLOSING_ONE_LINER}}</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="primary" data-cta-component="end-block">Install Mneme</a>
+    <a href="/pilot/" class="cta-link" data-cta-intent="pilot" data-cta-position="tertiary" data-cta-component="end-block">Evaluating for your team? Request a drift audit &rarr;</a>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     7. GLOBAL NAV PILOT CTA — outline styling now lives on .btn-nav-cta
+     in base.css itself; no extra class needed. Filled lime competed with
+     every page's own primary before content loaded.
+     ════════════════════════════════════════════════════════════════════ -->
+<a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>

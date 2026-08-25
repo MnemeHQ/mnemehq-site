@@ -26,7 +26,87 @@
   --accent: #c8f060;
   --accent-dim: #a8d040;
   --teal: #8be0c8;
+  --action: #ea735e;
+  --action-dim: #c95a46;
 }
+
+/* ── CTA primitives ────────────────────────────────────────────────────
+ * Colour contract (docs/site/cta-system.md):
+ *   coral fill      = the cluster's ONE primary action (never lime)
+ *   neutral outline = secondary action
+ *   mint text link  = tertiary / editorial hop
+ *   lime (--accent) = success + evidence states ONLY
+ * Buttons: ~14px label, min-height 44px, DM Mono, visible focus ring.
+ * One filled coral button per CLUSTER; the page intent may repeat at
+ * hero, mid-page and ending.
+ */
+
+.cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.7rem 1.5rem;
+  background: var(--action);
+  color: #0c0c0d;
+  border: 1px solid var(--action);
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.cta-btn-primary:hover { background: var(--action-dim); border-color: var(--action-dim); color: #0c0c0d; }
+.cta-btn-primary:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; }
+
+.cta-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.cta-btn-outline:hover { border-color: var(--muted); background: var(--surface); color: var(--text); }
+.cta-btn-outline:focus-visible { outline: 2px solid var(--muted); outline-offset: 3px; }
+
+.cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--teal);
+  font-size: 0.85rem;
+  line-height: 1.3;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(139, 224, 200, 0.4);
+  transition: border-color 0.15s;
+}
+.cta-link:hover { border-bottom-color: var(--teal); }
+.cta-link:focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; }
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+}
+.cta-row .cta-link { margin-left: 0.25rem; }
 
 html { scroll-behavior: smooth; }
 
@@ -49,8 +129,11 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--accent); }
-.nav-links a.btn-nav-cta { background: var(--accent); color: #0c0c0d; padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-.nav-links a.btn-nav-cta:hover { background: var(--accent-dim); color: #0c0c0d; }
+/* Nav pilot CTA: outline everywhere. Filled treatments competed with each
+ * page's own primary action before content loaded (docs/site/cta-system.md).
+ * body.home-v2 keeps its coral-outline variant via home-v2.css. */
+.nav-links a.btn-nav-cta { background: transparent; color: var(--text); border: 1px solid var(--border2); padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+.nav-links a.btn-nav-cta:hover { border-color: var(--action); color: var(--action); }
 
 /* ── Hamburger ── */
 .nav-hamburger {
@@ -134,6 +217,96 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 /* ── Footer ── */
 footer a { color: var(--muted); text-decoration: none; }
 footer a:hover { color: var(--text); }
+
+/* ── Canonical install module ────────────────────────────────────────── */
+.install-module {
+  max-width: 640px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+}
+.install-module-cmd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 0.65rem 0.9rem;
+}
+.install-module-cmd code {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.install-module-copy {
+  flex-shrink: 0;
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+  border-radius: 5px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.7rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.install-module-copy:hover { color: var(--text); border-color: var(--muted); }
+.install-module-copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.install-module-copy[data-copied="true"] { color: var(--accent); border-color: var(--accent); }
+.install-module-meta {
+  margin-top: 0.7rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.9rem;
+}
+.install-module-meta a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
+.install-module-meta a:hover { color: var(--text); }
+
+/* ── Mid-page CTA band ──────────────────────────────────────────────── */
+.cta-band {
+  margin: 3rem 0;
+  background: rgba(234, 115, 94, 0.05);
+  border: 1px solid rgba(234, 115, 94, 0.45);
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+.cta-band-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--action);
+  margin-bottom: 0.6rem;
+}
+.cta-band h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+}
+.cta-band p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; margin: 0 0 1.25rem; }
+
+/* ── End-of-page block ──────────────────────────────────────────────── */
+.cta-block-end {
+  margin-top: 3rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+}
+.cta-block-end h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
+.cta-block-end p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {

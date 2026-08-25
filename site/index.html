@@ -1012,7 +1012,7 @@
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
-    <a href="/pilot/" class="btn-nav-cta">Request a pilot</a>
+    <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
   </div>
 </nav>
 
@@ -1026,8 +1026,9 @@
         <h1 id="home-title"><span>Architecture</span><span>that holds.</span></h1>
         <p class="hm-hero-deck">AI writes the code. Your architecture still decides what ships.</p>
         <div class="hm-actions">
-          <a class="hm-btn hm-btn-primary" href="/demo/">Run the 2-minute demo</a>
-          <a class="hm-hero-alt" href="https://github.com/MnemeHQ/mneme">or read the source on GitHub →</a>
+          <a class="hm-btn hm-btn-primary" href="#install" data-cta-intent="install" data-cta-position="hero" data-cta-component="hero_cluster">Install Mneme</a>
+          <a class="hm-btn" href="/demo/" data-cta-intent="demo" data-cta-position="hero" data-cta-component="hero_cluster">Run the 2-minute demo</a>
+          <a class="hm-hero-alt" href="https://github.com/MnemeHQ/mneme" data-cta-intent="github" data-cta-position="hero" data-cta-component="hero_cluster">or read the source on GitHub &rarr;</a>
         </div>
 
         <div class="hm-backed" aria-label="Programme support">
@@ -1110,13 +1111,13 @@ trackCheckout(event) {
   </section>
 
   <!-- INSTALL: first rung of the ladder -->
-  <aside class="hm-install" aria-label="Install Mneme">
+  <aside class="hm-install" id="install" aria-label="Install Mneme">
     <div class="hm-shell hm-install-inner">
       <span class="hm-install-label">Install</span>
       <code class="hm-install-cmd" id="install-cmd">pip install mneme-hq</code>
-      <button class="hm-install-copy" type="button"
+      <button class="hm-install-copy" type="button" data-code-copy
               onclick="navigator.clipboard.writeText('pip install mneme-hq');this.textContent='Copied';setTimeout(()=>this.textContent='Copy',1600);">Copy</button>
-      <a class="hm-install-alt" href="/docs/">Quickstart →</a>
+      <a class="hm-install-alt" href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="mid" data-cta-component="install_module">Quickstart &rarr;</a>
     </div>
   </aside>
 
@@ -1264,7 +1265,7 @@ Result: FAIL</code></pre>
       <dl class="hm-compat-grid">
         <div class="hm-compat-tier">
           <dt class="hm-tier-name">Native</dt>
-          <dd class="hm-tier-tools">Mneme CLI<br>Claude Code hook<br>Claude Agent SDK hooks<br>Google Antigravity adapter</dd>
+          <dd class="hm-tier-tools">Mneme CLI<br>Claude Code hook<br>Claude Agent SDK hooks<br>Google Antigravity adapter<br>Codex CLI adapter</dd>
         </div>
         <div class="hm-compat-tier">
           <dt class="hm-tier-name">Tested workflow</dt>
@@ -1276,7 +1277,7 @@ Result: FAIL</code></pre>
         </div>
         <div class="hm-compat-tier">
           <dt class="hm-tier-name">In progress</dt>
-          <dd class="hm-tier-tools">Codex CLI (validation)<br>Deep Agents middleware POC<br>Kiro hook (open PR)</dd>
+          <dd class="hm-tier-tools">Deep Agents middleware POC<br>Kiro hook (open PR)</dd>
         </div>
       </dl>
       <div class="hm-logo-row">
@@ -1300,7 +1301,7 @@ Result: FAIL</code></pre>
     <div class="hm-shell hm-install-inner">
       <span class="hm-install-label">Install</span>
       <code class="hm-install-cmd">pip install mneme-hq</code>
-      <button class="hm-install-copy" type="button"
+      <button class="hm-install-copy" type="button" data-code-copy
               onclick="navigator.clipboard.writeText('pip install mneme-hq');this.textContent='Copied';setTimeout(()=>this.textContent='Copy',1600);">Copy</button>
     </div>
   </aside>
@@ -1310,9 +1311,8 @@ Result: FAIL</code></pre>
       <div class="hm-section-label">Architecture that holds</div>
       <h2 id="final-title">Give every coding agent the decisions your team already made.</h2>
       <div class="hm-actions">
-        <a class="hm-btn hm-btn-primary" href="/pilot/">Request a pilot</a>
-        <a class="hm-btn" href="/pricing/">View pricing</a>
-        <a class="hm-btn" href="/demo/">Run the 2-minute demo</a>
+        <a class="hm-btn hm-btn-primary" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Request a pilot</a>
+        <a class="hm-btn" href="/demo/" data-cta-intent="demo" data-cta-position="end" data-cta-component="end_block">Run the 2-minute demo</a>
       </div>
     </div>
   </section>
@@ -1523,5 +1523,78 @@ Result: FAIL</code></pre>
 
 
 
+<script><!-- cta-analytics -->
+(function(){
+  'use strict';
+  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
+   * consume these dataLayer events. Schema: docs/site/cta-system.md
+   *
+   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
+   * code_copy  { copy_context, page_type }
+   * form_start / form_submit / form_error / form_success are emitted by the
+   * pilot form page (PR 3) using the same page_type helper.
+   */
+
+  function pageType() {
+    var p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'homepage';
+    var map = [
+      ['/docs', 'docs'],
+      ['/demo', 'demo'],
+      ['/integrations', 'integration'],
+      ['/works-with', 'integration'],
+      ['/use-cases', 'use_case'],
+      ['/insights', 'insight'],
+      ['/concepts', 'concept'],
+      ['/for', 'team'],
+      ['/pilot', 'pilot'],
+      ['/pricing', 'pricing'],
+      ['/benchmark', 'benchmark']
+    ];
+    for (var i = 0; i < map.length; i++) {
+      if (p.indexOf(map[i][0]) === 0) return map[i][1];
+    }
+    return 'other';
+  }
+
+  var PAGE_TYPE = pageType();
+
+  function push(event, params) {
+    params.page_type = PAGE_TYPE;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params));
+  }
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
+    if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
+
+    push('cta_click', {
+      cta_intent: el.getAttribute('data-cta-intent'),
+      cta_position: el.getAttribute('data-cta-position'),
+      cta_component: el.getAttribute('data-cta-component'),
+      cta_destination: el.getAttribute('href')
+    });
+  }, true);
+})();
+</script>
 </body>
 </html>
