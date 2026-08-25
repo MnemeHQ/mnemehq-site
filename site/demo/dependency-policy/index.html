@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="An AI coding agent slips an unapproved dependency (sqlalchemy) into a refactor. Mneme catches it with a structured WARN in mneme check, names the exact decision that flagged it, and gives a tracked override path." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -294,12 +295,11 @@
 
 <article class="article-wrap">
   <header>
-    <div class="article-eyebrow">
-      <span class="eyebrow-tag">Supporting enforcement example &middot; approved-deps</span>
-      <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">5 min read</span>
-      <span class="eyebrow-dot"></span>
-      <span class="verdict-pill warn">WARN</span>
+    <div class="demo-meta">
+      <span class="mt mt-type">Supporting example</span>
+      <span class="mt">Runnable locally</span>
+      <span class="mt mt-outcome-warn">Outcome: WARN</span>
+      <span class="mt">5 min read</span>
     </div>
     <h1>Catching an unapproved dependency an AI agent added</h1>
     <p class="lede">During a refactor, the AI agent reaches for <code>sqlalchemy</code> &mdash; a sensible choice in isolation, but not on the team's approved dependency list. Mneme catches it during <code>mneme check</code> and emits a structured WARN with the originating decision ID, so the diff is flagged for review without hard-blocking the work.</p>
@@ -317,38 +317,48 @@
     <p>Most teams of any size end up maintaining an approved dependency list. Security has audited a small set of packages; the rest are off-limits until reviewed. The list lives in the team's heads, in a Notion doc, in a checklist on the security page &mdash; and almost never in a place AI coding agents can read.</p>
     <p>This codebase records it explicitly. <code>project_memory.json</code> contains a typed rule:</p>
     <p><strong>Dependency policy.</strong> Python packages may only come from the approved list (FastAPI, Pydantic, httpx, pytest, ruff, plus internal packages prefixed <code>internal_</code>). Anything else requires a security review and an explicit decision record before it can land.</p>
-    <p>An engineer asks the AI assistant to refactor a service module. Somewhere in the diff:</p>
+    <p>An engineer asks the AI assistant to refactor a service module. The violation surfaces mid-diff:</p>
 
-    <div class="panel">
-      <div class="panel-header bad">
-        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-        diff snippet
-      </div>
-      <div class="panel-body" style="min-height:220px;">
-        <div class="diff-rem">import json</div>
-        <div class="diff-add">import sqlalchemy</div>
-        <div class="diff-add">from sqlalchemy import create_engine</div>
-      </div>
-    </div>
+    <ol class="beat-flow">
+      <li class="beat beat-hit">
+        <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">dependency_policy &middot; project_memory.json</span></div>
+        <div class="beat-body">Python packages come from the approved list only &mdash; FastAPI, Pydantic, httpx, pytest, ruff, plus <code>internal_*</code>. Anything else requires a security review and an explicit decision record before it can land.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not exercised: this scenario enforces at check time; the editor-time injection path is not part of the reproduction.</div>
+      </li>
+      <li class="beat beat-hit">
+        <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">mid-refactor diff</span></div>
+        <div class="beat-body">
+          <pre class="b-term" tabindex="0"><span class="t-dim">- import json</span>
++ import sqlalchemy
++ from sqlalchemy import create_engine</pre>
+          Locally reasonable &mdash; <code>sqlalchemy</code> is a real, popular library. Without governance it lands in the next PR.
+        </div>
+      </li>
+      <li class="beat beat-warn">
+        <div class="beat-head"><span class="beat-tag">4 &middot; Warn</span><span class="chip chip-warn">WARN</span><span class="beat-state">mneme check</span></div>
+        <div class="beat-body"><strong>New dependency introduced</strong> &mdash; <code>sqlalchemy</code> not in approved list. The verdict carries the originating decision ID. A reviewer or CI job can branch on the level: PR comment, explicit override, security review. The override is itself a tracked event.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not exercised: WARN intentionally does not block; resolution happens through review, not automatic retry.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not exercised: merge proceeds only after review or a tracked override decision.</div>
+      </li>
+    </ol>
 
-    <p>The change looks reasonable in the editor. <code>sqlalchemy</code> is a real, popular library. Without governance, it would land in the next PR.</p>
+    <h2>Run it yourself</h2>
+    <pre tabindex="0"><code>pip install mneme-hq
+mneme init
+mneme check</code></pre>
 
-    <h2>Without Mneme</h2>
-    <p>The model has no signal that <code>sqlalchemy</code> is restricted. It treats the import as routine. The PR opens. Reviewers, who themselves rarely maintain a perfect mental copy of the approved list, scan the diff and merge if the logic looks right. The dependency arrives quietly. Three weeks later, the security team notices in the dependency audit and files a ticket asking who introduced it and why.</p>
-    <p>This is the silent-introduction failure mode. It is not catastrophic on any single PR. It compounds across hundreds.</p>
-
-    <h2>With Mneme</h2>
-    <p>The same diff goes through <code>mneme check</code>. The dependency rule is fetched from <code>project_memory.json</code>, the new import is matched against the approved list, and the verdict is emitted with the originating decision ID:</p>
-
-    <div class="check-results">
-      <div class="cr-title">mneme check &middot; dependency row</div>
-      <div class="check-row">
-        <span class="verdict warn">WARN</span>
-        <div class="desc"><strong>New dependency introduced</strong> &mdash; <code>sqlalchemy</code> not in approved list.</div>
-      </div>
-    </div>
-
-    <p>The verdict is structured. A reviewer (or a CI job) can branch on the <code>WARN</code> level: surface a comment on the PR, require an explicit override, request a security review, or auto-link to the dependency policy decision record. The verdict carries the decision ID, so the override is itself a tracked event.</p>
+    <h2>What happened</h2>
+    <p>The model has no signal that <code>sqlalchemy</code> is restricted. It treats the import as routine. The PR opens. Reviewers, who themselves rarely maintain a perfect mental copy of the approved list, scan the diff and merge if the logic looks right. The dependency arrives quietly. Three weeks later, the security team notices in the dependency audit and files a ticket asking who introduced it and why. This is the silent-introduction failure mode: not catastrophic on any single PR, compounding across hundreds.</p>
+    <p>With Mneme, the same diff goes through <code>mneme check</code>: the dependency rule is fetched from <code>project_memory.json</code>, the new import is matched against the approved list, and the verdict is emitted with the originating decision ID.</p>
 
     <h2>Why WARN and not FAIL</h2>
     <p>Dependency introductions are policy decisions that often have legitimate reasons. A security audit may approve a previously-rejected library; the team may have updated the approved list and not yet propagated it; an engineer may be deliberately spiking a new tool. Hard-blocking every dependency change creates governance fatigue and trains the team to disable the check.</p>
@@ -357,6 +367,19 @@
     <h2>How to wire this up in your repo</h2>
     <p>The approved dependency list lives in <code>project_memory.json</code> as a structured rule with <code>type: "dependency_policy"</code> and an explicit allowlist. <code>mneme init</code> writes a starter template; replace it with your team's list. The list is human-editable and version-controlled with the rest of the repo, so adding or removing a dependency is a tracked decision rather than a quiet config change.</p>
     <p>For the CI gate that turns dependency WARN into a PR comment or a hard block, see the <a href="/integrations/github-actions/">GitHub Actions integration</a>. For the design rationale behind structured records over text rule files, see <a href="/insights/why-prompt-memory-fails-at-scale/">why prompt memory fails at scale</a>.</p>
+
+      <h2>Video walkthrough</h2>
+      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Prefer video? Watch dependency policy enforcement in action — project memory as enforcement policy.</p>
+      <div style="max-width:720px;aspect-ratio:16/9;position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;">
+        <!-- pBJSpN8d9FU assigned here by topic inference — recheck after watching the video; move to a different demo page if content doesn't match dependency-policy scenario -->
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/pBJSpN8d9FU"
+          title="Project Memory Is Not Just Context. It Is Enforcement."
+          loading="lazy"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+          style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+      </div>
 
     <h2>FAQ</h2>
     <div class="faq-list">
@@ -374,18 +397,15 @@
       </details>
     </div>
 
-      <h2>Video walkthrough</h2>
-      <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Prefer video? Watch dependency policy enforcement in action — project memory as enforcement policy.</p>
-      <div style="max-width:720px;aspect-ratio:16/9;position:relative;border-radius:8px;overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;">
-        <!-- pBJSpN8d9FU assigned here by topic inference — recheck after watching the video; move to a different demo page if content doesn't match dependency-policy scenario -->
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/pBJSpN8d9FU"
-          title="Project Memory Is Not Just Context. It Is Enforcement."
-          loading="lazy"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-          style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
-      </div>
+  <aside class="related-panel" aria-labelledby="related-panel-label">
+    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+    <ul class="related-list">
+      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
+      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
+      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
+      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
+    </ul>
+  </aside>
 
     <div class="scenario-cta">
       <a href="/demo/storage-decision/">&larr; Previous &middot; Storage decision (PASS)</a>
@@ -415,16 +435,6 @@
         <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
       </section>
   </main>
-
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
-      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
-    </ul>
-  </aside>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>

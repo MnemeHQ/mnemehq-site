@@ -10,6 +10,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="Most teams already have ADRs. They sit in docs/adr/ and are quietly ignored by every AI coding agent. The ADR compiler reads those same files and emits enforceable, precedence-aware decisions. No rewrite. Runnable against Mneme's own ADRs." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -265,12 +266,11 @@
   <!-- SECTION 1: Hero + intro + pipeline (bg = --bg) -->
   <div class="prose-section">
     <header>
-      <div class="article-eyebrow">
-        <span class="eyebrow-tag" style="color: var(--teal);">Infrastructure feature &middot; ADR compiler</span>
-        <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">7 min read</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNNABLE</span>
+      <div class="demo-meta">
+        <span class="mt mt-type">Infrastructure</span>
+        <span class="mt">Runnable locally</span>
+        <span class="mt mt-outcome-warn">Outcome: WARN</span>
+        <span class="mt">7 min read</span>
       </div>
       <h1>Making AI coding agents follow the <em>ADRs you already have</em>.</h1>
       <p class="lede">Most teams have ADRs. They sit in <code>docs/adr/</code>, written in good faith, referenced in onboarding, and then quietly ignored by every AI coding agent that touches the codebase. The ADR compiler reads those same files, parses an optional <code>## Constraints</code> section, and emits enforceable, precedence-aware decisions that govern generation and CI. <strong>No rewrite. No new format. Decisions become infrastructure.</strong></p>
@@ -319,6 +319,33 @@
       </div>
 
       <p>Same query into the resolved corpus returns the same decision set every time. That property is non-negotiable: if retrieval is non-deterministic, the governance layer cannot block on it.</p>
+
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">compile step</span></div>
+          <div class="beat-body"><code>docs/adr/*.md</code> &rarr; parsed, validated, precedence-resolved, emitted as <code>project_memory.json</code>. The five-stage pipeline above is deterministic &mdash; no vector store, no ML.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Upstream of guidance: this page covers the compilation step that the editor hook and CI gate consume. The injection path is the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">namespace conflation</span></div>
+          <div class="beat-body">An agent writes <code>from MnemeHQ.memory_store import &hellip;</code> &mdash; brand name, not package namespace.</div>
+        </li>
+        <li class="beat beat-warn">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Warn</span><span class="chip chip-warn">WARN</span><span class="beat-state">mneme check</span></div>
+          <div class="beat-body">The compiled <code>ADR-005</code> constraint fires on the wrong import path &mdash; the enforcement output quoted below.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: the compiler demo ends at the verdict.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: the compliant import is the governed Python agent demo's ALLOW beat.</div>
+        </li>
+      </ol>
 
     </div>
   </div>

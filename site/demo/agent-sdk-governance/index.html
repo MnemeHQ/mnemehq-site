@@ -10,6 +10,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="A Claude Agent SDK workflow where Mneme acts as the governance layer. An autonomous agent tasked with caching introduces Redis — violating ADR-001. Mneme's pre-execution hook catches the violation before the file write executes and reroutes the agent to the compliant primitive." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -251,12 +252,11 @@
 
   <main id="main-content" tabindex="-1">
     <header>
-      <div class="article-eyebrow">
-        <span class="eyebrow-tag teal-pill">Integration Demo &middot; Claude Agent SDK</span>
-        <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">6 min read</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">FORWARD-LOOKING</span>
+      <div class="demo-meta">
+        <span class="mt mt-type">Integration demo</span>
+        <span class="mt">Forward-looking</span>
+        <span class="mt mt-outcome-deny">Outcome: DENY &rarr; PASS</span>
+        <span class="mt">6 min read</span>
       </div>
       <h1>Enforcing architectural decisions in <em>Claude Agent SDK</em> workflows.</h1>
       <p class="lede">An autonomous agent is tasked with "add caching to the user lookup service." Left unchecked, it introduces Redis &mdash; a clean, reasonable move that silently kills <code>ADR-001</code>. <strong>With Mneme's pre-execution governance hook wrapping the SDK tool call, the violation is caught before the file write executes and the agent is rerouted to the compliant in-process JSON cache primitive.</strong></p>
@@ -292,6 +292,34 @@
       </div>
 
       <p>Both invariants are relevant here. <code>ADR-001</code> blocks the Redis dependency outright. <code>ADR-004</code> governs what the compliant replacement must look like: the cache primitive must sit behind the Repository interface, not be called directly from the service layer.</p>
+
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-001 + ADR-004 &middot; compiled corpus</span></div>
+          <div class="beat-body">JSON storage only, and the Repository pattern as the data-access boundary.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="beat-state">remediation.inject</span></div>
+          <div class="beat-body">On intercept, the agent receives the violated ADR text and the compliant alternative &mdash; structured remediation, not a generic failure message.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">proposed diff</span></div>
+          <div class="beat-body"><code>import redis</code> in a new <code>cache.py</code> &mdash; the natural choice the task description never forbids.</div>
+        </li>
+        <li class="beat beat-deny">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">pre-execution hook</span></div>
+          <div class="beat-body"><code>GovernanceViolation</code> raised before the tool call executes &mdash; the file is never written. Full trace below.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">retry = 1</span></div>
+          <div class="beat-body">The agent regenerates <code>cache.py</code> against the compliant JSON cache primitive, behind the Repository interface.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span><span class="beat-state">post-execution verification</span></div>
+          <div class="beat-body">Session scan confirms no external dependency and an intact repository contract &mdash; CI gate green. Full trace below.</div>
+        </li>
+      </ol>
+      <p style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--muted);">Forward-looking: the sequence and traces on this page describe the designed integration. The runnable proof of the governance property is the <a href="/demo/multi-agent-governance/">multi-agent demo</a>.</p>
 
       <h2>Without governance</h2>
 

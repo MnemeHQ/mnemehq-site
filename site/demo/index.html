@@ -126,24 +126,6 @@
           "url": "https://mnemehq.com/demo/multi-agent-governance/"
         }
       ]
-    },
-    {
-      "@type": "VideoObject",
-      "name": "Mneme HQ — Governed Python Agent Demo",
-      "description": "Hero walkthrough of the Mneme HQ governed Python agent demo. A Python agent proposes a violating import, Mneme flags it against ADR-005, and a second, corrected file checks clean against the same corpus.",
-      "thumbnailUrl": "https://i.ytimg.com/vi/4Yg43V9amao/maxresdefault.jpg",
-      "uploadDate": "2026-05-15",
-      "contentUrl": "https://www.youtube.com/watch?v=4Yg43V9amao",
-      "embedUrl": "https://www.youtube-nocookie.com/embed/4Yg43V9amao",
-      "publisher": {
-        "@type": "Organization",
-        "name": "Mneme HQ",
-        "url": "https://mnemehq.com/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://mnemehq.com/logo-v3.png"
-        }
-      }
     }
   ]
 }
@@ -203,21 +185,12 @@
     .flagship-card .fc-evidence-item strong { color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500; }
     .flagship-card .fc-cta { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.78rem; }
     .flagship-card:hover .fc-cta { color: var(--accent-dim); }
-    /* ── CTA SNIPPET ── */
-    .cta-snippet { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.75rem; margin-top: 4rem; text-align: center; }
-    .cta-snippet h2 { font-family: 'Instrument Serif', serif; font-size: 1.3rem; font-weight: 400; color: var(--text); margin-bottom: 0.5rem; }
-    .cta-snippet p { color: var(--muted); font-size: 0.88rem; margin-bottom: 1.25rem; }
     /* Lean demo selector - ADR-002 phase 3 */
     .selector-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
     .more-scenarios { margin-top: 1.75rem; font-size: 0.82rem; color: var(--muted); line-height: 2; }
     .more-scenarios a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
     .more-scenarios a:hover { color: var(--accent); border-bottom-color: var(--accent); }
     .more-scenarios .ms-note { font-family: 'DM Mono', monospace; font-size: 0.7rem; opacity: 0.7; }
-    .cta-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .cta-snippet .cta-primary { background: var(--accent); color: #0c0c0d; padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .cta-snippet .cta-primary:hover { background: var(--accent-dim); }
-    .cta-snippet .cta-secondary { border: 1px solid var(--border2); color: var(--text); padding: 0.6rem 1.4rem; border-radius: 6px; font-size: 0.86rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
-    .cta-snippet .cta-secondary:hover { border-color: var(--accent); color: var(--accent); }
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left; }
     /* ── HAMBURGER ── */
@@ -287,16 +260,6 @@
       </p>
     </header>
 
-    <div style="max-width:880px;margin:0 auto 4rem;aspect-ratio:16/9;position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--border2);box-shadow:0 0 0 1px rgba(200,240,96,0.06), 0 20px 60px rgba(0,0,0,0.4);">
-      <iframe
-        src="https://www.youtube-nocookie.com/embed/4Yg43V9amao"
-        title="Mneme HQ &mdash; Governed Python Agent Demo"
-        loading="lazy"
-        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-        style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
-    </div>
-
     <section class="section" id="demos">
       <div class="flagship-grid selector-grid">
 
@@ -312,7 +275,7 @@
         <a class="flagship-card" href="/demo/architectural-drift/">
           <div class="flagship-meta">
             <span class="flagship-tag runnable">Runs locally</span>
-            <span class="flagship-tag forward">Agents scripted</span>
+            <span class="flagship-tag forward">Scripted reproduction</span>
           </div>
           <h2>Architectural drift</h2>
           <p class="fc-lede">One reasonable-looking change violates ADR-001. Three downstream edits amplify it. Mneme catches the divergence upstream, before it compounds.</p>
@@ -322,7 +285,7 @@
         <a class="flagship-card" href="/demo/multi-agent-governance/">
           <div class="flagship-meta">
             <span class="flagship-tag runnable">Runs locally</span>
-            <span class="flagship-tag forward">Agents scripted</span>
+            <span class="flagship-tag forward">Scripted reproduction</span>
           </div>
           <h2>Multi-agent consistency</h2>
           <p class="fc-lede">Three agents, no shared memory, one decision corpus. The same invariants hold across every actor, session, and retry.</p>
