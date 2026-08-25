@@ -1,0 +1,82 @@
+/* demos.css — demo-section shared system.
+ *
+ * Owns what is identical across the demo family:
+ *   1. Header taxonomy — three separate tokens (page type / runnability /
+ *      outcome), so no single eyebrow carries three meanings.
+ *   2. The canonical enforcement sequence component:
+ *        DECISION → GUIDANCE → VIOLATION → DENY|WARN → CORRECTION → ALLOW
+ *      Beats a scenario does not exercise render as explicit absent states
+ *      (—) with a reason. Never fabricated.
+ *   3. Canonical verdict colours: pass = lime (evidence only), warn = amber,
+ *      deny = red. Terminal body text stays muted; only tokens carry colour.
+ *
+ * Linked AFTER base.css and BEFORE each page's inline <style>, so page-local
+ * rules still win where a page intentionally differs.
+ */
+
+/* ── Verdict chips ────────────────────────────────────────────────────── */
+.chip { display:inline-flex; align-items:center; gap:0.35rem; font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.06em; text-transform:uppercase; padding:0.14rem 0.5rem; border-radius:4px; border:1px solid; flex-shrink:0; }
+.chip-pass { color:var(--pass,#c8f060); border-color:rgba(200,240,96,0.3); background:rgba(200,240,96,0.1); }
+.chip-warn { color:var(--warn,#f59e0b); border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.1); }
+.chip-deny { color:var(--fail,#ef4444); border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.1); }
+.chip-na { color:var(--muted,#a8a8b8); border-color:var(--border2,#2e2e34); background:transparent; }
+
+/* ── Header taxonomy tokens ─────────────────────────────────────────────
+ * mt-type = page type · plain .mt = runnability · .mt-outcome-* = outcome */
+.demo-meta { display:flex; flex-wrap:wrap; align-items:center; gap:0.45rem 0.55rem; margin-bottom:1.25rem; }
+.mt { font-family:'DM Mono',monospace; font-size:0.62rem; letter-spacing:0.07em; text-transform:uppercase; padding:0.2rem 0.6rem; border-radius:999px; border:1px solid var(--border2,#2e2e34); color:var(--muted,#a8a8b8); white-space:nowrap; }
+.mt-type { color:var(--teal,#8be0c8); border-color:rgba(139,224,200,0.35); background:rgba(139,224,200,0.08); }
+.mt-outcome-pass { color:var(--pass,#c8f060); border-color:rgba(200,240,96,0.3); background:rgba(200,240,96,0.1); }
+.mt-outcome-warn { color:var(--warn,#f59e0b); border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.1); }
+.mt-outcome-deny { color:var(--fail,#ef4444); border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.1); }
+
+/* ── Canonical enforcement sequence ───────────────────────────────────── */
+.beat-flow { list-style:none; margin:2.25rem 0; padding:0; }
+.beat { position:relative; margin:0; padding:0 0 1.6rem 2.1rem; border-left:1px solid var(--border2,#2e2e34); }
+.beat:last-child { border-left-color:transparent; padding-bottom:0.25rem; }
+.beat::before { content:''; position:absolute; left:-0.4rem; top:0.12rem; width:0.55rem; height:0.55rem; border-radius:50%; background:var(--bg,#0c0c0d); border:2px solid var(--border2,#2e2e34); }
+.beat-hit::before { border-color:var(--accent,#c8f060); }
+.beat-warn::before { border-color:var(--warn,#f59e0b); }
+.beat-deny::before { border-color:var(--fail,#ef4444); }
+.beat-pass::before { border-color:var(--pass,#c8f060); }
+.beat-na::before { opacity:0.4; }
+.beat-head { display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.35rem; }
+.beat-tag { font-family:'DM Mono',monospace; font-size:0.66rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text,#e8e8ec); font-weight:600; }
+.beat-na .beat-tag { color:var(--muted,#a8a8b8); font-weight:400; }
+.beat-state { font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--muted,#a8a8b8); }
+.beat-body { font-size:0.85rem; color:var(--muted,#a8a8b8); line-height:1.7; }
+.beat-body strong { color:var(--text,#e8e8ec); font-weight:500; }
+.beat-body code { font-family:'DM Mono',monospace; font-size:0.8em; background:var(--surface2,#1a1a1d); border:1px solid var(--border,#222226); border-radius:4px; padding:0.05rem 0.35rem; color:var(--text,#e8e8ec); }
+.beat-body pre.b-term { background:var(--term-bg,#0a0a0d); border:1px solid var(--border,#222226); border-radius:8px; padding:0.85rem 1.05rem; font-family:'DM Mono',monospace; font-size:0.74rem; line-height:1.8; overflow-x:auto; margin:0.7rem 0 0; }
+
+/* Terminal evidence tokens (inside .b-term) */
+.t-dim { color:var(--muted,#a8a8b8); }
+.t-val { color:var(--text,#e8e8ec); }
+.t-teal { color:var(--teal,#8be0c8); }
+.t-warn { color:var(--warn,#f59e0b); font-weight:500; }
+.t-deny { color:var(--fail,#ef4444); font-weight:600; }
+.t-pass { color:var(--pass,#c8f060); font-weight:600; }
+
+/* ── Related concepts panel (shared demo shell) ───────────────────────── */
+.related-panel { margin-top:3rem; padding-top:2.5rem; border-top:1px solid var(--border,#222226); }
+.related-panel-label { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted,#a8a8b8); margin-bottom:1.25rem; }
+.related-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:1px; background:var(--border,#222226); border-radius:10px; overflow:hidden; }
+.related-list li { margin:0; }
+.related-list a { display:block; padding:1.15rem 1.35rem; background:var(--surface,#141416); text-decoration:none; transition:background 0.15s; }
+.related-list a:hover { background:var(--surface2,#1a1a1d); }
+.related-list .rel-title { color:var(--text,#e8e8ec); font-size:0.92rem; font-weight:600; margin-bottom:0.35rem; display:flex; justify-content:space-between; align-items:center; gap:0.5rem; transition:color 0.15s; }
+.related-list .rel-title::after { content:'\2192'; color:var(--accent,#c8f060); opacity:0.4; transition:opacity 0.15s, transform 0.15s; flex-shrink:0; }
+.related-list a:hover .rel-title { color:var(--accent,#c8f060); }
+.related-list a:hover .rel-title::after { opacity:1; transform:translateX(3px); }
+.related-list .rel-desc { color:var(--muted,#a8a8b8); font-size:0.82rem; line-height:1.65; margin:0; }
+
+/* ── Prev / next scenario bar (shared demo shell) ─────────────────────── */
+.scenario-cta { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--border,#222226); display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.scenario-cta a { color:var(--muted,#a8a8b8); font-size:0.82rem; text-decoration:none; font-family:'DM Mono',monospace; }
+.scenario-cta a:hover { color:var(--text,#e8e8ec); }
+.scenario-cta .next { color:var(--accent,#c8f060); }
+.scenario-cta .next:hover { color:var(--accent-dim,#a8d040); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .beat { transition: border-color .15s; }
+}

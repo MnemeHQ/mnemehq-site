@@ -10,6 +10,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="A Python coding agent proposes an architecturally invalid import. Mneme retrieves ADR-005 and flags the namespace violation; a second, corrected file checks clean against the same corpus." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -194,13 +195,13 @@
 
   <main id="main-content" tabindex="-1">
     <header>
-      <div class="article-eyebrow">
-        <span class="eyebrow-tag">Runnable demo</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNS LOCALLY</span>
+      <div class="demo-meta">
+        <span class="mt mt-type">Flagship demo</span>
+        <span class="mt">Runnable locally</span>
+        <span class="mt mt-outcome-warn">Outcome: WARN &rarr; PASS</span>
       </div>
       <h1>Catching AI-generated code that violates an <em>ADR</em>.</h1>
-      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR and flags the violation. A second file using the corrected import checks clean against the same corpus. <strong>The animation below illustrates the intended retry loop; the runnable script performs the two checks, not the regeneration in between.</strong></p>
+      <p class="lede">A Python coding agent proposes a locally reasonable but architecturally invalid import. Mneme retrieves the relevant ADR and flags the violation. The corrected import checks clean against the same corpus. <strong>The sequence below is the canonical enforcement loop; the runnable script performs the two checks deterministically.</strong></p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -213,45 +214,39 @@
     <div class="body">
       <div class="adr-primer"><span class="primer-key">ADR-005</span> separates brand identity from package namespace. <code>MnemeHQ</code> is the GitHub org, the website, and the LinkedIn page &mdash; so an agent confidently writes <code>from MnemeHQ.memory_store import &hellip;</code>. The decision declares <code>MnemeHQ</code> a forbidden dependency; the installable package namespace is <code>mneme</code>.</div>
 
-      <div class="demo-wrap">
-        <div class="panel">
-          <div class="panel-header bad">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            Agent proposes
-          </div>
-          <div class="panel-body" id="agent-body">
-            <div class="prompt-line" id="agent-prompt"></div>
-            <div id="agent-out" class="hidden"></div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-header neutral">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            mneme check --mode warn
-          </div>
-          <div class="panel-body" id="enforce-body">
-            <div class="prompt-line" id="enforce-prompt"></div>
-            <div id="enforce-out" class="hidden"></div>
-          </div>
-        </div>
-        <div class="correct-panel hidden" id="correct-panel">
-          <div class="panel-header good">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            Corrected file &mdash; checked separately
-          </div>
-          <div class="panel-body" id="correct-out"></div>
-        </div>
-      </div>
-      <button class="replay-btn" type="button" id="replay-btn">&larr; Replay</button>
-      <p class="retry-note">Illustrative: the runnable script does not inject this context or regenerate the file. It writes a second, already-corrected file and checks it independently.</p>
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-005 &middot; project_memory.json</span></div>
+          <div class="beat-body"><strong>Brand vs package namespace enforcement.</strong> <code>FORBID_DEPENDENCY: MnemeHQ</code> &mdash; the compiled record the agent answers to, not a prompt-file plea.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="beat-state">pre-generation retrieval</span></div>
+          <div class="beat-body">Before the agent writes code, the retriever scores the task against the corpus and surfaces the relevant decision into its context.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">agent proposes</span></div>
+          <div class="beat-body"><code>from MnemeHQ.memory_store import MemoryStore</code> &mdash; the brand name, not the package. Locally reasonable; architecturally invalid.</div>
+        </li>
+        <li class="beat beat-warn">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Warn</span><span class="chip chip-warn">WARN</span><span class="beat-state">mneme check --mode warn</span></div>
+          <div class="beat-body">
+            <pre class="b-term" tabindex="0"><span class="t-warn">WARN</span>  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
+      Brand vs Package Namespace Enforcement
+      Use package namespace: mneme
 
-      <h2>What happened</h2>
-
-      <ul>
-        <li>The agent proposed <code>from MnemeHQ.memory_store import MemoryStore</code> &mdash; the brand name, not the package.</li>
-        <li>ADR-005 fired with its decision ID, the forbidden token, and the compliant alternative.</li>
-        <li>A second file using the corrected import (<code>from mneme.memory_store import MemoryStore</code>) was checked independently and passed.</li>
-      </ul>
+<span class="t-dim">Result:</span> <span class="t-warn">WARN</span></pre>
+          </div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">retry against the decision</span></div>
+          <div class="beat-body">The agent receives ADR-005 and the compliant alternative, and regenerates: <code>from mneme.memory_store import MemoryStore</code>.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span><span class="beat-state">same corpus, second check</span></div>
+          <div class="beat-body"><code>[ADR-005] import compliant &mdash; mneme namespace confirmed.</code> The corrected import checks clean against the same corpus that caught the violation.</div>
+        </li>
+      </ol>
+      <p class="retry-note">Illustration of the enforcement loop. The runnable script performs the two checks (violation, then corrected file) deterministically; the regeneration in between is the loop the hook drives in a live agent session.</p>
 
       <h2>Run it yourself</h2>
 
@@ -260,13 +255,30 @@ cd mneme
 pip install -e .
 python examples/demo-adr-import.py</code></pre>
 
-      <p>Step 4 is the enforcement check. It prints exactly this:</p>
+      <p>The final step prints the WARN verdict above. Edit an ADR in <code>docs/adr/</code> and rerun &mdash; the next verdict reflects your edit.</p>
 
-      <pre tabindex="0"><code><span class="v-warn">WARN</span>  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
-      Brand vs Package Namespace Enforcement
+      <h2>What happened</h2>
 
-Result: <span class="v-warn">WARN</span></code></pre>
+      <ul>
+        <li>The agent proposed <code>from MnemeHQ.memory_store import MemoryStore</code> &mdash; the brand name, not the package.</li>
+        <li>ADR-005 fired with its decision ID, the forbidden token, and the compliant alternative.</li>
+        <li>The corrected import (<code>from mneme.memory_store import MemoryStore</code>) was checked independently against the same corpus and passed.</li>
+      </ul>
 
+      <aside class="related-panel" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
+          <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
+          <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
+          <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
+        </ul>
+      </aside>
+
+      <div class="scenario-cta">
+        <a href="/demo/adr-compiler/">&larr; Previous &middot; ADR compiler</a>
+        <a href="/demo/architectural-drift/" class="next">Next &middot; Architectural drift (DENY) &rarr;</a>
+      </div>
     </div>
 
     <section class="cta-snippet" id="try">
@@ -388,128 +400,6 @@ Result: <span class="v-warn">WARN</span></code></pre>
   </div>
 </footer>
 
-  <script>
-  window.addEventListener('load', function() {
-
-    const PROMPT = '> "Add a memory store for the governance layer."';
-
-    const AGENT_LINES = [
-      { t: 800,  html: '<div class="out-muted">Thinking...</div>' },
-      { t: 1400, html: '<div class="out-bad">from MnemeHQ.memory_store import MemoryStore</div>' },
-      { t: 1900, html: '<br>' },
-      { t: 2000, html: '<div class="out-bad">store = MemoryStore(".mneme/project_memory.json")</div>' },
-    ];
-
-    const ENFORCE_LINES = [
-      { t: 400,  html: '<div class="out-muted">Compiler emits decisions...</div>' },
-      { t: 900,  html: '<div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&nbsp;&nbsp;&#8627; ADR-005: Brand vs Package Namespace Enforcement<br>&nbsp;&nbsp;&#8627; FORBID_DEPENDENCY: MnemeHQ</div>' },
-      { t: 1500, html: '<br>' },
-      { t: 1600, html: '<div><span class="label-badge badge-warn">WARN</span> <span style="color:var(--warn)">[ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq</span></div>' },
-      { t: 2000, html: '<div class="out-muted" style="font-size:0.72rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand vs Package Namespace Enforcement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use package namespace: mneme</div>' },
-      { t: 2600, html: '<br><div class="out-muted">Retry context injected to agent...</div>' },
-    ];
-
-    const CORRECT_LINES = [
-      { t: 400,  html: '<div class="out-good">from mneme.memory_store import MemoryStore</div>' },
-      { t: 900,  html: '<br>' },
-      { t: 1000, html: '<div class="out-good">store = MemoryStore(".mneme/project_memory.json")</div>' },
-      { t: 1600, html: '<br>' },
-      { t: 1700, html: '<div><span class="label-badge badge-pass">PASS</span> <span style="color:var(--text)">[ADR-005] import compliant</span> <span class="out-muted">&mdash; mneme namespace confirmed</span></div>' },
-    ];
-
-    let timers = [];
-    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
-    function typeText(el, text, cb) {
-      let i = 0; el.textContent = '';
-      function next() {
-        if (i < text.length) { el.textContent += text[i++]; timers.push(setTimeout(next, 28)); }
-        else if (cb) cb();
-      }
-      next();
-    }
-    function appendLines(containerId, lines, startDelay, onDone) {
-      const el = document.getElementById(containerId);
-      lines.forEach(({ t, html }) => {
-        const timer = setTimeout(() => {
-          const div = document.createElement('div'); div.innerHTML = html;
-          div.classList.add('fade-in'); el.appendChild(div);
-        }, startDelay + t);
-        timers.push(timer);
-      });
-      if (onDone) timers.push(setTimeout(onDone, startDelay + lines[lines.length - 1].t + 600));
-    }
-    function prefersReduced() {
-      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-    function renderInstant(el, lines) {
-      lines.forEach(function (l) {
-        var d = document.createElement('div');
-        d.innerHTML = l.html;
-        el.appendChild(d);
-      });
-    }
-    function startDemo(fromReplay) {
-      clearTimers();
-      document.getElementById('replay-btn').style.display = 'none';
-      const agentPrompt = document.getElementById('agent-prompt');
-      const enforcePrompt = document.getElementById('enforce-prompt');
-      const agentOut = document.getElementById('agent-out');
-      const enforceOut = document.getElementById('enforce-out');
-      const correctPanel = document.getElementById('correct-panel');
-      const correctOut = document.getElementById('correct-out');
-      agentPrompt.textContent = ''; enforcePrompt.textContent = '';
-      agentOut.innerHTML = ''; agentOut.classList.add('hidden');
-      enforceOut.innerHTML = ''; enforceOut.classList.add('hidden');
-      correctPanel.classList.add('hidden'); correctOut.innerHTML = '';
-      // A reduced-motion visitor gets the finished verdict, not a typing effect.
-      if (prefersReduced()) {
-        agentPrompt.textContent = PROMPT;
-        enforcePrompt.textContent = PROMPT;
-        agentOut.classList.remove('hidden');
-        enforceOut.classList.remove('hidden');
-        correctPanel.classList.remove('hidden');
-        renderInstant(agentOut, AGENT_LINES);
-        renderInstant(enforceOut, ENFORCE_LINES);
-        renderInstant(correctOut, CORRECT_LINES);
-        document.getElementById('replay-btn').style.display = 'inline-block';
-        return;
-      }
-      if (fromReplay) {
-        const wrap = document.querySelector('.demo-wrap');
-        if (wrap && wrap.scrollIntoView) {
-          wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }
-      typeText(agentPrompt, PROMPT, () => {
-        agentOut.classList.remove('hidden');
-        appendLines('agent-out', AGENT_LINES, 0);
-      });
-      timers.push(setTimeout(() => {
-        typeText(enforcePrompt, PROMPT, () => {
-          enforceOut.classList.remove('hidden');
-          appendLines('enforce-out', ENFORCE_LINES, 0, () => {
-            timers.push(setTimeout(() => {
-              correctPanel.classList.remove('hidden');
-              appendLines('correct-out', CORRECT_LINES, 0, () => {
-                document.getElementById('replay-btn').style.display = 'inline-block';
-              });
-            }, 600));
-          });
-        });
-      }, 150));
-    }
-    var _replayBtn = document.getElementById('replay-btn');
-    if (_replayBtn) _replayBtn.addEventListener('click', function(){ startDemo(true); });
-
-    if ('IntersectionObserver' in window) {
-      var _agentIo = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) { _agentIo.disconnect(); startDemo(); }
-      }, { threshold: 0.15 });
-      _agentIo.observe(document.querySelector('.demo-wrap'));
-    } else { startDemo(); }
-
-  });
-  </script>
   <script>
     (function(){
   var path = window.location.pathname;

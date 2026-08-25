@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="An AI coding agent bypasses the repository pattern in user.service.ts, writing raw SQL against the database. Mneme blocks the ADR-004 violation with a FAIL verdict that hard-blocks the diff in CI." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -295,12 +296,11 @@
 
 <article class="article-wrap">
   <header>
-    <div class="article-eyebrow">
-      <span class="eyebrow-tag">Supporting enforcement example &middot; ADR-004</span>
-      <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">5 min read</span>
-      <span class="eyebrow-dot"></span>
-      <span class="verdict-pill fail">FAIL</span>
+    <div class="demo-meta">
+      <span class="mt mt-type">Supporting example</span>
+      <span class="mt">Runnable locally</span>
+      <span class="mt mt-outcome-deny">Outcome: DENY</span>
+      <span class="mt">5 min read</span>
     </div>
     <h1>Blocking an AI agent that bypasses the repository pattern</h1>
     <p class="lede">An AI coding agent refactors <code>user.service.ts</code> and reaches straight into the database connection &mdash; bypassing the Repository abstraction <code>ADR-004</code> exists to protect. The diff looks clean in the editor. Mneme's enforcement layer hard-fails it before it can land.</p>
@@ -317,43 +317,53 @@
     <h2>The scenario</h2>
     <p>The codebase uses the Repository pattern as its data-access boundary. <code>ADR-004</code> records the rule:</p>
     <p><strong>ADR-004 &middot; Repository pattern is the only data-access boundary.</strong> All persistence flows through repository classes (<code>UserRepository</code>, <code>OrderRepository</code>, etc). Service classes depend on repository interfaces, not on the underlying storage layer. Direct database access from a service or controller is a violation.</p>
-    <p>An engineer asks the AI assistant to "speed up <code>user.service.ts</code> by inlining the lookup." The agent obliges. The diff opens cleanly:</p>
+    <p>An engineer asks the AI assistant to "speed up <code>user.service.ts</code> by inlining the lookup." The agent obliges:</p>
 
-    <div class="panel">
-      <div class="panel-header bad">
-        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-        user.service.ts &middot; diff
-      </div>
-      <div class="panel-body" style="min-height:220px;">
-        <div class="diff-ctx">export class UserService {</div>
-        <div class="diff-rem">  constructor(private users: UserRepository) {}</div>
-        <div class="diff-add">  constructor(private db: Database) {}</div>
-        <div class="diff-ctx">  async getActive(id: string) {</div>
-        <div class="diff-rem">    return this.users.findActive(id);</div>
-        <div class="diff-add">    return this.db.query('SELECT * FROM users WHERE id = $1 AND active = true', [id]);</div>
-        <div class="diff-ctx">  }</div>
-        <div class="diff-ctx">}</div>
-      </div>
-    </div>
+    <ol class="beat-flow">
+      <li class="beat beat-hit">
+        <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-004 &middot; project_memory.json</span></div>
+        <div class="beat-body"><strong>Repository pattern is the only data-access boundary.</strong> All persistence flows through repository classes; services depend on repository interfaces, not the storage layer. Direct database access from a service is a violation.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not exercised: enforcement is post-generation in this scenario. The editor-time injection path is covered in the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</div>
+      </li>
+      <li class="beat beat-hit">
+        <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">user.service.ts &middot; diff</span></div>
+        <div class="beat-body">
+          <pre class="b-term" tabindex="0">  <span class="t-val">export class UserService {</span>
+<span class="t-dim">-   constructor(private users: UserRepository) {}</span>
+<span class="t-val">+   constructor(private db: Database) {}</span>
+  <span class="t-val">async getActive(id: string) {</span>
+<span class="t-dim">-     return this.users.findActive(id);</span>
+<span class="t-val">+     return this.db.query('SELECT * FROM users WHERE id = $1 AND active = true', [id]);</span>
+  <span class="t-val">}</span>
+  <span class="t-val">}</span></pre>
+          Locally faster; architecturally it dissolves the abstraction <code>ADR-004</code> exists to maintain. Once <code>UserService</code> talks to the database directly, the next refactor copies the pattern.
+        </div>
+      </li>
+      <li class="beat beat-deny">
+        <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">mneme check --mode strict</span></div>
+        <div class="beat-body"><strong>Violates ADR-004</strong> &mdash; Repository pattern bypassed in <code>user.service.ts</code>. Strict mode exits non-zero, the workflow fails, the PR blocks. The verdict carries the decision ID and file path, so a reviewer navigates straight to the decision record &mdash; fix the diff, or open an explicit override decision, which is itself a tracked event in <code>project_memory.json</code>.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not automatic: the fix is human, or an explicit override decision &mdash; never a silent merge.</div>
+      </li>
+      <li class="beat beat-na">
+        <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-na">&mdash;</span></div>
+        <div class="beat-body">Not exercised: this scenario ends at the blocked merge.</div>
+      </li>
+    </ol>
 
-    <p>Locally, this is faster. Architecturally, it dissolves the abstraction <code>ADR-004</code> exists to maintain. Once <code>UserService</code> talks to the database directly, the next refactor copies the pattern, and the repository layer becomes a residue rather than a contract.</p>
+    <h2>Run it yourself</h2>
+    <pre tabindex="0"><code>pip install mneme-hq
+mneme init
+mneme check --mode strict</code></pre>
 
-    <h2>Without Mneme</h2>
+    <h2>What happened</h2>
     <p>The diff reaches review. The reviewer is moving fast on a Friday afternoon. The change is small, the SQL looks correct, the test passes. The PR merges. Three months later, four services have grown direct database calls, the repository layer has unused methods that nobody refactors out, and a new engineer asks why there's a Repository pattern that nobody uses.</p>
     <p>This is the failure mode architectural decisions exist to prevent. It is not caught by a linter (the SQL is fine), not caught by tests (the behavior is correct), not caught by typing (the types check). The only signal is the architectural rule itself, and that rule lives in human memory unless something operationalizes it.</p>
-
-    <h2>With Mneme</h2>
-    <p>Mneme intercepts the diff post-generation. The retriever surfaces <code>ADR-004</code> as relevant to changes touching <code>*.service.ts</code> files. The evaluator inspects the diff for direct database access patterns and matches the violation. <code>mneme check --mode strict</code> exits non-zero with a structured verdict:</p>
-
-    <div class="check-results">
-      <div class="cr-title">mneme check &middot; repository row</div>
-      <div class="check-row">
-        <span class="verdict fail">FAIL</span>
-        <div class="desc"><strong>Violates ADR-004</strong> &mdash; Repository pattern bypassed in <code>user.service.ts</code>.</div>
-      </div>
-    </div>
-
-    <p>The verdict carries the originating decision ID (<code>ADR-004</code>) and the file path of the violation. A reviewer reading the CI output can navigate directly to the decision record, see the rationale, and either fix the diff or open an explicit override decision &mdash; which is itself a tracked event in <code>project_memory.json</code>.</p>
 
     <h2>Why FAIL and not WARN</h2>
     <p>Architectural pattern violations have outsized downstream cost. Once one service bypasses the repository layer, the next refactor copies the pattern, and within six months the abstraction is dead. Mneme returns <strong>FAIL</strong> on architectural-pattern violations by default to keep the cost localized to the diff that introduced it. The override path exists, but it is a tracked decision rather than a silent merge.</p>

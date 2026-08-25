@@ -10,6 +10,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before three downstream changes are built on top of it. Runnable in one command." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -200,11 +201,10 @@
 
   <main id="main-content" tabindex="-1">
     <header>
-      <div class="article-eyebrow">
-        <span class="eyebrow-tag">Runnable demo</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNS LOCALLY</span>
-        <span class="verdict-pill">AGENTS SCRIPTED</span>
+      <div class="demo-meta">
+        <span class="mt mt-type">Flagship demo</span>
+        <span class="mt">Scripted reproduction</span>
+        <span class="mt mt-outcome-deny">Outcome: DENY</span>
       </div>
       <h1>Preventing architectural drift from <em>AI coding agents</em>.</h1>
       <p class="lede">Three agents work across a week. Every change is locally reasonable, and the architecture still drifts, because each one quietly relaxes an invariant the team already encoded. <strong>Mneme fails the first divergence before the rest are built on top of it.</strong></p>
@@ -227,28 +227,49 @@
         <p class="primer-what">The demo shows how three agents accidentally violate these decisions over a week &mdash; and how <strong>Mneme fails the first divergence</strong> before it propagates.</p>
       </div>
 
-      <!-- ── TERMINAL DEMO ── swap .demo-terminal-sim for <video> when VHS recording is ready -->
-      <div class="demo-terminal-wrapper" id="terminal-demo" aria-label="Live terminal demo">
-        <div class="demo-terminal-chrome">
-          <span class="dtc-dot dtc-red"></span>
-          <span class="dtc-dot dtc-yellow"></span>
-          <span class="dtc-dot dtc-green"></span>
-          <span class="dtc-title">mneme-demo — bash</span>
-          <div class="dtc-controls">
-            <button class="dtc-btn" id="term-pause-btn" aria-label="Pause animation" aria-pressed="false">
-              <span class="dtc-pause-icon" aria-hidden="true">⏸</span>
-            </button>
-            <button class="dtc-btn" id="term-replay-btn" aria-label="Replay animation">
-              <span aria-hidden="true">↺</span> Replay
-            </button>
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">compiled corpus</span></div>
+          <div class="beat-body"><code>ADR-001</code> prohibits external databases; <code>ADR-004</code> requires persistence to go through a Repository abstraction. Both live outside every agent.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: the scripted agents receive no pre-generation guidance. This reproduction isolates post-generation enforcement &mdash; the pre-generation path is the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">Agent A &middot; Monday</span></div>
+          <div class="beat-body">"Speed up the user lookup endpoint" &mdash; the diff reaches for Redis:
+            <pre class="b-term" tabindex="0"><span class="t-dim">$ mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn</span>
+
+<span class="t-dim">&#8627; Agent A -- Monday: "speed up the user lookup endpoint"</span>
+
+<span class="t-teal">Diff:</span>
+  <span class="t-val">import redis</span>
+  <span class="t-val">_cache = redis.Redis(host="localhost", port=6379)</span></pre>
           </div>
-        </div>
-        <div class="demo-terminal-sim" id="term-output" aria-live="polite" aria-atomic="false" role="log">
-          <div class="term-line" id="term-prompt-line">
-            <span class="term-prompt">$&nbsp;</span><span class="term-cmd" id="term-cmd"></span><span class="term-cursor" id="term-cursor" aria-hidden="true"></span>
+        </li>
+        <li class="beat beat-deny">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">mneme check</span></div>
+          <div class="beat-body">
+            <pre class="b-term" tabindex="0"><span class="t-deny">FAIL</span>  [ADR-001] anti_pattern "redis-py" -- trigger: redis
+      JSON storage only -- no external database.
+<span class="t-warn">WARN</span>  [ADR-001] constraint "no redis" -- trigger: redis
+      JSON storage only -- no external database.
+
+<span class="t-dim">Result:</span> <span class="t-deny">FAIL</span></pre>
+            The script runs in warn mode, which always exits 0; a strict-mode CI gate maps this same FAIL to a non-zero exit and blocks the merge.
           </div>
-        </div>
-      </div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">independent check</span></div>
+          <div class="beat-body">A second, corrected file using the existing JSON cache module is checked against the same corpus.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span><span class="beat-state">same corpus</span></div>
+          <div class="beat-body">The corrected file passes. Agent B, working from the corrected codebase, produces a compliant diff that also passes &mdash; a fourth check confirms Agent B's original Redis-based approach would have returned the same <code>FAIL</code>.</div>
+        </li>
+      </ol>
+
       <!-- Accessible static transcript -->
       <details class="term-transcript">
         <summary>Full terminal transcript</summary>
@@ -268,29 +289,28 @@ WARN  [ADR-001] constraint "no redis" -- trigger: redis
 Result: FAIL</code></pre>
       </details>
 
-      <h2>What happened</h2>
-
-      <ul>
-        <li>Agent A proposed a Redis cache. ADR-001 forbids external databases, so the check returned <code>FAIL</code>.</li>
-        <li>A second, corrected file using the existing JSON cache module was checked independently and passed.</li>
-        <li>Agent B, working from the corrected codebase, produced a compliant diff that also passed &mdash; a fourth check confirms Agent B's original Redis-based approach would have returned the same <code>FAIL</code>.</li>
-      </ul>
-
       <h2>Run it yourself</h2>
 
       <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme/examples/architectural-drift
 python run.py</code></pre>
 
-      <p>Step 1 is the first divergence. It prints exactly this:</p>
+      <p>The script prints the FAIL verdict above. The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved.</p>
 
-      <pre tabindex="0"><code><span class="v-fail">FAIL</span>  [ADR-001] anti_pattern "redis-py" -- trigger: redis
-<span class="v-warn">WARN</span>  [ADR-001] constraint "no redis" -- trigger: redis
+      <aside class="related-panel" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural drift prevention</div><p class="rel-desc">Catching the first divergence before later changes are built on top of it.</p></a></li>
+          <li><a href="/concepts/multi-agent-drift/"><div class="rel-title">Multi-agent drift</div><p class="rel-desc">How distributed AI execution amplifies small architectural relaxations into structural decay.</p></a></li>
+          <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
+          <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
+        </ul>
+      </aside>
 
-Result: <span class="v-fail">FAIL</span></code></pre>
-
-      <p>The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved. The script runs in warn mode, which always exits 0; a strict-mode CI gate maps this same FAIL to a non-zero exit and blocks the merge.</p>
-
+      <div class="scenario-cta">
+        <a href="/demo/governed-python-agent/">&larr; Previous &middot; Governed Python agent</a>
+        <a href="/demo/multi-agent-governance/" class="next">Next &middot; Multi-agent governance &rarr;</a>
+      </div>
     </div>
 
     <section class="cta-snippet" id="try">
@@ -438,122 +458,6 @@ Result: <span class="v-fail">FAIL</span></code></pre>
       window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
     })();
   </script>
-<script>
-  (function(){
-    /* ── Terminal demo animation ── */
-    var CMD = 'mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn';
-
-    var LINES = [
-      [600,  '',                                                          'term-blank'],
-      [0,    '↳ Agent A -- Monday: "speed up the user lookup endpoint"', 'term-muted'],
-      [1100, '',                                                          'term-blank'],
-      [0,    'Diff:',                                                     'term-key'],
-      [180,  '  import redis',                                            'term-value'],
-      [120,  '  _cache = redis.Redis(host="localhost", port=6379)',     'term-value'],
-      [500,  '',                                                          'term-blank'],
-      [0,    'FAIL  [ADR-001] anti_pattern "redis-py" -- trigger: redis', 'term-blocked'],
-      [180,  '      JSON storage only -- no external database.',         'term-value'],
-      [0,    'WARN  [ADR-001] constraint "no redis" -- trigger: redis', 'term-key'],
-      [180,  '      JSON storage only -- no external database.',         'term-value'],
-      [500,  '',                                                          'term-blank'],
-      [0,    'Result: FAIL',                                              'term-blocked']
-    ];
-
-    var cmdEl    = document.getElementById('term-cmd');
-    var cursor   = document.getElementById('term-cursor');
-    var output   = document.getElementById('term-output');
-    var pauseBtn = document.getElementById('term-pause-btn');
-    var replayBtn= document.getElementById('term-replay-btn');
-
-    if (!cmdEl || !output) return;
-
-    var timers   = [];
-    var paused   = false;
-    var done     = false;
-    var remaining = [];
-
-    function clearTimers() { timers.forEach(clearTimeout); timers = []; remaining = []; }
-
-    function schedule(fn, delay) { var id = setTimeout(fn, delay); timers.push(id); return id; }
-
-    function appendLine(text, cls) {
-      if (!text && cls === 'term-blank') {
-        var b = document.createElement('div'); b.className = 'term-blank'; output.appendChild(b); return;
-      }
-      var d = document.createElement('div');
-      d.className = 'term-output-line ' + (cls || '');
-      d.textContent = text;
-      output.appendChild(d);
-    }
-
-    function typeCmd(str, idx, cb) {
-      if (paused) { remaining.unshift({fn: function(){ typeCmd(str, idx, cb); }, delay: 0}); return; }
-      if (idx >= str.length) { cb(); return; }
-      cmdEl.textContent += str[idx];
-      schedule(function(){ typeCmd(str, idx + 1, cb); }, 28 + Math.random() * 22);
-    }
-
-    function runLines(index) {
-      if (index >= LINES.length) { done = true; cursor.classList.add('hidden'); return; }
-      var entry = LINES[index];
-      schedule(function(){
-        if (paused) { remaining.unshift({fn: function(){ runLines(index); }, delay: 0}); return; }
-        appendLine(entry[1], entry[2]);
-        runLines(index + 1);
-      }, entry[0]);
-    }
-
-    function start() {
-      clearTimers();
-      done = false; paused = false;
-      pauseBtn.setAttribute('aria-pressed', 'false');
-      pauseBtn.querySelector('.dtc-pause-icon').textContent = '⏸';
-      cmdEl.textContent = '';
-      cursor.classList.remove('hidden');
-      var promptLine = document.getElementById('term-prompt-line');
-      while (output.lastChild !== promptLine) output.removeChild(output.lastChild);
-
-      // A reduced-motion visitor gets the finished transcript, not a typing
-      // effect. The pause control is meaningless once nothing is moving.
-      if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        cmdEl.textContent = CMD;
-        cursor.classList.add('hidden');
-        LINES.forEach(function (entry) { appendLine(entry[1], entry[2]); });
-        done = true;
-        pauseBtn.setAttribute('disabled', '');
-        pauseBtn.setAttribute('aria-hidden', 'true');
-        return;
-      }
-      typeCmd(CMD, 0, function(){
-        cursor.classList.add('hidden');
-        runLines(0);
-      });
-    }
-
-    pauseBtn.addEventListener('click', function(){
-      if (done) return;
-      paused = !paused;
-      pauseBtn.setAttribute('aria-pressed', String(paused));
-      pauseBtn.querySelector('.dtc-pause-icon').textContent = paused ? '▶' : '⏸';
-      if (!paused && remaining.length) { var next = remaining.shift(); schedule(next.fn, next.delay); }
-    });
-
-    replayBtn.addEventListener('click', function(){ pauseBtn.removeAttribute('disabled'); pauseBtn.removeAttribute('aria-hidden'); start(); });
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function(entries){
-        if (entries[0].isIntersecting) { io.disconnect(); start(); }
-      }, { threshold: 0.25 });
-      io.observe(document.getElementById('terminal-demo'));
-    } else {
-      start();
-    }
-  })();
-  </script>
-
-
-
-
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;

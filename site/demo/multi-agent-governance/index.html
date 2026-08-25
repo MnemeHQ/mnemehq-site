@@ -10,6 +10,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
+  <link rel="stylesheet" href="/assets/css/demos.css">
   <meta name="description" content="Three AI agents act on the same codebase in sequence: one introduces a divergence, the next builds on it, the third remediates. Mneme keeps the architectural invariants coherent across actors, sessions, and retries — because they live outside the agents." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -188,11 +189,10 @@
 
   <main id="main-content" tabindex="-1">
     <header>
-      <div class="article-eyebrow">
-        <span class="eyebrow-tag">Runnable demo</span>
-        <span class="eyebrow-dot"></span>
-        <span class="verdict-pill">RUNS LOCALLY</span>
-        <span class="verdict-pill">AGENTS SCRIPTED</span>
+      <div class="demo-meta">
+        <span class="mt mt-type">Flagship demo</span>
+        <span class="mt">Scripted reproduction</span>
+        <span class="mt mt-outcome-deny">Outcome: DENY &rarr; PASS</span>
       </div>
       <h1>Keeping architecture consistent across <em>multiple AI agents</em>.</h1>
       <p class="lede">Three actors touch the same service in three separate sessions, sharing no memory with each other. They share one thing: the compiled decision corpus. <strong>The invariants hold because they live outside every actor, not inside any of them.</strong></p>
@@ -215,13 +215,94 @@
         <p class="primer-what">The demo shows how three independent actors stay aligned because they all evaluate against this same <strong>compiled corpus</strong> &mdash; not against each other.</p>
       </div>
 
-      <h2>What happened</h2>
+      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor A &middot; Monday &middot; fresh session</h3>
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-001 &middot; shared corpus</span></div>
+          <div class="beat-body">External databases are forbidden. The constraint is waiting in the corpus before the actor writes anything.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: scripted actors receive no pre-generation guidance; enforcement is post-generation.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">proposes Redis</span></div>
+          <div class="beat-body">A locally reasonable caching choice that violates <code>ADR-001</code>.</div>
+        </li>
+        <li class="beat beat-deny">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">ADR-001 FAIL</span></div>
+          <div class="beat-body">The check returns <code>FAIL</code> on the Redis dependency &mdash; the divergence is stopped at the first actor, not discovered in production.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">independent check</span></div>
+          <div class="beat-body">A second, corrected file is checked independently against the same corpus.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
+          <div class="beat-body">The corrected file passes, leaving a compliant primitive in the codebase for the next actor.</div>
+        </li>
+      </ol>
 
-      <ul>
-        <li>Actor A proposed Redis. ADR-001 returned <code>FAIL</code>; a second, corrected file checked independently and passed.</li>
-        <li>Actor B, in a fresh session with no memory of A, built on the corrected primitive and passed.</li>
-        <li>Actor C's remediation reached for an ORM. ADR-003 returned <code>FAIL</code>; the compliant remediation passed.</li>
-      </ul>
+      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor B &middot; Tuesday &middot; no memory of A</h3>
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">same corpus &middot; fresh session</span></div>
+          <div class="beat-body">Actor B shares no memory with A. The corpus is the only thing the two sessions have in common.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: same post-generation setup as Actor A.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Nothing proposed against the corpus: B builds on the compliant primitive A converged to.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Nothing to block.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Nothing to correct.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
+          <div class="beat-body">B's session passes against the same corpus &mdash; the invariant holds across actors without shared memory.</div>
+        </li>
+      </ol>
+
+      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor C &middot; Wednesday &middot; remediation pass</h3>
+      <ol class="beat-flow">
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-003 &middot; shared corpus</span></div>
+          <div class="beat-body">No ORMs in v1 &mdash; a second invariant in the same compiled corpus.</div>
+        </li>
+        <li class="beat beat-na">
+          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
+          <div class="beat-body">Not exercised: same post-generation setup.</div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">remediation reaches for an ORM</span></div>
+          <div class="beat-body">The remediation reaches for <code>sqlalchemy</code> &mdash; the interesting one: a genuine architectural violation surfaced explicitly rather than silently resolved.</div>
+        </li>
+        <li class="beat beat-deny">
+          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">mneme check</span></div>
+          <div class="beat-body">
+            <pre class="b-term" tabindex="0"><span class="t-deny">FAIL</span>  [ADR-003] anti_pattern "sqlalchemy" -- trigger: sqlalchemy
+<span class="t-warn">WARN</span>  [ADR-003] constraint "no sqlalchemy" -- trigger: sqlalchemy
+
+<span class="t-dim">Result:</span> <span class="t-deny">FAIL</span></pre>
+          </div>
+        </li>
+        <li class="beat beat-hit">
+          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">compliant remediation</span></div>
+          <div class="beat-body">The remediation is reworked without the ORM.</div>
+        </li>
+        <li class="beat beat-pass">
+          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
+          <div class="beat-body">The compliant remediation passes. Three actors, three sessions, one corpus &mdash; the invariants held for every one of them.</div>
+        </li>
+      </ol>
 
       <h2>Run it yourself</h2>
 
@@ -229,15 +310,22 @@
 cd mneme/examples/multi-agent-governance
 python run.py</code></pre>
 
-      <p>Actor C is the interesting one &mdash; a genuine architectural violation surfaced explicitly rather than silently resolved:</p>
-
-      <pre tabindex="0"><code><span class="v-fail">FAIL</span>  [ADR-003] anti_pattern "sqlalchemy" -- trigger: sqlalchemy
-<span class="v-warn">WARN</span>  [ADR-003] constraint "no sqlalchemy" -- trigger: sqlalchemy
-
-Result: <span class="v-fail">FAIL</span></code></pre>
-
       <p>The actors are scripted so the enforcement output stays deterministic. This is not a multi-agent runtime and does not claim to be one &mdash; it shows that one corpus keeps three independent sessions coherent.</p>
 
+      <aside class="related-panel" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/multi-agent-continuity/"><div class="rel-title">Multi-agent continuity</div><p class="rel-desc">Decisions persist across agents, sessions, and time. Decision-side memory, not agent-side memory.</p></a></li>
+          <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance propagation</div><p class="rel-desc">One compiled decision reaches every agent, every developer, every CI run with identical semantics.</p></a></li>
+          <li><a href="/concepts/multi-agent-drift/"><div class="rel-title">Multi-agent drift</div><p class="rel-desc">How distributed AI execution amplifies small architectural relaxations into structural decay.</p></a></li>
+          <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
+        </ul>
+      </aside>
+
+      <div class="scenario-cta">
+        <a href="/demo/architectural-drift/">&larr; Previous &middot; Architectural drift (DENY)</a>
+        <a href="/demo/adr-compiler/" class="next">Next &middot; ADR compiler &rarr;</a>
+      </div>
     </div>
 
     <section class="cta-snippet" id="try">
