@@ -286,7 +286,16 @@
     <p>The post&rsquo;s sharpest material is a paradox. A January 2026 study GitHub cites, titled &ldquo;More Code, Less Reuse,&rdquo; found that agent-generated code introduces more redundancy and more technical debt per change than human-written code. The same study found that reviewers reported feeling more confident approving agent-generated changes. Debt per change went up. Approval confidence went up with it.</p>
     <p>Read together, those two findings describe a governance failure mode, documented at scale by the platform with the best vantage point in the industry: code that measures worse on architectural quality is clearing human review more easily. The control everyone relies on &mdash; a person looking at the diff before it merges &mdash; is approving the wrong things with growing conviction. GitHub&rsquo;s response is to strengthen the reviewer. The data in its own post suggests the problem lives a layer earlier.</p>
 
-    <h2>Why Agent PRs Feel Safer Than They Are</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Why Agent PRs Feel Safer Than They Are</h2>
     <p>Agent PRs look like careful work. They follow naming conventions. They arrive with tests, and the tests pass. They handle edge cases a rushed human would skip, and they come wrapped in tidy descriptions. Every surface signal reviewers learned to trust &mdash; consistent formatting, green CI, comprehensive-looking coverage &mdash; is a signal agents now produce by default.</p>
     <p>&ldquo;More Code, Less Reuse&rdquo; shows what the polish conceals. The debt is structural: duplicated utilities, parallel abstractions, redundancy that accumulates across changes without announcing itself in any single diff. A reviewer scanning one well-formatted PR has no way to see that it adds the codebase&rsquo;s fourth slightly different retry helper. The signal that says &ldquo;this author was careful&rdquo; and the defect class that says &ldquo;this codebase is decaying&rdquo; live at different altitudes, and review operates at the lower one.</p>
     <p>That asymmetry is what makes the confidence finding so uncomfortable. The reviewer is being asked to detect, inside a single diff, the architectural problems the generation process never checked for at all &mdash; while the polish of that diff actively lowers their guard. <a href="/insights/why-code-review-cannot-scale-with-ai-output/">Code review already struggles to scale with AI output</a> on volume; GitHub&rsquo;s cited research suggests accuracy degrades alongside it.</p>

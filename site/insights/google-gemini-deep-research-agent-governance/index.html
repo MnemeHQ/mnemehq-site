@@ -331,6 +331,15 @@
 <p>Because that cycle of planning, searching, reading, and writing &ldquo;typically exceeds the standard timeout limits of synchronous API calls,&rdquo; the agent runs asynchronously. Tasks can take several minutes, so you set <em>background=true</em> and either poll for results or stream updates. The agent is reached exclusively through the Interactions API; it cannot be called through the older <em>generate_content</em> path.</p>
 <p>The <a href="https://ai.google.dev/gemini-api/docs/interactions" target="_blank" rel="noopener">Interactions API</a> is, per Google, the new way to use the Gemini API. It works across both Gemini models and agents &mdash; its supported-entity table tags each entry as either a Model or an Agent. It offers server-side history management for simplified multi-turn state, native support for multi-step tool use and orchestration, and long-running background tasks. Deep Research is the first agent surfaced this way, accessible in Google AI Studio and through the Gemini API.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
 <h2>More than a research tool</h2>
 <p>The capability is useful. The architectural change underneath it is the part worth watching.</p>
 <p>The old pattern was simple. An application called a model: one request, one response, with all the planning, retrieval, and control flow written and owned by the application. The model was a function; everything around it was your code.</p>

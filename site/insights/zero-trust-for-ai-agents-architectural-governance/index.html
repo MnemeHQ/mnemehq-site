@@ -302,6 +302,15 @@
 <p>Applied to agents, that becomes a thorough security program. Cryptographically-rooted agent identity instead of static API keys (which the framework says to &ldquo;treat as already-compromised&rdquo;). Short-lived tokens and deny-by-default access control. OWASP&rsquo;s <strong>&ldquo;Least Agency&rdquo;</strong> &mdash; least privilege extended to agents, restricting what each tool can do, how often, and where. Sandboxed execution, secrets management, immutable audit, behavioral monitoring, prompt-injection defense. The framework even offers a sharp design test for every control: <em>does this make the attack impossible, or just tedious?</em> Friction is not security.</p>
 <p>Notice what all of it verifies. Identity verifies <em>who the agent is</em>. Access control and Least Agency verify <em>what it is allowed to touch</em>. Sandboxing verifies <em>what it can reach if it goes wrong</em>. Every control answers one shape of question: <strong>can this agent perform this action, and how do we contain it if it is compromised?</strong> That is the right question for security. It is not the only question an autonomous coding agent raises.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
 <h2>The one trust the doctrine still leaves standing</h2>
 <p>Here is the move. Zero trust&rsquo;s great insight was that authentication is not authorization, and authorization is not safety &mdash; so you stop trusting the actor and verify every request at the boundary. But when the agent is writing code, there is a step after the request that the framework never reaches: the agent acts <em>within its permissions</em> and produces an <strong>artifact</strong> &mdash; a diff. And every system in the stack implicitly trusts that artifact, because the action that produced it was permitted.</p>
 <p>That is the last unexamined trust. A permitted action is silently assumed to yield a conforming change. But a cryptographic identity, a least-agency tool scope, and a sandbox say nothing about whether the diff introduces a banned dependency, crosses a ratified service boundary, or contradicts an architectural decision the team made on purpose. The agent can be fully zero-trust compliant and the change can still be wrong &mdash; not insecure, just architecturally wrong. Authentication is not conformance. <strong>A permission grant is not a conformance guarantee.</strong></p>

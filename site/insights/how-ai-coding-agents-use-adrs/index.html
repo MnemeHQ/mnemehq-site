@@ -306,7 +306,16 @@
     <p>An Architecture Decision Record is a short, structured note about a single architectural decision. The format was popularized by Michael Nygard in <a href="https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions" target="_blank" rel="noopener">Documenting Architecture Decisions</a>, and it is deliberately minimal: a title, the <em>context</em> (the forces at play), the <em>decision</em> itself stated in plain active voice, and the <em>consequences</em> that follow from it. A status field tracks whether the decision is proposed, accepted, deprecated, or superseded.</p>
     <p>The point of an ADR is to preserve the reasoning that would otherwise evaporate. Six months after a decision, the code shows <em>what</em> was built but not <em>why</em>, and the person who held the why in their head has moved teams. An ADR is the answer to &ldquo;why is it done this way?&rdquo; written down at the moment the choice was made. Examples are familiar: use PostgreSQL, not a document store; all async work goes through the existing worker service; services never read each other&rsquo;s databases directly.</p>
 
-    <h2>Why ADRs Matter More in the Agent Era</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Why ADRs Matter More in the Agent Era</h2>
     <p>ADRs used to be a nicety. In a team of humans, the important decisions lived partly in the documents and partly in the shared memory of the people who made them. A new engineer absorbed the conventions by reading the code, asking questions, and getting corrected in review. That transmission was slow, but it worked because the pace of change matched the pace of a human reading and understanding.</p>
     <p>AI coding agents break that assumption. An agent can touch twenty files in a minute, open a pull request, and move to the next task before anyone reads a line. It has no shared memory of the last standup and no scar tissue from the outage that produced a given rule. The decisions humans used to carry in their heads now have to be written down &mdash; and, more importantly, written down in a form something can act on. When generation is this fast, the only conventions that survive are the ones expressed explicitly. This is exactly why <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">context alone does not prevent architectural drift</a>: an agent that produces plausible, working code at speed will produce plausible, working, <em>inconsistent</em> code just as fast unless something holds it to the recorded decisions.</p>
 

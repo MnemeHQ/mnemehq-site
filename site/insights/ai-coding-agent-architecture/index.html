@@ -307,7 +307,16 @@
     <p>Anthropic&rsquo;s guidance on <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">building effective agents</a> makes the same distinction from the model builder&rsquo;s side: the foundational block is &ldquo;an LLM enhanced with augmentations such as retrieval, tools, and memory,&rdquo; and an agent is that model &ldquo;using tools based on environmental feedback in a loop.&rdquo; The model proposes. The system around it acts, observes, and decides what to do next.</p>
     <p>Once you accept that a coding agent is a stack rather than a model, the useful question changes. It is no longer &ldquo;which model is best?&rdquo; It is &ldquo;which layers do I have, and which am I missing?&rdquo; Most teams have more of the stack than they realize, and are missing the same one or two layers as everyone else.</p>
 
-    <h2>The Layers, Bottom to Top</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The Layers, Bottom to Top</h2>
     <p>Read the stack from the ground up. Each layer depends on the one below it and hands a well-defined job to the one above.</p>
     <ul>
       <li><strong>The model.</strong> This is the generator. Given a task and some context, it produces candidate code: a diff, a new file, a shell command, a plan. It is remarkably good at this and remarkably indifferent to whether the result fits your system. The model has no memory of your architecture and no stake in your conventions. It generates; it does not govern.</li>

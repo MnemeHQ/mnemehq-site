@@ -287,7 +287,16 @@
     <p>Segregation of duties exists so the person who initiates a transaction cannot also approve it. Data-handling boundaries exist because customer financial data sits under specific regulatory regimes. Controlled dependency lists exist because an unreviewed library in a payments path is a supply-chain exposure. Approval gates exist so that a change to a system of record is signed off before it ships. These are not stylistic conventions an engineer can renegotiate at 2 a.m. They are the encoded form of obligations a bank, insurer, or fintech has made to regulators and customers.</p>
     <p>This is what makes <a href="/insights/ai-governance-for-regulated-industries/">architectural drift in a regulated industry</a> a different category of problem. A locally correct change that crosses one of these boundaries is not a code-review nit. It is a control failure. The code can be clean, tested, and shipped, and still represent a break in a documented control &mdash; one that nobody flagged because, viewed in isolation, the change looked fine.</p>
 
-    <h2>How AI Coding Agents Create Governance Debt</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>How AI Coding Agents Create Governance Debt</h2>
     <p>AI coding agents are very good at producing changes that look fine. That is precisely the property that makes them dangerous in a regulated codebase. An agent generates many changes quickly, each one locally plausible, each one passing the tests in front of it. None of them automatically carry the thing finance actually requires: the rationale and the approval that say <em>this change is allowed, and here is why</em>.</p>
     <p>The result is governance debt. It accrues the same way financial debt does &mdash; quietly, in small increments, until the balance is large enough to matter. Every undocumented agent-made change that touches a controlled boundary is a small liability. A direct database write that should have gone through a service of record. A new outbound dependency added to a payments module. A reconciliation step quietly relaxed because it was failing a test. Individually, each is defensible. In aggregate, they form a codebase whose current behavior no longer matches its documented design, and whose history cannot explain how it got there.</p>
     <p>This is the same dynamic that turns <a href="/insights/pr-review-is-becoming-incident-response/">pull-request review into incident response</a>: when the rate of change outpaces the rate of human scrutiny, review stops being a gate and becomes an after-the-fact investigation. In finance, the investigation is not run by your own engineers. It is run by an examiner.</p>

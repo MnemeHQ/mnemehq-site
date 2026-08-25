@@ -287,7 +287,16 @@
 
     <div class="callout"><p><strong>Code-level quality and architectural integrity are now moving in opposite directions.</strong></p></div>
 
-    <h2>Why agent output can be clean and still be debt</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Why agent output can be clean and still be debt</h2>
     <p>The uncomfortable part of architectural debt is that it does not look like a defect. Every individual change compiles, passes its tests, satisfies its ticket, and reads well in review. The damage is only visible in aggregate, as the distance between how the system was designed and how it now behaves.</p>
     <p>An agent optimizes for the task in front of it. It has no stake in the decision made eleven months ago about which layer owns persistence, and no reliable way to know that the decision exists. So it does the locally sensible thing. It adds the direct database call, introduces the second HTTP client, duplicates the abstraction that already exists two directories away. None of that is bad code. All of it is <a href="/concepts/architectural-drift/">drift</a>.</p>
 

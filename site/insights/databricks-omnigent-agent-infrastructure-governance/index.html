@@ -286,7 +286,16 @@
     <p>Databricks frames the product around three capabilities. <strong>Composition</strong> lets teams combine models, harnesses, and techniques without rewriting, switching between agents with one-line changes. <strong>Control</strong> applies stateful, contextual policies that track agent actions and enforce guardrails such as cost budgets and permissions at the meta-harness layer rather than through prompts. <strong>Collaboration</strong> shares a live agent session by URL so teammates can review files, comment, and steer in real time. Underneath sits sandboxed execution with operating-system access controls. The thesis is stated plainly: to combine agents, govern them, and work on them with other people, you need a layer above the harness, and Omnigent is that layer.</p>
     <p>Omnigent&rsquo;s control plane is genuinely governance-flavored &mdash; budgets, permissions, action tracking. But it governs agent <em>execution</em>: which agent runs, what it may spend, what it may access. That is a different object from the architecture of the code those agents change.</p>
 
-    <h2>Orchestration Governs Execution. It Doesn&rsquo;t Govern Intent.</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Orchestration Governs Execution. It Doesn&rsquo;t Govern Intent.</h2>
     <p>The questions a meta-harness answers are execution questions. Which agent should run this step? What is its budget? What can it touch? Can a human take the wheel mid-session? Those matter, and Omnigent answers them well. They are not the questions a codebase asks.</p>
     <p>Multi-agent orchestration actually makes the architectural problem harder, not easier. When Omnigent composes a workflow &mdash; one agent plans, another implements, another reviews &mdash; every agent that does not know a given architectural decision re-decides it. The orchestration layer routes work between agents; it does not carry the architecture decision records, the service boundaries, and the engineering standards along with the work. More agents means more independent chances to <a href="/concepts/architectural-drift/">drift</a> from the intended design.</p>
 

@@ -285,7 +285,16 @@
     <p>For a small repository with a handful of conventions, this works well. The agent reads the file, follows the patterns, and produces code that looks like yours. Rule files solve the cold-start problem &mdash; the gap between a generic model and a project-specific one. That is a genuine and useful job.</p>
     <div class="callout"><p><strong>A rule file is not documentation. It is an always-on prompt prefix.</strong> Every token in it is prepended to every request, whether or not it is relevant to the task at hand.</p></div>
 
-    <h2>What a rule file actually is</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>What a rule file actually is</h2>
     <p>It helps to be precise about the mechanism. A rule file is not consulted when needed; it is loaded unconditionally. When the agent edits a CSS file, your database-migration conventions are still in the context window. When it writes a test, your API-versioning policy is still there. The model is asked to hold every rule you have ever written in working memory and apply only the ones that matter &mdash; for every single call.</p>
     <p>That design has a predictable failure curve. It is fine at ten rules and degrades steadily toward a hundred. The degradation is not a bug in any particular tool. It is structural, and it shows up along three axes.</p>
 

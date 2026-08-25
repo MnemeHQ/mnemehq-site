@@ -287,7 +287,16 @@
 
     <div class="callout"><p><strong>An architectural decision is a requirement with a very long half-life. Compliance at task one predicts very little about task ten.</strong></p></div>
 
-    <h2>Performance degrades across persistent rounds</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Performance degrades across persistent rounds</h2>
     <p><a href="https://arxiv.org/abs/2605.24110" target="_blank" rel="noopener">EvoCode-Bench</a> is the closest available proxy. It evaluates coding agents across 26 tasks spanning 227 sequential rounds, five to fifteen rounds each, in five domains including build systems, data engineering, and cloud and security work.</p>
     <p>Three design choices make it relevant. The workspace persists, so code and decisions from round one are still present at round fifteen. Specifications evolve, and some new instructions deliberately conflict with earlier assumptions. Testing is cumulative, so every round is scored against all accumulated requirements rather than only the newest one.</p>
     <p>Only two of the evaluated agents exceed half of the available multi-round credit. The failure profile is the more useful result. Weaker agents drop early requirements. Stronger agents get further and then fail on conflict resolution, self-correction, and regression management in later turns. Capability does not remove the problem. It relocates it.</p>

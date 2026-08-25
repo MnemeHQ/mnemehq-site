@@ -286,7 +286,16 @@
     <p>The paper organizes that layer into two halves. <strong>Governance controls</strong> cover authorization workflows, bounded execution, testing and evaluation, observability, and fail-safe modes. <strong>Governance workflows</strong> cover downstream evaluation, human and agentic collaboration, and AI lifecycle development. The spirit is captured in one line: &ldquo;Just because Agents are powerful does not mean they should by default have access to all data or be able to take any action in any system.&rdquo; And on reliability, Palantir is blunt about why the stakes differ by use case: an agent that fails 1% of the time may be fine for sales emails, but automatically shipping that code to production would be an unacceptable risk.</p>
     <p>This is operational agent governance, in the same lineage as the enterprise platforms from IBM, ServiceNow, and others. It is a strong articulation of a real category. It is also not the whole problem for software teams.</p>
 
-    <h2>What Palantir Names but Doesn&rsquo;t Solve</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>What Palantir Names but Doesn&rsquo;t Solve</h2>
     <p>The most telling sentence in the paper, for an engineering audience, is this: &ldquo;Take AI Coding Agents. They can easily produce code which is effective and efficient, but the code is very difficult for human engineers to understand.&rdquo; Palantir identifies the problem precisely. Then its framework stops where every operational-governance framework stops: authorization, bounded execution, evaluation, observability, fail-safes.</p>
     <p>None of those controls answers the question a software organization actually has about a coding agent&rsquo;s output. Did the change violate an architecture decision record? Did it cross a service boundary? Did it introduce a prohibited dependency? Did it contradict a decision the team made eighteen months ago? An agent can be perfectly authorized, fully observed, and bounded to exactly the systems it should touch, and still write code that quietly erodes the architecture.</p>
 

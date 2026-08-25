@@ -285,7 +285,16 @@
     <p>An agent can produce 2,000 lines of working code in minutes. The tests pass. CI is green. The pull request reads plausibly. The question nobody in that loop has answered: should the change have been 200 lines? Did it reuse the abstractions the codebase already has? Did it preserve the decisions the team already made about boundaries, dependencies, and data access?</p>
     <p>Generated volume is not engineering progress. The economics of producing code have collapsed, and every other cost in the delivery pipeline &mdash; understanding the change, reviewing it, maintaining it, unwinding it when it turns out to be wrong &mdash; stayed where it was. Some of those costs grew, because there is now more code to apply them to.</p>
 
-    <h2>The New Constraint Is Verification</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The New Constraint Is Verification</h2>
     <p>Glean&rsquo;s <a href="https://www.glean.com/work-ai-institute/reports/work-ai-index-report">Work AI Index</a>, a survey of 6,000 full-time digital workers across the US, UK, and Australia, gives the pattern a name: botsitting &mdash; the unbudgeted labor of making AI usable. Workers in the survey report saving around 11 hours a week with AI while spending 6.4 hours a week botsitting: 2.3 hours feeding the AI context, 2.2 hours supervising its output, and 1.7 hours debugging its mistakes. That is 37% of all AI-related time spent on supervision rather than production, and only 13% of workers say AI has made their organization perform significantly better. The numbers are self-reported and directional rather than precise &mdash; but the shape of the curve matches what engineering teams see daily.</p>
     <p>For software teams the bill itemizes differently, and we&rsquo;d call it a <strong>verification tax</strong>: reviewing more generated code, checking whether an implementation follows existing architectural decisions, spotting unnecessary complexity, finding subtle boundary violations, and debugging changes no one fully understands. That last item is not hypothetical. In Glean&rsquo;s data, 41% of workers admit they sometimes deliver AI-produced work they could not fully explain if asked. Run that behavior through a merge queue for a few quarters and the codebase fills with code whose authorship is nominal and whose rationale is nobody&rsquo;s.</p>
     <p>The report also flags where this goes next: agents can run workflows end to end without a human checking each step. Every step a human used to touch was an accidental checkpoint. Autonomy removes them faster than teams replace them with anything deliberate.</p>

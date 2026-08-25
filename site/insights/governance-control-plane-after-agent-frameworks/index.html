@@ -286,7 +286,16 @@
     <p>On June 13, Databricks open-sourced <a href="https://www.databricks.com/blog/introducing-omnigent-meta-harness-combine-control-and-share-your-agents" target="_blank" rel="noopener">Databricks&rsquo; Omnigent</a>, a meta-harness that sits above individual coding harnesses like Claude Code and Codex. Built by Matei Zaharia, Kasey Uhlenhuth, and Corey Zumar and released under Apache 2.0, it adds agent composition, runtime contextual policies, sandboxing, and spend and permission controls &mdash; for example, requiring a human to approve a <code>git push</code> after an agent has downloaded a new package. It is a serious piece of infrastructure.</p>
     <p>But the project itself is not the story. The story is what its existence signals: AI engineering is moving up a layer. For two years the work was about making a single agent more capable. The frontier is now about coordinating many agents safely. Omnigent is one of the first widely-shipped examples of that move, which makes it a clean lens on a question the whole industry is about to face &mdash; not <em>can</em> an agent act, but <em>should</em> it.</p>
 
-    <h2>Phase 1: The Era of the Individual Agent</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Phase 1: The Era of the Individual Agent</h2>
     <p>The first phase was the capable singleton. Claude Code, Codex, Cursor, and Gemini CLI all pursued the same goal: make one agent better at reading a codebase, planning a change, and writing code that compiles and passes tests. The improvements were real and they compounded quickly.</p>
     <p>Capability, though, was never the same thing as alignment. A more powerful agent writes more code, faster &mdash; including code that quietly violates architectural intent. It can introduce a new dependency the team rejected two quarters ago, reach around a service boundary, or re-implement a pattern an ADR explicitly forbids. None of those are bugs the model can catch, because from the model&rsquo;s point of view the change is locally correct. A smarter singleton does not close that gap. It widens it.</p>
 

@@ -286,7 +286,16 @@
     <p>Four months later the governance half stopped being a preview. GitHub&rsquo;s <a href="https://github.blog/changelog/2026-02-26-enterprise-ai-controls-agent-control-plane-now-generally-available/">Enterprise AI Controls and agent control plane reached general availability</a> on February 26, 2026, with a consolidated AI administration view, session-activity search filtered by agent &mdash; including third-party agents &mdash; and API support for applying enterprise-wide custom agent definitions.</p>
     <p>Then Build 2026 extended the same pattern from the repository to the whole estate. Microsoft announced the Agent 365 registry, which surfaces unmanaged agents discovered across Defender, Entra, and Intune &mdash; more than 20 agent types, including coding agents, AI desktop applications, and local and remote MCP servers. Windows 365 for Agents went generally available, running agents in isolated, policy-governed cloud PCs under Intune controls. And on June 2, 2026, Microsoft published the Agent Control Specification (ACS), an open industry specification for placing deterministic safety and security controls at checkpoints throughout agentic workflows. Each announcement names governance as its category. None of them treats it as a feature.</p>
 
-    <h2>What the Control Plane Actually Governs</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>What the Control Plane Actually Governs</h2>
     <p>The platform stack now covers a specific set of questions. Which agents may run: Agent HQ&rsquo;s control plane lets an administrator allowlist agents and define model access. Who an agent is: GitHub manages agent identity and access policies the way it manages a human team member&rsquo;s, and branch controls decide when CI runs for agent-generated code. What an agent did: audit logs and session activity record actions down to session detail. Where an agent executes: Windows 365 for Agents pins execution inside an Intune-governed cloud PC. What an agent may do mid-run: ACS defines five validation checkpoints across an agent&rsquo;s lifecycle &mdash; input, model call, state, tool execution, and output &mdash; where policy gets evaluated deterministically.</p>
     <p>The Foundry team&rsquo;s framing for ACS is the most candid statement of where this is heading: &ldquo;Just as Model Context Protocol (MCP) standardized how agents connect to tools and Agent2Agent (A2A) standardized how agents communicate with each other, ACS provides one open standard for safety controls that any framework can adopt.&rdquo; Tool access got a protocol. Agent communication got a protocol. Now runtime control is getting one. That is what an infrastructure layer looks like while it hardens.</p>
 

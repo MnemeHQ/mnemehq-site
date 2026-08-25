@@ -306,7 +306,16 @@
     <p>For a while, an AI coding agent got one shot. It read the request, produced a diff, and stopped. If the diff failed a test, a human had to notice and prompt again. Loop engineering removes that ceiling. The agent runs a cycle: <strong>plan</strong> the change, <strong>execute</strong> it, <strong>evaluate</strong> the result against some signal, <strong>revise</strong> based on what it learned, and repeat until a stop condition &mdash; tests green, a target met, or a maximum number of iterations reached.</p>
     <p>Anthropic&rsquo;s engineering guide describes this shape directly: agents are &ldquo;typically just LLMs using tools based on environmental feedback in a loop,&rdquo; and it is common to include stopping conditions such as a maximum number of iterations. See <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents</a> for the evaluator-optimizer pattern, where one call generates a change and another evaluates it, feeding correction back in until the result clears the bar. That feedback loop is what turns a one-shot generator into something that can carry a task to completion on its own.</p>
 
-    <h2>Why Loops Are Valuable</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Why Loops Are Valuable</h2>
     <p>The benefits are real and worth stating plainly, because the argument here is not that loops are a distraction:</p>
     <ul>
       <li><strong>Automatic retries.</strong> A failed test no longer stalls the workflow. The agent reads the failure and tries again without a human in the middle.</li>

@@ -286,7 +286,16 @@
     <p>Research into agent reliability increasingly locates the bottleneck here rather than in the model. A 2026 paper makes the point in its title &mdash; <a href="https://arxiv.org/abs/2605.22166">Adapting the Interface, Not the Model: Runtime Harness Adaptation for Deterministic LLM Agents</a> &mdash; and shows a lifecycle-aware harness improving frozen models across 116 of 126 model-environment settings without changing a single weight. The blunt finding: when you want a more reliable agent, the highest-leverage move is often to adapt the interface around the model, not to wait for a better model.</p>
     <div class="callout"><p><strong>Adapt the interface, not the model.</strong> Reliability is a property of the system around the model at least as much as the model itself.</p></div>
 
-    <h2>Why agent failures occur at the model-environment boundary</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Why agent failures occur at the model-environment boundary</h2>
     <p>Most visible agent failures are not the model being &ldquo;wrong&rdquo; in the abstract. They happen at the boundary where the agent meets a real environment: a tool used incorrectly, an action taken with a side effect the agent did not anticipate, feedback misread, a trajectory that wandered because nothing constrained it. These are interface failures. A better model reduces some of them, but it does not change the fact that the boundary is where reliability is won or lost.</p>
     <p>This maps cleanly onto a distinction we have drawn before. <a href="/insights/what-is-harness-engineering/">Harness engineering</a> is the discipline of building this boundary well &mdash; the execution layer between a model and production. It is real and necessary work. But a reliable harness is not automatically a <em>governed</em> one.</p>
 

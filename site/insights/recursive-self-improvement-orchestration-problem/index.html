@@ -287,7 +287,16 @@
     <p>That assumption is doing a lot of work, and it is worth questioning. Improving a model is expensive and slow. It means new training runs, fresh evaluation, large amounts of compute, and a deployment cycle measured in months. The loop exists, but it turns slowly, and only a handful of organizations can turn it at all.</p>
     <p>Meanwhile, a faster loop has been running in plain sight. It does not touch the model&rsquo;s weights at all.</p>
 
-    <h2>The Recursive Loop Already Running</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The Recursive Loop Already Running</h2>
     <p>Today&rsquo;s agents get dramatically more capable without any change to the underlying model. They improve through better prompts, sharper retrieval, persistent memory, explicit planning, smarter tool selection, and tighter evaluation loops. An agent does not need a new model to perform far better next week. It needs a better system around the same model.</p>
     <p>Watch a coding agent at work and the loop is obvious. It generates a change, runs the tests, reads the failure, repairs the change, and re-runs. <strong>Generate, evaluate, repair, re-run.</strong> Each pass produces signal that shapes the next pass. The model is frozen; the surrounding system learns what works in this repository, with these conventions, against these tests. That is a recursive improvement loop, and it is already in production.</p>
     <p>The agent writes code, runs tests, reads docs, searches repositories, reviews its own output, and refactors. Each cycle improves the next one, while the model itself never moves. The system becomes smarter even though the intelligence at its core stays exactly where it was. This is orchestration-driven recursive improvement, and it is compounding faster than any training cycle can.</p>

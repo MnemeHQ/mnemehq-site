@@ -306,7 +306,16 @@
     <p><a href="https://github.com/github/spec-kit" target="_blank" rel="noopener">Spec Kit</a> is a toolkit for spec-driven development, and its central move is to make the process explicit. Instead of one long prompt, you run an ordered set of commands. You establish a constitution with <code>/speckit.constitution</code>, describe what you want with <code>/speckit.specify</code>, produce a technical plan with <code>/speckit.plan</code>, break it into work with <code>/speckit.tasks</code>, and build with <code>/speckit.implement</code>. Optional steps like <code>/speckit.clarify</code> and <code>/speckit.analyze</code> tighten the loop. It is a serious, well-designed approach to <a href="/concepts/spec-driven-development/">spec-driven development</a>, and it is popular for good reason.</p>
     <p>The constitution is the interesting part. Stored in <code>.specify/memory/constitution.md</code>, it holds your project&rsquo;s foundational principles &mdash; the rules meant to guide every later phase so decisions stay consistent. On paper this looks like governance. You write the principles once, and every specification, plan, and implementation is supposed to respect them. That is exactly the right instinct. The question is what &ldquo;respect them&rdquo; means mechanically.</p>
 
-    <h2>The Constitution Matters, but It Is Agent-Interpreted</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The Constitution Matters, but It Is Agent-Interpreted</h2>
     <p>Here is the seam. The constitution is a Markdown file the coding agent reads as context and is instructed to follow. It shapes the agent&rsquo;s behavior through prompting, and prompting is probabilistic. A principle sitting in the context window is an <em>input</em> to generation. It is not an independent gate that inspects the output. When the agent writes the plan, or writes the code, nothing outside the agent re-reads the constitution and blocks a change that breaks it.</p>
     <p>This is not a flaw in Spec Kit. It is the nature of a document that guides an agent. A rule the model is told to obey and a rule a separate system enforces are different kinds of object. The first depends on the model attending to it, remembering it across a long task, and applying it correctly to a specific edit. The second holds regardless of what the model was thinking. Spec Kit gives you the first. <a href="/concepts/governance-before-generation/">Governance before generation</a> as an independent check is a distinct capability, and a constitution in the prompt does not provide it.</p>
     <div class="callout"><p><strong>A principle the agent is asked to follow is not the same as a check the agent must pass.</strong> The constitution informs generation. It does not, on its own, verify the result.</p></div>

@@ -286,7 +286,16 @@
     <p>Reflexes is a set of small, fast classifiers that read every conversational turn and label the ones that broke. Eight signals ship out of the box &mdash; among them <span class="diag-mono">is_agent_looping</span>, <span class="diag-mono">is_off_task</span>, <span class="diag-mono">is_user_frustrated</span>, <span class="diag-mono">tool_call_wrong</span>, <span class="diag-mono">jailbreak_attempt</span>, and <span class="diag-mono">policy_violation</span> &mdash; and teams can train custom ones. Each returns a label in a single forward pass, under 90 milliseconds, over as much as 64k tokens of context, cheap enough to run inline across 100% of production conversations. The labels are written as span attributes into the observability platforms teams already use, such as Langfuse or LangSmith. Morph&rsquo;s own framing draws the line precisely: structural tracing cannot see semantic failure.</p>
     <p>It is a good product solving a real problem, and it is firmly on one side of a boundary worth naming.</p>
 
-    <h2>Observability Tells You What Happened. It Doesn&rsquo;t Decide What&rsquo;s Allowed.</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Observability Tells You What Happened. It Doesn&rsquo;t Decide What&rsquo;s Allowed.</h2>
     <p>All observability is a reading of the past. Structural traces report what executed; behavioral classifiers like Reflexes report how the interaction went. Both run after the agent has acted. For production operations that is exactly right: you want to know the moment a session degrades. But detection, however fast, is a record, not a control. It describes; it does not decide.</p>
     <p>We have drawn this line before in the context of architecture monitoring: <a href="/insights/why-observability-is-not-governance/">visibility is not control</a>, and an observability layer with no enforcement is operational archaeology. Reflexes is the behavioral-runtime version of the same boundary. It can tell you an agent went off task on turn nine. It cannot tell the agent, before turn one, which actions it was never permitted to take.</p>
 

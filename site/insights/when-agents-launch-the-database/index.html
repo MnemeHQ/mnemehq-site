@@ -289,7 +289,16 @@
     <p>Agents are no longer confined to generating application code that a human then reviews and commits. They provision infrastructure. They create tables, alter schemas, configure row-level security, and wire up integrations &mdash; actions that used to sit firmly on the human side of the boundary, behind a review.</p>
     <div class="callout"><p><strong>When an agent can launch a database, the governance question is no longer &ldquo;is this code correct?&rdquo;</strong> It is &ldquo;was this infrastructure change allowed, and who decided that?&rdquo;</p></div>
 
-    <h2>The platforms are already adapting</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The platforms are already adapting</h2>
     <p>Infrastructure vendors are responding to this shift in their product defaults. In a <a href="https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically">2026 breaking change</a>, Supabase made new tables in the public schema no longer automatically exposed through its Data API &mdash; explicitly because the old model assumed a human reviewed each schema change before it went live. Supabase stated plainly that agents, CLI scripts, and AI platforms now create tables, often without a human reviewing the diff, and moved to require an explicit Postgres grant before the API can see a table &mdash; enforced at the role layer regardless of how, or by whom, the table was created.</p>
     <p>That is a vendor encoding governance into the platform because the human review step it used to rely on has quietly disappeared. It is a direct, external confirmation of the pattern: as agents act on infrastructure, safe defaults have to be enforced by the system, not assumed from a reviewer.</p>
 

@@ -286,7 +286,16 @@
     <p>The post catalogs nine categories of skills Anthropic uses internally: library and API reference, product verification, data fetching and analysis, business process automation, code scaffolding, code quality and review, CI/CD and deployment, runbooks, and infrastructure operations. Read that list twice. It covers most of what an engineering organization knows how to do.</p>
     <p>Underneath the catalog sits an admission. Shihipar writes that long instructions and prompts alone stopped scaling &mdash; the company that builds the model could not pack its own organizational knowledge into one prompt. Skills are the replacement: modular, reusable, versionable knowledge packages that load when the task calls for them. Teams maintaining a <a href="/insights/why-claude-md-stops-scaling/">CLAUDE.md file that has stopped scaling</a> already know this failure mode from the other side. Anthropic has now confirmed it from the inside.</p>
 
-    <h2>Skills Are Organizational Memory Made Executable</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>Skills Are Organizational Memory Made Executable</h2>
     <p>A skill is organizational memory with an execution path attached. Each one bundles a task, the context an agent needs to perform it, and guidance on how to execute &mdash; often with pre-written scripts and utilities so the agent runs proven code instead of improvising its own. Teams have externalized this kind of knowledge for decades as runbooks, playbooks, and templates. Skills make those documents executable, and two of Anthropic&rsquo;s nine categories &mdash; runbooks and code scaffolding &mdash; are exactly that conversion.</p>
     <p>The best practices in the post confirm the memory framing. Shihipar advises authors to skip what the model already knows, to use progressive disclosure through the skill&rsquo;s filesystem structure, to avoid railroading the agent so it keeps flexibility, and to write skill descriptions for models &mdash; when to trigger &mdash; rather than for humans. Skills can even accumulate experience: storing data in logs or JSON files via the CLAUDE_PLUGIN_DATA environment variable lets a skill learn from its past executions. On-demand hooks push the model further; the post gives the example of a /careful mode that blocks dangerous commands in production contexts.</p>
     <p>One line stands above the rest: &ldquo;The highest-signal content in any skill is the Gotchas section.&rdquo; Accumulated failure knowledge &mdash; what went wrong before, and the constraints that prevent it from recurring &mdash; is worth more than any description of the happy path. That matches the finding that separates <a href="/architecture/decision-memory-vs-documentation/">decision memory from documentation</a>: what a team decided after something broke matters more than what it wrote while everything worked.</p>

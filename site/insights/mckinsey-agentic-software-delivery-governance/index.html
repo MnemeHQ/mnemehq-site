@@ -304,6 +304,15 @@
 <blockquote>Architecture becomes more important, not less, because someone still has to define what the system is allowed to do.<cite>McKinsey, &ldquo;Rewiring software delivery for the agentic era&rdquo; (2026)</cite></blockquote>
 <p>That is correct, and the report is strong on the org side of it: architects defining guardrails, review points, and non-functional requirements; the operating model redesigned so humans supervise rather than type. None of this is a straw man to knock down. The rewiring is real and most enterprises need it. (For the engineering-side version of the same role shift, see <a href="/insights/future-of-software-engineering-after-vibe-coding/">the future of software engineering after vibe coding</a>.) The question is what the rewiring, by its nature, cannot reach.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
 <h2>An operating model is an org-design artifact. Nothing in it executes.</h2>
 <p>Here is the seam. Everything McKinsey describes is an <strong>org-design artifact</strong>: roles, pods, review processes, talent, standards, the shape of the delivery org. Redrawing those decides <em>who is accountable</em> for architecture. It does not produce the thing that actually holds at the moment an agent generates code &mdash; a machine-checkable constraint the change is evaluated against before it lands.</p>
 <p>The reason is a mismatch of speed. An org chart is a <strong>human-latency control loop</strong>: a reviewer reads, an architect weighs in, a standard gets discussed. The agent does not run at that latency. It runs underneath the org chart, at machine latency, in the gap between the redrawn roles &mdash; producing dozens of changes in the time it takes one review thread to start. McKinsey&rsquo;s notion that &ldquo;someone still has to define what the system is allowed to do&rdquo; is right; what the report leaves implicit is that, for an autonomous agent, &ldquo;define&rdquo; has to mean <em>compile into something that executes</em>, not <em>write down for a human to uphold</em>. A definition only a person can enforce is not reachable at the speed the agent is moving.</p>

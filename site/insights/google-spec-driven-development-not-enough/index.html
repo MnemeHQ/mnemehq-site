@@ -315,7 +315,16 @@
     </ul>
     <p>This is a strong, practitioner-grade framing. It names the real problem and refuses the fantasy that faster generation is a free lunch. Google&rsquo;s own tooling &mdash; Antigravity, the Gemini CLI, and MCP-based context wiring &mdash; sits underneath as the delivery vehicle. If you take one thing from the paper, take the reframing: the durable engineering artifact is intent, not code.</p>
 
-    <h2>The New Limiting Factor Is Validating Architectural Consistency</h2>
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+<h2>The New Limiting Factor Is Validating Architectural Consistency</h2>
     <p>Once implementation is cheap, the constraint moves downstream. Every generated change is plausible. Most of them work. The expensive question is whether each one is <em>consistent</em> with the system it just joined &mdash; whether it respected the service boundaries, used the approved libraries, followed the conventions, and honored the architectural decisions the team already made.</p>
     <p>That is not a code-quality question. A change can be clean, tested, and locally correct and still quietly violate an architectural decision recorded eighteen months ago. When one feature fans out across several agents, each optimizing its own slice, the odds of a system-wide decision surviving untouched drop with every additional generation. This is the scarce resource now: not producing code, but verifying that a flood of produced code stays inside the architecture.</p>
 
