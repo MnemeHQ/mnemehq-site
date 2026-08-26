@@ -100,6 +100,11 @@
     .int-card.muted { opacity: 0.6; }
     .int-card.muted:hover { opacity: 0.85; }
 
+    .integration-editorial { margin: 3.75rem 0; }
+    .integration-editorial img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border: 1px solid var(--border); border-radius: 10px; }
+    .integration-editorial figcaption { max-width: 640px; margin: 0.9rem auto 0; color: var(--muted); font-size: 0.8rem; line-height: 1.7; text-align: center; }
+    .integration-editorial figcaption strong { color: var(--text); font-weight: 500; }
+
     .eco-row { border-top: 1px solid var(--border); margin-top: 2.75rem; padding: 2.25rem 0 0; font-size: 0.85rem; color: var(--muted); line-height: 2.1; }
     .eco-row strong { color: var(--text); font-weight: 500; }
     .eco-row a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border2); }
@@ -117,7 +122,8 @@
     @media (max-width: 640px) {
       .hero { padding: 3rem 1.25rem 2.5rem; }
       .layers { padding: 0 1.25rem 2.5rem; }
-      .layer { padding-top: 2rem; }
+    .layer { padding-top: 2rem; }
+      .integration-editorial { margin: 2.75rem 0; }
     }
 /* === Nav upgrade (injected, overrides existing) === */
 .nav-hamburger {
@@ -285,6 +291,11 @@
       </a>
     </div>
   </section>
+
+  <figure class="integration-editorial">
+    <img src="/assets/images/photo-integration-workflow.webp" width="3000" height="2000" loading="lazy" decoding="async" alt="An engineer drawing a connected workflow on a whiteboard">
+    <figcaption><strong>One corpus, many enforcement boundaries.</strong> The workflow changes by tool; the architectural decisions do not.</figcaption>
+  </figure>
 
   <section class="layer">
     <div class="layer-head"><span class="layer-num">03</span><h2>Host environments</h2></div>

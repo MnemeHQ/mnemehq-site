@@ -2,73 +2,74 @@
   'use strict';
 
   var articleBody = document.querySelector('.article-wrap .article-body');
-  if (!articleBody || articleBody.dataset.integrationEnhanced === 'true') return;
-  articleBody.dataset.integrationEnhanced = 'true';
+  var firstProof = null;
 
-  var originalChildren = Array.from(articleBody.children);
-  var currentSection = null;
-  var sectionIndex = 0;
+  if (articleBody && articleBody.dataset.integrationEnhanced !== 'true') {
+    articleBody.dataset.integrationEnhanced = 'true';
 
-  originalChildren.forEach(function (node) {
-    if (node.matches && node.matches('h2')) {
-      if (node.id === 'related-reading') {
-        currentSection = null;
+    var originalChildren = Array.from(articleBody.children);
+    var currentSection = null;
+    var sectionIndex = 0;
+
+    originalChildren.forEach(function (node) {
+      if (node.matches && node.matches('h2')) {
+        if (node.id === 'related-reading') {
+          currentSection = null;
+          return;
+        }
+
+        sectionIndex += 1;
+        var section = document.createElement('section');
+        section.className = 'integration-reading-section';
+
+        if (!node.id) node.id = 'integration-section-' + sectionIndex;
+        section.setAttribute('aria-labelledby', node.id);
+        articleBody.insertBefore(section, node);
+        section.appendChild(node);
+        currentSection = section;
         return;
       }
 
-      sectionIndex += 1;
-      var section = document.createElement('section');
-      section.className = 'integration-reading-section';
-
-      if (!node.id) node.id = 'integration-section-' + sectionIndex;
-      section.setAttribute('aria-labelledby', node.id);
-      articleBody.insertBefore(section, node);
-      section.appendChild(node);
-      currentSection = section;
-      return;
-    }
-
-    if (currentSection) currentSection.appendChild(node);
-  });
-
-  var firstSection = articleBody.querySelector('.integration-reading-section');
-  if (!firstSection || articleBody.querySelector('.integration-install-cta')) return;
-
-  var installCta = document.createElement('aside');
-  installCta.id = 'install-mneme';
-  installCta.className = 'integration-install-cta';
-  installCta.setAttribute('aria-labelledby', 'integration-install-title');
-  installCta.innerHTML =
-    '<div>' +
-      '<span class="integration-install-cta__eyebrow">Ready to try it?</span>' +
-      '<h2 id="integration-install-title">Install the governance layer</h2>' +
-      '<p>Add Mneme locally, then continue with the integration-specific setup below. Open source, self-hosted, and stored with your repository.</p>' +
-    '</div>' +
-    '<div>' +
-      '<code class="integration-install-cta__command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code>' +
-      '<div class="integration-install-cta__actions">' +
-        '<button class="integration-install-cta__copy" type="button">Copy install command</button>' +
-        '<a class="integration-install-cta__docs" href="/docs/">Read the docs <span aria-hidden="true">&rarr;</span></a>' +
-      '</div>' +
-    '</div>';
-
-  firstSection.insertAdjacentElement('afterend', installCta);
-
-  var copyButton = installCta.querySelector('.integration-install-cta__copy');
-  var command = 'pipx install "mneme-hq>=0.5.1"';
-
-  copyButton.addEventListener('click', function () {
-    var copy = navigator.clipboard && navigator.clipboard.writeText
-      ? navigator.clipboard.writeText(command)
-      : Promise.reject(new Error('Clipboard API unavailable'));
-
-    copy.then(function () {
-      copyButton.textContent = 'Copied';
-      window.setTimeout(function () {
-        copyButton.textContent = 'Copy install command';
-      }, 1600);
-    }).catch(function () {
-      copyButton.textContent = command;
+      if (currentSection) currentSection.appendChild(node);
     });
-  });
+
+    firstProof = articleBody.querySelector('.integration-reading-section');
+  } else {
+    firstProof = document.querySelector('main > .section.narrow');
+  }
+
+  if (!firstProof) return;
+
+  var currentLabel = document.querySelector('.breadcrumb [aria-current="page"]');
+  var integrationName = currentLabel ? currentLabel.textContent.trim() : 'this integration';
+
+  if (!document.querySelector('.integration-mid-cta')) {
+    var midCta = document.createElement('aside');
+    midCta.id = 'setup-mneme';
+    midCta.className = 'integration-mid-cta';
+    midCta.setAttribute('aria-labelledby', 'integration-mid-cta-title');
+    midCta.innerHTML =
+      '<div>' +
+        '<span class="integration-mid-cta__eyebrow">Next step</span>' +
+        '<h2 id="integration-mid-cta-title">Set up Mneme with ' + integrationName + '</h2>' +
+        '<p>Start with the quickstart, then use the integration-specific guidance on this page to connect the enforcement boundary.</p>' +
+      '</div>' +
+      '<a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="mid" data-cta-component="cta_band">Open the quickstart <span aria-hidden="true">&rarr;</span></a>';
+
+    firstProof.insertAdjacentElement('afterend', midCta);
+  }
+
+  var endCta = document.querySelector('.article-wrap .cta-block, main > .cta-band');
+  if (!endCta) return;
+  if (endCta.classList.contains('integration-end-cta')) return;
+
+  endCta.classList.add('integration-end-cta');
+  endCta.innerHTML =
+    '<span class="integration-end-cta__eyebrow">Continue</span>' +
+    '<h2>Ready to govern ' + integrationName + '?</h2>' +
+    '<p>Complete the quickstart, then apply the integration-specific setup above in your repository.</p>' +
+    '<div class="integration-end-cta__actions">' +
+      '<a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>' +
+      '<a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>' +
+    '</div>';
 })();

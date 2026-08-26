@@ -16,8 +16,9 @@ Concretely: **Install → Demo → Pilot** on developer surfaces; reversed to
 **Pilot → Demo → Install** only where the visitor has shown team-level intent.
 Never equal buttons — always **one filled, one outlined, one text link**.
 
-**"One coral action" = one primary intent per page.** The same intent may repeat
-at hero, mid-page and ending — that is correct sequencing, not competition.
+**"One coral action" = one primary intent per page.** Where the placement matrix
+allows it, the same intent may repeat across the journey without becoming a new
+choice.
 The hard constraint is per **cluster**: one filled coral button per CTA cluster,
 never two in the same view.
 
@@ -69,6 +70,8 @@ Contrast (all pass WCAG AA): black-on-coral 6.76:1 · black-on-lime 14.98:1 ·
 mint-on-dark 12.66:1 · grey-on-dark 8.31:1.
 
 Button spec: ~14px text, 44–48px height, DM Mono labels, focus ring per base.css.
+Integration detail CTAs are the deliberate exception: Inter 500 reduces the
+heavy utility-button feel while keeping the primary label fully legible.
 
 ## 4. Placement matrix — what goes where and WHY
 
@@ -81,7 +84,7 @@ this table, it doesn't ship.
 | Homepage team section | Request a pilot               | Only section where visitor intent is explicitly team-level     | Run the demo             | Install                 |
 | Docs / quickstart    | Copy install command           | Docs visitors are mid-activation; remove all friction          | Run your first check     | GitHub source           |
 | Integration hub      | Install Mneme                  | Hub browsers are evaluating fit; install is the low-cost step  | View supported tools     | Request a pilot         |
-| Integration detail   | **Set up Mneme with [tool]**   | Tool-specific intent is the highest-signal developer moment    | View evidence/source     | Request a pilot         |
+| Integration detail   | **Set up Mneme with [tool]** after first proof | Tool-specific intent is high-signal, but the page must establish compatibility and enforcement before asking | Evidence stays in content | Team rollout link at end |
 | Demo hub             | Install Mneme (right after flagship proof) | Proof just landed; convert uncertainty into action immediately | View another demo | Request a pilot |
 | Demo details         | Install Mneme (~50–60% down)   | Same as hub but placed at proof density peak, not 75%          | View source              | Request a pilot         |
 | Use-cases hub        | See the demo after first proof | First use-case creates the problem; demo resolves it           | Request a drift audit    | —                       |
@@ -97,12 +100,16 @@ this table, it doesn't ship.
 
 ### Position rules
 
-1. Above-the-fold cluster on every template family page (hero or breadcrumb+H1 area).
-2. One mid-page action band on long pages, placed **after the first substantial
-   proof/evidence section**. The 45–60%-of-scroll figure is a heuristic from the
-   audit, not a rule — evidence position wins when the two disagree.
-3. One end-of-page block; never more than three destinations there.
-4. Every shipped integration page gets its setup CTA — no exceptions.
+1. Above-the-fold clusters belong on hubs and decision pages. Integration details
+   lead with compatibility, scope, and proof; they do **not** show a CTA cluster
+   before the first substantive section.
+2. Integration details get one setup action immediately **after the first
+   substantial proof/evidence section**. Other long pages use the same evidence-
+   first rule. The 45–60%-of-scroll figure is a heuristic, not a rule.
+3. One end-of-page block; never more than two destinations there. Source and
+   evidence links live in the relevant content section, not in conversion clusters.
+4. Every shipped integration page gets its setup CTA and a reciprocal route back
+   to Docs; Docs links to the integration hub and representative tool guides.
 
 ## 5. Components
 

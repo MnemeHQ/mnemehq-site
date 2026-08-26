@@ -122,6 +122,8 @@
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 
+  <link rel="stylesheet" href="/assets/css/integration-system-v2.css">
+  <script defer src="/assets/js/integration-system-v2.js"></script>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -154,11 +156,6 @@
   <div class="hero-eyebrow">Validated compatibility &middot; No adapter required</div>
   <h1>Mneme HQ + Paperclip</h1>
   <p class="hero-sub">Paperclip&rsquo;s <code style="color:var(--teal);">claude_local</code> adapter drives Claude Code in your project workspace &mdash; so Mneme&rsquo;s existing PreToolUse hook enforcement applies unchanged. A P1-gated validation run (August 22&ndash;23, 2026) proved deterministic enforcement under both Paperclip transports with zero Mneme code changes.</p>
-  <div class="hero-ctas">
-            <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="hero" data-cta-component="hero_cluster">Set up Mneme with Paperclip</a>
-            <a href="https://github.com/MnemeHQ/mneme/pull/315" class="cta-btn-outline" target="_blank" rel="noopener" data-cta-intent="evidence" data-cta-position="hero" data-cta-component="hero_cluster">Evidence</a>
-            <a href="/pilot/" class="cta-link" data-cta-intent="pilot" data-cta-position="hero" data-cta-component="hero_cluster">Running it across a team? Request a pilot &rarr;</a>
-          </div>
 </section>
 
 <section class="section narrow">
@@ -256,12 +253,13 @@ mneme check against the workspace's
   </details>
 </section>
 
-<div class="cta-band">
-  <h2>Governed agent orchestration, zero glue code</h2>
-  <p>If your orchestrator drives Claude Code, Mneme&rsquo;s enforcement comes along for free &mdash; one decision corpus, enforced at the same pre-tool boundary in interactive, orchestrated, and CI contexts.</p>
-  <div class="cta-band-buttons">
-    <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">GitHub</a>
-    <a href="/integrations/" class="btn-secondary">All integrations</a>
+<div class="cta-band integration-end-cta">
+  <span class="integration-end-cta__eyebrow">Continue</span>
+  <h2>Ready to govern Paperclip?</h2>
+  <p>Complete the quickstart, then apply the integration-specific setup above in your repository.</p>
+  <div class="integration-end-cta__actions">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
+    <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
 

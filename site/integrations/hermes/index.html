@@ -40,7 +40,13 @@
         {"@type": "ListItem", "position": 2, "name": "Integrations", "item": "https://mnemehq.com/integrations/"},
         {"@type": "ListItem", "position": 3, "name": "Hermes Agent", "item": "https://mnemehq.com/integrations/hermes/"}
       ]},
-      {"@type": "TechArticle", "headline": "Mneme HQ + Hermes Agent: Context Injection and Pre-Tool Enforcement", "description": "An experimental plugin adapter injects retrieved decisions into Hermes Agent turns and blocks supported mutations pre-execution via mneme check. Tested at the Hermes plugin dispatch layer against hermes-agent 0.19.0; shell/process bypasses remain and no blocking Stop-equivalent exists.", "url": "https://mnemehq.com/integrations/hermes/", "datePublished": "2026-08-25", "dateModified": "2026-08-25", "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"}, "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}, "image": "https://mnemehq.com/integrations/hermes/og.png", "mainEntityOfPage": "https://mnemehq.com/integrations/hermes/", "dependencies": "mneme-hq; hermes-agent 0.19.0 (dispatch-layer tested version)"}
+      {"@type": "TechArticle", "headline": "Mneme HQ + Hermes Agent: Context Injection and Pre-Tool Enforcement", "description": "An experimental plugin adapter injects retrieved decisions into Hermes Agent turns and blocks supported mutations pre-execution via mneme check. Tested at the Hermes plugin dispatch layer against hermes-agent 0.19.0; shell/process bypasses remain and no blocking Stop-equivalent exists.", "url": "https://mnemehq.com/integrations/hermes/", "datePublished": "2026-08-25", "dateModified": "2026-08-25", "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"}, "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}, "image": "https://mnemehq.com/integrations/hermes/og.png", "mainEntityOfPage": "https://mnemehq.com/integrations/hermes/", "dependencies": "mneme-hq; hermes-agent 0.19.0 (dispatch-layer tested version)"},
+      {"@type": "FAQPage", "mainEntity": [
+        {"@type": "Question", "name": "Which Hermes mutations are blocked before execution?", "acceptedAnswer": {"@type": "Answer", "text": "write_file, patch replace mode, patch Add/Update operations, and one simple quoted-delimiter heredoc write through terminal. Other surfaces pass through unblocked and are documented as bypasses."}},
+        {"@type": "Question", "name": "Is there a Stop audit like Claude Code or Codex CLI have?", "acceptedAnswer": {"@type": "Answer", "text": "No. Hermes exposes no blocking Stop-equivalent. on_session_end is observer-only, and CI remains the only post-mutation verification."}},
+        {"@type": "Question", "name": "What was actually tested?", "acceptedAnswer": {"@type": "Answer", "text": "Tests ran through Hermes' real plugin-manager dispatch layer against hermes-agent 0.19.0, covering payload shapes, blocking directives, context injection, and fail-open behavior. Live model-driven sessions were not claimed."}},
+        {"@type": "Question", "name": "What happens if the checker itself fails?", "acceptedAnswer": {"@type": "Answer", "text": "The gate fails open. Hermes swallows hook exceptions and ignores invalid directives, so a broken check degrades to an unblocked call and is never reported as governed-and-passing."}}
+      ]}
     ]
   }
   </script>
@@ -117,6 +123,8 @@
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 
+  <link rel="stylesheet" href="/assets/css/integration-system-v2.css">
+  <script defer src="/assets/js/integration-system-v2.js"></script>
 </head>
 <body>
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -149,11 +157,6 @@
   <div class="hero-eyebrow">Experimental integration &middot; merged, dispatch-layer tested</div>
   <h1>Mneme HQ + Hermes Agent</h1>
   <p class="hero-sub">A thin plugin adapter carries Mneme&rsquo;s decision corpus into Nous Research&rsquo;s Hermes Agent: retrieved decisions are injected each turn through <code>pre_llm_call</code>, and supported mutations are checked before execution through a blocking <code>pre_tool_call</code> gate. Experimental against <strong>Hermes Agent 0.19.0</strong>; shell/process bypasses remain and no blocking Stop-equivalent is available.</p>
-  <div class="hero-ctas">
-            <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="hero" data-cta-component="hero_cluster">Set up Mneme</a>
-            <a href="https://github.com/MnemeHQ/mneme/pull/329" class="cta-btn-outline" target="_blank" rel="noopener" data-cta-intent="evidence" data-cta-position="hero" data-cta-component="hero_cluster">Evidence</a>
-            <a href="/pilot/" class="cta-link" data-cta-intent="pilot" data-cta-position="hero" data-cta-component="hero_cluster">Running it across a team? Request a pilot &rarr;</a>
-          </div>
 </section>
 
 <section class="section narrow">
@@ -254,12 +257,13 @@ trusted strict WARN/FAIL &#8594; {"action": "block",
   </details>
 </section>
 
-<div class="cta-band">
-  <h2>Deterministic guardrails inside Hermes Agent</h2>
-  <p>Open-source. Repo-native. Context injection and pre-tool prevention over the same decision corpus &mdash; with every limitation on this page stated rather than implied.</p>
-  <div class="cta-band-buttons">
-    <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">GitHub</a>
-    <a href="/integrations/" class="btn-secondary">All integrations</a>
+<div class="cta-band integration-end-cta">
+  <span class="integration-end-cta__eyebrow">Continue</span>
+  <h2>Ready to govern Hermes Agent?</h2>
+  <p>Complete the quickstart, then apply the integration-specific setup above in your repository.</p>
+  <div class="integration-end-cta__actions">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
+    <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
 
