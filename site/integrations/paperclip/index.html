@@ -8,19 +8,19 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Paperclip drives Claude Code; Mneme's existing hook enforcement applies unchanged. Validation record for both Paperclip transports (CLI and ACP): 6/6 forbidden edits blocked at the hook layer, no adapter required." />
+  <meta name="description" content="Paperclip drives Claude Code - Mneme's existing hook enforcement applies unchanged under both Paperclip transports (CLI and ACP) - No adapter required" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/paperclip/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Mneme HQ + Paperclip: Validated Native Compatibility" />
-  <meta property="og:description" content="Unmodified Mneme enforced deterministically under both Paperclip engines: classic CLI and default ACP. No adapter required." />
+  <meta property="og:title" content="Mneme HQ + Paperclip: Architectural Governance" />
+  <meta property="og:description" content="Paperclip drives Claude Code - Mneme's existing hook enforcement applies unchanged under both Paperclip transports (CLI and ACP) - No adapter required" />
   <meta property="og:url" content="https://mnemehq.com/integrations/paperclip/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/paperclip/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Mneme HQ + Paperclip: Validated Native Compatibility" />
-  <meta name="twitter:description" content="Unmodified Mneme enforced deterministically under both Paperclip engines: classic CLI and default ACP. No adapter required." />
+  <meta name="twitter:title" content="Mneme HQ + Paperclip: Architectural Governance" />
+  <meta name="twitter:description" content="Paperclip drives Claude Code - Mneme's existing hook enforcement applies unchanged under both Paperclip transports (CLI and ACP) - No adapter required" />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/paperclip/og.png" />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-08-24T00:00:00Z" />
@@ -152,11 +152,29 @@
   </ol>
 </nav>
 
-<section class="hero">
+<article class="article-wrap">
+  <header class="article-header">
   <div class="hero-eyebrow">Validated compatibility &middot; No adapter required</div>
-  <h1>Mneme HQ + Paperclip</h1>
-  <p class="hero-sub">Paperclip&rsquo;s <code style="color:var(--teal);">claude_local</code> adapter drives Claude Code in your project workspace &mdash; so Mneme&rsquo;s existing PreToolUse hook enforcement applies unchanged. A P1-gated validation run (August 22&ndash;23, 2026) proved deterministic enforcement under both Paperclip transports with zero Mneme code changes.</p>
-</section>
+  <div class="answer-capsule" style="margin: 1.5rem -2rem 0; border-radius: 0; border-bottom: 1px solid rgba(200,240,96,0.18);">
+      <h1>Mneme HQ + Paperclip</h1>
+    </div>
+  <p class="article-lede">Paperclip&rsquo;s <code style="color:var(--teal);">claude_local</code> adapter drives Claude Code in your project workspace &mdash; so Mneme&rsquo;s existing PreToolUse hook enforcement applies unchanged. A P1-gated validation run (August 22&ndash;23, 2026) proved deterministic enforcement under both Paperclip transports with zero Mneme code changes.</p>
+</header>
+
+  <section class="quickstart-box" aria-labelledby="quickstart-title">
+    <div class="quickstart-head"><span class="quickstart-label">Quick start</span><span class="quickstart-version">Python 3.11+</span></div>
+    <h2 id="quickstart-title">Run your first governed check.</h2>
+    <p>Install the CLI, initialize the decision corpus, then evaluate your integration setup.</p>
+    <button type="button" class="cta-btn-primary" data-code-copy data-copy-text='pipx install "mneme-hq>=0.5.1"'
+            onclick='navigator.clipboard.writeText("pipx install "mneme-hq>=0.5.1"");this.textContent="Copied — now run: mneme init";setTimeout(()=>this.textContent="Copy install command",2000);'
+            data-cta-intent="install" data-cta-position="hero" data-cta-component="install_module">Copy install command</button>
+    <pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq>=0.5.1"
+<span class="cp">$</span> mneme init
+<span class="cp">$</span> mneme check --memory .mneme/project_memory.json --input prompt.txt --query "integration setup"</pre>
+    <p style="font-size:0.9rem;color:var(--muted);line-height:1.85;max-width:780px;margin:1rem 0 0;"><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty valid decision corpus. Exit code <code>0</code> = pass, <code>1</code> = warn, <code>2</code> = fail. See <a href="/docs/" style="color:var(--accent);">Docs</a> for full reference.</p>
+  </section>
+
+  <div class="article-body">
 
 <section class="section narrow">
   <h2>Validation verdict: native PASS, no code required</h2>
@@ -253,7 +271,7 @@ mneme check against the workspace's
   </details>
 </section>
 
-<div class="cta-band integration-end-cta">
+<div class="cta-block integration-end-cta">
   <span class="integration-end-cta__eyebrow">Continue</span>
   <h2>Ready to govern Paperclip?</h2>
   <p>Complete the quickstart, then apply the integration-specific setup above in your repository.</p>
@@ -262,7 +280,8 @@ mneme check against the workspace's
     <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
-
+  </div>
+</article>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">

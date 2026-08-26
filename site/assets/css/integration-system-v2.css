@@ -30,6 +30,14 @@
 
 .article-header { margin-bottom: clamp(3.25rem, 7vw, 5rem) !important; }
 
+.answer-capsule {
+  margin: 1.5rem -2rem 0;
+  border-radius: 0;
+  border-bottom: 1px solid rgba(200,240,96,0.18);
+  background: rgba(200,240,96,0.04);
+  min-height: 3rem;
+}
+
 .article-header h1,
 .hero h1 {
   max-width: 760px;
@@ -261,7 +269,71 @@ h2#related-reading + ul {
 @media (max-width: 720px) {
   .article-wrap { padding-right: 1.25rem !important; padding-left: 1.25rem !important; }
 
-  .article-header h1,
+.quickstart-box {
+  margin: 1.5rem -2rem 0;
+  padding: 1.5rem 2rem 1.2rem;
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  background: #121214;
+  min-height: auto;
+}
+
+.quickstart-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quickstart-head .quickstart-label {
+  font-family: 'DM Mono', monospace;
+}
+
+.quickstart-head .quickstart-version {
+  color: var(--accent);
+  font-size: 0.82rem;
+}
+
+.quickstart-box h2 {
+  margin: 0.5rem 0 0.75rem;
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.quickstart-box p:last-of-type {
+  margin: 0.75rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+.quickstart-box pre {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  overflow-x: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* Quickstart box responsive */
+@media (max-width: 720px) {
+  .quickstart-box { padding: 1rem; }
+  .quickstart-box h2 { font-size: clamp(1.3rem, 8vw, 1.6rem); }
+  .quickstart-box p { font-size: 0.78rem; }
+  .quickstart-box pre { font-size: 0.76rem; margin: 0.5rem 0 0; padding: 0.5rem; }
+}
   .hero h1 { font-size: clamp(2.45rem, 12vw, 3.3rem) !important; }
 
   .hero { width: calc(100% - 2.5rem); }
