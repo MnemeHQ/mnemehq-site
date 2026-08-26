@@ -325,7 +325,7 @@ body::after {{ content: ''; position: absolute; width: 520px; height: 520px; rig
 .frame {{ position: absolute; inset: 34px; border: 1px solid #2c2c31; padding: 38px 44px; display: grid; grid-template-rows: auto 1fr; z-index: 1; }}
 .top {{ display: flex; justify-content: space-between; align-items: center; gap: 24px; }}
 .brand {{ font-family: Instrument Serif, serif; font-size: 36px; letter-spacing: -.5px; }}
-.label {{ font-size: 18px; letter-spacing: .08em; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 9px 14px; background: rgba(200,240,96,.055); }}
+.label {{ font-size: 20px; letter-spacing: .08em; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 9px 14px; background: rgba(200,240,96,.055); }}
 .content {{ display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(360px, .88fr); gap: 54px; align-items: center; }}
 .copy {{ max-width: 690px; }}
 h1 {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: {headline_size}px; line-height: .98; letter-spacing: -2px; margin: 0 0 26px; max-width: 710px; text-wrap: balance; }}
@@ -333,17 +333,17 @@ h1 {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: {headli
 .integration-object, .proof-object, .boundary-object, .artifact-object, .editorial-object {{ min-height: 330px; border: 1px solid #33333a; background: rgba(20,20,22,.88); position: relative; box-shadow: 0 26px 80px rgba(0,0,0,.25); }}
 .integration-object {{ padding: 30px; display: flex; flex-direction: column; justify-content: center; }}
 .platform {{ font-family: Instrument Serif, serif; font-size: 52px; line-height: 1; margin-bottom: 16px; }}
-.support-status {{ align-self: flex-start; font-size: 19px; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 8px 10px; margin-bottom: 28px; }}
+.support-status {{ align-self: flex-start; font-size: 21px; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 8px 10px; margin-bottom: 28px; }}
 .statement {{ font-size: 24px; line-height: 1.35; color: #d0d0d8; }}
-.mechanism {{ margin-top: 30px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 15px; color: #8e8e9c; }}
+.mechanism {{ margin-top: 30px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 20px; color: #8e8e9c; }}
 .mechanism .teal {{ color: #8be0c8; }} .mechanism .lime {{ color: #c8f060; }}
 .proof-object {{ padding: 28px; display: flex; flex-direction: column; justify-content: center; }}
-.proof-row {{ display: flex; align-items: center; justify-content: space-between; gap: 24px; border: 1px solid #37373e; padding: 18px 20px; font-size: 17px; }}
-.proof-row b {{ font-size: 24px; font-weight: 500; }} .approved b {{ color: #c8f060; }} .proposal b {{ color: #8be0c8; }} .blocked {{ border-color: rgba(255,101,91,.65); background: rgba(255,101,91,.07); }} .blocked b {{ color: #ff655b; font-size: 29px; }}
+.proof-row {{ display: flex; align-items: center; justify-content: space-between; gap: 24px; border: 1px solid #37373e; padding: 18px 20px; font-size: 20px; }}
+.proof-row b {{ font-size: 28px; font-weight: 500; }} .approved b {{ color: #c8f060; }} .proposal b {{ color: #8be0c8; }} .blocked {{ border-color: rgba(255,101,91,.65); background: rgba(255,101,91,.07); }} .blocked b {{ color: #ff655b; font-size: 34px; }}
 .proof-arrow {{ text-align: center; color: #686874; font-size: 20px; line-height: 30px; }}
-.boundary-object {{ display: grid; grid-template-columns: 1fr 1px 1fr; }} .boundary-half {{ display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; }} .boundary-half small {{ font-size: 17px; color: #8f8f9b; }} .boundary-half strong {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: 48px; }} .allowed strong {{ color: #c8f060; }} .blocked strong {{ color: #ff655b; }} .boundary-line {{ background: #3b3b42; }}
-.artifact-object {{ padding: 28px; transform: rotate(1.5deg); }} .artifact-kicker {{ font-size: 17px; color: #ff8c78; margin-bottom: 28px; letter-spacing: .08em; }} .artifact-rule {{ border-top: 1px solid #3b3b42; padding: 18px 0; display: grid; grid-template-columns: 110px 1fr; gap: 16px; }} .artifact-rule span {{ color: #777784; font-size: 16px; }} .artifact-rule b {{ font-size: 22px; font-weight: 400; color: #dedee6; }} .artifact-seal {{ position: absolute; right: 24px; bottom: 24px; border: 1px solid rgba(200,240,96,.5); color: #c8f060; padding: 10px 12px; font-size: 16px; transform: rotate(-2deg); }}
-.editorial-object {{ padding: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 27px; }} .editorial-object span {{ color: #c8f060; }} .editorial-object .faded {{ color: #777784; }} .editorial-object b {{ color: #62626d; font-weight: 400; }} .drift-line {{ position: absolute; left: 48px; right: 48px; bottom: 82px; height: 2px; background: linear-gradient(90deg,#c8f060,#8be0c8 46%,#ff655b 80%); transform: rotate(-4deg); }} .drift-label {{ position: absolute; left: 42px; right: 42px; bottom: 28px; font-size: 14px; line-height: 1.35; color: #8b8b98; text-align: center; }}
+.boundary-object {{ display: grid; grid-template-columns: 1fr 1px 1fr; }} .boundary-half {{ display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; }} .boundary-half small {{ font-size: 20px; color: #8f8f9b; }} .boundary-half strong {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: 48px; }} .allowed strong {{ color: #c8f060; }} .blocked strong {{ color: #ff655b; }} .boundary-line {{ background: #3b3b42; }}
+.artifact-object {{ padding: 28px; transform: rotate(1.5deg); }} .artifact-kicker {{ font-size: 20px; color: #ea735e; margin-bottom: 28px; letter-spacing: .08em; }} .artifact-rule {{ border-top: 1px solid #3b3b42; padding: 18px 0; display: grid; grid-template-columns: 110px 1fr; gap: 16px; }} .artifact-rule span {{ color: #777784; font-size: 20px; }} .artifact-rule b {{ font-size: 24px; font-weight: 400; color: #dedee6; }} .artifact-seal {{ position: absolute; right: 24px; bottom: 24px; border: 1px solid rgba(200,240,96,.5); color: #c8f060; padding: 10px 12px; font-size: 20px; transform: rotate(-2deg); }}
+.editorial-object {{ padding: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 27px; }} .editorial-object span {{ color: #c8f060; }} .editorial-object .faded {{ color: #777784; }} .editorial-object b {{ color: #62626d; font-weight: 400; }} .drift-line {{ position: absolute; left: 48px; right: 48px; bottom: 82px; height: 2px; background: linear-gradient(90deg,#c8f060,#8be0c8 46%,#ff655b 80%); transform: rotate(-4deg); }} .drift-label {{ position: absolute; left: 42px; right: 42px; bottom: 28px; font-size: 18px; line-height: 1.35; color: #8b8b98; text-align: center; }}
 </style>
 </head>
 <body>
@@ -380,11 +380,11 @@ async def generate(cards: list[Card]) -> None:
                 page = await browser.new_page(
                     viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1
                 )
-                for card in cards:
+                for index, card in enumerate(cards):
                     card.image_path.parent.mkdir(parents=True, exist_ok=True)
                     render_file.write_text(render_html(card), encoding="utf-8")
                     await page.goto(
-                        f"http://127.0.0.1:{port}/{rel_temp}/card.html",
+                        f"http://127.0.0.1:{port}/{rel_temp}/card.html?v={index}",
                         wait_until="networkidle",
                     )
                     await page.evaluate("document.fonts.ready")
