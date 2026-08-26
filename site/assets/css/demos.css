@@ -88,11 +88,21 @@ body.demo-page *::after {
 }
 
 .demo-page .nav-links .btn-nav-cta {
+  background: transparent;
+  border: 1px solid var(--action, #ea735e);
+  color: #f2a08e;
   padding: 0.45rem 1rem;
   border-radius: 6px;
-  background: var(--accent);
+  font-weight: 500;
+  font-family: 'DM Mono', monospace;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.demo-page .nav-links .btn-nav-cta:hover {
+  background: var(--action, #ea735e);
+  border-color: var(--action, #ea735e);
   color: #0c0c0d;
-  font-weight: 600;
 }
 
 .demo-page .nav-hamburger {
