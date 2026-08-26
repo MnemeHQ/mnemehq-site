@@ -388,6 +388,8 @@ trusted strict WARN/FAIL &#8594; {"action": "block",
    *
    * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
    * code_copy  { copy_context, page_type }
+   * form_start / form_submit / form_error / form_success are emitted by the
+   * pilot form page (PR 3) using the same page_type helper.
    */
 
   function pageType() {
@@ -424,6 +426,23 @@ trusted strict WARN/FAIL &#8594; {"action": "block",
     if (!e.target.closest) return;
     var el = e.target.closest('[data-cta-intent], [data-code-copy]');
     if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
 
     push('cta_click', {
       cta_intent: el.getAttribute('data-cta-intent'),

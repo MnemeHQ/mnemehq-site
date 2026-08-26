@@ -15,6 +15,44 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Global Modern Tech Scrollbar ───────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2e2e34 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #2a2a32;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #3e3e4a;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+:where(pre, .pipeline, .code-scroll, .table-wrap, [class*='code-scroll'], [class*='table-scroll'])::-webkit-scrollbar-thumb {
+  background: #2e2e36;
+  border-radius: 3px;
+}
+
+:where(pre, .pipeline, .code-scroll, .table-wrap, [class*='code-scroll'], [class*='table-scroll'])::-webkit-scrollbar-thumb:hover {
+  background: #4a4a58;
+}
+
 :root {
   --bg: #0c0c0d;
   --surface: #141416;
@@ -27,6 +65,7 @@
   --accent-dim: #a8d040;
   --teal: #8be0c8;
   --action: #ea735e;
+  --action-soft: #f2a08e;
   --action-dim: #c95a46;
 }
 
@@ -41,56 +80,76 @@
  * hero, mid-page and ending.
  */
 
-.cta-btn-primary {
+.cta-btn-primary,
+:where(.article-body, .cta-band, .cta-snippet, .cta-block, .cta-block-end, .context-cta, aside, main) a.cta-btn-primary,
+a.cta-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.7rem 1.5rem;
-  background: var(--action);
-  color: #0c0c0d;
-  border: 1px solid var(--action);
+  background: var(--action) !important;
+  color: #0c0c0d !important;
+  border: 1px solid var(--action) !important;
+  border-bottom: 1px solid var(--action) !important;
   border-radius: 8px;
   font-family: 'DM Mono', monospace;
   font-size: 0.875rem;
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.005em;
-  text-decoration: none;
+  text-decoration: none !important;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.cta-btn-primary:hover { background: var(--action-dim); border-color: var(--action-dim); color: #0c0c0d; }
+.cta-btn-primary:hover,
+:where(.article-body, .cta-band, .cta-snippet, .cta-block, .cta-block-end, .context-cta, aside, main) a.cta-btn-primary:hover,
+a.cta-btn-primary:hover {
+  background: var(--action-dim) !important;
+  border-color: var(--action-dim) !important;
+  border-bottom-color: var(--action-dim) !important;
+  color: #0c0c0d !important;
+}
 .cta-btn-primary:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; }
 
-.cta-btn-outline {
+.cta-btn-outline,
+:where(.article-body, .cta-band, .cta-snippet, .cta-block, .cta-block-end, .context-cta, aside, main) a.cta-btn-outline,
+a.cta-btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   min-height: 44px;
   padding: 0.7rem 1.4rem;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border2);
+  background: transparent !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border2) !important;
+  border-bottom: 1px solid var(--border2) !important;
   border-radius: 8px;
   font-family: 'DM Mono', monospace;
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 1.3;
-  text-decoration: none;
+  text-decoration: none !important;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
 }
-.cta-btn-outline:hover { border-color: var(--muted); background: var(--surface); color: var(--text); }
+.cta-btn-outline:hover,
+:where(.article-body, .cta-band, .cta-snippet, .cta-block, .cta-block-end, .context-cta, aside, main) a.cta-btn-outline:hover,
+a.cta-btn-outline:hover {
+  border-color: var(--muted) !important;
+  border-bottom-color: var(--muted) !important;
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
 .cta-btn-outline:focus-visible { outline: 2px solid var(--muted); outline-offset: 3px; }
 
 .cta-link {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  color: var(--teal);
+  color: var(--teal) !important;
   font-size: 0.85rem;
   line-height: 1.3;
   text-decoration: none;
@@ -140,11 +199,31 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--accent); }
-/* Nav pilot CTA: outline everywhere. Filled treatments competed with each
- * page's own primary action before content loaded (docs/site/cta-system.md).
- * body.home-v2 keeps its coral-outline variant via home-v2.css. */
-.nav-links a.btn-nav-cta { background: transparent; color: var(--text); border: 1px solid var(--border2); padding: 0.45rem 1.1rem; border-radius: 6px; font-size: 0.82rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
-.nav-links a.btn-nav-cta:hover { border-color: var(--action); color: var(--action); }
+/* Nav pilot CTA: coral-outline matching the homepage v2 design system */
+.nav-links a.btn-nav-cta,
+.btn-nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent !important;
+  color: #f2a08e !important;
+  border: 1px solid var(--action, #ea735e) !important;
+  border-bottom: 1px solid var(--action, #ea735e) !important;
+  padding: 0.45rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'DM Mono', monospace;
+  text-decoration: none !important;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.nav-links a.btn-nav-cta:hover,
+.btn-nav-cta:hover {
+  background: var(--action, #ea735e) !important;
+  border-color: var(--action, #ea735e) !important;
+  border-bottom-color: var(--action, #ea735e) !important;
+  color: #0c0c0d !important;
+}
 
 /* ── Hamburger ── */
 .nav-hamburger {
