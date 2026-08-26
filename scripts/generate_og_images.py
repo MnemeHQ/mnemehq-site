@@ -1,374 +1,427 @@
 #!/usr/bin/env python3
-"""
-Generate OG images from HTML templates using Playwright.
-Each og-<slug>.html in site/ is rendered at 1200x630 and saved as og.png
-co-located with its corresponding page.
+"""Generate Mneme HQ Open Graph images from page metadata.
+
+The renderer is data-driven: every public HTML page supplies its own title,
+description, and advertised og:image path. Card family and a small set of
+high-value editorial overrides are derived from the page path.
 
 Usage:
     python scripts/generate_og_images.py
+    python scripts/generate_og_images.py --only / /demo/ /integrations/codex-cli/
 
 Requires:
     pip install playwright
     playwright install chromium
 """
 
+from __future__ import annotations
+
+import argparse
 import asyncio
+import html
 import http.server
-import os
+import re
+import tempfile
 import threading
-import time
+from dataclasses import dataclass
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import urlparse
 
-# Map from og-<slug>.html to output og.png path (relative to site/)
-TEMPLATE_MAP = {
-    "og-pricing.html": "pricing/og.png",
-    "og-homepage.html": "og.png",
-    "og-demo.html": "demo/og.png",
-    "og-demo-storage-decision.html": "demo/storage-decision/og.png",
-    "og-demo-dependency-policy.html": "demo/dependency-policy/og.png",
-    "og-demo-repository-pattern.html": "demo/repository-pattern/og.png",
-    "og-use-cases-gen.html": "use-cases/og.png",
-    "og-coding-assistant-governance.html": "use-cases/coding-assistant-governance/og.png",
-    "og-legacy-codebase-memory.html": "use-cases/legacy-codebase-memory/og.png",
-    "og-security-compliance-guardrails.html": "use-cases/security-compliance-guardrails/og.png",
-    "og-data-platform-governance.html": "use-cases/data-platform-governance/og.png",
-    "og-design-system-governance.html": "use-cases/design-system-governance/og.png",
-    "og-multi-agent-workflow-governance.html": "use-cases/multi-agent-workflow-governance/og.png",
-    "og-founder.html": "founder/og.png",
-    "og-contact.html": "contact/og.png",
-    "og-roadmap.html": "roadmap/og.png",
-    "og-insights.html": "insights/og.png",
-    "og-insights-prompt-engineering.html": "insights/prompt-engineering-is-not-governance/og.png",
-    "og-insights-rag.html": "insights/rag-is-not-memory/og.png",
-    "og-insights-nonlinear-review.html": "insights/ai-code-review-does-not-scale-linearly/og.png",
-    "og-insights-review-not-governance.html": "insights/review-is-not-governance/og.png",
-    "og-insights-prompt-memory-fails.html": "insights/why-prompt-memory-fails-at-scale/og.png",
-    "og-insights-heterogeneous-agents.html": "insights/architectural-governance-across-heterogeneous-ai-coding-agents/og.png",
-    "og-insights-agentic-education.html": "insights/rise-of-agentic-engineering-education/og.png",
-    "og-insights-openai-compatible-apis.html": "insights/openai-compatible-apis-are-commoditizing-models/og.png",
-    "og-standards.html": "standards/og.png",
-    "og-for-cto.html": "for-cto/og.png",
-    "og-for-platform.html": "for-platform/og.png",
-    "og-for-principal.html": "for-principal/og.png",
-    "og-compare-index.html": "compare/og.png",
-    "og-compare-coderabbit.html": "compare/coderabbit/og.png",
-    "og-compare-cursor-rules.html": "compare/cursor-rules/og.png",
-    "og-compare-claude-code-memory.html": "compare/claude-code-memory/og.png",
-    "og-compare-rag-vs-governance.html": "compare/rag-vs-governance/og.png",
-    "og-compare-rag-coding-memory.html": "compare/rag-coding-memory/og.png",
-    "og-compare-github-copilot.html": "compare/github-copilot/og.png",
-    "og-compare-aider.html": "compare/aider/og.png",
-    "og-compare-continue-dev.html": "compare/continue-dev/og.png",
-    "og-compare-windsurf.html": "compare/windsurf/og.png",
-    "og-compare-sourcegraph-cody.html": "compare/sourcegraph-cody/og.png",
-    "og-integration-index.html": "integrations/og.png",
-    "og-integration-claude-code.html": "integrations/claude-code/og.png",
-    "og-integration-cursor.html": "integrations/cursor/og.png",
-    "og-integration-vscode.html": "integrations/vscode/og.png",
-    "og-integration-github-actions.html": "integrations/github-actions/og.png",
-    "og-integration-gitlab.html": "integrations/gitlab/og.png",
-    "og-integration-adr-import.html": "integrations/adr-import/og.png",
-    "og-integration-copilot.html": "integrations/copilot/og.png",
-    "og-integration-jetbrains.html": "integrations/jetbrains/og.png",
-    "og-integration-warp.html": "integrations/warp/og.png",
-    "og-ci-governance.html": "use-cases/ci-governance-for-ai-generated-code/og.png",
+ROOT = Path(__file__).resolve().parent.parent
+SITE_DIR = ROOT / "site"
+WIDTH = 1200
+HEIGHT = 630
 
-    # Insights — new
-    "og-insights-genai-stack.html": "insights/generative-ai-software-engineering-stack/og.png",
-    "og-insights-deployment-quality.html": "insights/deployment-quality-will-define-the-ai-era/og.png",
-    "og-insights-acceleration-whiplash.html": "insights/acceleration-whiplash-governance-gap/og.png",
-    "og-insights-agents-of-chaos.html": "insights/agents-of-chaos-and-the-governance-gap/og.png",
-    "og-insights-ai-native-intent-debt.html": "insights/ai-native-engineering-intent-debt/og.png",
-    "og-insights-autonomous-remediation.html": "insights/autonomous-code-remediation-requires-architectural-governance/og.png",
-    "og-insights-datadog-report.html": "insights/datadog-state-of-ai-engineering-governance-crisis/og.png",
-    "og-insights-long-running-agents.html": "insights/long-running-agents-need-governance/og.png",
-    "og-insights-openclaw.html": "insights/openclaw-and-the-limits-of-autonomous-coding/og.png",
-    "og-insights-ai-sdlc.html": "insights/what-is-the-ai-sdlc/og.png",
-    "og-insights-claude-md-scaling.html": "insights/why-claude-md-stops-scaling/og.png",
-    "og-insights-reviewable-governance.html": "insights/ai-coding-governance-should-be-reviewable/og.png",
-    "og-insights-copilot-space.html": "insights/github-copilot-space-framework/og.png",
-    "og-insights-productivity-paradox.html": "insights/productivity-paradox-perception-vs-measurement/og.png",
-    "og-insights-harness-governance.html": "insights/harness-engineering-still-needs-governance/og.png",
-    "og-insights-observability-governance.html": "insights/why-observability-is-not-governance/og.png",
-    "og-insights-agent-infrastructure-stack.html": "insights/emerging-ai-agent-infrastructure-stack/og.png",
-    "og-insights-context-drift.html": "insights/why-context-alone-doesnt-prevent-architectural-drift/og.png",
-    "og-insights-agent-skills.html": "insights/agent-skills-vs-architectural-governance/og.png",
-    "og-insights-goal-driven-agents.html": "insights/goal-driven-agents-architectural-governance/og.png",
-    "og-insights-llm-wiki.html": "insights/llm-wiki-library-not-law/og.png",
-    "og-insights-ai-operating-layer.html": "insights/ai-is-becoming-the-operating-layer-for-software-execution/og.png",
-    "og-insights-models-are-temporary.html": "insights/models-are-temporary-architectural-intent-is-not/og.png",
-    # Concepts
-    "og-concepts-index.html": "concepts/og.png",
-    "og-concepts-agentic-development.html": "concepts/agentic-development/og.png",
-    "og-concepts-ai-agent-drift.html": "concepts/ai-agent-drift/og.png",
-    "og-concepts-ai-native-sdlc.html": "concepts/ai-native-sdlc/og.png",
-    "og-concepts-architectural-compiler.html": "concepts/architectural-compiler/og.png",
-    "og-concepts-architectural-drift.html": "concepts/architectural-drift/og.png",
-    "og-concepts-architectural-governance.html": "concepts/architectural-governance/og.png",
-    "og-concepts-decision-continuity.html": "concepts/decision-continuity/og.png",
-    "og-concepts-deterministic-enforcement.html": "concepts/deterministic-enforcement/og.png",
-    "og-concepts-enforcement-provenance.html": "concepts/enforcement-provenance/og.png",
-    "og-concepts-governance-before-generation.html": "concepts/governance-before-generation/og.png",
-    "og-concepts-governance-infrastructure.html": "concepts/governance-infrastructure/og.png",
-    "og-concepts-governance-propagation.html": "concepts/governance-propagation/og.png",
-    "og-concepts-intent-debt.html": "concepts/intent-debt/og.png",
-    "og-concepts-multi-agent-continuity.html": "concepts/multi-agent-continuity/og.png",
-    "og-concepts-precedence-semantics.html": "concepts/precedence-semantics/og.png",
-    "og-concepts-verification-contracts.html": "concepts/verification-contracts/og.png",
-    "og-concepts-agent-verification.html": "concepts/agent-verification/og.png",
-    "og-concepts-governance-provenance.html": "concepts/governance-provenance/og.png",
-    "og-concepts-execution-surfaces.html": "concepts/execution-surfaces/og.png",
-    "og-concepts-reliable-delegation.html": "concepts/reliable-delegation/og.png",
-    "og-concepts-objective-driven-development.html": "concepts/objective-driven-development/og.png",
-    "og-concepts-executable-architectural-intent.html": "concepts/executable-architectural-intent/og.png",
-    "og-concepts-ai-operating-layer.html": "concepts/ai-operating-layer/og.png",
-    "og-concepts-model-independent-governance.html": "concepts/model-independent-governance/og.png",
-    # Docs
-    "og-docs.html": "docs/og.png",
-    # Architecture
-    "og-architecture-index.html": "architecture/og.png",
-    "og-architecture-decision-memory.html": "architecture/decision-memory-vs-documentation/og.png",
-    "og-architecture-retrieval.html": "architecture/how-retrieval-works/og.png",
-    # Supported languages
-    "og-supported-languages.html": "supported-languages/og.png",
-    "og-supported-languages-js.html": "supported-languages/javascript-governance/og.png",
-    "og-supported-languages-py.html": "supported-languages/python-governance/og.png",
-    "og-supported-languages-ts.html": "supported-languages/typescript-governance/og.png",
-    "og-supported-languages-fastapi.html": "supported-languages/fastapi-governance/og.png",
-    "og-supported-languages-spring-boot.html": "supported-languages/spring-boot-governance/og.png",
-    "og-supported-languages-terraform.html": "supported-languages/terraform-governance/og.png",
-    # Misc
-    "og-about.html": "about/og.png",
-    "og-benchmark.html": "benchmark/og.png",
-    "og-for-index.html": "for/og.png",
-    "og-pilot.html": "pilot/og.png",
-    "og-platforms.html": "platforms/og.png",
-    "og-privacy.html": "privacy/og.png",
-    "og-works-with.html": "works-with/og.png",
-    "og-integration-claude-agent-sdk.html": "integrations/claude-agent-sdk/og.png",
 
-    # Insights — new
-    "og-insights-governance-perimeter-endpoint.html": "insights/governance-perimeter-is-moving-to-the-endpoint/og.png",
-    "og-insights-html-not-the-point.html": "insights/html-is-not-the-point-structure-is/og.png",
-    "og-insights-runtime-vs-architectural.html": "insights/runtime-verification-is-not-architectural-verification/og.png",
-    "og-insights-ai-roi-systems.html": "insights/ai-roi-problem-is-about-systems-not-models/og.png",
-    "og-insights-anthropic-coordination.html": "insights/anthropic-research-system-coordination-infrastructure/og.png",
-    "og-insights-pr-review-incident.html": "insights/pr-review-is-becoming-incident-response/og.png",
-    # Backfill — pre-existing templates missing from TEMPLATE_MAP, plus a new
-    # template for agentic-infrastructure-attack-surface (PNG rendered for
-    # the validator's og.png check)
-    "og-insights-rag.html": "insights/rag-is-not-memory/og.png",
-    "og-insights-ai-operating-layer.html": "insights/ai-is-becoming-the-operating-layer-for-software-execution/og.png",
-    "og-insights-agentic-attack-surface.html": "insights/agentic-infrastructure-attack-surface/og.png",
+@dataclass(frozen=True)
+class Card:
+    path: str
+    family: str
+    label: str
+    headline: str
+    support: str
+    image_path: Path
+    platform: str = ""
+    status: str = ""
+    statement: str = ""
 
-    # Insights — new
-    "og-insights-ms-agentic-playbook.html": "insights/microsoft-agentic-transformation-playbook-ai-agent-governance/og.png",
-    "og-insights-constraint-decay.html": "insights/constraint-decay-coding-agents-architectural-governance/og.png",
-    "og-insights-ai-peer-review.html": "insights/ai-peer-review-context-loss-governance/og.png",
-    "og-insights-ms-agent-forge.html": "insights/microsoft-agent-forge-enterprise-ai-infrastructure/og.png",
-    "og-insights-machine-readable-prs.html": "insights/machine-readable-pull-requests-agentic-development/og.png",
-    "og-insights-long-context-governance.html": "insights/long-context-windows-governance-infrastructure/og.png",
-    "og-insights-agent-runtime-governance.html": "insights/agent-runtime-governance/og.png",
-    "og-insights-mistral-vibe.html": "insights/mistral-vibe-ai-coding-enterprise-infrastructure/og.png",
-    "og-insights-coordination-governance.html": "insights/coordination-governance-multi-agent-systems/og.png",
-    "og-insights-determinism-probabilistic.html": "insights/ai-stack-determinism-probabilistic-models/og.png",
-    "og-insights-snowflake-report.html": "insights/snowflake-ai-data-engineering-governance-infrastructure/og.png",
-    "og-insights-claude-marketplace.html": "insights/anthropic-claude-marketplace-ai-engineering-control-plane/og.png",
-    "og-insights-devin-governance.html": "insights/devin-ai-software-engineer-governance/og.png",
-    "og-insights-antigravity-coordination.html": "insights/antigravity-solves-coordination-not-governance/og.png",
-    "og-insights-artifacts-not-governance.html": "insights/artifacts-are-not-governance/og.png",
-    "og-insights-agent-manager-control.html": "insights/agent-manager-control-plane-governance/og.png",
-    "og-insights-agent-first-ides.html": "insights/agent-first-ides-need-architectural-invariants/og.png",
-    "og-insights-governance-category.html": "insights/ai-infrastructure-governance-category/og.png",
-    "og-insights-liskov-python.html": "insights/barbara-liskov-python-encapsulation-ai-governance/og.png",
-    "og-insights-cursor-habits.html": "insights/cursor-developer-habits-report-governance-infrastructure/og.png",
-    "og-insights-dora-metrics.html": "insights/dora-metrics-insufficient-for-agentic-development/og.png",
-    "og-insights-gemini-deep-research.html": "insights/google-gemini-deep-research-agent-governance/og.png",
-    "og-insights-harness-engineering.html": "insights/what-is-harness-engineering/og.png",
-    "og-insights-prompt-vs-harness.html": "insights/prompt-engineering-vs-harness-engineering/og.png",
-    "og-insights-harness-verification.html": "insights/harness-engineering-verification-layer/og.png",
-    "og-insights-two-markets.html": "insights/ai-agent-governance-two-markets/og.png",
-    "og-insights-gcloud-agent-registry.html": "insights/google-cloud-agent-registry-agent-fleet-governance/og.png",
-    "og-insights-github-trust-layer.html": "insights/github-ai-agent-validation-trust-layer/og.png",
-    "og-insights-post-vibe-coding.html": "insights/future-of-software-engineering-after-vibe-coding/og.png",
-    "og-insights-architectural-zero-trust.html": "insights/zero-trust-for-ai-agents-architectural-governance/og.png",
-    "og-insights-mckinsey-rewiring.html": "insights/mckinsey-agentic-software-delivery-governance/og.png",
-    # Concepts
-    "og-concepts-runtime-governance.html": "concepts/runtime-governance/og.png",
-    "og-concepts-autonomous-se-governance.html": "concepts/autonomous-software-engineering-governance/og.png",
-    "og-concepts-agentic-ide-governance.html": "concepts/agentic-ide-governance/og.png",
-    "og-concepts-multi-agent-drift.html": "concepts/multi-agent-architectural-drift/og.png",
-    "og-concepts-artifact-provenance.html": "concepts/artifact-provenance/og.png",
-    "og-concepts-antigravity-governance.html": "concepts/antigravity-governance/og.png",
-    "og-concepts-ai-governance-infrastructure.html": "concepts/ai-governance-infrastructure/og.png",
-    # Misc
-    "og-integration-ms-agent-forge.html": "integrations/microsoft-agent-forge/og.png",
-    "og-integration-antigravity.html": "integrations/antigravity/og.png",
-    "og-works-with-claude-marketplace.html": "works-with/claude-marketplace/og.png",
-    "og-works-with-devin.html": "works-with/devin/og.png",
-    "og-works-with-antigravity.html": "works-with/antigravity/og.png",
-    "og-compare-devin-vs-architectural-governance.html": "compare/devin-vs-architectural-governance/og.png",
-    "og-compare-google-antigravity-vs-mneme.html": "compare/google-antigravity-vs-mneme/og.png",
 
-    # Insights — new
-    "og-insights-spec-driven-dev.html": "insights/spec-driven-development-still-needs-governance/og.png",
-    # Concepts
-    "og-concepts-spec-driven-development.html": "concepts/spec-driven-development/og.png",
+class HeadParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.meta: dict[str, str] = {}
+        self.title_parts: list[str] = []
+        self.in_title = False
 
-    # Insights — new
-    "og-insights-convergence-trap.html": "insights/agentic-convergence-trap-architectural-governance/og.png",
-    "og-insights-table-stakes-advantage.html": "insights/mckinsey-ai-table-stakes-to-advantage/og.png",
-    "og-insights-agents-not-employees.html": "insights/ai-agents-are-not-employees-governance/og.png",
-    # Compare — new
-    "og-compare-claude-md.html": "compare/claude-md/og.png",
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        attrs_d = {k.lower(): (v or "") for k, v in attrs}
+        if tag.lower() == "meta":
+            key = attrs_d.get("property") or attrs_d.get("name")
+            if key and attrs_d.get("content"):
+                self.meta[key.lower()] = attrs_d["content"].strip()
+        elif tag.lower() == "title":
+            self.in_title = True
 
-    # Insights — new
-    "og-insights-rule-files-retrieval.html": "insights/rule-files-vs-retrieval-memory/og.png",
-    "og-insights-governance-by-design.html": "insights/beyond-security-by-design-governance-by-design/og.png",
-    "og-insights-agents-launch-database.html": "insights/when-agents-launch-the-database/og.png",
-    "og-insights-ms-execution-containers.html": "insights/microsoft-execution-containers-ai-agent-runtime-governance/og.png",
-    "og-insights-agent-governance-sdlc.html": "insights/agent-governance-in-the-sdlc/og.png",
-    "og-insights-cloud-agents-durable.html": "insights/cloud-agents-need-architectural-governance/og.png",
-    "og-insights-latent-space-comms.html": "insights/latent-space-agent-communication-governance/og.png",
-    "og-insights-runtime-harnesses.html": "insights/runtime-harnesses-for-ai-agents/og.png",
-    "og-insights-search-as-code.html": "insights/search-as-code-agent-execution-surface/og.png",
-    # Misc
-    "og-integration-opencode.html": "integrations/opencode/og.png",
-    "og-integration-paperclip.html": "integrations/paperclip/og.png",
-    "og-integration-codex-cli.html": "integrations/codex-cli/og.png",
-    "og-integration-hermes.html": "integrations/hermes/og.png",
-    "og-integration-langchain-langgraph.html": "integrations/langchain-langgraph/og.png",
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "title":
+            self.in_title = False
 
-    # Insights — new
-    "og-insights-ai-adoption-maturity.html": "insights/ai-adoption-maturity-model-engineering-analysis/og.png",
-    "og-insights-bcg-operating-models.html": "insights/bcg-ai-era-operating-models-governance/og.png",
-    "og-insights-ibm-tech-leader-study.html": "insights/ibm-2026-tech-leader-study-agent-governance/og.png",
-    "og-insights-github-agent-prs.html": "insights/github-agent-pull-requests-review-wrong-layer/og.png",
-    "og-insights-claude-code-skills.html": "insights/claude-code-skills-organizational-knowledge/og.png",
-    "og-insights-bain-ai-dlc.html": "insights/bain-ai-development-lifecycle-governance/og.png",
-    "og-insights-project-solara.html": "insights/microsoft-project-solara-post-app-governance/og.png",
-    "og-insights-ms-agent-platform.html": "insights/microsoft-agent-platform-governance-layer/og.png",
+    def handle_data(self, data: str) -> None:
+        if self.in_title:
+            self.title_parts.append(data)
 
-    # Insights — new
-    "og-insights-verification-tax.html": "insights/ai-coding-agent-verification-tax/og.png",
+    @property
+    def title(self) -> str:
+        return " ".join("".join(self.title_parts).split())
 
-    # Insights — new
-    "og-insights-shared-memory-intent.html": "insights/shared-memory-is-not-shared-intent/og.png",
-    "og-insights-loop-engineering.html": "insights/loop-engineering-is-not-new/og.png",
-    "og-insights-productivity-rework.html": "insights/ai-coding-productivity-gains-rework/og.png",
-    "og-insights-copilot-review-economics.html": "insights/github-copilot-usage-based-billing-review-economics/og.png",
 
-    # Insights — new
-    "og-insights-infrastructure-alone.html": "insights/ai-race-wont-be-won-on-infrastructure-alone/og.png",
-    "og-insights-governance-layers-coding.html": "insights/governance-layers-for-ai-coding-assistants/og.png",
-    "og-insights-okf-vs-governance.html": "insights/open-knowledge-format-vs-governance/og.png",
-    "og-insights-rsi-orchestration.html": "insights/recursive-self-improvement-orchestration-problem/og.png",
-    "og-insights-governance-control-plane.html": "insights/governance-control-plane-after-agent-frameworks/og.png",
-    "og-insights-regulated-industries.html": "insights/ai-governance-for-regulated-industries/og.png",
-    "og-insights-life-sciences.html": "insights/ai-coding-agents-life-sciences-governance/og.png",
-    "og-insights-financial-services.html": "insights/ai-coding-agents-financial-services-audit-trail/og.png",
-
-    # Insights — new
-    "og-insights-anthropic-rsi.html": "insights/anthropic-recursive-self-improvement-engineering-governance/og.png",
-    "og-insights-morph-reflexes.html": "insights/morph-reflexes-agent-observability-engineering-governance/og.png",
-    "og-insights-nemo-toolkit.html": "insights/nvidia-nemo-agent-toolkit-engineering-governance/og.png",
-    "og-insights-palantir-agentic.html": "insights/palantir-agentic-governance-engineering-governance/og.png",
-    "og-insights-databricks-omnigent.html": "insights/databricks-omnigent-agent-infrastructure-governance/og.png",
-    "og-insights-gartner-ai-governance.html": "insights/gartner-ai-governance-engineering-governance/og.png",
-
-    # Insights — new
-    "og-insights-agent-guardrails.html": "insights/ai-coding-agent-guardrails/og.png",
-    "og-insights-agents-use-adrs.html": "insights/how-ai-coding-agents-use-adrs/og.png",
-    "og-insights-agent-architecture.html": "insights/ai-coding-agent-architecture/og.png",
-
-    # Insights — new
-    "og-insights-enterprise-guardrails.html": "insights/enterprise-ai-guardrails-five-layers/og.png",
-    "og-insights-smart-routing.html": "insights/smart-routing-ai-coding-agents/og.png",
-    "og-insights-loop-engineering-agents.html": "insights/loop-engineering-ai-coding-agents/og.png",
-    "og-insights-github-spec-kit.html": "insights/github-spec-kit-who-enforces-architecture/og.png",
-    "og-insights-google-spec-driven.html": "insights/google-spec-driven-development-not-enough/og.png",
-    "og-insights-agentic-governance-execution.html": "insights/agentic-ai-governance-closer-to-execution/og.png",
-
-    # Insights — new
-    "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
-
-    # Insights — new
-    "og-insights-prompt-graph-engineering.html": "insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/og.png",
-    "og-insights-claude-self-hosted.html": "insights/claude-code-self-hosted-environments-architectural-governance/og.png",
-    "og-insights-agent-swarms.html": "insights/ai-agent-swarms-deterministic-guardrails/og.png",
-    "og-insights-mckinsey-adoption-gap.html": "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/og.png",
-    "og-insights-openai-symphony.html": "insights/openai-symphony-architectural-context/og.png",
-
-    # Insights — new
-    "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
-    "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
-    "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
-    "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
-
-    # Insights — new
-    "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
-    "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
-    # Concepts
-    "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
-    # Misc
-    "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
-    "og-insights-ai-native-sdlc-arch-layer.html": "insights/ai-native-sdlc-architecture-layer/og.png",
+OVERRIDES: dict[str, dict[str, str]] = {
+    "/": {
+        "family": "brand",
+        "label": "ARCHITECTURAL DRIFT PREVENTION",
+        "headline": "Architecture that holds.",
+        "support": "Approved architectural intent, enforced before incompatible code lands.",
+    },
+    "/demo/": {
+        "family": "proof",
+        "label": "PRODUCT PROOF",
+        "headline": "See architectural drift get blocked.",
+        "support": "One approved decision. One incompatible change. One deterministic verdict.",
+    },
+    "/benchmark/": {
+        "family": "proof",
+        "label": "BENCHMARK",
+        "headline": "Measure whether architecture survives the agentic SDLC.",
+        "support": "Constraint survival, drift, and enforcement — tested rather than assumed.",
+    },
+    "/pilot/": {
+        "family": "brand",
+        "label": "DESIGN PARTNER PILOT",
+        "headline": "Find where your AI coding workflow can drift.",
+        "support": "Audit architectural intent, enforcement surfaces, and the gaps between them.",
+    },
+    "/concepts/architectural-drift-prevention/": {
+        "family": "editorial",
+        "label": "CONCEPT",
+        "headline": "Architectural drift prevention",
+        "support": "Keep generated code inside decisions already made.",
+    },
+    "/integrations/codex-cli/": {
+        "family": "integration",
+        "label": "INTEGRATION",
+        "headline": "Codex CLI",
+        "platform": "CODEX CLI",
+        "status": "NATIVE · SHIPPED",
+        "statement": "Block incompatible file changes before execution.",
+    },
+    "/integrations/antigravity/": {
+        "family": "integration",
+        "label": "INTEGRATION",
+        "headline": "Google Antigravity",
+        "platform": "ANTIGRAVITY",
+        "status": "NATIVE · SHIPPED",
+        "statement": "Apply architectural guardrails at the tool-call boundary.",
+    },
+    "/integrations/claude-code/": {
+        "family": "integration",
+        "label": "INTEGRATION",
+        "headline": "Claude Code",
+        "platform": "CLAUDE CODE",
+        "status": "NATIVE · SHIPPED",
+        "statement": "Turn ADRs into deterministic pre-tool enforcement.",
+    },
 }
 
-PORT = 8765
-SITE_DIR = Path(__file__).parent.parent / "site"
+
+def normalise_path(page: Path) -> str:
+    rel = page.relative_to(SITE_DIR)
+    if rel == Path("index.html"):
+        return "/"
+    if rel.name == "index.html":
+        return "/" + rel.parent.as_posix().strip("/") + "/"
+    return "/" + rel.as_posix().lstrip("/")
 
 
-def start_server():
-    os.chdir(SITE_DIR)
-    handler = http.server.SimpleHTTPRequestHandler
-    handler.log_message = lambda *a: None  # suppress logs
-    server = http.server.HTTPServer(("localhost", PORT), handler)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    return server
+def clean_title(value: str) -> str:
+    value = html.unescape(value or "")
+    value = re.sub(r"\s*[|—-]\s*Mneme HQ\s*$", "", value, flags=re.I)
+    return " ".join(value.split()).strip()
 
 
-async def generate(user_data_dir=None):
+def clamp_words(value: str, max_chars: int) -> str:
+    value = " ".join(html.unescape(value or "").split())
+    if len(value) <= max_chars:
+        return value
+    cut = value[: max_chars + 1].rsplit(" ", 1)[0].rstrip(" ,;:-")
+    return cut + "…"
+
+
+def family_for(path: str) -> str:
+    if path.startswith("/integrations/"):
+        return "integration"
+    if path.startswith("/demo/") or path.startswith("/architecture/") or path == "/benchmark/":
+        return "proof"
+    if path.startswith("/insights/") or path.startswith("/concepts/"):
+        return "editorial"
+    if path.startswith("/compare/") or path.startswith("/use-cases/") or path.startswith("/for/"):
+        return "boundary"
+    if path in {"/", "/about/", "/founder/", "/pilot/"}:
+        return "brand"
+    return "editorial"
+
+
+def label_for(path: str, family: str) -> str:
+    if family == "integration":
+        return "INTEGRATION"
+    if family == "proof":
+        return "PRODUCT PROOF"
+    if path.startswith("/insights/"):
+        return "INSIGHT"
+    if path.startswith("/concepts/"):
+        return "CONCEPT"
+    if path.startswith("/compare/"):
+        return "COMPARISON"
+    if path.startswith("/use-cases/"):
+        return "USE CASE"
+    return "MNEME HQ"
+
+
+def image_path_from_meta(page: Path, value: str) -> Path:
+    if value:
+        parsed = urlparse(value)
+        candidate = parsed.path or value
+        if candidate.startswith("/"):
+            target = SITE_DIR / candidate.lstrip("/")
+            if target.suffix.lower() == ".png":
+                return target
+    if page == SITE_DIR / "index.html":
+        return SITE_DIR / "og-home-v2.png"
+    return page.parent / "og.png"
+
+
+def parse_card(page: Path) -> Card | None:
+    text = page.read_text(encoding="utf-8")
+    parser = HeadParser()
+    parser.feed(text)
+    path = normalise_path(page)
+
+    if page.name.startswith("og-") or path.startswith("/assets/") or page.name == "404.html":
+        return None
+
+    override = OVERRIDES.get(path, {})
+    family = override.get("family", family_for(path))
+    raw_title = parser.meta.get("og:title") or parser.title
+    raw_desc = parser.meta.get("og:description") or parser.meta.get("description", "")
+    headline = override.get("headline", clean_title(raw_title))
+    support = override.get("support", clamp_words(raw_desc, 118))
+    label = override.get("label", label_for(path, family))
+    image_path = image_path_from_meta(page, parser.meta.get("og:image", ""))
+
+    platform = override.get("platform", "")
+    status = override.get("status", "")
+    statement = override.get("statement", "")
+    if family == "integration" and not platform:
+        platform = clean_title(raw_title).upper()
+        status = "MNEME INTEGRATION"
+        statement = clamp_words(raw_desc, 92)
+
+    if not headline:
+        return None
+
+    return Card(
+        path=path,
+        family=family,
+        label=label,
+        headline=clamp_words(headline, 96),
+        support=clamp_words(support, 132),
+        image_path=image_path,
+        platform=platform,
+        status=status,
+        statement=statement,
+    )
+
+
+def discover_cards() -> list[Card]:
+    cards: list[Card] = []
+    for page in sorted(SITE_DIR.rglob("*.html")):
+        card = parse_card(page)
+        if card:
+            cards.append(card)
+    return cards
+
+
+def font_size_for(headline: str) -> int:
+    n = len(headline)
+    if n <= 32:
+        return 82
+    if n <= 52:
+        return 74
+    if n <= 72:
+        return 66
+    return 60
+
+
+def visual_markup(card: Card) -> str:
+    esc = html.escape
+    if card.family == "integration":
+        return f"""
+        <div class="integration-object">
+          <div class="platform">{esc(card.platform or card.headline)}</div>
+          <div class="support-status">{esc(card.status or 'MNEME INTEGRATION')}</div>
+          <div class="statement">{esc(card.statement or card.support)}</div>
+          <div class="mechanism"><span>ARCHITECTURAL INTENT</span><b>→</b><span class="teal">PRE-TOOL GATE</span><b>→</b><span class="lime">VERDICT</span></div>
+        </div>"""
+    if card.family == "proof":
+        return """
+        <div class="proof-object">
+          <div class="proof-row approved"><span>ADR-014</span><b>APPROVED</b></div>
+          <div class="proof-arrow">↓</div>
+          <div class="proof-row proposal"><span>PROPOSED CHANGE</span><b>PostgreSQL</b></div>
+          <div class="proof-arrow">↓</div>
+          <div class="proof-row blocked"><span>VERDICT</span><b>BLOCKED</b></div>
+        </div>"""
+    if card.family == "boundary":
+        return """
+        <div class="boundary-object">
+          <div class="boundary-half allowed"><small>INSIDE INTENT</small><strong>ALLOWED</strong></div>
+          <div class="boundary-line"></div>
+          <div class="boundary-half blocked"><small>OUTSIDE INTENT</small><strong>BLOCKED</strong></div>
+        </div>"""
+    if card.family == "brand":
+        return """
+        <div class="artifact-object">
+          <div class="artifact-kicker">APPROVED ARCHITECTURE</div>
+          <div class="artifact-rule"><span>Decision</span><b>SQLite is the project database</b></div>
+          <div class="artifact-rule"><span>Scope</span><b>storage/**</b></div>
+          <div class="artifact-seal">ENFORCED BEFORE CODE</div>
+        </div>"""
+    return """
+      <div class="editorial-object">
+        <span>INTENT</span><b>→</b><span class="faded">CONTEXT</span><b>→</b><span>CODE</span>
+        <div class="drift-line"></div>
+        <div class="drift-label">DRIFT STARTS WHEN INTENT STOPS BEING ENFORCEABLE</div>
+      </div>"""
+
+
+def render_html(card: Card) -> str:
+    esc = html.escape
+    headline_size = font_size_for(card.headline)
+    support = f'<div class="support">{esc(card.support)}</div>' if card.support else ""
+    visual = visual_markup(card)
+    return f"""<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+@font-face {{ font-family: Instrument Serif; src: url('/assets/fonts/InstrumentSerif-400.woff2') format('woff2'); font-weight: 400; }}
+@font-face {{ font-family: DM Mono; src: url('/assets/fonts/DMMono-400.woff2') format('woff2'); font-weight: 400; }}
+@font-face {{ font-family: DM Mono; src: url('/assets/fonts/DMMono-500.woff2') format('woff2'); font-weight: 500; }}
+* {{ box-sizing: border-box; }}
+html, body {{ width: {WIDTH}px; height: {HEIGHT}px; margin: 0; overflow: hidden; background: #0c0c0d; }}
+body {{ color: #e8e8ec; font-family: DM Mono, monospace; position: relative; }}
+body::before {{ content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 72px 72px; mask-image: linear-gradient(to right, #000, transparent 72%); }}
+body::after {{ content: ''; position: absolute; width: 520px; height: 520px; right: -120px; top: -180px; border: 1px solid rgba(139,224,200,.14); border-radius: 50%; box-shadow: 0 0 0 80px rgba(139,224,200,.025), 0 0 0 160px rgba(200,240,96,.018); }}
+.frame {{ position: absolute; inset: 34px; border: 1px solid #2c2c31; padding: 38px 44px; display: grid; grid-template-rows: auto 1fr; z-index: 1; }}
+.top {{ display: flex; justify-content: space-between; align-items: center; gap: 24px; }}
+.brand {{ font-family: Instrument Serif, serif; font-size: 36px; letter-spacing: -.5px; }}
+.label {{ font-size: 20px; letter-spacing: .08em; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 9px 14px; background: rgba(200,240,96,.055); }}
+.content {{ display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(360px, .88fr); gap: 54px; align-items: center; }}
+.copy {{ max-width: 690px; }}
+h1 {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: {headline_size}px; line-height: .98; letter-spacing: -2px; margin: 0 0 26px; max-width: 710px; text-wrap: balance; }}
+.support {{ font-size: 26px; line-height: 1.36; color: #aaaab8; max-width: 660px; }}
+.integration-object, .proof-object, .boundary-object, .artifact-object, .editorial-object {{ min-height: 330px; border: 1px solid #33333a; background: rgba(20,20,22,.88); position: relative; box-shadow: 0 26px 80px rgba(0,0,0,.25); }}
+.integration-object {{ padding: 30px; display: flex; flex-direction: column; justify-content: center; }}
+.platform {{ font-family: Instrument Serif, serif; font-size: 52px; line-height: 1; margin-bottom: 16px; }}
+.support-status {{ align-self: flex-start; font-size: 21px; color: #c8f060; border: 1px solid rgba(200,240,96,.35); padding: 8px 10px; margin-bottom: 28px; }}
+.statement {{ font-size: 24px; line-height: 1.35; color: #d0d0d8; }}
+.mechanism {{ margin-top: 30px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: 20px; color: #8e8e9c; }}
+.mechanism .teal {{ color: #8be0c8; }} .mechanism .lime {{ color: #c8f060; }}
+.proof-object {{ padding: 28px; display: flex; flex-direction: column; justify-content: center; }}
+.proof-row {{ display: flex; align-items: center; justify-content: space-between; gap: 24px; border: 1px solid #37373e; padding: 18px 20px; font-size: 20px; }}
+.proof-row b {{ font-size: 28px; font-weight: 500; }} .approved b {{ color: #c8f060; }} .proposal b {{ color: #8be0c8; }} .blocked {{ border-color: rgba(255,101,91,.65); background: rgba(255,101,91,.07); }} .blocked b {{ color: #ff655b; font-size: 34px; }}
+.proof-arrow {{ text-align: center; color: #686874; font-size: 20px; line-height: 30px; }}
+.boundary-object {{ display: grid; grid-template-columns: 1fr 1px 1fr; }} .boundary-half {{ display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 16px; }} .boundary-half small {{ font-size: 20px; color: #8f8f9b; }} .boundary-half strong {{ font-family: Instrument Serif, serif; font-weight: 400; font-size: 48px; }} .allowed strong {{ color: #c8f060; }} .blocked strong {{ color: #ff655b; }} .boundary-line {{ background: #3b3b42; }}
+.artifact-object {{ padding: 28px; transform: rotate(1.5deg); }} .artifact-kicker {{ font-size: 20px; color: #ea735e; margin-bottom: 28px; letter-spacing: .08em; }} .artifact-rule {{ border-top: 1px solid #3b3b42; padding: 18px 0; display: grid; grid-template-columns: 110px 1fr; gap: 16px; }} .artifact-rule span {{ color: #777784; font-size: 20px; }} .artifact-rule b {{ font-size: 24px; font-weight: 400; color: #dedee6; }} .artifact-seal {{ position: absolute; right: 24px; bottom: 24px; border: 1px solid rgba(200,240,96,.5); color: #c8f060; padding: 10px 12px; font-size: 20px; transform: rotate(-2deg); }}
+.editorial-object {{ padding: 34px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 27px; }} .editorial-object span {{ color: #c8f060; }} .editorial-object .faded {{ color: #777784; }} .editorial-object b {{ color: #62626d; font-weight: 400; }} .drift-line {{ position: absolute; left: 48px; right: 48px; bottom: 82px; height: 2px; background: linear-gradient(90deg,#c8f060,#8be0c8 46%,#ff655b 80%); transform: rotate(-4deg); }} .drift-label {{ position: absolute; left: 42px; right: 42px; bottom: 28px; font-size: 18px; line-height: 1.35; color: #8b8b98; text-align: center; }}
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="top"><div class="brand">Mneme HQ</div><div class="label">{esc(card.label)}</div></div>
+    <div class="content">
+      <div class="copy"><h1>{esc(card.headline)}</h1>{support}</div>
+      {visual}
+    </div>
+  </div>
+</body>
+</html>"""
+
+
+async def generate(cards: list[Card]) -> None:
     from playwright.async_api import async_playwright
 
-    launch_args = {}
-    if user_data_dir:
-        launch_args["user_data_dir"] = user_data_dir
+    handler = lambda *args, **kwargs: http.server.SimpleHTTPRequestHandler(
+        *args, directory=str(SITE_DIR), **kwargs
+    )
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    port = server.server_address[1]
 
-    server = start_server()
-    time.sleep(0.5)  # let server start
+    try:
+        with tempfile.TemporaryDirectory(prefix=".og-render-", dir=SITE_DIR) as temp_dir:
+            temp_path = Path(temp_dir)
+            rel_temp = temp_path.relative_to(SITE_DIR).as_posix()
+            render_file = temp_path / "card.html"
 
-    generated = 0
-    failed = 0
-
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(**launch_args)
-        page = await browser.new_page(viewport={"width": 1200, "height": 630})
-
-        for template, output_rel in TEMPLATE_MAP.items():
-            url = f"http://localhost:{PORT}/{template}"
-            output_path = SITE_DIR / output_rel
-
-            output_path.parent.mkdir(parents=True, exist_ok=True)
-
-            try:
-                await page.goto(url, wait_until="networkidle")
-                await page.screenshot(
-                    path=str(output_path),
-                    clip={"x": 0, "y": 0, "width": 1200, "height": 630},
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                page = await browser.new_page(
+                    viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1
                 )
-                print(f"saved  {output_rel}")
-                generated += 1
-            except Exception as e:
-                print(f"FAILED {template}: {e}")
-                failed += 1
+                for index, card in enumerate(cards):
+                    card.image_path.parent.mkdir(parents=True, exist_ok=True)
+                    render_file.write_text(render_html(card), encoding="utf-8")
+                    await page.goto(
+                        f"http://127.0.0.1:{port}/{rel_temp}/card.html?v={index}",
+                        wait_until="networkidle",
+                    )
+                    await page.evaluate("document.fonts.ready")
+                    await page.screenshot(
+                        path=str(card.image_path), type="png", full_page=False
+                    )
+                    print(
+                        f"generated {card.path:<60} -> "
+                        f"{card.image_path.relative_to(ROOT)}"
+                    )
+                await browser.close()
+    finally:
+        server.shutdown()
+        server.server_close()
 
-        await browser.close()
 
-    server.shutdown()
-    print(f"\nDone: {generated} saved, {failed} failed")
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--only", nargs="*", default=[], help="Page paths to render, e.g. /demo/ /integrations/codex-cli/")
+    args = ap.parse_args()
+
+    cards = discover_cards()
+    if args.only:
+        wanted = {p if p.startswith("/") else f"/{p}" for p in args.only}
+        wanted = {p if p == "/" or p.endswith("/") or "." in Path(p).name else p + "/" for p in wanted}
+        cards = [c for c in cards if c.path in wanted]
+        missing = sorted(wanted - {c.path for c in cards})
+        if missing:
+            raise SystemExit(f"No public HTML page found for: {', '.join(missing)}")
+
+    if not cards:
+        raise SystemExit("No OG cards discovered")
+
+    asyncio.run(generate(cards))
+    print(f"\nGenerated {len(cards)} OG image(s).")
+    return 0
 
 
 if __name__ == "__main__":
-    asyncio.run(generate())
+    raise SystemExit(main())
