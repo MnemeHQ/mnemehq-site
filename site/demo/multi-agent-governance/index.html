@@ -2,168 +2,77 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="/favicon-v2.png" />
   <link rel="apple-touch-icon" href="/favicon-v2.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Keeping architecture consistent across multiple AI agents | Mneme HQ</title>
-  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/demos.css">
-  <meta name="description" content="Three AI agents act on the same codebase in sequence: one introduces a divergence, the next builds on it, the third remediates. Mneme keeps the architectural invariants coherent across actors, sessions, and retries — because they live outside the agents." />
+  <title>Multi-agent governance: the target contract | Mneme HQ</title>
+  <meta name="description" content="A forward-looking infrastructure example showing what Mneme must add to keep architectural decisions coherent across multiple agents. Current and unavailable stages are marked explicitly." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/demo/multi-agent-governance/" />
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/fonts.css" />
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Keeping architecture consistent across multiple AI agents" />
-  <meta property="og:description" content="As AI execution becomes distributed and persistent, governance becomes the coordination layer. Three agents act on the same codebase. Architectural invariants stay coherent across actors, sessions, and retries." />
+  <meta property="og:title" content="Multi-agent architectural governance: the target enforcement contract" />
+  <meta property="og:description" content="Current capability and future infrastructure are separated in one six-stage governance contract." />
   <meta property="og:url" content="https://mnemehq.com/demo/multi-agent-governance/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Keeping architecture consistent across multiple AI agents" />
-  <meta name="twitter:description" content="As AI execution becomes distributed and persistent, governance becomes the coordination layer." />
+  <meta name="twitter:title" content="Multi-agent governance: target architecture" />
+  <meta name="twitter:description" content="What exists today, what remains unavailable, and what a real multi-agent proof must demonstrate." />
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
-  <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://mnemehq.com/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Demo",
-          "item": "https://mnemehq.com/demo/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Keeping architecture consistent across multiple AI agents",
-          "item": "https://mnemehq.com/demo/multi-agent-governance/"
-        }
-      ]
-    },
-    {
-      "@type": "Article",
-      "headline": "Keeping architecture consistent across multiple AI agents",
-      "description": "As AI execution becomes distributed and persistent, governance becomes the coordination layer. Three agents act on the same codebase against a shared invariant set.",
-      "url": "https://mnemehq.com/demo/multi-agent-governance/",
-      "datePublished": "2026-05-13",
-      "dateModified": "2026-05-13",
-      "author": {
-        "@type": "Person",
-        "name": "Theo Valmis",
-        "url": "https://mnemehq.com/founder/"
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
+          {"@type": "ListItem", "position": 3, "name": "Multi-agent governance", "item": "https://mnemehq.com/demo/multi-agent-governance/"}
+        ]
       },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Mneme HQ",
-        "url": "https://mnemehq.com/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://mnemehq.com/logo-v3.png"
-        }
+      {
+        "@type": "Article",
+        "headline": "Multi-agent architectural governance: the target enforcement contract",
+        "description": "A forward-looking infrastructure example showing what Mneme must add to keep architectural decisions coherent across multiple agents. Current and unavailable stages are marked explicitly.",
+        "url": "https://mnemehq.com/demo/multi-agent-governance/",
+        "datePublished": "2026-05-15",
+        "dateModified": "2026-08-25",
+        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
+        "image": "https://mnemehq.com/demo/og.png",
+        "mainEntityOfPage": "https://mnemehq.com/demo/multi-agent-governance/"
       },
-      "image": "https://mnemehq.com/demo/og.png",
-      "mainEntityOfPage": "https://mnemehq.com/demo/multi-agent-governance/"
-    }
-  ]
-}
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is this a runnable multi-agent demo?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. This page is a forward-looking infrastructure contract. Mneme's current validated layer is local-repository, single-developer, and project-scoped. The stages that require shared policy distribution or cross-agent traces are marked as target capabilities."}
+          },
+          {
+            "@type": "Question",
+            "name": "What part works today?",
+            "acceptedAnswer": {"@type": "Answer", "text": "A repository can store explicit architectural decisions, retrieve the relevant constraints deterministically, and block a violating task before one agent executes it. Those same foundations are necessary for multi-agent governance, but they are not sufficient by themselves."}
+          },
+          {
+            "@type": "Question",
+            "name": "What would make the multi-agent claim demonstrable?",
+            "acceptedAnswer": {"@type": "Answer", "text": "A real proof needs versioned policy distribution, actor and decision-version identity, a shared enforcement boundary, and a persistent trace showing a violating actor denied and a corrected retry allowed against the same invariant set."}
+          }
+        ]
+      }
+    ]
+  }
   </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
-      --border: #222226; --border2: #2e2e34;
-      --text: #e8e8ec; --muted: #a8a8b8;
-      --accent: #c8f060; --accent-dim: #a8d040; --teal: #8be0c8;
-      --pass: #c8f060; --warn: #f59e0b; --fail: #ef4444;
-      --agent-a: #a78bfa; --agent-b: #f59e0b; --agent-c: #8be0c8;
-      --term-bad: #ff8585; --term-bg: #0a0a0d;
-    }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #0c0c0d; backdrop-filter: blur(8px); z-index: 100; }
-    .logo { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
-    .breadcrumb-nav { max-width: 880px; margin: 1.5rem auto 0; padding: 0 2rem; }
-    .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
-    .breadcrumb li:not(:last-child)::after { content: ' / '; margin-left: 0.5rem; color: var(--border2); }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--text); }
-    main { max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .eyebrow-tag { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-    .eyebrow-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
-    .verdict-pill { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 4px; letter-spacing: 0.06em; background: rgba(167,139,250,0.12); color: var(--agent-a); border: 1px solid rgba(167,139,250,0.3); }
-    h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
-    h1 em { font-style: italic; color: var(--accent); }
-    .lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    .lede strong { color: var(--text); font-weight: 500; }
-    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 3rem; }
-    .byline a { color: var(--muted); text-decoration: none; }
-    .byline a:hover { color: var(--text); }
-    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-    .body { font-size: 0.95rem; line-height: 1.85; color: var(--text); }
-    .body h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 3rem 0 1rem; color: var(--text); }
-    .body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--text); }
-    .body p { margin-bottom: 1.1rem; color: var(--muted); }
-    .body p strong { color: var(--text); font-weight: 500; }
-    .body code { font-family: 'DM Mono', monospace; font-size: 0.82rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; color: var(--text); }
-    .body a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
-    .body pre { background: var(--term-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
-    .body pre code { background: transparent; border: none; padding: 0; font-size: 0.78rem; line-height: 1.7; color: var(--text); }
-    /* ── ADR PRIMER ── */
-    .adr-primer { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 0 1.5rem; }
-    .primer-key { display: block; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #a78bfa; margin-bottom: 0.6rem; }
-    .primer-rules { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; font-size: 0.86rem; color: var(--muted); }
-    .primer-rules code { font-family: 'DM Mono', monospace; font-size: 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; color: var(--text); }
-    .primer-what { font-size: 0.86rem; color: var(--muted); margin: 0; padding-top: 0.65rem; border-top: 1px dashed var(--border); line-height: 1.65; }
-    .primer-what strong { color: var(--text); font-weight: 500; }
-    footer { border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left; }
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s; }
-    @media (max-width: 900px) {html, body { overflow-x: clip; }
-    body.menu-open { overflow: hidden; }
-    nav { padding: 1rem 1.25rem; }
-    .nav-hamburger { display: flex; }
-    .nav-links { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; gap: 0; background: rgba(12,12,13,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s; }
-    .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: 0.5rem 1.25rem 1.25rem; transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s; overflow-y: auto; }
-    .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.92rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
-    .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-    .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-    .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-    main { padding: 2rem 1.25rem 4rem; }
-    .breadcrumb-nav { padding: 0 1.25rem; }}
-    @media (max-width: 768px) {nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }}
-    footer a { color: var(--muted); text-decoration: none; }
-    /* The verdict is the point of the page - let it read that way. */
-    .body pre code .v-warn { color: var(--warn); font-weight: 500; }
-    .body pre code .v-fail { color: var(--fail); font-weight: 500; }
-    .body pre code .v-pass { color: var(--pass); font-weight: 500; }
-  
-    @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto !important; }
-          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-        }
-  
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
-
 </head>
-<body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<body class="demo-page">
   <a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
@@ -179,179 +88,139 @@
   </div>
 </nav>
 
-  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/demo/">Demo</a></li>
-      <li aria-current="page">Keeping architecture consistent across multiple AI agents</li>
+      <li>Multi-agent governance</li>
     </ol>
   </nav>
 
-  <main id="main-content" tabindex="-1">
+  <main id="main-content" tabindex="-1" class="demo-detail">
     <header>
-      <div class="demo-meta">
-        <span class="mt mt-type">Flagship demo</span>
-        <span class="mt">Scripted reproduction</span>
-        <span class="mt mt-outcome-deny">Outcome: DENY &rarr; PASS</span>
+      <div class="demo-meta" aria-label="Demo classification">
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Infrastructure</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value forward-looking">Forward-looking</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Target outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
-      <h1>Keeping architecture consistent across <em>multiple AI agents</em>.</h1>
-      <p class="lede">Three actors touch the same service in three separate sessions, sharing no memory with each other. They share one thing: the compiled decision corpus. <strong>The invariants hold because they live outside every actor, not inside any of them.</strong></p>
-      <p class="byline">
-        By <a href="/founder/">Theo Valmis</a>
-        <span class="sep">&middot;</span>
-        <time datetime="2026-05-13">Published May 2026</time>
-        <span class="sep">&middot;</span>
-        <a href="/demo/">All demos</a>
-      </p>
+      <h1>Many agents need one rulebook. Mneme is <em>building toward it</em>.</h1>
+      <p class="lede">Today, Mneme governs explicit decisions inside one local repository. Multi-agent work needs more: every actor gets the same policy, meets the same gate, and leaves a shared trace. This page maps that target without pretending it is a shipped proof.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-15">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
-      <div class="adr-primer">
-        <span class="primer-key">The decisions at stake</span>
-        <div class="primer-rules">
-          <div>&rarr; <code>ADR-001</code> forbids external databases. Redis is forbidden.</div>
-          <div>&rarr; <code>ADR-003</code> forbids ORMs in v1.</div>
+      <section class="demo-section" aria-labelledby="target-demo-title">
+        <span class="section-kicker">Target enforcement contract</span>
+        <h2 id="target-demo-title">The rule has to survive every agent and every retry.</h2>
+        <p class="section-intro">What works today is marked clearly. The distributed pieces are shown as the work still ahead.</p>
+
+        <div class="decision-stake">
+          <span class="decision-stake-label">Invariant at stake</span>
+          <p><strong>Retrieval remains deterministic.</strong> No agent may introduce sentence-transformers or a vector database unless the recorded decision is explicitly amended.</p>
         </div>
-        <p class="primer-what">The demo shows how three independent actors stay aligned because they all evaluate against this same <strong>compiled corpus</strong> &mdash; not against each other.</p>
+
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage multi-agent target enforcement contract">
+          <div class="enforcement-terminal-header">
+            <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="enforcement-terminal-title">target contract &middot; not live execution</span>
+          </div>
+          <ol class="enforcement-steps">
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">01 <strong>Decision</strong></div>
+              <div class="enforcement-copy"><p>A version-controlled repository records the deterministic retrieval boundary.</p><code class="trace-code">mneme_retrieval_deterministic <span class="trace-muted">&middot;</span> decision corpus v17</code><span class="stage-availability">Current</span></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
+              <div class="enforcement-copy"><p>One local agent can deterministically retrieve the applicable decision before a task runs.</p><code class="trace-code">actor A <span class="trace-muted">&middot;</span> local repository <span class="trace-muted">&middot;</span> decision v17</code><span class="stage-availability">Current</span></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">03 <strong>Violation</strong></div>
+              <div class="enforcement-copy"><p>A second actor proposes a retrieval rewrite that contradicts the shared invariant.</p><code class="trace-code trace-deny">actor B: add sentence-transformers + vector database</code><span class="stage-availability">Illustrative input</span></div>
+            </li>
+            <li class="enforcement-step is-unavailable" data-demo-step>
+              <div class="enforcement-stage">04 <strong>Deny</strong></div>
+              <div class="enforcement-copy"><p>A shared boundary would have to prove that Actor B was checked against the same decision version.</p><code class="trace-code">Unavailable: shared policy distribution + actor/version identity</code><span class="stage-availability">Requires Layer 2</span></div>
+              <span class="verdict-token target">TARGET</span>
+            </li>
+            <li class="enforcement-step is-unavailable" data-demo-step>
+              <div class="enforcement-stage">05 <strong>Correction</strong></div>
+              <div class="enforcement-copy"><p>The actor would retry inside the accepted architecture without weakening the invariant.</p><code class="trace-code">Unavailable: governed cross-agent retry trace</code><span class="stage-availability">Requires Layer 2</span></div>
+              <span class="verdict-token target">TARGET</span>
+            </li>
+            <li class="enforcement-step is-unavailable" data-demo-step>
+              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-copy"><p>The system would prove that the corrected retry passed against decision corpus v17.</p><code class="trace-code">Unavailable: persistent convergence proof across actors</code><span class="stage-availability">Requires Layer 2</span></div>
+              <span class="verdict-token target">TARGET</span>
+            </li>
+          </ol>
+          <div class="terminal-controls">
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
+            <span class="terminal-note">Architecture contract &middot; unavailable stages marked explicitly</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="current-title">
+        <h2 id="current-title">What is demonstrable today</h2>
+        <div class="demo-run forward-note">
+          <h3>Layer 1 proves the local enforcement primitive</h3>
+          <p><strong>Current:</strong> a local repository stores the decisions, retrieves applicable constraints deterministically, and blocks a violating task before one agent executes it.</p>
+          <pre><code>CURRENT   version-controlled project decision corpus
+CURRENT   deterministic retrieval and pre-flight enforcement
+CURRENT   local-repository decision trace
+
+TARGET    shared policy distribution across actors
+TARGET    actor + decision-version identity
+TARGET    persistent deny &rarr; correction &rarr; allow trace</code></pre>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="requires-title">
+        <h2 id="requires-title">What a real multi-agent proof must add</h2>
+        <div class="demo-explanation">
+          <div class="demo-explanation-item"><strong>Policy identity.</strong><p>Every verdict must name the exact decision corpus version each actor received.</p></div>
+          <div class="demo-explanation-item"><strong>One enforcement seam.</strong><p>Parallel actors cannot bypass governance by entering through different tools or sessions.</p></div>
+          <div class="demo-explanation-item"><strong>Convergence evidence.</strong><p>The trace must connect the denied attempt, corrected retry, and allowed result across actor boundaries.</p></div>
+        </div>
+      </section>
+
+      <section class="demo-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details><summary>Is this a runnable multi-agent demo?</summary><p>No. It is a forward-looking infrastructure contract. Stages that require shared policy distribution or persistent cross-agent traces are marked as target capabilities.</p></details>
+        <details><summary>What part works today?</summary><p>A repository can store explicit architectural decisions, retrieve relevant constraints deterministically, and block a violating task before one local agent executes it.</p></details>
+        <details><summary>What would make the claim demonstrable?</summary><p>Versioned policy distribution, actor and decision-version identity, a shared enforcement boundary, and a persistent trace connecting a denial to a compliant retry.</p></details>
+      </section>
+
+      <section class="install-cta" aria-labelledby="install-title">
+        <h2 id="install-title">Start with one governed repository.</h2>
+        <p>Start with a governed repository today. The shared, multi-agent layer is the next capability to prove.</p>
+        <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
+        <div class="install-links"><a href="/docs/">Current documentation</a><a href="https://github.com/MnemeHQ/mneme">Inspect the source</a><a href="/roadmap/">Read the roadmap</a></div>
+        <span class="install-meta">Current phase: local-repo, single-developer, project-scoped governance</span>
+      </section>
+
+      <div class="next-bar">
+        <a class="next-card" href="/demo/governed-python-agent/"><div class="nc-label">Flagship 01</div><h4>Governed Python agent</h4><p>A runnable deny-to-pass trace grounded in the current local-repository product.</p><span class="nc-arrow">See the current product &rarr;</span></a>
+        <a class="next-card" href="/demo/architectural-drift/"><div class="nc-label">Flagship 02</div><h4>Architectural drift prevention</h4><p>A runnable example that blocks the first retrieval-architecture divergence.</p><span class="nc-arrow">Run the proof &rarr;</span></a>
       </div>
 
-      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor A &middot; Monday &middot; fresh session</h3>
-      <ol class="beat-flow">
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-001 &middot; shared corpus</span></div>
-          <div class="beat-body">External databases are forbidden. The constraint is waiting in the corpus before the actor writes anything.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: scripted actors receive no pre-generation guidance; enforcement is post-generation.</div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">proposes Redis</span></div>
-          <div class="beat-body">A locally reasonable caching choice that violates <code>ADR-001</code>.</div>
-        </li>
-        <li class="beat beat-deny">
-          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">ADR-001 FAIL</span></div>
-          <div class="beat-body">The check returns <code>FAIL</code> on the Redis dependency &mdash; the divergence is stopped at the first actor, not discovered in production.</div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">independent check</span></div>
-          <div class="beat-body">A second, corrected file is checked independently against the same corpus.</div>
-        </li>
-        <li class="beat beat-pass">
-          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
-          <div class="beat-body">The corrected file passes, leaving a compliant primitive in the codebase for the next actor.</div>
-        </li>
-      </ol>
-
-      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor B &middot; Tuesday &middot; no memory of A</h3>
-      <ol class="beat-flow">
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">same corpus &middot; fresh session</span></div>
-          <div class="beat-body">Actor B shares no memory with A. The corpus is the only thing the two sessions have in common.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: same post-generation setup as Actor A.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Nothing proposed against the corpus: B builds on the compliant primitive A converged to.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Nothing to block.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Nothing to correct.</div>
-        </li>
-        <li class="beat beat-pass">
-          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
-          <div class="beat-body">B's session passes against the same corpus &mdash; the invariant holds across actors without shared memory.</div>
-        </li>
-      </ol>
-
-      <h3 style="font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;margin:2.25rem 0 0;">Actor C &middot; Wednesday &middot; remediation pass</h3>
-      <ol class="beat-flow">
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">ADR-003 &middot; shared corpus</span></div>
-          <div class="beat-body">No ORMs in v1 &mdash; a second invariant in the same compiled corpus.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: same post-generation setup.</div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">remediation reaches for an ORM</span></div>
-          <div class="beat-body">The remediation reaches for <code>sqlalchemy</code> &mdash; the interesting one: a genuine architectural violation surfaced explicitly rather than silently resolved.</div>
-        </li>
-        <li class="beat beat-deny">
-          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">mneme check</span></div>
-          <div class="beat-body">
-            <pre class="b-term" tabindex="0"><span class="t-deny">FAIL</span>  [ADR-003] anti_pattern "sqlalchemy" -- trigger: sqlalchemy
-<span class="t-warn">WARN</span>  [ADR-003] constraint "no sqlalchemy" -- trigger: sqlalchemy
-
-<span class="t-dim">Result:</span> <span class="t-deny">FAIL</span></pre>
-          </div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">compliant remediation</span></div>
-          <div class="beat-body">The remediation is reworked without the ORM.</div>
-        </li>
-        <li class="beat beat-pass">
-          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span></div>
-          <div class="beat-body">The compliant remediation passes. Three actors, three sessions, one corpus &mdash; the invariants held for every one of them.</div>
-        </li>
-      </ol>
-
-      <h2>Run it yourself</h2>
-
-      <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
-cd mneme/examples/multi-agent-governance
-python run.py</code></pre>
-
-      <p>The actors are scripted so the enforcement output stays deterministic. This is not a multi-agent runtime and does not claim to be one &mdash; it shows that one corpus keeps three independent sessions coherent.</p>
-
-      <aside class="related-panel" aria-labelledby="related-panel-label">
+      <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">
         <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
         <ul class="related-list">
-          <li><a href="/concepts/multi-agent-continuity/"><div class="rel-title">Multi-agent continuity</div><p class="rel-desc">Decisions persist across agents, sessions, and time. Decision-side memory, not agent-side memory.</p></a></li>
-          <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance propagation</div><p class="rel-desc">One compiled decision reaches every agent, every developer, every CI run with identical semantics.</p></a></li>
-          <li><a href="/concepts/multi-agent-drift/"><div class="rel-title">Multi-agent drift</div><p class="rel-desc">How distributed AI execution amplifies small architectural relaxations into structural decay.</p></a></li>
-          <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
+          <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The distribution, identity, and enforcement layer required as execution becomes distributed.</p></a></li>
+          <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural drift</div><p class="rel-desc">The failure mode that compounds when each actor reasons against different context.</p></a></li>
         </ul>
       </aside>
 
-      <div class="scenario-cta">
-        <a href="/demo/architectural-drift/">&larr; Previous &middot; Architectural drift (DENY)</a>
-        <a href="/demo/adr-compiler/" class="next">Next &middot; ADR compiler &rarr;</a>
-      </div>
-    </div>
 
-    <section class="cta-snippet" id="try">
-        <h3>Ready to try it?</h3>
-        <p>Install the CLI and check your first decision in under a minute.</p>
-        <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
-          <div class="install-module-cmd">
-            <code>pip install mneme-hq</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                    onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
-          </div>
-          <div class="install-module-meta">
-            <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.11+</span>
-            <span>MIT licensed</span>
-          </div>
-        </div>
-        <div class="cta-actions">
-          <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-        </div>
-        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
-      </section>
+
+
+
+
+    </div>
   </main>
 
-  <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
     .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
     .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
@@ -446,33 +315,18 @@ python run.py</code></pre>
     <span>&copy; 2026</span>
   </div>
 </footer>
-
-  <script>
-    (function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
   });
-  if (best) best.classList.add('active');
 })();
-  </script>
-  <script>
-    (function(){
-      var btn = document.querySelector('.nav-hamburger');
-      var links = document.querySelector('.nav-links');
-      if (!btn || !links) return;
-      function setOpen(open){ links.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); document.body.classList.toggle('menu-open', open); }
-      btn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!links.classList.contains('open')); });
-      document.addEventListener('click', function(e){ if (!links.classList.contains('open')) return; if (links.contains(e.target) || btn.contains(e.target)) return; setOpen(false); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false); });
-      links.addEventListener('click', function(e){ if (e.target.tagName === 'A') setOpen(false); });
-      window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
-    })();
-  </script>
+</script>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
@@ -484,79 +338,6 @@ python run.py</code></pre>
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>

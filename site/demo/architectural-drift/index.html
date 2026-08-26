@@ -2,34 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="/favicon-v2.png" />
   <link rel="apple-touch-icon" href="/favicon-v2.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Preventing architectural drift from AI coding agents | Mneme HQ</title>
-  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/demos.css">
-  <meta name="description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before three downstream changes are built on top of it. Runnable in one command." />
+  <title>Stop architectural drift before the first AI change | Mneme HQ</title>
+  <meta name="description" content="A coding agent proposes replacing deterministic retrieval with embeddings and a vector database. Mneme blocks the first architectural divergence and verifies the compliant retry." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/demo/architectural-drift/" />
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/fonts.css" />
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Preventing architectural drift from AI coding agents" />
-  <meta property="og:description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before three downstream changes are built on top of it. Runnable in one command." />
+  <meta property="og:title" content="Stopping architectural drift before the first AI-generated change" />
+  <meta property="og:description" content="One recorded decision blocks an embeddings rewrite, redirects the task, and keeps the existing deterministic architecture intact." />
   <meta property="og:url" content="https://mnemehq.com/demo/architectural-drift/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Preventing architectural drift from AI coding agents" />
-  <meta name="twitter:description" content="An agent proposes a Redis cache that violates ADR-001. Mneme fails the first divergence before downstream changes build on it." />
+  <meta name="twitter:title" content="Stopping architectural drift before the first AI-generated change" />
+  <meta name="twitter:description" content="One decision. One blocked divergence. One compliant retry." />
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
-  <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -39,143 +33,46 @@
         "itemListElement": [
           {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
           {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
-          {"@type": "ListItem", "position": 3, "name": "Architectural drift prevention", "item": "https://mnemehq.com/demo/architectural-drift/"}
+          {"@type": "ListItem", "position": 3, "name": "Architectural drift", "item": "https://mnemehq.com/demo/architectural-drift/"}
         ]
       },
       {
         "@type": "Article",
-        "headline": "Preventing architectural drift from AI coding agents",
-        "description": "Timeline showing how drift compounds without a governance layer, and how Mneme fails the first divergence upstream so the system converges.",
+        "headline": "Stopping architectural drift before the first AI-generated change",
+        "description": "A coding agent proposes replacing deterministic retrieval with embeddings and a vector database. Mneme blocks the first architectural divergence and verifies the compliant retry.",
         "url": "https://mnemehq.com/demo/architectural-drift/",
-        "datePublished": "2026-05-13",
-        "dateModified": "2026-05-13",
+        "datePublished": "2026-05-15",
+        "dateModified": "2026-08-25",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "image": "https://mnemehq.com/demo/og.png",
         "mainEntityOfPage": "https://mnemehq.com/demo/architectural-drift/"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What counts as architectural drift in this example?",
+            "acceptedAnswer": {"@type": "Answer", "text": "The project deliberately chose deterministic keyword retrieval. Adding sentence-transformers and a vector database would create a parallel retrieval architecture that contradicts that recorded decision."}
+          },
+          {
+            "@type": "Question",
+            "name": "Why block the first change instead of reviewing the final diff?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Later work tends to build on whatever lands first. Blocking the initial divergence prevents the new dependency, data path, tests, and operating assumptions from becoming the next agent's starting point."}
+          },
+          {
+            "@type": "Question",
+            "name": "Can I reproduce this without an LLM call?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision ships in examples/project_memory.json. The page provides two local mneme check commands: one violating input and one compliant input."}
+          }
+        ]
       }
     ]
   }
   </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
-      --border: #222226; --border2: #2e2e34;
-      --text: #e8e8ec; --muted: #a8a8b8;
-      --accent: #c8f060; --accent-dim: #a8d040; --teal: #8be0c8;
-      --pass: #c8f060; --warn: #f59e0b; --fail: #ef4444;
-      --term-bad: #ff8585; --term-bg: #0a0a0d;
-    }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #0c0c0d; backdrop-filter: blur(8px); z-index: 100; }
-    .logo { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
-    .breadcrumb-nav { max-width: 880px; margin: 1.5rem auto 0; padding: 0 2rem; }
-    .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
-    .breadcrumb li:not(:last-child)::after { content: ' / '; margin-left: 0.5rem; color: var(--border2); }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--text); }
-    main { max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .eyebrow-tag { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-    .eyebrow-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
-    .verdict-pill { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 4px; letter-spacing: 0.06em; background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border2); }
-    h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
-    h1 em { font-style: italic; color: var(--accent); }
-    .lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    .lede strong { color: var(--text); font-weight: 500; }
-    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 3rem; }
-    .byline a { color: var(--muted); text-decoration: none; }
-    .byline a:hover { color: var(--text); }
-    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-    .body { font-size: 0.95rem; line-height: 1.85; color: var(--text); }
-    .body h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 3rem 0 1rem; color: var(--text); }
-    .body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--text); }
-    .body p { margin-bottom: 1.1rem; color: var(--muted); }
-    .body p strong { color: var(--text); font-weight: 500; }
-    .body code { font-family: 'DM Mono', monospace; font-size: 0.82rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; color: var(--text); }
-    .body a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
-    .body pre { background: var(--term-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
-    .body pre code { background: transparent; border: none; padding: 0; font-size: 0.78rem; line-height: 1.7; color: var(--text); }
-    /* ── ADR PRIMER ── */
-    .adr-primer { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 8px; padding: 0.85rem 1.15rem; margin: 0 0 2.5rem; }
-    .primer-key { display: block; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: #a78bfa; margin-bottom: 0.6rem; }
-    .primer-rules { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.75rem; font-size: 0.86rem; color: var(--muted); }
-    .primer-rules code { font-family: 'DM Mono', monospace; font-size: 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; color: var(--text); }
-    .primer-what { font-size: 0.86rem; color: var(--muted); margin: 0; padding-top: 0.65rem; border-top: 1px dashed var(--border); line-height: 1.65; }
-    .primer-what strong { color: var(--text); font-weight: 500; }
-    footer { border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left; }
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s; }
-    @media (max-width: 900px) {html, body { overflow-x: clip; }
-    body.menu-open { overflow: hidden; }
-    nav { padding: 1rem 1.25rem; }
-    .nav-hamburger { display: flex; }
-    .nav-links { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; gap: 0; background: rgba(12,12,13,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s; }
-    .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: 0.5rem 1.25rem 1.25rem; transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s; overflow-y: auto; }
-    .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.92rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
-    .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-    .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-    .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-    main { padding: 2rem 1.25rem 4rem; }
-    .breadcrumb-nav { padding: 0 1.25rem; }}
-    @media (max-width: 768px) {nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }}
-    /* ── TERMINAL DEMO ── */
-    .demo-terminal-wrapper { margin: 0 0 3rem; border: 1px solid var(--border2); border-radius: 10px; overflow: hidden; background: var(--term-bg); }
-    .demo-terminal-chrome { display: flex; align-items: center; gap: 0.5rem; padding: 0.65rem 1rem; background: #1a1a1e; border-bottom: 1px solid var(--border2); }
-    .dtc-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
-    .dtc-red { background: #33333a; }
-    .dtc-yellow { background: #33333a; }
-    .dtc-green { background: #33333a; }
-    .dtc-title { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin: 0 auto; }
-    .dtc-controls { display: flex; gap: 0.5rem; align-items: center; margin-left: auto; }
-    .dtc-btn { background: transparent; border: 1px solid var(--border2); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.2rem 0.55rem; border-radius: 4px; cursor: pointer; transition: border-color 0.15s, color 0.15s; letter-spacing: 0.04em; }
-    .dtc-btn:hover { border-color: var(--accent); color: var(--text); }
-    .dtc-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-    .demo-terminal-sim { padding: 1.1rem 1.4rem 1.4rem; font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.75; min-height: 14rem; overflow-x: auto; }
-    .term-line { white-space: pre-wrap; word-break: break-word; }
-    .term-prompt { color: var(--accent); }
-    .term-cmd { color: var(--text); }
-    .term-cursor { display: inline-block; width: 0.52em; height: 1em; background: var(--text); vertical-align: text-bottom; animation: term-blink 1s step-end infinite; }
-    .term-cursor.hidden { display: none; }
-    @keyframes term-blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    .term-blank { height: 1.75em; }
-    .term-muted { color: var(--muted); }
-    .term-header { color: var(--term-bad); font-weight: 600; }
-    .term-key { color: var(--teal); }
-    .term-value { color: var(--text); }
-    .term-blocked { color: var(--fail); font-weight: 600; letter-spacing: 0.06em; }
-    .term-end { color: var(--accent); }
-    .term-transcript { margin: -2rem 0 2rem; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .term-transcript summary { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); padding: 0.55rem 1rem; cursor: pointer; letter-spacing: 0.04em; background: var(--surface); }
-    .term-transcript summary:hover { color: var(--text); }
-    .term-transcript pre { background: var(--term-bg); padding: 1rem 1.25rem; overflow-x: auto; }
-    .term-transcript pre code { font-family: 'DM Mono', monospace; font-size: 0.76rem; line-height: 1.7; color: var(--muted); background: transparent; border: none; padding: 0; }
-    footer a { color: var(--muted); text-decoration: none; }
-  
-    /* WCAG 2.3.3 - honour a reduced-motion preference. The JS below renders
-       the final verdict state immediately instead of typing it out; these
-       rules stop the residual fade and cursor blink. */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-      }
-      html { scroll-behavior: auto; }
-    }
-
-    /* The verdict is the point of the page - let it read that way. */
-    .body pre code .v-warn { color: var(--warn); font-weight: 500; }
-    .body pre code .v-fail { color: var(--fail); font-weight: 500; }
-    .body pre code .v-pass { color: var(--pass); font-weight: 500; }
-
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
-
 </head>
-<body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<body class="demo-page">
   <a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
@@ -191,152 +88,143 @@
   </div>
 </nav>
 
-  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <nav class="breadcrumb-nav" aria-label="Breadcrumb">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/demo/">Demo</a></li>
-      <li aria-current="page">Architectural drift</li>
+      <li>Architectural drift</li>
     </ol>
   </nav>
 
-  <main id="main-content" tabindex="-1">
+  <main id="main-content" tabindex="-1" class="demo-detail">
     <header>
-      <div class="demo-meta">
-        <span class="mt mt-type">Flagship demo</span>
-        <span class="mt">Scripted reproduction</span>
-        <span class="mt mt-outcome-deny">Outcome: DENY</span>
+      <div class="demo-meta" aria-label="Demo classification">
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Flagship demo</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Runnable locally</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
-      <h1>Preventing architectural drift from <em>AI coding agents</em>.</h1>
-      <p class="lede">Three agents work across a week. Every change is locally reasonable, and the architecture still drifts, because each one quietly relaxes an invariant the team already encoded. <strong>Mneme fails the first divergence before the rest are built on top of it.</strong></p>
-      <p class="byline">
-        By <a href="/founder/">Theo Valmis</a>
-        <span class="sep">&middot;</span>
-        <time datetime="2026-05-13">Published May 2026</time>
-        <span class="sep">&middot;</span>
-        <a href="/demo/">All demos</a>
-      </p>
+      <h1>An agent makes governance retrieval probabilistic. Mneme <em>blocks the fork</em>.</h1>
+      <p class="lede">This project finds governing decisions with deterministic keyword rules. The agent proposes sentence-transformers and a vector database instead. That means two agents can get different ADRs for the same task&mdash;and write conflicting code. Mneme blocks the change, then accepts an improvement that keeps retrieval predictable.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-15">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
-      <div class="adr-primer">
-        <span class="primer-key">The decisions at stake</span>
-        <div class="primer-rules">
-          <div>&rarr; <code>ADR-001</code> prohibits external databases. Redis is forbidden.</div>
-          <div>&rarr; <code>ADR-004</code> requires all persistence to go through a Repository abstraction.</div>
+      <section class="demo-section" aria-labelledby="live-demo-title">
+        <span class="section-kicker">Live enforcement</span>
+        <h2 id="live-demo-title">Stop the fork before it becomes the default.</h2>
+        <p class="section-intro">The first retrieval path that lands becomes tomorrow's precedent. This trace keeps the rulebook stable.</p>
+
+        <div class="decision-stake">
+          <span class="decision-stake-label">Decision at stake</span>
+          <p><strong>mneme_retrieval_deterministic &middot; Retrieval must be deterministic.</strong> Keep keyword scoring and explicit weights. No embeddings, learned weights, sentence-transformers, or vector database in v1.</p>
         </div>
-        <p class="primer-what">The demo shows how three agents accidentally violate these decisions over a week &mdash; and how <strong>Mneme fails the first divergence</strong> before it propagates.</p>
+
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-step architectural drift enforcement transcript">
+          <div class="enforcement-terminal-header">
+            <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="enforcement-terminal-title">mneme check &middot; retrieval architecture trace</span>
+          </div>
+          <ol class="enforcement-steps">
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">01 <strong>Decision</strong></div>
+              <div class="enforcement-copy"><p>The team chose a retrieval path that is reproducible, lightweight, and easy to debug.</p><code class="trace-code">retrieval: keyword scoring <span class="trace-muted">&middot;</span> result order: deterministic</code></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
+              <div class="enforcement-copy"><p>Mneme selects the applicable decision before the agent starts the retrieval work.</p><code class="trace-code"><span class="trace-muted">mneme_retrieval_deterministic:</span> extend the current retriever</code></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">03 <strong>Violation</strong></div>
+              <div class="enforcement-copy"><p>The proposed task creates a second retrieval architecture and adds a heavy dependency.</p><code class="trace-code trace-deny">Add sentence-transformers + a vector database</code></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">04 <strong>Deny</strong></div>
+              <div class="enforcement-copy"><p>The pre-flight check matches both anti-patterns and stops the task.</p><code class="trace-code"><span class="trace-deny">mneme_retrieval_deterministic</span> &middot; add sentence-transformers &middot; add vector database &middot; exit 2</code></div>
+              <span class="verdict-token deny">DENY</span>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">05 <strong>Correction</strong></div>
+              <div class="enforcement-copy"><p>The task keeps the architecture and narrows the improvement to explicit scoring behavior.</p><code class="trace-code trace-pass">Add deterministic tag weights + regression tests</code></div>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-copy"><p>The corrected task contains no forbidden retrieval path or dependency.</p><code class="trace-code"><span class="trace-pass">Result: PASS</span> &middot; exit 0</code></div>
+              <span class="verdict-token pass">PASS</span>
+            </li>
+          </ol>
+          <div class="terminal-controls">
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Replay trace</button>
+            <span class="terminal-note">No autoplay scroll &middot; deterministic local inputs</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="run-title">
+        <h2 id="run-title">Run it yourself</h2>
+        <div class="demo-run">
+          <h3>Check the divergence and the compliant retry</h3>
+          <p>The decision is already present in the repository's example corpus. These two inputs exercise its deny and pass paths without calling a model.</p>
+          <pre><code>git clone https://github.com/MnemeHQ/mneme
+cd mneme &amp;&amp; pip install -e .
+
+printf '%s\n' 'Add sentence-transformers and a vector database' &gt; /tmp/drift.txt
+mneme check --memory examples/project_memory.json \
+  --input /tmp/drift.txt --query "retrieval ranking"
+# FAIL [mneme_retrieval_deterministic] &middot; exit 2
+
+printf '%s\n' 'Extend keyword scoring with deterministic tag weights and tests' &gt; /tmp/aligned.txt
+mneme check --memory examples/project_memory.json \
+  --input /tmp/aligned.txt --query "retrieval ranking"
+# Result: PASS &middot; exit 0</code></pre>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="happened-title">
+        <h2 id="happened-title">What happened</h2>
+        <div class="demo-explanation">
+          <div class="demo-explanation-item"><strong>Agents keep one decision path.</strong><p>No vector index can return different governing ADRs for equivalent tasks or silently displace explicit precedence.</p></div>
+          <div class="demo-explanation-item"><strong>The decision stays attached.</strong><p>The denial names the recorded architecture decision instead of returning a generic policy failure.</p></div>
+          <div class="demo-explanation-item"><strong>The retry preserves intent.</strong><p>The agent can still improve retrieval, but inside the deterministic boundary the team chose.</p></div>
+        </div>
+      </section>
+
+      <section class="demo-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details><summary>What counts as architectural drift here?</summary><p>The project deliberately chose deterministic keyword retrieval. Adding sentence-transformers and a vector database creates a parallel retrieval architecture that contradicts that decision.</p></details>
+        <details><summary>Why block the first change?</summary><p>Later work builds on whatever lands first. Blocking the initial divergence prevents new dependencies, data paths, tests, and operating assumptions from becoming the next agent's baseline.</p></details>
+        <details><summary>Is the example reproducible without an LLM?</summary><p>Yes. The decision ships in <code>examples/project_memory.json</code>, and the commands above exercise both outcomes through <code>mneme check</code>.</p></details>
+      </section>
+
+      <section class="install-cta" aria-labelledby="install-title">
+        <h2 id="install-title">Catch the first divergence.</h2>
+        <p>Install Mneme, record the architectural decisions that matter, and check a proposed task before an agent turns it into code.</p>
+        <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
+        <div class="install-links"><a href="/docs/">5-minute quickstart</a><a href="https://github.com/MnemeHQ/mneme">View source</a><a href="/pilot/">Request a pilot</a></div>
+        <span class="install-meta">Python 3.11+ &middot; MIT licensed</span>
+      </section>
+
+      <div class="next-bar">
+        <a class="next-card" href="/demo/governed-python-agent/"><div class="nc-label">Flagship 01</div><h4>Governed Python agent</h4><p>A storage-layer violation is denied and corrected through the same deterministic check.</p><span class="nc-arrow">See the enforcement trace &rarr;</span></a>
+        <a class="next-card" href="/demo/multi-agent-governance/"><div class="nc-label">Infrastructure</div><h4>Multi-agent governance</h4><p>The honest forward-looking contract for keeping decisions coherent across multiple actors.</p><span class="nc-arrow">See the target architecture &rarr;</span></a>
       </div>
 
-      <ol class="beat-flow">
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">compiled corpus</span></div>
-          <div class="beat-body"><code>ADR-001</code> prohibits external databases; <code>ADR-004</code> requires persistence to go through a Repository abstraction. Both live outside every agent.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: the scripted agents receive no pre-generation guidance. This reproduction isolates post-generation enforcement &mdash; the pre-generation path is the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">Agent A &middot; Monday</span></div>
-          <div class="beat-body">"Speed up the user lookup endpoint" &mdash; the diff reaches for Redis:
-            <pre class="b-term" tabindex="0"><span class="t-dim">$ mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn</span>
-
-<span class="t-dim">&#8627; Agent A -- Monday: "speed up the user lookup endpoint"</span>
-
-<span class="t-teal">Diff:</span>
-  <span class="t-val">import redis</span>
-  <span class="t-val">_cache = redis.Redis(host="localhost", port=6379)</span></pre>
-          </div>
-        </li>
-        <li class="beat beat-deny">
-          <div class="beat-head"><span class="beat-tag">4 &middot; Deny</span><span class="chip chip-deny">DENY</span><span class="beat-state">mneme check</span></div>
-          <div class="beat-body">
-            <pre class="b-term" tabindex="0"><span class="t-deny">FAIL</span>  [ADR-001] anti_pattern "redis-py" -- trigger: redis
-      JSON storage only -- no external database.
-<span class="t-warn">WARN</span>  [ADR-001] constraint "no redis" -- trigger: redis
-      JSON storage only -- no external database.
-
-<span class="t-dim">Result:</span> <span class="t-deny">FAIL</span></pre>
-            The script runs in warn mode, which always exits 0; a strict-mode CI gate maps this same FAIL to a non-zero exit and blocks the merge.
-          </div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="beat-state">independent check</span></div>
-          <div class="beat-body">A second, corrected file using the existing JSON cache module is checked against the same corpus.</div>
-        </li>
-        <li class="beat beat-pass">
-          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-pass">PASS</span><span class="beat-state">same corpus</span></div>
-          <div class="beat-body">The corrected file passes. Agent B, working from the corrected codebase, produces a compliant diff that also passes &mdash; a fourth check confirms Agent B's original Redis-based approach would have returned the same <code>FAIL</code>.</div>
-        </li>
-      </ol>
-
-      <!-- Accessible static transcript -->
-      <details class="term-transcript">
-        <summary>Full terminal transcript</summary>
-        <pre aria-label="Terminal transcript" tabindex="0"><code>$ mneme check --input agent_a_redis_cache.txt --query "storage backend" --mode warn
-
-↳ Agent A -- Monday: "speed up the user lookup endpoint"
-
-Diff:
-  import redis
-  _cache = redis.Redis(host="localhost", port=6379)
-
-FAIL  [ADR-001] anti_pattern "redis-py" -- trigger: redis
-      JSON storage only -- no external database.
-WARN  [ADR-001] constraint "no redis" -- trigger: redis
-      JSON storage only -- no external database.
-
-Result: FAIL</code></pre>
-      </details>
-
-      <h2>Run it yourself</h2>
-
-      <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
-cd mneme/examples/architectural-drift
-python run.py</code></pre>
-
-      <p>The script prints the FAIL verdict above. The agents are scripted so the enforcement output stays deterministic &mdash; no LLM call is involved.</p>
-
-      <aside class="related-panel" aria-labelledby="related-panel-label">
+      <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">
         <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
         <ul class="related-list">
-          <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural drift prevention</div><p class="rel-desc">Catching the first divergence before later changes are built on top of it.</p></a></li>
-          <li><a href="/concepts/multi-agent-drift/"><div class="rel-title">Multi-agent drift</div><p class="rel-desc">How distributed AI execution amplifies small architectural relaxations into structural decay.</p></a></li>
-          <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
-          <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
+          <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural drift</div><p class="rel-desc">How locally reasonable changes compound into system-wide divergence.</p></a></li>
+          <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Apply the decision before the wrong implementation becomes review work.</p></a></li>
         </ul>
       </aside>
 
-      <div class="scenario-cta">
-        <a href="/demo/governed-python-agent/">&larr; Previous &middot; Governed Python agent</a>
-        <a href="/demo/multi-agent-governance/" class="next">Next &middot; Multi-agent governance &rarr;</a>
-      </div>
-    </div>
 
-    <section class="cta-snippet" id="try">
-        <h3>Ready to try it?</h3>
-        <p>Install the CLI and check your first decision in under a minute.</p>
-        <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
-          <div class="install-module-cmd">
-            <code>pip install mneme-hq</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                    onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
-          </div>
-          <div class="install-module-meta">
-            <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.11+</span>
-            <span>MIT licensed</span>
-          </div>
-        </div>
-        <div class="cta-actions">
-          <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-        </div>
-        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
-      </section>
+
+
+
+
+    </div>
   </main>
 
-  <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
     .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
     .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
@@ -431,33 +319,18 @@ python run.py</code></pre>
     <span>&copy; 2026</span>
   </div>
 </footer>
-
-  <script>
-    (function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
   });
-  if (best) best.classList.add('active');
 })();
-  </script>
-  <script>
-    (function(){
-      var btn = document.querySelector('.nav-hamburger');
-      var links = document.querySelector('.nav-links');
-      if (!btn || !links) return;
-      function setOpen(open){ links.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); document.body.classList.toggle('menu-open', open); }
-      btn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!links.classList.contains('open')); });
-      document.addEventListener('click', function(e){ if (!links.classList.contains('open')) return; if (links.contains(e.target) || btn.contains(e.target)) return; setOpen(false); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false); });
-      links.addEventListener('click', function(e){ if (e.target.tagName === 'A') setOpen(false); });
-      window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
-    })();
-  </script>
+</script>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
@@ -469,79 +342,6 @@ python run.py</code></pre>
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>

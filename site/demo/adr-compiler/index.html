@@ -1,244 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon-v2.png" />
-  <link rel="apple-touch-icon" href="/favicon-v2.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Making AI coding agents follow the ADRs you already have | Mneme HQ</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-v2.png">
+  <link rel="apple-touch-icon" href="/favicon-v2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compile existing ADRs into enforceable governance | Mneme HQ</title>
+  <meta name="description" content="A runnable Mneme ADR compiler walkthrough: parse Markdown decisions, resolve precedence, emit project memory, and enforce a compiled namespace constraint.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="canonical" href="https://mnemehq.com/demo/adr-compiler/">
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/demos.css">
-  <meta name="description" content="Most teams already have ADRs. They sit in docs/adr/ and are quietly ignored by every AI coding agent. The ADR compiler reads those same files and emits enforceable, precedence-aware decisions. No rewrite. Runnable against Mneme's own ADRs." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/demo/adr-compiler/" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Making AI coding agents follow the ADRs you already have" />
-  <meta property="og:description" content="Most teams already have ADRs. They sit in docs/adr/ and are quietly ignored by every AI coding agent. The ADR compiler reads those same files and emits enforceable, precedence-aware decisions." />
-  <meta property="og:url" content="https://mnemehq.com/demo/adr-compiler/" />
-  <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Making AI coding agents follow the ADRs you already have" />
-  <meta name="twitter:description" content="Most teams already have ADRs. They sit in docs/adr/ and are quietly ignored by every AI coding agent. The ADR compiler reads those same files and emits enforceable, precedence-aware decisions." />
-  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
-  <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mneme HQ">
+  <meta property="og:title" content="Compile existing ADRs into enforceable governance">
+  <meta property="og:description" content="Existing ADRs become deterministic, precedence-aware constraints used by editor hooks and CI without adopting a second documentation format.">
+  <meta property="og:url" content="https://mnemehq.com/demo/adr-compiler/">
+  <meta property="og:image" content="https://mnemehq.com/demo/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Compile existing ADRs into enforceable governance">
+  <meta name="twitter:description" content="Existing ADRs become deterministic, precedence-aware constraints used by editor hooks and CI without adopting a second documentation format.">
+  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
-          {"@type": "ListItem", "position": 3, "name": "The ADR compiler", "item": "https://mnemehq.com/demo/adr-compiler/"}
-        ]
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mnemehq.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Demo",
+          "item": "https://mnemehq.com/demo/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "ADR compiler",
+          "item": "https://mnemehq.com/demo/adr-compiler/"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "headline": "Compile existing ADRs into enforceable governance",
+      "description": "A runnable Mneme ADR compiler walkthrough: parse Markdown decisions, resolve precedence, emit project memory, and enforce a compiled namespace constraint.",
+      "url": "https://mnemehq.com/demo/adr-compiler/",
+      "datePublished": "2026-05-13",
+      "dateModified": "2026-08-25",
+      "author": {
+        "@type": "Person",
+        "name": "Theo Valmis",
+        "url": "https://mnemehq.com/founder/"
       },
-      {
-        "@type": "Article",
-        "headline": "Making AI coding agents follow the ADRs you already have",
-        "description": "Flagship walkthrough of Mneme's ADR compiler. Reads ADR files with optional Constraints sections and emits enforceable, precedence-aware decisions. Runnable against Mneme's own ADRs.",
-        "url": "https://mnemehq.com/demo/adr-compiler/",
-        "datePublished": "2026-05-13",
-        "dateModified": "2026-05-15",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/demo/og.png",
-        "mainEntityOfPage": "https://mnemehq.com/demo/adr-compiler/"
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://mnemehq.com/logo-v3.png"
+        }
       },
-      {
-        "@type": "VideoObject",
-        "name": "ADRs Don't Govern AI Agents. Compilers Do.",
-        "description": "Full ADR compiler walkthrough. ADRs with Constraints sections are compiled into executable, precedence-aware decisions and enforced end-to-end against Mneme's own architectural records.",
-        "thumbnailUrl": "https://i.ytimg.com/vi/lMkq-RoKeD4/maxresdefault.jpg",
-        "uploadDate": "2026-05-15",
-        "contentUrl": "https://www.youtube.com/watch?v=lMkq-RoKeD4",
-        "embedUrl": "https://www.youtube-nocookie.com/embed/lMkq-RoKeD4",
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
-      }
-    ]
-  }
+      "image": "https://mnemehq.com/demo/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/demo/adr-compiler/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does the compiler replace Markdown ADRs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. ADR files remain the source. The compiler emits a structured downstream artifact for enforcement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens when two ADRs conflict?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If precedence cannot be resolved deterministically, compilation stops. A human must supersede one decision, change priority, narrow scope, or otherwise remove the ambiguity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why are correction and allow absent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This page proves the compiler and one emitted WARN. The full corrected-import PASS is shown in the governed Python agent demo."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
-      --border: #222226; --border2: #2e2e34;
-      --text: #e8e8ec; --muted: #a8a8b8;
-      --accent: #c8f060; --accent-dim: #a8d040; --teal: #8be0c8;
-      --pass: #c8f060; --warn: #f59e0b; --fail: #ef4444;
-      --term-bad: #ff8585; --term-bg: #0a0a0d;
-    }
-
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #0c0c0d; backdrop-filter: blur(8px); z-index: 100; }
-    .logo { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
-
-    .breadcrumb-nav { max-width: 880px; margin: 1.5rem auto 0; padding: 0 2rem; }
-    .breadcrumb { display: flex; gap: 0.5rem; list-style: none; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.04em; }
-    .breadcrumb li:not(:last-child)::after { content: ' / '; margin-left: 0.5rem; color: var(--border2); }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--text); }
-
-    /* ── PROSE SECTIONS ── */
-    .prose-section { max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 3.5rem; }
-    .prose-section + .prose-section { padding-top: 0; }
-
-    .article-eyebrow { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .eyebrow-tag { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
-    .eyebrow-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border2); }
-    .eyebrow-meta { font-family: 'DM Mono', monospace; font-size: 0.66rem; color: var(--muted); letter-spacing: 0.04em; }
-    .verdict-pill { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 4px; letter-spacing: 0.06em; background: rgba(255,255,255,0.04); color: var(--muted); border: 1px solid var(--border2); }
-
-    h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
-    h1 em { font-style: italic; color: var(--accent); }
-    .lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    .lede strong { color: var(--text); font-weight: 500; }
-    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 2.5rem; }
-    .byline a { color: var(--muted); text-decoration: none; }
-    .byline a:hover { color: var(--text); }
-    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-
-    .body { font-size: 0.95rem; line-height: 1.85; color: var(--text); }
-    .body h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 3rem 0 1rem; color: var(--text); }
-    .body h2:first-child { margin-top: 0; }
-    .body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--text); }
-    .body p { margin-bottom: 1.1rem; color: var(--muted); }
-    .body p strong { color: var(--text); font-weight: 500; }
-    .body code { font-family: 'DM Mono', monospace; font-size: 0.82rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; color: var(--text); }
-    .body a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
-    .body pre { background: var(--term-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; margin: 1.25rem 0; }
-    .body pre code { background: transparent; border: none; padding: 0; font-size: 0.78rem; line-height: 1.7; color: var(--text); }
-
-    /* ── PIPELINE DIAGRAM ── */
-    .pipeline { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.75rem; margin: 1.75rem 0; }
-    .pipeline-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.5rem; align-items: center; font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); }
-    .pipeline-step { background: var(--term-bg); border: 1px solid var(--border); border-radius: 6px; padding: 0.65rem 0.85rem; text-align: center; }
-    .pipeline-step strong { color: var(--accent); font-weight: 500; display: block; margin-bottom: 0.15rem; letter-spacing: 0.04em; }
-    .pipeline-step span { color: var(--muted); font-size: 0.65rem; letter-spacing: 0.03em; }
-    .pipeline-arrow { color: var(--border2); font-size: 1rem; text-align: center; }
-    @media (max-width: 640px) { .pipeline-arrow { display: none; } }
-
-    /* ── CALLOUT ── */
-    .callout { background: rgba(139,224,200,0.05); border: 1px solid rgba(139,224,200,0.2); border-left: 3px solid var(--teal); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
-    .callout p { color: var(--muted); font-size: 0.88rem; margin: 0; }
-    .callout p strong { color: var(--teal); font-weight: 500; }
-
-    /* ── DEMO BAND ── */
-    .demo-band { background: var(--surface2); border-top: 1px solid var(--border2); border-bottom: 1px solid var(--border2); }
-    .demo-band-inner { max-width: 920px; margin: 0 auto; padding: 4rem 2rem; }
-    .demo-band-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.85rem; }
-    .demo-band h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.85rem; color: var(--text); }
-    .demo-band h2 em { font-style: italic; color: var(--accent); }
-    .demo-band .demo-intro { font-size: 0.95rem; color: var(--muted); line-height: 1.75; max-width: 680px; margin-bottom: 2.5rem; }
-    .demo-band .demo-intro strong { color: var(--text); font-weight: 500; }
-
-    /* ── INTERACTIVE PANELS ── */
-    .demo-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 0 0 0.75rem; }
-    @media (max-width: 680px) { .demo-wrap { grid-template-columns: 1fr; } }
-    .panel { background: var(--term-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .panel-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem; background: #0d0d10; border-bottom: 1px solid var(--border); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; }
-    .panel-header.bad { color: var(--fail); }
-    .panel-header.good { color: var(--accent); }
-    .panel-header.neutral { color: var(--muted); }
-    .dot { width: 9px; height: 9px; border-radius: 50%; }
-    .d-r { background: #33333a; } .d-y { background: #33333a; } .d-g { background: #33333a; }
-    .panel-body { padding: 1.1rem 1.4rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.9; min-height: 260px; }
-    .prompt-line { color: var(--muted); }
-    .out-bad { color: var(--term-bad); }
-    .out-good { color: var(--accent); }
-    .out-muted { color: var(--muted); }
-    .check-panel { grid-column: 1 / -1; background: var(--term-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
-    .label-badge { display: inline-block; font-size: 0.63rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; padding: 0.12rem 0.45rem; border-radius: 999px; margin-right: 0.4rem; font-family: 'DM Mono', monospace; }
-    .badge-pass { background: rgba(200,240,96,0.12); color: var(--accent); border: 1px solid rgba(200,240,96,0.25); }
-    .badge-warn { background: rgba(245,158,11,0.12); color: var(--warn); border: 1px solid rgba(245,158,11,0.25); }
-    .badge-fail { background: rgba(239,68,68,0.12); color: var(--fail); border: 1px solid rgba(239,68,68,0.25); }
-    .hidden { visibility: hidden; }
-    .fade-in { animation: fadeIn 0.35s ease forwards; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
-    .replay-btn { margin: 1rem 0 0; background: transparent; color: var(--muted); border: 1px solid var(--border2); padding: 0.5rem 1.2rem; border-radius: 6px; font-size: 0.78rem; font-family: 'DM Mono', monospace; cursor: pointer; display: none; transition: color 0.15s, border-color 0.15s; }
-    .replay-btn:hover { color: var(--text); border-color: var(--muted); }
-
-    /* ── CLOSING BAND ── */
-    .closing-band { background: var(--surface); border-top: 1px solid var(--border); }
-    .closing-band-inner { max-width: 880px; margin: 0 auto; padding: 3.5rem 2rem; }
-    .closing-band .body h2:first-child { margin-top: 0; }
-
-    /* ── CTA / NEXT ── */
-    .next-bar { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 640px) { .next-bar { grid-template-columns: 1fr; } }
-    .next-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.5rem; text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.15s; display: block; }
-    .next-card:hover { border-color: var(--border2); transform: translateY(-1px); }
-    .next-card .nc-label { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
-    .next-card h4 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
-    .next-card p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.5rem; }
-    .next-card .nc-arrow { color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.72rem; }
-
-    footer { border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left; }
-
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s; }
-    @media (max-width: 900px) {
-      html, body { overflow-x: clip; }
-      body.menu-open { overflow: hidden; }
-      nav { padding: 1rem 1.25rem; }
-      .nav-hamburger { display: flex; }
-      .nav-links { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; gap: 0; background: rgba(12,12,13,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s; }
-      .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: 0.5rem 1.25rem 1.25rem; transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s; overflow-y: auto; }
-      .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.92rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
-      .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-      .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-      .prose-section { padding: 2rem 1.25rem 2.5rem; }
-      .demo-band-inner { padding: 3rem 1.25rem; }
-      .closing-band-inner { padding: 2.5rem 1.25rem; }
-      .breadcrumb-nav { padding: 0 1.25rem; }
-    }
-  
-    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
-  
-    @media (max-width: 700px) { .demo-wrap { grid-template-columns: 1fr !important; } }
-    /* Cross-reference panel (Related governance concepts) */
-    .related-panel { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
-    .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
-    .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    .related-list li { margin: 0; }
-    .related-list a { display: block; padding: 1.15rem 1.35rem; background: var(--surface); text-decoration: none; transition: background 0.15s; }
-    .related-list a:hover { background: var(--surface2); }
-    .related-list .rel-title { color: var(--text); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; letter-spacing: -0.005em; transition: color 0.15s; }
-    .related-list .rel-title::after { content: '\2192'; color: var(--accent); opacity: 0.4; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
-    .related-list a:hover .rel-title { color: var(--accent); }
-    .related-list a:hover .rel-title::after { opacity: 1; transform: translateX(3px); }
-    .related-list .rel-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 0; }
-  
-    footer a { color: var(--muted); text-decoration: none; }
-
-    /* WCAG 2.3.3 - honour a reduced-motion preference. The JS below renders
-       the final verdict state immediately instead of typing it out; these
-       rules stop the residual fade and cursor blink. */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-      }
-      html { scroll-behavior: auto; }
-    }
-
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
 </head>
-<body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <a href="#main-content" class="skip-link">Skip to content</a>
+<body class="demo-page">
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
@@ -253,9 +125,7 @@
   </div>
 </nav>
 
-  <main id="main-content" tabindex="-1">
-
-<nav aria-label="Breadcrumb" class="breadcrumb-nav">
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/demo/">Demo</a></li>
@@ -263,278 +133,128 @@
     </ol>
   </nav>
 
-  <!-- SECTION 1: Hero + intro + pipeline (bg = --bg) -->
-  <div class="prose-section">
+  <main id="main-content" tabindex="-1" class="demo-detail">
     <header>
-      <div class="demo-meta">
-        <span class="mt mt-type">Infrastructure</span>
-        <span class="mt">Runnable locally</span>
-        <span class="mt mt-outcome-warn">Outcome: WARN</span>
-        <span class="mt">7 min read</span>
+      <div class="demo-meta" aria-label="Demo classification">
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Infrastructure</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Runnable locally</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-warn">WARN</span></span>
       </div>
-      <h1>Making AI coding agents follow the <em>ADRs you already have</em>.</h1>
-      <p class="lede">Most teams have ADRs. They sit in <code>docs/adr/</code>, written in good faith, referenced in onboarding, and then quietly ignored by every AI coding agent that touches the codebase. The ADR compiler reads those same files, parses an optional <code>## Constraints</code> section, and emits enforceable, precedence-aware decisions that govern generation and CI. <strong>No rewrite. No new format. Decisions become infrastructure.</strong></p>
-      <div class="callout" style="margin: 0 0 1.5rem;">
-        <p>For the end-to-end product loop, see the <a href="/demo/governed-python-agent/">Governed Python agent demo</a>. This page explains the compiler step that turns ADRs into the governance corpus used by that demo.</p>
-      </div>
-      <p class="byline">
-        By <a href="/founder/">Theo Valmis</a>
-        <span class="sep">&middot;</span>
-        <time datetime="2026-05-13">Published May 2026</time>
-        <span class="sep">&middot;</span>
-        <a href="/demo/">All demos</a>
-      </p>
+      <h1>Your ADRs become constraints the rest of the system can <em>enforce</em>.</h1>
+      <p class="lede">The compiler treats <code>docs/adr/*.md</code> as source: it reads the frontmatter, checks the directives, resolves precedence, emits <code>project_memory.json</code>, and hands the result to the normal enforcement pipeline. This walkthrough uses Mneme's own ADR-005&mdash;no model or external service required.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-13">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
+      <section class="demo-section" aria-labelledby="live-demo-title">
+        <span class="section-kicker">ADR compiler</span>
+        <h2 id="live-demo-title">The ADR stops being a document and starts doing work.</h2>
+        <p class="section-intro">This walkthrough follows compilation through to a real WARN. The flagship demo shows the corrected pass.</p>
 
-      <h2>Why the compiler is the foundation</h2>
-
-      <p>Every governance pitch eventually runs into the same objection: <em>we already document our architecture; the problem isn't documentation</em>. That objection is correct. The documentation is fine. What is missing is the compilation step that turns it into something an AI agent &mdash; or a CI gate &mdash; can actually answer to.</p>
-
-      <p>Prompt files (<code>CLAUDE.md</code>, <code>.cursor/rules</code>) try to bridge this gap by asking the model to respect the rules. The result is probabilistic. Vector stores try to bridge it by retrieving relevant text. The result is fuzzy. Neither produces a structured, precedence-aware decision a hook can block on.</p>
-
-      <p>The ADR compiler closes that gap by treating ADRs the way a compiler treats source: parse, validate, resolve conflicts, emit something downstream can execute against. The downstream artifact is <code>project_memory.json</code> &mdash; a structured decision corpus that drives the editor hook, the CI gate, and the conflict detector with the same precedence rules.</p>
-
-      <h3>What changes for the team</h3>
-
-      <p>Nothing structural. The ADRs stay where they are. Authors add an optional six-line YAML frontmatter and an optional <code>## Constraints</code> block when a decision should be machine-enforceable. Everything else is preserved as rationale. The compiler does not require the team to adopt a new tool or a new format &mdash; it reframes the artifact they already maintain.</p>
-
-      <h2>The pipeline</h2>
-
-      <p>Five stages. Deterministic. No vector store, no ML.</p>
-
-      <div class="pipeline">
-        <div class="pipeline-row">
-          <div class="pipeline-step"><strong>Parse</strong><span>docs/adr/*.md</span></div>
-          <div class="pipeline-arrow">&rarr;</div>
-          <div class="pipeline-step"><strong>Validate</strong><span>frontmatter + directives</span></div>
-          <div class="pipeline-arrow">&rarr;</div>
-          <div class="pipeline-step"><strong>Resolve</strong><span>precedence + supersession</span></div>
-          <div class="pipeline-arrow">&rarr;</div>
-          <div class="pipeline-step"><strong>Emit</strong><span>project_memory.json</span></div>
-          <div class="pipeline-arrow">&rarr;</div>
-          <div class="pipeline-step"><strong>Enforce</strong><span>hook + CI + retry</span></div>
+        <div class="decision-stake">
+          <span class="decision-stake-label">Source decision</span>
+          <p><strong>ADR-005 &middot; Brand versus package namespace.</strong> The Python namespace is <code>mneme</code>. <code>MnemeHQ</code> is a forbidden dependency token on code-bearing surfaces.</p>
         </div>
-      </div>
 
-      <p>Same query into the resolved corpus returns the same decision set every time. That property is non-negotiable: if retrieval is non-deterministic, the governance layer cannot block on it.</p>
-
-      <ol class="beat-flow">
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">compile step</span></div>
-          <div class="beat-body"><code>docs/adr/*.md</code> &rarr; parsed, validated, precedence-resolved, emitted as <code>project_memory.json</code>. The five-stage pipeline above is deterministic &mdash; no vector store, no ML.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Upstream of guidance: this page covers the compilation step that the editor hook and CI gate consume. The injection path is the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</div>
-        </li>
-        <li class="beat beat-hit">
-          <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">namespace conflation</span></div>
-          <div class="beat-body">An agent writes <code>from MnemeHQ.memory_store import &hellip;</code> &mdash; brand name, not package namespace.</div>
-        </li>
-        <li class="beat beat-warn">
-          <div class="beat-head"><span class="beat-tag">4 &middot; Warn</span><span class="chip chip-warn">WARN</span><span class="beat-state">mneme check</span></div>
-          <div class="beat-body">The compiled <code>ADR-005</code> constraint fires on the wrong import path &mdash; the enforcement output quoted below.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: the compiler demo ends at the verdict.</div>
-        </li>
-        <li class="beat beat-na">
-          <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-na">&mdash;</span></div>
-          <div class="beat-body">Not exercised: the compliant import is the governed Python agent demo's ALLOW beat.</div>
-        </li>
-      </ol>
-
-    </div>
-  </div>
-
-  <!-- SECTION 2: Live demo (bg = --surface2, full bleed) -->
-  <div class="demo-band" id="live-demo">
-    <div class="demo-band-inner">
-      <div class="demo-band-eyebrow">Live animation</div>
-      <h2>See it live: <em>ADRs as source, governance as output</em></h2>
-      <p class="demo-intro">The animation below runs the same task two ways: once as a plain agent reading ADRs as documentation, and once through the ADR compiler. <strong>The difference is not the model.</strong> The difference is that the compiler parses frontmatter, extracts constraints, resolves precedence, and emits a deterministic governance corpus that hooks and CI can enforce.</p>
-
-      <div class="demo-wrap">
-        <div class="panel">
-          <div class="panel-header bad">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            Without the compiler
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage ADR compiler and enforcement trace">
+          <div class="enforcement-terminal-header">
+            <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="enforcement-terminal-title">adr import + mneme check &middot; compiled constraint trace</span>
           </div>
-          <div class="panel-body" id="without-body" style="min-height:220px;">
-            <div class="prompt-line" id="w-prompt"></div>
-            <div id="w-out" class="hidden"></div>
+          <ol class="enforcement-steps">
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">01 <strong>Decision</strong></div>
+              <div class="enforcement-copy"><p>A Markdown ADR carries accepted status, foundational priority, code scope, and constraint directives.</p><code class="trace-code">docs/adr/ADR-005.md <span class="trace-muted">&middot;</span> FORBID_DEPENDENCY: MnemeHQ</code></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
+              <div class="enforcement-copy"><p>The compiler validates the directive, resolves precedence, and emits the active constraint.</p><code class="trace-code">emit .mneme/project_memory.json <span class="trace-muted">&middot;</span> active set: 4 ADRs</code><span class="stage-availability">Demonstrated</span></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">03 <strong>Violation</strong></div>
+              <div class="enforcement-copy"><p>The enforcement input uses the brand token as if it were the Python package namespace.</p><code class="trace-code trace-deny">from MnemeHQ.memory_store import MemoryStore</code></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
+              <div class="enforcement-copy"><p>The compiled rule fires through the normal checker and names its source ADR.</p><code class="trace-code">WARN [ADR-005] <span class="trace-muted">&middot;</span> trigger: mnemehq</code></div>
+              <span class="verdict-token warn">WARN</span>
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">05 <strong>Correction</strong></div>
+              <div class="enforcement-copy"><p>The compiler walkthrough stops after proving the emitted rule can fire.</p><code class="trace-code">Not included in this walkthrough</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-copy"><p>A corrected import and passing rerun are demonstrated in the governed Python flagship instead.</p><code class="trace-code">See governed-python-agent</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+          </ol>
+          <div class="terminal-controls">
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
+            <span class="terminal-note">Runnable locally &middot; compiler output is deterministic</span>
           </div>
         </div>
-        <div class="panel">
-          <div class="panel-header good">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            With the compiler
-          </div>
-          <div class="panel-body" id="with-body" style="min-height:220px;">
-            <div class="prompt-line" id="m-prompt"></div>
-            <div id="m-out" class="hidden"></div>
-          </div>
-        </div>
-        <div class="check-panel hidden" id="check-panel">
-          <div class="panel-header neutral">
-            <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-            mneme check --mode strict
-          </div>
-          <div class="panel-body" id="check-body"></div>
-        </div>
-      </div>
-      <button class="replay-btn" type="button" id="replay-btn">&larr; Replay</button>
-    </div>
-  </div>
+      </section>
 
-  <!-- SECTION 3: ADR format + conflict resolution + run it (bg = --bg) -->
-  <div class="prose-section">
-    <div class="body">
-
-      <h2>What an ADR looks like to the compiler</h2>
-
-      <p>The compiler reads YAML frontmatter for metadata, free-form Markdown for rationale, and an optional <code>## Constraints</code> section for machine-readable directives. The example below is one of Mneme's own ADRs:</p>
-
-      <pre tabindex="0"><code>---
-id: ADR-005
-title: Brand vs Package Namespace Enforcement
-status: accepted
-priority: foundational
-date: "2026-05-04"
-scope: code
----
-
-The package namespace is `mneme`. The brand name is "Mneme HQ".
-These must never be conflated in code-bearing surfaces.
-
-## Constraints
-
-- FORBID_DEPENDENCY: MnemeHQ
-- FORBID_PATH: site/use-cases/**/Mneme HQ*</code></pre>
-
-      <p>Three directive kinds are supported in this version: <code>FORBID_DEPENDENCY</code>, <code>FORBID_PATH</code>, and <code>REQUIRE_PATH</code>. Unknown directive kinds raise a parse error rather than being silently dropped &mdash; a typo should not defeat governance. The full directive reference lives in the <a href="/integrations/adr-import/">ADR import integration page</a>.</p>
-
-      <h2>Conflict resolution is part of the contract</h2>
-
-      <p>Two ADRs cannot silently disagree. If two accepted ADRs share the same scope, priority, and date, the compiler cannot pick a winner deterministically and refuses to emit until the contradiction is resolved. The fix is human: mark one superseded, give one a higher priority, or change the date. The compiler will not paper over the conflict.</p>
-
-      <div class="callout">
-        <p><strong>Why this matters.</strong> Most "AI memory" tools resolve conflicts statistically &mdash; the most-recently-retrieved chunk wins, or the longest match wins. That works for search. It does not work for governance. A precedence engine that refuses to emit on ambiguity is the right primitive for a layer that gates pull requests.</p>
-      </div>
-
-      <h2>Run it against Mneme's own ADRs</h2>
-
-      <p>The repo ships a Python walkthrough that runs the compiler end-to-end against Mneme's own architectural decisions. No API key. No external services. Local Mneme pipeline:</p>
-
-      <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
+      <section class="demo-section" aria-labelledby="run-title">
+        <h2 id="run-title">Run it yourself</h2>
+        <div class="demo-run">
+          <h3>Compile Mneme's own ADRs</h3>
+          <p>The repository walkthrough previews the import, writes a fresh memory file, and checks a namespace violation.</p>
+          <pre><code>git clone https://github.com/MnemeHQ/mneme
 cd mneme
 pip install -e .
 python examples/demo-adr-import.py</code></pre>
+          <p>Unknown directives and unresolved equal-precedence conflicts fail closed instead of being silently omitted.</p>
+        </div>
+      </section>
 
-      <p>The walkthrough runs three stages: a dry-run preview of what would be imported, an apply step that writes the compiled decisions to a fresh memory file, and an enforcement check that runs <code>mneme check</code> against a namespace violation so <code>ADR-005</code> fires on the wrong import path.</p>
+      <section class="demo-section" aria-labelledby="happened-title">
+        <h2 id="happened-title">What happened</h2>
+        <div class="demo-explanation">
+          <div class="demo-explanation-item"><strong>ADRs remain the source.</strong><p>Teams keep Markdown rationale and add structured metadata only where enforcement needs it.</p></div>
+          <div class="demo-explanation-item"><strong>Precedence is compiled.</strong><p>Supersession, priority, scope, and date are resolved before any hook or CI gate consumes the corpus.</p></div>
+          <div class="demo-explanation-item"><strong>The output is operational.</strong><p>The same emitted decision record drives agent guidance, enforcement checks, and the <a href="/demo/architectural-drift/">architectural-drift proof</a>.</p></div>
+        </div>
+      </section>
 
-      <h3>Expected output (abbreviated)</h3>
+      <section class="demo-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details><summary>Does the compiler replace Markdown ADRs?</summary><p>No. ADR files remain the source. The compiler emits a structured downstream artifact for enforcement.</p></details>
+        <details><summary>What happens when two ADRs conflict?</summary><p>If precedence cannot be resolved deterministically, compilation stops. A human must supersede one decision, change priority, narrow scope, or otherwise remove the ambiguity.</p></details>
+        <details><summary>Why are correction and allow absent?</summary><p>This page proves the compiler and one emitted WARN. The full corrected-import PASS is shown in the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</p></details>
+      </section>
 
-      <pre tabindex="0"><code>-- Step 2: Preview (dry-run -- no writes)
-
-ADR import preview
-============================================================
-
-Active set (4 ADRs):
-  [ADR-001] status=active
-  [ADR-005] status=active
-      constraint: no MnemeHQ
-      constraint: FORBID_PATH site/use-cases/**/Mneme HQ*
-  ...
-
--- Step 4: Enforcement check (namespace violation)
-
-WARN  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
-      Brand vs Package Namespace Enforcement
-
-Result: WARN</code></pre>
-
-      <p>Same decision corpus, same retrieval engine, same enforcement output every time. If you fork the repo and edit an ADR, the next run reflects the edit. That is the loop a governance layer has to close.</p>
-
-      <h2>Where this fits</h2>
-
-      <p>The compiler is the upstream half of the loop. The downstream half is the editor hook (Claude Code, Cursor) and the CI gate (GitHub Actions). The same compiled corpus drives all three, so the constraints a developer sees mid-edit are the same constraints CI evaluates at merge.</p>
-
-      <ul style="list-style: none; margin: 1rem 0 1.5rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; color: var(--muted); font-size: 0.9rem;">
-        <li>&rarr; <a href="/integrations/adr-import/">ADR import integration</a> &mdash; the operational reference for the compiler CLI.</li>
-        <li>&rarr; <a href="/integrations/claude-code/">Claude Code integration</a> &mdash; pre-generation hook that injects the compiled decisions.</li>
-        <li>&rarr; <a href="/integrations/github-actions/">GitHub Actions integration</a> &mdash; post-generation enforcement gate on PRs.</li>
-      </ul>
-
-    </div>
-  </div>
-
-  <!-- SECTION 4: Dogfooding + strategic framing + next (bg = --surface) -->
-  <div class="closing-band">
-    <div class="closing-band-inner">
-      <div class="body">
-
-        <h2>Dogfooding</h2>
-
-        <p>Mneme HQ enforces its own ADRs through the compiler. The <code>docs/adr/</code> directory in this repo holds the team's architectural decisions; the compiler keeps <code>.mneme/project_memory.json</code> in sync. When an AI-assisted task in this codebase generates a brand/namespace conflation, <code>ADR-005</code> fires before the change reaches review. The walkthrough above is the same loop the maintainers use day-to-day.</p>
-
-        <h2>The compiler is the engine room</h2>
-
-        <p>The drift demo shows the failure mode. The multi-agent demo shows where governance has to scale to. The compiler is the artifact that makes both of them tractable &mdash; <strong>it is the step that turns existing architectural documentation into the executable substrate the other demos rely on.</strong> Without a compiler, governance stays advisory. With one, it becomes infrastructure. The product experience that demonstrates this end-to-end is the <a href="/demo/governed-python-agent/">Governed Python agent demo</a>.</p>
-
-      <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/architectural-compiler/"><div class="rel-title">Architectural compiler</div><p class="rel-desc">The pipeline that converts documentation-form decisions into machine-evaluable constraint records.</p></a></li>
-      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence semantics</div><p class="rel-desc">Ordered rules that resolve overlapping decisions deterministically — supersession, scope, recency.</p></a></li>
-      <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
-      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
-    </ul>
-  </aside>
+      <section class="install-cta" aria-labelledby="install-title">
+        <h2 id="install-title">Compile the decisions you already maintain.</h2>
+        <p>Keep the ADRs human-readable and make their active constraints executable.</p>
+        <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
+        <span class="install-meta">Python 3.11+ &middot; MIT licensed</span>
+      </section>
 
       <div class="next-bar">
-          <a class="next-card" href="/demo/governed-python-agent/">
-            <div class="nc-label">Flagship 01 &middot; Centerpiece</div>
-            <h4>Catching AI-generated code that violates an ADR</h4>
-            <p>See the full product loop: a Python agent proposes a violating import, Mneme flags it against this compiled corpus, and a second, corrected file checks clean.</p>
-            <span class="nc-arrow">See the product demo &rarr;</span>
-          </a>
-          <a class="next-card" href="/demo/multi-agent-governance/">
-            <div class="nc-label">Flagship 03</div>
-            <h4>Keeping architecture consistent across multiple AI agents</h4>
-            <p>Where the compiler has to scale to once AI execution becomes parallel and persistent.</p>
-            <span class="nc-arrow">See the trace &rarr;</span>
-          </a>
-        </div>
-
+        <a class="next-card" href="/demo/governed-python-agent/"><div class="nc-label">Flagship proof</div><h4>Use the compiled decision</h4><p>Run a denial, correction, and passing retry against the emitted corpus.</p><span class="nc-arrow">Continue &rarr;</span></a>
+        <a class="next-card" href="/integrations/adr-import/"><div class="nc-label">Integration reference</div><h4>ADR import CLI</h4><p>See supported frontmatter, directives, and command options.</p><span class="nc-arrow">Open reference &rarr;</span></a>
       </div>
-    </div>
-  </div>
 
-  <section class="cta-snippet" id="try">
-        <h3>Ready to try it?</h3>
-        <p>Install the CLI and check your first decision in under a minute.</p>
-        <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
-          <div class="install-module-cmd">
-            <code>pip install mneme-hq</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                    onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
-          </div>
-          <div class="install-module-meta">
-            <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.11+</span>
-            <span>MIT licensed</span>
-          </div>
-        </div>
-        <div class="cta-actions">
-          <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-        </div>
-        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
-      </section>
+      <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/architectural-compiler/"><div class="rel-title">Architectural compiler</div><p class="rel-desc">Convert documentation-form decisions into executable constraint records.</p></a></li>
+          <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence semantics</div><p class="rel-desc">Resolve overlapping decisions before enforcement consumes them.</p></a></li>
+        </ul>
+      </aside>
+
+
+
+
+
+
+    </div>
   </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
@@ -633,157 +353,18 @@ Result: WARN</code></pre>
   </div>
 </footer>
 
-  <script>
-  window.addEventListener('load', function() {
-
-    const PROMPT = '> "Compile the repo ADRs into enforceable project memory."';
-
-    const WITHOUT_LINES = [
-      { t: 800,  html: '<div class="out-muted">Reading docs/adr/*.md as prose...</div>' },
-      { t: 1400, html: '<div class="out-bad">Found several architecture notes.</div>' },
-      { t: 1800, html: '<div class="out-bad">Summarizing decisions into guidance...</div>' },
-      { t: 2300, html: '<div class="out-bad">Brand: Mneme HQ. Package: maybe MnemeHQ.</div>' },
-      { t: 2800, html: '<div class="out-bad">No explicit enforcement artifact emitted.</div>' },
-      { t: 3300, html: '<div class="out-bad">No precedence or constraint validation.</div>' },
-    ];
-
-    const WITH_LINES = [
-      { t: 800,  html: '<div class="out-muted">Compiler parsing ADR frontmatter...</div>' },
-      { t: 1400, html: '<div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-005: Brand vs Package Namespace Enforcement<br>&#8627; status: accepted<br>&#8627; priority: foundational<br>&#8627; scope: code</div>' },
-      { t: 2100, html: '<br>' },
-      { t: 2200, html: '<div class="out-good">Constraints extracted:</div>' },
-      { t: 2700, html: '<div class="out-good">FORBID_DEPENDENCY: MnemeHQ</div>' },
-      { t: 3100, html: '<div class="out-good">FORBID_PATH: site/use-cases/**/Mneme HQ*</div>' },
-      { t: 3500, html: '<div class="out-good">Emitting .mneme/project_memory.json</div>' },
-    ];
-
-    const CHECK_LINES = [
-      { t: 400,  html: '<div class="out-muted">Checking compiled decisions against generated code...</div><br>' },
-      { t: 900,  html: '<div><span class="label-badge badge-pass">PASS</span> <span style="color:var(--text)">ADR metadata parsed</span> <span class="out-muted">&mdash; accepted / foundational / code</span></div>' },
-      { t: 1400, html: '<div><span class="label-badge badge-pass">PASS</span> <span style="color:var(--text)">Constraints emitted</span> <span class="out-muted">&mdash; dependency and path rules available</span></div>' },
-      { t: 1900, html: '<div><span class="label-badge badge-warn">WARN</span> <span style="color:var(--text)">Namespace trigger matched</span> <span class="out-muted">&mdash; MnemeHQ import detected</span></div>' },
-      { t: 2400, html: '<div class="out-muted" style="font-size:0.72rem;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from MnemeHQ.memory_store import MemoryStore<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brand vs Package Namespace Enforcement</div>' },
-      { t: 3000, html: '<br><div class="out-muted">2 passed &middot; 1 warning &middot; source: ADR-005</div>' },
-    ];
-
-    let timers = [];
-    function clearTimers() { timers.forEach(clearTimeout); timers = []; }
-
-    function typeText(el, text, cb) {
-      let i = 0; el.textContent = '';
-      function next() {
-        if (i < text.length) { el.textContent += text[i++]; timers.push(setTimeout(next, 28)); }
-        else if (cb) cb();
-      }
-      next();
-    }
-
-    function appendLines(containerId, lines, startDelay, onDone) {
-      const el = document.getElementById(containerId);
-      lines.forEach(({ t, html }) => {
-        const timer = setTimeout(() => {
-          const div = document.createElement('div'); div.innerHTML = html;
-          div.classList.add('fade-in'); el.appendChild(div);
-        }, startDelay + t);
-        timers.push(timer);
-      });
-      if (onDone) timers.push(setTimeout(onDone, startDelay + lines[lines.length - 1].t + 600));
-    }
-
-    function prefersReduced() {
-      return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-    function renderInstant(el, lines) {
-      lines.forEach(function (l) {
-        var d = document.createElement('div');
-        d.innerHTML = l.html;
-        el.appendChild(d);
-      });
-    }
-    function startDemo() {
-      clearTimers();
-      document.getElementById('replay-btn').style.display = 'none';
-      const wPrompt = document.getElementById('w-prompt');
-      const mPrompt = document.getElementById('m-prompt');
-      const wOut = document.getElementById('w-out');
-      const mOut = document.getElementById('m-out');
-      const checkPanel = document.getElementById('check-panel');
-      const checkBody = document.getElementById('check-body');
-      wPrompt.textContent = ''; mPrompt.textContent = '';
-      wOut.innerHTML = ''; wOut.classList.add('hidden');
-      mOut.innerHTML = ''; mOut.classList.add('hidden');
-      checkPanel.classList.add('hidden'); checkBody.innerHTML = '';
-      // A reduced-motion visitor gets the finished verdict, not a typing effect.
-      if (prefersReduced()) {
-        wPrompt.textContent = PROMPT;
-        mPrompt.textContent = PROMPT;
-        wOut.classList.remove('hidden');
-        mOut.classList.remove('hidden');
-        checkPanel.classList.remove('hidden');
-        renderInstant(wOut, WITHOUT_LINES);
-        renderInstant(mOut, WITH_LINES);
-        renderInstant(checkBody, CHECK_LINES);
-        document.getElementById('replay-btn').style.display = 'inline-block';
-        return;
-      }
-
-      typeText(wPrompt, PROMPT, () => {
-        wOut.classList.remove('hidden');
-        appendLines('w-out', WITHOUT_LINES, 0);
-      });
-      timers.push(setTimeout(() => {
-        typeText(mPrompt, PROMPT, () => {
-          mOut.classList.remove('hidden');
-          appendLines('m-out', WITH_LINES, 0, () => {
-            timers.push(setTimeout(() => {
-              checkPanel.classList.remove('hidden');
-              appendLines('check-body', CHECK_LINES, 0, () => {
-                document.getElementById('replay-btn').style.display = 'inline-block';
-              });
-            }, 600));
-          });
-        });
-      }, 150));
-    }
-
-    var _replayBtn = document.getElementById('replay-btn');
-    if (_replayBtn) _replayBtn.addEventListener('click', function(){ startDemo(); });
-
-    if ('IntersectionObserver' in window) {
-      var _adrIo = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) { _adrIo.disconnect(); startDemo(); }
-      }, { threshold: 0.15 });
-      _adrIo.observe(document.querySelector('.demo-wrap'));
-    } else { startDemo(); }
-
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
   });
-</script>
-  <script>
-    (function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
-  });
-  if (best) best.classList.add('active');
 })();
-  </script>
-  <script>
-    (function(){
-      var btn = document.querySelector('.nav-hamburger');
-      var links = document.querySelector('.nav-links');
-      if (!btn || !links) return;
-      function setOpen(open){ links.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); document.body.classList.toggle('menu-open', open); }
-      btn.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!links.classList.contains('open')); });
-      document.addEventListener('click', function(e){ if (!links.classList.contains('open')) return; if (links.contains(e.target) || btn.contains(e.target)) return; setOpen(false); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false); });
-      links.addEventListener('click', function(e){ if (e.target.tagName === 'A') setOpen(false); });
-      window.addEventListener('resize', function(){ if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false); });
-    })();
-  </script>
+</script>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
@@ -795,79 +376,6 @@ Result: WARN</code></pre>
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>

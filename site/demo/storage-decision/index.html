@@ -1,268 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stopping an AI agent from swapping your storage backend | Mneme HQ</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-v2.png">
+  <link rel="apple-touch-icon" href="/favicon-v2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guiding an AI agent to preserve the approved storage layer | Mneme HQ</title>
+  <meta name="description" content="A guided-first-pass Mneme example: ADR-001 keeps an AI agent inside the approved JSON store, and the resulting task passes the deterministic check.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="canonical" href="https://mnemehq.com/demo/storage-decision/">
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="An AI coding agent asked to refactor a storage backend proposes a Postgres migration. Mneme enforces ADR-001 — JSON-only storage, no external database — before generation, so the agent extends the existing module instead. Same prompt, same model, different answer." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/demo/storage-decision/" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Stopping an AI agent from swapping your storage backend" />
-  <meta property="og:description" content="How Mneme enforces ADR-001 (JSON-only storage) when an AI agent proposes migrating to PostgreSQL or Redis. PASS verdict in mneme check." />
-  <meta property="og:url" content="https://mnemehq.com/demo/storage-decision/" />
-  <meta property="og:image" content="https://mnemehq.com/demo/storage-decision/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Stopping an AI agent from swapping your storage backend" />
-  <meta name="twitter:description" content="How Mneme enforces ADR-001 (JSON-only storage) when an AI agent proposes migrating to PostgreSQL or Redis. PASS verdict in mneme check." />
-  <meta name="twitter:image" content="https://mnemehq.com/demo/storage-decision/og.png" />
-  <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-05-09T00:00:00Z" />
-  <meta property="article:author" content="https://mnemehq.com/founder/" />
-  <meta property="article:section" content="Demo" />
-
-    <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
-
-  <link rel="icon" href="/favicon-v2.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mneme HQ">
+  <meta property="og:title" content="Guiding an AI agent to preserve the approved storage layer">
+  <meta property="og:description" content="ADR guidance prevents an unauthorized database migration before generation, and the compliant JSON-storage plan passes Mneme.">
+  <meta property="og:url" content="https://mnemehq.com/demo/storage-decision/">
+  <meta property="og:image" content="https://mnemehq.com/demo/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Guiding an AI agent to preserve the approved storage layer">
+  <meta name="twitter:description" content="ADR guidance prevents an unauthorized database migration before generation, and the compliant JSON-storage plan passes Mneme.">
+  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
-          {"@type": "ListItem", "position": 3, "name": "Storage decision enforcement", "item": "https://mnemehq.com/demo/storage-decision/"}
-        ]
-      },
-      {
-        "@type": "Article",
-        "headline": "Stopping an AI agent from swapping your storage backend",
-        "description": "Walkthrough of how Mneme enforces ADR-001 (JSON-only storage) when an AI coding agent proposes a database migration. Same prompt, same model, different answer.",
-        "url": "https://mnemehq.com/demo/storage-decision/",
-        "datePublished": "2026-05-09",
-        "dateModified": "2026-05-09",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/demo/storage-decision/og.png",
-        "mainEntityOfPage": "https://mnemehq.com/demo/storage-decision/",
-        "isPartOf": {"@type": "WebPage", "@id": "https://mnemehq.com/demo/"}
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {"@type": "Question", "name": "What is ADR-001 in this scenario?", "acceptedAnswer": {"@type": "Answer", "text": "ADR-001 is a project decision record stating that the codebase uses JSON file storage only — no external database, no migration to PostgreSQL, Redis, or similar. The decision is stored in project_memory.json and surfaced to any AI coding agent that asks Mneme for relevant constraints before generating code."}},
-          {"@type": "Question", "name": "Why does the same model give a different answer with Mneme?", "acceptedAnswer": {"@type": "Answer", "text": "Without Mneme, the model relies on training-data priors that say 'JSON storage at scale should migrate to a real database.' With Mneme, the model receives ADR-001 in its context window before generating, so it proposes extending the existing storage module instead of replacing it. The model itself is unchanged; the context is enforced."}},
-          {"@type": "Question", "name": "Does this work in CI as well as the editor?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The same decision corpus drives interactive coding sessions through Claude Code or Cursor and the GitHub Actions enforcement gate that runs mneme check on every pull request. A diff that contradicts ADR-001 would be flagged in CI even if it slipped past the editor-time hook."}}
-        ]
-      }
-    ]
-  }
-  </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
-      --border: #222226; --border2: #2e2e34;
-      --text: #e8e8ec; --muted: #a8a8b8;
-      --accent: #c8f060; --accent-dim: #a8d040; --teal: #8be0c8;
-      --term-bg: #0a0a0d; --term-bad: #ff8585;
-      --pass: #c8f060; --warn: #f59e0b; --fail: #ef4444;
-    }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
-
-    .breadcrumb-nav { max-width: 720px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
-    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
-    .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--text); }
-    .breadcrumb [aria-current="page"] { color: var(--text); }
-
-    .article-wrap { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 6rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
-    .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
-    .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .verdict-pill { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 4px; letter-spacing: 0.06em; }
-    .verdict-pill.pass { background: rgba(200,240,96,0.14); color: var(--pass); border: 1px solid rgba(200,240,96,0.3); }
-    .verdict-pill.warn { background: rgba(245,158,11,0.14); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
-    .verdict-pill.fail { background: rgba(239,68,68,0.14); color: var(--fail); border: 1px solid rgba(239,68,68,0.3); }
-    h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.18; margin-bottom: 1.25rem; }
-    .lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 3rem; }
-    .byline a { color: var(--muted); text-decoration: none; }
-    .byline a:hover { color: var(--text); }
-    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-
-    .body { font-size: 0.92rem; line-height: 1.9; color: var(--text); }
-    .body h2 { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; letter-spacing: -0.015em; margin: 2.75rem 0 1rem; color: var(--text); }
-    .body p { margin-bottom: 1.1rem; color: var(--muted); }
-    .body p strong { color: var(--text); font-weight: 500; }
-    .body code { font-family: 'DM Mono', monospace; font-size: 0.82rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; color: var(--text); }
-    .body a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
-
-    .panel { background: var(--term-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
-    .panel-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; background: #0d0d10; border-bottom: 1px solid var(--border); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; }
-    .panel-header.bad { color: var(--fail); }
-    .panel-header.good { color: var(--accent); }
-    .panel-header.neutral { color: var(--teal); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .d-r { background: #ff5f57; }
-    .d-y { background: #febc2e; }
-    .d-g { background: #28c840; }
-    .panel-body { padding: 1rem 1.25rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.85; }
-    .panel-body .prompt { color: #a78bfa; margin-bottom: 0.5rem; }
-    .panel-body .out-bad { color: var(--term-bad); }
-    .panel-body .out-good { color: var(--accent); }
-    .panel-body .out-muted { color: var(--muted); }
-
-    .check-row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.85rem; line-height: 1.7; }
-    .check-row:last-child { border-bottom: none; }
-    .check-row .verdict { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 4px; flex-shrink: 0; }
-    .check-row .verdict.pass { background: rgba(200,240,96,0.12); color: var(--accent); border: 1px solid rgba(200,240,96,0.25); }
-    .check-row .verdict.warn { background: rgba(245,158,11,0.12); color: var(--warn); border: 1px solid rgba(245,158,11,0.25); }
-    .check-row .verdict.fail { background: rgba(239,68,68,0.12); color: var(--fail); border: 1px solid rgba(239,68,68,0.25); }
-    .check-row .desc { color: var(--muted); }
-    .check-row .desc strong { color: var(--text); font-weight: 500; }
-    .check-results { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
-    .check-results .cr-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.65rem; }
-
-    .faq-list { margin-top: 1.5rem; }
-    .faq-item { border-top: 1px solid var(--border); padding: 1.05rem 0; }
-    .faq-item:last-child { border-bottom: 1px solid var(--border); }
-    .faq-item summary { cursor: pointer; font-size: 0.92rem; color: var(--text); font-weight: 500; list-style: none; position: relative; padding-right: 2rem; }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after { content: '+'; font-family: 'DM Mono', monospace; color: var(--muted); font-size: 1.1rem; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-    .faq-item[open] summary::after { content: '\2212'; }
-    .faq-body { padding-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
-    .faq-body a { color: var(--accent); text-decoration: none; }
-    .faq-body a:hover { color: var(--accent-dim); }
-
-    .scenario-cta { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-    .scenario-cta a { color: var(--muted); font-size: 0.82rem; text-decoration: none; font-family: 'DM Mono', monospace; }
-    .scenario-cta a:hover { color: var(--text); }
-    .scenario-cta .next { color: var(--accent); }
-    .scenario-cta .next:hover { color: var(--accent-dim); }
-
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; }
-
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
-    @media (max-width: 640px) {
-      .article-wrap { padding: 2.5rem 1.25rem 4rem; }
-    }
-/* === Nav upgrade (injected, overrides existing) === */
-.nav-hamburger {
-  display: none;
-  background: none;
-  border: 1px solid var(--border2);
-  color: var(--text);
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 4px;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-@media (max-width: 900px) {
-  html, body { overflow-x: clip; }
-  body.menu-open { overflow: hidden; }
-  nav, nav.site-nav { padding: 1rem 1.25rem; }
-  .nav-hamburger { display: flex; }
-  .nav-links {
-    display: flex !important;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    gap: 0;
-    background: rgba(12,12,13,0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.25rem;
-    z-index: 99;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
-  }
-  .nav-links.open {
-    max-height: 80vh;
-    opacity: 1;
-    visibility: visible;
-    padding: 0.5rem 1.25rem 1.25rem;
-    transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
-    overflow-y: auto;
-  }
-  .nav-links a:not(.btn-nav-cta) {
-    display: block;
-    color: var(--text);
-    font-size: 0.92rem;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-  .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-}
-      /* === Related reading === */
-    h2#related-reading { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 400; margin-top: 3.5rem; margin-bottom: 0.75rem; }
-    h2#related-reading + ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    h2#related-reading + ul li { margin: 0; }
-    h2#related-reading + ul li a { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1.1rem; background: var(--surface); color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: background 0.15s, color 0.15s; }
-    h2#related-reading + ul li a::after { content: '\2192'; opacity: 0.35; transition: opacity 0.15s, transform 0.15s; display: inline-block; margin-left: 0.5rem; }
-    h2#related-reading + ul li a:hover { background: var(--surface2); color: var(--accent); }
-    h2#related-reading + ul li a:hover::after { opacity: 1; transform: translateX(3px); }
-  
-    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
-    /* Cross-reference panel (Related governance concepts) */
-    .related-panel { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
-    .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
-    .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    .related-list li { margin: 0; }
-    .related-list a { display: block; padding: 1.15rem 1.35rem; background: var(--surface); text-decoration: none; transition: background 0.15s; }
-    .related-list a:hover { background: var(--surface2); }
-    .related-list .rel-title { color: var(--text); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; letter-spacing: -0.005em; transition: color 0.15s; }
-    .related-list .rel-title::after { content: '\2192'; color: var(--accent); opacity: 0.4; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
-    .related-list a:hover .rel-title { color: var(--accent); }
-    .related-list a:hover .rel-title::after { opacity: 1; transform: translateX(3px); }
-    .related-list .rel-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 0; }
-  
-    @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto !important; }
-          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mnemehq.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Demo",
+          "item": "https://mnemehq.com/demo/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Storage decision",
+          "item": "https://mnemehq.com/demo/storage-decision/"
         }
-  
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
+      ]
+    },
+    {
+      "@type": "Article",
+      "headline": "Guiding an AI agent to preserve the approved storage layer",
+      "description": "A guided-first-pass Mneme example: ADR-001 keeps an AI agent inside the approved JSON store, and the resulting task passes the deterministic check.",
+      "url": "https://mnemehq.com/demo/storage-decision/",
+      "datePublished": "2026-05-09",
+      "dateModified": "2026-08-25",
+      "author": {
+        "@type": "Person",
+        "name": "Theo Valmis",
+        "url": "https://mnemehq.com/founder/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://mnemehq.com/logo-v3.png"
+        }
+      },
+      "image": "https://mnemehq.com/demo/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/demo/storage-decision/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why is there no DENY stage?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Because this example demonstrates pre-generation guidance. The governed agent proposes a compliant JSON extension on its first attempt, so there is no violating write to deny."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does the PASS prove?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It proves that the resulting task contains no forbidden database, ORM, or migration pattern under the recorded storage decisions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can the deny-to-pass sequence be reproduced?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. The governed Python agent flagship runs both the violating and corrected fixtures through the same decision."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
-<body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
+<body class="demo-page">
 <a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
@@ -278,164 +125,139 @@
   </div>
 </nav>
 
-<main id="main-content" tabindex="-1">
-<nav aria-label="Breadcrumb" class="breadcrumb-nav">
-  <ol class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li><a href="/demo/">Demo</a></li>
-    <li aria-current="page">Storage decision</li>
-  </ol>
-</nav>
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/demo/">Demo</a></li>
+      <li aria-current="page">Storage decision</li>
+    </ol>
+  </nav>
 
-<article class="article-wrap">
-  <header>
-    <div class="article-eyebrow">
-      <span class="eyebrow-tag">Supporting enforcement example &middot; ADR-001</span>
-      <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">5 min read</span>
-      <span class="eyebrow-dot"></span>
-      <span class="verdict-pill pass">PASS</span>
-    </div>
-    <h1>Stopping an AI agent from swapping your storage backend</h1>
-    <p class="lede">An AI coding agent is asked to refactor a storage backend "for scalability." Without governance it proposes a Postgres migration. With Mneme, ADR-001 is injected before generation and the agent extends the existing JSON storage module instead. Same prompt, same model, different answer.</p>
-    <p class="byline">
-      By <a href="/founder/">Theo Valmis</a>
-      <span class="sep">&middot;</span>
-      <time datetime="2026-05-09">Published May 2026</time>
-      <span class="sep">&middot;</span>
-      <a href="/demo/">All scenarios</a>
-    </p>
-  </header>
-
-  <div class="body">
-    <h2>The scenario</h2>
-    <p>The codebase is a single-binary Python service that uses a flat-file JSON store for all persistence. This is a deliberate choice, not an accident. <code>ADR-001</code> records it explicitly:</p>
-    <p><strong>ADR-001 &middot; JSON storage only, no external database.</strong> The service runs on edge hardware where shipping a separate database is operationally unacceptable. Postgres, Redis, and SQLite are all out of scope until the product crosses a usage threshold defined in <code>ADR-005</code>.</p>
-    <p>An engineer opens Claude Code or Cursor and types the prompt that any team will eventually type:</p>
-
-    <div class="panel">
-      <div class="panel-header neutral">
-        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-        prompt
+  <main id="main-content" tabindex="-1" class="demo-detail">
+    <header>
+      <div class="demo-meta" aria-label="Demo classification">
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Supporting example</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-pass">PASS</span></span>
       </div>
-      <div class="panel-body" style="min-height:220px;"><div class="prompt">&gt; Refactor the storage backend for scalability.</div></div>
-    </div>
+      <h1>The agent keeps the approved store <em>on the first attempt</em>.</h1>
+      <p class="lede">This is the guided-first-pass variant. The project runs on edge hardware and keeps state in human-editable JSON. Mneme supplies ADR-001 before generation, so the agent extends the module already there instead of reaching for a database and migration stack.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-09">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
+    </header>
 
-    <h2>Without Mneme</h2>
-    <p>The model has no project context. It pattern-matches the request against everything it has seen during training, where "refactor for scalability" almost always means a database migration. The output is fluent and confident:</p>
+    <div class="body">
+      <section class="demo-section" aria-labelledby="live-demo-title">
+        <span class="section-kicker">Guided enforcement</span>
+        <h2 id="live-demo-title">The risky architecture never gets written.</h2>
+        <p class="section-intro">Guidance changes the first governed output. The task stays inside the approved boundary and passes the check.</p>
 
-    <div class="panel">
-      <div class="panel-header bad">
-        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-        without mneme
-      </div>
-      <div class="panel-body" style="min-height:220px;">
-        <div class="out-bad">I recommend migrating to a distributed database</div>
-        <div class="out-bad">architecture. Consider replacing JSON storage with</div>
-        <div class="out-bad">PostgreSQL or Redis. Add a migration layer and ORM</div>
-        <div class="out-bad">for long-term scalability.</div>
-      </div>
-    </div>
+        <div class="decision-stake">
+          <span class="decision-stake-label">Decision at stake</span>
+          <p><strong>ADR-001 &middot; JSON storage only.</strong> No external database on edge hardware. ADR-003 forbids an ORM in v1; ADR-005 requires extending the current storage module before rebuilding it.</p>
+        </div>
 
-    <p>Three architectural decisions are silently violated: <code>ADR-001</code> (no external DB), <code>ADR-003</code> (no ORM in v1), and <code>ADR-005</code> (extend before rebuild). The diff that follows would survive review only if a reviewer happened to remember all three. At AI-assisted velocity, that is not a reliable filter.</p>
-
-    <h2>With Mneme</h2>
-    <p>Mneme intercepts the same prompt before generation. The retriever scores the prompt against <code>project_memory.json</code> and surfaces the relevant decision records into the model's context:</p>
-
-    <div class="panel">
-      <div class="panel-header good">
-        <span class="dot d-r"></span><span class="dot d-y"></span><span class="dot d-g"></span>
-        with mneme
-      </div>
-      <div class="panel-body" style="min-height:220px;">
-        <div class="out-muted">Injecting project decisions...</div>
-        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-001: JSON storage only &mdash; no external DB</div>
-        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-003: No ORM in v1</div>
-        <div class="out-muted" style="font-size:0.72rem;color:#3a3a4a;">&#8627; ADR-005: Extend before rebuild</div>
-        <br>
-        <div class="out-good">Storage decision enforced. Per ADR-001, JSON</div>
-        <div class="out-good">storage is locked &mdash; no Postgres, no Redis, no</div>
-        <div class="out-good">ORM in v1. Extend the current storage module</div>
-        <div class="out-good">instead.</div>
-      </div>
-    </div>
-
-    <p>The model is the same. The prompt is the same. Only the context changed. The output now respects the project's architectural truth.</p>
-
-    <h2>What <code>mneme check</code> returns</h2>
-    <p>If the engineer commits the change anyway, the post-generation enforcement layer runs <code>mneme check --mode strict</code> against the diff and emits a structured verdict. For this scenario, the storage check returns <strong>PASS</strong>:</p>
-
-    <div class="check-results">
-      <div class="cr-title">mneme check &middot; storage row</div>
-      <div class="check-row">
-        <span class="verdict pass">PASS</span>
-        <div class="desc"><strong>Storage decision enforced</strong> &mdash; JSON only, no new databases.</div>
-      </div>
-    </div>
-
-    <p>The verdict is structured (<code>PASS</code> / <code>WARN</code> / <code>FAIL</code> with the originating decision ID), so it can gate pull requests, feed dashboards, or block deploys via the <a href="/integrations/github-actions/">GitHub Actions enforcement gate</a>.</p>
-
-<h2>How to wire this up in your repo</h2>
-    <p>Three lines of setup:</p>
-    <p><code>pipx install "mneme-hq>=0.5.1" && mneme init && mneme check</code></p>
-    <p><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty valid decision corpus &mdash; no placeholder content. Add your own decisions with <code>mneme add_decision</code>. The <a href="/integrations/claude-code/">Claude Code hook</a> picks up the file automatically; the <a href="/integrations/cursor/">Cursor integration</a> exports the same corpus into <code>.cursor/rules/</code> so your editor session sees identical constraints.</p>
-
-    <p>For the architectural argument behind a single tool-agnostic decision store, see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/">architectural governance across heterogeneous AI coding agents</a>. For how Mneme aligns with NIST CAISI, MCP, and AGENTS.md, see <a href="/standards/">the standards landscape</a>.</p>
-
-    <h2>FAQ</h2>
-    <div class="faq-list">
-      <details class="faq-item">
-        <summary>What is ADR-001 in this scenario?</summary>
-        <div class="faq-body">A project decision record stating that the codebase uses JSON file storage only &mdash; no external database, no migration to PostgreSQL, Redis, or similar. The decision is stored in <code>project_memory.json</code> and surfaced to any AI coding agent that asks Mneme for relevant constraints before generating code. ADRs are first-class records, not paragraphs in a CLAUDE.md.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Why does the same model give a different answer with Mneme?</summary>
-        <div class="faq-body">Without Mneme, the model relies on training-data priors that say "JSON storage at scale should migrate to a real database." With Mneme, the model receives ADR-001 in its context window before generating, so it proposes extending the existing storage module instead of replacing it. The model itself is unchanged; the context is enforced. See <a href="/insights/why-prompt-memory-fails-at-scale/">why prompt memory fails at scale</a> for the broader pattern.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Does this work in CI as well as the editor?</summary>
-        <div class="faq-body">Yes. The same decision corpus drives interactive coding sessions through Claude Code or Cursor and the GitHub Actions enforcement gate that runs <code>mneme check</code> on every pull request. A diff that contradicts ADR-001 would be flagged in CI even if it slipped past the editor-time hook.</div>
-      </details>
-    </div>
-
-    
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
-      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence semantics</div><p class="rel-desc">Ordered rules that resolve overlapping decisions deterministically — supersession, scope, recency.</p></a></li>
-    </ul>
-  </aside>
-
-    <div class="scenario-cta">
-      <a href="/demo/">&larr; All demo scenarios</a>
-      <a href="/demo/dependency-policy/" class="next">Next &middot; Dependency policy (WARN) &rarr;</a>
-    </div>
-  </div>
-</article>
-<section class="cta-snippet" id="try">
-        <h3>Ready to try it?</h3>
-        <p>Install the CLI and check your first decision in under a minute.</p>
-        <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
-          <div class="install-module-cmd">
-            <code>pipx install "mneme-hq>=0.5.1"</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text='pipx install "mneme-hq>=0.5.1"'
-                    onclick="navigator.clipboard.writeText('pipx install \"mneme-hq>=0.5.1\"');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage guided storage decision trace">
+          <div class="enforcement-terminal-header">
+            <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="enforcement-terminal-title">mneme guidance &middot; storage decision trace</span>
           </div>
-          <div class="install-module-meta">
-            <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.11+</span>
-            <span>MIT licensed</span>
+          <ol class="enforcement-steps">
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">01 <strong>Decision</strong></div>
+              <div class="enforcement-copy"><p>The repository records JSON as an operational constraint, not an accidental implementation detail.</p><code class="trace-code">ADR-001 <span class="trace-muted">&middot;</span> JSON only <span class="trace-muted">&middot;</span> edge deployment</code></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
+              <div class="enforcement-copy"><p>Mneme selects the three applicable decisions before the agent plans the refactor.</p><code class="trace-code">ADR-001 + ADR-003 + ADR-005 <span class="trace-muted">&middot;</span> extend the current store</code><span class="stage-availability">Demonstrated</span></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">03 <strong>Violation</strong></div>
+              <div class="enforcement-copy"><p>Without project guidance, the training-data prior is a database migration.</p><code class="trace-code trace-deny">Counterfactual: PostgreSQL + Redis + ORM + migrations</code><span class="stage-availability">Illustrative comparison</span></div>
+
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
+              <div class="enforcement-copy"><p>No violating governed write is evaluated in this walkthrough; guidance prevents it earlier.</p><code class="trace-code">Not present in this scenario</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">05 <strong>Correction</strong></div>
+              <div class="enforcement-copy"><p>No retry is required because the first governed plan already respects the decision.</p><code class="trace-code">Not required</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-copy"><p>The agent extends the JSON module and introduces no external persistence dependency.</p><code class="trace-code trace-pass">Result: PASS <span class="trace-muted">&middot;</span> storage_violation_count=0</code></div>
+              <span class="verdict-token pass">PASS</span>
+            </li>
+          </ol>
+          <div class="terminal-controls">
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
+            <span class="terminal-note">Guided first pass &middot; absent stages marked explicitly</span>
           </div>
         </div>
-        <div class="cta-actions">
-          <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-        </div>
-        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
       </section>
+
+      <section class="demo-section" aria-labelledby="run-title">
+        <h2 id="run-title">Run it yourself</h2>
+        <div class="demo-run">
+          <h3>Verify the compliant storage task</h3>
+          <p>The product repository includes the decision corpus and clean storage prompt used by the flagship trace.</p>
+          <pre><code>git clone https://github.com/MnemeHQ/mneme
+cd mneme
+pip install -e .
+
+mneme check --memory examples/project_memory.json &#92;
+  --input examples/prompt_clean.txt --query "storage backend"
+# Result: PASS · exit 0</code></pre>
+          <p>This supporting page proves the aligned output. The flagship storage demo runs both the violating and corrected inputs.</p>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="happened-title">
+        <h2 id="happened-title">What happened</h2>
+        <div class="demo-explanation">
+          <div class="demo-explanation-item"><strong>Guidance changes the first plan.</strong><p>The model does not need to guess whether JSON is temporary; the decision is explicit before generation.</p></div>
+          <div class="demo-explanation-item"><strong>PASS is the only demonstrated verdict.</strong><p>The counterfactual migration explains the risk, but this page does not pretend a DENY happened.</p></div>
+          <div class="demo-explanation-item"><strong>The operational constraint survives.</strong><p>No database service, credential path, migration history, or second source of truth is introduced.</p></div>
+        </div>
+      </section>
+
+      <section class="demo-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details><summary>Why is there no DENY stage?</summary><p>Because this example demonstrates pre-generation guidance. The governed agent proposes a compliant JSON extension on its first attempt, so there is no violating write to deny.</p></details>
+        <details><summary>What does the PASS prove?</summary><p>It proves that the resulting task contains no forbidden database, ORM, or migration pattern under the recorded storage decisions.</p></details>
+        <details><summary>Can the deny-to-pass sequence be reproduced?</summary><p>Yes. The <a href="/demo/governed-python-agent/">governed Python agent flagship</a> runs both the violating and corrected fixtures through the same decision.</p></details>
+      </section>
+
+      <section class="install-cta" aria-labelledby="install-title">
+        <h2 id="install-title">Check the decision before the refactor.</h2>
+        <p>Record the storage boundary once, then use the same corpus in agent guidance and CI.</p>
+        <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
+        <span class="install-meta">Python 3.11+ &middot; MIT licensed</span>
+      </section>
+
+      <div class="next-bar">
+        <a class="next-card" href="/demo/governed-python-agent/"><div class="nc-label">Flagship proof</div><h4>Storage migration denied</h4><p>Run the full violation, denial, correction, and pass sequence.</p><span class="nc-arrow">Open flagship &rarr;</span></a>
+        <a class="next-card" href="/demo/dependency-policy/"><div class="nc-label">Supporting example</div><h4>Dependency policy warning</h4><p>See a scenario that stops honestly at WARN.</p><span class="nc-arrow">Continue &rarr;</span></a>
+      </div>
+
+      <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Apply the decision while the agent is still choosing an implementation path.</p></a></li>
+          <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Define exactly what a passing governance check must prove.</p></a></li>
+        </ul>
+      </aside>
+
+
+
+
+
+
+    </div>
   </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
@@ -534,33 +356,15 @@
   </div>
 </footer>
 
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
 <script>
 (function(){
   var btn = document.querySelector('.nav-hamburger');
   var links = document.querySelector('.nav-links');
   if (!btn || !links) return;
-  function setOpen(open){
-    links.classList.toggle('open', open);
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
     btn.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menu-open', open);
-  }
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    setOpen(!links.classList.contains('open'));
-  });
-  document.addEventListener('click', function(e){
-    if (!links.classList.contains('open')) return;
-    if (links.contains(e.target) || btn.contains(e.target)) return;
-    setOpen(false);
-  });
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
-  });
-  links.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') setOpen(false);
-  });
-  window.addEventListener('resize', function(){
-    if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
   });
 })();
 </script>
@@ -575,82 +379,6 @@
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-
-
-
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>
