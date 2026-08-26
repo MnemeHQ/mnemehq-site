@@ -314,7 +314,7 @@ These must never be conflated in code-bearing surfaces.
 
 ## Constraints
 
-- FORBID_LITERAL: pip install mneme</code></pre>
+- FORBID_LITERAL: pip install mneme  # correct: pipx install "mneme-hq>=0.5.0"</code></pre>
 
     <p>The canonical, mechanically enforced directive is <strong><code>FORBID_LITERAL</code></strong>. Its value is matched as an exact, case-sensitive token sequence &mdash; no stemming, no synonyms, no regex. When a checked artifact contains the literal, the verdict is a deterministic FAIL.</p>
 
@@ -392,7 +392,7 @@ Active set (4 ADRs):
   [ADR-001] status=active
       (no ## Constraints directives)
   [ADR-005] status=active
-      rule: FORBID_LITERAL "pip install mneme"
+      rule: FORBID_LITERAL "pip install mneme"  # correct: pipx install "mneme-hq>=0.5.0"
       constraint: FORBID_PATH site/use-cases/**/Mneme HQ*</code></pre>
 
     <p>ADRs with status <code>proposed</code>, <code>deprecated</code>, or <code>superseded</code> are excluded from the active set. Explicit supersession via the <code>supersedes</code> frontmatter field is handled silently. Active-active contradictions (two accepted ADRs sharing the same scope, priority, and date) surface as diagnostics and block the apply step until resolved.</p>
@@ -416,9 +416,9 @@ Active set (4 ADRs):
   --input agent-output.sh \
   --query "local development setup"</code></pre>
 
-    <p>If <code>agent-output.sh</code> contains <code>pip install mneme</code>:</p>
+    <p>If <code>agent-output.sh</code> contains <code>pip install mneme</code> (use <code>pipx install "mneme-hq>=0.5.0"</code> instead):</p>
 
-    <pre tabindex="0"><code>FAIL  [ADR-005] FORBID_LITERAL "pip install mneme" -- trigger: pip install mneme
+    <pre tabindex="0"><code>FAIL  [ADR-005] FORBID_LITERAL "pip install mneme" -- trigger: pip install mneme  # correct: pipx install "mneme-hq>=0.5.0"
       Brand vs Package Namespace Enforcement
 
 Result: FAIL</code></pre>
