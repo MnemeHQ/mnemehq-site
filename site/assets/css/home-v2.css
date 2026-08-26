@@ -1,5 +1,43 @@
 /* Mneme homepage v2 — System Precision with human authorship at the edges. */
 
+/* ── Global Modern Tech Scrollbar ───────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2e2e34 transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #2a2a32;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #3e3e4a;
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+:where(pre, .pipeline, .code-scroll, .table-wrap, [class*='code-scroll'], [class*='table-scroll'])::-webkit-scrollbar-thumb {
+  background: #2e2e36;
+  border-radius: 3px;
+}
+
+:where(pre, .pipeline, .code-scroll, .table-wrap, [class*='code-scroll'], [class*='table-scroll'])::-webkit-scrollbar-thumb:hover {
+  background: #4a4a58;
+}
+
 :root {
   --bg: #090a0a;
   --surface: #111313;
@@ -56,7 +94,7 @@ body.home-v2 {
   background: transparent;
   border: 1px solid var(--coral);
   color: var(--coral-soft);
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .home-v2 .btn-nav-cta:hover {
