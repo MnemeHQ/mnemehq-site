@@ -87,3 +87,35 @@
   font-display: swap;
   src: url('/assets/fonts/Inter-600.woff2') format('woff2');
 }
+
+/* Global overflow surfaces: restrained, high-contrast, and consistent with the terminal UI. */
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll']) {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(200, 240, 96, 0.72) rgba(255, 255, 255, 0.045);
+  scrollbar-gutter: stable;
+}
+
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll'])::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll'])::-webkit-scrollbar-track {
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+  background: #101012;
+}
+
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll'])::-webkit-scrollbar-thumb {
+  min-width: 44px;
+  border: 2px solid #101012;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #91ae43, #c8f060);
+}
+
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll'])::-webkit-scrollbar-thumb:hover {
+  background: #d7ff75;
+}
+
+:where(pre, .table-wrap, .code-scroll, [class*='table-scroll'], [class*='code-scroll'])::-webkit-scrollbar-corner {
+  background: #101012;
+}

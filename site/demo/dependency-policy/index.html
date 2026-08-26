@@ -1,274 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catching an unapproved dependency an AI agent added | Mneme HQ</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-v2.png">
+  <link rel="apple-touch-icon" href="/favicon-v2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catching an unapproved AI-added dependency | Mneme HQ</title>
+  <meta name="description" content="A Mneme supporting example showing an AI-added SQLAlchemy import matched against an approved dependency list and returned as a structured WARN.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="canonical" href="https://mnemehq.com/demo/dependency-policy/">
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <link rel="stylesheet" href="/assets/css/demos.css">
-  <meta name="description" content="An AI coding agent slips an unapproved dependency (sqlalchemy) into a refactor. Mneme catches it with a structured WARN in mneme check, names the exact decision that flagged it, and gives a tracked override path." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/demo/dependency-policy/" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <meta property="og:type" content="article" />
-  <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Catching an unapproved dependency an AI agent added" />
-  <meta property="og:description" content="How Mneme flags unapproved dependencies (sqlalchemy) when an AI agent introduces them mid-refactor. WARN verdict with the originating decision ID." />
-  <meta property="og:url" content="https://mnemehq.com/demo/dependency-policy/" />
-  <meta property="og:image" content="https://mnemehq.com/demo/dependency-policy/og.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Catching an unapproved dependency an AI agent added" />
-  <meta name="twitter:description" content="How Mneme flags unapproved dependencies (sqlalchemy) when an AI agent introduces them mid-refactor. WARN verdict with the originating decision ID." />
-  <meta name="twitter:image" content="https://mnemehq.com/demo/dependency-policy/og.png" />
-  <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-05-09T00:00:00Z" />
-  <meta property="article:author" content="https://mnemehq.com/founder/" />
-  <meta property="article:section" content="Demo" />
-
-    <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
-
-  <link rel="icon" href="/favicon-v2.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Mneme HQ">
+  <meta property="og:title" content="Catching an unapproved dependency added by an AI agent">
+  <meta property="og:description" content="SQLAlchemy is legitimate software but not an approved project dependency. Mneme emits a traceable WARN instead of silently accepting it.">
+  <meta property="og:url" content="https://mnemehq.com/demo/dependency-policy/">
+  <meta property="og:image" content="https://mnemehq.com/demo/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Catching an unapproved dependency added by an AI agent">
+  <meta name="twitter:description" content="SQLAlchemy is legitimate software but not an approved project dependency. Mneme emits a traceable WARN instead of silently accepting it.">
+  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Demo", "item": "https://mnemehq.com/demo/"},
-          {"@type": "ListItem", "position": 3, "name": "Dependency policy enforcement", "item": "https://mnemehq.com/demo/dependency-policy/"}
-        ]
-      },
-      {
-        "@type": "Article",
-        "headline": "Catching an unapproved dependency an AI agent added",
-        "description": "How Mneme catches an unapproved dependency (sqlalchemy) when an AI coding agent introduces it during a refactor. Structured WARN verdict with the originating decision ID.",
-        "url": "https://mnemehq.com/demo/dependency-policy/",
-        "datePublished": "2026-05-09",
-        "dateModified": "2026-05-09",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/demo/dependency-policy/og.png",
-        "mainEntityOfPage": "https://mnemehq.com/demo/dependency-policy/",
-        "isPartOf": {"@type": "WebPage", "@id": "https://mnemehq.com/demo/"}
-      },
-      {
-        "@type": "VideoObject",
-        "name": "Project Memory Is Not Just Context. It Is Enforcement.",
-        "description": "Project memory as enforcement policy. The approved dependency list lives in project_memory.json as a structured, version-controlled rule, and Mneme returns a WARN verdict when an AI agent introduces an unapproved package during a refactor.",
-        "thumbnailUrl": "https://i.ytimg.com/vi/pBJSpN8d9FU/maxresdefault.jpg",
-        "uploadDate": "2026-05-09",
-        "contentUrl": "https://www.youtube.com/watch?v=pBJSpN8d9FU",
-        "embedUrl": "https://www.youtube-nocookie.com/embed/pBJSpN8d9FU",
-        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {"@type": "Question", "name": "Why is this a WARN and not a FAIL?", "acceptedAnswer": {"@type": "Answer", "text": "Dependency introductions are policy decisions that often have legitimate reasons — a security audit may approve a previously rejected library, or the team may have updated the approved list and not yet pushed it. Mneme returns WARN so the diff is flagged for review without hard-blocking the work. Teams that want strict enforcement can configure dependency-policy as FAIL via mneme check --mode strict."}},
-          {"@type": "Question", "name": "How does Mneme know which dependencies are approved?", "acceptedAnswer": {"@type": "Answer", "text": "The approved dependency list lives in project_memory.json as a structured rule: type 'dependency_policy', scope (Python packages, JS packages, system binaries), and an explicit allowlist. The list is human-editable and version-controlled with the rest of the repo. Adding or removing a dependency is a tracked decision, not a quiet config change."}},
-          {"@type": "Question", "name": "Can I scope the policy to specific paths?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Decision records carry a scope field. A dependency policy can apply to the whole repo, a specific service directory, or a particular layer (e.g. only the API layer can use HTTP clients). The precedence engine resolves overlapping rules deterministically — see the architectural governance article for the full design rationale."}}
-        ]
-      }
-    ]
-  }
-  </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d; --surface: #141416; --surface2: #1a1a1d;
-      --border: #222226; --border2: #2e2e34;
-      --text: #e8e8ec; --muted: #a8a8b8;
-      --accent: #c8f060; --accent-dim: #a8d040; --teal: #8be0c8;
-      --term-bg: #0a0a0d; --term-bad: #ff8585;
-      --pass: #c8f060; --warn: #f59e0b; --fail: #ef4444;
-    }
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
-
-    .breadcrumb-nav { max-width: 720px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
-    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
-    .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--text); }
-    .breadcrumb [aria-current="page"] { color: var(--text); }
-
-    .article-wrap { max-width: 720px; margin: 0 auto; padding: 4rem 2rem 6rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; flex-wrap: wrap; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
-    .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
-    .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
-    .verdict-pill { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.18rem 0.55rem; border-radius: 4px; letter-spacing: 0.06em; }
-    .verdict-pill.pass { background: rgba(200,240,96,0.14); color: var(--pass); border: 1px solid rgba(200,240,96,0.3); }
-    .verdict-pill.warn { background: rgba(245,158,11,0.14); color: var(--warn); border: 1px solid rgba(245,158,11,0.3); }
-    .verdict-pill.fail { background: rgba(239,68,68,0.14); color: var(--fail); border: 1px solid rgba(239,68,68,0.3); }
-    h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.18; margin-bottom: 1.25rem; }
-    .lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--warn); padding-left: 1.25rem; margin-bottom: 1.25rem; }
-    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-bottom: 3rem; }
-    .byline a { color: var(--muted); text-decoration: none; }
-    .byline a:hover { color: var(--text); }
-    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-
-    .body { font-size: 0.92rem; line-height: 1.9; color: var(--text); }
-    .body h2 { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; letter-spacing: -0.015em; margin: 2.75rem 0 1rem; color: var(--text); }
-    .body p { margin-bottom: 1.1rem; color: var(--muted); }
-    .body p strong { color: var(--text); font-weight: 500; }
-    .body code { font-family: 'DM Mono', monospace; font-size: 0.82rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.4rem; color: var(--text); }
-    .body a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .body a:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
-
-    .panel { background: var(--term-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
-    .panel-header { display: flex; align-items: center; gap: 0.5rem; padding: 0.55rem 1rem; background: #0d0d10; border-bottom: 1px solid var(--border); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.07em; font-family: 'DM Mono', monospace; }
-    .panel-header.bad { color: var(--fail); }
-    .panel-header.warn { color: var(--warn); }
-    .panel-header.neutral { color: var(--teal); }
-    .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .d-r { background: #ff5f57; }
-    .d-y { background: #febc2e; }
-    .d-g { background: #28c840; }
-    .panel-body { padding: 1rem 1.25rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; line-height: 1.85; }
-    .panel-body .out-bad { color: var(--term-bad); }
-    .panel-body .out-warn { color: var(--warn); }
-    .panel-body .out-muted { color: var(--muted); }
-    .panel-body .diff-add { color: var(--term-bad); }
-    .panel-body .diff-add::before { content: '+ '; color: var(--term-bad); }
-    .panel-body .diff-rem { color: var(--muted); }
-    .panel-body .diff-rem::before { content: '- '; color: var(--muted); }
-
-    .check-row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-family: 'Inter', sans-serif; font-size: 0.85rem; line-height: 1.7; }
-    .check-row:last-child { border-bottom: none; }
-    .check-row .verdict { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.06em; padding: 0.15rem 0.5rem; border-radius: 4px; flex-shrink: 0; }
-    .check-row .verdict.pass { background: rgba(200,240,96,0.12); color: var(--accent); border: 1px solid rgba(200,240,96,0.25); }
-    .check-row .verdict.warn { background: rgba(245,158,11,0.12); color: var(--warn); border: 1px solid rgba(245,158,11,0.25); }
-    .check-row .verdict.fail { background: rgba(239,68,68,0.12); color: var(--fail); border: 1px solid rgba(239,68,68,0.25); }
-    .check-row .desc { color: var(--muted); }
-    .check-row .desc strong { color: var(--text); font-weight: 500; }
-    .check-results { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin: 1.5rem 0; }
-    .check-results .cr-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.65rem; }
-
-    .faq-list { margin-top: 1.5rem; }
-    .faq-item { border-top: 1px solid var(--border); padding: 1.05rem 0; }
-    .faq-item:last-child { border-bottom: 1px solid var(--border); }
-    .faq-item summary { cursor: pointer; font-size: 0.92rem; color: var(--text); font-weight: 500; list-style: none; position: relative; padding-right: 2rem; }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after { content: '+'; font-family: 'DM Mono', monospace; color: var(--muted); font-size: 1.1rem; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-    .faq-item[open] summary::after { content: '\2212'; }
-    .faq-body { padding-top: 0.8rem; font-size: 0.85rem; color: var(--muted); line-height: 1.8; }
-    .faq-body a { color: var(--accent); text-decoration: none; }
-    .faq-body a:hover { color: var(--accent-dim); }
-
-    .scenario-cta { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
-    .scenario-cta a { color: var(--muted); font-size: 0.82rem; text-decoration: none; font-family: 'DM Mono', monospace; }
-    .scenario-cta a:hover { color: var(--text); }
-    .scenario-cta .next { color: var(--accent); }
-    .scenario-cta .next:hover { color: var(--accent-dim); }
-
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; }
-
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
-    @media (max-width: 640px) {
-      .article-wrap { padding: 2.5rem 1.25rem 4rem; }
-    }
-/* === Nav upgrade (injected, overrides existing) === */
-.nav-hamburger {
-  display: none;
-  background: none;
-  border: 1px solid var(--border2);
-  color: var(--text);
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 4px;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-@media (max-width: 900px) {
-  html, body { overflow-x: clip; }
-  body.menu-open { overflow: hidden; }
-  nav, nav.site-nav { padding: 1rem 1.25rem; }
-  .nav-hamburger { display: flex; }
-  .nav-links {
-    display: flex !important;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    gap: 0;
-    background: rgba(12,12,13,0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.25rem;
-    z-index: 99;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
-  }
-  .nav-links.open {
-    max-height: 80vh;
-    opacity: 1;
-    visibility: visible;
-    padding: 0.5rem 1.25rem 1.25rem;
-    transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
-    overflow-y: auto;
-  }
-  .nav-links a:not(.btn-nav-cta) {
-    display: block;
-    color: var(--text);
-    font-size: 0.92rem;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-  .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-}
-  
-    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
-    /* Cross-reference panel (Related governance concepts) */
-    .related-panel { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
-    .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
-    .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    .related-list li { margin: 0; }
-    .related-list a { display: block; padding: 1.15rem 1.35rem; background: var(--surface); text-decoration: none; transition: background 0.15s; }
-    .related-list a:hover { background: var(--surface2); }
-    .related-list .rel-title { color: var(--text); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; letter-spacing: -0.005em; transition: color 0.15s; }
-    .related-list .rel-title::after { content: '\2192'; color: var(--accent); opacity: 0.4; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
-    .related-list a:hover .rel-title { color: var(--accent); }
-    .related-list a:hover .rel-title::after { opacity: 1; transform: translateX(3px); }
-    .related-list .rel-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 0; }
-  
-    @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto !important; }
-          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://mnemehq.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Demo",
+          "item": "https://mnemehq.com/demo/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Dependency policy",
+          "item": "https://mnemehq.com/demo/dependency-policy/"
         }
-  
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
+      ]
+    },
+    {
+      "@type": "Article",
+      "headline": "Catching an unapproved dependency added by an AI agent",
+      "description": "A Mneme supporting example showing an AI-added SQLAlchemy import matched against an approved dependency list and returned as a structured WARN.",
+      "url": "https://mnemehq.com/demo/dependency-policy/",
+      "datePublished": "2026-05-09",
+      "dateModified": "2026-08-25",
+      "author": {
+        "@type": "Person",
+        "name": "Theo Valmis",
+        "url": "https://mnemehq.com/founder/"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://mnemehq.com/logo-v3.png"
+        }
+      },
+      "image": "https://mnemehq.com/demo/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/demo/dependency-policy/"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Why is this WARN instead of DENY?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "New dependencies can have legitimate reasons. WARN surfaces the introduction and policy source while leaving room for explicit review; strict mode can promote it to a hard failure."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does the approved list live?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In the repository's project_memory.json as a typed, version-controlled dependency-policy rule."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why are correction and allow absent?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The original evidence ends at the warning. A reviewer outcome or approved retry is not part of this reproduction, so the page marks those stages unavailable."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
-<body>
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
-
+<body class="demo-page">
 <a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
@@ -284,143 +125,137 @@
   </div>
 </nav>
 
-<main id="main-content" tabindex="-1">
-<nav aria-label="Breadcrumb" class="breadcrumb-nav">
-  <ol class="breadcrumb">
-    <li><a href="/">Home</a></li>
-    <li><a href="/demo/">Demo</a></li>
-    <li aria-current="page">Dependency policy</li>
-  </ol>
-</nav>
-
-<article class="article-wrap">
-  <header>
-    <div class="demo-meta">
-      <span class="mt mt-type">Supporting example</span>
-      <span class="mt">Runnable locally</span>
-      <span class="mt mt-outcome-warn">Outcome: WARN</span>
-      <span class="mt">5 min read</span>
-    </div>
-    <h1>Catching an unapproved dependency an AI agent added</h1>
-    <p class="lede">During a refactor, the AI agent reaches for <code>sqlalchemy</code> &mdash; a sensible choice in isolation, but not on the team's approved dependency list. Mneme catches it during <code>mneme check</code> and emits a structured WARN with the originating decision ID, so the diff is flagged for review without hard-blocking the work.</p>
-    <p class="byline">
-      By <a href="/founder/">Theo Valmis</a>
-      <span class="sep">&middot;</span>
-      <time datetime="2026-05-09">Published May 2026</time>
-      <span class="sep">&middot;</span>
-      <a href="/demo/">All scenarios</a>
-    </p>
-  </header>
-
-  <div class="body">
-    <h2>The scenario</h2>
-    <p>Most teams of any size end up maintaining an approved dependency list. Security has audited a small set of packages; the rest are off-limits until reviewed. The list lives in the team's heads, in a Notion doc, in a checklist on the security page &mdash; and almost never in a place AI coding agents can read.</p>
-    <p>This codebase records it explicitly. <code>project_memory.json</code> contains a typed rule:</p>
-    <p><strong>Dependency policy.</strong> Python packages may only come from the approved list (FastAPI, Pydantic, httpx, pytest, ruff, plus internal packages prefixed <code>internal_</code>). Anything else requires a security review and an explicit decision record before it can land.</p>
-    <p>An engineer asks the AI assistant to refactor a service module. The violation surfaces mid-diff:</p>
-
-    <ol class="beat-flow">
-      <li class="beat beat-hit">
-        <div class="beat-head"><span class="beat-tag">1 &middot; Decision</span><span class="beat-state">dependency_policy &middot; project_memory.json</span></div>
-        <div class="beat-body">Python packages come from the approved list only &mdash; FastAPI, Pydantic, httpx, pytest, ruff, plus <code>internal_*</code>. Anything else requires a security review and an explicit decision record before it can land.</div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">2 &middot; Guidance</span><span class="chip chip-na">&mdash;</span></div>
-        <div class="beat-body">Not exercised: this scenario enforces at check time; the editor-time injection path is not part of the reproduction.</div>
-      </li>
-      <li class="beat beat-hit">
-        <div class="beat-head"><span class="beat-tag">3 &middot; Violation</span><span class="beat-state">mid-refactor diff</span></div>
-        <div class="beat-body">
-          <pre class="b-term" tabindex="0"><span class="t-dim">- import json</span>
-+ import sqlalchemy
-+ from sqlalchemy import create_engine</pre>
-          Locally reasonable &mdash; <code>sqlalchemy</code> is a real, popular library. Without governance it lands in the next PR.
-        </div>
-      </li>
-      <li class="beat beat-warn">
-        <div class="beat-head"><span class="beat-tag">4 &middot; Warn</span><span class="chip chip-warn">WARN</span><span class="beat-state">mneme check</span></div>
-        <div class="beat-body"><strong>New dependency introduced</strong> &mdash; <code>sqlalchemy</code> not in approved list. The verdict carries the originating decision ID. A reviewer or CI job can branch on the level: PR comment, explicit override, security review. The override is itself a tracked event.</div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">5 &middot; Correction</span><span class="chip chip-na">&mdash;</span></div>
-        <div class="beat-body">Not exercised: WARN intentionally does not block; resolution happens through review, not automatic retry.</div>
-      </li>
-      <li class="beat beat-na">
-        <div class="beat-head"><span class="beat-tag">6 &middot; Allow</span><span class="chip chip-na">&mdash;</span></div>
-        <div class="beat-body">Not exercised: merge proceeds only after review or a tracked override decision.</div>
-      </li>
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/demo/">Demo</a></li>
+      <li aria-current="page">Dependency policy</li>
     </ol>
+  </nav>
 
-    <h2>Run it yourself</h2>
-    <pre tabindex="0"><code>pip install mneme-hq
-mneme init
-mneme check</code></pre>
+  <main id="main-content" tabindex="-1" class="demo-detail">
+    <header>
+      <div class="demo-meta" aria-label="Demo classification">
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Supporting example</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-warn">WARN</span></span>
+      </div>
+      <h1>The dependency is legitimate. The introduction is <em>not approved</em>.</h1>
+      <p class="lede">An AI refactor adds <code>sqlalchemy</code>. It is a real, useful library&mdash;but it is not on this repository's audited allowlist. Mneme raises a structured WARN so someone can make the call instead of letting the dependency drift in unnoticed.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-09">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
+    </header>
 
-    <h2>What happened</h2>
-    <p>The model has no signal that <code>sqlalchemy</code> is restricted. It treats the import as routine. The PR opens. Reviewers, who themselves rarely maintain a perfect mental copy of the approved list, scan the diff and merge if the logic looks right. The dependency arrives quietly. Three weeks later, the security team notices in the dependency audit and files a ticket asking who introduced it and why. This is the silent-introduction failure mode: not catastrophic on any single PR, compounding across hundreds.</p>
-    <p>With Mneme, the same diff goes through <code>mneme check</code>: the dependency rule is fetched from <code>project_memory.json</code>, the new import is matched against the approved list, and the verdict is emitted with the originating decision ID.</p>
+    <div class="body">
+      <section class="demo-section" aria-labelledby="live-demo-title">
+        <span class="section-kicker">Dependency enforcement</span>
+        <h2 id="live-demo-title">A review signal. Not an automatic veto.</h2>
+        <p class="section-intro">This trace ends at WARN: the policy asks for a decision; it does not quietly wave the package through.</p>
 
-    <h2>Why WARN and not FAIL</h2>
-    <p>Dependency introductions are policy decisions that often have legitimate reasons. A security audit may approve a previously-rejected library; the team may have updated the approved list and not yet propagated it; an engineer may be deliberately spiking a new tool. Hard-blocking every dependency change creates governance fatigue and trains the team to disable the check.</p>
-    <p>Mneme's default for dependency policy is <strong>WARN</strong> &mdash; visible, traceable, easy to override with a documented reason. Teams that want strict enforcement can configure dependency policy as <strong>FAIL</strong> via <code>mneme check --mode strict</code>, which is the typical CI configuration for regulated environments.</p>
+        <div class="decision-stake">
+          <span class="decision-stake-label">Decision at stake</span>
+          <p><strong>approved-deps &middot; Audited packages only.</strong> FastAPI, Pydantic, httpx, pytest, ruff, and <code>internal_*</code> are approved. Everything else requires explicit review.</p>
+        </div>
 
-    <h2>How to wire this up in your repo</h2>
-    <p>The approved dependency list lives in <code>project_memory.json</code> as a structured rule with <code>type: "dependency_policy"</code> and an explicit allowlist. <code>mneme init</code> writes a starter template; replace it with your team's list. The list is human-editable and version-controlled with the rest of the repo, so adding or removing a dependency is a tracked decision rather than a quiet config change.</p>
-    <p>For the CI gate that turns dependency WARN into a PR comment or a hard block, see the <a href="/integrations/github-actions/">GitHub Actions integration</a>. For the design rationale behind structured records over text rule files, see <a href="/insights/why-prompt-memory-fails-at-scale/">why prompt memory fails at scale</a>.</p>
-
-      <h2>FAQ</h2>
-    <div class="faq-list">
-      <details class="faq-item">
-        <summary>Why is this a WARN and not a FAIL?</summary>
-        <div class="faq-body">Dependency introductions are policy decisions with often-legitimate reasons. Mneme returns WARN so the diff is flagged without hard-blocking the work. Teams that want strict enforcement can configure dependency policy as FAIL via <code>mneme check --mode strict</code>.</div>
-      </details>
-      <details class="faq-item">
-        <summary>How does Mneme know which dependencies are approved?</summary>
-        <div class="faq-body">The approved list lives in <code>project_memory.json</code> as a structured rule: type <code>dependency_policy</code>, scope (Python packages, JS packages, system binaries), and an explicit allowlist. Adding or removing a dependency is a tracked decision, version-controlled with the rest of the repo.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Can I scope the policy to specific paths?</summary>
-        <div class="faq-body">Yes. Decision records carry a scope field. A dependency policy can apply to the whole repo, a specific service directory, or a particular layer (only the API layer can use HTTP clients, for example). The precedence engine resolves overlapping rules deterministically &mdash; see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/">the architectural governance article</a> for the full design rationale.</div>
-      </details>
-    </div>
-
-  <aside class="related-panel" aria-labelledby="related-panel-label">
-    <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
-    <ul class="related-list">
-      <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">Same input, same verdict — every run, every agent, every consumer. The precondition for auditability.</p></a></li>
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
-      <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
-    </ul>
-  </aside>
-
-    <div class="scenario-cta">
-      <a href="/demo/storage-decision/">&larr; Previous &middot; Storage decision (PASS)</a>
-      <a href="/demo/repository-pattern/" class="next">Next &middot; Repository pattern (FAIL) &rarr;</a>
-    </div>
-  </div>
-</article>
-<section class="cta-snippet" id="try">
-        <h3>Ready to try it?</h3>
-        <p>Install the CLI and check your first decision in under a minute.</p>
-        <div class="install-module" id="install" style="text-align:left;max-width:520px;margin:0 auto 1.25rem;">
-          <div class="install-module-cmd">
-            <code>pip install mneme-hq</code>
-            <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                    onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage dependency policy trace">
+          <div class="enforcement-terminal-header">
+            <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span class="enforcement-terminal-title">mneme check &middot; approved dependency trace</span>
           </div>
-          <div class="install-module-meta">
-            <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="end" data-cta-component="install_module">5-minute quickstart</a>
-            <span>Python 3.11+</span>
-            <span>MIT licensed</span>
+          <ol class="enforcement-steps">
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">01 <strong>Decision</strong></div>
+              <div class="enforcement-copy"><p>The repository versions an explicit allowlist instead of relying on reviewer memory.</p><code class="trace-code">approved-deps <span class="trace-muted">&middot;</span> scope: Python packages</code></div>
+
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
+              <div class="enforcement-copy"><p>This page documents a post-generation check; no pre-flight guidance event is captured.</p><code class="trace-code">Not present in this reproduction</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">03 <strong>Violation</strong></div>
+              <div class="enforcement-copy"><p>The generated diff adds a package that has not completed the project's approval path.</p><code class="trace-code trace-deny">+ import sqlalchemy <span class="trace-muted">&middot;</span> + from sqlalchemy import create_engine</code></div>
+
+            </li>
+            <li class="enforcement-step" data-demo-step>
+              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
+              <div class="enforcement-copy"><p>The dependency matcher emits a reviewable warning with the originating policy.</p><code class="trace-code">WARN [approved-deps] <span class="trace-muted">&middot;</span> sqlalchemy not in approved list</code></div>
+              <span class="verdict-token warn">WARN</span>
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">05 <strong>Correction</strong></div>
+              <div class="enforcement-copy"><p>A reviewer may remove the package, approve it, or record a scoped override. None is shown here.</p><code class="trace-code">Outcome pending human review</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+            <li class="enforcement-step is-absent" data-demo-step>
+              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-copy"><p>Because no resolution is included, this page does not claim a passing state.</p><code class="trace-code">Not demonstrated</code></div>
+              <span class="verdict-token na">N/A</span>
+            </li>
+          </ol>
+          <div class="terminal-controls">
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
+            <span class="terminal-note">Structured WARN &middot; review outcome intentionally absent</span>
           </div>
         </div>
-        <div class="cta-actions">
-          <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-        </div>
-        <p class="cta-tertiary"><a href="https://github.com/MnemeHQ/mneme">View source on GitHub</a> &middot; <a href="/demo/">All demos</a></p>
       </section>
+
+      <section class="demo-section" aria-labelledby="run-title">
+        <h2 id="run-title">Run it yourself</h2>
+        <div class="demo-run">
+          <h3>Reproduce the warning against your allowlist</h3>
+          <p>Record a dependency-policy rule, save the proposed diff as an input file, and query that policy through the CLI.</p>
+          <pre><code>pipx install &quot;mneme-hq&gt;=0.5.1&quot;
+
+mneme check --memory .mneme/project_memory.json &#92;
+  --input proposed-diff.txt --query "dependency policy"
+# WARN [approved-deps] · sqlalchemy requires review</code></pre>
+          <p>This is a command-level reproduction, not a dedicated bundled fixture. Strict CI can promote the warning to a blocking failure.</p>
+        </div>
+      </section>
+
+      <section class="demo-section" aria-labelledby="happened-title">
+        <h2 id="happened-title">What happened</h2>
+        <div class="demo-explanation">
+          <div class="demo-explanation-item"><strong>Popular is not the same as approved.</strong><p>Training-data prevalence cannot substitute for the repository's security and maintenance decision.</p></div>
+          <div class="demo-explanation-item"><strong>WARN preserves judgment.</strong><p>A legitimate exception can proceed through review without training teams to disable an indiscriminate hard gate.</p></div>
+          <div class="demo-explanation-item"><strong>The override becomes evidence.</strong><p>Approval, removal, or a scoped exception can be recorded instead of disappearing into a comment thread.</p></div>
+        </div>
+      </section>
+
+      <section class="demo-faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Common questions</h2>
+        <details><summary>Why is this WARN instead of DENY?</summary><p>New dependencies can have legitimate reasons. WARN surfaces the introduction and policy source while leaving room for explicit review; strict mode can promote it to a hard failure.</p></details>
+        <details><summary>Where does the approved list live?</summary><p>In the repository's <code>project_memory.json</code> as a typed, version-controlled dependency-policy rule.</p></details>
+        <details><summary>Why are correction and allow absent?</summary><p>The original evidence ends at the warning. A reviewer outcome or approved retry is not part of this reproduction, so the page marks those stages unavailable.</p></details>
+      </section>
+
+      <section class="install-cta" aria-labelledby="install-title">
+        <h2 id="install-title">Make new dependencies explicit.</h2>
+        <p>Keep the allowlist in the repository and turn quiet package introductions into reviewable decisions.</p>
+        <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
+        <span class="install-meta">Python 3.11+ &middot; MIT licensed</span>
+      </section>
+
+      <div class="next-bar">
+        <a class="next-card" href="/demo/storage-decision/"><div class="nc-label">Supporting example</div><h4>Guided storage PASS</h4><p>See a first governed output that requires no retry.</p><span class="nc-arrow">Previous &rarr;</span></a>
+        <a class="next-card" href="/demo/repository-pattern/"><div class="nc-label">Supporting example</div><h4>Repository boundary DENY</h4><p>See a violation severe enough to block the change.</p><span class="nc-arrow">Continue &rarr;</span></a>
+      </div>
+
+      <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">
+        <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
+        <ul class="related-list">
+          <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic enforcement</div><p class="rel-desc">The same dependency delta produces the same policy verdict every time.</p></a></li>
+          <li><a href="/concepts/enforcement-provenance/"><div class="rel-title">Enforcement provenance</div><p class="rel-desc">Every warning names the decision that justified it.</p></a></li>
+        </ul>
+      </aside>
+
+
+
+
+
+
+    </div>
   </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
@@ -519,33 +354,15 @@ mneme check</code></pre>
   </div>
 </footer>
 
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
 <script>
 (function(){
   var btn = document.querySelector('.nav-hamburger');
   var links = document.querySelector('.nav-links');
   if (!btn || !links) return;
-  function setOpen(open){
-    links.classList.toggle('open', open);
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
     btn.setAttribute('aria-expanded', String(open));
-    document.body.classList.toggle('menu-open', open);
-  }
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    setOpen(!links.classList.contains('open'));
-  });
-  document.addEventListener('click', function(e){
-    if (!links.classList.contains('open')) return;
-    if (links.contains(e.target) || btn.contains(e.target)) return;
-    setOpen(false);
-  });
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
-  });
-  links.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') setOpen(false);
-  });
-  window.addEventListener('resize', function(){
-    if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
   });
 })();
 </script>
@@ -560,82 +377,6 @@ mneme check</code></pre>
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-
-
-
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>

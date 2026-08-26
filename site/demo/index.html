@@ -1,241 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/png" href="/favicon-v2.png" />
-  <link rel="apple-touch-icon" href="/favicon-v2.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mneme HQ — AI governance in action: governed agents, drift prevention, multi-actor continuity</title>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="/favicon-v2.png">
+  <link rel="apple-touch-icon" href="/favicon-v2.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentic AI governance in operation — Mneme HQ</title>
+  <meta name="description" content="Watch Mneme catch consequential AI coding failures before they land. Runnable traces, supporting checks, and an honest multi-agent target contract.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#0c0c0d">
+  <link rel="canonical" href="https://mnemehq.com/demo/">
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css">
-  <meta name="description" content="Three runnable demos of architectural governance for AI coding agents. An agent's namespace violation is caught against ADR-005, drift is caught upstream, and invariants hold across multiple actors." />
-  <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/demo/" />
-  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Mneme HQ — AI governance in action: governed agents, drift prevention, multi-actor continuity" />
-  <meta property="og:description" content="Three runnable demos of architectural governance for AI coding agents. An agent's namespace violation is caught against ADR-005, drift is caught upstream, and invariants hold across multiple actors." />
-  <meta property="og:url" content="https://mnemehq.com/demo/" />
-  <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Mneme HQ — AI governance in action: governed agents, drift prevention, multi-actor continuity" />
-  <meta name="twitter:description" content="Three runnable demos of architectural governance for AI coding agents. An agent's namespace violation is caught against ADR-005, drift is caught upstream, and invariants hold across multiple actors." />
-  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png" />
-
-    <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
-
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
-  <!-- End Google Tag Manager -->
+  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826f">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mneme HQ">
+  <meta property="og:title" content="Agentic AI governance in operation — Mneme HQ">
+  <meta property="og:description" content="Runnable enforcement traces, supporting checks, and an honest multi-agent target contract.">
+  <meta property="og:url" content="https://mnemehq.com/demo/">
+  <meta property="og:image" content="https://mnemehq.com/demo/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Agentic AI governance in operation — Mneme HQ">
+  <meta name="twitter:description" content="Runnable enforcement traces, supporting checks, and an honest multi-agent target contract.">
+  <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://mnemehq.com/"
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Demos", "item": "https://mnemehq.com/demo/"}
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "name": "Agentic AI governance in operation",
+        "description": "Runnable Mneme enforcement traces, supporting checks, and an explicitly forward-looking multi-agent contract.",
+        "url": "https://mnemehq.com/demo/",
+        "dateModified": "2026-08-25",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Mneme HQ",
+          "url": "https://mnemehq.com/",
+          "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}
         },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Demo",
-          "item": "https://mnemehq.com/demo/"
-        }
-      ]
-    },
-    {
-      "@type": "WebPage",
-      "name": "Mneme HQ — Operational proof of architectural governance",
-      "description": "Three runnable demos of architectural governance for AI coding agents: ADR enforcement, architectural drift, and multi-agent consistency.",
-      "url": "https://mnemehq.com/demo/",
-      "datePublished": "2026-04-01",
-      "dateModified": "2026-05-15",
-      "author": {
-        "@type": "Person",
-        "name": "Theo Valmis",
-        "url": "https://mnemehq.com/founder/"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Mneme HQ",
-        "url": "https://mnemehq.com/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://mnemehq.com/logo-v3.png"
-        }
-      },
-      "primaryImageOfPage": "https://mnemehq.com/demo/og.png",
-      "mainEntity": {
-        "@id": "https://mnemehq.com/#mneme-software"
+        "hasPart": [
+          {"@type": "WebPage", "name": "Block an unauthorized storage migration", "url": "https://mnemehq.com/demo/governed-python-agent/"},
+          {"@type": "WebPage", "name": "Prevent a nondeterministic governance fork", "url": "https://mnemehq.com/demo/architectural-drift/"},
+          {"@type": "WebPage", "name": "Multi-agent governance target contract", "url": "https://mnemehq.com/demo/multi-agent-governance/"}
+        ]
       }
-    },
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://mnemehq.com/#mneme-software",
-      "name": "Mneme HQ",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Linux, macOS, Windows",
-      "description": "Open-source architectural governance layer for AI coding agents. Compiles project architectural decisions into enforceable, precedence-aware constraints that govern Claude Code, Cursor, GitHub Copilot, Windsurf, and custom SDK agents at the pre-generation stage.",
-      "url": "https://mnemehq.com/",
-      "downloadUrl": "https://github.com/MnemeHQ/mneme",
-      "license": "https://opensource.org/licenses/MIT",
-      "softwareVersion": "0.5.1",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "author": {
-        "@type": "Person",
-        "name": "Theo Valmis",
-        "url": "https://mnemehq.com/founder/"
-      }
-    },
-    {
-      "@type": "ItemList",
-      "name": "Mneme HQ flagship demos",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Catching AI-generated code that violates an ADR",
-          "url": "https://mnemehq.com/demo/governed-python-agent/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Preventing architectural drift from AI coding agents",
-          "url": "https://mnemehq.com/demo/architectural-drift/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "Keeping architecture consistent across multiple AI agents",
-          "url": "https://mnemehq.com/demo/multi-agent-governance/"
-        }
-      ]
-    }
-  ]
-}
+    ]
+  }
   </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0c0c0d;
-      --surface: #141416;
-      --surface2: #1a1a1d;
-      --border: #222226;
-      --border2: #2e2e34;
-      --text: #e8e8ec;
-      --muted: #a8a8b8;
-      --accent: #c8f060;
-      --accent-dim: #a8d040;
-      --teal: #8be0c8;
-      --pass: #c8f060;
-      --warn: #f59e0b;
-      --fail: #ef4444;
-      --term-bad: #ff8585;
-      --term-bg: #0a0a0d;
-    }
-    /* ── NAV ── */
-    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: #0c0c0d; backdrop-filter: blur(8px); z-index: 100; }
-    .logo { font-family: 'Instrument Serif', serif; font-size: 1.4rem; font-weight: 400; color: var(--text); text-decoration: none; letter-spacing: -0.01em; }
-    /* ── LAYOUT ── */
-    main { max-width: 1080px; margin: 0 auto; padding: 4.5rem 2rem 6rem; }
-    .hero { text-align: center; margin-bottom: 5rem; }
-    .hero-eyebrow { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1rem; font-family: 'DM Mono', monospace; }
-    .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.1rem, 4.5vw, 3.3rem); font-weight: 400; line-height: 1.12; letter-spacing: -0.015em; margin-bottom: 1.25rem; max-width: 880px; margin-left: auto; margin-right: auto; }
-    .hero h1 em { font-style: italic; color: var(--accent); }
-    .hero p.lede { color: var(--muted); font-size: 1.05rem; max-width: 680px; margin: 0 auto 1.25rem; line-height: 1.7; }
-    .hero .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; }
-    .hero .byline a { color: var(--muted); text-decoration: none; }
-    .hero .byline a:hover { color: var(--text); }
-    .hero .byline .sep { color: var(--border2); margin: 0 0.5rem; }
-    /* ── SECTION HEADER ── */
-    .section { margin-bottom: 5rem; }
-    /* ── FLAGSHIP CARDS ── */
-    .flagship-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-    .flagship-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem 1.85rem; text-decoration: none; color: inherit; display: block; transition: border-color 0.15s, transform 0.15s, background 0.2s; position: relative; overflow: hidden; }
-    .flagship-card:hover { border-color: var(--border2); transform: translateY(-1px); background: #16161a; }
-    .flagship-card.featured { border-color: var(--border2); padding: 2.25rem 2.25rem; }
-    .flagship-card.featured::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--teal)); }
-    .flagship-meta { display: flex; align-items: center; gap: 0.65rem; margin-bottom: 1rem; flex-wrap: wrap; }
-    .flagship-tag { font-family: 'DM Mono', monospace; font-size: 0.6rem; padding: 0.16rem 0.55rem; border-radius: 999px; letter-spacing: 0.06em; text-transform: uppercase; }
-    .flagship-tag.runnable { color: var(--muted); border: 1px solid var(--border2); }
-    .flagship-tag.centerpiece { background: rgba(139,224,200,0.1); color: var(--teal); border: 1px solid rgba(139,224,200,0.25); }
-    .flagship-tag.forward { color: var(--muted); border: 1px solid var(--border2); }
-    .flagship-card h2 { font-family: 'Instrument Serif', serif; font-size: 1.5rem; font-weight: 400; color: var(--text); margin-bottom: 0.6rem; line-height: 1.25; letter-spacing: -0.01em; }
-    .flagship-card.featured h2 { font-size: 1.85rem; }
-    .flagship-card p.fc-lede { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 1rem; }
-    .flagship-card.featured p.fc-lede { font-size: 0.98rem; }
-    .flagship-card .fc-evidence { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-bottom: 1.1rem; padding-top: 1rem; border-top: 1px dashed var(--border); }
-    .flagship-card .fc-evidence-item { font-size: 0.78rem; color: var(--muted); display: flex; align-items: baseline; gap: 0.5rem; }
-    .flagship-card .fc-evidence-item strong { color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.72rem; font-weight: 500; }
-    .flagship-card .fc-cta { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--accent); font-family: 'DM Mono', monospace; font-size: 0.78rem; }
-    .flagship-card:hover .fc-cta { color: var(--accent-dim); }
-    /* Lean demo selector - ADR-002 phase 3 */
-    .selector-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
-    .more-scenarios { margin-top: 1.75rem; font-size: 0.82rem; color: var(--muted); line-height: 2; }
-    .more-scenarios a { color: var(--muted); text-decoration: none; border-bottom: 1px solid var(--border2); }
-    .more-scenarios a:hover { color: var(--accent); border-bottom-color: var(--accent); }
-    .more-scenarios .ms-note { font-family: 'DM Mono', monospace; font-size: 0.7rem; opacity: 0.7; }
-    /* ── FOOTER ── */
-    footer { border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left; }
-    /* ── HAMBURGER ── */
-    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; transition: border-color 0.15s, background 0.15s; }
-    @media (max-width: 900px) {html, body { overflow-x: clip; }
-    body.menu-open { overflow: hidden; }
-    nav { padding: 1rem 1.25rem; }
-    .nav-hamburger { display: flex; }
-    .nav-links { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; gap: 0; background: rgba(12,12,13,0.98); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s; }
-    .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: 0.5rem 1.25rem 1.25rem; transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s; overflow-y: auto; }
-    .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: 0.92rem; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
-    .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-    .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
-    .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-    main { padding: 3rem 1.25rem 4rem; }}
-    @media (max-width: 768px) {nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }}
-    footer a { color: var(--muted); text-decoration: none; }
-    /* ── SECTION BEAT ──
-       9 of 11 sections were transparent and fell through to the body colour, so
-       the page read as one uninterrupted black slab with no section boundaries.
-       Alternate bands plus hairlines give the eye somewhere to break. */
-    main > section { position: relative; }
-    main > section:nth-of-type(even)::before {
-      content: '';
-      position: absolute;
-      z-index: -1;
-      inset: 0 auto 0 50%;
-      width: 100vw;
-      transform: translateX(-50%);
-      background: #131717;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    main > section > * { position: relative; }
-    @media (prefers-reduced-motion: no-preference) {main > section { transition: background .2s; }}
-  
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
-  </style>
 </head>
-<body>
-  <!-- Google Tag Manager (noscript) -->
+<body class="demo-page demo-hub-page">
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
 
-  <a href="#main-content" class="skip-link">Skip to content</a>
+<a href="#main-content" class="skip-link">Skip to content</a>
 <nav>
   <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
   <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
@@ -250,82 +76,110 @@
   </div>
 </nav>
 
-  <main id="main-content" tabindex="-1">
-    <header class="hero">
-      <div class="hero-eyebrow">Runnable demos</div>
-      <h1>Watch Mneme catch a change that <em>would have merged</em>.</h1>
-      <p class="lede">An AI agent proposes code that looks correct and violates a decision your team already made. Each demo shows the catch, the decision it cites, and a compliant follow-up &mdash; and runs on your own machine.</p>
-      <p style="margin-top:0.9rem;font-family:'DM Mono',monospace;font-size:0.7rem;color:var(--muted);letter-spacing:0.04em;">
-        Open source &middot; No API key &middot; 7/7 benchmark scenarios caught
-      </p>
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li aria-current="page">Demos</li>
+    </ol>
+  </nav>
+
+  <main id="main-content" tabindex="-1" class="demo-hub-main">
+    <header class="demo-hub-hero">
+      <div class="demo-hub-hero-inner">
+        <div class="demo-hub-eyebrow">Agentic AI governance in operation</div>
+        <h1>Watch an agent cross the line. Then watch Mneme <em>stop it.</em></h1>
+        <p class="lede">Two runnable proofs show consequential architectural failures before they land. A third page defines the multi-agent enforcement contract honestly: what works now, what does not, and what proof is still required.</p>
+      </div>
     </header>
 
-    <section class="section" id="demos">
-      <div class="flagship-grid selector-grid">
-
-        <a class="flagship-card" href="/demo/governed-python-agent/">
-          <div class="flagship-meta">
-            <span class="flagship-tag runnable">Runs locally</span>
-          </div>
-          <h2>ADR enforcement</h2>
-          <p class="fc-lede">An agent imports from the brand namespace instead of the package namespace. Mneme retrieves ADR-005 and flags the violation; a second, corrected file checks clean against the same corpus.</p>
-          <span class="fc-cta">View demo &rarr;</span>
-        </a>
-
-        <a class="flagship-card" href="/demo/architectural-drift/">
-          <div class="flagship-meta">
-            <span class="flagship-tag runnable">Runs locally</span>
-            <span class="flagship-tag forward">Scripted reproduction</span>
-          </div>
-          <h2>Architectural drift</h2>
-          <p class="fc-lede">One reasonable-looking change violates ADR-001. Three downstream edits amplify it. Mneme catches the divergence upstream, before it compounds.</p>
-          <span class="fc-cta">View demo &rarr;</span>
-        </a>
-
-        <a class="flagship-card" href="/demo/multi-agent-governance/">
-          <div class="flagship-meta">
-            <span class="flagship-tag runnable">Runs locally</span>
-            <span class="flagship-tag forward">Scripted reproduction</span>
-          </div>
-          <h2>Multi-agent consistency</h2>
-          <p class="fc-lede">Three agents, no shared memory, one decision corpus. The same invariants hold across every actor, session, and retry.</p>
-          <span class="fc-cta">View demo &rarr;</span>
-        </a>
-
-      </div>
-
-      <p class="more-scenarios">More scenarios:
-        <a href="/demo/adr-compiler/">ADR compiler</a> &middot;
-        <a href="/demo/storage-decision/">Storage decision</a> &middot;
-        <a href="/demo/dependency-policy/">Dependency policy</a> &middot;
-        <a href="/demo/repository-pattern/">Repository pattern</a> &middot;
-        <a href="/demo/agent-sdk-governance/">Claude Agent SDK</a> <span class="ms-note">(roadmap)</span>
-      </p>
-    </section>
-
-    <section class="cta-snippet" id="try">
-      <h2>Ready to try it?</h2>
-      <p>Install the CLI and check your first decision in under a minute.</p>
-      <div class="install-module" id="install">
-        <div class="install-module-cmd">
-          <code>pip install mneme-hq</code>
-          <button type="button" class="install-module-copy" data-code-copy data-copy-text="pip install mneme-hq"
-                  onclick="navigator.clipboard.writeText('pip install mneme-hq');this.dataset.copied='true';this.textContent='Copied';setTimeout(()=>{this.dataset.copied='false';this.textContent='Copy';},1600);">Copy</button>
+    <div class="demo-hub-content">
+      <section class="hub-section" aria-labelledby="proofs-title">
+        <div class="hub-section-head">
+          <div class="hub-section-label">Runnable proofs</div>
+          <h2 id="proofs-title">The change looks useful. The decision says otherwise.</h2>
         </div>
-        <div class="install-module-meta">
-          <a href="/docs/#quickstart" data-cta-intent="quickstart" data-cta-position="mid" data-cta-component="install_module">5-minute quickstart</a>
-          <span>Python 3.11+</span>
-          <span>MIT licensed</span>
+
+        <div class="hub-proof-grid">
+          <a class="hub-card" href="/demo/governed-python-agent/">
+            <div class="hub-card-top">
+              <span class="hub-card-kicker">Flagship 01</span>
+              <span class="hub-card-meta">Runnable locally · <b class="hub-outcome hub-outcome--deny">Deny</b> → <b class="hub-outcome hub-outcome--pass">pass</b></span>
+            </div>
+            <h3>A second database <span class="hub-deny-word">sneaks in.</span></h3>
+            <p>JSON becomes Postgres. Mneme stops the migration, then checks the safer retry.</p>
+            <div class="hub-impact">
+              <span class="hub-impact-label">If it lands</span>
+              <strong>One product. Two sources of truth.</strong>
+            </div>
+            <span class="hub-card-cta">Open the six-beat proof &rarr;</span>
+          </a>
+
+          <a class="hub-card" href="/demo/architectural-drift/">
+            <div class="hub-card-top">
+              <span class="hub-card-kicker">Flagship 02</span>
+              <span class="hub-card-meta">Runnable locally · <b class="hub-outcome hub-outcome--deny">Deny</b> → <b class="hub-outcome hub-outcome--pass">pass</b></span>
+            </div>
+            <h3>The rulebook starts <span class="hub-warn-word">guessing.</span></h3>
+            <p>A vector-search change lets agents find different decisions for the same task. Mneme blocks the fork.</p>
+            <div class="hub-impact">
+              <span class="hub-impact-label">If it lands</span>
+              <strong>Same request. Different rules. Conflicting code.</strong>
+            </div>
+            <span class="hub-card-cta">Open the six-beat proof &rarr;</span>
+          </a>
+
+          <a class="hub-card hub-card--target" href="/demo/multi-agent-governance/">
+            <div>
+              <div class="hub-card-top">
+                <span class="hub-card-kicker">Infrastructure contract</span>
+              <span class="hub-card-meta">Forward-looking · <b class="hub-outcome">Target capability</b></span>
+              </div>
+              <h3>Many agents. <span class="hub-pass-word">One rulebook.</span></h3>
+              <p>The target: every agent gets the same decision, meets the same gate, and leaves a shared trace.</p>
+              <span class="hub-card-cta">Inspect the target contract &rarr;</span>
+            </div>
+            <div class="hub-target-requirements" aria-label="Required multi-agent capabilities">
+              <span>Shared policy version</span>
+              <span>Actor + verdict identity</span>
+              <span>Persistent correction trace</span>
+            </div>
+          </a>
         </div>
-      </div>
-      <div class="cta-row" style="margin-top:1.25rem;">
-        <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="mid" data-cta-component="install_module">Install Mneme</a>
-        <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="mid" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
-      </div>
-    </section>
+      </section>
+
+      <section class="hub-section hub-run hub-run--featured" aria-labelledby="run-title">
+        <div>
+          <div class="hub-section-label">Try it yourself</div>
+          <h2 id="run-title">Run a governed check locally.</h2>
+          <p>Open source. Deterministic. No model call required.</p>
+        </div>
+        <div class="hub-run-command"><code>pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="hub-install-command">Copy</button></div>
+        <code id="hub-install-command" class="visually-hidden">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code>
+      </section>
+
+      <section class="hub-section" aria-labelledby="examples-title">
+        <div class="hub-section-head">
+          <div class="hub-section-label">Supporting examples</div>
+          <h2 id="examples-title">Same system. Smaller, useful checks.</h2>
+        </div>
+        <div class="hub-support-grid">
+          <a class="hub-support-card" href="/demo/storage-decision/"><span class="hub-outcome hub-outcome--pass">Pass</span><strong>Keep JSON. Ship the change.</strong><p>Guidance steers the first attempt.</p></a>
+          <a class="hub-support-card" href="/demo/dependency-policy/"><span class="hub-outcome hub-outcome--warn">Warn</span><strong>New package? Make it a decision.</strong><p>Flag the dependency before it drifts in.</p></a>
+          <a class="hub-support-card" href="/demo/repository-pattern/"><span class="hub-outcome hub-outcome--deny">Deny</span><strong>The code works. The boundary does not.</strong><p>Stop direct database access in a service.</p></a>
+          <a class="hub-support-card" href="/demo/adr-compiler/"><span>Infrastructure</span><strong>Turn ADRs into checks.</strong><p>Compile the rules you already maintain.</p></a>
+          <a class="hub-support-card" href="/demo/agent-sdk-governance/"><span>Integration target</span><strong>Put the gate before the tool call.</strong><p>A real check; future SDK wiring.</p></a>
+        </div>
+      </section>
+
+      <figure class="hub-image" aria-labelledby="hub-image-caption">
+        <img src="/assets/images/photo-whiteboard-plan-coral.webp" width="1535" height="1025" loading="lazy" decoding="async" alt="An engineer reviewing architecture and product flows drawn on a whiteboard">
+        <figcaption id="hub-image-caption">Architecture begins as a plan people can inspect. Agentic governance keeps later changes tied to it.</figcaption>
+      </figure>
+
+    </div>
   </main>
 
-  <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
     .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
     .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
@@ -421,49 +275,18 @@
   </div>
 </footer>
 
-  <script>
-    (function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
+  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
   });
-  if (best) best.classList.add('active');
 })();
-  </script>
-  <script>
-    (function(){
-      var btn = document.querySelector('.nav-hamburger');
-      var links = document.querySelector('.nav-links');
-      if (!btn || !links) return;
-      function setOpen(open){
-        links.classList.toggle('open', open);
-        btn.setAttribute('aria-expanded', String(open));
-        document.body.classList.toggle('menu-open', open);
-      }
-      btn.addEventListener('click', function(e){
-        e.stopPropagation();
-        setOpen(!links.classList.contains('open'));
-      });
-      document.addEventListener('click', function(e){
-        if (!links.classList.contains('open')) return;
-        if (links.contains(e.target) || btn.contains(e.target)) return;
-        setOpen(false);
-      });
-      document.addEventListener('keydown', function(e){
-        if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
-      });
-      links.addEventListener('click', function(e){
-        if (e.target.tagName === 'A') setOpen(false);
-      });
-      window.addEventListener('resize', function(){
-        if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
-      });
-    })();
-  </script>
+</script>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;
@@ -475,79 +298,6 @@
     }
   });
   if (best) best.classList.add('active');
-})();
-</script>
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>

@@ -1,0 +1,288 @@
+/* Mneme integration detail-page system.
+   One outer grid, one reading measure, and consistent semantic colour roles. */
+
+:root {
+  --integration-shell: 1120px;
+  --integration-reading: 760px;
+  --integration-beat: #111513;
+  --integration-beat-border: #202923;
+  --integration-focus: #e7ff9d;
+}
+
+/* Shared geometry across article-style and landing-style integrations. */
+.breadcrumb-nav,
+.hero,
+.section,
+.cta-band {
+  max-width: var(--integration-shell) !important;
+}
+
+.article-wrap {
+  box-sizing: border-box;
+  max-width: var(--integration-shell) !important;
+  padding-top: clamp(3.5rem, 7vw, 5.5rem) !important;
+  padding-bottom: 5rem !important;
+}
+
+.article-header,
+.article-body,
+.article-wrap > #related-reading,
+.article-wrap > #related-reading + ul,
+.article-footer {
+  max-width: var(--integration-reading);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.article-header {
+  margin-bottom: clamp(3.25rem, 7vw, 5rem) !important;
+}
+
+.article-header h1 {
+  max-width: 740px;
+  font-size: clamp(2.75rem, 6vw, 4.25rem) !important;
+  line-height: 1.02 !important;
+  text-wrap: balance;
+}
+
+.article-lede {
+  max-width: 740px;
+  border-left-color: var(--accent) !important;
+  font-size: clamp(1.05rem, 2vw, 1.18rem) !important;
+}
+
+.article-header > p:not(.article-lede):not(.byline) {
+  max-width: 720px !important;
+}
+
+/* Colour is meaning, not decoration: lime = action, teal = technical path. */
+.article-body a:not(.btn-primary),
+.article-header > p a,
+.faq-body a {
+  color: var(--teal) !important;
+  text-decoration-color: rgba(139, 224, 200, 0.42) !important;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+.article-body a:not(.btn-primary):hover,
+.article-header > p a:hover,
+.faq-body a:hover {
+  color: #b6f3e2 !important;
+  text-decoration-color: currentColor !important;
+}
+
+.article-body pre {
+  border-color: #28322e !important;
+  background: #101311 !important;
+  box-shadow: inset 3px 0 0 rgba(139, 224, 200, 0.34);
+}
+
+.callout {
+  border-color: #26332d !important;
+  border-left-color: var(--teal) !important;
+  background: #101613 !important;
+}
+
+.callout p strong {
+  color: var(--teal) !important;
+}
+
+/* JS groups existing h2 content into semantic reading beats. */
+.integration-reading-section {
+  box-sizing: border-box;
+  margin: 0 -2.25rem;
+  padding: 2.65rem 2.25rem 2.25rem;
+  border: 1px solid transparent;
+  border-radius: 18px;
+}
+
+.integration-reading-section + .integration-reading-section {
+  margin-top: 1rem;
+}
+
+.integration-reading-section:nth-of-type(even) {
+  border-color: var(--integration-beat-border);
+  background: var(--integration-beat);
+}
+
+.integration-reading-section > h2:first-child {
+  margin-top: 0 !important;
+  padding-top: 0;
+}
+
+.integration-reading-section > :last-child {
+  margin-bottom: 0;
+}
+
+/* The first real conversion moment: prominent, useful, and scannable. */
+.integration-install-cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(290px, 0.9fr);
+  gap: 2rem;
+  align-items: center;
+  margin: 2.5rem -2.25rem 3.5rem;
+  padding: clamp(1.5rem, 4vw, 2.4rem);
+  border: 1px solid rgba(200, 240, 96, 0.42);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(200, 240, 96, 0.12), transparent 42%),
+    #141713;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.2);
+}
+
+.integration-install-cta__eyebrow {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: var(--accent);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.integration-install-cta h2 {
+  margin: 0 0 0.75rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: clamp(1.35rem, 3vw, 1.75rem) !important;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.integration-install-cta p {
+  margin: 0 !important;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.integration-install-cta__command {
+  display: block;
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  border: 1px solid #2b3731;
+  border-radius: 9px;
+  background: #0c0f0d;
+  color: var(--teal);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  white-space: nowrap;
+}
+
+.integration-install-cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.integration-install-cta__copy,
+.integration-install-cta__docs {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.76rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.integration-install-cta__copy {
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #0c0c0d;
+}
+
+.integration-install-cta__copy:hover {
+  border-color: var(--integration-focus);
+  background: var(--integration-focus);
+}
+
+.integration-install-cta__docs {
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border2);
+  color: var(--text) !important;
+}
+
+.integration-install-cta__docs:hover {
+  border-color: var(--muted);
+  background: var(--surface2);
+}
+
+.integration-install-cta__copy:focus-visible,
+.integration-install-cta__docs:focus-visible {
+  outline: 3px solid rgba(200, 240, 96, 0.35);
+  outline-offset: 3px;
+}
+
+/* A quieter, shorter page tail: related reading, one return path, one CTA. */
+h2#related-reading {
+  margin-top: 4.5rem !important;
+}
+
+h2#related-reading + ul {
+  border: 1px solid var(--border);
+  background: transparent !important;
+}
+
+.article-footer {
+  margin-top: 3.75rem !important;
+}
+
+.cta-block {
+  margin-top: 1.75rem !important;
+  padding: clamp(1.5rem, 4vw, 2rem) !important;
+  border-color: var(--border2) !important;
+  background: #121214 !important;
+}
+
+.cta-block .cta-secondary {
+  display: none !important;
+}
+
+.btn-primary {
+  min-height: 42px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 720px) {
+  .article-wrap {
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  .article-header h1 {
+    font-size: clamp(2.45rem, 12vw, 3.3rem) !important;
+  }
+
+  .integration-reading-section {
+    margin-right: -0.65rem;
+    margin-left: -0.65rem;
+    padding: 2rem 1rem 1.65rem;
+    border-radius: 13px;
+  }
+
+  .integration-install-cta {
+    grid-template-columns: 1fr;
+    margin-right: -0.65rem;
+    margin-left: -0.65rem;
+  }
+
+  .integration-install-cta__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .integration-install-cta__copy,
+  .integration-install-cta__docs {
+    transition: none !important;
+  }
+}
