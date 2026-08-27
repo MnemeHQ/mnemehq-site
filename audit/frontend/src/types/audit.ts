@@ -15,7 +15,7 @@ export interface ArchitecturalDecision {
     type: string;
     pattern: string;
     description: string;
-  };
+  } | null;
   confidence: number;
 }
 

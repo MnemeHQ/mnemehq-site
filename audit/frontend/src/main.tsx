@@ -6,7 +6,7 @@ import './styles.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <HashRouter basename="/audit/workspace">
+    <HashRouter>
       <App />
     </HashRouter>
   </React.StrictMode>,

@@ -50,7 +50,7 @@ export function DecisionDetailPage() {
   }, [id, decisionId, getAudit]);
 
   const copyRule = async () => {
-    if (!decision) return;
+    if (!decision || !decision.proposedRule) return;
     const ruleText = `${decision.proposedRule.type} "${decision.proposedRule.pattern}"`;
     await navigator.clipboard.writeText(ruleText);
     setCopied(true);
@@ -161,19 +161,26 @@ export function DecisionDetailPage() {
 
         <section className="detail-section" aria-labelledby="proposed-rule">
           <h2 id="proposed-rule" className="detail-section-title">PROPOSED MNEM RULE</h2>
-          <div className="rule-box">
-            <div className="rule-box-label">Deterministic enforcement rule</div>
-            <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
-            <p className="mt-2 text-sm text-muted font-normal font-sans">{decision.proposedRule.description}</p>
-            <button 
-              onClick={copyRule}
-              className="btn btn-ghost btn-sm mt-3 flex items-center gap-2"
-              data-cta-intent="copy_rule"
-              data-cta-position="decision_detail"
-            >
-              <Copy size={14} /> {copied ? 'Copied!' : 'Copy rule'}
-            </button>
-          </div>
+          {decision.proposedRule ? (
+            <div className="rule-box">
+              <div className="rule-box-label">Deterministic enforcement rule</div>
+              <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
+              <p className="mt-2 text-sm text-muted font-normal font-sans">{decision.proposedRule.description}</p>
+              <button 
+                onClick={copyRule}
+                className="btn btn-ghost btn-sm mt-3 flex items-center gap-2"
+                data-cta-intent="copy_rule"
+                data-cta-position="decision_detail"
+              >
+                <Copy size={14} /> {copied ? 'Copied!' : 'Copy rule'}
+              </button>
+            </div>
+          ) : (
+            <div className="rule-box" style={{ background: 'var(--surface2)', borderColor: 'var(--border2)' }}>
+              <div className="rule-box-label">Deterministic enforcement rule</div>
+              <p className="text-muted">No deterministic rule defined for this decision.</p>
+            </div>
+          )}
         </section>
 
         <div className="detail-section" style={{ paddingBottom: '4rem' }}>

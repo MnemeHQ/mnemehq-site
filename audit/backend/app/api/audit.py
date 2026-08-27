@@ -172,13 +172,28 @@ def _generate_markdown(audit: AuditResult) -> str:
             f"",
             f"**Applies To:** {', '.join(decision.appliesTo) if decision.appliesTo else 'N/A'}",
             f"",
-            f"**Proposed Mneme Rule:**",
-            f"```",
-            f'{decision.proposedRule.type} "{decision.proposedRule.pattern}"',
-            f"```",
-            f"",
-            f"*{decision.proposedRule.description}*",
-            f"",
+        ])
+        
+        if decision.proposedRule:
+            lines.extend([
+                f"**Proposed Mneme Rule:**",
+                f"```",
+                f'{decision.proposedRule.type} "{decision.proposedRule.pattern}"',
+                f"```",
+                f"",
+                f"*{decision.proposedRule.description}*",
+                f"",
+            ])
+        else:
+            lines.extend([
+                f"**Proposed Mneme Rule:**",
+                f"```",
+                f'No deterministic rule defined.',
+                f"```",
+                f"",
+            ])
+        
+        lines.extend([
             f"---",
             f"",
         ])

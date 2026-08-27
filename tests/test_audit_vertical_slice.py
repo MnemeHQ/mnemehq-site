@@ -58,7 +58,7 @@ async def test_vertical_slice():
         print(f"    Next step: {g.suggestedNextStep}")
         print()
     
-    # Assertions - the fixture yields:
+# Assertions - the fixture yields:
     # - 1 enforceable (ADR-001: FORBID_LITERAL sqlite, mysql)
     # - 1 partial (ADR-002: FORBID_DEPENDENCY pip, poetry)
     # - 3 guidance (ADR-003: service boundaries; CLAUDE.md: agent instructions; pyproject.toml: config)
@@ -69,13 +69,16 @@ async def test_vertical_slice():
     # Verify specific decisions
     enforceable_dec = next(d for d in result.decisions if d.governability == "enforceable")
     assert "database" in enforceable_dec.title.lower() or "sqlite" in enforceable_dec.requirement.lower()
+    assert enforceable_dec.proposedRule is not None
     assert enforceable_dec.proposedRule.type == "FORBID_LITERAL"
     
     partial_dec = next(d for d in result.decisions if d.governability == "partial")
     assert "package" in partial_dec.title.lower() or "pip" in partial_dec.requirement.lower()
-    assert partial_dec.proposedRule.type in ("REQUIRE_PATTERN", "FORBID_LITERAL")
+    assert partial_dec.proposedRule is None  # No deterministic rule for partial (FORBID_DEPENDENCY only)
     
     guidance_decisions = [d for d in result.decisions if d.governability == "guidance"]
+    assert len(guidance_decisions) == 3
+    assert all(d.proposedRule is None for d in guidance_decisions)
     assert any("service" in d.title.lower() or "boundar" in d.requirement.lower() for d in guidance_decisions)
     assert any("config" in d.title.lower() or "pyproject" in d.title.lower() for d in guidance_decisions)
     
