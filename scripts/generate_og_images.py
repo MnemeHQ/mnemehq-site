@@ -239,6 +239,7 @@ TEMPLATE_MAP = {
     "og-integration-codex-cli.html": "integrations/codex-cli/og.png",
     "og-integration-hermes.html": "integrations/hermes/og.png",
     "og-integration-langchain-langgraph.html": "integrations/langchain-langgraph/og.png",
+    "og-integration-kiro.html": "integrations/kiro/og.png",
 
     # Insights — new
     "og-insights-ai-adoption-maturity.html": "insights/ai-adoption-maturity-model-engineering-analysis/og.png",
