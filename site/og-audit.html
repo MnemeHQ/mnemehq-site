@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Audit | Mneme HQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Inter:wght@400;500;600&family=Instrument+Serif:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #0c0c0d;
+      --surface: #141416;
+      --surface2: #1a1a1d;
+      --border: #222226;
+      --text: #e8e8ec;
+      --muted: #a8a8b8;
+      --accent: #c8f060;
+      --accent-dim: #a8d040;
+      --teal: #8be0c8;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      width: 1200px;
+      height: 630px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4rem;
+      overflow: hidden;
+    }
+    
+    .font-mono { font-family: 'DM Mono', monospace; }
+    .font-serif { font-family: 'Instrument Serif', serif; }
+    
+    .og-container {
+      max-width: 900px;
+      text-align: center;
+    }
+    
+    .og-tag {
+      display: inline-block;
+      background: rgba(200, 240, 96, 0.07);
+      border: 1px solid rgba(200, 240, 96, 0.22);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .og-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+    }
+    
+    .og-accent { color: var(--accent); }
+    
+    .og-desc {
+      font-size: 1.2rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+    
+    .og-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .og-stat {
+      text-align: center;
+    }
+    
+    .og-stat-value {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    
+    .og-stat-label {
+      font-size: 0.78rem;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    
+    .og-badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .og-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-weight: 600;
+    }
+    
+    .og-badge-enforceable { background: rgba(139, 224, 200, 0.15); color: var(--teal); border: 1px solid rgba(139, 224, 200, 0.3); }
+    .og-badge-partial { background: rgba(245, 166, 35, 0.15); color: var(--warning); border: 1px solid rgba(245, 166, 35, 0.3); }
+    .og-badge-guidance { background: rgba(168, 168, 184, 0.15); color: var(--muted); border: 1px solid rgba(168, 168, 184, 0.3); }
+    
+    .og-footer {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+    }
+    
+    .og-logo {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="og-container">
+    <span class="og-tag">Architecture Governability Audit</span>
+    <h1 class="og-title">
+      Understand which architectural decisions <br />
+      <span class="og-accent">can actually be governed</span>
+    </h1>
+    <p class="og-desc">
+      Give Mneme a repository. It identifies architectural decisions, classifies their governability, 
+      and shows you exactly which ones translate to deterministic enforcement rules.
+    </p>
+    
+    <div class="og-stats">
+      <div class="og-stat">
+        <div class="og-stat-value">12+</div>
+        <div class="og-stat-label">Decisions Identified</div>
+      </div>
+      <div class="og-stat">
+        <div class="og-stat-value">42%</div>
+        <div class="og-stat-label">Coverage</div>
+      </div>
+      <div class="og-stat">
+        <div class="og-stat-value">5</div>
+        <div class="og-stat-label">Enforceable Now</div>
+      </div>
+    </div>
+    
+    <div class="og-badge-row">
+      <span class="og-badge og-badge-enforceable">✓ Enforceable</span>
+      <span class="og-badge og-badge-partial">⚠ Partial</span>
+      <span class="og-badge og-badge-guidance">○ Guidance</span>
+    </div>
+  </div>
+  
+  <div class="og-footer">
+    <img src="/logo-v3.png" alt="Mneme HQ" class="og-logo" />
+    <span>mnemehq.com/audit</span>
+  </div>
+</body>
+</html>
