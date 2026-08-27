@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
+  <meta name="description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Kiro CLI, Codex CLI, LangChain/LangGraph, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="AI Coding Agent Integrations | Mneme HQ" />
-  <meta property="og:description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
+  <meta property="og:description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Kiro CLI, Codex CLI, LangChain/LangGraph, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
   <meta property="og:url" content="https://mnemehq.com/integrations/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="AI Coding Agent Integrations | Mneme HQ" />
-  <meta name="twitter:description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
+  <meta name="twitter:description" content="Use one architectural decision corpus across Claude Code, Claude Agent SDK, Google Antigravity, Paperclip, Kiro CLI, Codex CLI, LangChain/LangGraph, Cursor and CI. Native hooks, validated compatibility, rules export and deterministic gates prevent architectural drift across the AI SDLC." />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/og.png" />
 
     <!-- Consent defaults -->
@@ -56,6 +56,7 @@
           {"@type": "WebPage", "name": "Paperclip", "url": "https://mnemehq.com/integrations/paperclip/"},
           {"@type": "WebPage", "name": "Codex CLI", "url": "https://mnemehq.com/integrations/codex-cli/"},
           {"@type": "WebPage", "name": "LangChain / LangGraph", "url": "https://mnemehq.com/integrations/langchain-langgraph/"},
+          {"@type": "WebPage", "name": "Kiro CLI", "url": "https://mnemehq.com/integrations/kiro/"},
           {"@type": "WebPage", "name": "Cursor", "url": "https://mnemehq.com/integrations/cursor/"},
           {"@type": "WebPage", "name": "GitHub Actions", "url": "https://mnemehq.com/integrations/github-actions/"},
           {"@type": "WebPage", "name": "GitLab CI", "url": "https://mnemehq.com/integrations/gitlab/"},
@@ -211,6 +212,7 @@
     <a href="/docs/how-enforcement-works/">How it works</a>
     <a href="/use-cases/">Use cases</a>
     <a href="/demo/">Demo</a>
+    <a href="/audit/">Architecture Audit</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
@@ -261,6 +263,11 @@
         <div class="int-status">Native &middot; Shipped</div>
         <h3>LangChain / LangGraph</h3>
         <p>Inject architectural context before model calls and deterministically govern supported <code>write_file</code> and <code>edit_file</code> mutations through LangChain agent middleware.</p>
+      </a>
+      <a class="int-card" href="/integrations/kiro/">
+        <div class="int-status">Native &middot; Shipped</div>
+        <h3>Kiro CLI</h3>
+        <p>Pre-disk enforcement for <code>fs_write</code> and <code>fs_append</code> mutations on Kiro CLI 3.0 / v3 engine, using Mneme&rsquo;s existing introduced-delta enforcement path.</p>
       </a>
     </div>
   </section>
@@ -333,11 +340,11 @@
         <h3>OpenCode</h3>
         <p>Plugin-hooks approach under evaluation; no production plugin. Compaction experiment: NULL verdict.</p>
       </a>
-      <a class="int-card muted" href="https://github.com/MnemeHQ/mneme/pull/314" target="_blank" rel="noopener">
-        <div class="int-status">Experimental &middot; PR #314</div>
-        <h3>Kiro</h3>
-        <p>Bounded PreToolUse hook adapter, contract-tested, pending review and merge.</p>
-      </a>
+      <div class="int-card muted">
+        <div class="int-status">Planned</div>
+        <h3>Kiro IDE</h3>
+        <p>IDE extension hook surface pending. CLI integration shipped; coverage for IDE-initiated writes not yet claimed.</p>
+      </div>
       <a class="int-card muted" href="/integrations/hermes/">
         <div class="int-status">Experimental</div>
         <h3>Hermes Agent</h3>

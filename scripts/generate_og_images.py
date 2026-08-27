@@ -238,6 +238,7 @@ TEMPLATE_MAP = {
     "og-integration-codex-cli.html": "integrations/codex-cli/og.png",
     "og-integration-hermes.html": "integrations/hermes/og.png",
     "og-integration-langchain-langgraph.html": "integrations/langchain-langgraph/og.png",
+    "og-integration-kiro.html": "integrations/kiro/og.png",
 
     # Insights — new
     "og-insights-ai-adoption-maturity.html": "insights/ai-adoption-maturity-model-engineering-analysis/og.png",
@@ -304,6 +305,9 @@ TEMPLATE_MAP = {
     "og-insights-constraint-survival.html": "insights/architectural-constraint-survival-long-running-coding-agents/og.png",
     "og-insights-programmable-policy.html": "insights/programmable-ai-policy-executable-architectural-intent/og.png",
     "og-insights-lost-in-compaction.html": "insights/architecture-cannot-be-a-prompt-context-compaction/og.png",
+
+    # Audit
+    "og-audit.html": "audit/og.png",
 
     # Insights — new
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
