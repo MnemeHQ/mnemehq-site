@@ -219,7 +219,7 @@
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
       <h1>An agent creates a second source of truth. Mneme <em>blocks the migration</em>.</h1>
-      <p class="lede">This project keeps state in human-editable JSON. The agent proposes SQLAlchemy, PostgreSQL, and Alembic anyway&mdash;a storage migration with new credentials, operations, and a second place to trust. Mneme stops it before code is written, then checks a correction that stays inside the existing store.</p>
+      <p class="lede">This project keeps state in human-editable JSON. The supplied task proposes SQLAlchemy, PostgreSQL, and Alembic anyway&mdash;a storage migration with new credentials, operations, and a second place to trust. Mneme rejects that task, then checks a correction that stays inside the existing store.</p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -259,7 +259,7 @@
             </li>
             <li class="enforcement-step" data-demo-step>
               <div class="enforcement-stage">03 <strong>Mneme</strong></div>
-              <div class="enforcement-copy"><p>The pre-flight check blocks the violating task before code is written.</p><code class="trace-code trace-deny">DENY [mneme_storage_json] <span class="trace-muted">&middot;</span> exit 2</code></div>
+              <div class="enforcement-copy"><p>The check rejects the violating task and returns the governing decision.</p><code class="trace-code trace-deny">DENY [mneme_storage_json] <span class="trace-muted">&middot;</span> exit 2</code></div>
               <span class="verdict-token deny">DENY</span>
             </li>
             <li class="enforcement-step" data-demo-step>
