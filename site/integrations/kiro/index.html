@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mneme + Kiro — PreToolUse Hook Integration &amp; Architectural Enforcement — Mneme HQ</title>
+  <title>Mneme + Kiro: PreToolUse Governance for File Writes — Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
@@ -104,7 +104,7 @@
       <span class="eyebrow-meta">4 min read &nbsp;·&nbsp; August 2026</span>
     </div>
     <h1>Mneme + Kiro</h1>
-    <p class="article-lede">PreToolUse Hook Integration &amp; Architectural Governance. Kiro CLI 3.0 (v3 engine) executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ via the shipped installer, you ensure native <code>write</code>, <code>fs_write</code>, <code>fsWrite</code>, and <code>fs_append</code> mutations are evaluated against your project's authoritative decision memory before the file system is modified.</p>
+    <p class="article-lede">Mneme adds a guardrail to Kiro CLI 3.0 (v3 engine). Before Kiro uses its native file-write tools, Mneme checks the proposed change against the architectural decisions stored with your repository. If the change conflicts with those decisions, Mneme can block it before the file is modified.</p>
     <p class="byline" style="font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem;">
       By <a href="/founder/" style="color:var(--muted); text-decoration:none;">Theo Valmis</a>
       <span style="color: var(--border2); margin: 0 0.5rem;">&middot;</span>
@@ -114,19 +114,26 @@
 
   <div class="article-body">
     <h2>Overview</h2>
-    <p>Kiro CLI 3.0 (v3 engine) executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ via the shipped installer, you can ensure that native <code>write</code>, <code>fs_write</code>, <code>fsWrite</code>, and <code>fs_append</code> operations emitted by Kiro are evaluated against your project's authoritative decision memory before the file system is modified.</p>
+    <p>Use this integration when you want Kiro to check native write operations against the decisions your team has recorded in Mneme. The hook covers <code>write</code>, <code>fs_write</code>, <code>fsWrite</code>, and <code>fs_append</code> calls made by Kiro's v3 engine, before the proposed change reaches disk.</p>
 
     <div class="callout" style="border-left: 2px solid var(--accent); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--muted);">
-      <p style="margin:0;"><strong>Enforcement Scope Boundary:</strong> Kiro currently implements <code>PreToolUse</code> prevention only for native v3 engine mutations. Session baseline capture (<code>SessionStart</code>) and post-session delta auditing (<code>Stop</code>) are deferred. Furthermore, shell redirection and script-generated writes are not pre-execution governed because Mneme does not parse shell commands.</p>
+      <p style="margin:0;"><strong>What this does not cover:</strong> This integration currently covers Kiro's native v3 write tools only. It does not yet capture the starting state of a session or audit changes after it ends. It also cannot inspect writes performed through shell redirection or scripts, because those writes are not exposed as native Kiro tool calls.</p>
     </div>
+    <h2>How the check works</h2>
+    <p>When Kiro starts a native file write, it sends the tool name and proposed content to the hook. Mneme compares the change being introduced with the architectural decisions recorded for the project. It does not judge unrelated, pre-existing content in the file.</p>
+    <p>That keeps the feedback specific. In strict mode, Mneme stops a conflicting write and explains why. In warn mode, it lets the write continue while leaving a warning in the agent's context. Use strict mode for decisions that must hold; use warn mode when introducing governance gradually.</p>
+    <p>For implementation details and the source code, see <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener">Mneme on GitHub</a>.</p>
+
+    <h2>When to use it</h2>
+    <p>Use this integration when Kiro is making changes in a repository with decisions you want to preserve, such as approved frameworks, dependency rules, or architectural boundaries. It is a guardrail for Kiro's native write tools, not a general monitor for every way a file can change.</p>
 
     <h2>Installation</h2>
-    <p>Install the Mneme runtime and run the shipped Kiro installer to automatically configure the pre-execution hook in your repository:</p>
+    <p>Install Mneme, then run the provided Kiro installer from the Mneme repository to add the pre-execution hook to your project:</p>
     <pre tabindex="0"><code>pip install mneme-hq
 python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
 
     <h2>Hook Configuration</h2>
-    <p>If configuring manually, the shipped Kiro hook schema requires the structured action and command definition:</p>
+    <p>To configure the hook manually, add this definition to your Kiro hooks configuration:</p>
     <pre tabindex="0"><code>{
   "version": "v1",
   "hooks": [
@@ -145,18 +152,18 @@ python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
 }</code></pre>
 
     <h2>Behavior &amp; Exit Codes</h2>
-    <p>The hook evaluates the proposed payload against compiled constraints and communicates via exit codes:</p>
+    <p>Mneme reports the result through an exit code:</p>
     <ul>
-      <li><strong>Strict Mode (Exit 2):</strong> Emits violations to stderr and blocks the mutation immediately.</li>
-      <li><strong>Warn Mode (Exit 0):</strong> Emits a non-blocking warning to stdout and permits the mutation.</li>
-      <li><strong>Operational Failure (Exit 0):</strong> Emits a visible notice if the decision corpus cannot be read.</li>
+      <li><strong>Strict mode (exit 2):</strong> Writes the reason to stderr and blocks the change.</li>
+      <li><strong>Warn mode (exit 0):</strong> Writes a warning to stdout and allows the change.</li>
+      <li><strong>Operational failure (exit 0):</strong> Shows a notice and allows the change when Mneme cannot read the decision corpus.</li>
     </ul>
 
     <h2>Known Limitations</h2>
     <ul>
-      <li><strong>CLI v2 Behavior:</strong> CLI v2 execution loops ignore blocking exit codes and write anyway; strict enforcement is unsupported on CLI v2.</li>
-      <li><strong>MCP Namespaced Tools:</strong> Kiro's namespaced tool format (<code>@server/tool</code>) is not natively mapped by the current adapter tier.</li>
-      <li><strong>IDE 1.x Support:</strong> IDE-level integration surfaces are pending live validation and are not currently claimed.</li>
+      <li><strong>CLI v2:</strong> Kiro v2 ignores blocking exit codes, so strict enforcement is not available.</li>
+      <li><strong>MCP tools:</strong> Mneme does not yet map Kiro's <code>@server/tool</code> names.</li>
+      <li><strong>IDE 1.x:</strong> We have not validated IDE-initiated writes, so this page makes no support claim.</li>
     </ul>
   </div>
 
@@ -165,7 +172,7 @@ python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
     <div class="cta-block integration-end-cta">
       <span class="integration-end-cta__eyebrow">Continue</span>
       <h2>Ready to govern Kiro workflows?</h2>
-      <p>Complete the quickstart, then apply the integration setup above in your repository.</p>
+      <p>Finish the quickstart, then configure Kiro in your repository.</p>
       <div class="integration-end-cta__actions">
         <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
         <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
@@ -374,3 +381,4 @@ python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
 </script>
 </body>
 </html>
+
