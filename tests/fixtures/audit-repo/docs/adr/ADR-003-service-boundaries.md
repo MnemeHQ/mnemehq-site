@@ -4,6 +4,7 @@ title: Service Boundaries
 status: accepted
 date: 2026-01-15
 priority: foundational
+scope: architecture
 ---
 
 # ADR-003: Service Boundaries

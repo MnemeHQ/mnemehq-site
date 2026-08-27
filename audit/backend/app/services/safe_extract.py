@@ -196,7 +196,6 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
             "git", "clone",
             "--depth", str(depth),
             "--single-branch",
-            "--branch", "HEAD",  # default branch
             repo_url,
             str(dest_dir),
         ]

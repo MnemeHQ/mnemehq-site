@@ -60,11 +60,11 @@ async def test_vertical_slice():
     
     # Assertions - the fixture yields:
     # - 1 enforceable (ADR-001: FORBID_LITERAL sqlite, mysql)
-    # - 1 partial (ADR-002: "no pip install", "no poetry" constraints)
-    # - 2 guidance (ADR-003: service boundaries; pyproject.toml: config)
+    # - 1 partial (ADR-002: FORBID_DEPENDENCY pip, poetry)
+    # - 3 guidance (ADR-003: service boundaries; CLAUDE.md: agent instructions; pyproject.toml: config)
     assert result.summary.enforceable == 1, f"Expected 1 enforceable, got {result.summary.enforceable}"
     assert result.summary.partial == 1, f"Expected 1 partial, got {result.summary.partial}"
-    assert result.summary.guidance == 2, f"Expected 2 guidance, got {result.summary.guidance}"
+    assert result.summary.guidance == 3, f"Expected 3 guidance, got {result.summary.guidance}"
     
     # Verify specific decisions
     enforceable_dec = next(d for d in result.decisions if d.governability == "enforceable")

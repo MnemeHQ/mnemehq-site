@@ -4,8 +4,9 @@ from typing import Optional
 import tempfile
 import os
 import io
+import aiofiles
 
-from app.models.audit import AuditResult, NewAuditRequest
+from app.models.audit import AuditResult
 from app.services.audit_service import audit_service
 
 router = APIRouter(prefix="/audit", tags=["audit"])
@@ -13,38 +14,52 @@ router = APIRouter(prefix="/audit", tags=["audit"])
 # In-memory storage for demo (replace with database in production)
 audit_storage: dict[str, AuditResult] = {}
 
+# Max upload size: 50 MB (matches extraction limit)
+MAX_UPLOAD_SIZE = 50 * 1024 * 1024
+
 
 @router.post("", response_model=AuditResult)
 async def create_audit(
     background_tasks: BackgroundTasks,
     repository_url: Optional[str] = Form(None),
     zip_file: Optional[UploadFile] = File(None),
-    local_path: Optional[str] = Form(None),
 ):
-    """Create a new architecture audit."""
+    """Create a new architecture audit.
+    
+    Accepts either a public GitHub repository URL or a ZIP file upload.
+    local_path is intentionally not exposed via public API for security.
+    """
     
     # Validate input
-    if not repository_url and not zip_file and not local_path:
-        raise HTTPException(status_code=400, detail="Provide repository_url, zip_file, or local_path")
+    if not repository_url and not zip_file:
+        raise HTTPException(status_code=400, detail="Provide repository_url or zip_file")
     
-    # Handle ZIP upload
+    # Handle ZIP upload with streaming to disk and size limit
     zip_path = None
     if zip_file:
         if not zip_file.filename or not zip_file.filename.endswith('.zip'):
             raise HTTPException(status_code=400, detail="File must be a .zip archive")
         
-        # Save to temp file
+        # Stream to temp file with size limit
         with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as tmp:
-            content = await zip_file.read()
-            tmp.write(content)
             zip_path = tmp.name
+            written = 0
+            while True:
+                chunk = await zip_file.read(8192)
+                if not chunk:
+                    break
+                written += len(chunk)
+                if written > MAX_UPLOAD_SIZE:
+                    os.unlink(zip_path)
+                    raise HTTPException(status_code=413, detail=f"Upload exceeds {MAX_UPLOAD_SIZE // (1024*1024)} MB limit")
+                tmp.write(chunk)
     
     try:
         # Run audit
         result = await audit_service.analyze_repository(
             repo_url=repository_url,
             zip_path=zip_path,
-            local_path=local_path,
+            # local_path intentionally not accepted from public API
         )
         
         # Store result
