@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
@@ -8,6 +8,7 @@ import { Loader2, Download, FileText, AlertCircle } from 'lucide-react';
 import type { AuditResult } from '../types/audit';
 
 export function AuditOverviewPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { getAudit, exportAudit, loading, error } = useAuditApi();
   const [audit, setAudit] = useState<AuditResult | null>(null);
@@ -138,7 +139,7 @@ export function AuditOverviewPage() {
               <DecisionItem 
                 key={decision.id} 
                 decision={decision} 
-                onClick={() => window.location.href = `/audit/${id}/decisions/${decision.id}`} 
+                onClick={() => navigate(`/audit/${id}/decisions/${decision.id}`)} 
               />
             ))}
           </div>

@@ -1,9 +1,11 @@
 import { useState, useRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 
 export function NewAuditPage() {
+  const navigate = useNavigate();
   const { createAudit, loading, error } = useAuditApi();
   const [repositoryUrl, setRepositoryUrl] = useState('');
   const [zipFile, setZipFile] = useState<File | null>(null);
@@ -78,7 +80,7 @@ export function NewAuditPage() {
     const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
     
     if (result.success && result.data) {
-      window.location.href = `/audit/${result.data.id}`;
+      navigate(`/audit/${result.data.id}`);
     } else {
       setSubmitError(result.error || 'Failed to start audit');
     }
@@ -88,7 +90,7 @@ export function NewAuditPage() {
     setSubmitError('');
     const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
     if (result.success && result.data) {
-      window.location.href = `/audit/${result.data.id}`;
+      navigate(`/audit/${result.data.id}`);
     } else {
       setSubmitError(result.error || 'Failed to load demo');
     }

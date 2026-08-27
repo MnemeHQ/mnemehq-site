@@ -28,7 +28,9 @@ export function AuditNav() {
           <Github className="flex items-center gap-2" size={16} /> GitHub
         </Link>
         <Link 
-          to="/demo" 
+          to="https://mnemehq.com/demo/" 
+          target="_blank" 
+          rel="noopener noreferrer"
           className="btn btn-primary"
           data-cta-intent="nav_demo"
           data-cta-position="audit_nav"

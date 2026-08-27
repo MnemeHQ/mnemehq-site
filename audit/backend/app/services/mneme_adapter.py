@@ -99,37 +99,35 @@ class MnemeAdapter:
         """
         Extract proposed Mneme rules from a decision.
         
-        Returns the rules that Mneme would actually enforce.
+        Returns only the rules that Mneme actually enforces (typed FORBID_LITERAL rules
+        and single-term anti_patterns). Does not invent rules for constraints.
         """
         proposed = []
         
+        # Typed FORBID_LITERAL rules - these are always enforced
         for rule in decision.rules:
             proposed.append(ProposedRuleInfo(
                 type=rule.type,
                 pattern=rule.value,
-                description=f"FORBID_LITERAL: {rule.value}",
+                description=f"{rule.type}: {rule.value}",
                 include_paths=rule.include_paths,
                 exclude_paths=rule.exclude_paths,
             ))
         
+        # Single-term anti_patterns - these are always enforced (FAIL severity)
+        from mneme.enforcer import _is_literal_rule
         for ap in decision.anti_patterns:
-            # Use Mneme's own logic to determine if single-term
-            from mneme.enforcer import _is_literal_rule
             if _is_literal_rule(ap):
                 proposed.append(ProposedRuleInfo(
                     type="FORBID_LITERAL",
                     pattern=ap,
-                    description=f"Anti-pattern (single term): {ap}",
+                    description=f"FORBID_LITERAL: {ap}",
                 ))
         
-        for constraint in decision.constraints:
-            m = re.match(r"^no\s+(.+)$", constraint.strip(), re.IGNORECASE)
-            if m:
-                proposed.append(ProposedRuleInfo(
-                    type="REQUIRE_PATTERN",
-                    pattern=m.group(1).strip(),
-                    description=f"Constraint: no {m.group(1).strip()}",
-                ))
+        # Multi-term anti_patterns and "no X" constraints are NOT returned here.
+        # They are enforced only for top-N retrieved decisions (multi-term)
+        # or produce WARN severity (constraints), so they're not "deterministic rules"
+        # in the same sense as typed FORBID_LITERAL rules.
         
         return proposed
     

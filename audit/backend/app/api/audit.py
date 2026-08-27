@@ -5,7 +5,6 @@ import tempfile
 import os
 import io
 import re
-import aiofiles
 
 from app.models.audit import AuditResult
 from app.services.audit_service import audit_service
