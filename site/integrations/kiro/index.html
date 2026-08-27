@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mneme + Kiro — PreToolUse Hook Integration &amp; Architectural Enforcement</title>
+    <meta name="description" content="Integrate Mneme HQ architectural decision governance into Kiro via PreToolUse hooks. Enforce structural invariants before writes without rewriting agent workflows.">
+    <link rel="stylesheet" href="../../assets/css/base.css">
+    <link rel="stylesheet" href="../../assets/css/integration-system-v2.css">
+    <meta property="og:title" content="Mneme + Kiro — Architectural Enforcement">
+    <meta property="og:description" content="PreToolUse hook integration for Kiro. Prevent architectural drift before writes occur.">
+    <meta property="og:image" content="https://mnemehq.com/integrations/kiro/og.png">
+    <meta property="og:type" content="article">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo">Mneme HQ</a>
+            <nav class="nav-links">
+                <a href="/integrations/">Integrations</a>
+                <a href="/docs/">Docs</a>
+                <a href="/standards/">Standards</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="integration-main">
+        <div class="breadcrumb">
+            <a href="/integrations/">Integrations</a> &rarr; <span>Kiro</span>
+        </div>
+
+        <h1>Mneme + Kiro</h1>
+        <p class="subtitle">PreToolUse Hook Integration &amp; Architectural Governance</p>
+
+        <section class="integration-content">
+            <h2>Overview</h2>
+            <p>Kiro executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ as a <code>PreToolUse</code> hook handler, you can ensure that every write operation emitted by Kiro is evaluated against your project's authoritative decision memory before the file system is modified.</p>
+
+            <div class="callout-box warning">
+                <strong>Enforcement Scope Boundary:</strong> Kiro currently implements <code>PreToolUse</code> prevention only. Session baseline capture (<code>SessionStart</code>) and post-session delta auditing (<code>Stop</code>) are deferred in this integration tier.
+            </div>
+
+            <h2>Hook Configuration</h2>
+            <p>Configure the hook inside your Kiro settings or project configuration file using the standard schema:</p>
+            <pre><code>{
+  "version": "v1",
+  "hooks": [
+    {
+      "trigger": "PreToolUse",
+      "matcher": "^(fs_write|fsWrite|write|fs_append)$",
+      "command": "mneme-kiro-hook",
+      "timeout": 30
+    }
+  ]
+}</code></pre>
+
+            <h2>Behavior &amp; Exit Codes</h2>
+            <p>The hook evaluates the proposed payload against compiled constraints and communicates via exit codes:</p>
+            <ul>
+                <li><strong>Strict Mode (Exit 2):</strong> Emits violations to stderr and blocks the mutation immediately.</li>
+                <li><strong>Warn Mode (Exit 0):</strong> Emits a non-blocking warning to stdout and permits the mutation.</li>
+                <li><strong>Operational Failure (Exit 0):</strong> Emits a visible notice if the decision corpus cannot be read.</li>
+            </ul>
+
+            <h2>Known Limitations</h2>
+            <ul>
+                <li><strong>CLI v2 Behavior:</strong> CLI v2 execution loops ignore blocking exit codes and write anyway; strict enforcement is unsupported on CLI v2.</li>
+                <li><strong>MCP Namespaced Tools:</strong> Kiro's namespaced tool format (<code>@server/tool</code>) is not natively mapped by the current adapter tier.</li>
+                <li><strong>IDE 1.x Support:</strong> IDE-level integration surfaces are pending live validation and are not currently claimed.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <p>&copy; Mneme HQ. Open source under MIT.</p>
+        </div>
+    </footer>
+</body>
+</html>
