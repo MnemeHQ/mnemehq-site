@@ -59,7 +59,7 @@
           {
             "@type": "Question",
             "name": "Is the terminal output real?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision record and both input files are included in the Mneme repository. The six-beat transcript condenses the two real mneme check runs into one readable sequence."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision record and both input files are included in the Mneme repository. The four-beat transcript condenses the two real mneme check runs into one readable sequence."}
           },
           {
             "@type": "Question",
@@ -219,7 +219,7 @@
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
       <h1>An agent creates a second source of truth. Mneme <em>blocks the migration</em>.</h1>
-      <p class="lede">This project keeps state in human-editable JSON. The agent proposes SQLAlchemy, PostgreSQL, and Alembic anyway&mdash;a storage migration with new credentials, operations, and a second place to trust. Mneme stops it before code is written, then checks a correction that stays inside the existing store.</p>
+      <p class="lede">This project keeps state in human-editable JSON. The supplied task proposes SQLAlchemy, PostgreSQL, and Alembic anyway&mdash;a storage migration with new credentials, operations, and a second place to trust. Mneme rejects that task, then checks a correction that stays inside the existing store.</p>
       <p class="byline">
         By <a href="/founder/">Theo Valmis</a>
         <span class="sep">&middot;</span>
@@ -235,15 +235,15 @@
 
       <section class="demo-section" aria-labelledby="live-demo-title">
         <span class="section-kicker">Live enforcement</span>
-        <h2 id="live-demo-title">One decision. One blocked plan. One safe retry.</h2>
-        <p class="section-intro">This is a product boundary, not a style preference. Both plans go through the same recorded decision.</p>
+        <h2 id="live-demo-title">One decision. One blocked change. One safe retry.</h2>
+        <p class="section-intro">This is a product rule, not a style preference. Both task descriptions go through the same check.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
           <p><strong>mneme_storage_json &middot; Use JSON storage only.</strong> Keep the project local-first and human-editable. No external database, ORM, or migration layer in v1.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-step enforcement transcript">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-step enforcement transcript">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">mneme check &middot; storage policy trace</span>
@@ -251,46 +251,20 @@
           <ol class="enforcement-steps">
             <li class="enforcement-step" data-demo-step>
               <div class="enforcement-stage">01 <strong>Decision</strong></div>
-              <div class="enforcement-copy">
-                <p>The project records JSON as a deliberate storage boundary, not a temporary default.</p>
-                <code class="trace-code">storage: JSON <span class="trace-muted">&middot;</span> external database: denied</code>
-              </div>
+              <div class="enforcement-copy"><p>The project records JSON as the approved storage boundary.</p><code class="trace-code">storage: JSON <span class="trace-muted">&middot;</span> no ORM <span class="trace-muted">&middot;</span> no migrations</code></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy">
-                <p>The relevant decision is selected before the agent executes the storage refactor.</p>
-                <code class="trace-code"><span class="trace-muted">mneme_storage_json:</span> no ORM <span class="trace-muted">&middot;</span> no migration layer</code>
-              </div>
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>The agent proposes replacing the store with a database stack.</p><code class="trace-code trace-deny">Use SQLAlchemy + PostgreSQL + Alembic</code></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy">
-                <p>The proposed task replaces the approved store with a new database stack.</p>
-                <code class="trace-code trace-deny">Use SQLAlchemy + PostgreSQL + Alembic</code>
-              </div>
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny</strong></div>
-              <div class="enforcement-copy">
-                <p>The pre-flight check matches two explicit anti-patterns and exits non-zero.</p>
-                <code class="trace-code"><span class="trace-deny">mneme_storage_json</span> &middot; add sqlalchemy &middot; add migration layer &middot; exit 2</code>
-              </div>
+              <div class="enforcement-stage">03 <strong>Mneme</strong></div>
+              <div class="enforcement-copy"><p>The check rejects the violating task and returns the governing decision.</p><code class="trace-code trace-deny">DENY [mneme_storage_json] <span class="trace-muted">&middot;</span> exit 2</code></div>
               <span class="verdict-token deny">DENY</span>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy">
-                <p>The task is narrowed to add capability inside the existing storage boundary.</p>
-                <code class="trace-code trace-pass">Add expires_at &middot; keep JSON &middot; no new dependencies</code>
-              </div>
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy">
-                <p>The same deterministic check runs clean on the corrected task.</p>
-                <code class="trace-code"><span class="trace-pass">Result: PASS</span> &middot; exit 0</code>
-              </div>
+              <div class="enforcement-stage">04 <strong>Safe retry</strong></div>
+              <div class="enforcement-copy"><p>The corrected task stays inside JSON and passes the same check.</p><code class="trace-code trace-pass">Add expires_at <span class="trace-muted">&middot;</span> keep JSON <span class="trace-muted">&middot;</span> Result: PASS</code></div>
               <span class="verdict-token pass">PASS</span>
             </li>
           </ol>
@@ -323,8 +297,8 @@ mneme check --memory examples/project_memory.json \
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>The boundary is explicit.</strong><p>The decision names JSON as the approved store and ORM, SQLAlchemy, and migrations as anti-patterns.</p></div>
-          <div class="demo-explanation-item"><strong>One source of truth remains.</strong><p>The agent cannot create a parallel database, migration history, and credential path that later work would treat as established architecture.</p></div>
+          <div class="demo-explanation-item"><strong>The rule is explicit.</strong><p>JSON is the approved store; an ORM, SQLAlchemy, and migrations are outside the boundary.</p></div>
+          <div class="demo-explanation-item"><strong>One source of truth remains.</strong><p>The agent cannot introduce a second database, migration history, and credential path for later work to inherit.</p></div>
           <div class="demo-explanation-item"><strong>The retry is re-verified.</strong><p>The corrected task is not trusted automatically; it passes through the same decision and returns clean.</p></div>
         </div>
       </section>
@@ -364,7 +338,7 @@ mneme check --memory examples/project_memory.json \
         <a class="next-card" href="/demo/architectural-drift/">
           <div class="nc-label">Flagship 02</div>
           <h4>Preventing architectural drift from AI coding agents</h4>
-          <p>The failure mode a governance layer exists to prevent. A six-step timeline of compounding divergence without enforcement.</p>
+          <p>The failure mode a governance layer exists to prevent, shown as a concise decision-to-retry sequence.</p>
           <span class="nc-arrow">Walk the timeline &rarr;</span>
         </a>
         <a class="next-card" href="/demo/multi-agent-governance/">

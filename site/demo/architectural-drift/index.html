@@ -103,23 +103,23 @@
         <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Runnable locally</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
-      <h1>An agent makes governance retrieval probabilistic. Mneme <em>blocks the fork</em>.</h1>
-      <p class="lede">This project finds governing decisions with deterministic keyword rules. The agent proposes sentence-transformers and a vector database instead. That means two agents can get different ADRs for the same task&mdash;and write conflicting code. Mneme blocks the change, then accepts an improvement that keeps retrieval predictable.</p>
+      <h1>The rulebook starts guessing. Mneme <em>blocks the fork</em>.</h1>
+      <p class="lede">This project uses predictable keyword matching to find the rules that apply. The agent tries to add embeddings and a vector database instead. Mneme blocks the second rulebook, then allows an improvement that keeps results predictable.</p>
       <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-15">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
       <section class="demo-section" aria-labelledby="live-demo-title">
         <span class="section-kicker">Live enforcement</span>
-        <h2 id="live-demo-title">Stop the fork before it becomes the default.</h2>
-        <p class="section-intro">The first retrieval path that lands becomes tomorrow's precedent. This trace keeps the rulebook stable.</p>
+        <h2 id="live-demo-title">Keep every agent on the same rules.</h2>
+        <p class="section-intro">The first search path that lands becomes the next agent's starting point. This check keeps the rulebook stable.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
           <p><strong>mneme_retrieval_deterministic &middot; Retrieval must be deterministic.</strong> Keep keyword scoring and explicit weights. No embeddings, learned weights, sentence-transformers, or vector database in v1.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-step architectural drift enforcement transcript">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-step architectural drift enforcement transcript">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">mneme check &middot; retrieval architecture trace</span>
@@ -130,25 +130,17 @@
               <div class="enforcement-copy"><p>The team chose a retrieval path that is reproducible, lightweight, and easy to debug.</p><code class="trace-code">retrieval: keyword scoring <span class="trace-muted">&middot;</span> result order: deterministic</code></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>Mneme selects the applicable decision before the agent starts the retrieval work.</p><code class="trace-code"><span class="trace-muted">mneme_retrieval_deterministic:</span> extend the current retriever</code></div>
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>The agent proposes embeddings and a vector database.</p><code class="trace-code trace-deny">Add sentence-transformers + a vector database</code></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>The proposed task creates a second retrieval architecture and adds a heavy dependency.</p><code class="trace-code trace-deny">Add sentence-transformers + a vector database</code></div>
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny</strong></div>
-              <div class="enforcement-copy"><p>The pre-flight check matches both anti-patterns and stops the task.</p><code class="trace-code"><span class="trace-deny">mneme_retrieval_deterministic</span> &middot; add sentence-transformers &middot; add vector database &middot; exit 2</code></div>
+              <div class="enforcement-stage">03 <strong>Mneme</strong></div>
+              <div class="enforcement-copy"><p>The check blocks the second retrieval architecture.</p><code class="trace-code"><span class="trace-deny">DENY [mneme_retrieval_deterministic]</span> &middot; exit 2</code></div>
               <span class="verdict-token deny">DENY</span>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>The task keeps the architecture and narrows the improvement to explicit scoring behavior.</p><code class="trace-code trace-pass">Add deterministic tag weights + regression tests</code></div>
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>The corrected task contains no forbidden retrieval path or dependency.</p><code class="trace-code"><span class="trace-pass">Result: PASS</span> &middot; exit 0</code></div>
+              <div class="enforcement-stage">04 <strong>Safe retry</strong></div>
+              <div class="enforcement-copy"><p>The agent keeps keyword scoring and adds deterministic tag weights.</p><code class="trace-code trace-pass">Add tag weights + regression tests <span class="trace-muted">&middot;</span> Result: PASS</code></div>
               <span class="verdict-token pass">PASS</span>
             </li>
           </ol>
@@ -182,15 +174,15 @@ mneme check --memory examples/project_memory.json \
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>Agents keep one decision path.</strong><p>No vector index can return different governing ADRs for equivalent tasks or silently displace explicit precedence.</p></div>
-          <div class="demo-explanation-item"><strong>The decision stays attached.</strong><p>The denial names the recorded architecture decision instead of returning a generic policy failure.</p></div>
-          <div class="demo-explanation-item"><strong>The retry preserves intent.</strong><p>The agent can still improve retrieval, but inside the deterministic boundary the team chose.</p></div>
+          <div class="demo-explanation-item"><strong>Every agent gets the same answer.</strong><p>Keyword matching returns the same relevant rules for the same task.</p></div>
+          <div class="demo-explanation-item"><strong>The block names the rule.</strong><p>Mneme points to the architecture decision instead of returning a vague failure.</p></div>
+          <div class="demo-explanation-item"><strong>The work can still move forward.</strong><p>The agent improves retrieval without replacing the system the team chose.</p></div>
         </div>
       </section>
 
       <section class="demo-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Common questions</h2>
-        <details><summary>What counts as architectural drift here?</summary><p>The project deliberately chose deterministic keyword retrieval. Adding sentence-transformers and a vector database creates a parallel retrieval architecture that contradicts that decision.</p></details>
+        <details><summary>What counts as architectural drift here?</summary><p>The project chose predictable keyword matching. Adding embeddings and a vector database creates a second, conflicting way to find the rules.</p></details>
         <details><summary>Why block the first change?</summary><p>Later work builds on whatever lands first. Blocking the initial divergence prevents new dependencies, data paths, tests, and operating assumptions from becoming the next agent's baseline.</p></details>
         <details><summary>Is the example reproducible without an LLM?</summary><p>Yes. The decision ships in <code>examples/project_memory.json</code>, and the commands above exercise both outcomes through <code>mneme check</code>.</p></details>
       </section>
