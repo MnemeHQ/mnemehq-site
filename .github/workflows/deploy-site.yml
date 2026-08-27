@@ -58,3 +58,17 @@ jobs:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ZONE_ID: ${{ secrets.CF_ZONE_ID }}
         run: python scripts/deploy_site.py
+
+      - name: Record deployment provenance
+        if: success()
+        shell: bash
+        run: |
+          DEPLOYED_SHA="$(git rev-parse site-deployed 2>/dev/null || true)"
+          {
+            echo "## Deployment provenance"
+            echo "- Deploy actor: github-actions"
+            echo "- Trigger: ${GITHUB_EVENT_NAME}"
+            echo "- Workflow initiator: @${GITHUB_ACTOR}"
+            echo "- Workflow SHA: ${GITHUB_SHA}"
+            echo "- site-deployed SHA: ${DEPLOYED_SHA:-unavailable}"
+          } >> "$GITHUB_STEP_SUMMARY"
