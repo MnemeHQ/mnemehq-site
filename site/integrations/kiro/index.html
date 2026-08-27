@@ -104,7 +104,7 @@
       <span class="eyebrow-meta">4 min read &nbsp;·&nbsp; August 2026</span>
     </div>
     <h1>Mneme + Kiro</h1>
-    <p class="article-lede">PreToolUse Hook Integration &amp; Architectural Governance. Kiro executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ as a PreToolUse hook handler, you ensure every write operation is evaluated against your project's authoritative decision memory before the file system is modified.</p>
+    <p class="article-lede">PreToolUse Hook Integration &amp; Architectural Governance. Kiro CLI 3.0 (v3 engine) executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ via the shipped installer, you ensure native <code>write</code>, <code>fs_write</code>, <code>fsWrite</code>, and <code>fs_append</code> mutations are evaluated against your project's authoritative decision memory before the file system is modified.</p>
     <p class="byline" style="font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem;">
       By <a href="/founder/" style="color:var(--muted); text-decoration:none;">Theo Valmis</a>
       <span style="color: var(--border2); margin: 0 0.5rem;">&middot;</span>
@@ -114,21 +114,31 @@
 
   <div class="article-body">
     <h2>Overview</h2>
-    <p>Kiro executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ as a <code>PreToolUse</code> hook handler, you can ensure that every write operation emitted by Kiro is evaluated against your project's authoritative decision memory before the file system is modified.</p>
+    <p>Kiro CLI 3.0 (v3 engine) executes file mutations through tool calls that can be intercepted via client-side hook architectures. By configuring Mneme HQ via the shipped installer, you can ensure that native <code>write</code>, <code>fs_write</code>, <code>fsWrite</code>, and <code>fs_append</code> operations emitted by Kiro are evaluated against your project's authoritative decision memory before the file system is modified.</p>
 
     <div class="callout" style="border-left: 2px solid var(--accent); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--muted);">
-      <p style="margin:0;"><strong>Enforcement Scope Boundary:</strong> Kiro currently implements <code>PreToolUse</code> prevention only. Session baseline capture (<code>SessionStart</code>) and post-session delta auditing (<code>Stop</code>) are deferred in this integration tier.</p>
+      <p style="margin:0;"><strong>Enforcement Scope Boundary:</strong> Kiro currently implements <code>PreToolUse</code> prevention only for native v3 engine mutations. Session baseline capture (<code>SessionStart</code>) and post-session delta auditing (<code>Stop</code>) are deferred. Furthermore, shell redirection and script-generated writes are not pre-execution governed because Mneme does not parse shell commands.</p>
     </div>
 
+    <h2>Installation</h2>
+    <p>Install the Mneme runtime and run the shipped Kiro installer to automatically configure the pre-execution hook in your repository:</p>
+    <pre tabindex="0"><code>pip install mneme-hq
+python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
+
     <h2>Hook Configuration</h2>
-    <p>Configure the hook inside your Kiro settings or project configuration file using the standard schema:</p>
+    <p>If configuring manually, the shipped Kiro hook schema requires the structured action and command definition:</p>
     <pre tabindex="0"><code>{
   "version": "v1",
   "hooks": [
     {
+      "name": "mneme-guard",
       "trigger": "PreToolUse",
       "matcher": "^(fs_write|fsWrite|write|fs_append)$",
-      "command": "mneme-kiro-hook",
+      "enabled": true,
+      "action": {
+        "type": "command",
+        "command": "mneme-kiro-hook"
+      },
       "timeout": 30
     }
   ]

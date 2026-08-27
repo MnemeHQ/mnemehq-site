@@ -71,6 +71,7 @@ TEMPLATE_MAP = {
     "og-integration-copilot.html": "integrations/copilot/og.png",
     "og-integration-jetbrains.html": "integrations/jetbrains/og.png",
     "og-integration-warp.html": "integrations/warp/og.png",
+    "og-integration-kiro.html": "integrations/kiro/og.png",
     "og-ci-governance.html": "use-cases/ci-governance-for-ai-generated-code/og.png",
 
     # Insights — new
