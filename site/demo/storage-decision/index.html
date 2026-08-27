@@ -6,7 +6,7 @@
   <link rel="apple-touch-icon" href="/favicon-v2.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guiding an AI agent to preserve the approved storage layer | Mneme HQ</title>
-  <meta name="description" content="A guided-first-pass Mneme example: ADR-001 keeps an AI agent inside the approved JSON store, and the resulting task passes the deterministic check.">
+  <meta name="description" content="A deterministic Mneme check verifies that a storage task stays inside the approved JSON architecture without claiming to have caused the model output.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0c0c0d">
   <link rel="canonical" href="https://mnemehq.com/demo/storage-decision/">
@@ -54,8 +54,8 @@
     },
     {
       "@type": "Article",
-      "headline": "Guiding an AI agent to preserve the approved storage layer",
-      "description": "A guided-first-pass Mneme example: ADR-001 keeps an AI agent inside the approved JSON store, and the resulting task passes the deterministic check.",
+      "headline": "Verifying a compliant storage task",
+      "description": "A deterministic Mneme check verifies that a storage task stays inside the approved JSON architecture without claiming to have caused the model output.",
       "url": "https://mnemehq.com/demo/storage-decision/",
       "datePublished": "2026-05-09",
       "dateModified": "2026-08-25",
@@ -140,23 +140,23 @@
         <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-pass">PASS</span></span>
       </div>
-      <h1>The agent keeps the approved store <em>on the first attempt</em>.</h1>
-      <p class="lede">This is the guided-first-pass variant. The project runs on edge hardware and keeps state in human-editable JSON. Mneme supplies ADR-001 before generation, so the agent extends the module already there instead of reaching for a database and migration stack.</p>
+      <h1>The compliant storage task <em>stays inside the boundary</em>.</h1>
+      <p class="lede">This supporting example verifies a clean storage task against the project's JSON-only decisions. It proves the input passes; it does not claim that Mneme caused a model to choose it.</p>
       <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-09">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
       <section class="demo-section" aria-labelledby="live-demo-title">
-        <span class="section-kicker">Guided enforcement</span>
-        <h2 id="live-demo-title">The risky architecture never gets written.</h2>
-        <p class="section-intro">Guidance changes the first governed output. The task stays inside the approved boundary and passes the check.</p>
+        <span class="section-kicker">Compliant check</span>
+        <h2 id="live-demo-title">A clean input gets a clean result.</h2>
+        <p class="section-intro">This example shows the PASS path only. The flagship demo shows a separate deny-and-retry sequence.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
           <p><strong>ADR-001 &middot; JSON storage only.</strong> No external database on edge hardware. ADR-003 forbids an ORM in v1; ADR-005 requires extending the current storage module before rebuilding it.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage guided storage decision trace">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-stage storage decision trace">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">mneme guidance &middot; storage decision trace</span>
@@ -168,34 +168,24 @@
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>Mneme selects the three applicable decisions before the agent plans the refactor.</p><code class="trace-code">ADR-001 + ADR-003 + ADR-005 <span class="trace-muted">&middot;</span> extend the current store</code><span class="stage-availability">Demonstrated</span></div>
+              <div class="enforcement-stage">02 <strong>Input</strong></div>
+              <div class="enforcement-copy"><p>The bundled task extends the current JSON store and adds no database.</p><code class="trace-code">extend json_store.py <span class="trace-muted">&middot;</span> no ORM <span class="trace-muted">&middot;</span> no migration</code><span class="stage-availability">Bundled fixture</span></div>
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>Without project guidance, the training-data prior is a database migration.</p><code class="trace-code trace-deny">Counterfactual: PostgreSQL + Redis + ORM + migrations</code><span class="stage-availability">Illustrative comparison</span></div>
+              <div class="enforcement-stage">03 <strong>Check</strong></div>
+              <div class="enforcement-copy"><p>Mneme checks the task against the recorded storage decisions.</p><code class="trace-code">mneme check <span class="trace-muted">&middot;</span> storage_violation_count=0</code><span class="stage-availability">Current Mneme</span></div>
 
             </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
-              <div class="enforcement-copy"><p>No violating governed write is evaluated in this walkthrough; guidance prevents it earlier.</p><code class="trace-code">Not present in this scenario</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>No retry is required because the first governed plan already respects the decision.</p><code class="trace-code">Not required</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
+              <div class="enforcement-stage">04 <strong>Result</strong></div>
               <div class="enforcement-copy"><p>The agent extends the JSON module and introduces no external persistence dependency.</p><code class="trace-code trace-pass">Result: PASS <span class="trace-muted">&middot;</span> storage_violation_count=0</code></div>
               <span class="verdict-token pass">PASS</span>
             </li>
           </ol>
           <div class="terminal-controls">
             <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
-            <span class="terminal-note">Guided first pass &middot; absent stages marked explicitly</span>
+            <span class="terminal-note">Compliant fixture &middot; no model causality claimed</span>
           </div>
         </div>
       </section>
@@ -219,15 +209,15 @@ mneme check --memory examples/project_memory.json &#92;
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>Guidance changes the first plan.</strong><p>The model does not need to guess whether JSON is temporary; the decision is explicit before generation.</p></div>
-          <div class="demo-explanation-item"><strong>PASS is the only demonstrated verdict.</strong><p>The counterfactual migration explains the risk, but this page does not pretend a DENY happened.</p></div>
+          <div class="demo-explanation-item"><strong>PASS is the only result shown.</strong><p>The bundled task contains no forbidden database, ORM, or migration pattern.</p></div>
+          <div class="demo-explanation-item"><strong>This checks the task, not the model.</strong><p>It verifies a supplied task; it does not measure whether Mneme changed a model's choice.</p></div>
           <div class="demo-explanation-item"><strong>The operational constraint survives.</strong><p>No database service, credential path, migration history, or second source of truth is introduced.</p></div>
         </div>
       </section>
 
       <section class="demo-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Common questions</h2>
-        <details><summary>Why is there no DENY stage?</summary><p>Because this example demonstrates pre-generation guidance. The governed agent proposes a compliant JSON extension on its first attempt, so there is no violating write to deny.</p></details>
+        <details><summary>Why is there no DENY stage?</summary><p>This page checks only the bundled clean task. It does not include a violating task to block.</p></details>
         <details><summary>What does the PASS prove?</summary><p>It proves that the resulting task contains no forbidden database, ORM, or migration pattern under the recorded storage decisions.</p></details>
         <details><summary>Can the deny-to-pass sequence be reproduced?</summary><p>Yes. The <a href="/demo/governed-python-agent/">governed Python agent flagship</a> runs both the violating and corrected fixtures through the same decision.</p></details>
       </section>

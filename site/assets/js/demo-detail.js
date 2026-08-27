@@ -28,9 +28,9 @@
     steps.forEach(function (step, index) {
       timers.push(window.setTimeout(function () {
         step.classList.add('is-visible');
-      }, 300 + (index * 600)));
+      }, 500 + (index * 900)));
     });
-    timers.push(window.setTimeout(showAll, 300 + (steps.length * 600)));
+    timers.push(window.setTimeout(showAll, 500 + (steps.length * 900)));
   }
 
   if (replay) replay.addEventListener('click', play);

@@ -17,7 +17,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Multi-agent architectural governance: the target enforcement contract" />
-  <meta property="og:description" content="Current capability and future infrastructure are separated in one six-stage governance contract." />
+  <meta property="og:description" content="Current capability and future infrastructure are separated in one concise governance contract." />
   <meta property="og:url" content="https://mnemehq.com/demo/multi-agent-governance/" />
   <meta property="og:image" content="https://mnemehq.com/demo/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -100,26 +100,26 @@
     <header>
       <div class="demo-meta" aria-label="Demo classification">
         <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Infrastructure</span></span>
-        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value forward-looking">Forward-looking</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value forward-looking">Target contract</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Target outcome</span><span class="demo-meta-value outcome-deny">Deny &rarr; pass</span></span>
       </div>
-      <h1>Many agents need one rulebook. Mneme is <em>building toward it</em>.</h1>
-      <p class="lede">Today, Mneme governs explicit decisions inside one local repository. Multi-agent work needs more: every actor gets the same policy, meets the same gate, and leaves a shared trace. This page maps that target without pretending it is a shipped proof.</p>
+      <h1>Many agents need the same rules. This is <em>what comes next</em>.</h1>
+      <p class="lede">Today, Mneme checks one local repository. For many agents, every agent needs the exact same rule, checked the same way, with a clear record of what happened. This page shows that target without calling it a shipped demo.</p>
       <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-15">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
       <section class="demo-section" aria-labelledby="target-demo-title">
-        <span class="section-kicker">Target enforcement contract</span>
-        <h2 id="target-demo-title">The rule has to survive every agent and every retry.</h2>
-        <p class="section-intro">What works today is marked clearly. The distributed pieces are shown as the work still ahead.</p>
+        <span class="section-kicker">What we are building next</span>
+        <h2 id="target-demo-title">Keep every agent on the same rules.</h2>
+        <p class="section-intro">What works today is marked clearly. The shared pieces are the work still ahead.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Invariant at stake</span>
           <p><strong>Retrieval remains deterministic.</strong> No agent may introduce sentence-transformers or a vector database unless the recorded decision is explicitly amended.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage multi-agent target enforcement contract">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-stage multi-agent target enforcement contract">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">target contract &middot; not live execution</span>
@@ -130,32 +130,23 @@
               <div class="enforcement-copy"><p>A version-controlled repository records the deterministic retrieval boundary.</p><code class="trace-code">mneme_retrieval_deterministic <span class="trace-muted">&middot;</span> decision corpus v17</code><span class="stage-availability">Current</span></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>One local agent can deterministically retrieve the applicable decision before a task runs.</p><code class="trace-code">actor A <span class="trace-muted">&middot;</span> local repository <span class="trace-muted">&middot;</span> decision v17</code><span class="stage-availability">Current</span></div>
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>Another agent proposes a retrieval rewrite that conflicts with the rule.</p><code class="trace-code trace-deny">actor B <span class="trace-muted">&middot;</span> add vector database</code><span class="stage-availability">Illustrative input</span></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>A second actor proposes a retrieval rewrite that contradicts the shared invariant.</p><code class="trace-code trace-deny">actor B: add sentence-transformers + vector database</code><span class="stage-availability">Illustrative input</span></div>
-            </li>
-            <li class="enforcement-step is-unavailable" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny</strong></div>
-              <div class="enforcement-copy"><p>A shared boundary would have to prove that Actor B was checked against the same decision version.</p><code class="trace-code">Unavailable: shared policy distribution + actor/version identity</code><span class="stage-availability">Requires Layer 2</span></div>
+              <div class="enforcement-stage">03 <strong>Shared gate</strong></div>
+              <div class="enforcement-copy"><p>Every agent would need the same policy version at the same enforcement boundary.</p><code class="trace-code">TARGET <span class="trace-muted">&middot;</span> shared policy + actor identity</code><span class="stage-availability">Requires Layer 2</span></div>
               <span class="verdict-token target">TARGET</span>
             </li>
             <li class="enforcement-step is-unavailable" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>The actor would retry inside the accepted architecture without weakening the invariant.</p><code class="trace-code">Unavailable: governed cross-agent retry trace</code><span class="stage-availability">Requires Layer 2</span></div>
-              <span class="verdict-token target">TARGET</span>
-            </li>
-            <li class="enforcement-step is-unavailable" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>The system would prove that the corrected retry passed against decision corpus v17.</p><code class="trace-code">Unavailable: persistent convergence proof across actors</code><span class="stage-availability">Requires Layer 2</span></div>
+              <div class="enforcement-stage">04 <strong>Shared trace</strong></div>
+              <div class="enforcement-copy"><p>A blocked change and its corrected retry must remain connected across actors.</p><code class="trace-code">TARGET <span class="trace-muted">&middot;</span> persistent cross-agent evidence</code><span class="stage-availability">Requires Layer 2</span></div>
               <span class="verdict-token target">TARGET</span>
             </li>
           </ol>
           <div class="terminal-controls">
             <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
-            <span class="terminal-note">Architecture contract &middot; unavailable stages marked explicitly</span>
+            <span class="terminal-note">Architecture contract &middot; target stages marked explicitly</span>
           </div>
         </div>
       </section>
@@ -178,17 +169,17 @@ TARGET    persistent deny &rarr; correction &rarr; allow trace</code></pre>
       <section class="demo-section" aria-labelledby="requires-title">
         <h2 id="requires-title">What a real multi-agent proof must add</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>Policy identity.</strong><p>Every verdict must name the exact decision corpus version each actor received.</p></div>
-          <div class="demo-explanation-item"><strong>One enforcement seam.</strong><p>Parallel actors cannot bypass governance by entering through different tools or sessions.</p></div>
-          <div class="demo-explanation-item"><strong>Convergence evidence.</strong><p>The trace must connect the denied attempt, corrected retry, and allowed result across actor boundaries.</p></div>
+          <div class="demo-explanation-item"><strong>Every agent sees the same rule version.</strong><p>Each result must say exactly which set of project rules the agent received.</p></div>
+          <div class="demo-explanation-item"><strong>Every agent meets the same check.</strong><p>Parallel agents cannot skip the rules by using a different tool or session.</p></div>
+          <div class="demo-explanation-item"><strong>The retry stays connected to the block.</strong><p>The record must connect the denied attempt, the correction, and the allowed result across agents.</p></div>
         </div>
       </section>
 
       <section class="demo-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Common questions</h2>
-        <details><summary>Is this a runnable multi-agent demo?</summary><p>No. It is a forward-looking infrastructure contract. Stages that require shared policy distribution or persistent cross-agent traces are marked as target capabilities.</p></details>
-        <details><summary>What part works today?</summary><p>A repository can store explicit architectural decisions, retrieve relevant constraints deterministically, and block a violating task before one local agent executes it.</p></details>
-        <details><summary>What would make the claim demonstrable?</summary><p>Versioned policy distribution, actor and decision-version identity, a shared enforcement boundary, and a persistent trace connecting a denial to a compliant retry.</p></details>
+        <details><summary>Is this a runnable multi-agent demo?</summary><p>No. It is a target contract. The stages that need shared rules and persistent cross-agent records are marked as work still to do.</p></details>
+        <details><summary>What part works today?</summary><p>One repository can store clear architecture rules, find the relevant ones, and block a violating task before a local agent runs it.</p></details>
+        <details><summary>What would make this real?</summary><p>All agents need the same rule version, the same check point, and one record that connects a block to its compliant retry.</p></details>
       </section>
 
       <section class="install-cta" aria-labelledby="install-title">

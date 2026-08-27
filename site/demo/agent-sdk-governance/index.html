@@ -5,8 +5,8 @@
   <link rel="icon" type="image/png" href="/favicon-v2.png">
   <link rel="apple-touch-icon" href="/favicon-v2.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scripted Agent SDK governance with Mneme | Mneme HQ</title>
-  <meta name="description" content="A forward-looking Claude Agent SDK integration demo using the real Mneme check pipeline and a scripted adapter to prove deny, correction, and pass behavior.">
+  <title>Claude Agent SDK governance with Mneme | Mneme HQ</title>
+  <meta name="description" content="A runnable Claude Agent SDK integration demo: Mneme injects the project decision, blocks a violating Write, and allows the model's compliant retry.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0c0c0d">
   <link rel="canonical" href="https://mnemehq.com/demo/agent-sdk-governance/">
@@ -17,13 +17,13 @@
   <link rel="stylesheet" href="/assets/css/demos.css?v=20260826d">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Mneme HQ">
-  <meta property="og:title" content="Scripted Agent SDK governance with Mneme">
-  <meta property="og:description" content="The Mneme checks are real; the agent diff producer and SDK adapter are scripted. The page separates demonstrated governance from target integration wiring.">
+  <meta property="og:title" content="Claude Agent SDK governance with Mneme">
+  <meta property="og:description" content="Mneme injects the project decision, blocks a violating Write, and allows the model's compliant retry inside a Claude Agent SDK workflow.">
   <meta property="og:url" content="https://mnemehq.com/demo/agent-sdk-governance/">
   <meta property="og:image" content="https://mnemehq.com/demo/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Scripted Agent SDK governance with Mneme">
-  <meta name="twitter:description" content="The Mneme checks are real; the agent diff producer and SDK adapter are scripted. The page separates demonstrated governance from target integration wiring.">
+  <meta name="twitter:title" content="Claude Agent SDK governance with Mneme">
+  <meta name="twitter:description" content="Mneme injects the project decision, blocks a violating Write, and allows the model's compliant retry inside a Claude Agent SDK workflow.">
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
 {
@@ -54,8 +54,8 @@
     },
     {
       "@type": "Article",
-      "headline": "Scripted Agent SDK governance with Mneme",
-      "description": "A forward-looking Claude Agent SDK integration demo using the real Mneme check pipeline and a scripted adapter to prove deny, correction, and pass behavior.",
+      "headline": "Claude Agent SDK governance with Mneme",
+      "description": "A runnable Claude Agent SDK integration demo: Mneme injects the project decision, blocks a violating Write, and allows the model's compliant retry.",
       "url": "https://mnemehq.com/demo/agent-sdk-governance/",
       "datePublished": "2026-05-14",
       "dateModified": "2026-08-25",
@@ -82,26 +82,17 @@
         {
           "@type": "Question",
           "name": "Is this a live Claude Agent SDK integration?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. The Mneme checks are current, while the agent outputs and tool-dispatch adapter are scripted. Live SDK registration remains forward-looking."
-          }
+          "acceptedAnswer": {"@type": "Answer", "text": "Yes. The repository example includes deterministic mode and a live mode using the native MnemeAgentSdk adapter."}
         },
         {
           "@type": "Question",
-          "name": "What can I reproduce now?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "The deterministic violating diff, blocking Mneme verdict, scripted correction, and passing rerun against the same corpus."
-          }
+          "name": "Which tools does Mneme gate?",
+          "acceptedAnswer": {"@type": "Answer", "text": "The shipped adapter checks Write, Edit, and MultiEdit before execution. Shell commands are not reconstructed reliably enough to claim as covered."}
         },
         {
           "@type": "Question",
-          "name": "Why keep this page in the demo system?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "It makes the integration contract concrete without calling unfinished SDK wiring a released feature."
-          }
+          "name": "What happens after a denial?",
+          "acceptedAnswer": {"@type": "Answer", "text": "In strict mode, the decision reason is returned to Claude so it can revise the proposal. The corrected SQLite write is checked again and allowed."}
         }
       ]
     }
@@ -136,109 +127,100 @@
   <main id="main-content" tabindex="-1" class="demo-detail">
     <header>
       <div class="demo-meta" aria-label="Demo classification">
-        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Integration demo</span></span>
-        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Native integration</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Runnable locally</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">DENY → PASS</span></span>
-        <span class="demo-meta-item"><span class="demo-meta-label">SDK binding</span><span class="demo-meta-value forward-looking">Forward-looking</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Modes</span><span class="demo-meta-value">Deterministic + live</span></span>
       </div>
-      <h1>An agent breaks two ADRs. The Mneme check <em>catches both</em>.</h1>
-      <p class="lede">The agent proposes Redis and direct service-layer storage access. A scripted adapter sends the bad and corrected diffs through the real Mneme check. The verdicts are real; wiring this adapter into Claude Agent SDK's live tool dispatcher is the next step.</p>
+      <h1>Claude proposes a violating write. Mneme <em>blocks it before disk</em>.</h1>
+      <p class="lede">A Claude Agent SDK app tries to add PostgreSQL to a project that uses SQLite. Mneme gives Claude that rule before work starts, blocks the bad <code>Write</code>, and lets it retry with SQLite.</p>
       <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-14">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
     <div class="body">
       <section class="demo-section" aria-labelledby="live-demo-title">
-        <span class="section-kicker">Forward-looking integration</span>
-        <h2 id="live-demo-title">Real checks. Scripted orchestration. Clear boundary.</h2>
-        <p class="section-intro">Each stage says whether it comes from the current Mneme check or the scripted Agent SDK adapter.</p>
+        <span class="section-kicker">Native integration</span>
+        <h2 id="live-demo-title">One hook. One blocked write. One compliant retry.</h2>
+        <p class="section-intro">Before Claude starts, Mneme shares the relevant rule. Before a file changes, it checks the proposed <code>Write</code>, <code>Edit</code>, or <code>MultiEdit</code>.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
-          <p><strong>ADR-001 + ADR-004.</strong> No external persistence dependency, and all storage access remains behind the repository interface.</p>
+          <p><strong>store_001.</strong> Use SQLite for local storage. A PostgreSQL dependency must not reach the project through a file write.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage scripted Agent SDK governance trace">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-stage Claude Agent SDK governance trace">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
-            <span class="enforcement-terminal-title">scripted adapter + mneme check &middot; tool-write trace</span>
+            <span class="enforcement-terminal-title">claude agent sdk + mneme &middot; pre-tool write trace</span>
           </div>
           <ol class="enforcement-steps">
             <li class="enforcement-step" data-demo-step>
               <div class="enforcement-stage">01 <strong>Decision</strong></div>
-              <div class="enforcement-copy"><p>The local corpus records both the storage rule and repository boundary.</p><code class="trace-code">ADR-001 + ADR-004 <span class="trace-muted">&middot;</span> project corpus</code><span class="stage-availability">Current Mneme</span></div>
-
+              <div class="enforcement-copy"><p>Mneme injects the project's storage decision before Claude starts.</p><code class="trace-code">store_001 <span class="trace-muted">&middot;</span> Use SQLite for local storage</code><span class="stage-availability">UserPromptSubmit</span></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>The scripted adapter retrieves both decisions before evaluating the proposed tool write.</p><code class="trace-code">check(diff, corpus) <span class="trace-muted">&middot;</span> applicable decisions: 2</code><span class="stage-availability">Current check + scripted adapter</span></div>
-
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>Claude proposes a file write that imports PostgreSQL.</p><code class="trace-code trace-deny">Write db.py <span class="trace-muted">&middot;</span> import psycopg2</code><span class="stage-availability">Claude Agent SDK</span></div>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>The scripted agent proposes Redis and calls it directly from the service layer.</p><code class="trace-code trace-deny">+ import redis <span class="trace-muted">&middot;</span> + UserService.redis.get(...)</code><span class="stage-availability">Scripted agent input</span></div>
-
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
-              <div class="enforcement-copy"><p>The real checker returns a blocking verdict; the scripted adapter represents the aborted tool call.</p><code class="trace-code">FAIL [ADR-001, ADR-004] <span class="trace-muted">&middot;</span> file write withheld</code><span class="stage-availability">Current check + scripted adapter</span></div>
+              <div class="enforcement-stage">03 <strong>Mneme</strong></div>
+              <div class="enforcement-copy"><p>The pre-tool hook blocks the write and returns the decision reason to Claude.</p><code class="trace-code trace-deny">DENY [store_001] <span class="trace-muted">&middot;</span> psycopg2 forbidden <span class="trace-muted">&middot;</span> write withheld</code><span class="stage-availability">PreToolUse + Mneme</span></div>
               <span class="verdict-token deny">DENY</span>
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>The scripted retry moves the cache behind <code>JsonUserRepository</code> and removes Redis.</p><code class="trace-code trace-pass">extend JsonUserRepository <span class="trace-muted">&middot;</span> external_deps_delta=0</code><span class="stage-availability">Scripted retry</span></div>
-
-            </li>
-            <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>The corrected diff passes the same real corpus check.</p><code class="trace-code trace-pass">Result: PASS <span class="trace-muted">&middot;</span> repository_contract_intact</code><span class="stage-availability">Current Mneme</span></div>
+              <div class="enforcement-stage">04 <strong>Retry</strong></div>
+              <div class="enforcement-copy"><p>Claude revises the file with SQLite and the same hook allows it.</p><code class="trace-code trace-pass">Write db.py <span class="trace-muted">&middot;</span> import sqlite3 <span class="trace-muted">&middot;</span> Result: PASS</code><span class="stage-availability">PreToolUse + Mneme</span></div>
               <span class="verdict-token pass">PASS</span>
             </li>
           </ol>
           <div class="terminal-controls">
-            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Reset trace</button>
-            <span class="terminal-note">Current checks &middot; scripted agent &middot; live SDK binding not claimed</span>
+            <button class="terminal-replay" type="button" id="terminal-replay">&larr; Replay trace</button>
+            <span class="terminal-note">Deterministic mode needs no API key &middot; live mode uses Claude Agent SDK</span>
           </div>
         </div>
       </section>
 
       <section class="demo-section" aria-labelledby="run-title">
         <h2 id="run-title">Run it yourself</h2>
-        <div class="demo-run forward-note">
-          <h3>Run the scripted integration proof</h3>
-          <p>The script drives the existing Mneme pipeline with deterministic agent outputs; no live model call is required.</p>
+        <div class="demo-run">
+          <h3>Run the deterministic proof or live session</h3>
+          <p>The example is bundled with the Mneme repository. Deterministic mode needs no API key; <code>--live</code> runs the real Claude Agent SDK loop.</p>
           <pre><code>git clone https://github.com/MnemeHQ/mneme
-cd mneme/examples/agent-sdk-governance
-python run.py</code></pre>
-          <p>The enforcement trace is real. Live SDK registration and tool-dispatch binding are the integration work still to come.</p>
+cd mneme/examples/claude-agent-sdk
+python run.py
+
+# Optional: run the live Claude Agent SDK workflow
+python run.py --live</code></pre>
+          <p>The browser transcript is a readable summary of this flow; the repository example is the executable proof.</p>
         </div>
       </section>
 
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>The enforcement primitive is real.</strong><p>Both diffs pass through the current decision corpus and checker, producing real structured outcomes.</p></div>
-          <div class="demo-explanation-item"><strong>The agent path is scripted.</strong><p>A deterministic diff producer and adapter stand in for live SDK orchestration so the page does not depend on an LLM.</p></div>
-          <div class="demo-explanation-item"><strong>The integration boundary stays honest.</strong><p>Live SDK registration remains forward-looking; the <a href="/demo/governed-python-agent/">governed Python proof</a> remains the reference for current executable behavior.</p></div>
+          <div class="demo-explanation-item"><strong>Claude starts with the right rule.</strong><p>Mneme adds the relevant project decision to the task before work begins.</p></div>
+          <div class="demo-explanation-item"><strong>Writes are checked before they land.</strong><p>Mneme checks supported file changes and returns a clear allow or block.</p></div>
+          <div class="demo-explanation-item"><strong>What it cannot check stays visible.</strong><p>Shell commands sit outside this gate, so whole-file checks and CI remain the backstop.</p></div>
         </div>
       </section>
 
       <section class="demo-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Common questions</h2>
-        <details><summary>Is this a live Claude Agent SDK integration?</summary><p>No. The Mneme checks are current, while the agent outputs and tool-dispatch adapter are scripted. Live SDK registration remains forward-looking.</p></details>
-        <details><summary>What can I reproduce now?</summary><p>The deterministic violating diff, blocking Mneme verdict, scripted correction, and passing rerun against the same corpus.</p></details>
-        <details><summary>Why keep this page in the demo system?</summary><p>It makes the integration contract concrete without calling unfinished SDK wiring a released feature.</p></details>
+        <details><summary>Is this a live Claude Agent SDK integration?</summary><p>Yes. The repository example includes deterministic mode and a <code>--live</code> mode using the native <code>MnemeAgentSdk</code> adapter.</p></details>
+        <details><summary>Which tools does Mneme gate?</summary><p>The shipped adapter checks <code>Write</code>, <code>Edit</code>, and <code>MultiEdit</code> before execution. Shell commands are not reconstructed reliably enough to claim as covered.</p></details>
+        <details><summary>What happens after a denial?</summary><p>In strict mode, the decision reason is returned to Claude so it can revise the proposal. The corrected SQLite write is checked again and allowed.</p></details>
       </section>
 
       <section class="install-cta" aria-labelledby="install-title">
-        <h2 id="install-title">Start with the current enforcement primitive.</h2>
-        <p>Prove the corpus check locally before evaluating a forward-looking agent-runtime binding.</p>
+        <h2 id="install-title">Put the gate before the tool call.</h2>
+        <p>Use the native adapter when your Claude Agent SDK workflow needs architectural decisions enforced before file mutations land.</p>
         <div class="install-command"><code id="install-command">pipx install &quot;mneme-hq&gt;=0.5.1&quot;</code><button class="install-copy" type="button" data-copy-target="install-command">Copy command</button></div>
         <span class="install-meta">Python 3.11+ &middot; MIT licensed</span>
       </section>
 
       <div class="next-bar">
         <a class="next-card" href="/demo/multi-agent-governance/"><div class="nc-label">Infrastructure contract</div><h4>Multi-agent governance</h4><p>See what distributed policy identity and convergence proof still require.</p><span class="nc-arrow">Continue &rarr;</span></a>
-        <a class="next-card" href="/integrations/claude-agent-sdk/"><div class="nc-label">Integration reference</div><h4>Claude Agent SDK</h4><p>Review the current integration surface and roadmap boundary.</p><span class="nc-arrow">Open reference &rarr;</span></a>
+        <a class="next-card" href="/integrations/claude-agent-sdk/"><div class="nc-label">Integration reference</div><h4>Claude Agent SDK</h4><p>Review hooks, supported mutation tools, and fail-open behavior.</p><span class="nc-arrow">Open reference &rarr;</span></a>
       </div>
 
       <aside class="related-panel related-panel--compact" aria-labelledby="related-panel-label">

@@ -97,10 +97,10 @@
         },
         {
           "@type": "Question",
-          "name": "Why are correction and allow absent?",
+          "name": "Why does this example end in WARN?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "This page proves the compiler and one emitted WARN. The full corrected-import PASS is shown in the governed Python agent demo."
+            "text": "This page proves that the compiler emits a working rule and that the rule can flag a bad input. The full deny-and-pass sequence is shown in the governed Python agent demo."
           }
         }
       ]
@@ -141,7 +141,7 @@
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-warn">WARN</span></span>
       </div>
       <h1>Your ADRs become constraints the rest of the system can <em>enforce</em>.</h1>
-      <p class="lede">The compiler treats <code>docs/adr/*.md</code> as source: it reads the frontmatter, checks the directives, resolves precedence, emits <code>project_memory.json</code>, and hands the result to the normal enforcement pipeline. This walkthrough uses Mneme's own ADR-005&mdash;no model or external service required.</p>
+      <p class="lede">You already have ADRs. Mneme reads the enforceable parts, turns them into rules, and uses those rules to check a proposed change. This walkthrough uses Mneme's own ADR-005&mdash;no model or external service required.</p>
       <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-13">Published May 2026</time><span class="sep">&middot;</span><time datetime="2026-08-25">Updated Aug 2026</time><span class="sep">&middot;</span><a href="/demo/">All demos</a></p>
     </header>
 
@@ -149,14 +149,14 @@
       <section class="demo-section" aria-labelledby="live-demo-title">
         <span class="section-kicker">ADR compiler</span>
         <h2 id="live-demo-title">The ADR stops being a document and starts doing work.</h2>
-        <p class="section-intro">This walkthrough follows compilation through to a real WARN. The flagship demo shows the corrected pass.</p>
+        <p class="section-intro">One ADR becomes one check. This example shows the warning that check produces.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Source decision</span>
           <p><strong>ADR-005 &middot; Brand versus package namespace.</strong> The Python namespace is <code>mneme</code>. <code>MnemeHQ</code> is a forbidden dependency token on code-bearing surfaces.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage ADR compiler and enforcement trace">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Four-stage ADR compiler and enforcement trace">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">adr import + mneme check &middot; compiled constraint trace</span>
@@ -168,29 +168,19 @@
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>The compiler validates the directive, resolves precedence, and emits the active constraint.</p><code class="trace-code">emit .mneme/project_memory.json <span class="trace-muted">&middot;</span> active set: 4 ADRs</code><span class="stage-availability">Demonstrated</span></div>
+              <div class="enforcement-stage">02 <strong>Compile</strong></div>
+              <div class="enforcement-copy"><p>The compiler emits the active constraint into project memory.</p><code class="trace-code">ADR Markdown <span class="trace-muted">&rarr;</span> .mneme/project_memory.json</code><span class="stage-availability">Current Mneme</span></div>
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>The enforcement input uses the brand token as if it were the Python package namespace.</p><code class="trace-code trace-deny">from MnemeHQ.memory_store import MemoryStore</code></div>
+              <div class="enforcement-stage">03 <strong>Check</strong></div>
+              <div class="enforcement-copy"><p>The input uses the brand token as if it were the Python package namespace.</p><code class="trace-code trace-deny">from MnemeHQ.memory_store import MemoryStore</code></div>
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
+              <div class="enforcement-stage">04 <strong>Result</strong></div>
               <div class="enforcement-copy"><p>The compiled rule fires through the normal checker and names its source ADR.</p><code class="trace-code">WARN [ADR-005] <span class="trace-muted">&middot;</span> trigger: mnemehq</code></div>
               <span class="verdict-token warn">WARN</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>The compiler walkthrough stops after proving the emitted rule can fire.</p><code class="trace-code">Not included in this walkthrough</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>A corrected import and passing rerun are demonstrated in the governed Python flagship instead.</p><code class="trace-code">See governed-python-agent</code></div>
-              <span class="verdict-token na">N/A</span>
             </li>
           </ol>
           <div class="terminal-controls">
@@ -216,9 +206,9 @@ python examples/demo-adr-import.py</code></pre>
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>ADRs remain the source.</strong><p>Teams keep Markdown rationale and add structured metadata only where enforcement needs it.</p></div>
-          <div class="demo-explanation-item"><strong>Precedence is compiled.</strong><p>Supersession, priority, scope, and date are resolved before any hook or CI gate consumes the corpus.</p></div>
-          <div class="demo-explanation-item"><strong>The output is operational.</strong><p>The same emitted decision record drives agent guidance, enforcement checks, and the <a href="/demo/architectural-drift/">architectural-drift proof</a>.</p></div>
+          <div class="demo-explanation-item"><strong>Your ADR stays readable.</strong><p>Markdown remains the source; Mneme extracts only the parts it needs to enforce.</p></div>
+          <div class="demo-explanation-item"><strong>Conflicts are resolved before a check runs.</strong><p>Mneme works out which ADR wins before an agent or CI job relies on it.</p></div>
+          <div class="demo-explanation-item"><strong>The result is a usable rule.</strong><p>The compiled decision can guide agents and block violations in the same way as the <a href="/demo/architectural-drift/">architectural-drift proof</a>.</p></div>
         </div>
       </section>
 
@@ -226,7 +216,7 @@ python examples/demo-adr-import.py</code></pre>
         <h2 id="faq-title">Common questions</h2>
         <details><summary>Does the compiler replace Markdown ADRs?</summary><p>No. ADR files remain the source. The compiler emits a structured downstream artifact for enforcement.</p></details>
         <details><summary>What happens when two ADRs conflict?</summary><p>If precedence cannot be resolved deterministically, compilation stops. A human must supersede one decision, change priority, narrow scope, or otherwise remove the ambiguity.</p></details>
-        <details><summary>Why are correction and allow absent?</summary><p>This page proves the compiler and one emitted WARN. The full corrected-import PASS is shown in the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</p></details>
+        <details><summary>Why does this example end in WARN?</summary><p>This page proves that the compiler emits a working rule and that the rule can flag a bad input. The full deny-and-pass sequence is shown in the <a href="/demo/governed-python-agent/">governed Python agent demo</a>.</p></details>
       </section>
 
       <section class="install-cta" aria-labelledby="install-title">

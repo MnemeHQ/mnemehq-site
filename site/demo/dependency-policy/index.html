@@ -97,10 +97,10 @@
         },
         {
           "@type": "Question",
-          "name": "Why are correction and allow absent?",
+          "name": "What happens after the warning?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The original evidence ends at the warning. A reviewer outcome or approved retry is not part of this reproduction, so the page marks those stages unavailable."
+            "text": "A reviewer can remove the package, approve it, or record a limited exception. This example stops at the moment a human decision is needed."
           }
         }
       ]
@@ -137,7 +137,7 @@
     <header>
       <div class="demo-meta" aria-label="Demo classification">
         <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Supporting example</span></span>
-        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Reproduction recipe</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-warn">WARN</span></span>
       </div>
       <h1>The dependency is legitimate. The introduction is <em>not approved</em>.</h1>
@@ -149,14 +149,14 @@
       <section class="demo-section" aria-labelledby="live-demo-title">
         <span class="section-kicker">Dependency enforcement</span>
         <h2 id="live-demo-title">A review signal. Not an automatic veto.</h2>
-        <p class="section-intro">This trace ends at WARN: the policy asks for a decision; it does not quietly wave the package through.</p>
+        <p class="section-intro">Mneme flags the package for review. A person decides whether to approve it.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
           <p><strong>approved-deps &middot; Audited packages only.</strong> FastAPI, Pydantic, httpx, pytest, ruff, and <code>internal_*</code> are approved. Everything else requires explicit review.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage dependency policy trace">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Three-stage dependency policy trace">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">mneme check &middot; approved dependency trace</span>
@@ -167,30 +167,15 @@
               <div class="enforcement-copy"><p>The repository versions an explicit allowlist instead of relying on reviewer memory.</p><code class="trace-code">approved-deps <span class="trace-muted">&middot;</span> scope: Python packages</code></div>
 
             </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>This page documents a post-generation check; no pre-flight guidance event is captured.</p><code class="trace-code">Not present in this reproduction</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>The generated diff adds a package that has not completed the project's approval path.</p><code class="trace-code trace-deny">+ import sqlalchemy <span class="trace-muted">&middot;</span> + from sqlalchemy import create_engine</code></div>
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>The generated diff adds a package outside the approved list.</p><code class="trace-code trace-deny">+ import sqlalchemy <span class="trace-muted">&middot;</span> + create_engine(...)</code></div>
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
-              <div class="enforcement-copy"><p>The dependency matcher emits a reviewable warning with the originating policy.</p><code class="trace-code">WARN [approved-deps] <span class="trace-muted">&middot;</span> sqlalchemy not in approved list</code></div>
+              <div class="enforcement-stage">03 <strong>Mneme</strong></div>
+              <div class="enforcement-copy"><p>Mneme flags the new dependency for a human decision instead of blocking automatically.</p><code class="trace-code">WARN [approved-deps] <span class="trace-muted">&middot;</span> review required</code></div>
               <span class="verdict-token warn">WARN</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>A reviewer may remove the package, approve it, or record a scoped override. None is shown here.</p><code class="trace-code">Outcome pending human review</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>Because no resolution is included, this page does not claim a passing state.</p><code class="trace-code">Not demonstrated</code></div>
-              <span class="verdict-token na">N/A</span>
             </li>
           </ol>
           <div class="terminal-controls">
@@ -201,7 +186,7 @@
       </section>
 
       <section class="demo-section" aria-labelledby="run-title">
-        <h2 id="run-title">Run it yourself</h2>
+        <h2 id="run-title">Reproduction recipe</h2>
         <div class="demo-run">
           <h3>Reproduce the warning against your allowlist</h3>
           <p>Record a dependency-policy rule, save the proposed diff as an input file, and query that policy through the CLI.</p>
@@ -210,16 +195,16 @@
 mneme check --memory .mneme/project_memory.json &#92;
   --input proposed-diff.txt --query "dependency policy"
 # WARN [approved-deps] · sqlalchemy requires review</code></pre>
-          <p>This is a command-level reproduction, not a dedicated bundled fixture. Strict CI can promote the warning to a blocking failure.</p>
+          <p>This page is a recipe, not a turnkey fixture: you provide the policy file and proposed input. Strict CI can promote the warning to a blocking failure.</p>
         </div>
       </section>
 
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>Popular is not the same as approved.</strong><p>Training-data prevalence cannot substitute for the repository's security and maintenance decision.</p></div>
-          <div class="demo-explanation-item"><strong>WARN preserves judgment.</strong><p>A legitimate exception can proceed through review without training teams to disable an indiscriminate hard gate.</p></div>
-          <div class="demo-explanation-item"><strong>The override becomes evidence.</strong><p>Approval, removal, or a scoped exception can be recorded instead of disappearing into a comment thread.</p></div>
+          <div class="demo-explanation-item"><strong>Popular is not the same as approved.</strong><p>A common package still needs the project's security and maintenance review.</p></div>
+          <div class="demo-explanation-item"><strong>Mneme flags it instead of blocking automatically.</strong><p>A legitimate exception can proceed through review without training teams to disable an indiscriminate hard gate.</p></div>
+          <div class="demo-explanation-item"><strong>The decision is recorded.</strong><p>Approval, removal, or a narrow exception can become a visible project rule instead of disappearing in a comment thread.</p></div>
         </div>
       </section>
 
@@ -227,7 +212,7 @@ mneme check --memory .mneme/project_memory.json &#92;
         <h2 id="faq-title">Common questions</h2>
         <details><summary>Why is this WARN instead of DENY?</summary><p>New dependencies can have legitimate reasons. WARN surfaces the introduction and policy source while leaving room for explicit review; strict mode can promote it to a hard failure.</p></details>
         <details><summary>Where does the approved list live?</summary><p>In the repository's <code>project_memory.json</code> as a typed, version-controlled dependency-policy rule.</p></details>
-        <details><summary>Why are correction and allow absent?</summary><p>The original evidence ends at the warning. A reviewer outcome or approved retry is not part of this reproduction, so the page marks those stages unavailable.</p></details>
+        <details><summary>What happens after the warning?</summary><p>A reviewer can remove the package, approve it, or record a limited exception. This example stops at the moment a human decision is needed.</p></details>
       </section>
 
       <section class="install-cta" aria-labelledby="install-title">

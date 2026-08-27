@@ -97,10 +97,10 @@
         },
         {
           "@type": "Question",
-          "name": "Why are correction and allow absent?",
+          "name": "What happens after the block?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "The supplied trace ends at the block. A corrected diff and clean rerun belong in a future reproduction, not in a fabricated ending."
+            "text": "The developer or agent should move the query back behind UserRepository and run the check again. This page does not invent that unbundled retry."
           }
         }
       ]
@@ -137,7 +137,7 @@
     <header>
       <div class="demo-meta" aria-label="Demo classification">
         <span class="demo-meta-item"><span class="demo-meta-label">Page type</span><span class="demo-meta-value">Supporting example</span></span>
-        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Scripted reproduction</span></span>
+        <span class="demo-meta-item"><span class="demo-meta-label">Runnability</span><span class="demo-meta-value">Reproduction recipe</span></span>
         <span class="demo-meta-item"><span class="demo-meta-label">Outcome</span><span class="demo-meta-value outcome-deny">DENY</span></span>
       </div>
       <h1>The code works. The architecture is <em>still wrong</em>.</h1>
@@ -148,15 +148,15 @@
     <div class="body">
       <section class="demo-section" aria-labelledby="live-demo-title">
         <span class="section-kicker">Boundary enforcement</span>
-        <h2 id="live-demo-title">Working code can still break the architecture.</h2>
-        <p class="section-intro">This trace ends at the block. It shows the failure a team needs to catch, not a made-up recovery.</p>
+        <h2 id="live-demo-title">Code can pass tests and still break the rules.</h2>
+        <p class="section-intro">This trace ends at the block. It shows the failure a team needs to catch, without inventing a recovery.</p>
 
         <div class="decision-stake">
           <span class="decision-stake-label">Decision at stake</span>
           <p><strong>ADR-004 &middot; Repository pattern is the only data-access boundary.</strong> Services depend on repository interfaces. Direct database imports, raw SQL, and ORM calls stay inside repository implementations.</p>
         </div>
 
-        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Six-stage repository boundary trace">
+        <div class="enforcement-terminal" id="enforcement-terminal" aria-label="Three-stage repository boundary trace">
           <div class="enforcement-terminal-header">
             <span class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></span>
             <span class="enforcement-terminal-title">mneme check --mode strict &middot; repository trace</span>
@@ -167,30 +167,15 @@
               <div class="enforcement-copy"><p>The repository boundary is recorded with a service-layer file scope and explicit anti-patterns.</p><code class="trace-code">ADR-004 <span class="trace-muted">&middot;</span> scope: **/*.service.ts</code></div>
 
             </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">02 <strong>Guidance</strong></div>
-              <div class="enforcement-copy"><p>This evidence is a post-generation CI check; it does not contain a pre-flight guidance event.</p><code class="trace-code">Not present in this reproduction</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">03 <strong>Violation</strong></div>
-              <div class="enforcement-copy"><p>The service drops its repository dependency and opens a direct SQL path.</p><code class="trace-code trace-deny">+ this.db.query('SELECT * FROM users ...')</code></div>
+              <div class="enforcement-stage">02 <strong>Agent change</strong></div>
+              <div class="enforcement-copy"><p>The service bypasses its repository and opens a direct SQL path.</p><code class="trace-code trace-deny">+ this.db.query('SELECT * FROM users ...')</code></div>
 
             </li>
             <li class="enforcement-step" data-demo-step>
-              <div class="enforcement-stage">04 <strong>Deny / warn</strong></div>
-              <div class="enforcement-copy"><p>Strict mode matches the direct access pattern, names the file, and exits non-zero.</p><code class="trace-code">FAIL [ADR-004] <span class="trace-muted">&middot;</span> user.service.ts <span class="trace-muted">&middot;</span> exit 2</code></div>
+              <div class="enforcement-stage">03 <strong>Mneme</strong></div>
+              <div class="enforcement-copy"><p>Strict mode names the boundary decision and blocks the file change.</p><code class="trace-code">DENY [ADR-004] <span class="trace-muted">&middot;</span> user.service.ts <span class="trace-muted">&middot;</span> exit 2</code></div>
               <span class="verdict-token deny">DENY</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">05 <strong>Correction</strong></div>
-              <div class="enforcement-copy"><p>The evidence does not include the refactor back through <code>UserRepository</code>.</p><code class="trace-code">Not demonstrated</code></div>
-              <span class="verdict-token na">N/A</span>
-            </li>
-            <li class="enforcement-step is-absent" data-demo-step>
-              <div class="enforcement-stage">06 <strong>Allow</strong></div>
-              <div class="enforcement-copy"><p>A clean follow-up check is not part of this supporting example.</p><code class="trace-code">Not demonstrated</code></div>
-              <span class="verdict-token na">N/A</span>
             </li>
           </ol>
           <div class="terminal-controls">
@@ -201,7 +186,7 @@
       </section>
 
       <section class="demo-section" aria-labelledby="run-title">
-        <h2 id="run-title">Run it yourself</h2>
+        <h2 id="run-title">Reproduction recipe</h2>
         <div class="demo-run">
           <h3>Reproduce the strict boundary check</h3>
           <p>Record ADR-004, save the proposed service diff, and evaluate it in strict mode.</p>
@@ -211,16 +196,16 @@ mneme check --mode strict &#92;
   --memory .mneme/project_memory.json &#92;
   --input user-service.diff --query "repository data access"
 # FAIL [ADR-004] · exit 2</code></pre>
-          <p>This is a command-level reproduction. The page does not claim a bundled corrected fixture.</p>
+          <p>This page is a recipe, not a turnkey fixture: you provide the policy file and proposed diff. A corrected rerun is not included here.</p>
         </div>
       </section>
 
       <section class="demo-section" aria-labelledby="happened-title">
         <h2 id="happened-title">What happened</h2>
         <div class="demo-explanation">
-          <div class="demo-explanation-item"><strong>The failure is architectural.</strong><p>Linters, types, and behavior tests can all pass while the service boundary is being dismantled.</p></div>
-          <div class="demo-explanation-item"><strong>The first bypass is the cheapest to stop.</strong><p>Once direct SQL becomes precedent, later agents copy it and the repository layer stops functioning as a contract.</p></div>
-          <div class="demo-explanation-item"><strong>DENY remains traceable.</strong><p>The verdict names ADR-004 and the offending file, so an override must become an explicit decision.</p></div>
+          <div class="demo-explanation-item"><strong>The failure is architectural.</strong><p>Types and tests can pass while the service layer is quietly taking on database work.</p></div>
+          <div class="demo-explanation-item"><strong>The first shortcut is the cheapest to stop.</strong><p>Once direct SQL lands, later agents copy it and the repository layer stops being the clear boundary.</p></div>
+          <div class="demo-explanation-item"><strong>The block explains itself.</strong><p>Mneme names ADR-004 and the file that broke it, so any override has to be a conscious choice.</p></div>
         </div>
       </section>
 
@@ -228,7 +213,7 @@ mneme check --mode strict &#92;
         <h2 id="faq-title">Common questions</h2>
         <details><summary>Why is this a DENY?</summary><p>Direct data access from a service invalidates the boundary ADR-004 exists to protect. Its downstream cost compounds, so strict mode returns a non-zero failure.</p></details>
         <details><summary>Does the denial block the pull request?</summary><p>Yes, when <code>mneme check --mode strict</code> is wired into the required CI workflow.</p></details>
-        <details><summary>Why are correction and allow absent?</summary><p>The supplied trace ends at the block. A corrected diff and clean rerun belong in a future reproduction, not in a fabricated ending.</p></details>
+        <details><summary>What happens after the block?</summary><p>The developer or agent should move the query back behind <code>UserRepository</code> and run the check again. This page does not invent that unbundled retry.</p></details>
       </section>
 
       <section class="install-cta" aria-labelledby="install-title">
