@@ -1,124 +1,125 @@
-import os
-import tempfile
-import zipfile
-import shutil
-import subprocess
+"""
+AuditService — Repository analysis using Mneme core.
+
+This service orchestrates:
+1. Safe repository ingestion (git clone, ZIP extract, local path)
+2. Evidence extraction (ADRs, CLAUDE.md, AGENTS.md, configs)
+3. Governability assessment via MnemeAdapter (Mneme is sole authority)
+4. Audit result assembly
+"""
+from __future__ import annotations
+
+import re
+import uuid
 from pathlib import Path
 from typing import List, Optional
-from git import Repo
+
 import yaml
 
 from app.models.audit import (
-    ArchitecturalDecision, 
-    GovernanceGap, 
-    AuditSummary, 
+    ArchitecturalDecision,
+    GovernanceGap,
+    AuditSummary,
     AuditResult,
     Source,
     ProposedRule,
-    Governability
 )
+from app.services.mneme_adapter import mneme_adapter
+from app.services.safe_extract import (
+    safe_clone_repo,
+    safe_extract_zip,
+    safe_local_path,
+    cleanup_temp_dir,
+    SafeExtractionError,
+)
+
 
 class AuditService:
     """Service for analyzing repositories and extracting architectural decisions."""
     
-    DECISION_PATTERNS = {
-        'database': {
-            'keywords': ['postgresql', 'postgres', 'mysql', 'sqlite', 'database', 'db'],
-            'rule_type': 'FORBID_LITERAL',
-            'enforceable': True,
-        },
-        'package_manager': {
-            'keywords': ['uv', 'pip', 'poetry', 'pipenv', 'package manager'],
-            'rule_type': 'REQUIRE_PATTERN',
-            'enforceable': True,
-        },
-        'service_boundary': {
-            'keywords': ['service boundary', 'must not import', 'forbidden import', 'cross-service'],
-            'rule_type': 'FORBID_IMPORT',
-            'enforceable': False,
-        },
-        'testing': {
-            'keywords': ['test', 'pytest', 'unit test', 'integration test', 'coverage'],
-            'rule_type': 'REQUIRE_PATTERN',
-            'enforceable': True,
-        },
-        'linting': {
-            'keywords': ['ruff', 'flake8', 'pylint', 'mypy', 'type check', 'lint'],
-            'rule_type': 'REQUIRE_COMMAND',
-            'enforceable': True,
-        },
-        'architecture': {
-            'keywords': ['architecture', 'adr', 'decision record', 'architectural decision'],
-            'rule_type': 'REQUIRE_PATTERN',
-            'enforceable': False,
-        },
-        'dependency': {
-            'keywords': ['dependency', 'import', 'require', 'vendor'],
-            'rule_type': 'FORBID_IMPORT',
-            'enforceable': True,
-        },
-        'security': {
-            'keywords': ['secret', 'password', 'token', 'key', 'credential', 'auth'],
-            'rule_type': 'FORBID_LITERAL',
-            'enforceable': True,
-        },
-    }
-
-    SOURCE_FILES = [
-        'CLAUDE.md',
-        'AGENTS.md',
-        'architecture.md',
-        'ARCHITECTURE.md',
-        'docs/architecture.md',
-        'docs/adr/',
-        'pyproject.toml',
-        'requirements.txt',
-        'setup.py',
-        'setup.cfg',
-        '.github/workflows/',
-        '.gitlab-ci.yml',
-        'Makefile',
-        'justfile',
-        'Taskfile.yml',
+    # Files that commonly contain architectural decisions
+    SOURCE_FILE_PATTERNS = [
+        "CLAUDE.md",
+        "AGENTS.md",
+        "architecture.md",
+        "ARCHITECTURE.md",
+        "docs/architecture.md",
+        "docs/adr/",
+        "pyproject.toml",
+        "requirements.txt",
+        "requirements-dev.txt",
+        "setup.py",
+        "setup.cfg",
+        ".github/workflows/",
+        ".gitlab-ci.yml",
+        "Makefile",
+        "justfile",
+        "Taskfile.yml",
     ]
+    
+    # Binary file extensions to skip
+    BINARY_EXTENSIONS = {
+        ".png", ".jpg", ".jpeg", ".gif", ".ico", ".svg", ".webp",
+        ".pdf", ".zip", ".tar", ".gz", ".tgz", ".rar",
+        ".exe", ".dll", ".so", ".dylib",
+        ".pyc", ".pyo", ".pyd",
+        ".woff", ".woff2", ".ttf", ".eot",
+        ".mp4", ".webm", ".mov",
+    }
 
     def __init__(self):
         self.repo_path: Optional[Path] = None
+        self._temp_dir: Optional[Path] = None
 
-    async def analyze_repository(self, repo_url: Optional[str] = None, zip_path: Optional[str] = None, local_path: Optional[str] = None) -> AuditResult:
-        """Analyze a repository and return audit results."""
+    async def analyze_repository(
+        self,
+        repo_url: Optional[str] = None,
+        zip_path: Optional[str] = None,
+        local_path: Optional[str] = None,
+    ) -> AuditResult:
+        """Analyze a repository and return audit results using Mneme core."""
         
-        # Prepare repository
+        # Prepare repository with safe extraction
         if repo_url:
-            self.repo_path = await self._clone_repo(repo_url)
-            repo_name = repo_url.rstrip('/').split('/')[-1].replace('.git', '')
+            self.repo_path = safe_clone_repo(repo_url)
+            self._temp_dir = self.repo_path
+            repo_name = repo_url.rstrip("/").split("/")[-1].replace(".git", "")
             repo_identifier = repo_url
         elif zip_path:
-            self.repo_path = await self._extract_zip(zip_path)
+            self.repo_path = safe_extract_zip(zip_path)
+            self._temp_dir = self.repo_path
             repo_name = Path(zip_path).stem
             repo_identifier = f"upload:{repo_name}"
         elif local_path:
-            self.repo_path = Path(local_path).resolve()
+            self.repo_path = safe_local_path(local_path)
             repo_name = self.repo_path.name
             repo_identifier = f"local:{local_path}"
         else:
             raise ValueError("No repository source provided")
 
         try:
-            # Find source files
+            # Load Mneme decisions from repository (ADRs, memory file)
+            mneme_report = mneme_adapter.load_repository(self.repo_path)
+            
+            # Also check for .mneme/project_memory.json
+            memory_path = self.repo_path / ".mneme" / "project_memory.json"
+            if memory_path.exists():
+                mneme_adapter.load_memory_file(memory_path)
+            
+            # Find all source files containing architectural intent
             sources = self._find_source_files()
             
             # Extract decisions from sources
             decisions = self._extract_decisions(sources)
             
-            # Classify governability
+            # Assess governability via MnemeAdapter (Mneme is sole authority)
             for decision in decisions:
-                self._classify_governability(decision)
+                self._assess_via_mneme(decision)
             
             # Generate summary
             summary = self._generate_summary(decisions, sources)
             
-            # Identify gaps
+            # Identify governance gaps
             gaps = self._identify_gaps(decisions)
             
             return AuditResult(
@@ -131,47 +132,44 @@ class AuditService:
             )
         finally:
             # Cleanup temp directory if we created one
-            if repo_url or zip_path:
-                self._cleanup()
-
-    async def _clone_repo(self, url: str) -> Path:
-        """Clone a git repository to a temporary directory."""
-        temp_dir = Path(tempfile.mkdtemp(prefix='mneme-audit-'))
-        Repo.clone_from(url, temp_dir, depth=1)
-        return temp_dir
-
-    async def _extract_zip(self, zip_path: str) -> Path:
-        """Extract a ZIP file to a temporary directory."""
-        temp_dir = Path(tempfile.mkdtemp(prefix='mneme-audit-'))
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-        return temp_dir
-
-    def _cleanup(self):
-        """Clean up temporary directory."""
-        if self.repo_path and self.repo_path.exists():
-            shutil.rmtree(self.repo_path, ignore_errors=True)
+            if self._temp_dir and (repo_url or zip_path):
+                cleanup_temp_dir(self._temp_dir)
 
     def _find_source_files(self) -> List[Path]:
         """Find relevant source files in the repository."""
         sources = []
         
-        for pattern in self.SOURCE_FILES:
-            if pattern.endswith('/'):
+        for pattern in self.SOURCE_FILE_PATTERNS:
+            if pattern.endswith("/"):
                 # Directory pattern
-                dir_path = self.repo_path / pattern.rstrip('/')
+                dir_path = self.repo_path / pattern.rstrip("/")
                 if dir_path.exists() and dir_path.is_dir():
-                    for file in dir_path.rglob('*'):
-                        if file.is_file() and file.suffix in ['.md', '.txt', '.yaml', '.yml', '.toml']:
+                    for file in dir_path.rglob("*"):
+                        if file.is_file() and not self._is_binary_file(file):
                             sources.append(file)
             else:
                 # File pattern (supports glob)
                 for file in self.repo_path.rglob(pattern):
-                    if file.is_file():
+                    if file.is_file() and not self._is_binary_file(file):
                         sources.append(file)
         
         # Deduplicate
         return list(set(sources))
+    
+    def _is_binary_file(self, path: Path) -> bool:
+        """Quick binary check by extension and content sample."""
+        if path.suffix.lower() in self.BINARY_EXTENSIONS:
+            return True
+        try:
+            sample = path.read_bytes()[:8192]
+            if b"\x00" in sample:
+                return True
+            non_ascii = sum(1 for b in sample if b > 127)
+            if sample and (non_ascii / len(sample)) > 0.3:
+                return True
+        except Exception:
+            pass
+        return False
 
     def _extract_decisions(self, sources: List[Path]) -> List[ArchitecturalDecision]:
         """Extract architectural decisions from source files."""
@@ -179,76 +177,97 @@ class AuditService:
         
         for source in sources:
             try:
-                content = source.read_text(encoding='utf-8', errors='ignore')
+                content = source.read_text(encoding="utf-8", errors="ignore")
                 relative_path = source.relative_to(self.repo_path)
                 
                 # Parse based on file type
-                if source.suffix in ['.md', '.txt']:
+                if source.suffix in [".md", ".txt"]:
                     decisions.extend(self._parse_markdown(content, relative_path))
-                elif source.suffix in ['.yaml', '.yml']:
+                elif source.suffix in [".yaml", ".yml"]:
                     decisions.extend(self._parse_yaml(content, relative_path))
-                elif source.suffix == '.toml':
+                elif source.suffix == ".toml":
                     decisions.extend(self._parse_toml(content, relative_path))
-            except Exception as e:
-                print(f"Error parsing {source}: {e}")
+            except Exception:
+                # Never log source contents - hostile input safety
+                pass
         
-        return decisions
+        # Deduplicate by title similarity
+        return self._deduplicate_decisions(decisions)
+
+    def _deduplicate_decisions(self, decisions: List[ArchitecturalDecision]) -> List[ArchitecturalDecision]:
+        """Remove duplicate decisions based on title similarity."""
+        seen = set()
+        unique = []
+        for d in decisions:
+            key = d.title.lower().strip()
+            if key not in seen:
+                seen.add(key)
+                unique.append(d)
+        return unique
 
     def _parse_markdown(self, content: str, file_path: Path) -> List[ArchitecturalDecision]:
         """Parse markdown files for architectural decisions."""
         decisions = []
-        lines = content.split('\n')
+        lines = content.split("\n")
         
-        # Look for ADR patterns
+        # Look for ADR patterns - these are the primary decisions
         in_adr = False
         adr_title = ""
         adr_start = 0
         
         for i, line in enumerate(lines):
-            # Detect ADR headers
-            if line.startswith('# ') and ('ADR' in line.upper() or 'ARCHITECTURAL DECISION' in line.upper()):
+            if line.startswith("# ") and ("ADR" in line.upper() or "ARCHITECTURAL DECISION" in line.upper()):
                 if in_adr and adr_title:
-                    decisions.append(self._create_decision(
+                    decisions.append(self._create_decision_from_context(
                         adr_title, 
-                        '\n'.join(lines[adr_start:i]), 
+                        "\n".join(lines[adr_start:i]), 
                         file_path, 
                         f"{adr_start+1}-{i}"
                     ))
                 in_adr = True
                 adr_title = line[2:].strip()
                 adr_start = i
-            elif in_adr and line.startswith('## ') and i > adr_start:
-                # Subsection within ADR
-                pass
         
         # Handle last ADR
         if in_adr and adr_title:
-            decisions.append(self._create_decision(
+            decisions.append(self._create_decision_from_context(
                 adr_title, 
-                '\n'.join(lines[adr_start:]), 
+                "\n".join(lines[adr_start:]), 
                 file_path, 
                 f"{adr_start+1}-{len(lines)}"
             ))
         
-        # Also look for key architectural statements in any markdown
-        for pattern_name, pattern_info in self.DECISION_PATTERNS.items():
-            for keyword in pattern_info['keywords']:
-                for i, line in enumerate(lines):
-                    if keyword.lower() in line.lower() and len(line.strip()) > 20:
-                        # Found a relevant line, extract context
-                        context_start = max(0, i - 2)
-                        context_end = min(len(lines), i + 3)
-                        context = '\n'.join(lines[context_start:context_end])
-                        
-                        decisions.append(self._create_decision(
-                            f"{pattern_name.replace('_', ' ').title()}: {line.strip()[:60]}",
-                            context,
-                            file_path,
-                            f"{context_start+1}-{context_end}",
-                            pattern_name
-                        ))
+        # For non-ADR markdown (CLAUDE.md, AGENTS.md), only extract if they have
+        # explicit constraint language, and only create ONE decision per file
+        if not in_adr and ("CLAUDE.md" in str(file_path) or "AGENTS.md" in str(file_path)):
+            constraints = self._extract_constraints(content)
+            if constraints:
+                decisions.append(self._create_decision_from_context(
+                    f"Agent Instructions: {file_path.name}",
+                    "\n".join(constraints[:5]),
+                    file_path,
+                    "1-50",
+                    pattern_type="agent_instructions"
+                ))
         
         return decisions
+
+    def _extract_constraints(self, text: str) -> list:
+        """Extract lines that look like constraints."""
+        constraints = []
+        for line in text.split("\n"):
+            line = line.strip()
+            if len(line) < 20:
+                continue
+            line_lower = line.lower()
+            if any(p in line_lower for p in ["must", "must not", "shall", "shall not", 
+                                              "required", "forbidden", "prohibited",
+                                              "use ", "avoid ", "prefer ", "do not ",
+                                              "only ", "never ", "always ",
+                                              "enforce", "require", "constrain",
+                                              "no "]):
+                constraints.append(line)
+        return constraints
 
     def _parse_yaml(self, content: str, file_path: Path) -> List[ArchitecturalDecision]:
         """Parse YAML files for architectural decisions."""
@@ -256,12 +275,12 @@ class AuditService:
         try:
             data = yaml.safe_load(content)
             if data:
-                decisions.append(self._create_decision(
+                decisions.append(self._create_decision_from_context(
                     f"Configuration: {file_path.name}",
-                    yaml.dump(data, default_flow_style=False)[:500],
+                    yaml.dump(data, default_flow_style=False)[:1000],
                     file_path,
-                    "1-50",
-                    "configuration"
+                    "1-100",
+                    pattern_type="configuration"
                 ))
         except Exception:
             pass
@@ -270,115 +289,131 @@ class AuditService:
     def _parse_toml(self, content: str, file_path: Path) -> List[ArchitecturalDecision]:
         """Parse TOML files for architectural decisions."""
         decisions = []
-        # Simple extraction of key sections
-        if '[tool.' in content or '[project' in content:
-            decisions.append(self._create_decision(
+        if "[tool." in content or "[project" in content:
+            decisions.append(self._create_decision_from_context(
                 f"Project Config: {file_path.name}",
-                content[:500],
+                content[:1000],
                 file_path,
-                "1-50",
-                "configuration"
+                "1-100",
+                pattern_type="configuration"
             ))
         return decisions
 
-    def _create_decision(
-        self, 
-        title: str, 
-        content: str, 
-        file_path: Path, 
+    def _create_decision_from_context(
+        self,
+        title: str,
+        content: str,
+        file_path: Path,
         lines: str,
         pattern_type: str = "general"
     ) -> ArchitecturalDecision:
-        """Create an architectural decision from extracted content."""
-        
-        # Determine pattern info
-        pattern_info = self.DECISION_PATTERNS.get(pattern_type, {
-            'rule_type': 'REQUIRE_PATTERN',
-            'enforceable': False,
-        })
-        
-        # Generate a proposed rule based on pattern
-        proposed_rule = self._generate_rule(pattern_type, content)
-        
+        """Create an architectural decision from extracted context."""
         return ArchitecturalDecision(
-            title=title[:100],
-            summary=content[:200].replace('\n', ' ').strip(),
-            requirement=content[:500],
+            title=title[:120],
+            summary=content[:300].replace("\n", " ").strip(),
+            requirement=content[:1000],
             source=Source(file=str(file_path), lines=lines),
-            governability="partial",  # Will be classified later
-            appliesTo=self._infer_applies_to(pattern_type),
-            proposedRule=proposed_rule,
-            confidence=0.85,
+            governability="partial",  # Will be assessed by Mneme
+            appliesTo=[],
+            proposedRule=ProposedRule(
+                type="REQUIRE_PATTERN",
+                pattern="",
+                description=f"Extracted from {pattern_type}"
+            ),
+            confidence=0.8,
         )
 
-    def _generate_rule(self, pattern_type: str, content: str) -> ProposedRule:
-        """Generate a proposed Mneme rule based on pattern type."""
-        pattern_info = self.DECISION_PATTERNS.get(pattern_type, {})
-        rule_type = pattern_info.get('rule_type', 'REQUIRE_PATTERN')
+    def _assess_via_mneme(self, decision: ArchitecturalDecision) -> None:
+        """
+        Assess governability using MnemeAdapter.
         
-        # Extract key terms from content for pattern
-        if pattern_type == 'database':
-            for db in ['postgresql', 'postgres', 'mysql', 'sqlite']:
-                if db in content.lower():
-                    return ProposedRule(
-                        type=rule_type,
-                        pattern=db,
-                        description=f"Enforce {db} as the required database"
-                    )
-        elif pattern_type == 'package_manager':
-            if 'uv' in content.lower():
-                return ProposedRule(
-                    type=rule_type,
-                    pattern='uv',
-                    description="Require uv for package management"
-                )
-        elif pattern_type == 'dependency':
-            return ProposedRule(
-                type='FORBID_IMPORT',
-                pattern='*',
-                description="Restrict cross-service dependencies"
-            )
-        elif pattern_type == 'security':
-            return ProposedRule(
-                type='FORBID_LITERAL',
-                pattern='password|secret|token|key',
-                description="Forbid hardcoded secrets"
-            )
+        This is where Mneme becomes the sole authority on governability.
+        """
+        from mneme.schemas import Decision as MnemeDecision, Rule as MnemeRule
         
-        return ProposedRule(
-            type=rule_type,
-            pattern='',
-            description=f"Enforce {pattern_type.replace('_', ' ')}"
+        # Extract potential rules from the requirement text
+        rules = self._extract_mneme_rules(decision.requirement)
+        
+        mneme_decision = MnemeDecision(
+            id=f"audit_{decision.id}",
+            decision=decision.title,
+            rationale=decision.summary,
+            scope=self._infer_scope(decision.requirement),
+            constraints=self._extract_constraints(decision.requirement),
+            anti_patterns=self._extract_anti_patterns(decision.requirement),
+            rules=rules,
+            source_path=decision.source.file,
         )
-
-    def _infer_applies_to(self, pattern_type: str) -> List[str]:
-        """Infer which paths the decision applies to."""
-        mapping = {
-            'database': ['src/**', 'migrations/**', 'alembic/**'],
-            'package_manager': ['pyproject.toml', 'requirements*.txt', 'setup.py'],
-            'service_boundary': ['src/**/services/**', 'src/**/api/**'],
-            'testing': ['tests/**', 'test_*.py', '*_test.py'],
-            'linting': ['**/*.py', 'pyproject.toml'],
-            'architecture': ['docs/adr/**', 'architecture.md', 'CLAUDE.md', 'AGENTS.md'],
-            'dependency': ['src/**'],
-            'security': ['**/*'],
-            'configuration': ['pyproject.toml', 'setup.py', 'requirements.txt'],
-        }
-        return mapping.get(pattern_type, ['src/**'])
-
-    def _classify_governability(self, decision: ArchitecturalDecision):
-        """Classify the governability of a decision."""
-        rule_type = decision.proposedRule.type
         
-        # Deterministic rules are enforceable
-        enforceable_types = ['FORBID_LITERAL', 'REQUIRE_PATTERN', 'REQUIRE_COMMAND', 'FORBID_IMPORT']
+        # Get Mneme's assessment
+        assessment = mneme_adapter.assess_governability(mneme_decision, decision.source.file, decision.source.lines)
         
-        if rule_type in enforceable_types and decision.proposedRule.pattern:
+        # Update the audit decision with Mneme's verdict
+        if assessment.enforceable:
             decision.governability = "enforceable"
-        elif rule_type in enforceable_types:
+        elif assessment.partially_enforceable:
             decision.governability = "partial"
         else:
             decision.governability = "guidance"
+        
+        decision.appliesTo = assessment.applies_to_paths
+        decision.confidence = assessment.confidence
+        
+        # Use Mneme's proposed rules
+        proposed = mneme_adapter.get_proposed_rules(mneme_decision)
+        if proposed:
+            decision.proposedRule = ProposedRule(
+                type=proposed[0]["type"],
+                pattern=proposed[0]["pattern"],
+                description=proposed[0]["description"],
+            )
+
+    def _extract_mneme_rules(self, text: str) -> list:
+        """Extract FORBID_LITERAL rules from text."""
+        from mneme.schemas import Rule
+        rules = []
+        
+        for db in ["postgresql", "postgres", "mysql", "sqlite"]:
+            if db in text.lower():
+                rules.append(Rule(type="FORBID_LITERAL", value=db))
+        
+        for pm in ["uv", "pip", "poetry", "pipenv"]:
+            if f"must use {pm}" in text.lower() or f"use {pm} for" in text.lower():
+                rules.append(Rule(type="FORBID_LITERAL", value=pm))
+        
+        return rules
+
+    def _infer_scope(self, text: str) -> list:
+        """Infer scope from text."""
+        scope = []
+        if any(db in text.lower() for db in ["database", "postgres", "mysql", "sqlite"]):
+            scope.append("storage")
+        if any(pm in text.lower() for pm in ["package", "uv", "pip", "poetry"]):
+            scope.append("dependencies")
+        if "service" in text.lower() and "boundary" in text.lower():
+            scope.append("architecture")
+        return scope or ["general"]
+
+    def _extract_constraints(self, text: str) -> list:
+        """Extract 'no X' style constraints from text (handles markdown lists)."""
+        constraints = []
+        for line in text.split("\n"):
+            line = line.strip().lower()
+            # Handle markdown list items: "- no X", "* no X", "1. no X"
+            clean_line = line.lstrip("- *0123456789.").strip()
+            if clean_line.startswith("no ") or "must not" in clean_line or "forbidden" in clean_line:
+                constraints.append(clean_line)
+        return constraints[:5]
+
+    def _extract_anti_patterns(self, text: str) -> list:
+        """Extract anti-patterns from text."""
+        patterns = []
+        text_lower = text.lower()
+        if "orm" in text_lower and ("avoid" in text_lower or "not" in text_lower):
+            patterns.append("introduce ORM")
+        if "migration" in text_lower and ("avoid" in text_lower or "not" in text_lower):
+            patterns.append("add migration layer")
+        return patterns
 
     def _generate_summary(self, decisions: List[ArchitecturalDecision], sources: List[Path]) -> AuditSummary:
         """Generate audit summary."""
@@ -424,7 +459,6 @@ class AuditService:
 
     def _generate_audit_id(self) -> str:
         """Generate a short audit ID."""
-        import uuid
         return str(uuid.uuid4())[:8]
 
 
