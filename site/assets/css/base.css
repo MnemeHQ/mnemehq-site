@@ -96,7 +96,7 @@ a.cta-btn-primary {
   border-radius: 8px;
   font-family: 'DM Mono', monospace;
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.3;
   letter-spacing: -0.005em;
   text-decoration: none !important;
@@ -193,7 +193,7 @@ body {
 .skip-link:focus { left: 0; }
 
 /* ── Nav ── */
-nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
+nav:not(.breadcrumb-nav) { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
 .logo { display: flex; align-items: center; text-decoration: none; }
 .nav-links { display: flex; gap: 1.5rem; align-items: center; }
 .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
@@ -223,6 +223,19 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
   border-color: var(--action, #ea735e) !important;
   border-bottom-color: var(--action, #ea735e) !important;
   color: #0c0c0d !important;
+}
+
+/* ── Breadcrumb reset ── */
+.breadcrumb-nav,
+nav.breadcrumb-nav {
+  position: static !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  z-index: auto !important;
+  display: block;
 }
 
 /* ── Hamburger ── */
@@ -262,7 +275,7 @@ nav { display: flex; justify-content: space-between; align-items: center; paddin
 @media (max-width: 900px) {
   html, body { overflow-x: clip; }
   body.menu-open { overflow: hidden; }
-  nav { padding: 1rem 1.25rem; }
+  nav:not(.breadcrumb-nav) { padding: 1rem 1.25rem; }
   .nav-hamburger { display: flex; }
   .nav-links {
     display: flex !important;
@@ -399,6 +412,59 @@ footer a:hover { color: var(--text); }
 }
 .cta-block-end h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
 .cta-block-end p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
+
+/* ── Article Header Hero (matching demo hero style) ── */
+.article-wrap {
+  padding-top: 0 !important;
+}
+
+.article-header {
+  position: relative;
+  isolation: isolate;
+  max-width: none !important;
+  margin: 0 calc(50% - 50vw) 3.5rem !important;
+  padding:
+    clamp(2.5rem, 5vw, 3.8rem)
+    max(1.25rem, calc((100vw - 720px) / 2 + 2rem))
+    clamp(2.2rem, 4vw, 3.2rem) !important;
+  overflow: hidden;
+  border-top: 1px solid #292a2f;
+  border-bottom: 1px solid #292a2f;
+  background:
+    radial-gradient(70% 150% at 78% 0%, rgba(200, 240, 96, 0.065), transparent 58%),
+    linear-gradient(145deg, #161719 0%, #111214 68%, #131414 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.018), 0 28px 80px rgba(0, 0, 0, 0.12);
+}
+
+.article-header::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(200, 240, 96, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200, 240, 96, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  content: '';
+  opacity: 0.32;
+  -webkit-mask-image: radial-gradient(ellipse 82% 120% at 62% 6%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse 82% 120% at 62% 6%, #000 0%, transparent 72%);
+  pointer-events: none;
+}
+
+.article-header > * {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 900px) {
+  .article-header {
+    margin: 0 calc(50% - 50vw) 2.5rem !important;
+    padding: clamp(2rem, 5vw, 3rem) 1.25rem clamp(1.75rem, 4vw, 2.5rem) !important;
+  }
+}
 
 /* ── Reduced motion ── */
 @media (prefers-reduced-motion: reduce) {
