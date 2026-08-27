@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Integrate Mneme HQ architectural decision governance into Kiro via PreToolUse hooks. Enforce structural invariants before writes without rewriting agent workflows." />
+  <meta name="description" content="Integrate Mneme HQ architectural decision governance into Kiro CLI 3.0 (v3 engine) via PreToolUse hooks. Enforce native write and append mutations before disk." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/kiro/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme + Kiro — PreToolUse Hook Integration" />
-  <meta property="og:description" content="Integrate Mneme HQ architectural decision governance into Kiro via PreToolUse hooks. Enforce structural invariants before writes without rewriting agent workflows." />
+  <meta property="og:description" content="Integrate Mneme HQ architectural decision governance into Kiro CLI 3.0 (v3 engine) via PreToolUse hooks. Enforce native write and append mutations before disk." />
   <meta property="og:url" content="https://mnemehq.com/integrations/kiro/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/kiro/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -51,7 +51,7 @@
       {
         "@type": "TechArticle",
         "headline": "Mneme + Kiro — PreToolUse Hook Integration & Architectural Enforcement",
-        "description": "Integrate Mneme HQ architectural decision governance into Kiro via PreToolUse hooks. Enforce structural invariants before writes without rewriting agent workflows.",
+        "description": "Kiro CLI 3.0 / v3 native write and append mutations are governed before they reach disk.",
         "url": "https://mnemehq.com/integrations/kiro/",
         "datePublished": "2026-08-27",
         "dateModified": "2026-08-27",
@@ -131,7 +131,7 @@ python scripts/install_kiro.py [PROJECT_DIR]</code></pre>
   "version": "v1",
   "hooks": [
     {
-      "name": "mneme-guard",
+      "name": "mneme-governance-gate",
       "trigger": "PreToolUse",
       "matcher": "^(fs_write|fsWrite|write|fs_append)$",
       "enabled": true,
