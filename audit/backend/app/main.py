@@ -23,7 +23,7 @@ app.add_middleware(
 )
 
 # Include API routes
-app.include_router(audit.router)
+app.include_router(audit.router, prefix="/api")
 
 # Health check
 @app.get("/health")

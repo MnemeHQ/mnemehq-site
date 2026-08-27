@@ -116,14 +116,17 @@ class AuditService:
                 assessment = mneme_adapter.assess_governability(mneme_decision)
                 proposed = mneme_adapter.get_proposed_rules(mneme_decision)
                 
+                # Use actual ADR source path from Mneme
+                source_file = mneme_decision.source_path if mneme_decision.source_path else f"docs/adr/{mneme_decision.id}.md"
+                
                 decisions.append(ArchitecturalDecision(
                     id=mneme_decision.id,
                     title=mneme_decision.decision,
                     summary=mneme_decision.rationale[:300] if mneme_decision.rationale else mneme_decision.decision[:300],
                     requirement=mneme_decision.decision + ("\n\nRationale: " + mneme_decision.rationale if mneme_decision.rationale else ""),
-                    source=Source(file=f"docs/adr/{mneme_decision.id}.md", lines="ADR import"),
+                    source=Source(file=source_file, lines="ADR import"),
                     governability=assessment.tier,
-                    appliesTo=list(assessment.applicable_paths) or ["src/**"],
+                    appliesTo=list(assessment.applicable_paths),  # Don't fallback to src/** — leave empty if no paths
                     proposedRule=ProposedRule(
                         type=proposed[0].type if proposed else "REQUIRE_PATTERN",
                         pattern=proposed[0].pattern if proposed else "",
@@ -178,8 +181,8 @@ class AuditService:
             # Deduplicate by title
             decisions = self._deduplicate_decisions(decisions)
             
-            # Generate summary
-            summary = self._generate_summary(decisions)
+            # Generate summary (pass sources for accurate source list)
+            summary = self._generate_summary(decisions, sources)
             
             # Identify governance gaps
             gaps = self._identify_gaps(decisions)

@@ -4,6 +4,7 @@ from typing import Optional
 import tempfile
 import os
 import io
+import re
 import aiofiles
 
 from app.models.audit import AuditResult
@@ -16,6 +17,15 @@ audit_storage: dict[str, AuditResult] = {}
 
 # Max upload size: 50 MB (matches extraction limit)
 MAX_UPLOAD_SIZE = 50 * 1024 * 1024
+
+# GitHub URL validation regex
+GITHUB_URL_PATTERN = re.compile(
+    r'^https://github\.com/[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+(?:\.git)?/?$'
+)
+
+def validate_github_url(url: str) -> bool:
+    """Validate that a URL is a public GitHub repository URL."""
+    return bool(GITHUB_URL_PATTERN.match(url))
 
 
 @router.post("", response_model=AuditResult)
@@ -33,6 +43,13 @@ async def create_audit(
     # Validate input
     if not repository_url and not zip_file:
         raise HTTPException(status_code=400, detail="Provide repository_url or zip_file")
+    
+    # Validate GitHub URL if provided
+    if repository_url and not validate_github_url(repository_url):
+        raise HTTPException(
+            status_code=400, 
+            detail="repository_url must be a public GitHub repository URL (https://github.com/owner/repo)"
+        )
     
     # Handle ZIP upload with streaming to disk and size limit
     zip_path = None

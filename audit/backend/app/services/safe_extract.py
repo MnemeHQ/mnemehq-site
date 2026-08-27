@@ -127,6 +127,10 @@ def safe_extract_zip(zip_path: str, dest_dir: Optional[Path] = None) -> Path:
             if zip_size > 0 and total_uncompressed / zip_size > MAX_ZIP_RATIO:
                 raise SafeExtractionError(f"Suspected zip bomb: ratio {total_uncompressed/zip_size:.1f}")
             
+            # Also enforce absolute uncompressed size limit
+            if total_uncompressed > MAX_REPO_SIZE_BYTES:
+                raise SafeExtractionError(f"ZIP uncompressed size too large: {total_uncompressed} bytes (max {MAX_REPO_SIZE_BYTES})")
+            
             extracted_count = 0
             for member in members:
                 if member.is_dir():
@@ -212,7 +216,7 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
         if result.returncode != 0:
             raise SafeExtractionError(f"Git clone failed: {result.stderr}")
         
-        # Verify repo size after clone
+        # Verify repo size after clone and check for symlinks
         total_size = 0
         file_count = 0
         for root, dirs, files in os.walk(dest_dir):
@@ -221,6 +225,9 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
             for f in files:
                 fp = Path(root) / f
                 try:
+                    # Check for symlinks
+                    if fp.is_symlink():
+                        raise SafeExtractionError(f"Repository contains symlink (rejected): {fp}")
                     total_size += fp.stat().st_size
                     file_count += 1
                     if total_size > MAX_REPO_SIZE_BYTES:
