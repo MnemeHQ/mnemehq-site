@@ -22,7 +22,7 @@ class ArchitecturalDecision(BaseModel):
     source: Source
     governability: Governability
     appliesTo: List[str] = []
-    proposedRule: ProposedRule
+    proposedRule: Optional[ProposedRule] = None
     confidence: float = 0.9
 
 class GovernanceGap(BaseModel):

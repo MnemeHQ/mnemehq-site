@@ -14,7 +14,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../public',
+    outDir: '../../site/audit/workspace',
     emptyOutDir: true,
   },
 })

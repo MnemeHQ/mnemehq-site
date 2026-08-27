@@ -1,6 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import HTTPException
 import os
 
 from app.api import audit
@@ -10,6 +12,14 @@ app = FastAPI(
     description="API for the Architecture Governability Audit Workspace",
     version="0.1.0",
 )
+
+# Custom exception handler to format errors for frontend
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"success": False, "error": exc.detail},
+    )
 
 # CORS for frontend development and production
 # Allow origins from environment variable (comma-separated) or default to localhost

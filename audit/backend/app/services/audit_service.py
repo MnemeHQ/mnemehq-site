@@ -24,6 +24,7 @@ from app.models.audit import (
     Source,
     ProposedRule,
 )
+from typing import Optional as TypingOptional
 from app.services.mneme_adapter import mneme_adapter, ProposedRuleInfo
 from app.services.safe_extract import (
     safe_clone_repo,
@@ -128,10 +129,10 @@ class AuditService:
                     governability=assessment.tier,
                     appliesTo=list(assessment.applicable_paths),  # Don't fallback to src/** — leave empty if no paths
                     proposedRule=ProposedRule(
-                        type=proposed[0].type if proposed else "REQUIRE_PATTERN",
-                        pattern=proposed[0].pattern if proposed else "",
-                        description=proposed[0].description if proposed else "Mneme ADR import"
-                    ),
+                        type=proposed[0].type,
+                        pattern=proposed[0].pattern,
+                        description=proposed[0].description
+                    ) if proposed else None,
                     confidence=assessment.confidence,
                 ))
             
@@ -151,11 +152,7 @@ class AuditService:
                             source=Source(file=str(source.relative_to(self.repo_path)), lines="1-50"),
                             governability="guidance",
                             appliesTo=[],
-                            proposedRule=ProposedRule(
-                                type="REQUIRE_PATTERN",
-                                pattern="",
-                                description="Agent instructions — architectural intent, not mechanically enforceable"
-                            ),
+                            proposedRule=None,  # No deterministic rule for guidance-only findings
                             confidence=0.5,
                         ))
             
@@ -170,11 +167,7 @@ class AuditService:
                         source=Source(file=str(source.relative_to(self.repo_path)), lines="1-100"),
                         governability="guidance",
                         appliesTo=[],
-                        proposedRule=ProposedRule(
-                            type="REQUIRE_PATTERN",
-                            pattern="",
-                            description="Configuration file — architectural context, not mechanically enforceable"
-                        ),
+                        proposedRule=None,  # No deterministic rule for config files
                         confidence=0.4,
                     ))
             
