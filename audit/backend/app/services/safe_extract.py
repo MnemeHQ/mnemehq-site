@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
 import tempfile
 import zipfile
 from pathlib import Path
@@ -21,6 +22,11 @@ MAX_FILE_COUNT = 5000                       # max files to process
 MAX_ZIP_RATIO = 100                         # max uncompressed/compressed ratio (zip bomb)
 CLONE_TIMEOUT_SECONDS = 30                  # git clone timeout
 READ_CHUNK_SIZE = 8192                      # bounded reads
+
+# Unix file type constants for symlink detection in ZIP external_attr
+# external_attr is (mode << 16) | attrs, where mode is standard stat mode
+S_IFMT = 0o170000
+S_IFLNK = 0o120000
 
 
 class SafeExtractionError(Exception):
@@ -39,6 +45,26 @@ def _is_binary(content: bytes) -> bool:
     return (non_ascii / len(sample)) > 0.3
 
 
+def _is_absolute_path(filename: str) -> bool:
+    """Check if a ZIP member filename is an absolute path."""
+    # POSIX absolute paths start with /
+    # Windows absolute paths start with drive letter + : or \\
+    if filename.startswith("/"):
+        return True
+    if len(filename) >= 2 and filename[1] == ":":
+        return True
+    if filename.startswith("\\\\"):
+        return True
+    return False
+
+
+def _is_symlink(member: zipfile.ZipInfo) -> bool:
+    """Check if a ZIP member is a symlink via external_attr (Unix mode bits)."""
+    # external_attr upper 16 bits contain the Unix mode
+    mode = (member.external_attr >> 16) & 0xFFFF
+    return (mode & S_IFMT) == S_IFLNK
+
+
 def _validate_zip_member(member: zipfile.ZipInfo, base_path: Path) -> Path:
     """
     Validate a ZIP member path and return the resolved safe destination.
@@ -48,14 +74,20 @@ def _validate_zip_member(member: zipfile.ZipInfo, base_path: Path) -> Path:
     - Path traversal (..)
     - Symlink escapes
     """
-    if member.is_absolute():
+    # Check for absolute paths
+    if _is_absolute_path(member.filename):
         raise SafeExtractionError(f"ZIP contains absolute path: {member.filename}")
+    
+    # Reject symlinks entirely
+    if _is_symlink(member):
+        raise SafeExtractionError(f"ZIP contains symlink (rejected): {member.filename}")
     
     try:
         resolved = (base_path / member.filename).resolve()
     except Exception as e:
         raise SafeExtractionError(f"Invalid path in ZIP: {member.filename}") from e
     
+    # Ensure resolved path stays within base_path
     try:
         resolved.relative_to(base_path.resolve())
     except ValueError:
@@ -145,6 +177,9 @@ def safe_extract_zip(zip_path: str, dest_dir: Optional[Path] = None) -> Path:
 def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int = 1) -> Path:
     """
     Safely clone a Git repository with timeout and size limits.
+    
+    Uses `git clone` subprocess with timeout for reliable timeout enforcement,
+    since GitPython's clone_from doesn't support timeout directly.
     """
     if dest_dir is None:
         dest_dir = Path(tempfile.mkdtemp(prefix="mneme-audit-git-"))
@@ -155,14 +190,30 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
     dest_dir = dest_dir.resolve()
     
     try:
-        Repo.clone_from(
+        # Use subprocess with timeout for reliable timeout enforcement
+        # GitPython's clone_from doesn't expose timeout parameter
+        cmd = [
+            "git", "clone",
+            "--depth", str(depth),
+            "--single-branch",
+            "--branch", "HEAD",  # default branch
             repo_url,
-            dest_dir,
-            depth=depth,
-            single_branch=True,
-            env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
+            str(dest_dir),
+        ]
+        env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+        
+        result = subprocess.run(
+            cmd,
+            env=env,
+            timeout=CLONE_TIMEOUT_SECONDS,
+            capture_output=True,
+            text=True,
         )
         
+        if result.returncode != 0:
+            raise SafeExtractionError(f"Git clone failed: {result.stderr}")
+        
+        # Verify repo size after clone
         total_size = 0
         file_count = 0
         for root, dirs, files in os.walk(dest_dir):
@@ -182,12 +233,15 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
         
         return dest_dir
     
-    except GitCommandError as e:
+    except subprocess.TimeoutExpired:
         shutil.rmtree(dest_dir, ignore_errors=True)
-        raise SafeExtractionError(f"Git clone failed: {e}") from e
+        raise SafeExtractionError(f"Git clone timed out after {CLONE_TIMEOUT_SECONDS} seconds")
     except SafeExtractionError:
         shutil.rmtree(dest_dir, ignore_errors=True)
         raise
+    except subprocess.CalledProcessError as e:
+        shutil.rmtree(dest_dir, ignore_errors=True)
+        raise SafeExtractionError(f"Git clone failed: {e.stderr}") from e
     except Exception as e:
         shutil.rmtree(dest_dir, ignore_errors=True)
         raise SafeExtractionError(f"Repository clone failed: {e}") from e

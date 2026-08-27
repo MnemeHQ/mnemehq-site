@@ -1,7 +1,11 @@
 import { useState, useCallback } from 'react';
 import type { AuditResult, NewAuditRequest, ApiResponse } from '../types/audit';
 
-const API_BASE = '/api';
+// API base is configurable via VITE_API_BASE env var
+// - unset → same-origin "/api/..." (production default)
+// - dev/staging → configurable host (e.g., "http://localhost:8001")
+// Convention: VITE_API_BASE should NOT include trailing slash
+const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '');
 
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
@@ -32,7 +36,7 @@ export function useAuditApi() {
     if (request.zipFile) formData.append('zip_file', request.zipFile);
     if (request.localPath) formData.append('local_path', request.localPath);
 
-    const response = await fetch(`${API_BASE}/audit`, {
+    const response = await fetch(`${API_BASE}/api/audit`, {
       method: 'POST',
       body: formData,
     });
@@ -51,14 +55,14 @@ export function useAuditApi() {
   const getAudit = useCallback(async (id: string) => {
     setLoading(true);
     setError(null);
-    const result = await fetchApi<AuditResult>(`/audit/${id}`);
+    const result = await fetchApi<AuditResult>(`/api/audit/${id}`);
     setLoading(false);
     if (!result.success) setError(result.error ?? 'Unknown error');
     return result;
   }, []);
 
   const exportAudit = useCallback(async (id: string, format: 'markdown' | 'json' = 'markdown') => {
-    const response = await fetch(`${API_BASE}/audit/${id}/export?format=${format}`);
+    const response = await fetch(`${API_BASE}/api/audit/${id}/export?format=${format}`);
     if (!response.ok) throw new Error('Export failed');
     return response.blob();
   }, []);

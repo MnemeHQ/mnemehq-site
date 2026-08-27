@@ -24,7 +24,7 @@ from app.models.audit import (
     Source,
     ProposedRule,
 )
-from app.services.mneme_adapter import mneme_adapter
+from app.services.mneme_adapter import mneme_adapter, ProposedRuleInfo
 from app.services.safe_extract import (
     safe_clone_repo,
     safe_extract_zip,
@@ -345,27 +345,27 @@ class AuditService:
             source_path=decision.source.file,
         )
         
-        # Get Mneme's assessment
-        assessment = mneme_adapter.assess_governability(mneme_decision, decision.source.file, decision.source.lines)
+        # Get Mneme's authoritative assessment
+        assessment = mneme_adapter.assess_governability(mneme_decision)
         
         # Update the audit decision with Mneme's verdict
-        if assessment.enforceable:
+        if assessment.tier == "enforceable":
             decision.governability = "enforceable"
-        elif assessment.partially_enforceable:
+        elif assessment.tier == "partial":
             decision.governability = "partial"
         else:
             decision.governability = "guidance"
         
-        decision.appliesTo = assessment.applies_to_paths
+        decision.appliesTo = list(assessment.applicable_paths) or ["src/**"]
         decision.confidence = assessment.confidence
         
         # Use Mneme's proposed rules
         proposed = mneme_adapter.get_proposed_rules(mneme_decision)
         if proposed:
             decision.proposedRule = ProposedRule(
-                type=proposed[0]["type"],
-                pattern=proposed[0]["pattern"],
-                description=proposed[0]["description"],
+                type=proposed[0].type,
+                pattern=proposed[0].pattern,
+                description=proposed[0].description,
             )
 
     def _extract_mneme_rules(self, text: str) -> list:

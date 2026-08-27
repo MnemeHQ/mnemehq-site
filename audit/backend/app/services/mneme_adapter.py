@@ -3,7 +3,7 @@ MnemeAdapter — Thin wrapper around Mneme core for the audit service.
 
 This adapter translates the audit service's needs into Mneme operations:
 - Import ADRs from a repository
-- Evaluate governability of extracted decisions
+- Evaluate governability of extracted decisions (via Mneme's assess_governability)
 - Generate proposed Mneme rules from decisions
 
 All Mneme semantics (what is enforceable, how rules match, path applicability)
@@ -18,25 +18,25 @@ from typing import Optional
 
 from mneme.adr_import import compile_for_import, ImportReport
 from mneme.schemas import Decision, Rule
-from mneme.enforcer import check_prompt, Severity, EnforcementResult
+from mneme.enforcer import (
+    check_prompt, 
+    Severity, 
+    EnforcementResult, 
+    assess_governability,
+    GovernabilityAssessment,
+)
 from mneme.decision_retriever import DecisionRetriever, ScoredDecision
 from mneme.memory_store import MemoryStore
 
 
 @dataclass
-class GovernabilityAssessment:
-    """Mneme's assessment of a decision's governability."""
-    decision_id: str
-    decision_title: str
-    enforceable: bool
-    partially_enforceable: bool
-    guidance_only: bool
-    mneme_rules: list[Rule]
-    has_literal_rules: bool
-    has_single_term_anti_patterns: bool
-    has_no_constraints: bool
-    applies_to_paths: list[str]
-    confidence: float
+class ProposedRuleInfo:
+    """A proposed Mneme rule extracted from a decision."""
+    type: str
+    pattern: str
+    description: str
+    include_paths: tuple[str, ...] | None = None
+    exclude_paths: tuple[str, ...] = ()
 
 
 class MnemeAdapter:
@@ -93,57 +93,9 @@ class MnemeAdapter:
         
         This is the single point where Mneme's authority on governability is invoked.
         """
-        has_literal_rules = bool(decision.rules)
-        has_single_term_anti_patterns = any(
-            self._is_single_term(ap) for ap in decision.anti_patterns
-        )
-        has_no_constraints = any(
-            re.match(r"^no\s+(.+)$", c.strip(), re.IGNORECASE)
-            for c in decision.constraints
-        )
-        
-        enforceable = has_literal_rules or has_single_term_anti_patterns
-        partially_enforceable = has_no_constraints or bool(decision.anti_patterns)
-        guidance_only = not enforceable and not partially_enforceable
-        
-        applies_to = []
-        for rule in decision.rules:
-            if rule.include_paths:
-                applies_to.extend(rule.include_paths)
-        
-        if enforceable:
-            confidence = 0.95
-        elif partially_enforceable:
-            confidence = 0.7
-        else:
-            confidence = 0.4
-        
-        return GovernabilityAssessment(
-            decision_id=decision.id,
-            decision_title=decision.decision,
-            enforceable=enforceable,
-            partially_enforceable=partially_enforceable,
-            guidance_only=guidance_only,
-            mneme_rules=decision.rules,
-            has_literal_rules=has_literal_rules,
-            has_single_term_anti_patterns=has_single_term_anti_patterns,
-            has_no_constraints=has_no_constraints,
-            applies_to_paths=applies_to or ["src/**"],
-            confidence=confidence,
-        )
+        return assess_governability(decision)
     
-    def _is_single_term(self, text: str) -> bool:
-        """Check if an anti-pattern reduces to a single significant term (Mneme's logic)."""
-        stopwords = frozenset({
-            "add", "use", "not", "get", "set", "run", "and", "the",
-            "for", "with", "into", "from", "that", "this", "will",
-            "should", "would", "could", "make", "keep", "have",
-        })
-        words = re.findall(r"[a-z0-9]+", text.lower())
-        significant = [w for w in words if len(w) >= 3 and w not in stopwords]
-        return len(significant) == 1
-    
-    def get_proposed_rules(self, decision: Decision) -> list[dict]:
+    def get_proposed_rules(self, decision: Decision) -> list[ProposedRuleInfo]:
         """
         Extract proposed Mneme rules from a decision.
         
@@ -152,30 +104,32 @@ class MnemeAdapter:
         proposed = []
         
         for rule in decision.rules:
-            proposed.append({
-                "type": rule.type,
-                "pattern": rule.value,
-                "description": f"FORBID_LITERAL: {rule.value}",
-                "include_paths": list(rule.include_paths) if rule.include_paths else None,
-                "exclude_paths": list(rule.exclude_paths) if rule.exclude_paths else None,
-            })
+            proposed.append(ProposedRuleInfo(
+                type=rule.type,
+                pattern=rule.value,
+                description=f"FORBID_LITERAL: {rule.value}",
+                include_paths=rule.include_paths,
+                exclude_paths=rule.exclude_paths,
+            ))
         
         for ap in decision.anti_patterns:
-            if self._is_single_term(ap):
-                proposed.append({
-                    "type": "FORBID_LITERAL",
-                    "pattern": ap,
-                    "description": f"Anti-pattern (single term): {ap}",
-                })
+            # Use Mneme's own logic to determine if single-term
+            from mneme.enforcer import _is_literal_rule
+            if _is_literal_rule(ap):
+                proposed.append(ProposedRuleInfo(
+                    type="FORBID_LITERAL",
+                    pattern=ap,
+                    description=f"Anti-pattern (single term): {ap}",
+                ))
         
         for constraint in decision.constraints:
             m = re.match(r"^no\s+(.+)$", constraint.strip(), re.IGNORECASE)
             if m:
-                proposed.append({
-                    "type": "REQUIRE_PATTERN",
-                    "pattern": m.group(1).strip(),
-                    "description": f"Constraint: no {m.group(1).strip()}",
-                })
+                proposed.append(ProposedRuleInfo(
+                    type="REQUIRE_PATTERN",
+                    pattern=m.group(1).strip(),
+                    description=f"Constraint: no {m.group(1).strip()}",
+                ))
         
         return proposed
     
