@@ -317,6 +317,10 @@ TEMPLATE_MAP = {
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-insights-ai-native-sdlc-arch-layer.html": "insights/ai-native-sdlc-architecture-layer/og.png",
     "og-audit.html": "audit/og.png",
+    # Migration cluster
+    "og-insights-migrations-drift.html": "insights/ai-assisted-software-migrations-architectural-drift/og.png",
+    "og-insights-legacy-copying.html": "insights/why-ai-coding-agents-copy-legacy-architecture/og.png",
+    "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
 }
 
 PORT = 8765
