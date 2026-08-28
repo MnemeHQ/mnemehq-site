@@ -30,6 +30,7 @@ TEMPLATE_MAP = {
     "og-use-cases-gen.html": "use-cases/og.png",
     "og-coding-assistant-governance.html": "use-cases/coding-assistant-governance/og.png",
     "og-legacy-codebase-memory.html": "use-cases/legacy-codebase-memory/og.png",
+    "og-ai-assisted-software-migrations.html": "use-cases/ai-assisted-software-migrations/og.png",
     "og-security-compliance-guardrails.html": "use-cases/security-compliance-guardrails/og.png",
     "og-data-platform-governance.html": "use-cases/data-platform-governance/og.png",
     "og-design-system-governance.html": "use-cases/design-system-governance/og.png",
