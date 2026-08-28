@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture Audit | Mneme HQ</title>
+  <meta name="description" content="Architecture Governability Audit — Give Mneme a repository and understand which architectural decisions can actually be governed." />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="canonical" href="https://mnemehq.com/audit/" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Mneme HQ" />
+  <meta property="og:title" content="Architecture Governability Audit | Mneme HQ" />
+  <meta property="og:description" content="Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules." />
+  <meta property="og:url" content="https://mnemehq.com/audit/" />
+  <meta property="og:image" content="https://mnemehq.com/audit/og.png" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Architecture Governability Audit | Mneme HQ" />
+  <meta name="twitter:description" content="Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules." />
+  <meta name="twitter:image" content="https://mnemehq.com/audit/og.png" />
+  
+  <!-- Fonts & Styles -->
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+  
+  <link rel="icon" href="/favicon-v2.png" type="image/png">
+  
+  <style>
+    /* Audit-specific styles override */
+    .audit-hero {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3rem;
+      text-align: center;
+    }
+    .audit-hero-tag {
+      display: inline-block;
+      background: rgba(200, 240, 96, 0.07);
+      border: 1px solid rgba(200, 240, 96, 0.22);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-family: 'DM Mono', monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    .audit-hero h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+    .audit-hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+    }
+    .cta-group {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .audit-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+    .audit-section-title {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      color: var(--text);
+    }
+    
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .works-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.5rem 1.25rem;
+      transition: border-color 0.15s;
+    }
+    .works-card:hover { border-color: rgba(200,240,96,0.28); }
+    .works-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+    .works-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    
+    .screens-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .screen-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .screen-header {
+      padding: 0.75rem 1rem;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.72rem;
+      font-family: 'DM Mono', monospace;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .screen-body {
+      padding: 1.5rem;
+      color: var(--text);
+    }
+    .screen-body h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .screen-body ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .screen-body li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+    .screen-body li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      font-family: 'DM Mono', monospace;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #0c0c0d;
+    }
+    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text);
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+    
+    @media (max-width: 768px) {
+      .audit-hero { padding: 3rem 1.25rem 2rem; }
+      .audit-section { padding: 2rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- NAV -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
+    <a href="/docs/how-enforcement-works/">How it works</a>
+    <a href="/use-cases/">Use cases</a>
+    <a href="/demo/">Demo</a>
+    <a href="/audit/">Architecture Audit</a>
+    <a href="/insights/">Insights</a>
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
+    <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
+  </div>
+</nav>
+
+<main id="main-content" tabindex="-1">
+
+  <!-- HERO -->
+  <header class="audit-hero" aria-labelledby="audit-title">
+    <span class="audit-hero-tag">Architecture Governability Audit</span>
+    <h1 id="audit-title">Understand which architectural decisions <br />can actually be governed.</h1>
+    <p>Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules.</p>
+    
+    <div class="cta-group">
+      <a href="/audit/workspace/" class="btn btn-primary" data-cta-intent="start_audit" data-cta-position="audit_hero" data-cta-component="hero_cluster">Run Architecture Audit</a>
+      <a href="/demo/" class="btn btn-ghost" data-cta-intent="try_demo" data-cta-position="audit_hero" data-cta-component="hero_cluster">Try Demo First</a>
+    </div>
+  </header>
+
+  <!-- HOW IT WORKS -->
+  <section class="audit-section" aria-labelledby="how-it-works">
+    <h2 id="how-it-works" class="audit-section-title">Three screens. One actionable audit.</h2>
+    
+    <div class="screens-preview">
+      <article class="screen-card">
+        <div class="screen-header">Screen 1 — New Audit</div>
+        <div class="screen-body">
+          <h3>Repository input</h3>
+          <ul>
+            <li>GitHub repository URL (public)</li>
+            <li>ZIP file upload</li>
+            <li>Local path (internal use)</li>
+          </ul>
+          <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--muted);">No GitHub OAuth required for MVP. OAuth and GitHub App come later.</p>
+        </div>
+      </article>
+      
+      <article class="screen-card">
+        <div class="screen-header">Screen 2 — Audit Overview</div>
+        <div class="screen-body">
+          <h3>Decisions summary</h3>
+          <ul>
+            <li>Total decisions identified</li>
+            <li>Enforceable / Partial / Guidance counts</li>
+            <li>Coverage percentage</li>
+            <li>Sources found (ADRs, CLAUDE.md, etc.)</li>
+            <li>Clickable decision list with governability badges</li>
+          </ul>
+        </div>
+      </article>
+      
+      <article class="screen-card">
+        <div class="screen-header">Screen 3 — Decision Detail</div>
+        <div class="screen-body">
+          <h3>Source + rationale + rule</h3>
+          <ul>
+            <li>Full requirement text</li>
+            <li>Source file and line numbers</li>
+            <li>Governability classification with reasoning</li>
+            <li>Applies-to paths</li>
+            <li>Proposed Mneme rule (copyable)</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- WHAT YOU GET -->
+  <section class="audit-section" aria-labelledby="what-you-get">
+    <h2 id="what-you-get" class="audit-section-title">What the audit tells you</h2>
+    
+    <div class="works-grid">
+      <article class="works-card">
+        <h3>Decisions discovered</h3>
+        <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, config files — every source of architectural intent in the repository.</p>
+      </article>
+      <article class="works-card">
+        <h3>Governability classified</h3>
+        <p>Each decision rated: <span style="color: var(--teal);">Enforceable</span>, <span style="color: var(--warning);">Partial</span>, or <span style="color: var(--muted);">Guidance only</span>.</p>
+      </article>
+      <article class="works-card">
+        <h3>Proposed Mneme rules</h3>
+        <p>See the exact deterministic Mneme rule where one exists (e.g., FORBID_LITERAL).</p>
+      </article>
+      <article class="works-card">
+        <h3>Governance gaps</h3>
+        <p>Decisions that can't be enforced yet — with specific next steps to make them machine-testable.</p>
+      </article>
+      <article class="works-card">
+        <h3>Exportable report</h3>
+        <p>Download the full audit as Markdown or JSON to share with your team or design partners.</p>
+      </article>
+      <article class="works-card">
+        <h3>Designed for design partners</h3>
+        <p>This audit is the artifact you send after a design-partner call — concrete evidence of where their architecture is ambiguous to AI agents.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- THE DISTINCTION -->
+  <section class="audit-section" aria-labelledby="the-distinction" style="background: var(--surface); border: 1px solid var(--border); border-radius: 10px; margin: 0 2rem 3rem; padding: 3rem 2rem;">
+    <h2 id="the-distinction" class="audit-section-title" style="text-align: center; max-width: 700px; margin: 0 auto 2rem;">The important distinction</h2>
+    
+    <div style="max-width: 700px; margin: 0 auto;">
+      <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+        <p style="color: var(--red); font-family: 'DM Mono', monospace; font-size: 0.82rem; margin-bottom: 0.5rem;">Don't say:</p>
+        <p style="font-size: 1.05rem; line-height: 1.6;">"Mneme found architectural drift."</p>
+      </div>
+      <div style="background: rgba(139, 224, 200, 0.05); border: 1px solid rgba(139, 224, 200, 0.3); border-radius: 8px; padding: 1.5rem;">
+        <p style="color: var(--teal); font-family: 'DM Mono', monospace; font-size: 0.82rem; margin-bottom: 0.5rem;">The audit asks:</p>
+        <p style="font-size: 1.05rem; line-height: 1.6; font-weight: 500;">"Can this architectural intent be deterministically governed?"</p>
+      </div>
+      <p style="margin-top: 1.5rem; color: var(--muted);">You don't have generalized drift detection yet. The audit is valuable precisely because it answers a narrower, answerable question — and that answer is what Mneme actually does today.</p>
+    </div>
+  </section>
+
+  <!-- CTA FOOTER -->
+  <section class="cta-footer" style="border-top: 1px solid var(--border); text-align: center; padding: 5rem 2rem;">
+    <h2 style="font-family: 'Inter', sans-serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 2rem; color: var(--text);">
+      Ready to audit your architecture?
+    </h2>
+    <div class="cta-group">
+      <a href="/audit/workspace/" class="btn btn-primary" data-cta-intent="start_audit" data-cta-position="audit_footer" data-cta-component="footer_cluster">Run Architecture Audit</a>
+      <a href="/pilot/" class="btn btn-ghost" data-cta-intent="request_pilot" data-cta-position="audit_footer" data-cta-component="footer_cluster">Request a Pilot</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted);">
+  <p>Mneme HQ — Architectural drift prevention for the agentic AI SDLC</p>
+  <p style="margin-top: 0.5rem;">
+    <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener noreferrer">Open source on GitHub</a>
+    <span style="margin: 0 0.75rem;">·</span>
+    <a href="/docs/">Documentation</a>
+    <span style="margin: 0 0.75rem;">·</span>
+    <a href="/privacy/">Privacy</a>
+  </p>
+</footer>
+
+<!-- Hamburger JS -->
+<script>
+(function() {
+  const hamburger = document.querySelector('.nav-hamburger');
+  const navLinks = document.querySelector('.nav-links');
+  if (hamburger && navLinks) {
+    hamburger.addEventListener('click', function() {
+      const isOpen = navLinks.classList.toggle('open');
+      hamburger.setAttribute('aria-expanded', isOpen);
+    });
+  }
+})();
+</script>
+
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
+<script><!-- cta-analytics -->
+(function(){
+  'use strict';
+  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
+   * consume these dataLayer events. Schema: docs/site/cta-system.md
+   *
+   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
+   * code_copy  { copy_context, page_type }
+   * form_start / form_submit / form_error / form_success are emitted by the
+   * pilot form page (PR 3) using the same page_type helper.
+   */
+
+  function pageType() {
+    var p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'homepage';
+    var map = [
+      ['/docs', 'docs'],
+      ['/demo', 'demo'],
+      ['/integrations', 'integration'],
+      ['/works-with', 'integration'],
+      ['/use-cases', 'use_case'],
+      ['/insights', 'insight'],
+      ['/concepts', 'concept'],
+      ['/for', 'team'],
+      ['/pilot', 'pilot'],
+      ['/pricing', 'pricing'],
+      ['/benchmark', 'benchmark']
+    ];
+    for (var i = 0; i < map.length; i++) {
+      if (p.indexOf(map[i][0]) === 0) return map[i][1];
+    }
+    return 'other';
+  }
+
+  var PAGE_TYPE = pageType();
+
+  function push(event, params) {
+    params.page_type = PAGE_TYPE;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params));
+  }
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
+    if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
+
+    push('cta_click', {
+      cta_intent: el.getAttribute('data-cta-intent'),
+      cta_position: el.getAttribute('data-cta-position'),
+      cta_component: el.getAttribute('data-cta-component'),
+      cta_destination: el.getAttribute('href')
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>

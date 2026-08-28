@@ -315,6 +315,7 @@ TEMPLATE_MAP = {
     # Misc
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-insights-ai-native-sdlc-arch-layer.html": "insights/ai-native-sdlc-architecture-layer/og.png",
+    "og-audit.html": "audit/og.png",
 }
 
 PORT = 8765
