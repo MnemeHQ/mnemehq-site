@@ -106,13 +106,14 @@ class MnemeAdapter:
         
         # Typed FORBID_LITERAL rules - these are always enforced
         for rule in decision.rules:
-            proposed.append(ProposedRuleInfo(
-                type=rule.type,
-                pattern=rule.value,
-                description=f"{rule.type}: {rule.value}",
-                include_paths=rule.include_paths,
-                exclude_paths=rule.exclude_paths,
-            ))
+            if rule.type == "FORBID_LITERAL":
+                proposed.append(ProposedRuleInfo(
+                    type=rule.type,
+                    pattern=rule.value,
+                    description=f"{rule.type}: {rule.value}",
+                    include_paths=rule.include_paths,
+                    exclude_paths=rule.exclude_paths,
+                ))
         
         # Single-term anti_patterns - these are always enforced (FAIL severity)
         from mneme.enforcer import _is_literal_rule

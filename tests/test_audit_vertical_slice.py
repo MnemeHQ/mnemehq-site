@@ -47,7 +47,10 @@ async def test_vertical_slice():
         print(f"  [{d.governability.upper()}] {d.title}")
         print(f"    Source: {d.source.file} (lines {d.source.lines})")
         print(f"    Applies to: {d.appliesTo}")
-        print(f"    Proposed rule: {d.proposedRule.type} \"{d.proposedRule.pattern}\"")
+        if d.proposedRule:
+            print(f"    Proposed rule: {d.proposedRule.type} \"{d.proposedRule.pattern}\"")
+        else:
+            print(f"    Proposed rule: None (no deterministic rule)")
         print(f"    Confidence: {d.confidence}")
         print()
     
