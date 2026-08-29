@@ -1241,6 +1241,87 @@ body.demo-page *::after {
   gap: 1.25rem;
 }
 
+.hub-native-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  border: 1px solid rgba(200, 240, 96, 0.3);
+  border-radius: 12px;
+  background: linear-gradient(115deg, rgba(200, 240, 96, 0.07), #131315 46%, #101012);
+}
+
+.hub-native-card .hub-card-top {
+  margin-bottom: 2rem;
+}
+
+.hub-native-card h2 {
+  max-width: 38rem;
+  margin: 0 0 1rem;
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2.25rem, 5vw, 3.7rem);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+}
+
+.hub-native-card p {
+  max-width: 36rem;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.hub-native-card p code {
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.86em;
+}
+
+.hub-native-card .hub-card-cta {
+  margin-top: 1.75rem;
+  color: var(--accent);
+}
+
+.hub-native-trace {
+  display: grid;
+  align-content: center;
+  gap: 0.7rem;
+  padding-left: clamp(1rem, 3vw, 2rem);
+  border-left: 1px solid rgba(200, 240, 96, 0.25);
+}
+
+.hub-native-trace div {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.15rem 0.8rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid #29292f;
+}
+
+.hub-native-trace div:last-child {
+  border-bottom: 0;
+}
+
+.hub-native-trace span,
+.hub-native-trace code {
+  color: #8f8f9a;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.64rem;
+}
+
+.hub-native-trace strong {
+  font-size: 0.83rem;
+  font-weight: 600;
+}
+
+.hub-native-trace code {
+  grid-column: 2;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .hub-card {
   display: flex;
   min-height: 25rem;
@@ -1370,7 +1451,7 @@ body.demo-page *::after {
 
 .hub-support-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.8rem;
 }
 
@@ -1428,6 +1509,28 @@ body.demo-page *::after {
   padding: clamp(1.5rem, 4vw, 2.25rem);
   border-color: rgba(200, 240, 96, 0.22);
   background: linear-gradient(100deg, rgba(200, 240, 96, 0.045), #131316 40%, #101012);
+}
+
+.hub-next .hub-section-head {
+  margin-bottom: 2rem;
+}
+
+.hub-next .hub-section-label {
+  color: #777781;
+}
+
+.hub-next .hub-card--target {
+  border-color: #25252b;
+  background: #0e0e10;
+}
+
+.hub-next .hub-card--target h3 {
+  color: #c4c4cc;
+}
+
+.hub-next .hub-card--target p,
+.hub-next .hub-card--target .hub-card-cta {
+  color: #858590;
 }
 
 .hub-run--featured .hub-section-label {
@@ -1528,9 +1631,17 @@ body.demo-page *::after {
 
   .hub-section-head,
   .hub-proof-grid,
+  .hub-native-card,
   .hub-card--target,
   .hub-support-grid {
     grid-template-columns: 1fr;
+  }
+
+  .hub-native-trace {
+    padding-top: 1rem;
+    padding-left: 0;
+    border-top: 1px solid rgba(200, 240, 96, 0.25);
+    border-left: 0;
   }
 
   .hub-card--target {
