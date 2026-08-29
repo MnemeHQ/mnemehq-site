@@ -50,6 +50,11 @@ FOOTER_SNIPPET = SITE / "_snippets" / "footer.html"
 # global nav/footer. _snippets/ are the canonical sources themselves.
 EXCLUDED_FILENAME_PREFIXES = ("og-",)
 EXCLUDED_DIR_PARTS = ("_snippets",)
+# Build-output SPA shells: a bundler-generated <div id="root"> document whose
+# chrome is rendered by the application at runtime, so there is no static nav
+# or footer to compare. Listed as a path so a hand-written page under the same
+# directory is still checked.
+EXCLUDED_PATHS = ("audit/workspace/index.html",)
 
 EXPECTED_FOOTER_HEADINGS = ["Product", "Developers", "Learn", "Company", "Connect"]
 EXPECTED_CTA_HREF = "/pilot/"
@@ -99,6 +104,8 @@ def is_excluded(path: Path) -> bool:
     if any(part in EXCLUDED_DIR_PARTS for part in path.parts):
         return True
     if path.name.startswith(EXCLUDED_FILENAME_PREFIXES):
+        return True
+    if path.relative_to(SITE).as_posix() in EXCLUDED_PATHS:
         return True
     return False
 
