@@ -164,6 +164,38 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-strangler-fig.html",
+        "Insights",
+        "Strangler-Fig Migrations",
+        "40px",
+        "Only the adapter is supposed to depend on the legacy system. An agent that reaches past it breaks the guarantee the migration is built on.",
+        "insights/strangler-fig-migrations-architectural-drift",
+    ),
+    (
+        "og-insights-context-not-enough.html",
+        "Insights",
+        "Codebase Context Is Not Enough",
+        "44px",
+        "Retrieval reports what a repository contains. A migration needs a decision about what should survive.",
+        "insights/why-codebase-context-is-not-enough-for-migrations",
+    ),
+    (
+        "og-insights-migration-guardrails.html",
+        "Insights",
+        "Migration Guardrails for AI Coding Agents",
+        "36px",
+        "Five path-scoped rules: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports.",
+        "insights/migration-guardrails-for-ai-coding-agents",
+    ),
+    (
+        "og-insights-cloud-platform-migrations.html",
+        "Insights",
+        "Drift During Cloud and Platform Migrations",
+        "40px",
+        "AWS to Azure, VM to Kubernetes, monolith to services: the same path-scoped decision covers all five.",
+        "insights/architectural-drift-cloud-platform-migrations",
+    ),
+    (
         "og-insights-migrations-drift.html",
         "Insights",
         "AI-Assisted Software Migrations",
@@ -864,6 +896,10 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-strangler-fig.html": "insights/strangler-fig-migrations-architectural-drift/og.png",
+    "og-insights-context-not-enough.html": "insights/why-codebase-context-is-not-enough-for-migrations/og.png",
+    "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",
+    "og-insights-cloud-platform-migrations.html": "insights/architectural-drift-cloud-platform-migrations/og.png",
     "og-insights-migrations-drift.html": "insights/ai-assisted-software-migrations-architectural-drift/og.png",
     "og-insights-legacy-copying.html": "insights/why-ai-coding-agents-copy-legacy-architecture/og.png",
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",

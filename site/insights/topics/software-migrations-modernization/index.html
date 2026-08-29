@@ -51,6 +51,10 @@
         "url": "https://mnemehq.com/insights/topics/software-migrations-modernization/",
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
+          {"@type": "Article", "name": "Strangler-Fig Migrations: Preventing Architectural Drift at the Boundary", "url": "https://mnemehq.com/insights/strangler-fig-migrations-architectural-drift/"},
+          {"@type": "Article", "name": "Why Codebase Context Is Not Enough During an AI-Assisted Migration", "url": "https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/"},
+          {"@type": "Article", "name": "How to Encode Migration Guardrails for AI Coding Agents", "url": "https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/"},
+          {"@type": "Article", "name": "Architectural Drift During Cloud and Platform Migrations", "url": "https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/"},
           {"@type": "Article", "name": "AI-Assisted Software Migrations: How to Prevent Architectural Drift", "url": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/"},
           {"@type": "Article", "name": "Why AI Coding Agents Copy Legacy Architecture During Migrations", "url": "https://mnemehq.com/insights/why-ai-coding-agents-copy-legacy-architecture/"},
           {"@type": "Article", "name": "ADRs for Software Migrations: Legacy, Target and Transitional Decisions", "url": "https://mnemehq.com/insights/adrs-for-software-migrations/"},
@@ -282,7 +286,7 @@
 <div class="cards-wrap">
   <p class="hub-intro">A migration is the one situation where following the surrounding code is the wrong instinct. For as long as the project runs, the repository demonstrates two architectures, and the one being removed is almost always the better represented of the two. An agent that infers house style by looking at what is already there will infer the architecture you are paying to eliminate, and it will do so while every individual change looks locally reasonable.</p>
   <p class="hub-intro">These essays cover why that happens, why better retrieval makes it worse rather than better, and what a decision corpus needs in order to describe a system in transition: states for legacy, target, transitional and superseded patterns, and path applicability so a rule can govern migrated modules while staying silent where migration has not reached.</p>
-  <p class="hub-intro">If you want to see the enforcement path before reading the argument, the <a href="/demo/repository-pattern/" style="color:var(--teal);">repository pattern demo</a> shows a direct database call from a service layer matched to its decision and denied by a strict check, which is the exact shape of the verdict a migrated module produces when an agent reaches for the superseded pattern.</p>
+  <p class="hub-intro">If you want to see the enforcement path before reading the argument, the <a href="/demo/legacy-vs-target-architecture/" style="color:var(--teal);">migration demo</a> traces an agent copying the legacy pattern into a migrated module: denied there, and silently skipped in the legacy tree where the same pattern is still correct.</p>
   <div class="cards-section">
     <div class="section-divider"><span class="section-label">Cornerstone</span></div>
     <div class="cards-grid">
@@ -331,6 +335,66 @@
           </div>
           <h2>ADRs for Software Migrations: Legacy, Target and Transitional Decisions</h2>
           <p>Classic ADR practice assumes one architecture at a time. A migration needs states that expire and decisions scoped to the paths they govern.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/strangler-fig-migrations-architectural-drift/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Guide</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">7 min read</span>
+          </div>
+          <h2>Strangler-Fig Migrations: Preventing Architectural Drift at the Boundary</h2>
+          <p>A strangler migration works because only the adapter depends on the legacy system. Here is why agents break that guarantee, and how to stop them.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/why-codebase-context-is-not-enough-for-migrations/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">6 min read</span>
+          </div>
+          <h2>Why Codebase Context Is Not Enough During an AI-Assisted Migration</h2>
+          <p>Retrieval reports what a repository contains, and mid-migration that is mostly the pattern being removed. Better recall cannot substitute for a decision.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/migration-guardrails-for-ai-coding-agents/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Guide</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">7 min read</span>
+          </div>
+          <h2>How to Encode Migration Guardrails for AI Coding Agents</h2>
+          <p>Five path-scoped rules cover most migration guardrails an AI coding agent needs: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/architectural-drift-cloud-platform-migrations/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">6 min read</span>
+          </div>
+          <h2>Architectural Drift During Cloud and Platform Migrations</h2>
+          <p>AWS to Azure, VM to Kubernetes, monolith to services: five common platform migrations, and why each needs the same path-scoped decision as any other.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
