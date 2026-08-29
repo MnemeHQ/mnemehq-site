@@ -109,7 +109,7 @@
           "name": "What states does a migration ADR need?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Four. Legacy remains in force where migration has not reached. Target is what new and migrated code follows. Transitional permits a deliberate exception at a declared boundary and carries a termination condition. Superseded prevents a pattern from returning to a component that has already migrated."
+            "text": "Four. Legacy remains in force where migration has not reached. Target is what new and migrated code follows. Transitional permits a deliberate exception at a declared boundary and carries a termination condition. Forbidden reintroduction prevents a pattern from returning to a component that has already migrated, as a decision that stays active and scoped."
           }
         },
         {
@@ -391,13 +391,15 @@
       <tbody>
         <tr><td>Legacy</td><td>This was the standard. It remains in force where migration has not reached.</td><td>Retired when the last component migrates.</td></tr>
         <tr class="accent-row"><td>Target</td><td>This is what new and migrated code follows.</td><td>Becomes the only active decision at completion.</td></tr>
-        <tr><td>Transitional</td><td>This exception is permitted at a declared boundary during cutover.</td><td>Carries a termination condition. Marked superseded when the boundary closes.</td></tr>
-        <tr><td>Superseded</td><td>This pattern must not return to a component that has migrated.</td><td>Permanent. It is the record that prevents the pattern coming back.</td></tr>
+        <tr><td>Transitional</td><td>This exception is permitted at a declared boundary during cutover.</td><td>States its termination condition in prose. Marked <code>status: superseded</code> when the boundary closes.</td></tr>
+        <tr><td>Forbidden reintroduction</td><td>This pattern must not return to a component that has migrated.</td><td>Stays <code>status: accepted</code> with selectors covering the migrated tree. It is the record that prevents the pattern coming back.</td></tr>
       </tbody>
     </table>
     </div>
 
-    <p>The last row is the one teams skip and the one that matters most after the migration is nominally finished. A superseded decision is not dead documentation. It is the only thing standing between a migrated module and the next agent that has no local reason to avoid the old approach.</p>
+    <p>The last row is the one teams skip and the one that matters most after the migration is nominally finished. It is the only thing standing between a migrated module and the next agent that has no local reason to avoid the old approach.</p>
+
+    <p>Mind the vocabulary here, because two meanings of the same word sit next to each other. The <em>pattern</em> is superseded, and the decision that forbids it is <code>status: accepted</code>, scoped to the migrated tree. An ADR whose own <code>status:</code> is <code>superseded</code> is excluded from the active set entirely, which is how you retire a record rather than how you enforce one. Marking the forbidding decision superseded would switch it off.</p>
 
     <h2>Applicability is what makes the states work</h2>
     <p>States alone do not resolve anything. A decision that says "direct persistence access is superseded" is either wrong in the legacy tree or ignored everywhere, unless it also says where it applies.</p>
@@ -413,7 +415,7 @@
 
     <h2>Sequencing belongs in the corpus</h2>
     <p>Migrations carry ordering requirements. A downstream component cannot move until its dependency has. Those requirements normally live in a project plan, which is not something an agent is checked against.</p>
-    <p>Recording them as decisions turns a scheduling assumption into an enforceable one. It also gives the team a single place to answer the question that comes up constantly during a long migration, which is whether a particular piece of work is allowed to start yet.</p>
+    <p>No directive expresses "has component A migrated yet." What the corpus can carry is a rule that holds the downstream tree to the legacy pattern until its dependency lands, retired as part of that dependency's migration. That keeps the ordering visible and attributable rather than machine-derived, and it gives the team one place to answer the question that comes up constantly during a long migration, which is whether a particular piece of work is allowed to start yet.</p>
 
     <h2>Retiring decisions is part of the work</h2>
     <p>The end state of a well-run migration corpus is small. The transitional decisions have been marked superseded as their boundaries closed. The legacy decision has been retired. What remains is the target decision plus the superseded records that keep the old patterns from returning.</p>
@@ -443,7 +445,7 @@
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What states does a migration ADR need?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Four. Legacy remains in force where migration has not reached. Target is what new and migrated code follows. Transitional permits a deliberate exception at a declared boundary and carries a termination condition. Superseded prevents a pattern from returning to a component that has already migrated.</div>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Four. Legacy remains in force where migration has not reached. Target is what new and migrated code follows. Transitional permits a deliberate exception at a declared boundary and carries a termination condition. Forbidden reintroduction prevents a pattern from returning to a component that has already migrated, as a decision that stays active and scoped.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How does an ADR say where a decision applies?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>

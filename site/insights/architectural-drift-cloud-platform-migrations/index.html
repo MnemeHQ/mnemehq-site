@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI-Assisted Software Migrations: How to Prevent Architectural Drift &mdash; Mneme HQ</title>
+  <title>Architectural Drift During Cloud and Platform Migrations &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
+  <meta name="description" content="AWS to Azure, VM to Kubernetes, monolith to services: five common platform migrations, and why each needs the same path-scoped decision as any other migration." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/" />
+  <link rel="canonical" href="https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="AI-Assisted Software Migrations: How to Prevent Architectural Drift" />
-  <meta property="og:description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
-  <meta property="og:url" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/" />
-  <meta property="og:image" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png" />
+  <meta property="og:title" content="Architectural Drift During Cloud and Platform Migrations" />
+  <meta property="og:description" content="AWS to Azure, VM to Kubernetes, monolith to services: five common platform migrations, and why each needs the same path-scoped decision as any other migration." />
+  <meta property="og:url" content="https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AI-Assisted Software Migrations: How to Prevent Architectural Drift" />
-  <meta name="twitter:description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
-  <meta name="twitter:image" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png" />
+  <meta name="twitter:title" content="Architectural Drift During Cloud and Platform Migrations" />
+  <meta name="twitter:description" content="AWS to Azure, VM to Kubernetes, monolith to services: five common platform migrations, and why each needs the same path-scoped decision as any other migration." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/og.png" />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-08-28T00:00:00Z" />
+  <meta property="article:published_time" content="2026-08-29T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Engineering" />
 
@@ -59,18 +59,18 @@
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "AI-Assisted Software Migrations: How to Prevent Architectural Drift",
-          "item": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/"
+          "name": "Architectural Drift During Cloud and Platform Migrations",
+          "item": "https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/"
         }
       ]
     },
     {
       "@type": "TechArticle",
-      "headline": "AI-Assisted Software Migrations: How to Prevent Architectural Drift",
-      "description": "During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target.",
-      "url": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/",
-      "datePublished": "2026-08-28",
-      "dateModified": "2026-08-28",
+      "headline": "Architectural Drift During Cloud and Platform Migrations",
+      "description": "AWS to Azure, VM to Kubernetes, monolith to services: five common platform migrations, and why each needs the same path-scoped decision as any other migration.",
+      "url": "https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/",
+      "datePublished": "2026-08-29",
+      "dateModified": "2026-08-29",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -85,12 +85,12 @@
           "url": "https://mnemehq.com/logo-v3.png"
         }
       },
-      "image": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png",
-      "mainEntityOfPage": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/",
+      "image": "https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/insights/architectural-drift-cloud-platform-migrations/",
       "about": [
-        "architectural drift",
-        "software migration",
-        "architecture decision record"
+        "cloud migration",
+        "platform migration",
+        "architectural drift"
       ]
     },
     {
@@ -98,42 +98,34 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Why are migrations harder for AI coding agents than greenfield work?",
+          "name": "Why do platform migrations produce more drift than application-level ones?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "In greenfield work the codebase demonstrates one architecture, so copying the surrounding patterns is usually correct. During a migration two architectures coexist and the one being removed is normally the better represented, so the agent's most reliable heuristic points at the wrong target for the entire duration of the project."
+            "text": "They typically touch more of the codebase over a longer period, with more of the change happening in configuration and infrastructure code that fewer people review line by line. An agent working near a mostly-unmigrated majority faces the same frequency problem as any migration, just spread across more surface area."
           }
         },
         {
           "@type": "Question",
-          "name": "Does better retrieval or a larger context window fix this?",
+          "name": "Does a framework version upgrade really count as the same kind of migration?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No, and it can make the problem worse. Retrieval reports what exists in the repository, and during a migration what exists is mostly legacy. More thorough search returns more examples of the architecture you are leaving, so the agent reproduces it more confidently, not less."
+            "text": "Yes. Old-API and new-API usage typically coexist for months during a major upgrade, and an agent working near recently-upgraded code faces the identical frequency problem. It's often treated as routine maintenance rather than a governed migration, which usually means it has no scoped decisions covering it at all."
           }
         },
         {
           "@type": "Question",
-          "name": "Why four migration states instead of old code and new code?",
+          "name": "Do observability, secrets, and networking really need their own migration decisions?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess."
+            "text": "Yes. They tend to be treated as plumbing rather than architecture, but a service that migrates its business logic while keeping the old logging or secrets pattern is not actually fully migrated, and an agent has no way to know that unless it's recorded the same way as everything else."
           }
         },
         {
           "@type": "Question",
-          "name": "How can a rule forbid a pattern in migrated code but allow it in the legacy tree?",
+          "name": "Does each of these five migration types need a different enforcement mechanism?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Through path applicability. A rule carries explicit include and exclude selectors, so it governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. That is what lets both architectures coexist without the agent inferring which one is canonical."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do we need to model the entire migration before this is useful?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying, and further boundaries are added as the migration proceeds."
+            "text": "No. All five use the same path-scoped decision mechanism: include_paths for the migrated tree, exclude_paths for the legacy tree. Only the specific literal or pattern being scoped changes between an SDK call, a deployment convention, a query dialect, or an old-version API call."
           }
         }
       ]
@@ -349,152 +341,106 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
-    <li aria-current="page">AI-Assisted Software Migrations: How to Prevent Architectural Drift</li>
+    <li aria-current="page">Architectural Drift During Cloud and Platform Migrations</li>
   </ol>
 </nav>
 
 <article class="article-wrap">
   <header class="article-header">
     <div class="article-eyebrow">
-      <span class="eyebrow-tag">Guide</span>
+      <span class="eyebrow-tag">Analysis</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">8 min read</span>
+      <span class="eyebrow-meta">6 min read</span>
     </div>
-    <h1>AI-Assisted Software Migrations: How to Prevent Architectural Drift</h1>
-    <p class="article-lede">A migration puts two architectures in one repository for years at a time. An agent's most reliable instinct, follow the surrounding code, points at the one you are paying to remove.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-28">August 2026</time></p>
+    <h1>Architectural Drift During Cloud and Platform Migrations</h1>
+    <p class="article-lede">Cloud and platform migrations get a budget, a timeline, and a runbook. The architectural drift they create in application code usually gets none of the three.</p>
+    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-29">August 2026</time></p>
   </header>
 
 <div class="article-body">
 
-    <h2>Migrations are the hardest case for an AI coding agent</h2>
-    <p>Greenfield development gives a coding agent a clean signal. There is one architecture, the codebase demonstrates it, and copying the surrounding patterns is usually the right instinct. A migration inverts that. For the entire duration of the project the repository contains two architectures at once, and the one you are trying to eliminate is almost always the better represented of the two.</p>
-    <p>This is not a temporary annoyance. It is the defining condition of the work. A migration that took two years to schedule will take at least as long to execute, and for all of that time the agent's most reliable heuristic, follow the surrounding code, points in exactly the wrong direction.</p>
-    <div class="callout"><p><strong>The dominant pattern in a repository may be precisely the pattern you are paying to remove.</strong></p></div>
+    <h2>The infrastructure move is not the hard part</h2>
+    <p>AWS to Azure or GCP. VMs to Kubernetes. A monolith split into services. REST replaced by an event-driven backbone. A database engine swap. A framework major-version upgrade. These are usually described, and budgeted, as infrastructure or platform projects. The actual difficulty rarely lives in the infrastructure. It lives in what happens to the application code that has to keep running correctly while the ground underneath it changes.</p>
+    <p>Every one of these projects is, underneath the platform work, an architectural migration of exactly the kind the rest of this cluster describes: two valid patterns coexisting in one codebase for the length of the project, with agents statistically likely to reproduce the one being retired.</p>
 
-    <h2>Legacy code is misleading context</h2>
-    <p>Retrieval and context engineering have made agents much better at finding what exists in a codebase. During a migration that improvement cuts against you. A more thorough search returns more examples of the legacy structure, because there are more of them. The better the retrieval, the more confidently the agent reproduces the architecture you are leaving.</p>
-    <p>Suppose the system you are moving away from is organized as <code>Controller &rarr; Service &rarr; Repository &rarr; Database</code>, and the target is <code>API &rarr; Domain &rarr; Port &rarr; Adapter</code>. Both are present. Both compile. Both pass their tests. Nothing in the repository marks one as historical and the other as intended, because that distinction does not live in code. It lives in a decision that was made in a meeting and recorded, at best, in a document nobody compiles.</p>
+    <h2>Why platform migrations produce more drift, not less</h2>
+    <p>It is tempting to assume a platform migration is lower risk for this problem than an application-level one, because so much of the change happens in configuration and infrastructure code rather than business logic. The opposite tends to be true. Platform migrations usually touch more of the codebase, over a longer period, with less of the change concentrated in code anyone is reading line by line.</p>
+    <p>A Kubernetes migration means every service's deployment story changes, generally on a per-service schedule stretched across months. A database engine change means every query, every migration script, and often every ORM mapping is touched somewhere. An agent generating code for a not-yet-migrated service, next to a dozen already-migrated ones, faces the exact frequency problem from the pillar article: the migrated pattern is newer and rarer, the legacy pattern is older and more numerous, and nothing marks one as historical.</p>
 
-    <h2>Frequency is not architectural intent</h2>
-    <p>An agent asked to add a feature will inspect the codebase and find, say, two hundred instances of the legacy pattern and twenty of the target. It concludes that the legacy pattern is how this system is built. As a statistical claim about the current repository, that is correct. As an architectural claim about what should be written next, it is exactly backwards.</p>
-    <p>This is the gap that migration governance has to close. What exists in the codebase is a description of the past. What should be created next is a decision, and decisions are not recoverable by counting.</p>
-
-    <h2>Four states, not two</h2>
-    <p>Most migration tooling treats the problem as binary: old code and new code. That framing is what forces agents to guess, because the interesting cases are the ones in between. Four states describe almost any migration, and each maps onto a decision an enforcement layer can resolve against a path.</p>
+    <h2>The pattern repeats across five common migrations</h2>
 
     <div style="overflow-x:auto;">
     <table class="gov-table">
       <thead>
-        <tr><th>State</th><th>Meaning</th><th>What an agent may do</th></tr>
+        <tr><th>Migration</th><th>What agents copy by default</th><th>What has to be scoped instead</th></tr>
       </thead>
       <tbody>
-        <tr><td>Legacy</td><td>Valid historically. No longer the model for new work.</td><td>Read it. Modify it in place. Do not extend it.</td></tr>
-        <tr class="accent-row"><td>Target</td><td>What new and migrated code follows.</td><td>Build here by default.</td></tr>
-        <tr><td>Transitional</td><td>Adapters, dual writes, compatibility layers, strangler boundaries that exist only during the cutover.</td><td>Permitted, but only at the declared boundary and only until the boundary closes.</td></tr>
-        <tr><td>Forbidden reintroduction</td><td>A pattern that must not return to a component once that component has migrated.</td><td>Blocked in the migrated tree. Still allowed where migration has not reached.</td></tr>
+        <tr><td>AWS &rarr; Azure/GCP</td><td>Provider-specific SDK calls and IAM patterns from the majority of existing services</td><td>The target provider's client and auth pattern, scoped to migrated services</td></tr>
+        <tr class="accent-row"><td>VM &rarr; Kubernetes</td><td>Deployment scripts and health-check conventions built for long-lived hosts</td><td>Container-native patterns: readiness probes, externalized config, stateless assumptions</td></tr>
+        <tr><td>Monolith &rarr; services</td><td>Direct in-process calls to modules that are supposed to be remote now</td><td>Service-boundary contracts, scoped per extracted service as it moves</td></tr>
+        <tr><td>REST &rarr; event-driven</td><td>Synchronous request/response call shapes copied from the surrounding code</td><td>Publish/subscribe patterns, scoped to the events already migrated</td></tr>
+        <tr><td>Database engine swap</td><td>Query syntax and transaction assumptions specific to the old engine</td><td>Target-engine query patterns and transaction boundaries, scoped per migrated table or service</td></tr>
       </tbody>
     </table>
     </div>
 
-    <p>A naming caution, because the words collide. The fourth state is a decision that stays <code>status: accepted</code> and carries path selectors covering the migrated tree. That is not the same thing as an ADR whose <code>status:</code> is <code>superseded</code>, which is how a record is retired from the active set and stops being enforced at all. The pattern is superseded; the decision forbidding it is active.</p>
+    <p>The specific pattern being copied changes with the migration. The mechanism does not. In every row, an agent generating code near a not-yet-migrated majority reaches for what it sees, and what it sees is the platform being replaced.</p>
 
-    <p>The fourth state is the one that gets skipped, and it is the one that causes the most damage. Once a module has been moved, nothing in the codebase prevents the next agent from reintroducing the old pattern into it. The module now contains target-architecture code, so the agent has no local signal that the old approach was ever wrong here.</p>
+    <h2>Framework upgrades are the same problem in miniature</h2>
+    <p>A major framework version upgrade rarely happens as one commit. It happens module by module, sometimes over quarters, with old-API and new-API usage coexisting the entire time. An agent asked to add a feature near recently-upgraded code has the same frequency problem as any other migration: the old API is usually still the majority pattern until the upgrade is nearly complete, which is exactly when the temptation to relax vigilance is highest.</p>
+    <p>This is worth naming separately from the infrastructure cases above because it is the one most likely to be treated as routine maintenance rather than a governed migration, and therefore the one most likely to have no scoped decisions at all.</p>
 
-    <div class="diag-wrap">
-      <svg viewBox="0 0 700 300" role="img" aria-label="The four migration states and how enforcement resolves between them" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;margin:0 auto;">
-        <rect x="20" y="0" width="300" height="42" rx="8" class="diag-box"/>
-        <text x="170" y="25" text-anchor="middle" class="diag-text">Legacy architecture</text>
-        <rect x="380" y="0" width="300" height="42" rx="8" class="diag-box-active"/>
-        <text x="530" y="25" text-anchor="middle" class="diag-text diag-accent-text">Target architecture</text>
-        <line x1="170" y1="42" x2="170" y2="95" class="diag-arrow"/>
-        <line x1="530" y1="42" x2="530" y2="95" class="diag-arrow-active"/>
-        <rect x="150" y="95" width="400" height="42" rx="8" class="diag-box-teal"/>
-        <text x="350" y="120" text-anchor="middle" class="diag-text diag-teal-text">Transitional boundary</text>
-        <line x1="350" y1="137" x2="350" y2="190" class="diag-arrow"/>
-        <rect x="150" y="190" width="400" height="42" rx="8" class="diag-box"/>
-        <text x="350" y="215" text-anchor="middle" class="diag-text">Path applicability resolves the rule</text>
-        <line x1="350" y1="232" x2="350" y2="250" class="diag-arrow-active"/>
-        <rect x="150" y="250" width="400" height="42" rx="8" class="diag-box-active"/>
-        <text x="350" y="275" text-anchor="middle" class="diag-text diag-accent-text">Verdict, per path</text>
-      </svg>
-      <p class="diag-caption">The same rule resolves differently depending on which tree the agent is editing</p>
-    </div>
+    <h2>What does not change: the fix is still path applicability</h2>
+    <p>None of these five migrations need a different governance mechanism from the one covered throughout this cluster. Each is a legacy pattern and a target pattern occupying the same codebase, resolved by a decision scoped with <code>include_paths</code> for the migrated tree and <code>exclude_paths</code> for the legacy tree, the same shape as the persistence and adapter examples in the guardrails article.</p>
+    <p>What differs across the five is only the specific literal or pattern being scoped: a provider SDK import, a deployment manifest convention, a synchronous call shape, a query dialect, an old-version API call. The scoping mechanism, and the reason it is needed, is identical in every case.</p>
 
-    <h2>Transitional decisions are the ones that expire</h2>
-    <p>A compatibility adapter is not a mistake. It is a deliberate, temporary exception, and it needs to be recorded as one. The failure mode is not that teams create adapters. It is that the adapter's expiry is never written down anywhere a machine can read it, so the adapter quietly becomes permanent architecture.</p>
-    <p>A transitional decision should state its boundary and its termination condition. Both live in the ADR's prose, not in a field the compiler reads: there is no expiry attribute, so retiring the exception on time is a human step. What the corpus guarantees is that the exception is visible and attributable while it lasts. When the component behind the adapter finishes migrating, the decision is marked <code>status: superseded</code>, which removes it from the active set, and the target decision governs that path. The retired record stays in the corpus as the reason the exception existed, which is the part that ordinarily gets lost.</p>
+    <h2>Cross-cutting platform state needs its own decision</h2>
+    <p>One thing platform migrations add that a pure application migration usually does not: cross-cutting concerns like observability, secrets, and networking often change shape at the same time as everything else, and they tend to be the parts nobody writes an ADR for because they feel like plumbing rather than architecture.</p>
+    <p>They are architecture. A service that migrates its business logic to the target platform but keeps the old logging or secrets pattern is not fully migrated, and an agent has no way to know that unless the decision covering it is recorded and scoped the same way as everything else.</p>
 
-    <h2>Sequencing is a constraint, not a plan</h2>
-    <p>Migrations have ordering requirements. Component B cannot move until component A has moved. Those requirements usually live in a project plan, which agents do not read, rather than in the decision corpus, which they can be checked against.</p>
-    <p>There is no ordering primitive to reach for here. What a corpus can hold is the consequence of the ordering: while component A has not moved, a rule forbids the target pattern in component B's tree, and that rule is retired as part of A's migration. The ordering is still enforced by whoever retires the rule. What the corpus adds is that an agent is checked against it in the meantime, rather than discovering the constraint through a merge conflict three weeks later.</p>
-
-    <h2>Documentation does not survive a long migration</h2>
-    <p>Every organization running a migration has a document describing the target architecture. It is usually accurate on the day it is written. The problem is not accuracy. It is that a document is advisory, and an agent that never reads it is not violating anything.</p>
-    <p>Prompt-level instruction has the same weakness in a sharper form. You can tell an agent about the target architecture at the start of a session, and that instruction is real until the context is compacted, the session restarts, a different agent picks up the work, or the task runs long enough that the instruction is outranked by more recent material. Over a migration measured in quarters, every one of those happens repeatedly.</p>
-    <div class="callout"><p><strong>Retrieval tells an agent what exists. Governance tells it what should survive.</strong></p></div>
-
-    <h2>Enforcement has to be scoped by path</h2>
-    <p>The reason migration governance needs more than a global rule list is that the same rule must produce different verdicts in different parts of the repository. Forbidding the legacy pattern everywhere breaks the legacy tree, which is still running in production. Allowing it everywhere is what created the problem.</p>
-    <p>Path applicability resolves this. A rule that carries explicit include and exclude selectors governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. An agent working across a half-migrated repository then gets a specific answer for the file it is editing rather than one blanket rule it has to reason around.</p>
-
-    <h2>What to encode first</h2>
-    <p>You do not need to model the whole migration before this is useful. Start with the boundary agents cross most often, which in practice is nearly always persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying.</p>
-    <ul>
-      <li>The persistence boundary. New and migrated modules reach data through the target abstraction.</li>
-      <li>The dependency direction. Migrated code does not acquire new imports from the legacy tree.</li>
-      <li>The adapter boundary. Only the declared adapter may call the legacy interface.</li>
-      <li>The reintroduction rule. A pattern removed from a migrated component does not come back to it.</li>
-    </ul>
-    <p>Each of these is a sentence a staff engineer can write in a minute and an agent can be checked against for the rest of the migration.</p>
+    <h2>Sequencing matters more here</h2>
+    <p>Platform migrations frequently have hard ordering constraints that application migrations do not: a service cannot move to the new cluster until its dependencies are reachable there, a table cannot move to the new database until its consumers can read from both. As the pillar article covers, the corpus cannot express the ordering directly, but it can hold the rule that keeps a downstream tree on the legacy pattern until its dependency lands. That is worth doing because a project plan is not something an agent is checked against.</p>
 
     <h2>Conclusion</h2>
-    <p>Adding autonomous coding agents to a migration raises a specific risk that greenfield work does not carry: the agents are statistically likely to rebuild the architecture the migration exists to remove, and they will do it at machine speed while every individual change looks locally reasonable.</p>
-    <p>The fix is not a better prompt or a larger context window. It is making the distinction between historical architecture and current architectural intent machine-readable, scoping it to the paths it governs, and enforcing it at the moment an agent acts.</p>
-    <p>The <a href="/demo/architectural-drift/">architectural drift demo</a> shows the same enforcement path on a week of agent-produced changes.</p>
+    <p>The infrastructure work in a cloud or platform migration gets the budget, the timeline, and the runbook. The architectural drift it creates in application code, while old and new platforms coexist, usually gets neither. The governance need is not specific to any one of these five migrations; it is the same path-scoped decision mechanism this cluster has covered throughout, applied to whichever platform boundary the project is actually crossing.</p>
+    <p>The <a href="/demo/legacy-vs-target-architecture/">migration demo</a> traces the same path-scoped mechanism end to end, on the persistence boundary that recurs across all five migration types above.</p>
 
   </div><!-- /.article-body -->
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See how path-scoped decisions keep agents inside the target architecture during a migration.</p>
+    <p class="context-cta-copy">The same path-scoped mechanism covers a platform migration, not just an application one.</p>
     <div class="context-cta-actions">
-      <a href="/use-cases/ai-assisted-software-migrations/" class="context-cta-primary">Read the migrations use case &rarr;</a>
-      <a href="/demo/legacy-vs-target-architecture/" class="context-cta-secondary">See the migration demo &rarr;</a>
+      <a href="/use-cases/ai-assisted-software-migrations/" class="context-cta-primary">Migrations use case &rarr;</a>
+      <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
     </div>
   </aside>
 
   <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
     <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why are migrations harder for AI coding agents than greenfield work?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">In greenfield work the codebase demonstrates one architecture, so copying the surrounding patterns is usually correct. During a migration two architectures coexist and the one being removed is normally the better represented, so the agent's most reliable heuristic points at the wrong target for the entire duration of the project.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why do platform migrations produce more drift than application-level ones?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">They typically touch more of the codebase over a longer period, with more of the change happening in configuration and infrastructure code that fewer people review line by line. An agent working near a mostly-unmigrated majority faces the same frequency problem as any migration, just spread across more surface area.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does better retrieval or a larger context window fix this?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No, and it can make the problem worse. Retrieval reports what exists in the repository, and during a migration what exists is mostly legacy. More thorough search returns more examples of the architecture you are leaving, so the agent reproduces it more confidently, not less.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does a framework version upgrade really count as the same kind of migration?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Yes. Old-API and new-API usage typically coexist for months during a major upgrade, and an agent working near recently-upgraded code faces the identical frequency problem. It's often treated as routine maintenance rather than a governed migration, which usually means it has no scoped decisions covering it at all.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why four migration states instead of old code and new code?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Do observability, secrets, and networking really need their own migration decisions?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Yes. They tend to be treated as plumbing rather than architecture, but a service that migrates its business logic while keeping the old logging or secrets pattern is not actually fully migrated, and an agent has no way to know that unless it's recorded the same way as everything else.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How can a rule forbid a pattern in migrated code but allow it in the legacy tree?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Through path applicability. A rule carries explicit include and exclude selectors, so it governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. That is what lets both architectures coexist without the agent inferring which one is canonical.</div>
-    </details>
-    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Do we need to model the entire migration before this is useful?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying, and further boundaries are added as the migration proceeds.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does each of these five migration types need a different enforcement mechanism?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. All five use the same path-scoped decision mechanism: include_paths for the migrated tree, exclude_paths for the legacy tree. Only the specific literal or pattern being scoped changes between an SDK call, a deployment convention, a query dialect, or an old-version API call.</div>
     </details>
   </section>
 
   <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:3rem;">
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The accumulation of deviations from the decisions that define how a system should be built.</p></a></li>
-      <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural Drift Prevention</div><p class="rel-desc">The discipline of keeping generated changes aligned with existing architectural decisions.</p></a></li>
-      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence Semantics</div><p class="rel-desc">Which decision wins when several apply, and why that ordering has to be deterministic.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic Enforcement</div><p class="rel-desc">Same constraint, same codebase state, same verdict, every run.</p></a></li>
+      <li><a href="/concepts/execution-surfaces/"><div class="rel-title">Execution Surfaces</div><p class="rel-desc">Where an agent's changes actually take effect, and why governance has to follow it there.</p></a></li>
+      <li><a href="/concepts/runtime-governance/"><div class="rel-title">Runtime Governance</div><p class="rel-desc">Enforcement that holds as code moves from generation into a running platform.</p></a></li>
       <li><a href="/concepts/decision-continuity/"><div class="rel-title">Decision Continuity</div><p class="rel-desc">Keeping an architectural decision in force across sessions, agents, and months of work.</p></a></li>
     </ul>
   </aside>
@@ -502,11 +448,9 @@
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:2rem;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/insights/why-ai-coding-agents-copy-legacy-architecture/"><div class="rel-title">Why AI Coding Agents Copy Legacy Architecture During Migrations</div><p class="rel-desc">The codebase itself teaches the wrong pattern, and the teaching signal gets stronger as retrieval improves.</p></a></li>
-      <li><a href="/insights/adrs-for-software-migrations/"><div class="rel-title">ADRs for Software Migrations</div><p class="rel-desc">Legacy, target, and transitional decisions, and why a migration needs ADR states that expire.</p></a></li>
-      <li><a href="/insights/how-ai-coding-agents-use-adrs/"><div class="rel-title">How AI Coding Agents Use ADRs (Architecture Decision Records)</div><p class="rel-desc">How agents interact with ADRs today, ignored, advisory, or enforced, and how to make them executable.</p></a></li>
-      <li><a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/"><div class="rel-title">Why Context Alone Doesn&rsquo;t Prevent Architectural Drift</div><p class="rel-desc">Better retrieval improves recall. It does not enforce architectural constraints.</p></a></li>
-      <li><a href="/insights/architecture-cannot-be-a-prompt-context-compaction/"><div class="rel-title">Architecture Cannot Be a Prompt: What Context Compaction Silently Drops</div><p class="rel-desc">Compaction keeps the task and drops the rule that governed it.</p></a></li>
+      <li><a href="/insights/ai-assisted-software-migrations-architectural-drift/"><div class="rel-title">AI-Assisted Software Migrations: How to Prevent Architectural Drift</div><p class="rel-desc">The full picture: four migration states, transitional decisions that expire, and what to encode first.</p></a></li>
+      <li><a href="/insights/migration-guardrails-for-ai-coding-agents/"><div class="rel-title">How to Encode Migration Guardrails for AI Coding Agents</div><p class="rel-desc">Five concrete guardrail patterns, the same shape used for any of these platform boundaries.</p></a></li>
+      <li><a href="/insights/agentic-infrastructure-attack-surface/"><div class="rel-title">The Agentic Infrastructure Attack Surface</div><p class="rel-desc">What changes when agents provision and modify infrastructure directly.</p></a></li>
     </ul>
   </aside>
 

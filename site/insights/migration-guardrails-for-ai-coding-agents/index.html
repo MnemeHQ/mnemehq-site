@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI-Assisted Software Migrations: How to Prevent Architectural Drift &mdash; Mneme HQ</title>
+  <title>How to Encode Migration Guardrails for AI Coding Agents &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
+  <meta name="description" content="Five path-scoped rules cover most migration guardrails an AI coding agent needs: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/" />
+  <link rel="canonical" href="https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="AI-Assisted Software Migrations: How to Prevent Architectural Drift" />
-  <meta property="og:description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
-  <meta property="og:url" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/" />
-  <meta property="og:image" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png" />
+  <meta property="og:title" content="How to Encode Migration Guardrails for AI Coding Agents" />
+  <meta property="og:description" content="Five path-scoped rules cover most migration guardrails an AI coding agent needs: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports." />
+  <meta property="og:url" content="https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="AI-Assisted Software Migrations: How to Prevent Architectural Drift" />
-  <meta name="twitter:description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
-  <meta name="twitter:image" content="https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png" />
+  <meta name="twitter:title" content="How to Encode Migration Guardrails for AI Coding Agents" />
+  <meta name="twitter:description" content="Five path-scoped rules cover most migration guardrails an AI coding agent needs: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/og.png" />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-08-28T00:00:00Z" />
+  <meta property="article:published_time" content="2026-08-29T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Engineering" />
 
@@ -59,18 +59,18 @@
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "AI-Assisted Software Migrations: How to Prevent Architectural Drift",
-          "item": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/"
+          "name": "How to Encode Migration Guardrails for AI Coding Agents",
+          "item": "https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/"
         }
       ]
     },
     {
       "@type": "TechArticle",
-      "headline": "AI-Assisted Software Migrations: How to Prevent Architectural Drift",
-      "description": "During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target.",
-      "url": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/",
-      "datePublished": "2026-08-28",
-      "dateModified": "2026-08-28",
+      "headline": "How to Encode Migration Guardrails for AI Coding Agents",
+      "description": "Five path-scoped rules cover most migration guardrails an AI coding agent needs: persistence, adapter boundaries, freezes, deprecated APIs, legacy imports.",
+      "url": "https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/",
+      "datePublished": "2026-08-29",
+      "dateModified": "2026-08-29",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -85,11 +85,11 @@
           "url": "https://mnemehq.com/logo-v3.png"
         }
       },
-      "image": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/og.png",
-      "mainEntityOfPage": "https://mnemehq.com/insights/ai-assisted-software-migrations-architectural-drift/",
+      "image": "https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/insights/migration-guardrails-for-ai-coding-agents/",
       "about": [
-        "architectural drift",
-        "software migration",
+        "migration guardrails",
+        "AI coding agents",
         "architecture decision record"
       ]
     },
@@ -98,42 +98,34 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Why are migrations harder for AI coding agents than greenfield work?",
+          "name": "Do all five guardrails need to be in place before starting a migration?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "In greenfield work the codebase demonstrates one architecture, so copying the surrounding patterns is usually correct. During a migration two architectures coexist and the one being removed is normally the better represented, so the agent's most reliable heuristic points at the wrong target for the entire duration of the project."
+            "text": "No. The persistence rule and the adapter-boundary rule cover most incorrect pattern copying on their own. Encode those first for the component actually being migrated, and add the others as a real bypass attempt shows they're needed."
           }
         },
         {
           "@type": "Question",
-          "name": "Does better retrieval or a larger context window fix this?",
+          "name": "Why FORBID_LITERAL instead of a more general pattern-matching rule?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No, and it can make the problem worse. Retrieval reports what exists in the repository, and during a migration what exists is mostly legacy. More thorough search returns more examples of the architecture you are leaving, so the agent reproduces it more confidently, not less."
+            "text": "FORBID_LITERAL is exact and case-sensitive by design, which makes every check's outcome fully predictable. A fuzzier pattern-match rule trades that predictability for convenience the migration case doesn't actually need, since the literal calls being forbidden are usually specific and known in advance."
           }
         },
         {
           "@type": "Question",
-          "name": "Why four migration states instead of old code and new code?",
+          "name": "What happens if an agent needs a legitimate exception to one of these rules?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess."
+            "text": "Add it as an explicit exclude_paths entry, the same way the adapter module is excluded from the no-legacy-imports rule. The exception should be named and scoped, not handled by disabling the rule."
           }
         },
         {
           "@type": "Question",
-          "name": "How can a rule forbid a pattern in migrated code but allow it in the legacy tree?",
+          "name": "How do these five guardrails relate to the four migration states from the pillar article?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Through path applicability. A rule carries explicit include and exclude selectors, so it governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. That is what lets both architectures coexist without the agent inferring which one is canonical."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Do we need to model the entire migration before this is useful?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying, and further boundaries are added as the migration proceeds."
+            "text": "They're the concrete implementation of those states. The read-only freeze is a transitional decision. The persistence and adapter rules encode the target state and the boundary of the legacy state. The deprecated-API rule encodes a superseded pattern."
           }
         }
       ]
@@ -349,7 +341,7 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
-    <li aria-current="page">AI-Assisted Software Migrations: How to Prevent Architectural Drift</li>
+    <li aria-current="page">How to Encode Migration Guardrails for AI Coding Agents</li>
   </ol>
 </nav>
 
@@ -358,155 +350,140 @@
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Guide</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">8 min read</span>
+      <span class="eyebrow-meta">6 min read</span>
     </div>
-    <h1>AI-Assisted Software Migrations: How to Prevent Architectural Drift</h1>
-    <p class="article-lede">A migration puts two architectures in one repository for years at a time. An agent's most reliable instinct, follow the surrounding code, points at the one you are paying to remove.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-28">August 2026</time></p>
+    <h1>How to Encode Migration Guardrails for AI Coding Agents</h1>
+    <p class="article-lede">A migration plan usually has a good architecture diagram and nothing an agent can be checked against directly. Five concrete guardrail patterns close that gap.</p>
+    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-29">August 2026</time></p>
   </header>
 
 <div class="article-body">
 
-    <h2>Migrations are the hardest case for an AI coding agent</h2>
-    <p>Greenfield development gives a coding agent a clean signal. There is one architecture, the codebase demonstrates it, and copying the surrounding patterns is usually the right instinct. A migration inverts that. For the entire duration of the project the repository contains two architectures at once, and the one you are trying to eliminate is almost always the better represented of the two.</p>
-    <p>This is not a temporary annoyance. It is the defining condition of the work. A migration that took two years to schedule will take at least as long to execute, and for all of that time the agent's most reliable heuristic, follow the surrounding code, points in exactly the wrong direction.</p>
-    <div class="callout"><p><strong>The dominant pattern in a repository may be precisely the pattern you are paying to remove.</strong></p></div>
+    <h2>Most migration guidance stops at the diagram</h2>
+    <p>A migration plan usually has a good architecture diagram: here is the target, here are the phases, here is roughly when each component moves. What it rarely has is anything an AI coding agent can be checked against directly. The diagram lives in a slide deck. The agent lives in a terminal. Between them is a translation step most teams never do.</p>
+    <p>This is a practical, developer-facing pass at that translation: five guardrail shapes that cover most of what a migration actually needs enforced, written the way a decision needs to be written to be evaluable rather than just readable.</p>
 
-    <h2>Legacy code is misleading context</h2>
-    <p>Retrieval and context engineering have made agents much better at finding what exists in a codebase. During a migration that improvement cuts against you. A more thorough search returns more examples of the legacy structure, because there are more of them. The better the retrieval, the more confidently the agent reproduces the architecture you are leaving.</p>
-    <p>Suppose the system you are moving away from is organized as <code>Controller &rarr; Service &rarr; Repository &rarr; Database</code>, and the target is <code>API &rarr; Domain &rarr; Port &rarr; Adapter</code>. Both are present. Both compile. Both pass their tests. Nothing in the repository marks one as historical and the other as intended, because that distinction does not live in code. It lives in a decision that was made in a meeting and recorded, at best, in a document nobody compiles.</p>
+    <h2>1. No new imports from the legacy tree</h2>
+    <p>The most common boundary in any migration is the line between old code and new code. The rule is simple to state and easy to get wrong in practice, because "avoid the legacy code" is not specific enough for an agent to act on.</p>
+    <p><em>## Constraints</em></p>
+    <pre><code>- FORBID_LITERAL:
+    value: from legacy.
+    include_paths:
+      - "modern/**"
+    exclude_paths:
+      - "modern/adapters/**"</code></pre>
+    <p>The exclusion matters as much as the rule. Almost every migration needs exactly one sanctioned crossing point, and naming it explicitly is what keeps the rule from either blocking legitimate adapter code or silently permitting everything.</p>
 
-    <h2>Frequency is not architectural intent</h2>
-    <p>An agent asked to add a feature will inspect the codebase and find, say, two hundred instances of the legacy pattern and twenty of the target. It concludes that the legacy pattern is how this system is built. As a statistical claim about the current repository, that is correct. As an architectural claim about what should be written next, it is exactly backwards.</p>
-    <p>This is the gap that migration governance has to close. What exists in the codebase is a description of the past. What should be created next is a decision, and decisions are not recoverable by counting.</p>
+    <h2>2. New persistence goes through the target repository</h2>
+    <p>Persistence is usually the boundary agents cross most often, because nearly every feature touches data. A rule scoped to the migrated tree, forbidding the literal call an agent would otherwise reach for, is usually the single highest-leverage guardrail in a migration.</p>
+    <p><em>## Constraints</em></p>
+    <pre><code>- FORBID_LITERAL:
+    value: db.query(
+    include_paths:
+      - "modern/**"
+    exclude_paths:
+      - "legacy/**"</code></pre>
+    <p>This is the exact decision the <a href="/demo/legacy-vs-target-architecture/">migration demo</a> traces end to end: denied in the migrated tree, silently skipped in the legacy tree where the old pattern is still correct.</p>
 
-    <h2>Four states, not two</h2>
-    <p>Most migration tooling treats the problem as binary: old code and new code. That framing is what forces agents to guess, because the interesting cases are the ones in between. Four states describe almost any migration, and each maps onto a decision an enforcement layer can resolve against a path.</p>
+    <h2>3. A service is read-only during its migration window</h2>
+    <p>Some components need a hard freeze while they move, particularly when a migration involves a cutover with a defined window rather than a gradual strangler boundary. Write access resuming a day early, because an agent had no way to know the freeze was in effect, is a common and avoidable failure.</p>
+    <p><em>## Constraints</em></p>
+    <pre><code>- FORBID_LITERAL:
+    value: def update_
+    include_paths:
+      - "services/billing/**"</code></pre>
+    <p>This is a transitional decision in the sense from the pillar article: it has a start and an expected end, and it should be removed, not just ignored, once the freeze lifts. A freeze rule with no corresponding removal step is how a two-week cutover becomes permanently frozen code nobody remembers why.</p>
 
-    <div style="overflow-x:auto;">
-    <table class="gov-table">
-      <thead>
-        <tr><th>State</th><th>Meaning</th><th>What an agent may do</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Legacy</td><td>Valid historically. No longer the model for new work.</td><td>Read it. Modify it in place. Do not extend it.</td></tr>
-        <tr class="accent-row"><td>Target</td><td>What new and migrated code follows.</td><td>Build here by default.</td></tr>
-        <tr><td>Transitional</td><td>Adapters, dual writes, compatibility layers, strangler boundaries that exist only during the cutover.</td><td>Permitted, but only at the declared boundary and only until the boundary closes.</td></tr>
-        <tr><td>Forbidden reintroduction</td><td>A pattern that must not return to a component once that component has migrated.</td><td>Blocked in the migrated tree. Still allowed where migration has not reached.</td></tr>
-      </tbody>
-    </table>
-    </div>
+    <h2>4. Only the named adapter may call the legacy interface</h2>
+    <p>Covered in depth in the <a href="/insights/strangler-fig-migrations-architectural-drift/">strangler-fig migration article</a>: an agent is allowed to touch legacy code without creating a new dependency back into it. Encoding this as a scoped exception, rather than a general convention, is what makes it enforceable rather than aspirational.</p>
+    <p><em>## Constraints</em></p>
+    <pre><code>- FORBID_LITERAL:
+    value: import legacy_billing
+    include_paths:
+      - "services/**"
+    exclude_paths:
+      - "services/adapter.py"</code></pre>
 
-    <p>A naming caution, because the words collide. The fourth state is a decision that stays <code>status: accepted</code> and carries path selectors covering the migrated tree. That is not the same thing as an ADR whose <code>status:</code> is <code>superseded</code>, which is how a record is retired from the active set and stops being enforced at all. The pattern is superseded; the decision forbidding it is active.</p>
+    <h2>5. Deprecated APIs do not appear in newly generated code</h2>
+    <p>A deprecated library or API often keeps working long after it stops being the intended path, which is exactly why agents keep reaching for it: it is present, it compiles, and nothing signals that it is going away. This rule targets the surface an agent actually sees, the call itself, rather than trying to remove every trace of the old dependency at once.</p>
+    <p><em>## Constraints</em></p>
+    <pre><code>- FORBID_LITERAL:
+    value: LegacyHttpClient(
+    include_paths:
+      - "**/*.py"
+    exclude_paths:
+      - "legacy/**"</code></pre>
+    <p>Scoping by file extension rather than a specific tree works well here, because the goal is that no <em>new</em> code anywhere reaches for the deprecated client, regardless of which package it happens to sit in.</p>
 
-    <p>The fourth state is the one that gets skipped, and it is the one that causes the most damage. Once a module has been moved, nothing in the codebase prevents the next agent from reintroducing the old pattern into it. The module now contains target-architecture code, so the agent has no local signal that the old approach was ever wrong here.</p>
+    <h2>Compiling and checking these</h2>
+    <p>Each of the five patterns above is a <code>## Constraints</code> block inside an ordinary ADR: identity and status in the frontmatter, the reasoning in prose, the enforceable rule in the constraints section. <code>mneme adr import</code> compiles the block into a typed rule; <code>mneme check --mode strict</code> evaluates a proposed change against the whole corpus and reports pass, fail, or skip with the reason for each.</p>
+    <p><em>Terminal</em></p>
+    <pre><code>$ mneme adr import docs/adr --memory .mneme/project_memory.json --apply
+Wrote 5 decisions to .mneme/project_memory.json
 
-    <div class="diag-wrap">
-      <svg viewBox="0 0 700 300" role="img" aria-label="The four migration states and how enforcement resolves between them" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:560px;display:block;margin:0 auto;">
-        <rect x="20" y="0" width="300" height="42" rx="8" class="diag-box"/>
-        <text x="170" y="25" text-anchor="middle" class="diag-text">Legacy architecture</text>
-        <rect x="380" y="0" width="300" height="42" rx="8" class="diag-box-active"/>
-        <text x="530" y="25" text-anchor="middle" class="diag-text diag-accent-text">Target architecture</text>
-        <line x1="170" y1="42" x2="170" y2="95" class="diag-arrow"/>
-        <line x1="530" y1="42" x2="530" y2="95" class="diag-arrow-active"/>
-        <rect x="150" y="95" width="400" height="42" rx="8" class="diag-box-teal"/>
-        <text x="350" y="120" text-anchor="middle" class="diag-text diag-teal-text">Transitional boundary</text>
-        <line x1="350" y1="137" x2="350" y2="190" class="diag-arrow"/>
-        <rect x="150" y="190" width="400" height="42" rx="8" class="diag-box"/>
-        <text x="350" y="215" text-anchor="middle" class="diag-text">Path applicability resolves the rule</text>
-        <line x1="350" y1="232" x2="350" y2="250" class="diag-arrow-active"/>
-        <rect x="150" y="250" width="400" height="42" rx="8" class="diag-box-active"/>
-        <text x="350" y="275" text-anchor="middle" class="diag-text diag-accent-text">Verdict, per path</text>
-      </svg>
-      <p class="diag-caption">The same rule resolves differently depending on which tree the agent is editing</p>
-    </div>
+$ mneme check \
+    --memory .mneme/project_memory.json \
+    --input proposed.diff \
+    --target-path modern/orders/customer_lookup.py \
+    --query "migrated module data access" --mode strict
+FAIL  [ADR-042] FORBID_LITERAL "db.query(" -- trigger: db.query(
+PATH SKIP   [ADR-041] legacy/** excluded by selector
+Result: FAIL</code></pre>
 
-    <h2>Transitional decisions are the ones that expire</h2>
-    <p>A compatibility adapter is not a mistake. It is a deliberate, temporary exception, and it needs to be recorded as one. The failure mode is not that teams create adapters. It is that the adapter's expiry is never written down anywhere a machine can read it, so the adapter quietly becomes permanent architecture.</p>
-    <p>A transitional decision should state its boundary and its termination condition. Both live in the ADR's prose, not in a field the compiler reads: there is no expiry attribute, so retiring the exception on time is a human step. What the corpus guarantees is that the exception is visible and attributable while it lasts. When the component behind the adapter finishes migrating, the decision is marked <code>status: superseded</code>, which removes it from the active set, and the target decision governs that path. The retired record stays in the corpus as the reason the exception existed, which is the part that ordinarily gets lost.</p>
-
-    <h2>Sequencing is a constraint, not a plan</h2>
-    <p>Migrations have ordering requirements. Component B cannot move until component A has moved. Those requirements usually live in a project plan, which agents do not read, rather than in the decision corpus, which they can be checked against.</p>
-    <p>There is no ordering primitive to reach for here. What a corpus can hold is the consequence of the ordering: while component A has not moved, a rule forbids the target pattern in component B's tree, and that rule is retired as part of A's migration. The ordering is still enforced by whoever retires the rule. What the corpus adds is that an agent is checked against it in the meantime, rather than discovering the constraint through a merge conflict three weeks later.</p>
-
-    <h2>Documentation does not survive a long migration</h2>
-    <p>Every organization running a migration has a document describing the target architecture. It is usually accurate on the day it is written. The problem is not accuracy. It is that a document is advisory, and an agent that never reads it is not violating anything.</p>
-    <p>Prompt-level instruction has the same weakness in a sharper form. You can tell an agent about the target architecture at the start of a session, and that instruction is real until the context is compacted, the session restarts, a different agent picks up the work, or the task runs long enough that the instruction is outranked by more recent material. Over a migration measured in quarters, every one of those happens repeatedly.</p>
-    <div class="callout"><p><strong>Retrieval tells an agent what exists. Governance tells it what should survive.</strong></p></div>
-
-    <h2>Enforcement has to be scoped by path</h2>
-    <p>The reason migration governance needs more than a global rule list is that the same rule must produce different verdicts in different parts of the repository. Forbidding the legacy pattern everywhere breaks the legacy tree, which is still running in production. Allowing it everywhere is what created the problem.</p>
-    <p>Path applicability resolves this. A rule that carries explicit include and exclude selectors governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. An agent working across a half-migrated repository then gets a specific answer for the file it is editing rather than one blanket rule it has to reason around.</p>
-
-    <h2>What to encode first</h2>
-    <p>You do not need to model the whole migration before this is useful. Start with the boundary agents cross most often, which in practice is nearly always persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying.</p>
-    <ul>
-      <li>The persistence boundary. New and migrated modules reach data through the target abstraction.</li>
-      <li>The dependency direction. Migrated code does not acquire new imports from the legacy tree.</li>
-      <li>The adapter boundary. Only the declared adapter may call the legacy interface.</li>
-      <li>The reintroduction rule. A pattern removed from a migrated component does not come back to it.</li>
-    </ul>
-    <p>Each of these is a sentence a staff engineer can write in a minute and an agent can be checked against for the rest of the migration.</p>
+    <h2>Where to start</h2>
+    <p>Five rules is a ceiling worth resisting the urge to front-load. Encoding all five before writing any migration code is usually slower than encoding the one or two that actually matter for the first component being moved, watching what an agent tries to do against them, and adding the next rule when a real bypass attempt shows what is actually needed.</p>
+    <p>In practice the persistence rule and the adapter-boundary rule cover the majority of incorrect pattern copying on their own. The other three are worth having in reserve, not worth blocking the first migrated component to write in advance.</p>
 
     <h2>Conclusion</h2>
-    <p>Adding autonomous coding agents to a migration raises a specific risk that greenfield work does not carry: the agents are statistically likely to rebuild the architecture the migration exists to remove, and they will do it at machine speed while every individual change looks locally reasonable.</p>
-    <p>The fix is not a better prompt or a larger context window. It is making the distinction between historical architecture and current architectural intent machine-readable, scoping it to the paths it governs, and enforcing it at the moment an agent acts.</p>
-    <p>The <a href="/demo/architectural-drift/">architectural drift demo</a> shows the same enforcement path on a week of agent-produced changes.</p>
+    <p>None of these five patterns require new tooling concepts. They are ordinary typed rules with path selectors, the same mechanism used everywhere else in the corpus. What makes them migration guardrails specifically is that they are scoped to a tree that moves over time, and written with an explicit exception for the one crossing point a migration usually needs. Writing five short rules is a fraction of the cost of discovering, after the fact, how many agents quietly copied the pattern the migration existed to remove.</p>
 
   </div><!-- /.article-body -->
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See how path-scoped decisions keep agents inside the target architecture during a migration.</p>
+    <p class="context-cta-copy">Compile these patterns into your own migration corpus.</p>
     <div class="context-cta-actions">
-      <a href="/use-cases/ai-assisted-software-migrations/" class="context-cta-primary">Read the migrations use case &rarr;</a>
-      <a href="/demo/legacy-vs-target-architecture/" class="context-cta-secondary">See the migration demo &rarr;</a>
+      <a href="/docs/#quickstart" class="context-cta-primary">Install Mneme &rarr;</a>
+      <a href="/integrations/adr-import/" class="context-cta-secondary">See ADR import &rarr;</a>
     </div>
   </aside>
 
   <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
     <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why are migrations harder for AI coding agents than greenfield work?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">In greenfield work the codebase demonstrates one architecture, so copying the surrounding patterns is usually correct. During a migration two architectures coexist and the one being removed is normally the better represented, so the agent's most reliable heuristic points at the wrong target for the entire duration of the project.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Do all five guardrails need to be in place before starting a migration?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. The persistence rule and the adapter-boundary rule cover most incorrect pattern copying on their own. Encode those first for the component actually being migrated, and add the others as a real bypass attempt shows they're needed.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does better retrieval or a larger context window fix this?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No, and it can make the problem worse. Retrieval reports what exists in the repository, and during a migration what exists is mostly legacy. More thorough search returns more examples of the architecture you are leaving, so the agent reproduces it more confidently, not less.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why FORBID_LITERAL instead of a more general pattern-matching rule?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">FORBID_LITERAL is exact and case-sensitive by design, which makes every check's outcome fully predictable. A fuzzier pattern-match rule trades that predictability for convenience the migration case doesn't actually need, since the literal calls being forbidden are usually specific and known in advance.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why four migration states instead of old code and new code?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What happens if an agent needs a legitimate exception to one of these rules?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Add it as an explicit exclude_paths entry, the same way the adapter module is excluded from the no-legacy-imports rule. The exception should be named and scoped, not handled by disabling the rule.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How can a rule forbid a pattern in migrated code but allow it in the legacy tree?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Through path applicability. A rule carries explicit include and exclude selectors, so it governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. That is what lets both architectures coexist without the agent inferring which one is canonical.</div>
-    </details>
-    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Do we need to model the entire migration before this is useful?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying, and further boundaries are added as the migration proceeds.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How do these five guardrails relate to the four migration states from the pillar article?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">They're the concrete implementation of those states. The read-only freeze is a transitional decision. The persistence and adapter rules encode the target state and the boundary of the legacy state. The deprecated-API rule encodes a superseded pattern.</div>
     </details>
   </section>
 
   <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:3rem;">
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The accumulation of deviations from the decisions that define how a system should be built.</p></a></li>
-      <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural Drift Prevention</div><p class="rel-desc">The discipline of keeping generated changes aligned with existing architectural decisions.</p></a></li>
-      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence Semantics</div><p class="rel-desc">Which decision wins when several apply, and why that ordering has to be deterministic.</p></a></li>
+      <li><a href="/concepts/architectural-compiler/"><div class="rel-title">Architectural Compiler</div><p class="rel-desc">The component that turns recorded decisions into constraints an enforcement layer can evaluate.</p></a></li>
       <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic Enforcement</div><p class="rel-desc">Same constraint, same codebase state, same verdict, every run.</p></a></li>
-      <li><a href="/concepts/decision-continuity/"><div class="rel-title">Decision Continuity</div><p class="rel-desc">Keeping an architectural decision in force across sessions, agents, and months of work.</p></a></li>
+      <li><a href="/concepts/enforcement-provenance/"><div class="rel-title">Enforcement Provenance</div><p class="rel-desc">Which decision produced a verdict, and why it applied to this path.</p></a></li>
     </ul>
   </aside>
 
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:2rem;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/insights/why-ai-coding-agents-copy-legacy-architecture/"><div class="rel-title">Why AI Coding Agents Copy Legacy Architecture During Migrations</div><p class="rel-desc">The codebase itself teaches the wrong pattern, and the teaching signal gets stronger as retrieval improves.</p></a></li>
-      <li><a href="/insights/adrs-for-software-migrations/"><div class="rel-title">ADRs for Software Migrations</div><p class="rel-desc">Legacy, target, and transitional decisions, and why a migration needs ADR states that expire.</p></a></li>
-      <li><a href="/insights/how-ai-coding-agents-use-adrs/"><div class="rel-title">How AI Coding Agents Use ADRs (Architecture Decision Records)</div><p class="rel-desc">How agents interact with ADRs today, ignored, advisory, or enforced, and how to make them executable.</p></a></li>
-      <li><a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/"><div class="rel-title">Why Context Alone Doesn&rsquo;t Prevent Architectural Drift</div><p class="rel-desc">Better retrieval improves recall. It does not enforce architectural constraints.</p></a></li>
-      <li><a href="/insights/architecture-cannot-be-a-prompt-context-compaction/"><div class="rel-title">Architecture Cannot Be a Prompt: What Context Compaction Silently Drops</div><p class="rel-desc">Compaction keeps the task and drops the rule that governed it.</p></a></li>
+      <li><a href="/insights/adrs-for-software-migrations/"><div class="rel-title">ADRs for Software Migrations</div><p class="rel-desc">Legacy, target, transitional and superseded decision states, each scoped to the paths it governs.</p></a></li>
+      <li><a href="/insights/strangler-fig-migrations-architectural-drift/"><div class="rel-title">Strangler-Fig Migrations: Preventing Architectural Drift at the Boundary</div><p class="rel-desc">Why an agent must be allowed to touch legacy code without creating a new dependency back into it.</p></a></li>
+      <li><a href="/insights/why-ai-coding-agents-copy-legacy-architecture/"><div class="rel-title">Why AI Coding Agents Copy Legacy Architecture During Migrations</div><p class="rel-desc">Frequency is not architectural intent, and better retrieval strengthens the wrong signal.</p></a></li>
+      <li><a href="/insights/ai-coding-agent-guardrails/"><div class="rel-title">AI Coding-Agent Guardrails</div><p class="rel-desc">A field guide to which guardrail layers hold and which quietly fail.</p></a></li>
     </ul>
   </aside>
 

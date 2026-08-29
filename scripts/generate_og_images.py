@@ -321,6 +321,12 @@ TEMPLATE_MAP = {
     "og-insights-migrations-drift.html": "insights/ai-assisted-software-migrations-architectural-drift/og.png",
     "og-insights-legacy-copying.html": "insights/why-ai-coding-agents-copy-legacy-architecture/og.png",
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
+
+    # Insights — new
+    "og-insights-strangler-fig.html": "insights/strangler-fig-migrations-architectural-drift/og.png",
+    "og-insights-codebase-memory.html": "insights/codebase-memory-during-migrations/og.png",
+    "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",
+    "og-insights-cloud-platform-migrations.html": "insights/architectural-drift-cloud-platform-migrations/og.png",
 }
 
 PORT = 8765

@@ -184,7 +184,7 @@
             </li>
             <li class="enforcement-step" data-demo-step>
               <div class="enforcement-stage">04 <strong>Same rule, legacy path</strong></div>
-              <div class="enforcement-copy"><p>The identical decision is evaluated against an unmigrated component and reports why it did not apply.</p><code class="trace-code">SKIP [ADR-042] <span class="trace-muted">&middot;</span> legacy/orders/service.py <span class="trace-muted">&middot;</span> excluded by exclude_paths</code></div>
+              <div class="enforcement-copy"><p>The identical decision is evaluated against an unmigrated component and reports why it did not apply.</p><code class="trace-code">PATH SKIP [ADR-042] <span class="trace-muted">&middot;</span> legacy/orders/service.py <span class="trace-muted">&middot;</span> outside include_paths</code></div>
             </li>
           </ol>
           <div class="terminal-controls">
@@ -201,12 +201,14 @@
           <p>Record ADR-042 with its path selectors, compile it, then evaluate a proposed diff against the migrated module.</p>
           <pre><code>pipx install &quot;mneme-hq&gt;=0.6.0&quot;
 
-mneme adr import docs/adr/
+mneme adr import docs/adr --memory .mneme/project_memory.json --apply
 
-mneme check --mode strict &#92;
+mneme check &#92;
   --memory .mneme/project_memory.json &#92;
-  --input orders-service.diff --query "migrated module data access"
-# FAIL [ADR-042] &middot; exit 2</code></pre>
+  --input orders-service.diff &#92;
+  --target-path modern/orders/customer_lookup.py &#92;
+  --query "migrated module data access" --mode strict
+# FAIL [ADR-042] &middot; Result: FAIL &middot; exit 2</code></pre>
           <p>This page is a recipe, not a turnkey fixture: you provide the ADR and the proposed diff. The legacy-path skip in step 04 is the same command run against a file outside the include selector.</p>
         </div>
       </section>
