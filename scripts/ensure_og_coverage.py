@@ -164,6 +164,30 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-migrations-drift.html",
+        "Insights",
+        "AI-Assisted Software Migrations",
+        "44px",
+        "The repository holds more of the architecture you are leaving than the one you are moving toward.",
+        "insights/ai-assisted-software-migrations-architectural-drift",
+    ),
+    (
+        "og-insights-legacy-copying.html",
+        "Insights",
+        "Why Agents Copy Legacy Architecture",
+        "44px",
+        "The agent is reading the repository correctly. The repository is mostly the old architecture.",
+        "insights/why-ai-coding-agents-copy-legacy-architecture",
+    ),
+    (
+        "og-insights-migration-adrs.html",
+        "Insights",
+        "ADRs for Software Migrations",
+        "44px",
+        "Legacy, target, transitional and superseded, each scoped to the paths it governs.",
+        "insights/adrs-for-software-migrations",
+    ),
+    (
         "og-insights-supabase-startups.html",
         "Insights",
         "61% of Startup Codebases Are Majority AI-Written",
@@ -840,6 +864,9 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-migrations-drift.html": "insights/ai-assisted-software-migrations-architectural-drift/og.png",
+    "og-insights-legacy-copying.html": "insights/why-ai-coding-agents-copy-legacy-architecture/og.png",
+    "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
