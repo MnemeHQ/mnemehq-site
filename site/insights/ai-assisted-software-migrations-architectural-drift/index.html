@@ -117,7 +117,7 @@
           "name": "Why four migration states instead of old code and new code?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Superseded covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess."
+            "text": "Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess."
           }
         },
         {
@@ -392,10 +392,12 @@
         <tr><td>Legacy</td><td>Valid historically. No longer the model for new work.</td><td>Read it. Modify it in place. Do not extend it.</td></tr>
         <tr class="accent-row"><td>Target</td><td>What new and migrated code follows.</td><td>Build here by default.</td></tr>
         <tr><td>Transitional</td><td>Adapters, dual writes, compatibility layers, strangler boundaries that exist only during the cutover.</td><td>Permitted, but only at the declared boundary and only until the boundary closes.</td></tr>
-        <tr><td>Superseded</td><td>A pattern that must not return to a component once that component has migrated.</td><td>Blocked in the migrated tree. Still allowed where migration has not reached.</td></tr>
+        <tr><td>Forbidden reintroduction</td><td>A pattern that must not return to a component once that component has migrated.</td><td>Blocked in the migrated tree. Still allowed where migration has not reached.</td></tr>
       </tbody>
     </table>
     </div>
+
+    <p>A naming caution, because the words collide. The fourth state is a decision that stays <code>status: accepted</code> and carries path selectors covering the migrated tree. That is not the same thing as an ADR whose <code>status:</code> is <code>superseded</code>, which is how a record is retired from the active set and stops being enforced at all. The pattern is superseded; the decision forbidding it is active.</p>
 
     <p>The fourth state is the one that gets skipped, and it is the one that causes the most damage. Once a module has been moved, nothing in the codebase prevents the next agent from reintroducing the old pattern into it. The module now contains target-architecture code, so the agent has no local signal that the old approach was ever wrong here.</p>
 
@@ -421,11 +423,11 @@
 
     <h2>Transitional decisions are the ones that expire</h2>
     <p>A compatibility adapter is not a mistake. It is a deliberate, temporary exception, and it needs to be recorded as one. The failure mode is not that teams create adapters. It is that the adapter's expiry is never written down anywhere a machine can read it, so the adapter quietly becomes permanent architecture.</p>
-    <p>A transitional decision should carry its boundary and its termination condition. When the component behind the adapter finishes migrating, the decision is marked superseded and the target decision takes over for that path. The superseded record stays in the corpus as the reason the exception existed, which is the part that ordinarily gets lost.</p>
+    <p>A transitional decision should state its boundary and its termination condition. Both live in the ADR's prose, not in a field the compiler reads: there is no expiry attribute, so retiring the exception on time is a human step. What the corpus guarantees is that the exception is visible and attributable while it lasts. When the component behind the adapter finishes migrating, the decision is marked <code>status: superseded</code>, which removes it from the active set, and the target decision governs that path. The retired record stays in the corpus as the reason the exception existed, which is the part that ordinarily gets lost.</p>
 
     <h2>Sequencing is a constraint, not a plan</h2>
     <p>Migrations have ordering requirements. Component B cannot move until component A has moved. Those requirements usually live in a project plan, which agents do not read, rather than in the decision corpus, which they can be checked against.</p>
-    <p>Encoding sequencing turns a scheduling assumption into something enforceable. An agent that tries to migrate a downstream module before its dependency has moved gets a verdict instead of a merge conflict three weeks later.</p>
+    <p>There is no ordering primitive to reach for here. What a corpus can hold is the consequence of the ordering: while component A has not moved, a rule forbids the target pattern in component B's tree, and that rule is retired as part of A's migration. The ordering is still enforced by whoever retires the rule. What the corpus adds is that an agent is checked against it in the meantime, rather than discovering the constraint through a merge conflict three weeks later.</p>
 
     <h2>Documentation does not survive a long migration</h2>
     <p>Every organization running a migration has a document describing the target architecture. It is usually accurate on the day it is written. The problem is not accuracy. It is that a document is advisory, and an agent that never reads it is not violating anything.</p>
@@ -458,7 +460,7 @@
     <p class="context-cta-copy">See how path-scoped decisions keep agents inside the target architecture during a migration.</p>
     <div class="context-cta-actions">
       <a href="/use-cases/ai-assisted-software-migrations/" class="context-cta-primary">Read the migrations use case &rarr;</a>
-      <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
+      <a href="/demo/legacy-vs-target-architecture/" class="context-cta-secondary">See the migration demo &rarr;</a>
     </div>
   </aside>
 
@@ -474,7 +476,7 @@
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why four migration states instead of old code and new code?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Superseded covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess.</div>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Because the interesting cases are in between. Transitional covers adapters, dual writes, and compatibility layers that are deliberate but temporary. Forbidden reintroduction covers patterns that must not return to a component once it has migrated. Collapsing those into a binary is what forces agents to guess.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How can a rule forbid a pattern in migrated code but allow it in the legacy tree?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>

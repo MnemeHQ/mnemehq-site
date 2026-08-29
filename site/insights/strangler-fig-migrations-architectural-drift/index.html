@@ -395,8 +395,8 @@
     </div>
 
     <h2>Enforcing a direction, not a location</h2>
-    <p>What makes this different from an ordinary module boundary is that the constraint is about the direction of dependency, not just which files exist where. Legacy code calling new code, or new code being called by the adapter, is fine. New code reaching backward into legacy internals is the specific thing being prevented. A rule scoped only by path, without capturing that directionality, either blocks legitimate adapter traffic or misses the bypass it exists to catch.</p>
-    <p>In practice this means the constraint has to name the adapter module as an explicit exception rather than trying to describe the forbidden pattern generically. A decision that forbids a literal import path, scoped to the new-code tree, with the adapter excluded, resolves this without needing to model the full dependency graph.</p>
+    <p>What makes this different from an ordinary module boundary is that the constraint is about the direction of dependency, not just which files exist where. Legacy code calling new code, or new code being called by the adapter, is fine. New code reaching backward into legacy internals is the specific thing being prevented. A symmetric boundary rule, one that simply forbids the two trees from referring to each other at all, either blocks legitimate adapter traffic or misses the bypass it exists to catch.</p>
+    <p>What resolves it is that the direction is already encoded in the literal being forbidden. An import statement naming the legacy package only ever appears on the calling side, so a rule that forbids that literal, scoped to the new-code tree with the adapter excluded, catches exactly the backward dependency and nothing else. No dependency-graph model is required, because the text of the import is the direction.</p>
 
     <h2>When the boundary moves</h2>
     <p>A strangler migration is not one boundary, it is a sequence of them, moving through the system over months. Each time a component finishes moving, the boundary shifts, and a decision that was correct yesterday can become the thing that should now be forbidden.</p>

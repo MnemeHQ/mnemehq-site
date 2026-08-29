@@ -324,7 +324,7 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-strangler-fig.html": "insights/strangler-fig-migrations-architectural-drift/og.png",
-    "og-insights-context-not-enough.html": "insights/why-codebase-context-is-not-enough-for-migrations/og.png",
+    "og-insights-codebase-memory.html": "insights/codebase-memory-during-migrations/og.png",
     "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",
     "og-insights-cloud-platform-migrations.html": "insights/architectural-drift-cloud-platform-migrations/og.png",
 }

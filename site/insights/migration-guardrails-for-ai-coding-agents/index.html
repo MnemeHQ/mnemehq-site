@@ -418,13 +418,17 @@
     <h2>Compiling and checking these</h2>
     <p>Each of the five patterns above is a <code>## Constraints</code> block inside an ordinary ADR: identity and status in the frontmatter, the reasoning in prose, the enforceable rule in the constraints section. <code>mneme adr import</code> compiles the block into a typed rule; <code>mneme check --mode strict</code> evaluates a proposed change against the whole corpus and reports pass, fail, or skip with the reason for each.</p>
     <p><em>Terminal</em></p>
-    <pre><code>$ mneme adr import docs/adr/
-Compiled 5 migration decisions.
+    <pre><code>$ mneme adr import docs/adr --memory .mneme/project_memory.json --apply
+Wrote 5 decisions to .mneme/project_memory.json
 
-$ mneme check --mode strict --input proposed.diff
-PASS [ADR-041] persistence via RepositoryPort
-FAIL [ADR-042] FORBID_LITERAL "db.query("
-  Path: modern/orders/customer_lookup.py</code></pre>
+$ mneme check \
+    --memory .mneme/project_memory.json \
+    --input proposed.diff \
+    --target-path modern/orders/customer_lookup.py \
+    --query "migrated module data access" --mode strict
+FAIL  [ADR-042] FORBID_LITERAL "db.query(" -- trigger: db.query(
+PATH SKIP   [ADR-041] legacy/** excluded by selector
+Result: FAIL</code></pre>
 
     <h2>Where to start</h2>
     <p>Five rules is a ceiling worth resisting the urge to front-load. Encoding all five before writing any migration code is usually slower than encoding the one or two that actually matter for the first component being moved, watching what an agent tries to do against them, and adding the next rule when a real bypass attempt shows what is actually needed.</p>

@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Why Codebase Context Is Not Enough During an AI-Assisted Migration &mdash; Mneme HQ</title>
+  <title>Why Codebase Memory Goes Stale During a Migration &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Retrieval reports what a repository contains, and mid-migration that is mostly the pattern being removed. Better recall cannot substitute for a decision." />
+  <meta name="description" content="A memory layer is most confident about the code you are removing and most out of date about the code you are moving toward, and cannot express which is which." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
-  <link rel="canonical" href="https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/" />
+  <link rel="canonical" href="https://mnemehq.com/insights/codebase-memory-during-migrations/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Why Codebase Context Is Not Enough During an AI-Assisted Migration" />
-  <meta property="og:description" content="Retrieval reports what a repository contains, and mid-migration that is mostly the pattern being removed. Better recall cannot substitute for a decision." />
-  <meta property="og:url" content="https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/" />
-  <meta property="og:image" content="https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/og.png" />
+  <meta property="og:title" content="Why Codebase Memory Goes Stale During a Migration" />
+  <meta property="og:description" content="A memory layer is most confident about the code you are removing and most out of date about the code you are moving toward, and cannot express which is which." />
+  <meta property="og:url" content="https://mnemehq.com/insights/codebase-memory-during-migrations/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/codebase-memory-during-migrations/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Why Codebase Context Is Not Enough During an AI-Assisted Migration" />
-  <meta name="twitter:description" content="Retrieval reports what a repository contains, and mid-migration that is mostly the pattern being removed. Better recall cannot substitute for a decision." />
-  <meta name="twitter:image" content="https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/og.png" />
+  <meta name="twitter:title" content="Why Codebase Memory Goes Stale During a Migration" />
+  <meta name="twitter:description" content="A memory layer is most confident about the code you are removing and most out of date about the code you are moving toward, and cannot express which is which." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/codebase-memory-during-migrations/og.png" />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-08-29T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
@@ -59,16 +59,16 @@
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Why Codebase Context Is Not Enough During an AI-Assisted Migration",
-          "item": "https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/"
+          "name": "Why Codebase Memory Goes Stale During a Migration",
+          "item": "https://mnemehq.com/insights/codebase-memory-during-migrations/"
         }
       ]
     },
     {
       "@type": "TechArticle",
-      "headline": "Why Codebase Context Is Not Enough During an AI-Assisted Migration",
-      "description": "Retrieval reports what a repository contains, and mid-migration that is mostly the pattern being removed. Better recall cannot substitute for a decision.",
-      "url": "https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/",
+      "headline": "Why Codebase Memory Goes Stale During a Migration",
+      "description": "A memory layer is most confident about the code you are removing and most out of date about the code you are moving toward, and cannot express which is which.",
+      "url": "https://mnemehq.com/insights/codebase-memory-during-migrations/",
       "datePublished": "2026-08-29",
       "dateModified": "2026-08-29",
       "author": {
@@ -85,12 +85,12 @@
           "url": "https://mnemehq.com/logo-v3.png"
         }
       },
-      "image": "https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/og.png",
-      "mainEntityOfPage": "https://mnemehq.com/insights/why-codebase-context-is-not-enough-for-migrations/",
+      "image": "https://mnemehq.com/insights/codebase-memory-during-migrations/og.png",
+      "mainEntityOfPage": "https://mnemehq.com/insights/codebase-memory-during-migrations/",
       "about": [
-        "retrieval",
-        "architectural governance",
-        "software migration"
+        "codebase memory",
+        "software migration",
+        "architectural governance"
       ]
     },
     {
@@ -98,34 +98,34 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Isn't better retrieval always an improvement?",
+          "name": "Doesn't re-indexing fix the staleness problem?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "For recall, yes. For architectural correctness during a migration, no. A more thorough search returns a more representative sample of the repository, and a representative sample mid-migration is mostly legacy code. Improving recall does not change that ratio."
+            "text": "It fixes half of it. A refreshed index tells you what the code looks like now, including migrated components in their new form. It still does not tell you which of the two shapes present in the repository is the one that should survive, because that was never a property of the code for the index to read."
           }
         },
         {
           "@type": "Question",
-          "name": "Does this mean codebase-memory tools are not useful for migrations?",
+          "name": "Why is migration staleness worse than ordinary memory staleness?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "They remain useful for understanding what the legacy system actually does, which matters when writing a correct adapter or transitional layer. What they cannot do is tell an agent which of two valid patterns should survive, because that is a decision, not a fact recoverable from the code."
+            "text": "Because it is structured rather than diffuse. The components whose descriptions have gone stale are exactly the ones that have already been migrated, while the untouched legacy components are still described perfectly. The memory is most accurate about the code you least want copied."
           }
         },
         {
           "@type": "Question",
-          "name": "Why doesn't putting the migration plan in the system prompt solve this?",
+          "name": "What does a memory layer lack that a recorded decision has?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A prompt is one signal among many in a session and is subject to compaction and dilution like any other context. It also has to compete with a much larger, more consistent signal: the actual majority pattern in the repository, which a single instruction rarely outweighs."
+            "text": "Three things: authority (a claim about what governs new work, not what was observed), scope (a statement that holds for one part of the tree and explicitly not another), and evaluation at the point of action rather than retrieval as one more piece of competing context."
           }
         },
         {
           "@type": "Question",
-          "name": "What's the practical alternative to relying on retrieval here?",
+          "name": "Is this an argument against using codebase memory during a migration?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Encode the decision explicitly and separately from the code, scoped to the paths it governs, and check agents against it directly at the moment they act, the same mechanism covered in the pillar and ADR articles."
+            "text": "No. Knowing what the legacy system actually does is often the hardest part of a migration and is exactly what memory is good at. The argument is that this strength is being asked to cover a different job: deciding which of two coexisting architectures should survive."
           }
         }
       ]
@@ -341,7 +341,7 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
-    <li aria-current="page">Why Codebase Context Is Not Enough During an AI-Assisted Migration</li>
+    <li aria-current="page">Why Codebase Memory Goes Stale During a Migration</li>
   </ol>
 </nav>
 
@@ -352,92 +352,98 @@
       <span class="eyebrow-dot"></span>
       <span class="eyebrow-meta">6 min read</span>
     </div>
-    <h1>Why Codebase Context Is Not Enough During an AI-Assisted Migration</h1>
-    <p class="article-lede">What a codebase contains and what it should contain are different questions. Retrieval answers the first well. A migration needs an answer to the second, and no amount of recall supplies one.</p>
+    <h1>Why Codebase Memory Goes Stale During a Migration</h1>
+    <p class="article-lede">Persistent codebase memory fixes the cold-start problem. During a migration it develops a specific bias: most accurate about the components you are removing, most out of date about the ones you are moving toward.</p>
     <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-08-29">August 2026</time></p>
   </header>
 
 <div class="article-body">
 
-    <h2>Two different questions</h2>
-    <p>"What does this codebase contain" and "what should this codebase contain" are different questions, and during a migration they have different answers. Retrieval, context engineering, and codebase-memory tools are all built to answer the first one well. None of them are built to answer the second, and a migration is precisely the situation where the two answers diverge.</p>
-    <p>This is not a criticism of retrieval. Better recall is genuinely useful, most of the time, for most tasks. The claim here is narrower: recall cannot substitute for a decision, no matter how good it gets, because a decision is not a fact about the codebase's current state.</p>
+    <h2>Memory solves the session problem, not the migration problem</h2>
+    <p>Persistent codebase-memory tools exist to fix a real and annoying failure: an agent that starts every session knowing nothing, rediscovering the same structure, asking the same questions, drawing the same wrong conclusions it drew last week. A memory layer that carries understanding across sessions is a genuine improvement, and on a stable codebase it mostly just works.</p>
+    <p>A migration breaks the assumption underneath it. Memory is valuable when what it remembers stays true. During a migration, the thing being remembered is changing underneath the memory, component by component, for months. What was an accurate description of a service in March is a description of a service that no longer exists by June.</p>
 
-    <h2>What better retrieval actually returns during a migration</h2>
-    <p>Feed a well-tuned retrieval system a query about how a system handles persistence, mid-migration, and it will accurately report what it finds: mostly the legacy pattern, because that is what is actually there in the greater volume. This is retrieval working correctly. The information it surfaces is true. It is also the wrong answer to the question the developer actually needed answered, which was not "what exists" but "what should I write."</p>
-    <p>If you have read <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">why context alone doesn't prevent architectural drift</a>, this is the same structural gap, sharpened by a migration's specific conditions. That piece argues context engineering solves recall, not enforcement, in general. During a migration the gap is not theoretical: the majority pattern in the retrieved context is measurably, specifically the pattern being phased out.</p>
+    <h2>What a memory layer actually holds mid-migration</h2>
+    <p>Consider what gets stored. An agent works on the orders service in the legacy tree, learns that it reaches the database directly, that its error handling follows a particular shape, that a certain helper is the conventional way to load a customer. All of that is accurate. All of it is written down.</p>
+    <p>Three months later the orders service has migrated. It now reaches persistence through a repository port, its error handling follows the target pattern, and the helper is deprecated. The memory layer still holds the March description, and nothing about the migration told it otherwise, because migrating a component is not an event a memory layer observes. It is a series of commits that look, individually, like ordinary work.</p>
+    <div class="callout"><p><strong>Memory is a record of what was true when it was written. A migration's entire purpose is to make that record wrong.</strong></p></div>
 
-    <h2>Why a bigger context window does not close the gap</h2>
-    <p>The intuitive fix, more context, a longer window, a smarter retriever, makes the problem worse rather than better. A narrow, incomplete search might return a lucky mix of legacy and target examples. A thorough one returns a representative sample, and a representative sample of a mid-migration repository is mostly legacy, because that is the accurate state of the codebase.</p>
-    <p>There is no retrieval improvement that changes this, because the ratio is a property of the codebase, not a property of the search. Recall quality and architectural correctness are simply answering different questions, and improving one does not move the other.</p>
+    <h2>Staleness has a specific shape here</h2>
+    <p>Ordinary memory staleness is diffuse: a few facts drift, the agent is a bit out of date, someone corrects it. Migration staleness is structured, and that makes it more dangerous.</p>
+    <p>It is not random facts going stale. It is specifically the components that have already been fixed whose descriptions are wrong, while the components that have not been touched are still described perfectly. The memory is most accurate about exactly the code you least want copied, and least accurate about the code you want treated as the model.</p>
+    <p>An agent drawing on that memory to decide how the system does things will weight the still-accurate legacy descriptions correctly and the stale target descriptions incorrectly, and it will do so with more confidence than a cold-start agent would have had.</p>
 
-    <h2>Codebase memory has the same ceiling</h2>
-    <p>Persistent codebase-memory tools extend retrieval across sessions: what an agent learned about the codebase last week is available this week too. This helps with consistency and continuity, and it is a real improvement over starting from nothing every session.</p>
-    <p>It does not change what kind of thing is being remembered. A codebase-memory layer that has thoroughly indexed a mid-migration repository has thoroughly indexed mostly-legacy code. Persisting that understanding across sessions persists the same skew it started with. Memory of what exists is not the same claim as memory of what should exist next, and no amount of durability converts one into the other.</p>
-    <div class="callout"><p><strong>Retrieval tells an agent what exists. Migration governance tells it what should survive.</strong></p></div>
+    <h2>Durability turns a snapshot into a commitment</h2>
+    <p>The property that makes memory useful, that it persists, is the property that hurts here. A cold-start agent reading a half-migrated repository at least reads the current state, including the migrated components in their new form. An agent consulting a memory layer built up over the migration reads an accumulation, weighted toward whenever each component was last examined in depth.</p>
+    <p>Re-indexing helps and does not solve it. A refreshed index tells you what the code looks like now; it still does not tell you which of the two shapes present in the repository is the one that should survive. That question was never a property of the code, so no amount of re-reading the code answers it.</p>
 
-    <h2>Where the missing information actually lives</h2>
-    <p>The fact that would resolve the ambiguity, that the twenty examples are the future and the two hundred are debt, is not a fact about the code at all. It is a decision, made by a person, at a point in time, for reasons that are not visible in the resulting diff. No retrieval mechanism can recover a decision from its output, because the decision and its rationale are not encoded there. They have to be recorded separately, in a form the agent is actually checked against.</p>
-    <p>This is also why the fix is not "give the agent better instructions in the prompt." A prompt is one more piece of context, subject to the same compaction and dilution as everything else in the session, and it competes with a much larger, more consistent signal: the actual majority pattern in the repository. A single sentence of guidance rarely outweighs two hundred call sites.</p>
+    <h2>Memory has no notion of authority</h2>
+    <p>The deeper limitation is not staleness, which is at least fixable by re-indexing. It is that a memory layer stores observations, and observations do not carry precedence.</p>
+    <p>If a memory layer holds both "the orders service uses a repository port" and "services in this system query the database directly," it has no basis for ranking them. Both were observed. Both were true of something at some point. Nothing in the storage format expresses that one is a decision the organization intends to hold and the other is a description of what is being removed. Recall gives you both facts and leaves the ranking to the agent, which resolves it the way anything resolves an unranked set: by weight of evidence, which points at the legacy side.</p>
 
-    <h2>Not an argument against retrieval</h2>
-    <p>None of this is an argument for worse retrieval, or for abandoning codebase-memory tooling. Retrieval remains the right way to answer "what does this system currently do," and that question matters constantly, including during a migration, where knowing what the legacy code actually does is often the hardest part of writing a correct adapter.</p>
-    <p>The argument is narrower: retrieval and governance are answering different questions, and a migration is the case where mistaking one for the other has a specific, predictable failure mode. Layering more retrieval on top of a governance gap improves the wrong metric.</p>
+    <h2>What memory would need to become governance</h2>
+    <p>The gap is specific enough to name. To be useful during a migration, a stored fact would need three properties that a memory layer does not give it:</p>
+    <ul>
+      <li><strong>Authority.</strong> Not "this pattern was observed here" but "this pattern is the one that governs new work," which is a claim about intent, not observation.</li>
+      <li><strong>Scope.</strong> A statement that holds for one part of the tree and explicitly does not hold for another, so a half-migrated repository does not force a single global answer.</li>
+      <li><strong>Evaluation at the point of action.</strong> Consulted when the agent writes, and producing an outcome, rather than retrieved as one more piece of context competing against everything else in the window.</li>
+    </ul>
+    <p>Those are the properties of a recorded decision, not of a remembered observation. This is the same distinction the <a href="/insights/adrs-for-software-migrations/">migration ADR states</a> formalize, and the reason the decision has to live somewhere other than the index.</p>
 
-    <h2>What actually closes the gap</h2>
-    <p>The decision has to be encoded explicitly, separate from the code, and evaluated at the moment the agent acts rather than left to be inferred from what the agent can see. That is the same requirement the pillar article and the ADR states cover: legacy, target, transitional and superseded, each scoped to the paths it governs, checked against directly instead of reconstructed from majority pattern.</p>
-    <p>Concretely, that means a rule the enforcement layer resolves per path, not a hope that sufficiently good retrieval will someday surface the right answer on its own.</p>
+    <h2>Not an argument for forgetting</h2>
+    <p>None of this is an argument against codebase memory. Knowing what the legacy system actually does is often the hardest part of a migration, and it is exactly what a memory layer is good at. Writing a correct compatibility adapter requires deep, durable knowledge of the code being replaced.</p>
+    <p>The argument is that this strength is being asked to cover a different job. Memory answers "what is this system." A migration also needs an answer to "which of these two systems am I supposed to be building," and that answer is a decision somebody made, recorded somewhere an agent is checked against rather than somewhere it might recall.</p>
 
     <h2>Conclusion</h2>
-    <p>Codebase context answers what exists. A migration needs an answer to what should exist next, and that answer is a decision, not a search result. Improving retrieval improves the former. Only recording the decision separately, and checking agents against it directly, addresses the latter.</p>
+    <p>A memory layer during a migration is most confident about the code you are removing and most out of date about the code you are moving toward, and it has no way to express which is which. That is not a flaw in the tooling. It is a category difference between remembering what a system is and deciding what it should become.</p>
 
   </div><!-- /.article-body -->
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See a decision resolved against a path instead of inferred from the surrounding code.</p>
+    <p class="context-cta-copy">See a recorded decision evaluated against a path, rather than recalled from an index.</p>
     <div class="context-cta-actions">
       <a href="/demo/legacy-vs-target-architecture/" class="context-cta-primary">See the migration demo &rarr;</a>
-      <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
+      <a href="/use-cases/ai-assisted-software-migrations/" class="context-cta-secondary">Migrations use case &rarr;</a>
     </div>
   </aside>
 
   <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
     <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Isn't better retrieval always an improvement?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">For recall, yes. For architectural correctness during a migration, no. A more thorough search returns a more representative sample of the repository, and a representative sample mid-migration is mostly legacy code. Improving recall does not change that ratio.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Doesn't re-indexing fix the staleness problem?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">It fixes half of it. A refreshed index tells you what the code looks like now, including migrated components in their new form. It still does not tell you which of the two shapes present in the repository is the one that should survive, because that was never a property of the code for the index to read.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does this mean codebase-memory tools are not useful for migrations?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">They remain useful for understanding what the legacy system actually does, which matters when writing a correct adapter or transitional layer. What they cannot do is tell an agent which of two valid patterns should survive, because that is a decision, not a fact recoverable from the code.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why is migration staleness worse than ordinary memory staleness?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Because it is structured rather than diffuse. The components whose descriptions have gone stale are exactly the ones that have already been migrated, while the untouched legacy components are still described perfectly. The memory is most accurate about the code you least want copied.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why doesn't putting the migration plan in the system prompt solve this?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">A prompt is one signal among many in a session and is subject to compaction and dilution like any other context. It also has to compete with a much larger, more consistent signal: the actual majority pattern in the repository, which a single instruction rarely outweighs.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What does a memory layer lack that a recorded decision has?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Three things: authority (a claim about what governs new work, not what was observed), scope (a statement that holds for one part of the tree and explicitly not another), and evaluation at the point of action rather than retrieval as one more piece of competing context.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
-      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What's the practical alternative to relying on retrieval here?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Encode the decision explicitly and separately from the code, scoped to the paths it governs, and check agents against it directly at the moment they act, the same mechanism covered in the pillar and ADR articles.</div>
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Is this an argument against using codebase memory during a migration?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Knowing what the legacy system actually does is often the hardest part of a migration and is exactly what memory is good at. The argument is that this strength is being asked to cover a different job: deciding which of two coexisting architectures should survive.</div>
     </details>
   </section>
 
   <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:3rem;">
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
+      <li><a href="/concepts/decision-continuity/"><div class="rel-title">Decision Continuity</div><p class="rel-desc">Keeping an architectural decision in force across sessions, agents, and months of work.</p></a></li>
+      <li><a href="/concepts/precedence-semantics/"><div class="rel-title">Precedence Semantics</div><p class="rel-desc">Which decision wins when several apply, and why that ordering has to be deterministic.</p></a></li>
       <li><a href="/concepts/executable-architectural-intent/"><div class="rel-title">Executable Architectural Intent</div><p class="rel-desc">Architectural decisions expressed so a machine can act on them, not just read them.</p></a></li>
-      <li><a href="/concepts/architectural-drift/"><div class="rel-title">Architectural Drift</div><p class="rel-desc">The accumulation of deviations from the decisions that define how a system should be built.</p></a></li>
-      <li><a href="/concepts/deterministic-enforcement/"><div class="rel-title">Deterministic Enforcement</div><p class="rel-desc">Same constraint, same codebase state, same verdict, every run.</p></a></li>
     </ul>
   </aside>
 
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:2rem;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/insights/why-rag-fails-for-architectural-governance/"><div class="rel-title">Why RAG Fails for Architectural Governance</div><p class="rel-desc">Retrieval surfaces information. It does not enforce constraints. The failure modes are different.</p></a></li>
-      <li><a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/"><div class="rel-title">Why Context Alone Doesn&rsquo;t Prevent Architectural Drift</div><p class="rel-desc">Better retrieval improves recall. It does not enforce architectural constraints.</p></a></li>
-      <li><a href="/insights/why-ai-coding-agents-copy-legacy-architecture/"><div class="rel-title">Why AI Coding Agents Copy Legacy Architecture During Migrations</div><p class="rel-desc">The codebase itself teaches the wrong pattern, and better retrieval strengthens the lesson.</p></a></li>
+      <li><a href="/insights/memory-is-not-governance/"><div class="rel-title">Memory Is Not Governance</div><p class="rel-desc">Context persistence cannot enforce architectural invariants. Recall is not constraint.</p></a></li>
+      <li><a href="/insights/why-ai-coding-agents-copy-legacy-architecture/"><div class="rel-title">Why AI Coding Agents Copy Legacy Architecture During Migrations</div><p class="rel-desc">The live-repository version of the problem: frequency in the current tree, not staleness in an index.</p></a></li>
       <li><a href="/insights/ai-assisted-software-migrations-architectural-drift/"><div class="rel-title">AI-Assisted Software Migrations: How to Prevent Architectural Drift</div><p class="rel-desc">The full picture: four migration states, transitional decisions that expire, and what to encode first.</p></a></li>
+      <li><a href="/insights/adrs-for-software-migrations/"><div class="rel-title">ADRs for Software Migrations</div><p class="rel-desc">Legacy, target, transitional and forbidden-reintroduction states, each scoped to the paths it governs.</p></a></li>
     </ul>
   </aside>
 

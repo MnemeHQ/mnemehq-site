@@ -172,12 +172,12 @@ TEMPLATES = [
         "insights/strangler-fig-migrations-architectural-drift",
     ),
     (
-        "og-insights-context-not-enough.html",
+        "og-insights-codebase-memory.html",
         "Insights",
-        "Codebase Context Is Not Enough",
+        "Codebase Memory Goes Stale",
         "44px",
-        "Retrieval reports what a repository contains. A migration needs a decision about what should survive.",
-        "insights/why-codebase-context-is-not-enough-for-migrations",
+        "Most confident about the code you are removing. Most out of date about the code you are moving toward.",
+        "insights/codebase-memory-during-migrations",
     ),
     (
         "og-insights-migration-guardrails.html",
@@ -897,7 +897,7 @@ TEMPLATES = [
 
 NEW_MAP_ENTRIES = {
     "og-insights-strangler-fig.html": "insights/strangler-fig-migrations-architectural-drift/og.png",
-    "og-insights-context-not-enough.html": "insights/why-codebase-context-is-not-enough-for-migrations/og.png",
+    "og-insights-codebase-memory.html": "insights/codebase-memory-during-migrations/og.png",
     "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",
     "og-insights-cloud-platform-migrations.html": "insights/architectural-drift-cloud-platform-migrations/og.png",
     "og-insights-migrations-drift.html": "insights/ai-assisted-software-migrations-architectural-drift/og.png",

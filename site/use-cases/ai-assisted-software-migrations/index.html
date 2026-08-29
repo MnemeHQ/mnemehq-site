@@ -405,7 +405,7 @@
         <div class="step-num">1</div>
         <div class="step-body">
           <h3>Record the four migration states</h3>
-          <p><strong>Legacy</strong> was valid historically and is no longer the model for new work. <strong>Target</strong> is what new and migrated code follows. <strong>Transitional</strong> covers the adapters, dual writes, and compatibility layers that exist only during the cutover. <strong>Superseded</strong> is the pattern that must not return to a component once it has migrated.</p>
+          <p><strong>Legacy</strong> was valid historically and is no longer the model for new work. <strong>Target</strong> is what new and migrated code follows. <strong>Transitional</strong> covers the adapters, dual writes, and compatibility layers that exist only during the cutover. <strong>Forbidden reintroduction</strong> covers the pattern that must not return to a component once it has migrated. That decision stays <code>status: accepted</code> with selectors on the migrated tree; an ADR marked <code>status: superseded</code> is excluded from the active set and stops being enforced.</p>
         </div>
       </div>
       <div class="step">
@@ -466,22 +466,22 @@ keeps its existing calls until its components are migrated.
 
     <div class="code-block">
       <div class="code-block-label">Terminal — enforcement with applicability resolved</div>
-      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme adr import</span> docs/adr/
-<span class="cc">Compiled 3 migration decisions.</span>
+      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme adr import</span> docs/adr --memory .mneme/project_memory.json --apply
+<span class="cc">Wrote 3 decisions to .mneme/project_memory.json</span>
 
-<span class="cc">$ </span><span class="ck">mneme check</span> --mode strict
+<span class="cc">$ </span><span class="ck">mneme check</span> \
+  --memory .mneme/project_memory.json \
+  --input orders-service.diff \
+  --target-path modern/orders/customer_lookup.py \
+  --query <span class="cs">"migrated module data access"</span> --mode strict
 
-<span class="cs">PASS</span> [ADR-041] migrated module resolves persistence through RepositoryPort
-<span class="cc">SKIP</span> [ADR-042] legacy/orders/service.py
-  <span class="cc">Reason: excluded by exclude_paths. This component has not migrated.</span>
-<span style="color:#ff7070">FAIL</span> [ADR-042] FORBID_LITERAL <span class="cs">"db.query("</span>
-  <span class="cc">Path: modern/orders/customer_lookup.py</span>
-  <span class="cc">Reason: direct database access is superseded in migrated modules.</span>
+<span style="color:#ff7070">FAIL</span>  [ADR-042] FORBID_LITERAL <span class="cs">"db.query("</span> -- trigger: db.query(
+<span class="cc">PATH SKIP</span>   [ADR-042] legacy/** excluded by selector
 
-<span style="color:#ff7070">Result: FAIL (1 violation, strict mode)</span></pre>
+<span style="color:#ff7070">Result: FAIL</span></pre>
     </div>
 
-    <p class="prose">The <code>SKIP</code> line is the part that matters during a migration. The same rule that fails in the migrated tree is deliberately silent in the legacy tree, and the check reports why. An agent working across a half-migrated repository gets a different answer per path instead of one blanket rule it has to reason around.</p>
+    <p class="prose">The <code>PATH SKIP</code> line is the part that matters during a migration. A path-scoped rule reports its applicability outcome against the target path, so the same decision that fails inside the migrated tree is visibly and explainably inert outside it. An agent working across a half-migrated repository gets a different answer per path instead of one blanket rule it has to reason around.</p>
 
     <p class="prose">The enforcement path itself is shown end to end in the <a href="/demo/repository-pattern/" style="color:var(--teal);">repository pattern demo</a>, where a direct SQL call from a service layer is matched to its decision and denied by a strict check.</p>
   </div>
