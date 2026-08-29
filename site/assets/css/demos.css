@@ -43,6 +43,29 @@ body.demo-page *::after {
   box-sizing: border-box;
 }
 
+/* Demo pages that use this stylesheet without base.css still need the shared
+   keyboard-only skip-link treatment. */
+.demo-page .skip-link {
+  position: fixed;
+  top: 0;
+  left: 1rem;
+  z-index: 1000;
+  padding: 0.6rem 1.1rem;
+  transform: translateY(-150%);
+  border-radius: 0 0 6px 6px;
+  background: var(--accent, #c8f060);
+  color: #0c0c0d;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: transform 0.15s ease;
+}
+
+.demo-page .skip-link:focus,
+.demo-page .skip-link:focus-visible {
+  transform: translateY(0);
+}
+
 .demo-page .site-nav,
 .demo-page > nav:first-of-type {
   position: sticky;
@@ -663,6 +686,13 @@ body.demo-page *::after {
   overflow-wrap: anywhere;
 }
 
+.demo-detail .trace-code {
+  padding: 0.05rem 0.38rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface2);
+}
+
 .trace-muted {
   color: #777786;
 }
@@ -1257,6 +1287,20 @@ body.demo-page *::after {
   border: 1px solid rgba(200, 240, 96, 0.3);
   border-radius: 12px;
   background: linear-gradient(115deg, rgba(200, 240, 96, 0.07), #131315 46%, #101012);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+}
+
+.hub-native-card:hover {
+  border-color: rgba(200, 240, 96, 0.55);
+  background: linear-gradient(115deg, rgba(200, 240, 96, 0.1), #151517 46%, #121214);
+  transform: translateY(-2px);
+}
+
+.hub-native-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
 .hub-native-card .hub-card-top {

@@ -378,15 +378,21 @@ def rule_linking_pattern(html: str, ctx: PageContext) -> RuleResult:
     parent_hub = f"/{section}/"
     self_url = "/" + rel.removesuffix("index.html")
 
-    # All anchor hrefs inside <main>
+    # All anchor hrefs inside <main>. Parent-hub navigation may live in the
+    # page breadcrumb immediately before <main>, so inspect the full body for
+    # that one relationship.
     main_hrefs = re.findall(
         r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']',
         ctx.main_body,
     )
+    body_hrefs = re.findall(
+        r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']',
+        ctx.body,
+    )
 
     has_parent_hub = any(
         h == parent_hub or h.startswith(parent_hub + "#")
-        for h in main_hrefs
+        for h in body_hrefs
     )
 
     # Count distinct related pages (siblings under the same section,
@@ -532,6 +538,10 @@ def rule_byline(html: str, ctx: PageContext) -> RuleResult:
     # Skip pages where Article isn't the main type (e.g. SoftwareApplication-only).
     interesting = {"Article", "TechArticle", "BlogPosting"}
     if not (ctx.types & interesting):
+        return PASS, ""
+    # Demo pages present classification and breadcrumb navigation instead of
+    # editorial bylines. Their author and publication dates remain in JSON-LD.
+    if ctx.rel_path.startswith("demo/"):
         return PASS, ""
     has_byline = bool(re.search(r'class\s*=\s*"[^"]*\bbyline\b[^"]*"', ctx.body))
     has_datetime = bool(re.search(r'<time\b[^>]*\bdatetime\s*=', ctx.body))
