@@ -6,7 +6,7 @@
   <link rel="apple-touch-icon" href="/favicon-v2.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agentic AI governance in operation — Mneme HQ</title>
-  <meta name="description" content="Watch Mneme catch consequential AI coding failures before they land. Runnable traces, supporting checks, and an honest multi-agent target contract.">
+   <meta name="description" content="Watch Mneme catch consequential AI coding failures before they land. Two flagship proofs, a runnable Claude Agent SDK integration, supporting checks, and an honest multi-agent target contract.">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#0c0c0d">
   <link rel="canonical" href="https://mnemehq.com/demo/">
@@ -14,16 +14,16 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <link rel="stylesheet" href="/assets/css/demos.css?v=20260826f">
+   <link rel="stylesheet" href="/assets/css/demos.css?v=20260828a">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mneme HQ">
   <meta property="og:title" content="Agentic AI governance in operation — Mneme HQ">
-  <meta property="og:description" content="Runnable enforcement traces, supporting checks, and an honest multi-agent target contract.">
+   <meta property="og:description" content="Two flagship enforcement proofs, a runnable Claude Agent SDK integration, supporting checks, and an honest multi-agent target contract.">
   <meta property="og:url" content="https://mnemehq.com/demo/">
   <meta property="og:image" content="https://mnemehq.com/demo/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Agentic AI governance in operation — Mneme HQ">
-  <meta name="twitter:description" content="Runnable enforcement traces, supporting checks, and an honest multi-agent target contract.">
+   <meta name="twitter:description" content="Two flagship enforcement proofs, a runnable Claude Agent SDK integration, supporting checks, and an honest multi-agent target contract.">
   <meta name="twitter:image" content="https://mnemehq.com/demo/og.png">
   <script type="application/ld+json">
   {
@@ -39,9 +39,9 @@
       {
         "@type": "CollectionPage",
         "name": "Agentic AI governance in operation",
-        "description": "Runnable Mneme enforcement traces, supporting checks, and an explicitly forward-looking multi-agent contract.",
+        "description": "Two flagship Mneme enforcement proofs, a runnable Claude Agent SDK integration, supporting checks, and an explicitly forward-looking multi-agent contract.",
         "url": "https://mnemehq.com/demo/",
-        "dateModified": "2026-08-25",
+        "dateModified": "2026-08-28",
         "publisher": {
           "@type": "Organization",
           "name": "Mneme HQ",
@@ -51,6 +51,7 @@
         "hasPart": [
           {"@type": "WebPage", "name": "Block an unauthorized storage migration", "url": "https://mnemehq.com/demo/governed-python-agent/"},
           {"@type": "WebPage", "name": "Prevent a nondeterministic governance fork", "url": "https://mnemehq.com/demo/architectural-drift/"},
+          {"@type": "WebPage", "name": "Claude Agent SDK governance with Mneme", "url": "https://mnemehq.com/demo/agent-sdk-governance/"},
           {"@type": "WebPage", "name": "Multi-agent governance target contract", "url": "https://mnemehq.com/demo/multi-agent-governance/"}
         ]
       }
@@ -89,7 +90,7 @@
       <div class="demo-hub-hero-inner">
         <div class="demo-hub-eyebrow">Agentic AI governance in operation</div>
         <h1>Watch an agent cross the line. Then watch Mneme <em>stop it.</em></h1>
-        <p class="lede">Two runnable demos show architecture failures before they land. A third shows what Mneme can do today and what still needs to exist for many agents to follow the same rules.</p>
+        <p class="lede">Two runnable demos show architecture failures before they land. Then see Mneme block a violating write in a real Claude Agent SDK workflow before it reaches disk.</p>
       </div>
     </header>
 
@@ -100,11 +101,11 @@
           <h2 id="proofs-title">The change looks useful. The decision says otherwise.</h2>
         </div>
 
-        <div class="hub-proof-grid">
+         <div class="hub-proof-grid">
           <a class="hub-card" href="/demo/governed-python-agent/">
             <div class="hub-card-top">
-              <span class="hub-card-kicker">Flagship 01</span>
-              <span class="hub-card-meta">Runnable locally · <b class="hub-outcome hub-outcome--deny">Deny</b> → <b class="hub-outcome hub-outcome--pass">pass</b></span>
+              <span class="hub-card-kicker">Core enforcement</span>
+              <span class="hub-card-meta">Local CLI · <b class="hub-outcome hub-outcome--deny">DENY</b> → <b class="hub-outcome hub-outcome--pass">PASS</b></span>
             </div>
             <h3>A second database <span class="hub-deny-word">sneaks in.</span></h3>
             <p>JSON becomes Postgres. Mneme stops the migration, then checks the safer retry.</p>
@@ -117,8 +118,8 @@
 
           <a class="hub-card" href="/demo/architectural-drift/">
             <div class="hub-card-top">
-              <span class="hub-card-kicker">Flagship 02</span>
-              <span class="hub-card-meta">Runnable locally · <b class="hub-outcome hub-outcome--deny">Deny</b> → <b class="hub-outcome hub-outcome--pass">pass</b></span>
+              <span class="hub-card-kicker">Drift prevention</span>
+              <span class="hub-card-meta">Retrieval architecture · Local CLI · <b class="hub-outcome hub-outcome--deny">DENY</b> → <b class="hub-outcome hub-outcome--pass">PASS</b></span>
             </div>
             <h3>The rulebook starts <span class="hub-warn-word">guessing.</span></h3>
             <p>A vector-search change lets agents find different decisions for the same task. Mneme blocks the fork.</p>
@@ -129,26 +130,29 @@
             <span class="hub-card-cta">See how Mneme blocks it &rarr;</span>
           </a>
 
-          <a class="hub-card hub-card--target" href="/demo/multi-agent-governance/">
-            <div>
-              <div class="hub-card-top">
-                <span class="hub-card-kicker">Infrastructure contract</span>
-              <span class="hub-card-meta">What comes next · <b class="hub-outcome">Target capability</b></span>
-              </div>
-              <h3>Many agents. <span class="hub-pass-word">One rulebook.</span></h3>
-              <p>The goal: every agent gets the same rule, meets the same check, and leaves one shared record.</p>
-              <span class="hub-card-cta">Inspect the target contract &rarr;</span>
-            </div>
-            <div class="hub-target-requirements" aria-label="Required multi-agent capabilities">
-              <span>Same rule version</span>
-              <span>Agent + result identity</span>
-              <span>Connected retry record</span>
-            </div>
-          </a>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <section class="hub-section hub-run hub-run--featured" aria-labelledby="run-title">
+       <section class="hub-section" aria-labelledby="native-title">
+         <div class="hub-native-card">
+           <div>
+             <div class="hub-card-top">
+               <span class="hub-card-kicker">Claude Agent SDK</span>
+               <span class="hub-card-meta">Native integration · Live + deterministic · <b class="hub-outcome hub-outcome--deny">DENY</b> → <b class="hub-outcome hub-outcome--pass">PASS</b></span>
+             </div>
+             <h2 id="native-title">Claude proposes a write. Mneme stops it before disk.</h2>
+             <p>A real Claude Agent SDK workflow receives the governing decision, attempts a violating <code>Write</code>, gets denied, and retries with the compliant change.</p>
+             <a class="hub-card-cta" href="/demo/agent-sdk-governance/">Run the Agent SDK proof &rarr;</a>
+           </div>
+           <div class="hub-native-trace" aria-label="Claude Agent SDK governance trace">
+             <div><span>01</span><strong>Claude proposes</strong><code>Write → storage.py</code></div>
+             <div><span>02</span><strong>Mneme denies</strong><code>Decision injected · hook returns DENY</code></div>
+             <div><span>03</span><strong>Claude retries</strong><code>Approved path → PASS</code></div>
+           </div>
+         </div>
+       </section>
+
+       <section class="hub-section hub-run hub-run--featured" aria-labelledby="run-title">
         <div>
           <div class="hub-section-label">Try it yourself</div>
           <h2 id="run-title">Run a governed check locally.</h2>
@@ -161,16 +165,39 @@
       <section class="hub-section" aria-labelledby="examples-title">
         <div class="hub-section-head">
           <div class="hub-section-label">Supporting examples</div>
-          <h2 id="examples-title">Same system. Smaller, useful checks.</h2>
+           <h2 id="examples-title">More ways Mneme enforces architecture.</h2>
+           <p class="hub-section-subtitle">CI boundaries, dependency policy, ADR import, and compliant checks.</p>
         </div>
         <div class="hub-support-grid">
-          <a class="hub-support-card" href="/demo/storage-decision/"><span class="hub-outcome hub-outcome--pass">Pass</span><strong>Keep JSON. Ship the change.</strong><p>Verify a clean storage task.</p></a>
-          <a class="hub-support-card" href="/demo/dependency-policy/"><span class="hub-outcome hub-outcome--warn">Warn</span><strong>New package? Make it a decision.</strong><p>Flag the dependency before it drifts in.</p></a>
-          <a class="hub-support-card" href="/demo/repository-pattern/"><span class="hub-outcome hub-outcome--deny">Deny</span><strong>The code works. The boundary does not.</strong><p>Stop direct database access in a service.</p></a>
-          <a class="hub-support-card" href="/demo/adr-compiler/"><span>Infrastructure</span><strong>Turn ADRs into checks.</strong><p>Compile the rules you already maintain.</p></a>
-          <a class="hub-support-card" href="/demo/agent-sdk-governance/"><span>Native integration</span><strong>Put the gate before the tool call.</strong><p>Claude proposes a write; Mneme checks it before it reaches disk.</p></a>
-        </div>
-      </section>
+           <a class="hub-support-card" href="/demo/repository-pattern/"><span>CI enforcement · Strict mode · <b class="hub-outcome hub-outcome--deny">DENY</b></span><strong>The code works. The boundary does not.</strong><p>Stop direct database access in a service.</p></a>
+           <a class="hub-support-card" href="/demo/dependency-policy/"><span>Dependency policy · Warn mode · <b class="hub-outcome hub-outcome--warn">WARN</b></span><strong>New package? Make it a decision.</strong><p>Flag the dependency before it drifts in.</p></a>
+           <a class="hub-support-card" href="/demo/adr-compiler/"><span>ADR import · Local CLI · <b class="hub-outcome hub-outcome--warn">WARN</b></span><strong>Turn ADRs into checks.</strong><p>Compile the rules you already maintain.</p></a>
+           <a class="hub-support-card" href="/demo/storage-decision/"><span>Compliant check · Local CLI · <b class="hub-outcome hub-outcome--pass">PASS</b></span><strong>Keep JSON. Ship the change.</strong><p>Verify a clean storage task.</p></a>
+         </div>
+       </section>
+
+       <section class="hub-section hub-next" aria-labelledby="next-title">
+         <div class="hub-section-head">
+           <div class="hub-section-label">What comes next</div>
+           <h2 id="next-title">Multi-agent governance is the target architecture.</h2>
+         </div>
+         <a class="hub-card hub-card--target" href="/demo/multi-agent-governance/">
+           <div>
+             <div class="hub-card-top">
+               <span class="hub-card-kicker">Multi-agent governance</span>
+               <span class="hub-card-meta">Target architecture · Not shipped · Not runnable</span>
+             </div>
+             <h3>Many agents. <span class="hub-pass-word">One rulebook.</span></h3>
+             <p>The goal: every agent gets the same rule, meets the same check, and leaves one shared record.</p>
+             <span class="hub-card-cta">Inspect the target contract &rarr;</span>
+           </div>
+           <div class="hub-target-requirements" aria-label="Required multi-agent capabilities">
+             <span>Same rule version</span>
+             <span>Agent + result identity</span>
+             <span>Connected retry record</span>
+           </div>
+         </a>
+       </section>
 
       <figure class="hub-image" aria-labelledby="hub-image-caption">
         <img src="/assets/images/photo-whiteboard-plan-coral.webp" width="1535" height="1025" loading="lazy" decoding="async" alt="An engineer reviewing architecture and product flows drawn on a whiteboard">
