@@ -309,7 +309,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install mneme-hq
+      - run: pip install mneme-hq>=0.6.0
       - run: mneme check --mode warn</code></pre>
 
     <p>See <a href="/integrations/github-actions/">GitHub Actions AI Governance</a> for the full integration page.</p>
@@ -322,7 +322,7 @@ mneme-check:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
-    - pip install mneme-hq
+    - pip install mneme-hq>=0.6.0
     - mneme check --mode warn</code></pre>
 
     <p>See <a href="/integrations/gitlab/">GitLab CI integration</a> for the full page.</p>
