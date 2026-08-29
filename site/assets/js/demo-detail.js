@@ -80,21 +80,4 @@
     stake.classList.add('decision-stake--' + stakePreview);
   }
 
-  var menuButton = document.querySelector('.nav-hamburger');
-  var navLinks = document.querySelector('.nav-links');
-  if (menuButton && navLinks) {
-    function setOpen(open) {
-      navLinks.classList.toggle('open', open);
-      menuButton.setAttribute('aria-expanded', String(open));
-    }
-    menuButton.addEventListener('click', function () {
-      setOpen(!navLinks.classList.contains('open'));
-    });
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') setOpen(false);
-    });
-    navLinks.addEventListener('click', function (event) {
-      if (event.target.tagName === 'A') setOpen(false);
-    });
-  }
 })();

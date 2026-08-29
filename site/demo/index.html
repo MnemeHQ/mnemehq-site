@@ -14,7 +14,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-   <link rel="stylesheet" href="/assets/css/demos.css?v=20260828a">
+   <link rel="stylesheet" href="/assets/css/demos.css?v=20260829a">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mneme HQ">
   <meta property="og:title" content="Agentic AI governance in operation — Mneme HQ">
@@ -134,7 +134,7 @@
         </section>
 
        <section class="hub-section" aria-labelledby="native-title">
-         <div class="hub-native-card">
+         <a class="hub-native-card" href="/demo/agent-sdk-governance/" aria-labelledby="native-title">
            <div>
              <div class="hub-card-top">
                <span class="hub-card-kicker">Claude Agent SDK</span>
@@ -142,14 +142,14 @@
              </div>
              <h2 id="native-title">Claude proposes a write. Mneme stops it before disk.</h2>
              <p>A real Claude Agent SDK workflow receives the governing decision, attempts a violating <code>Write</code>, gets denied, and retries with the compliant change.</p>
-             <a class="hub-card-cta" href="/demo/agent-sdk-governance/">Run the Agent SDK proof &rarr;</a>
+             <span class="hub-card-cta">Run the Agent SDK proof &rarr;</span>
            </div>
            <div class="hub-native-trace" aria-label="Claude Agent SDK governance trace">
              <div><span>01</span><strong>Claude proposes</strong><code>Write → storage.py</code></div>
              <div><span>02</span><strong>Mneme denies</strong><code>Decision injected · hook returns DENY</code></div>
              <div><span>03</span><strong>Claude retries</strong><code>Approved path → PASS</code></div>
            </div>
-         </div>
+         </a>
        </section>
 
        <section class="hub-section hub-run hub-run--featured" aria-labelledby="run-title">
@@ -303,7 +303,7 @@
   </div>
 </footer>
 
-  <script src="/assets/js/demo-detail.js?v=20260826d"></script>
+  <script src="/assets/js/demo-detail.js?v=20260829a"></script>
 <script>
 (function(){
   var btn = document.querySelector('.nav-hamburger');

@@ -24,6 +24,9 @@ What it checks
      `<nav>` / `<nav class="site-nav">` / `<nav class="site">` wrapper variants
      do not matter, but any link/label/structure divergence fails)
    - its site `<footer>` block matches the canonical footer
+   - its mobile nav has exactly one runtime toggle handler, counting inline
+     code and local script assets
+   - its skip link has styling from base.css, demos.css, or a local rule
    - a non-excluded page that is missing either block fails (it is never
      silently skipped)
 
@@ -69,6 +72,8 @@ FOOTER_RE = re.compile(
 HEADING_RE = re.compile(r'margin-bottom: 0\.9rem;">([^<]+)<')
 CTA_RE = re.compile(r'<a\b[^>]*class="btn-nav-cta"[^>]*>', re.S)
 HREF_RE = re.compile(r'href="([^"]+)"')
+SCRIPT_SRC_RE = re.compile(r'<script\b[^>]*\bsrc="(/[^"]+\.js)(?:\?[^\"]*)?"[^>]*>', re.I)
+MENU_TOGGLE_RE = re.compile(r"classList\.toggle\(\s*['\"]open['\"]")
 
 
 def normalize(markup: str) -> str:
@@ -108,6 +113,20 @@ def is_excluded(path: Path) -> bool:
     if path.relative_to(SITE).as_posix() in EXCLUDED_PATHS:
         return True
     return False
+
+
+def menu_toggle_count(text: str) -> int:
+    """Count inline and local-asset handlers that toggle the primary menu."""
+    count = len(MENU_TOGGLE_RE.findall(text))
+    for src in SCRIPT_SRC_RE.findall(text):
+        asset = SITE / src.lstrip("/")
+        if asset.exists():
+            count += len(
+                MENU_TOGGLE_RE.findall(
+                    asset.read_text(encoding="utf-8", errors="replace")
+                )
+            )
+    return count
 
 
 def validate_canonical(errors: list[str]) -> tuple[str | None, str | None]:
@@ -172,6 +191,23 @@ def main(argv: list[str]) -> int:
             errors.append(f"{rel}: no <div class=\"nav-links\"> block (missing global nav)")
         elif nav_norm is not None and normalize(page_nav) != nav_norm:
             errors.append(f"{rel}: header nav diverges from _snippets/nav.html")
+
+        if 'class="nav-hamburger"' in text:
+            handler_count = menu_toggle_count(text)
+            if handler_count != 1:
+                errors.append(
+                    f"{rel}: expected exactly one mobile-menu toggle handler, "
+                    f"found {handler_count}"
+                )
+
+        if 'class="skip-link"' in text:
+            has_shared_skip_css = (
+                "/assets/css/base.css" in text
+                or "/assets/css/demos.css" in text
+                or ".skip-link {" in text
+            )
+            if not has_shared_skip_css:
+                errors.append(f"{rel}: skip link has no shared or local styling")
 
         page_footer = extract_footer(text)
         if page_footer is None:
