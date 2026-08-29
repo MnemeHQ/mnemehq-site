@@ -242,7 +242,7 @@
         "name": "Wire Mneme HQ into Claude Code",
         "description": "Install Mneme, register the PreToolUse hook with Claude Code, and verify enforcement on a test diff.",
         "step": [
-          {"@type": "HowToStep", "name": "Install", "text": "pipx install \"mneme-hq>=0.5.1\" installs the runtime; the runtime and the Claude Code plugin are separate artifacts."},
+          {"@type": "HowToStep", "name": "Install", "text": "pipx install \"mneme-hq>=0.6.0\" installs the runtime; the runtime and the Claude Code plugin are separate artifacts."},
           {"@type": "HowToStep", "name": "Scaffold project memory", "text": "Run mneme init to create .mneme/project_memory.json with an empty valid decision corpus. It refuses to overwrite an existing corpus unless --force is supplied."},
           {"@type": "HowToStep", "name": "Register the hook", "text": "Load the plugin from a Mneme checkout with claude --plugin-dir ./integrations/claude-code-plugin so Edit, Write, MultiEdit, and supported Bash operations check the corpus before applying changes."},
           {"@type": "HowToStep", "name": "Populate decisions", "text": "Add the team's real decisions with mneme add_decision or import existing ADRs with mneme adr import — init seeds an empty valid corpus, never placeholder content."},
@@ -331,8 +331,8 @@
     <ol>
       <li>
         <strong>Install the runtime</strong>
-        <pre tabindex="0"><code>pipx install "mneme-hq&gt;=0.5.1"</code></pre>
-        <p><code>&gt;=0.5.1</code> is a real requirement, not a preference: earlier releases do not support the machine-readable <code>--json</code> verdict the hook relies on, and on them a crashing check could hard-block an edit.</p>
+        <pre tabindex="0"><code>pipx install "mneme-hq&gt;=0.6.0"</code></pre>
+        <p><code>mneme-hq&gt;=0.6.0</code> keeps the runtime aligned with the current hook contract, including its machine-readable <code>--json</code> verdict.</p>
       </li>
       <li>
         <strong>Scaffold project memory (if you don't have one yet)</strong>

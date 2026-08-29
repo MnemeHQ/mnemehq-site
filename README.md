@@ -56,13 +56,24 @@ distribution, recompiles the ADR corpus to catch stale memory, and applies
 Run the same local preflight with:
 
 ```
-python -m pip install "mneme-hq>=0.5.0"
+python -m pip install "mneme-hq>=0.6.0"
 mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
 git diff --name-only HEAD^ HEAD > .mneme/changed-paths.txt
 mneme check --memory .mneme/project_memory.json --input .mneme/changed-paths.txt --query "Assess these changed paths against Mneme HQ website publishing, shared site chrome, deployment, and validation governance." --top 10 --mode strict
 ```
 
 `mneme-hq` is the distribution name; the installed CLI remains `mneme`.
+
+Active public install references are synchronized from
+[`scripts/core_version.json`](scripts/core_version.json). For the next core
+release, run one command from the repository root:
+
+```
+python scripts/sync_core_version.py 0.7.0
+```
+
+The command updates the active site and README references; CI runs
+`python scripts/sync_core_version.py --check` to prevent them drifting apart.
 
 ## Deployment
 

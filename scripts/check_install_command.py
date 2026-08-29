@@ -28,6 +28,7 @@ Exit codes:
 """
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import sys
@@ -40,6 +41,9 @@ VIOLATION = re.compile(
 )
 
 CORRECT = "mneme-hq"
+CORE_VERSION = json.loads(
+    (Path(__file__).with_name("core_version.json")).read_text(encoding="utf-8")
+)["minimum_version"]
 
 # `pip install -e mneme` / `--editable mneme` takes a *local directory path*,
 # not a PyPI distribution name, so it never resolves to the wrong package.
@@ -105,7 +109,7 @@ SELF_TEST_CASES: list[tuple[str, bool]] = [
     ("    - pip install mneme", True),
     ("pip install --upgrade mneme", True),
     ("pip install mneme-hq", False),
-    ('pipx install "mneme-hq&gt;=0.5.0"', False),
+    (f'pipx install "mneme-hq&gt;={CORE_VERSION}"', False),
     ("pip install -e mneme", False),
     ("pip install --editable mneme", False),
     ("pipx install ./mneme", False),
@@ -145,7 +149,7 @@ def main(argv: list[str]) -> int:
     print("The bare name installs an unrelated, abandoned third-party package")
     print("this project does not own. Publish this instead:")
     print()
-    print('    pipx install "mneme-hq>=0.5.0"')
+    print(f'    pipx install "mneme-hq>={CORE_VERSION}"')
     print()
     print(f"{len(findings)} occurrence(s):")
     for path, lineno, line in findings:

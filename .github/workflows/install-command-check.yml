@@ -40,3 +40,9 @@ jobs:
 
       - name: Run install-command gate
         run: python scripts/check_install_command.py
+
+      - name: Verify core version synchronizer
+        run: python scripts/sync_core_version.py --self-test
+
+      - name: Verify core version references
+        run: python scripts/sync_core_version.py --check
