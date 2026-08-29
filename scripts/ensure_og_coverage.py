@@ -1092,7 +1092,10 @@ def write_templates():
             skipped += 1
         else:
             html = make_template(tag, heading, font_size, subtitle, url_path)
-            dest.write_text(html, encoding="utf-8")
+            # write_text() translates the string's LF to os.linesep on
+            # Windows, which would give new templates CRLF while the rest
+            # of the repo is LF. Encode and write bytes directly instead.
+            dest.write_bytes(html.encode("utf-8"))
             print(f"  wrote  {filename}")
             written += 1
     print(f"\nTemplates: {written} written, {skipped} skipped\n")
@@ -1104,7 +1107,12 @@ def write_templates():
 # ---------------------------------------------------------------------------
 
 def update_template_map():
-    src = GENERATE_SCRIPT.read_text(encoding="utf-8")
+    # Read/write bytes explicitly (no universal-newline translation) so
+    # this preserves generate_og_images.py's existing line-ending
+    # convention. A read_text()/write_text() round trip silently flips
+    # an LF file to CRLF on Windows.
+    src_bytes = GENERATE_SCRIPT.read_bytes()
+    src = src_bytes.decode("utf-8")
 
     # Find what's already in the map
     existing_keys = set(re.findall(r'"(og-[^"]+\.html)":', src))
@@ -1151,7 +1159,11 @@ def update_template_map():
     # Find the last entry line end position
     closing_brace_pos = match.start(2)
     new_src = src[:closing_brace_pos] + insertion_block + src[closing_brace_pos:]
-    GENERATE_SCRIPT.write_text(new_src, encoding="utf-8")
+    out_bytes = new_src.encode("utf-8")
+    assert out_bytes.count(b"\r\n") == src_bytes.count(b"\r\n"), (
+        "TEMPLATE_MAP update would change the line-ending convention"
+    )
+    GENERATE_SCRIPT.write_bytes(out_bytes)
     print(f"TEMPLATE_MAP updated: {len(new_entries)} entries added.\n")
     return len(new_entries)
 
@@ -1170,7 +1182,10 @@ def fix_html_tags():
             not_found += 1
             continue
 
-        content = html_file.read_text(encoding="utf-8")
+        # Read/write bytes explicitly to preserve the file's existing
+        # line-ending convention; see update_template_map() above.
+        file_bytes = html_file.read_bytes()
+        content = file_bytes.decode("utf-8")
         changed = False
 
         # Fix og:image
@@ -1188,7 +1203,11 @@ def fix_html_tags():
             changed = True
 
         if changed:
-            html_file.write_text(content, encoding="utf-8")
+            out_bytes = content.encode("utf-8")
+            assert out_bytes.count(b"\r\n") == file_bytes.count(b"\r\n"), (
+                rel_path + ": fix would change its line-ending convention"
+            )
+            html_file.write_bytes(out_bytes)
             print(f"  fixed   {rel_path}")
             fixed += 1
         else:
