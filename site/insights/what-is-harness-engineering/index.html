@@ -428,7 +428,7 @@
   <p class="diag-caption">Generation produces, orchestration executes, governance decides what is allowed</p>
 </div>
 
-<p>Reading the stack this way makes the boundary obvious. A better model improves generation. A better harness improves orchestration. Neither, by construction, decides whether the result conforms to the decisions the system was built to preserve. That is a separate concern, and it sits one layer up.</p>
+<p>Reading the stack this way makes the boundary obvious. A better model improves generation. A better harness improves orchestration. Neither, by construction, decides whether the result conforms to the decisions the system was built to preserve. That is a separate concern &mdash; logically independent of the harness, but enforced through the same execution boundary the harness already exposes: before tool calls, file writes, and commits.</p>
 
 <h2>What harnesses do not do</h2>
 
@@ -498,6 +498,7 @@
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:1.5rem;padding-top:0;border-top:none;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
+      <li><a href="/insights/deepseek-agent-model-harness-architectural-governance/"><div class="rel-title">DeepSeek Harness Got Agent = Model + Harness Right. Governance Is the Missing Term</div><p class="rel-desc">A concrete open-source pre-execute policy seam, and what a decision corpus plugged into it would look like.</p></a></li>
       <li><a href="/insights/ai-coding-agent-architecture/"><div class="rel-title">AI Coding-Agent Architecture</div><p class="rel-desc">A coding agent is not a model. It is a stack: the model, the harness, the governance layer, and the intent it enforces. Here is what each layer does, and which one most tools leave out.</p></a></li>
       <li><a href="/insights/prompt-engineering-vs-harness-engineering/"><div class="rel-title">Prompt Engineering Was About Inputs. Harness Engineering Is About Systems.</div><p class="rel-desc">How the discipline moved from optimizing one call to engineering whole execution systems.</p></a></li>
       <li><a href="/insights/harness-engineering-verification-layer/"><div class="rel-title">The Missing Layer in Harness Engineering Is Verification</div><p class="rel-desc">Coordinating execution is not verifying that the execution was correct against durable intent.</p></a></li>

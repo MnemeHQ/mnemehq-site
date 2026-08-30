@@ -243,7 +243,7 @@
 </div>
 
 <div class="cards-wrap">
-  <p class="hub-intro">This page describes compatibility, not partnership. Where a native, documented integration exists, it is linked through to <a href="/integrations/" style="color:var(--accent);text-decoration:none;">/integrations/</a>. Everywhere else, Mneme is designed to operate alongside the tool at the file-write or context-injection seam &mdash; harnesses coordinate execution, Mneme enforces architectural intent, and they run side by side. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/" style="color:var(--accent);text-decoration:none;">Harness Engineering Still Needs Governance</a>.</p>
+  <p class="hub-intro">This page describes compatibility, not partnership. Where a native, documented integration exists, it is linked through to <a href="/integrations/" style="color:var(--accent);text-decoration:none;">/integrations/</a>. Everywhere else, Mneme is designed to plug into the tool at the file-write or context-injection seam &mdash; harnesses coordinate execution, and Mneme enforces architectural intent through that same execution boundary rather than running as a parallel, disconnected process. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/" style="color:var(--accent);text-decoration:none;">Harness Engineering Still Needs Governance</a>.</p>
 
   <h2 class="group-title">Model providers</h2>
   <p class="group-lede">Mneme HQ is model-agnostic. Governance operates at the seam where the agent reads context and writes to disk, so it does not care which model produced the tokens.</p>
@@ -340,6 +340,19 @@
         </div>
         <h3>Claude Code</h3>
         <p>Hook-level enforcement via SessionStart, PreToolUse, and PostToolUse. One of the three documented native integrations.</p>
+        <div class="card-footer">
+          <span class="read-link">Integration page &rarr;</span>
+        </div>
+      </div>
+    </a>
+
+    <a href="/integrations/kiro/" class="compare-card-link">
+      <div class="compare-card native">
+        <div class="card-meta">
+          <span class="card-tag">Native integration</span>
+        </div>
+        <h3>Kiro</h3>
+        <p>PreToolUse hook enforcement for Kiro CLI 3.0 native write and append mutations, checked before they reach disk.</p>
         <div class="card-footer">
           <span class="read-link">Integration page &rarr;</span>
         </div>

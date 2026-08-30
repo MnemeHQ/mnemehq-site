@@ -164,6 +164,30 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-cyber-migration.html",
+        "Insights",
+        "Collective Cyber Defense",
+        "42px",
+        "110+ organizations named legacy technical debt as AI-attack exposure. Fixing it means migrations agents now run.",
+        "insights/ai-accelerating-cybersecurity-migration-problem",
+    ),
+    (
+        "og-insights-model-hardware-standard.html",
+        "Insights",
+        "Model Hardware Standard",
+        "42px",
+        "Device limits say what a machine can do. They do not say what an agent is allowed to do with it.",
+        "insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails",
+    ),
+    (
+        "og-insights-deepseek-harness.html",
+        "Insights",
+        "Agent = Model + Harness",
+        "44px",
+        "DeepSeek Harness publishes a real pre-execute policy seam. It does not supply the architecture to enforce through it.",
+        "insights/deepseek-agent-model-harness-architectural-governance",
+    ),
+    (
         "og-insights-strangler-fig.html",
         "Insights",
         "Strangler-Fig Migrations",
@@ -896,6 +920,9 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-cyber-migration.html": "insights/ai-accelerating-cybersecurity-migration-problem/og.png",
+    "og-insights-model-hardware-standard.html": "insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails/og.png",
+    "og-insights-deepseek-harness.html": "insights/deepseek-agent-model-harness-architectural-governance/og.png",
     "og-insights-strangler-fig.html": "insights/strangler-fig-migrations-architectural-drift/og.png",
     "og-insights-codebase-memory.html": "insights/codebase-memory-during-migrations/og.png",
     "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",

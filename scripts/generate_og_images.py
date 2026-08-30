@@ -327,6 +327,11 @@ TEMPLATE_MAP = {
     "og-insights-codebase-memory.html": "insights/codebase-memory-during-migrations/og.png",
     "og-insights-migration-guardrails.html": "insights/migration-guardrails-for-ai-coding-agents/og.png",
     "og-insights-cloud-platform-migrations.html": "insights/architectural-drift-cloud-platform-migrations/og.png",
+
+    # Insights — new
+    "og-insights-cyber-migration.html": "insights/ai-accelerating-cybersecurity-migration-problem/og.png",
+    "og-insights-model-hardware-standard.html": "insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails/og.png",
+    "og-insights-deepseek-harness.html": "insights/deepseek-agent-model-harness-architectural-governance/og.png",
 }
 
 PORT = 8765
