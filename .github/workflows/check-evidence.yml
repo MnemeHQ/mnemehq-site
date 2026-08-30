@@ -1,0 +1,45 @@
+name: check first-party evidence contract
+
+# Validates that every first-party evidence block (<div class="callout
+# callout-evidence" data-evidence-id="...">) on a governed page resolves to
+# a verified public artifact and carries an explicit claim boundary.
+#
+# Contract: docs/adr/ADR-004-first-party-evidence-contract.md
+# Registry: docs/site/evidence-contract.json
+# Validator: scripts/check_evidence.py
+#
+# Path filter: only runs on PRs that touch the registry, the checker, or a
+# governed page, so this stays a lightweight check.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/site/evidence-contract.json'
+      - 'scripts/check_evidence.py'
+      - 'scripts/test_check_evidence.py'
+      - 'site/insights/how-ai-coding-agents-use-adrs/**'
+      - 'site/insights/ai-native-sdlc-architecture-layer/**'
+
+permissions:
+  contents: read
+
+jobs:
+  check-evidence:
+    name: check_evidence.py
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Test evidence-contract checker
+        run: python test_check_evidence.py
+        working-directory: scripts
+
+      - name: Run evidence-contract validator
+        run: python scripts/check_evidence.py

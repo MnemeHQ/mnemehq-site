@@ -84,6 +84,24 @@
       "created_at": "2026-08-24",
       "updated_at": "2026-08-24",
       "source": "Visual audit 2026-08-24; integrations hub redesign commit d8b92f02"
+    },
+    {
+      "id": "ADR-004",
+      "decision": "Public empirical claims must resolve to a verified public artifact",
+      "rationale": "# ADR-004: Public empirical claims must resolve to a verified public artifact\n\n## Status\n\nAccepted \u2014 2026-08-30\n\n## Context\n\nA citation-worthiness review of the site's insights content found that\nseveral articles synthesize third-party evidence (Gartner, research\npapers, vendor reports) well but supply little first-party evidence of\ntheir own \u2014 content that interprets sources rather than contributing an\nobservation a retrieval system could cite. Mneme already has reproducible\nfirst-party evidence in the public `MnemeHQ/mneme` repository: a frozen\nenforcement benchmark and an enforcement-quality suite, both with\ncommitted, versioned results.\n\n[ADR-002](ADR-002-demo-evidence-contract.md) already established this\ndiscipline for `site/demo/**`: a claim must correspond to an executable\npath that produces it, or be marked illustrative. Content outside\n`site/demo/**` \u2014 insights articles citing benchmark numbers \u2014 has no\nequivalent contract, and nothing stops a number from drifting out of\nsync with the artifact that produced it once either side is edited.\n\n## Decision\n\nPublic empirical claims must resolve to a verified public artifact and\ncarry an explicit claim boundary.\n\nConcretely: any first-party result cited on the site (a benchmark\nnumber, a measured rate, a pass/fail count) must link to a public,\ncommitted artifact that actually contains that result, and the\nsurrounding copy must state what the result does and does not\nestablish. A result whose source artifact is not yet public, or has not\nbeen verified against the page's claim, is not eligible to be cited.\n\nThis ADR states the rule. It does not prescribe a visual component,\npage layout, or paragraph template \u2014 those are implementation detail\nthat can change without revising this document. The initial\nimplementation (an evidence registry and a small CI checker) is recorded\nin `docs/superpowers/specs/2026-08-30-citation-worthiness-evidence-design.md`,\nnot here.\n\n## Consequences\n\n- A claim can be written before its source artifact is public, but\n  cannot ship until the artifact is merged to the source repository's\n  main branch and the claim is verified against it.\n- This is expected to recur: future benchmark results, design-partner\n  evidence, and other first-party observations should be checked\n  against this same rule before being cited on the site.\n",
+      "scope": [
+        "site.evidence"
+      ],
+      "constraints": [],
+      "anti_patterns": [],
+      "rules": [],
+      "created_at": "2026-08-30",
+      "updated_at": "2026-08-30",
+      "source": {
+        "type": "adr",
+        "path": "../docs/adr/ADR-004-first-party-evidence-contract.md",
+        "sha256": "574d7d5f8edeaef1d535341837e6c2cb8557937da9a17bc8d991ef493b3c2ca6"
+      }
     }
   ]
 }

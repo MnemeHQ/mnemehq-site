@@ -113,6 +113,10 @@
     .callout p { margin: 0; color: var(--muted); font-size: 0.88rem; }
     .callout p strong { color: var(--accent); }
 
+    .callout-evidence .evidence-claim { margin-bottom: 0.75rem; }
+    .callout-evidence .evidence-limitation { margin-bottom: 0.75rem; font-size: 0.85rem; }
+    .callout-evidence .evidence-source { font-size: 0.85rem; }
+
     .article-footer { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
     .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
     .back-link:hover { color: var(--text); }
@@ -341,8 +345,14 @@
       <li><strong>Check the proposed edit against them.</strong> Compare what the agent wants to write to what the retrieved decisions require. This is a deterministic evaluation, not a second model forming an opinion.</li>
       <li><strong>Reject with the specific ADR named.</strong> If the edit violates a decision, block it and say which one. &ldquo;This change violates ADR-014&rdquo; is actionable in a way that &ldquo;this looks wrong&rdquo; is not, and it lets the agent retry compliantly instead of guessing.</li>
     </ul>
-    <p>Make it concrete. <strong>ADR-014</strong> in a repository says all background work must use the existing worker service. An agent, asked to add an email-sending feature, proposes pulling in Redis and BullMQ to run the job on a new queue &mdash; a perfectly reasonable choice in the abstract, and probably a common pattern in its training data. At edit time, the check retrieves ADR-014, sees that the proposed change introduces a second async mechanism the decision forbids, and blocks the write with a message naming ADR-014 and its constraint. The agent does not get to add the dependency. It gets told exactly which recorded decision it broke, and it routes the work through the worker service instead.</p>
+    <p>Here&rsquo;s a hypothetical to make it concrete. <strong>ADR-014</strong> in a repository says all background work must use the existing worker service. An agent, asked to add an email-sending feature, proposes pulling in Redis and BullMQ to run the job on a new queue &mdash; a perfectly reasonable choice in the abstract, and probably a common pattern in its training data. At edit time, the check retrieves ADR-014, sees that the proposed change introduces a second async mechanism the decision forbids, and blocks the write with a message naming ADR-014 and its constraint. The agent does not get to add the dependency. It gets told exactly which recorded decision it broke, and it routes the work through the worker service instead.</p>
     <p>Nothing about ADR-014 changed. It is the same short document a human could read. What changed is that the decision now carries <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>: the constraint is expressed in a form a check can evaluate, so the ADR does more than sit in a folder. When the block fires, the reason is traceable back to a specific decision, which is the property <a href="/concepts/enforcement-provenance/">enforcement provenance</a> describes &mdash; every rejection points at the ADR that justified it.</p>
+
+    <div class="callout callout-evidence" data-evidence-id="E1">
+      <p class="evidence-claim"><strong>First-party validation.</strong> The worker-service scenario above is illustrative. What Mneme&rsquo;s frozen enforcement benchmark actually measures is narrower and public: across a fixed set of governed scenarios, whether the output correctly flags a proposed change that violates a recorded decision. One of those seven scenarios has an LLM recommending a Postgres/SQLAlchemy stack against a JSON-only storage constraint. The benchmark caught 7/7 violations.</p>
+      <p class="evidence-limitation">This validates the deterministic enforcement path under fixed benchmark scenarios; it does not establish effectiveness across production codebases or against adversarial paraphrasing. The same report&rsquo;s retrieval layer, measured separately from enforcement, scores mean precision@3 of 0.33 &mdash; publishing that number alongside the enforcement result rather than only the favorable one.</p>
+      <a class="evidence-source" href="https://github.com/MnemeHQ/mneme/blob/b98b213c3a5a28cf16483fc92e9e8f573303f19b/examples/benchmarks/reports/RESULTS.md">Method and artifacts &rarr;</a>
+    </div>
 
     <h2>ADRs in CI and at Edit Time</h2>
     <p>There are two moments where an ADR can be enforced, and they are complementary rather than competing.</p>
