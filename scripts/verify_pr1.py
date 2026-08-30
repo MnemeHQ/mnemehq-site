@@ -98,6 +98,16 @@ def main(user_data_dir=None):
              and events[0].get("page_type") == "homepage"
         check("[home] cta_click event payload correct", ok)
 
+        team_pilot = page.locator('.hm-team a[href="/pilot/"]').first
+        check("[home] team pilot CTA is instrumented",
+              team_pilot.get_attribute("data-cta-intent") == "pilot"
+              and team_pilot.get_attribute("data-cta-position") == "mid"
+              and team_pilot.get_attribute("data-cta-component") == "cta_band")
+
+        legacy = page.evaluate("""() => document.body.innerHTML.includes('install_command_copied')
+          || document.body.innerHTML.includes("gtag('event', 'cta_clicked'")""")
+        check("[home] legacy direct analytics handlers removed", not legacy)
+
         # docs page checks
         page.goto(f"http://127.0.0.1:{PORT}/docs/", wait_until="networkidle")
         check("[docs] copy install command control present",

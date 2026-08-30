@@ -146,7 +146,8 @@ code_copy
   copy_context: command string copied
   page_type
 
-form_start / form_error / form_submit / form_success  (pilot form, PR 3)
+pilot_form_start / pilot_form_error / pilot_form_attempt / pilot_form_success
+  form_id; error events also include error_type
 ```
 
 Markup contract: CTA controls carry `data-cta-intent`, `data-cta-position`,
@@ -173,7 +174,7 @@ Sequencing decided by the GA4 baseline table.
 
 ### PR 3 — Use cases, team pages, pricing (+ pilot form events)
 Pilot page: form + criteria side-by-side above the fold; four required fields;
-`form_start/form_error/form_submit/form_success` wired.
+`pilot_form_start/pilot_form_error/pilot_form_attempt/pilot_form_success` wired.
 
 ### PR 4 — Insights, concepts, benchmark and remaining templates
 Mid-article bands placed after first proof section (not by scroll percentage).
