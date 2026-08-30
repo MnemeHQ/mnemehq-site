@@ -855,17 +855,17 @@
   form.addEventListener('focusin', function(){
     if (started) return;
     started = true;
-    track('form_start');
+    track('pilot_form_start');
   }, true);
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if (!form.checkValidity()) {
-      track('form_error', { error_type: 'validation' });
+      track('pilot_form_error', { error_type: 'validation' });
       form.reportValidity();
       return;
     }
-    track('form_submit');
+    track('pilot_form_attempt');
     btn.disabled = true;
     btn.textContent = 'Submitting…';
     error.style.display = 'none';
@@ -878,16 +878,14 @@
         form.style.display = 'none';
         success.style.display = 'block';
         success.focus();
-        track('form_success');
-        window.gtag = window.gtag || function(){(window.dataLayer = window.dataLayer||[]).push(arguments);};
-        window.gtag('event', 'pilot_form_submitted');
+        track('pilot_form_success');
       } else {
         return res.json().then(function(data){
           throw new Error(data.error || 'error');
         });
       }
     }).catch(function(){
-      track('form_error', { error_type: 'network' });
+      track('pilot_form_error', { error_type: 'network' });
       btn.disabled = false;
       btn.textContent = 'Submit pilot request';
       error.style.display = 'block';

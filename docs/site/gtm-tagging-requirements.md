@@ -1,108 +1,143 @@
-# GTM/GA4 tagging requirements — handoff for Codex
+# GTM/GA4 canonical tagging requirements
 
-Status: ready to execute. Owner: Codex (requires interactive Chrome with a
-logged-in Google session — automation could not attach; see §6).
-Context: `docs/site/cta-system.md` (system) and `scratch/ga4-baseline.md` (data).
+Status: site changes and GTM workspace staged; production publish pending.
+Last verified against GTM container `GTM-KL7FB67N`: 2026-08-30.
 
-## 0. Preconditions
+This document is the source of truth for site event delivery. The site pushes
+structured objects to `window.dataLayer`; GTM reads those objects and sends GA4
+events to measurement ID `G-ZZ9YG12PPX` (property `534820916`).
 
-- GTM container: `GTM-KL7FB67N` (present in every site page's `<head>`)
-- GA4 property: export dataset `analytics_534820916` in BQ project `mneme-hq-prod`
-- The site-side handler is already live: every page pushes structured events to
-  `window.dataLayer` via `site/_snippets/cta-analytics.js` (synced by
-  `scripts/sync_shared.py`). Nothing on the site needs to change.
+## 1. Canonical events
 
-## 1. GA4 custom dimensions (Admin → Custom definitions)
+| Event | Meaning | Key event? |
+|---|---|---|
+| `cta_click` | A tagged conversion-oriented link was clicked | No |
+| `code_copy` | An install/code control was copied | No |
+| `pilot_form_start` | First interaction with the pilot form | No |
+| `pilot_form_attempt` | A locally valid form was sent to Formspree | No |
+| `pilot_form_error` | Validation or network/server failure | No |
+| `pilot_form_success` | Formspree returned HTTP success | **Yes** |
 
-Create event-scoped dimensions (used as event parameters):
+`pilot_form_success` is the sole primary conversion. CTA clicks, code copies,
+and page views remain funnel signals rather than GA4 key events.
 
-| Dimension name    | Parameter        | Scope |
-| ----------------- | ---------------- | ----- |
-| CTA intent        | `cta_intent`     | event |
-| CTA position      | `cta_position`   | event |
-| CTA component     | `cta_component`  | event |
-| CTA destination   | `cta_destination`| event |
-| Page type         | `page_type`      | event |
-| Copy context      | `copy_context`   | event |
+## 2. Payload contract
 
-## 2. GTM: `cta_click` event
+### `cta_click`
 
-- **Trigger:** Custom Event, event name `cta_click`, fires on all clicks.
-- **Tag:** GA4 Event, name `cta_click`, parameters exactly as pushed:
-  `cta_intent`, `cta_position`, `cta_component`, `cta_destination`, `page_type`.
-  Create GTM Data Layer Variables (v2) for each name, or use "Event Settings"
-  auto-collection of dataLayer variables.
-
-Expected payload shape (from `cta-analytics.js`):
-
-```
-{ event: 'cta_click',
-  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence',
+```js
+{
+  event: 'cta_click',
+  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute',
   cta_position: 'nav|hero|mid|end',
-  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav',
+  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card',
   cta_destination: '<href>',
-  page_type: 'homepage|docs|demo|integration|use_case|insight|concept|team|pilot|pricing|benchmark|other' }
+  page_type: 'homepage|docs|demo|integration|use_case|insight|concept|team|pilot|pricing|benchmark|other'
+}
 ```
 
-## 3. GTM: `code_copy` event
+### `code_copy`
 
-- **Trigger:** Custom Event `code_copy`.
-- **Tag:** GA4 Event `code_copy` with `copy_context`, `page_type`.
-- Copy controls must NEVER emit `cta_click` (handler guarantees this).
+```js
+{ event: 'code_copy', copy_context: '<copied command>', page_type: '<page type>' }
+```
 
-## 4. GTM: pilot form events (PR 3 prerequisite)
+### Pilot form
 
-Reserve GA4 events now so PR 3 only adds page code:
-`form_start`, `form_error`, `form_submit`, `form_success` — each Custom Event
-trigger + GA4 event tag passing `page_type` (form pages will push the rest).
+All pilot events include `page_type=pilot` and `form_id=pilot-form`.
+`pilot_form_error` also includes `error_type=validation|network`.
 
-## 5. Migrate legacy events (single-source reporting)
+The names are deliberately prefixed with `pilot_`. GA4 enhanced measurement
+already uses `form_start` and `form_submit`; reusing those names would merge
+automatic and application-defined events.
 
-The property already receives hand-rolled events that must be mapped to the new
-schema (baseline volumes in `scratch/ga4-baseline.md` §8):
+## 3. GTM variables
 
-| Legacy event            | 90d volume | Migration |
-| ----------------------- | ---------- | --------- |
-| `cta_github_click`      | 93         | Find the GTM tag/trigger producing it; repoint to `cta_click` with `cta_intent=github`. If produced by inline site JS, list the pages for a site-side fix instead of forcing it in GTM. |
-| `cta_demo_click`        | 32         | Same → `cta_click` with `cta_intent=demo`. |
-| `insight_article_clicked` | 87       | Keep for now (editorial nav, not conversion); revisit in PR 4. |
-| `outbound_link_clicked` | 335        | Keep — GA4 enhanced measurement; complements `cta_click`. |
+Create Data Layer Variables (version 2) with these exact names:
 
-Do NOT delete legacy triggers until the new events are verified in the GA4
-DebugView and one BQ daily export has landed.
+| GTM variable name | Data layer key |
+|---|---|
+| `DLV - cta_intent` | `cta_intent` |
+| `DLV - cta_position` | `cta_position` |
+| `DLV - cta_component` | `cta_component` |
+| `DLV - cta_destination` | `cta_destination` |
+| `DLV - page_type` | `page_type` |
+| `DLV - copy_context` | `copy_context` |
+| `DLV - form_id` | `form_id` |
+| `DLV - error_type` | `error_type` |
 
-## 6. Chrome/automation constraints (why this is manual)
+Do not rely on Event Settings to discover arbitrary data-layer keys. Each GA4
+event parameter must be explicitly mapped to the corresponding DLV.
 
-Playwright/CDP can only attach to a Chrome instance started with
-`--remote-debugging-port`. The user's daily Chrome is not started that way, and
-automating login credential entry is out of bounds. Two sanctioned approaches:
+## 4. GTM trigger and router tag
 
-1. **Restart user's Chrome with the flag** (preferred): close Chrome, relaunch
-   with `--remote-debugging-port=9222` on the EXISTING default profile
-   (`--user-data-dir` must NOT be overridden — that would create a new,
-   logged-out profile). Attach via CDP `http://127.0.0.1:9222`. All sessions
-   persist; nothing is deleted. Restore tabs afterwards.
-2. **One-time login in a scratch profile**: launch Playwright
-   `launch_persistent_context` on a temp dir, user signs in once, session
-   persists for the session.
+Use one Custom Event trigger named `Custom Event - Canonical Analytics`:
 
-NEVER: delete or modify Chrome profile directories, automate password entry,
-or disable existing Chrome processes' data.
+- Event name: `^(cta_click|code_copy|pilot_form_(start|attempt|error|success))$`
+- Use regex matching: enabled
+- Fires on: **All Custom Events**
 
-## 7. Verification checklist (Codex)
+Attach it to one GA4 Event tag named `GA4 - Canonical dataLayer event`:
 
-1. GTM Preview mode: click homepage hero Install → `cta_click` fires with full payload.
-2. Click a Copy control → `code_copy` fires, no `cta_click`.
-3. GA4 DebugView shows both events with all parameters populated.
-4. Next day: `bq query` on `analytics_534820916.events_*` confirms export.
-5. Legacy `cta_github_click`/`cta_demo_click` counts drop to ~0 while
-   `cta_click` with matching intents rises.
-6. Document the final trigger/tag names in this file (§8).
+- Measurement ID: `G-ZZ9YG12PPX`
+- Event name: `{{Event}}`
+- Event parameters: explicitly map all eight DLVs listed in section 3
 
-## 8. Change log (Codex fills in)
+Parameters that are not present on an event resolve to `undefined` and are not
+sent. This router preserves the originating event name while keeping one
+auditable mapping instead of six near-identical tags.
 
-- [ ] date — dimensions created
-- [ ] date — cta_click tag live
-- [ ] date — code_copy tag live
-- [ ] date — form event tags reserved
-- [ ] date — legacy migration done
+## 5. GA4 custom dimensions
+
+Register these event-scoped dimensions after parameters are visible in
+Realtime/DebugView:
+
+| Dimension | Parameter |
+|---|---|
+| CTA intent | `cta_intent` |
+| CTA position | `cta_position` |
+| CTA component | `cta_component` |
+| Page type | `page_type` |
+| Form ID | `form_id` |
+| Form error type | `error_type` |
+
+Keep raw `cta_destination` and `copy_context` in BigQuery. They can have many
+distinct values and do not need GA4 custom-dimension quota for current reports.
+
+## 6. Legacy cutover
+
+The live container still has click-triggered legacy tags including
+`cta_demo_click`, `cta_github_click`, and `install_command_copied`. The homepage
+also previously fired `cta_clicked` directly.
+
+1. Publish the canonical tags while legacy tags remain unchanged.
+2. Verify exactly one canonical event per action in GTM Preview and DebugView.
+3. Verify one daily BigQuery export.
+4. Pause overlapping legacy tags; do not repoint them to `cta_click` because
+   both the legacy click trigger and the data-layer trigger would then send the
+   same event.
+5. Confirm legacy counts fall to zero before deleting anything.
+
+## 7. Verification checklist
+
+- [ ] Homepage hero Install sends one `cta_click` with all five parameters.
+- [ ] Homepage team Pilot sends one `cta_click` with `cta_position=mid`.
+- [ ] Copy sends one `code_copy` and no `cta_click`.
+- [ ] Invalid pilot form sends `pilot_form_start` and `pilot_form_error` only.
+- [ ] Valid pilot submission sends `pilot_form_attempt`, then
+      `pilot_form_success` only after Formspree returns HTTP success.
+- [ ] DebugView shows parameters populated, not `(not set)`.
+- [ ] BigQuery daily export contains the canonical events and parameters.
+- [ ] `pilot_form_success` is marked as a GA4 key event.
+- [ ] Obsolete key-event flags and overlapping legacy tags are removed only
+      after the daily-export check.
+
+## 8. Change log
+
+- [x] 2026-08-30 — live GTM/GA4 configuration audited
+- [x] 2026-08-30 — canonical event taxonomy and explicit parameter map defined
+- [ ] date — site event normalization deployed
+- [x] 2026-08-30 — GTM variables, regex trigger, and router tag staged and verified in Preview
+- [ ] date — staged GTM workspace published
+- [x] 2026-08-30 — six low-cardinality GA4 dimensions created
+- [ ] date — pilot success verified and legacy tags paused

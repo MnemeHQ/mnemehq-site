@@ -1190,7 +1190,7 @@ Result: FAIL</code></pre>
         <p class="hm-lede">A Mneme pilot turns one real set of architectural decisions into an enforceable workflow across the agents and repositories your team already uses. Start with one boundary, one repository, and evidence everyone can inspect.</p>
         <p class="hm-team-quote">People decide. Mneme makes the decision operational. Evidence proves it held.</p>
         <div class="hm-actions">
-          <a class="hm-btn hm-btn-primary" href="/pilot/">Request a pilot</a>
+          <a class="hm-btn hm-btn-primary" href="/pilot/" data-cta-intent="pilot" data-cta-position="mid" data-cta-component="cta_band">Request a pilot</a>
           <a class="hm-btn" href="/for/">See the team rollout path</a>
         </div>
       </div>
@@ -1405,67 +1405,6 @@ Result: FAIL</code></pre>
 </footer>
 
 
-<script>
-(function () {
-  window.dataLayer = window.dataLayer || [];
-  document.querySelectorAll('.copy-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var block = btn.closest('[data-copy-block]');
-      if (!block) return;
-      var pre = block.querySelector('pre');
-      if (!pre) return;
-      var text = pre.innerText.replace(/^\s*\$\s?/gm, '').trim();
-      var done = function () {
-        btn.classList.add('copied');
-        var original = btn.textContent;
-        btn.textContent = 'Copied';
-        setTimeout(function () {
-          btn.classList.remove('copied');
-          btn.textContent = original;
-        }, 1800);
-        window.dataLayer.push({
-          event: 'install_command_copied',
-          command: btn.dataset.command || 'unknown'
-        });
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, done);
-      } else {
-        var ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch (e) {}
-        document.body.removeChild(ta);
-        done();
-      }
-    });
-  });
-})();
-</script>
-<script>
-(function () {
-  window.gtag = window.gtag || function(){(window.dataLayer = window.dataLayer||[]).push(arguments);};
-  document.addEventListener('click', function (e) {
-    var el = e.target.closest('a[href], button');
-    if (!el) return;
-    var href = el.getAttribute('href') || '';
-    var text = (el.innerText || el.textContent || '').trim().slice(0, 60);
-    var isPrimary = el.classList.contains('btn-primary');
-    var isDemo = href.indexOf('/demo') !== -1;
-    var isPilot = href.indexOf('/pilot') !== -1;
-    if (isPrimary || isDemo || isPilot) {
-      window.gtag('event', 'cta_clicked', {
-        cta_text: text,
-        cta_href: href,
-        cta_type: isPilot ? 'pilot' : isDemo ? 'demo' : 'primary'
-      });
-    }
-  });
-})();
-</script>
 <script><!-- nav-active -->
 (function(){
   var path = window.location.pathname;

@@ -31,6 +31,11 @@ def main():
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.route("https://formspree.io/**", lambda route: route.fulfill(
+            status=200,
+            content_type="application/json",
+            body='{"ok":true}',
+        ))
 
         # ── Pilot page ──
         page.goto(f"{base}/pilot/", wait_until="networkidle")
@@ -67,8 +72,8 @@ def main():
           btn.click();  // empty form -> validation error
           return window.dataLayer.map(d => d.event);
         }""")
-        check("[pilot] form_start emitted", "form_start" in events)
-        check("[pilot] form_error emitted on empty submit", "form_error" in events)
+        check("[pilot] pilot_form_start emitted", "pilot_form_start" in events)
+        check("[pilot] pilot_form_error emitted on empty submit", "pilot_form_error" in events)
         ev2 = page.evaluate("""() => {
           window.dataLayer = [];
           document.getElementById('pilot-name').value = 'Test';
@@ -78,8 +83,10 @@ def main():
           document.getElementById('pilot-submit').click();
           return new Promise(r => setTimeout(() => r(window.dataLayer.map(d => d.event)), 1500));
         }""")
-        check("[pilot] form_submit emitted on valid submit", "form_submit" in ev2)
-        check("[pilot] form_success or network-error emitted", "form_success" in ev2 or "form_error" in ev2)
+        check("[pilot] pilot_form_attempt emitted on valid submit", "pilot_form_attempt" in ev2)
+        check("[pilot] pilot_form_success emitted after HTTP 200", "pilot_form_success" in ev2)
+        check("[pilot] no legacy generic form events emitted",
+              not any(e in ev2 for e in ("form_start", "form_submit", "form_success")))
 
         # mobile screenshot
         pm = browser.new_page(viewport={"width": 390, "height": 844})
