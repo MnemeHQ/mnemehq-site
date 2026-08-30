@@ -13,6 +13,13 @@ on a governed page:
   ERROR  -- evidence-limitation element is missing or empty
   ERROR  -- a forbidden-claim string appears in the block's text
 
+Also checks, per governed page in GOVERNED_PAGES:
+  ERROR  -- the page's required evidence ID is not present exactly once
+            (catches a deleted block, a duplicated block, or a page that
+            substitutes a different evidence ID for its required one --
+            this check does not depend on any block being found, so it
+            cannot pass by omission)
+
 Exit codes:  0 = clean   1 = errors found   2 = warnings only
 """
 
@@ -24,10 +31,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY = REPO_ROOT / "docs" / "site" / "evidence-contract.json"
 
-GOVERNED_PAGES = [
-    REPO_ROOT / "site" / "insights" / "how-ai-coding-agents-use-adrs" / "index.html",
-    REPO_ROOT / "site" / "insights" / "ai-native-sdlc-architecture-layer" / "index.html",
-]
+# Each governed page maps to the evidence ID(s) it must carry exactly once.
+# This is the source of truth for "this page must not lose its evidence" --
+# a page with zero matching blocks fails here even though there is nothing
+# for check_block() to inspect.
+GOVERNED_PAGES = {
+    REPO_ROOT / "site" / "insights" / "how-ai-coding-agents-use-adrs" / "index.html": ["E1"],
+    REPO_ROOT / "site" / "insights" / "ai-native-sdlc-architecture-layer" / "index.html": ["E2"],
+}
 
 EVIDENCE_BLOCK_RE = re.compile(
     r'<div\s+class="callout callout-evidence"\s+data-evidence-id="([^"]+)">(.*?)</div>',
@@ -107,6 +118,32 @@ def check_block(page: Path, evidence_id: str, block_html: str, registry: dict, e
             errors.append(f"{prefix} forbidden claim language present: {phrase!r}")
 
 
+def check_governed_page(page: Path, required_ids: list, html: str, registry: dict, errors: list) -> int:
+    """Check every evidence block on one page, plus that each of the page's
+    required evidence IDs appears exactly once. Returns the number of blocks
+    checked. This is the function that makes the checker fail-closed: it
+    asserts presence independently of whatever find_evidence_blocks() finds,
+    so a deleted, duplicated, or substituted block is caught even though
+    there is nothing (or the wrong thing) for check_block() to inspect.
+    """
+    found_ids = []
+    blocks_checked = 0
+    for evidence_id, block_html in find_evidence_blocks(html):
+        found_ids.append(evidence_id)
+        blocks_checked += 1
+        check_block(page, evidence_id, block_html, registry, errors)
+
+    for required_id in required_ids:
+        count = found_ids.count(required_id)
+        if count != 1:
+            errors.append(
+                f"  {page_label(page)}: requires exactly one evidence block "
+                f"for {required_id!r}, found {count}"
+            )
+
+    return blocks_checked
+
+
 def main() -> int:
     if not REGISTRY.exists():
         print(f"ERROR  Registry not found: {REGISTRY}", file=sys.stderr)
@@ -116,14 +153,12 @@ def main() -> int:
     errors = []
     blocks_checked = 0
 
-    for page in GOVERNED_PAGES:
+    for page, required_ids in GOVERNED_PAGES.items():
         if not page.exists():
             errors.append(f"  governed page not found: {page.relative_to(REPO_ROOT)}")
             continue
         html = load_html(page)
-        for evidence_id, block_html in find_evidence_blocks(html):
-            blocks_checked += 1
-            check_block(page, evidence_id, block_html, registry, errors)
+        blocks_checked += check_governed_page(page, required_ids, html, registry, errors)
 
     if errors:
         print("ERRORS -- fix before opening PR:")

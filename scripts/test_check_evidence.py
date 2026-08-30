@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import re
 import unittest
 
 import check_evidence as ce
@@ -98,6 +99,66 @@ class CheckEvidenceTests(unittest.TestCase):
     def test_find_evidence_blocks_ignores_non_evidence_callouts(self):
         html = '<div class="callout"><p>Just a regular callout.</p></div>'
         self.assertEqual(list(ce.find_evidence_blocks(html)), [])
+
+
+class CheckGovernedPageTests(unittest.TestCase):
+    """Fail-closed page-level tests: a governed page must carry its required
+    evidence ID exactly once. These do not depend on any block being found,
+    which is the property that closes the fail-open gap a deleted or
+    swapped-out evidence block would otherwise slip through as."""
+
+    def check_page(self, html: str, required_ids: list, registry: dict = REGISTRY):
+        errors: list = []
+        ce.check_governed_page(ce.Path("dummy.html"), required_ids, html, registry, errors)
+        return errors
+
+    def test_page_with_required_block_has_no_presence_error(self):
+        errors = self.check_page(valid_e1_block(), ["E1"])
+        self.assertFalse(any("requires exactly one evidence block" in e for e in errors))
+
+    def test_deleted_block_fails(self):
+        html = "<p>The evidence block used to be here but was removed.</p>"
+        errors = self.check_page(html, ["E1"])
+        self.assertTrue(
+            any("requires exactly one evidence block for 'E1', found 0" in e for e in errors)
+        )
+
+    def test_wrong_evidence_id_on_page_fails(self):
+        # Page carries a real, valid block -- just not the one this page requires.
+        wrong_block = valid_e1_block().replace('data-evidence-id="E1"', 'data-evidence-id="E2"')
+        wrong_block = wrong_block.replace(
+            "https://example.com/e1-results.md", "https://example.com/e2-results.md"
+        ).replace("7/7", "3/3").replace("0.33", "0/4")
+        verified_registry = {**REGISTRY, "E2": {**REGISTRY["E2"], "status": "verified"}}
+        errors = self.check_page(wrong_block, ["E1"], registry=verified_registry)
+        self.assertTrue(
+            any("requires exactly one evidence block for 'E1', found 0" in e for e in errors)
+        )
+
+    def test_duplicated_block_fails(self):
+        html = valid_e1_block() + valid_e1_block()
+        errors = self.check_page(html, ["E1"])
+        self.assertTrue(
+            any("requires exactly one evidence block for 'E1', found 2" in e for e in errors)
+        )
+
+
+class RealRegistryTests(unittest.TestCase):
+    """Sanity checks against the actual docs/site/evidence-contract.json,
+    not the synthetic fixture registry above."""
+
+    def test_all_source_urls_are_pinned_to_a_commit_not_a_branch(self):
+        # A `blob/main` URL can change after this PR merges while the
+        # checker stays green -- ADR-004 exists to prevent exactly that.
+        # Every registry entry must pin to a 40-hex commit SHA instead.
+        commit_sha_re = re.compile(r"^https://github\.com/[^/]+/[^/]+/blob/[0-9a-f]{40}/")
+        registry = ce.load_registry()
+        for evidence_id, entry in registry.items():
+            url = entry["source_artifact_url"]
+            self.assertRegex(
+                url, commit_sha_re,
+                f"{evidence_id} source_artifact_url is not pinned to a commit SHA: {url!r}",
+            )
 
 
 if __name__ == "__main__":
