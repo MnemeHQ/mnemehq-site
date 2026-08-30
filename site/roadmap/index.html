@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roadmap &mdash; Mneme HQ Governance Layer for AI Coding</title>
+  <title>Roadmap — Mneme HQ Architectural Drift Prevention</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Mneme HQ is evolving from local governance tooling into the governance infrastructure layer for AI-assisted software development. See our strategic direction." />
+  <meta name="description" content="Mneme HQ roadmap: external validation now, Architecture Review and source ingestion next, with multi-agent and ecosystem interoperability research after evidence." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/roadmap/" />
@@ -16,21 +16,22 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Roadmap — Mneme HQ" />
-  <meta property="og:description" content="Mneme HQ is evolving from local governance tooling into the governance infrastructure layer for AI-assisted software development." />
+  <meta property="og:description" content="External validation now. Architecture Review and high-value interoperability next." />
   <meta property="og:url" content="https://mnemehq.com/roadmap/" />
   <meta property="og:image" content="https://mnemehq.com/roadmap/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Roadmap — Mneme HQ" />
-  <meta name="twitter:description" content="Mneme HQ is evolving from local governance tooling into the governance infrastructure layer for AI-assisted software development." />
+  <meta name="twitter:description" content="External validation now. Architecture Review and high-value interoperability next." />
   <meta name="twitter:image" content="https://mnemehq.com/roadmap/og.png" />
 
-    <!-- Consent defaults -->
+  <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <!-- End Google Tag Manager -->
   <link rel="icon" href="/favicon-v2.png" type="image/png">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -44,178 +45,63 @@
       },
       {
         "@type": "WebPage",
-        "name": "Roadmap — Mneme HQ Governance Layer for AI Coding",
-        "description": "Mneme HQ is evolving from local governance tooling into the governance infrastructure layer for AI-assisted software development. Strategic direction across four phases.",
+        "name": "Roadmap — Mneme HQ Architectural Drift Prevention",
+        "description": "Mneme HQ is in external validation and adoption: proving architectural drift prevention on real repositories before expanding into broader team and platform governance.",
         "url": "https://mnemehq.com/roadmap/",
         "datePublished": "2026-04-01",
-        "dateModified": "2026-05-10",
+        "dateModified": "2026-08-30",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
     ]
   }
   </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /* NAV */
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
-    .nav-links a.active { color: var(--text); }
-
-    /* BUTTONS */
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
-    .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-family: 'DM Mono', monospace; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; text-decoration: none; }
+    .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; text-decoration: none; }
     .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
-
-    /* HERO */
-    .hero { max-width: 800px; margin: 0 auto; padding: 5.5rem 2rem 4.5rem; text-align: center; }
-    .hero-tag { display: inline-block; background: rgba(200,240,96,0.07); border: 1px solid rgba(200,240,96,0.22); color: var(--accent); font-size: 0.72rem; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 999px; margin-bottom: 1.75rem; }
-    .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; color: var(--text); }
-    .hero-sub { font-size: 1rem; color: var(--muted); max-width: 580px; margin: 0 auto 2.5rem; line-height: 1.75; }
-    .cta-group { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-
-    /* SECTION SHARED */
-    .section-wrap { max-width: 900px; margin: 0 auto; padding: 4.5rem 2rem; border-top: 1px solid var(--border); }
-    .section-eyebrow { font-size: 0.72rem; font-family: 'DM Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
-    .section-title { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 2.8vw, 2rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 1.25rem; color: var(--text); }
-
-    /* PHASE CARDS */
-    .phases { display: flex; flex-direction: column; gap: 1.5rem; }
-    .phase-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.15s; }
-    .phase-card.current { border-color: rgba(200,240,96,0.28); }
-    .phase-card:hover { border-color: rgba(200,240,96,0.22); }
-    .phase-card.current:hover { border-color: rgba(200,240,96,0.44); }
-    .phase-header { display: flex; align-items: baseline; gap: 1rem; padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
-    .phase-label { font-size: 0.72rem; font-family: 'DM Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-    .phase-card.current .phase-label { color: var(--accent); }
-    .phase-status { font-size: 0.68rem; font-family: 'DM Mono', monospace; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.65rem; border-radius: 999px; background: rgba(200,240,96,0.1); color: var(--accent); border: 1px solid rgba(200,240,96,0.22); }
-    .phase-status.planned { background: rgba(139,224,200,0.07); color: var(--teal); border-color: rgba(139,224,200,0.18); }
-    .phase-title { font-family: 'Instrument Serif', serif; font-size: clamp(1.3rem, 2.5vw, 1.6rem); font-weight: 400; color: var(--text); margin-left: auto; width: 100%; padding-top: 0.1rem; }
-    .phase-body { padding: 1.5rem 1.75rem; }
-    .phase-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.25rem; max-width: 680px; }
-    .phase-capabilities { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
-    .phase-capabilities li { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.82rem; font-family: 'DM Mono', monospace; color: var(--muted); line-height: 1.55; }
-    .phase-capabilities li::before { content: '—'; color: var(--border2); flex-shrink: 0; margin-top: 0.05rem; }
-    .phase-card.current .phase-capabilities li::before { color: rgba(200,240,96,0.4); }
-    .phase-card.current .phase-capabilities li { color: var(--text); }
-
-    /* THESIS */
-    .thesis-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2.25rem; }
-    .thesis-item { display: flex; gap: 1.25rem; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-    .thesis-item:first-child { padding-top: 0; }
-    .thesis-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .thesis-arrow { flex-shrink: 0; font-family: 'DM Mono', monospace; font-size: 0.88rem; color: var(--accent); margin-top: 0.15rem; }
-    .thesis-text { font-size: 0.92rem; color: var(--text); line-height: 1.65; }
-    .thesis-text em { color: var(--muted); font-style: normal; }
-
-    /* CTA FOOTER */
-    .cta-footer { border-top: 1px solid var(--border); text-align: center; padding: 5.5rem 2rem; }
-    .cta-footer h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 0.75rem; color: var(--text); }
-    .cta-footer p { font-size: 0.88rem; color: var(--muted); margin-bottom: 2rem; }
-
-    /* DISCLAIMER */
-    .roadmap-note { font-size: 0.75rem; font-family: 'DM Mono', monospace; color: var(--muted); opacity: 0.7; text-align: center; padding: 0 2rem 1rem; }
-
-    /* FOOTER */
-    footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; }
-
-    
-    /* ── HAMBURGER ── */
-    .nav-hamburger {
-      display: none;
-      background: none;
-      border: 1px solid var(--border2);
-      color: var(--text);
-      width: 36px;
-      height: 36px;
-      border-radius: 6px;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      flex-shrink: 0;
-    }
-
-    @media (max-width: 640px) {
-      .hero { padding: 3.5rem 1.25rem 3rem; }
-      .section-wrap { padding: 3rem 1.25rem; }
-      .phase-header { padding: 1.25rem; }
-      .phase-body { padding: 1.25rem; }
-      .thesis-block { padding: 1.5rem; }
-      .thesis-item { gap: 0.75rem; }
-    }
-/* === Nav upgrade (injected, overrides existing) === */
-.nav-hamburger {
-  display: none;
-  background: none;
-  border: 1px solid var(--border2);
-  color: var(--text);
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  cursor: pointer;
-  padding: 0;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 4px;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-@media (max-width: 900px) {
-  html, body { overflow-x: clip; }
-  body.menu-open { overflow: hidden; }
-  nav, nav.site-nav { padding: 1rem 1.25rem; }
-  .nav-hamburger { display: flex; }
-  .nav-links {
-    display: flex !important;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    gap: 0;
-    background: rgba(12,12,13,0.98);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 1.25rem;
-    z-index: 99;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
-  }
-  .nav-links.open {
-    max-height: 80vh;
-    opacity: 1;
-    visibility: visible;
-    padding: 0.5rem 1.25rem 1.25rem;
-    transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
-    overflow-y: auto;
-  }
-  .nav-links a:not(.btn-nav-cta) {
-    display: block;
-    color: var(--text);
-    font-size: 0.92rem;
-    padding: 0.85rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
-  .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
-}
-  
-    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
-  
-    @media (prefers-reduced-motion: reduce) {
-          html { scroll-behavior: auto !important; }
-          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
-        }
-  
+    .hero { max-width: 820px; margin: 0 auto; padding: 5.5rem 2rem 4rem; text-align: center; }
+    .hero-tag { display: inline-block; border: 1px solid rgba(200,240,96,.22); color: var(--accent); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding: .3rem .9rem; border-radius: 999px; margin-bottom: 1.5rem; }
+    .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.3rem,5vw,3.5rem); font-weight: 400; letter-spacing: -.025em; line-height: 1.08; margin-bottom: 1.2rem; }
+    .hero-sub { color: var(--muted); font-size: 1rem; line-height: 1.75; max-width: 650px; margin: 0 auto 2rem; }
+    .cta-group { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; }
+    .roadmap-wrap { max-width: 960px; margin: 0 auto; padding: 0 2rem 5rem; }
+    .phase { border-top: 1px solid var(--border); padding: 3.5rem 0; }
+    .phase:first-child { border-top: 0; }
+    .phase-meta { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .9rem; }
+    .phase-label { font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .phase-status { font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(200,240,96,.22); border-radius: 999px; padding: .2rem .6rem; }
+    .phase h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem,3vw,2.35rem); font-weight: 400; margin-bottom: .8rem; }
+    .phase > p { color: var(--muted); max-width: 760px; line-height: 1.75; margin-bottom: 1.5rem; }
+    .cards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.35rem 1.4rem; }
+    .card h3 { font-family: 'Inter', sans-serif; font-size: .95rem; font-weight: 600; margin-bottom: .55rem; }
+    .card p { font-size: .84rem; line-height: 1.65; color: var(--muted); }
+    .constraint { margin-top: 1rem; border-left: 2px solid var(--teal); padding: .8rem 1rem; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+    .foundation { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.6rem; }
+    .foundation ul { margin: .8rem 0 0; padding-left: 1.2rem; color: var(--muted); }
+    .foundation li { margin: .45rem 0; line-height: 1.6; }
+    .roadmap-note { font-size: .75rem; color: var(--muted); margin-top: 1.5rem; }
+    .cta-footer { border-top: 1px solid var(--border); text-align: center; padding: 4.5rem 2rem; }
+    .cta-footer h2 { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem,3vw,2.2rem); margin-bottom: .75rem; }
+    .cta-footer p { color: var(--muted); margin-bottom: 1.5rem; }
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 40px; height: 40px; border-radius: 8px; cursor: pointer; padding: 0; flex-shrink: 0; align-items: center; justify-content: center; flex-direction: column; gap: 4px; }
+    @media (max-width: 900px) {
+      html, body { overflow-x: clip; }
+      body.menu-open { overflow: hidden; }
+      nav { padding: 1rem 1.25rem; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: flex !important; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; gap: 0; background: rgba(12,12,13,0.98); border-bottom: 1px solid var(--border); padding: 0 1.25rem; z-index: 99; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; }
+      .nav-links.open { max-height: 80vh; opacity: 1; visibility: visible; padding: .5rem 1.25rem 1.25rem; overflow-y: auto; }
+      .nav-links a:not(.btn-nav-cta) { display: block; color: var(--text); font-size: .92rem; padding: .85rem 0; border-bottom: 1px solid var(--border); }
+      .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
+    }
+    @media (max-width: 720px) { .hero { padding: 3.5rem 1.25rem 2.8rem; } .roadmap-wrap { padding: 0 1.25rem 4rem; } .cards { grid-template-columns: 1fr; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
   </style>
 </head>
 <body>
@@ -239,153 +125,97 @@
 </nav>
 
 <main id="main-content" tabindex="-1">
-
-  <!-- HERO -->
-  <div class="hero">
-    <div class="hero-tag">Vision &amp; roadmap</div>
-    <h1>Building the Governance Layer<br>for AI-Assisted Development</h1>
-    <p class="hero-sub">Mneme is evolving from local governance tooling into the governance infrastructure layer for AI-assisted software development. The roadmap expands Mneme's architectural drift prevention coverage across the AI SDLC — more surfaces, more languages, more enforcement points — as AI coding workflows mature and teams need more than prompt files to maintain architectural consistency at scale.</p>
+  <section class="hero">
+    <div class="hero-tag">Current phase · August 2026</div>
+    <h1>Prove the architectural-control layer.</h1>
+    <p class="hero-sub">Mneme's core enforcement mechanism and multiple agent integrations now ship. The priority is external evidence: real repositories, design partners, and reproducible architecture-compliance results before broader platform expansion.</p>
     <div class="cta-group">
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">View on GitHub</a>
-      <a href="/contact/" class="btn-ghost">Talk to us</a>
+      <a href="/docs/#quickstart" class="btn-primary">Install Mneme</a>
+      <a href="/demo/" class="btn-ghost">See the demo</a>
+      <a href="/pilot/" class="btn-ghost">Request a pilot</a>
     </div>
+  </section>
+
+  <div class="roadmap-wrap">
+    <section class="phase">
+      <div class="phase-meta"><span class="phase-label">Now</span><span class="phase-status">P0 · current focus</span></div>
+      <h2>External validation and adoption</h2>
+      <p>The current phase is not about maximizing integration count. It is about demonstrating that recorded architectural decisions change what AI coding agents actually build without materially reducing functional completion.</p>
+      <div class="cards">
+        <article class="card"><h3>Design partners and real repositories</h3><p>Measure first-attempt architectural compliance, functional completion, scope expansion, setup friction, and continued use on real projects.</p></article>
+        <article class="card"><h3>Architecture Audit</h3><p>Use the Audit Workspace to identify enforceable, partial, and guidance-only decisions and turn that assessment into pilot evidence.</p></article>
+        <article class="card"><h3>Architecture-compliance benchmark</h3><p>Build externally legible comparisons with frozen fixtures, deterministic scoring, and explicit treatment/control boundaries.</p></article>
+        <article class="card"><h3>Evidence over breadth</h3><p>A design-partner result or reproducible benchmark carries more weight than another unvalidated adapter.</p></article>
+      </div>
+    </section>
+
+    <section class="phase">
+      <div class="phase-meta"><span class="phase-label">Next</span><span class="phase-status">P1</span></div>
+      <h2>Strengthen the review and ingestion surfaces</h2>
+      <p>Next work should make the existing enforcement layer easier to apply, not create a parallel policy system.</p>
+      <div class="cards">
+        <article class="card"><h3>Architecture Review Skill</h3><p>Evolve the existing Claude Code Mneme Skill into a clearer executable review workflow over <code>/mneme:context</code>, <code>/mneme:check</code>, <code>/mneme:record</code>, and <code>/mneme:review</code>.</p></article>
+        <article class="card"><h3>Confluence ADR ingestion</h3><p>Reduce adoption friction for teams whose architectural decisions already live in Confluence while keeping ingestion separate from enforcement semantics.</p></article>
+        <article class="card"><h3>Migration-aware Audit</h3><p>Extend the Audit workflow for legacy/target coexistence and path-scoped decisions rather than creating a separate migration product.</p></article>
+        <article class="card"><h3>Deep Agents capability POC</h3><p>Validate the filesystem mutation seam and nested-agent propagation before making any support claim.</p></article>
+      </div>
+      <div class="constraint"><strong>Architecture Review boundary:</strong> the Skill is an interface over Mneme retrieval and deterministic enforcement. It does not become a second policy engine.</div>
+    </section>
+
+    <section class="phase">
+      <div class="phase-meta"><span class="phase-label">Research</span><span class="phase-status">P2 · evidence first</span></div>
+      <h2>Test the emerging harness layer</h2>
+      <p>These are research surfaces, not integration claims. Each must prove a useful control boundary before promotion.</p>
+      <div class="cards">
+        <article class="card"><h3>Slack Code / shared multi-agent constraints</h3><p>Investigate whether one project architectural contract can govern multiple coding agents and sessions inside a shared harness.</p></article>
+        <article class="card"><h3>AWS AgentCore benchmark</h3><p>Use AgentCore as a controlled execution substrate for architecture-compliance benchmarking before considering deeper integration.</p></article>
+        <article class="card"><h3>Salesforce Skills interoperability</h3><p>Test whether Mneme adds project-specific architecture compliance on top of Salesforce domain Skills. This is not a Claudeforce integration claim.</p></article>
+        <article class="card"><h3>Claude Managed Agents revisit</h3><p>Revisit the current PARTIAL result only when Anthropic exposes current workspace bytes, a filesystem-local evaluator, or a blocking completion boundary.</p></article>
+      </div>
+    </section>
+
+    <section class="phase">
+      <div class="phase-meta"><span class="phase-label">Deferred</span></div>
+      <h2>Wait for user pull</h2>
+      <p>Broader platform work remains intentionally behind external validation.</p>
+      <div class="foundation">
+        <ul>
+          <li>EventCatalog graph enrichment beyond the validated retrieval-only boundary.</li>
+          <li>Team and org policy synchronization, shared policy packs, and cross-repo governance.</li>
+          <li>Generic hosted MCP / HTTP control plane and broad SaaS administration.</li>
+          <li>Higher-level policy DSL beyond the current typed-rule path.</li>
+          <li>Deeper integrations without a reliable mutation or verification seam.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="phase">
+      <div class="phase-meta"><span class="phase-label">Shipped foundation</span></div>
+      <h2>What this roadmap builds on</h2>
+      <p>The roadmap assumes the current shipped foundation: typed and path-scoped enforcement, governability assessment, ADR lifecycle analysis, and maintained integration adapters with evidence.</p>
+      <div class="foundation">
+        <ul>
+          <li>Native: Claude Code, Claude Agent SDK, Google Antigravity, Codex CLI, LangChain/LangGraph, and Kiro CLI v3.</li>
+          <li>Validated compatibility: Paperclip.</li>
+          <li>Experimental: Hermes Agent; OpenCode remains incomplete.</li>
+          <li>Evidence-only: Claude Managed Agents PARTIAL.</li>
+          <li>EventCatalog retrieval-only ADR ingestion and effectiveness validation.</li>
+          <li>Architecture Audit Workspace over the authoritative Mneme governability API.</li>
+        </ul>
+      </div>
+      <p class="roadmap-note">Support status is evidence-based and can change independently of roadmap priority. See <a href="/integrations/">Integrations</a> for current public support claims.</p>
+    </section>
   </div>
 
-  <!-- PHASES -->
-  <div class="section-wrap">
-    <div class="section-eyebrow">Strategic phases</div>
-    <h2 class="section-title">Where we are. Where we're going.</h2>
-
-    <div class="phases">
-
-      <!-- Phase 1 -->
-      <div class="phase-card current">
-        <div class="phase-header">
-          <span class="phase-label">Phase 1</span>
-          <span class="phase-status">Current focus</span>
-          <div class="phase-title">OSS Developer Wedge</div>
-        </div>
-        <div class="phase-body">
-          <p class="phase-desc">Architectural governance for individual developers and early engineering adopters. Mneme starts where the problem is most visible — individual AI coding workflows — and builds the foundation that team and enterprise governance will run on.</p>
-          <ul class="phase-capabilities">
-            <li>Architectural decision retrieval at prompt time</li>
-            <li>Constraint injection into coding workflows</li>
-            <li>Governance benchmark validation</li>
-            <li>Cursor Rules and CLAUDE.md integration</li>
-            <li>CI enforcement gate for AI-generated code</li>
-            <li>Deterministic keyword scoring — no ML dependencies</li>
-            <li>Runnable blocking-verdict demo — a published path where a constraint halts the change, not only warns</li>
-            <li>Claude Agent SDK governance example script</li>
-            <li>Hermes Agent plugin POC — block at pre_tool_call, inject decisions at pre_llm_call, against its documented project-local plugin contract</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Phase 2 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <span class="phase-label">Phase 2</span>
-          <span class="phase-status planned">Planned</span>
-          <div class="phase-title">Team Governance Layer</div>
-        </div>
-        <div class="phase-body">
-          <p class="phase-desc">Shared governance for engineering teams adopting AI-assisted development at scale. The same enforcement model that works for one developer, extended to coordinate decisions across a team without manual synchronization.</p>
-          <ul class="phase-capabilities">
-            <li>Shared policy and decision stores</li>
-            <li>Centralized rule management and versioning</li>
-            <li>Team synchronization and conflict resolution</li>
-            <li>Organization-wide governance controls</li>
-            <li>Role-scoped decision visibility</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Phase 3 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <span class="phase-label">Phase 3</span>
-          <span class="phase-status planned">Planned</span>
-          <div class="phase-title">Agent Platform Integrations</div>
-        </div>
-        <div class="phase-body">
-          <p class="phase-desc">Governance for enterprise agent workflows. As organizations deploy managed coding agent platforms, governance moves from the individual session to the platform level — enforcing constraints across every agent invocation.</p>
-          <ul class="phase-capabilities">
-            <li>Managed coding agent platform integrations</li>
-            <li>Enterprise AI development environment support</li>
-            <li>Internal engineering agent system hooks</li>
-            <li>Agent orchestration framework governance</li>
-            <li>API-level constraint enforcement</li>
-            <li>Workspace execution surface governance &mdash; Notion and similar platforms where agents read, write, and trigger workflows</li>
-            <li>Emerging agent harness discovery — Oh My Pi (tool_call blocking, context injection) and DeepSeek Harness as compatibility probes pending API stability</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Phase 4 -->
-      <div class="phase-card">
-        <div class="phase-header">
-          <span class="phase-label">Phase 4</span>
-          <span class="phase-status planned">Planned</span>
-          <div class="phase-title">Governance Infrastructure</div>
-        </div>
-        <div class="phase-body">
-          <p class="phase-desc">Constraint infrastructure for AI software development at the organizational level. Governance becomes a first-class infrastructure concern — not a tool bolted onto a workflow, but a layer that every coding agent runs against.</p>
-          <ul class="phase-capabilities">
-            <li>Policy-as-code for engineering agents</li>
-            <li>Drift analytics and adherence reporting</li>
-            <li>Cross-agent governance enforcement</li>
-            <li>Workflow and CI/CD governance hooks</li>
-            <li>Architectural audit trails across teams</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- THESIS -->
-  <div style="background:var(--surface2);border-top:1px solid var(--border2);border-bottom:1px solid var(--border2);">
-  <div class="section-wrap" style="border-top:none;">
-    <div class="section-eyebrow">Our thesis</div>
-    <h2 class="section-title">Why governance is the next engineering bottleneck.</h2>
-    <div class="thesis-block">
-      <div class="thesis-item">
-        <span class="thesis-arrow">01</span>
-        <p class="thesis-text">AI-assisted development increases code generation throughput faster than reviewer bandwidth. <em>The output volume problem is already here.</em></p>
-      </div>
-      <div class="thesis-item">
-        <span class="thesis-arrow">02</span>
-        <p class="thesis-text">Architectural review is becoming the next engineering bottleneck. <em>Senior engineers spend their capacity on decisions that were already made.</em></p>
-      </div>
-      <div class="thesis-item">
-        <span class="thesis-arrow">03</span>
-        <p class="thesis-text">Mneme exists to move governance upstream — from post-generation review to pre-generation architectural constraint. <em>Catch drift before the code exists, not after it reaches review.</em></p>
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <!-- CONTEXT: how the roadmap connects to current work -->
-  <div class="section-wrap" style="border-top:none;">
-    <div class="section-eyebrow">How this connects to what's shipped today</div>
-    <h2 class="section-title">The roadmap is not speculative.</h2>
-    <p style="color:var(--muted); font-size:0.92rem; line-height:1.85; max-width:720px; margin:0 auto 1.1rem;">Each phase builds on something already in production. The OSS developer wedge ships today as the open-source <code style="font-family:'DM Mono',monospace;font-size:0.82em;">mneme</code> CLI, the Claude Code hook, the Cursor rules export, and the GitHub Actions enforcement gate &mdash; see the <a href="/integrations/" style="color:var(--accent);text-decoration:none;">integrations index</a>. The architectural argument behind why this layer has to exist outside any single AI coding tool is in the <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color:var(--accent);text-decoration:none;">heterogeneous-agents article</a>.</p>
-    <p style="color:var(--muted); font-size:0.92rem; line-height:1.85; max-width:720px; margin:0 auto 1.1rem;">The team-governance phase extends the same decision corpus into shared org-wide policies with deterministic precedence resolution &mdash; the design pattern is described on the <a href="/for/platform/" style="color:var(--accent);text-decoration:none;">platform engineering page</a>. The agent-platform-integrations phase aligns with the cross-tool standards forming around AGENTS.md, the Model Context Protocol, and NIST CAISI; we track that landscape on the <a href="/standards/" style="color:var(--accent);text-decoration:none;">standards page</a> and the public benchmark methodology behind enforcement claims is at <a href="/benchmark/" style="color:var(--accent);text-decoration:none;">/benchmark/</a>.</p>
-    <p style="color:var(--muted); font-size:0.92rem; line-height:1.85; max-width:720px; margin:0 auto;">The governance-infrastructure phase is the long-term bet: that policy-as-code and drift analytics across engineering organizations will become an operational requirement, not a nice-to-have. That bet is informed by the <a href="/insights/deployment-quality-will-define-the-ai-era/" style="color:var(--accent);text-decoration:none;">deployment-quality argument</a> and the regulatory direction NIST CAISI is taking. Phases ship in order; nothing later is gated on the discovery work.</p>
-  </div>
-
-  <!-- CTA FOOTER -->
-  <div class="cta-footer">
-    <h2>Interested in shaping this roadmap?</h2>
-    <p>We're speaking with engineering leaders and early adopters exploring governance for AI-assisted development.</p>
+  <section class="cta-footer">
+    <h2>Test Mneme on a real architecture.</h2>
+    <p>Start with the CLI, inspect the demo, or bring a repository into a pilot.</p>
     <div class="cta-group">
-      <a href="/contact/" class="btn-primary">Talk to us</a>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-ghost">View on GitHub</a>
+      <a href="/docs/#quickstart" class="btn-primary">Install Mneme</a>
+      <a href="/demo/" class="btn-ghost">See the demo</a>
+      <a href="/pilot/" class="btn-ghost">Request a pilot</a>
     </div>
-  </div>
-
-  <p class="roadmap-note">Roadmap reflects current strategic direction and may evolve based on user feedback and adoption.</p>
-
+  </section>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
@@ -484,123 +314,16 @@
   </div>
 </footer>
 
-<script><!-- nav-active -->
-(function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
-  });
-  if (best) best.classList.add('active');
-})();
-</script>
 <script>
-(function(){
-  var btn = document.querySelector('.nav-hamburger');
-  var links = document.querySelector('.nav-links');
-  if (!btn || !links) return;
-  function setOpen(open){
-    links.classList.toggle('open', open);
-    btn.setAttribute('aria-expanded', String(open));
+(function () {
+  var button = document.querySelector('.nav-hamburger');
+  var menu = document.getElementById('primary-nav');
+  if (!button || !menu) return;
+  button.addEventListener('click', function () {
+    var open = menu.classList.toggle('open');
+    button.setAttribute('aria-expanded', String(open));
     document.body.classList.toggle('menu-open', open);
-  }
-  btn.addEventListener('click', function(e){
-    e.stopPropagation();
-    setOpen(!links.classList.contains('open'));
   });
-  document.addEventListener('click', function(e){
-    if (!links.classList.contains('open')) return;
-    if (links.contains(e.target) || btn.contains(e.target)) return;
-    setOpen(false);
-  });
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
-  });
-  links.addEventListener('click', function(e){
-    if (e.target.tagName === 'A') setOpen(false);
-  });
-  window.addEventListener('resize', function(){
-    if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
-  });
-})();
-</script>
-
-
-
-<script><!-- cta-analytics -->
-(function(){
-  'use strict';
-  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
-   * consume these dataLayer events. Schema: docs/site/cta-system.md
-   *
-   * cta_click  { cta_intent, cta_position, cta_component, page_type, cta_destination }
-   * code_copy  { copy_context, page_type }
-   * form_start / form_submit / form_error / form_success are emitted by the
-   * pilot form page (PR 3) using the same page_type helper.
-   */
-
-  function pageType() {
-    var p = window.location.pathname;
-    if (p === '/' || p === '/index.html') return 'homepage';
-    var map = [
-      ['/docs', 'docs'],
-      ['/demo', 'demo'],
-      ['/integrations', 'integration'],
-      ['/works-with', 'integration'],
-      ['/use-cases', 'use_case'],
-      ['/insights', 'insight'],
-      ['/concepts', 'concept'],
-      ['/for', 'team'],
-      ['/pilot', 'pilot'],
-      ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
-    ];
-    for (var i = 0; i < map.length; i++) {
-      if (p.indexOf(map[i][0]) === 0) return map[i][1];
-    }
-    return 'other';
-  }
-
-  var PAGE_TYPE = pageType();
-
-  function push(event, params) {
-    params.page_type = PAGE_TYPE;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(Object.assign({ event: event }, params));
-  }
-
-  document.addEventListener('click', function(e){
-    if (!e.target.closest) return;
-    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
-    if (!el) return;
-
-    // Copy controls report code_copy, not cta_click.
-    if (el.hasAttribute('data-code-copy')) {
-      var ctx = el.getAttribute('data-copy-text');
-      if (!ctx) {
-        var codeEl = el.closest('.install-module');
-        if (!codeEl) codeEl = el.parentElement;
-        if (codeEl) {
-          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
-          ctx = found ? (found.textContent || '').trim() : 'unknown';
-        } else {
-          ctx = 'unknown';
-        }
-      }
-      push('code_copy', { copy_context: ctx });
-      return;
-    }
-
-    push('cta_click', {
-      cta_intent: el.getAttribute('data-cta-intent'),
-      cta_position: el.getAttribute('data-cta-position'),
-      cta_component: el.getAttribute('data-cta-component'),
-      cta_destination: el.getAttribute('href')
-    });
-  }, true);
 })();
 </script>
 </body>
