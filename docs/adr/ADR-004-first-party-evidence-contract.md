@@ -1,5 +1,5 @@
 ---
-id: ADR-003
+id: ADR-004
 title: "Public empirical claims must resolve to a verified public artifact"
 status: accepted
 priority: foundational
@@ -7,7 +7,7 @@ date: 2026-08-30
 scope: site.evidence
 ---
 
-# ADR-003: Public empirical claims must resolve to a verified public artifact
+# ADR-004: Public empirical claims must resolve to a verified public artifact
 
 ## Status
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Validates first-party evidence blocks against docs/site/evidence-contract.json
-(ADR-003: public empirical claims must resolve to a verified public artifact
+(ADR-004: public empirical claims must resolve to a verified public artifact
 and carry an explicit claim boundary).
 
 Checks, per <div class="callout callout-evidence" data-evidence-id="..."> block

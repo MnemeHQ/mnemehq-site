@@ -3,7 +3,13 @@
 Status: approved for implementation
 Date: 2026-08-30
 
-## Decision (ADR-003)
+## Decision (ADR-004)
+
+Note: originally drafted as ADR-003, renumbered to ADR-004 during
+implementation — `.mneme/project_memory.json` on `origin/main` already
+carries a compiled ADR-003 entry ("Status labels are monochrome") with
+no corresponding source file in `docs/adr/`, an orphaned entry from
+prior work. ADR-004 was the next genuinely unclaimed ID.
 
 Public empirical claims must resolve to a verified public artifact and
 carry an explicit claim boundary.
