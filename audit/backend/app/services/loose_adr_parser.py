@@ -196,7 +196,6 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
     # Parse sections - track line numbers for provenance
     current_section = ""
     current_content = []
-    current_section_start = 0
     decision_start_line = 0
     decision_end_line = 0
     
@@ -230,6 +229,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 rationale = "\n".join(current_content).strip()
             elif current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
+                decision_end_line = i - 1
             elif current_section == "status":
                 pass  # status section, just finalize
             current_section = "decision"
@@ -274,6 +274,8 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
     # Handle remaining content
     if current_section == "decision":
         decision_text = "\n".join(current_content).strip()
+        if not decision_end_line:
+            decision_end_line = len(lines)
     elif current_section == "rationale":
         rationale = "\n".join(current_content).strip()
     
