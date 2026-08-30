@@ -84,6 +84,7 @@ class MnemeAdapter:
         """Load a Mneme project memory file (.mneme/project_memory.json)."""
         if memory_path.exists():
             self._memory_store = MemoryStore(memory_path)
+            self._memory_store.load()
             self._decisions = self._memory_store.memory.decisions
             self._retriever = DecisionRetriever(self._decisions)
     
