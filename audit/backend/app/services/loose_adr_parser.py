@@ -193,11 +193,14 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
             title = line[2:].strip()
             break
     
-    # Parse sections
+    # Parse sections - track line numbers for provenance
     current_section = ""
     current_content = []
+    current_section_start = 0
+    decision_start_line = 0
+    decision_end_line = 0
     
-    for line in lines:
+    for i, line in enumerate(lines, start=1):
         line_stripped = line.strip()
         
         # Check for decision heading
@@ -231,10 +234,12 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 pass  # status section, just finalize
             current_section = "decision"
             current_content = []
+            decision_start_line = i
             continue
         elif is_rationale_heading:
             if current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
+                decision_end_line = i - 1
             elif current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
             current_section = "rationale"
@@ -252,6 +257,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
             # Another heading - end current section
             if current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
+                decision_end_line = i - 1
             elif current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
             elif current_section == "status":
@@ -261,6 +267,8 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
             continue
         
         if current_section:
+            if current_section == "decision" and decision_start_line == 0:
+                decision_start_line = i
             current_content.append(line)
     
     # Handle remaining content
@@ -279,8 +287,10 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
         rel_path = file_path
     
     # Determine source lines for the decision section
-    # For simplicity, use the range where decision_text was found
-    source_lines = "1-" + str(min(len(lines), 100))
+    if decision_start_line and decision_end_line:
+        source_lines = f"{decision_start_line}-{decision_end_line}"
+    else:
+        source_lines = "1-" + str(min(len(lines), 100))
     
     # Generate title from filename if no title found
     title = title or file_path.stem.replace("_", " ").replace("-", " ").title()
@@ -290,7 +300,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
         decision_text=decision_text[:2000],  # Limit size
         rationale=rationale[:2000],
         source_path=str(file_path.relative_to(repo_root)) if file_path.is_absolute() else str(file_path),
-        source_lines="1-" + str(min(len(lines), 100)),
+        source_lines=source_lines,
         confidence=0.5,
     )
 
