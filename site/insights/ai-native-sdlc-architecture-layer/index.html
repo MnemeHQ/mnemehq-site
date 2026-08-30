@@ -64,7 +64,11 @@
 
     .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
     .callout p { margin: 0; color: var(--muted); font-size: 0.88rem; }
-    .callout p strong { color: var(--accent); }    .article-footer { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .callout p strong { color: var(--accent); }
+    .callout-evidence .evidence-claim { margin-bottom: 0.75rem; }
+    .callout-evidence .evidence-limitation { margin-bottom: 0.75rem; font-size: 0.85rem; }
+    .callout-evidence .evidence-source { font-size: 0.85rem; }
+    .article-footer { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
     .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
     .back-link:hover { color: var(--text); }
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
@@ -372,6 +376,12 @@
     </ol>
 
     <p>Advisory versus deterministic is the exact distinction our whole category rests on. Retrieval and guidance raise the probability that an agent does the right thing. Deterministic checks decide, before the action lands, whether it is permitted. When the largest vendor in the space tells enterprises that anything that must always hold needs a deterministic backstop, the argument for <a href="/concepts/deterministic-enforcement/">deterministic enforcement</a> stops being ours to make alone.</p>
+
+    <div class="callout callout-evidence" data-evidence-id="E2">
+      <p class="evidence-claim"><strong>First-party validation.</strong> The distinction has a property guidance cannot have: enforcement is measurable in both directions. Guidance has no false-positive rate, because it never blocks anything to be wrong about. In Mneme's enforcement-quality regression suite, the deterministic path caught 3/3 injected violations and blocked 0/4 benign controls &mdash; it did not fire on the work it was supposed to leave alone.</p>
+      <p class="evidence-limitation">This validates enforcement precision under a fixed regression suite; it does not establish false-positive behavior across production codebases or under adversarial paraphrasing.</p>
+      <a class="evidence-source" href="https://github.com/MnemeHQ/mneme/blob/main/examples/benchmarks-enforcement-quality/reports/RESULTS.md">Method and artifacts &rarr;</a>
+    </div>
 
     <h2 id="harder-control-problem">Architecture creates a harder control problem</h2>
 
