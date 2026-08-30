@@ -84,10 +84,16 @@ def is_adr_candidate(file_path: Path, repo_root: Path) -> bool:
     - Is not a known index/template file
     """
     # Check if in a recognized ADR directory
-    relative_path = file_path.relative_to(repo_root) if file_path.is_absolute() else file_path
+    try:
+        relative_path = file_path.relative_to(repo_root)
+    except ValueError:
+        # File is not under repo_root
+        return False
     relative_str = str(relative_path).replace("\\", "/")
     
-    in_adr_dir = any(relative_str.startswith(d.rstrip("/") + "/") for d in LOOSE_ADR_DIRS)
+    # Normalize LOOSE_ADR_DIRS for cross-platform comparison
+    normalized_dirs = [d.replace("/", "/").rstrip("/") + "/" for d in LOOSE_ADR_DIRS]
+    in_adr_dir = any(relative_str.startswith(d) for d in normalized_dirs)
     if not in_adr_dir:
         return False
     
@@ -172,7 +178,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
         return None
     
     # Skip if it's a template or index file
-    filename_lower = Path(relative_to=repo_root, other=file_path).name.lower() if file_path.is_absolute() else file_path.name.lower()
+    filename_lower = file_path.name.lower()
     if filename_lower in SKIP_FILES:
         return None
     
@@ -215,19 +221,30 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 is_status_heading = True
                 break
         
-        if is_decision_heading and not current_section:
-            # Start collecting decision text
+        if is_decision_heading:
+            # Decision heading found - finalize any previous section and start decision
+            if current_section == "rationale":
+                rationale = "\n".join(current_content).strip()
+            elif current_section == "decision":
+                decision_text = "\n".join(current_content).strip()
+            elif current_section == "status":
+                pass  # status section, just finalize
             current_section = "decision"
+            current_content = []
             continue
         elif is_rationale_heading:
             if current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
+            elif current_section == "rationale":
+                rationale = "\n".join(current_content).strip()
             current_section = "rationale"
             current_content = []
             continue
         elif is_status_heading:
             if current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
+            elif current_section == "decision":
+                decision_text = "\n".join(current_content).strip()
             current_section = "status"
             current_content = []
             continue
@@ -237,6 +254,8 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 decision_text = "\n".join(current_content).strip()
             elif current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
+            elif current_section == "status":
+                pass
             current_section = ""
             current_content = []
             continue
@@ -250,21 +269,17 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
     elif current_section == "rationale":
         rationale = "\n".join(current_content).strip()
     
-    # Fallback: if no structured decision found but we have a decision heading,
-    # use the whole document
-    if not decision_text and has_decision_heading:
-        decision_text = content[:2000]
-    
     if not decision_text:
         return None
     
-    # Get relative path and source lines
+    # Get relative path
     try:
         rel_path = file_path.relative_to(repo_root)
     except Exception:
         rel_path = file_path
     
-    # Determine source lines (approximate)
+    # Determine source lines for the decision section
+    # For simplicity, use the range where decision_text was found
     source_lines = "1-" + str(min(len(lines), 100))
     
     # Generate title from filename if no title found
