@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="OpenAI, Anthropic, Google, Microsoft and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it means migrations agents now run." />
+  <meta name="description" content="OpenAI, Anthropic, Google and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it takes migrations, and agents now run them." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/insights/ai-accelerating-cybersecurity-migration-problem/" />
@@ -16,12 +16,12 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Collective Cyber Defense: AI Is Accelerating the Cybersecurity Migration Problem" />
-  <meta property="og:description" content="OpenAI, Anthropic, Google, Microsoft and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it means migrations agents now run." />
+  <meta property="og:description" content="OpenAI, Anthropic, Google and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it takes migrations, and agents now run them." />
   <meta property="og:url" content="https://mnemehq.com/insights/ai-accelerating-cybersecurity-migration-problem/" />
   <meta property="og:image" content="https://mnemehq.com/insights/ai-accelerating-cybersecurity-migration-problem/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Collective Cyber Defense: AI Is Accelerating the Cybersecurity Migration Problem" />
-  <meta name="twitter:description" content="OpenAI, Anthropic, Google, Microsoft and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it means migrations agents now run." />
+  <meta name="twitter:description" content="OpenAI, Anthropic, Google and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it takes migrations, and agents now run them." />
   <meta name="twitter:image" content="https://mnemehq.com/insights/ai-accelerating-cybersecurity-migration-problem/og.png" />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-08-30T00:00:00Z" />
@@ -48,7 +48,7 @@
       {
         "@type": "TechArticle",
         "headline": "Collective Cyber Defense: AI Is Accelerating the Cybersecurity Migration Problem",
-        "description": "OpenAI, Anthropic, Google, Microsoft and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it means migrations agents now run.",
+        "description": "OpenAI, Anthropic, Google and 110+ organizations named legacy technical debt as AI-attack exposure. Fixing it takes migrations, and agents now run them.",
         "url": "https://mnemehq.com/insights/ai-accelerating-cybersecurity-migration-problem/",
         "datePublished": "2026-08-30",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
@@ -226,7 +226,7 @@
 
     <h2>The missing artifact is the executable target architecture</h2>
     <p>Traditional migration reasoning goes: current state &rarr; migration plan &rarr; target architecture &rarr; implementation. Agentic migration needs one more step in the middle: current state &rarr; recover intent &rarr; define target decisions &rarr; make those decisions machine-consumable &rarr; agent changes &rarr; verify the result.</p>
-    <p>A hundred-page target-architecture document is not a guardrail. Neither is pasting every ADR into a prompt. An agent moving at migration speed needs to know, for each proposed change: which decision applies, to what scope, whether it is guidance or enforceable, what a violation looks like, and whether the resulting implementation actually conforms.</p>
+    <p>A hundred-page target-architecture document is not a guardrail. Neither is pasting every ADR into a prompt. An agent moving at migration speed needs to know, for each proposed change: which decision applies, to what scope, whether it is guidance or enforceable, and what a violation of it looks like &mdash; before the change lands, not after.</p>
 
     <div class="diag-wrap">
       <svg viewBox="0 0 700 220" role="img" aria-label="Audit, encode, enforce, verify migration control loop" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:640px;display:block;margin:0 auto;">
@@ -241,12 +241,12 @@
         <rect x="360" y="80" width="150" height="60" rx="8" class="diag-box-active"/>
         <text x="435" y="105" text-anchor="middle" class="diag-text diag-accent-text">Enforce</text>
         <text x="435" y="122" text-anchor="middle" class="diag-meta">block violations pre-write</text>
-        <line x1="510" y1="110" x2="535" y2="110" class="diag-arrow-active"/>
-        <rect x="535" y="80" width="150" height="60" rx="8" class="diag-box-active"/>
-        <text x="610" y="105" text-anchor="middle" class="diag-text diag-accent-text">Verify</text>
-        <text x="610" y="122" text-anchor="middle" class="diag-meta">confirm conformance</text>
+        <line x1="510" y1="110" x2="535" y2="110" class="diag-arrow"/>
+        <rect x="535" y="80" width="150" height="60" rx="8" class="diag-box"/>
+        <text x="610" y="105" text-anchor="middle" class="diag-text">Verify</text>
+        <text x="610" y="122" text-anchor="middle" class="diag-meta">tests, audit, review</text>
       </svg>
-      <p class="diag-caption">The migration control loop &mdash; audit becomes stage one, not a separate product</p>
+      <p class="diag-caption">The migration control loop &mdash; enforcement is the stage architectural guardrails own</p>
     </div>
 
     <h2>Security scanners and architectural guardrails solve different problems</h2>
@@ -263,7 +263,7 @@
       </tbody>
     </table>
     </div>
-    <p>Security modernization needs all five. Mneme does not compete with Snyk, Wiz, or Checkmarx &mdash; it answers the one question none of them are built to answer: whether the migration itself stayed inside the architecture it was supposed to implement.</p>
+    <p>AI-assisted modernization may require all of these complementary controls. Mneme does not compete with Snyk, Wiz, or Checkmarx &mdash; it addresses the one question none of them are built to answer: whether the architectural constraints a team encoded for the migration were actually enforced while agents did the work.</p>
 
     <h2>Conclusion</h2>
     <p>AI may shorten the time required to replace insecure legacy systems, which is exactly what the collective cyber-defense letter is asking for. It also shortens the window in which architectural mistakes can be introduced at scale, which the letter does not address directly.</p>
@@ -292,7 +292,7 @@
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does Mneme replace vulnerability scanners like Snyk or Wiz?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Vulnerability scanners answer whether code is vulnerable and whether access is permitted. Mneme answers a different question: whether an AI-driven migration or remediation stayed inside the target architecture it was supposed to implement. The two are complementary, not competing.</div>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Vulnerability scanners answer whether code is vulnerable; IAM and security policy answer whether access is permitted. Mneme answers a different question: whether the architectural constraints a team encoded for a migration were enforced against the changes agents proposed. These are complementary controls, not competing ones.</div>
     </details>
   </section>
 

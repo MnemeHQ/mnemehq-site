@@ -237,7 +237,7 @@
 
     <h2>Software architecture already has this exact gap</h2>
     <p>This is not a new problem for Mneme &mdash; it's the same problem restated in a physical register. In software, an agent that can technically execute a database write is not thereby authorized to write to a table an ADR designated read-only, or to introduce a dependency the architecture forbids. The compiler and the runtime will happily let it happen; nothing at that layer knows the decision exists.</p>
-    <p>MHS device drivers are the physical-world equivalent of a permissive runtime: correct about what is mechanically possible, silent about what is organizationally allowed. The pattern rhymes with what pre-action architectural enforcement already does for coding agents &mdash; evaluate the compiled decision corpus against a proposed action deterministically, then pass, warn, or fail before the action crosses a consequential boundary. Today that boundary is a file write or a shell command. As device-control standards like MHS mature, it will also be <code>robot.move()</code> or <code>reactor.set_temperature()</code>.</p>
+    <p>MHS device drivers are the physical-world equivalent of a permissive runtime: correct about what is mechanically possible, silent about what is organizationally allowed. The pattern rhymes with what pre-action architectural enforcement already does for coding agents &mdash; evaluate the compiled decision corpus against a proposed action deterministically, then pass, warn, or fail before the action crosses a consequential boundary. For architectural governance today that boundary is a file write or a shell command. As device-control standards like MHS mature, someone will have to answer the same question at <code>robot.move()</code> or <code>reactor.set_temperature()</code>.</p>
 
     <h2>Conclusion</h2>
     <p>MHS is a genuine and useful piece of infrastructure: it solves device integration, and it does so without requiring any particular model. But solving device integration is not the same as solving authorization, and the standard does not claim to be. That second problem lands on whoever deploys the agent.</p>
@@ -247,7 +247,7 @@
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
     <div class="context-cta-eyebrow">Operationalize this</div>
-    <p class="context-cta-copy">See how Mneme enforces the organizational-policy layer above execution &mdash; today, for AI coding agents.</p>
+    <p class="context-cta-copy">See how Mneme enforces encoded architectural constraints before an action runs &mdash; today, for AI coding agents.</p>
     <div class="context-cta-actions">
       <a href="/docs/how-enforcement-works/" class="context-cta-primary">See how enforcement works &rarr;</a>
       <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
@@ -266,7 +266,7 @@
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Is this the same problem architectural governance solves for coding agents?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Structurally, yes. A runtime tells an AI coding agent what is technically executable, not what is architecturally allowed &mdash; the same gap MHS leaves for physical devices. Mneme applies pre-action, deterministic policy enforcement to that gap today for software; the argument here is that physical-facing agents will need the equivalent layer as standards like MHS mature.</div>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Structurally, yes. A runtime tells an AI coding agent what is technically executable, not what is architecturally allowed &mdash; the same gap MHS leaves for physical devices. Mneme applies pre-action, deterministic enforcement of encoded architectural constraints to that gap today for software; the argument here is that physical-facing agents will need the equivalent layer as standards like MHS mature.</div>
     </details>
   </section>
 
@@ -281,7 +281,7 @@
   <aside class="related-panel" aria-labelledby="related-essays-label" style="margin-top:1.5rem;padding-top:0;border-top:none;">
     <div class="related-panel-label" id="related-essays-label">Related operational essays</div>
     <ul class="related-list">
-      <li><a href="/docs/how-enforcement-works/"><div class="rel-title">How Enforcement Works</div><p class="rel-desc">The pre-action allow/warn/block pipeline, for software today.</p></a></li>
+      <li><a href="/docs/how-enforcement-works/"><div class="rel-title">How Enforcement Works</div><p class="rel-desc">How encoded architectural constraints are evaluated before an action runs, for software today.</p></a></li>
       <li><a href="/insights/ai-coding-agent-guardrails/"><div class="rel-title">AI Coding-Agent Guardrails</div><p class="rel-desc">A field guide to which guardrail layers hold and which quietly fail.</p></a></li>
     </ul>
   </aside>

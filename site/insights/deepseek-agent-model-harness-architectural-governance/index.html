@@ -210,19 +210,25 @@
     <p>That gap is not a DeepSeek Harness shortcoming. It is the correct division of labor: a harness exposes the seam. It should not be in the business of knowing your architecture.</p>
 
     <div class="diag-wrap">
-      <svg viewBox="0 0 700 240" role="img" aria-label="DeepSeek Harness pre-execute seam with an external decision corpus" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:0 auto;">
+      <svg viewBox="0 0 700 300" role="img" aria-label="Tool call evaluated against an external decision corpus at the pre-execute seam, then a verdict, then execution" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px;display:block;margin:0 auto;">
         <rect x="175" y="0" width="350" height="46" rx="8" class="diag-box"/>
         <text x="350" y="28" text-anchor="middle" class="diag-text">Model proposes tool call</text>
         <line x1="350" y1="46" x2="350" y2="74" class="diag-arrow"/>
-        <rect x="175" y="74" width="350" height="46" rx="8" class="diag-box-active"/>
-        <text x="350" y="102" text-anchor="middle" class="diag-text diag-accent-text">tools/pre-execute + tools.guard()</text>
-        <line x1="350" y1="120" x2="350" y2="148" class="diag-arrow"/>
-        <rect x="175" y="148" width="350" height="46" rx="8" class="diag-box"/>
-        <text x="350" y="176" text-anchor="middle" class="diag-text">Architectural decisions (external corpus)</text>
-        <line x1="350" y1="194" x2="350" y2="216" class="diag-arrow"/>
-        <text x="350" y="230" text-anchor="middle" class="diag-meta">PASS / WARN / FAIL &mdash; then execute</text>
+
+        <rect x="175" y="74" width="350" height="56" rx="8" class="diag-box"/>
+        <text x="350" y="97" text-anchor="middle" class="diag-text">Architectural decisions (external corpus)</text>
+        <text x="350" y="117" text-anchor="middle" class="diag-meta">scope, then rule, evaluated deterministically</text>
+        <line x1="350" y1="130" x2="350" y2="158" class="diag-arrow-active"/>
+
+        <rect x="175" y="158" width="350" height="56" rx="8" class="diag-box-active"/>
+        <text x="350" y="181" text-anchor="middle" class="diag-text diag-accent-text">tools/pre-execute + tools.guard()</text>
+        <text x="350" y="201" text-anchor="middle" class="diag-meta">PASS / WARN / FAIL</text>
+        <line x1="350" y1="214" x2="350" y2="242" class="diag-arrow"/>
+
+        <rect x="175" y="242" width="350" height="46" rx="8" class="diag-box"/>
+        <text x="350" y="270" text-anchor="middle" class="diag-text">Execute, or return the violation to the agent</text>
       </svg>
-      <p class="diag-caption">The seam is the harness's; the decisions it evaluates are not</p>
+      <p class="diag-caption">The corpus feeds the seam &mdash; the seam is the harness's, the decisions are not</p>
     </div>
 
     <h2>What a decision corpus at that seam would actually look like</h2>
@@ -232,9 +238,9 @@
     <ul>
       <li><strong>A corpus, not a config.</strong> The decisions live in a versioned artifact in the repository &mdash; the same one CI reads &mdash; rather than in the harness's plugin settings. The <code>mneme</code> CLI reads it via <code>--memory</code>, and every surface points at that one file.</li>
       <li><strong>Applicability, not just matching.</strong> A decision that forbids a dependency may be scoped with <code>include_paths</code> so it binds in <code>services/billing/**</code> and stays silent elsewhere. The seam has to evaluate scope before it evaluates the rule, or every constraint becomes repository-wide and teams turn it off.</li>
-      <li><strong>A verdict the loop can act on.</strong> <code>mneme check</code> returns Unix exit codes &mdash; <code>0</code> pass, <code>1</code> warn, <code>2</code> fail &mdash; which is exactly the shape a <code>tools/pre-execute</code> listener needs to map onto allow, ask, and deny. A fail is where <code>tools.guard()</code> earns its monotonicity: once the architectural verdict is deny, a later listener in the waterfall should not be able to reverse it.</li>
+      <li><strong>A verdict the loop can act on.</strong> <code>mneme check</code> returns Unix exit codes &mdash; <code>0</code> pass, <code>1</code> warn, <code>2</code> fail. Pass maps naturally onto allow and fail onto deny; what a warn should do is adapter policy, not something the exit code decides &mdash; a team may route it to the harness&rsquo;s ask path, or let it through with the finding recorded. A deny is where <code>tools.guard()</code> would earn its monotonicity: once the architectural verdict is deny, a later listener in the waterfall should not be able to reverse it.</li>
     </ul>
-    <p>Read that way, DeepSeek Harness has not created a new problem for governance. It has published a well-specified socket, and the plug already exists in roughly the same shape it takes for Claude Code's <code>PreToolUse</code> hook or Kiro's write hook. What makes it interesting is that the socket is open-source and vendor-neutral, so the same corpus can reach it without anyone negotiating a partnership.</p>
+    <p>Read that way, DeepSeek Harness has not created a new problem for governance. It has published a well-specified socket &mdash; one shaped much like the seams Mneme already plugs into for Claude Code's <code>PreToolUse</code> hook and Kiro's write hook. No DeepSeek Harness adapter exists today, and the harness itself is still a developer preview, so this is an integration opportunity rather than a shipped path. What makes it worth naming is that the socket is open-source and vendor-neutral, so the same corpus could reach it without anyone negotiating a partnership.</p>
 
     <h2>Why the decisions need to be portable</h2>
     <p>DeepSeek Harness is one runtime among several an organization's agents will pass through &mdash; alongside Claude Code, Codex CLI, Kiro, and others, each with its own hook or middleware seam for the same class of pre-action check. If the architectural decisions live only inside one harness's plugin configuration, they don't survive a harness swap, a model swap, or a session reset. They have to be defined once, outside any single harness, and evaluated identically wherever an agent is about to act.</p>
