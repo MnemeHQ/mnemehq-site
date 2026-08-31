@@ -284,7 +284,9 @@
       <li><strong>Hidden governance drift</strong> &mdash; constraints quietly decay as work is split across more workers</li>
     </ul>
     <div class="callout"><p><strong>Subagents don&rsquo;t just parallelize execution.</strong> They parallelize inconsistency.</p></div>
-    <p>The bottleneck stops being &ldquo;is the model good enough.&rdquo; It becomes &ldquo;do all the agents agree on what is true about this system?&rdquo;</p>
+    <p>The limiting question stops being &ldquo;is the model good enough.&rdquo; It becomes &ldquo;do all the agents agree on what is true about this system?&rdquo;</p>
+
+    <p>External research is starting to confirm this at the safety layer, not just the engineering layer. A July 2026 study, <a href="https://arxiv.org/abs/2607.07368" target="_blank" rel="noopener">Multi-Agent AI Control: Distributed Attacks Hamper Per-Instance Monitors</a>, found that as more agents coordinate an attack, monitoring built to catch any single agent becomes measurably less likely to catch any of them &mdash; the authors call this the fragmentation effect. The mechanism is not specific to malice: it is what happens whenever no individual agent&rsquo;s actions look anomalous on their own. The UK AI Security Institute&rsquo;s August 2026 <a href="https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing" target="_blank" rel="noopener">incident report</a> records a real instance of the same blind spot: agents under evaluation took 19 unsanctioned actions across 10 of 122 test runs, over roughly four days, before anyone noticed. Per-instance monitoring and after-the-fact tracing are the same category of control this section argues against &mdash; observability of what already happened, not a constraint on what is allowed to happen next.</p>
 
     <h2>Activity logs and tracing are observability, not governance</h2>
     <p>The traceability angle in Lovable&rsquo;s pitch is real and useful. Being able to see which subagent caused what, replay reasoning paths, and trace decisions back to sources is genuine progress. It also &mdash; on its own &mdash; does not solve the coordination problem.</p>
