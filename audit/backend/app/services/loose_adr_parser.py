@@ -8,7 +8,7 @@ without inventing enforceable rules.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -41,37 +41,50 @@ ADR_FILE_PATTERNS = [
     r"^\d{4}[-_].*\.md$",           # 0001-something.md, 0001_something.md
     r"^adr[-_]\d+.*\.md$",          # adr-001.md, adr_001.md
     r"^ADR[-_]\d+.*\.md$",          # ADR-001.md, ADR_001.md
-    r"^adr[-_]\d+.*\.md$",          # adr-001.md, adr_001.md
 ]
 
 # Files to skip (not ADR decisions)
 SKIP_FILES = {
     "index.md",
-    "README.md",
-    "README.md",
-    "template.md",
-    "TEMPLATE.md",
-    "template.md",
     "readme.md",
-    "README.md",
+    "template.md",
 }
 
-# Heading patterns that indicate a decision
-DECISION_HEADING_PATTERNS = [
-    r"^##?\s*(Decision|Decision Outcome|Outcome|Chosen Option|Accepted Decision)",
-    r"^##?\s*(Decision|Outcome|Chosen Option)",
-]
+# Supported decision headings — EXACT match (case-insensitive), not prefix
+VALID_DECISION_HEADINGS = {
+    "decision",
+    "decision outcome",
+    "outcome",
+    "chosen option",
+    "accepted decision",
+}
 
 # Context/rationale headings
-RATIONALE_HEADING_PATTERNS = [
-    r"^##?\s*(Context|Background|Rationale|Motivation|Reasoning)",
-    r"^##?\s*(Context|Background|Rationale)",
-]
+VALID_RATIONALE_HEADINGS = {
+    "context",
+    "background",
+    "rationale",
+    "motivation",
+    "reasoning",
+}
 
-# Status/Status heading patterns
-STATUS_HEADING_PATTERNS = [
-    r"^##?\s*(Status|State)",
-]
+# Status headings
+VALID_STATUS_HEADINGS = {
+    "status",
+    "state",
+}
+
+# Headings that terminate a decision section but are NOT decision headings
+TERMINATING_HEADINGS = VALID_RATIONALE_HEADINGS | VALID_STATUS_HEADINGS
+
+
+def _normalize_heading(line: str) -> str:
+    """Extract and normalize heading text from a markdown heading line."""
+    stripped = line.strip()
+    match = re.match(r"^#+\s*(.+)$", stripped)
+    if not match:
+        return ""
+    return match.group(1).strip().lower()
 
 
 def is_adr_candidate(file_path: Path, repo_root: Path) -> bool:
@@ -87,7 +100,6 @@ def is_adr_candidate(file_path: Path, repo_root: Path) -> bool:
     try:
         relative_path = file_path.relative_to(repo_root)
     except ValueError:
-        # File is not under repo_root
         return False
     relative_str = str(relative_path).replace("\\", "/")
     
@@ -164,17 +176,15 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
     if not lines:
         return None
     
-    # Check if this looks like an ADR (has decision-related headings)
-    has_decision_heading = False
+    # Check if this looks like an ADR (has at least one valid decision heading)
+    has_valid_decision_heading = False
     for line in lines:
-        for pattern in DECISION_HEADING_PATTERNS:
-            if re.match(pattern, line.strip(), re.IGNORECASE):
-                has_decision_heading = True
-                break
-        if has_decision_heading:
+        heading = _normalize_heading(line)
+        if heading in VALID_DECISION_HEADINGS:
+            has_valid_decision_heading = True
             break
     
-    if not has_decision_heading:
+    if not has_valid_decision_heading:
         return None
     
     # Skip if it's a template or index file
@@ -187,44 +197,39 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
     decision_text = ""
     rationale = ""
     
-    # Extract title from first heading
+    # Extract title from first heading that doesn't look like a filename
     for line in lines:
         if line.startswith("# "):
-            title = line[2:].strip()
-            break
+            candidate = line[2:].strip()
+            # Skip headings that look like filenames (end with .md, contain dashes/underscores like a slug)
+            if not (candidate.endswith(".md") or 
+                    (candidate.lower().replace(" ", "-") == file_path.stem.lower())):
+                title = candidate
+                break
+    # Fallback: if all # headings look like filenames, use the first one anyway
+    if not title:
+        for line in lines:
+            if line.startswith("# "):
+                title = line[2:].strip()
+                break
     
     # Parse sections - track line numbers for provenance
-    current_section = ""
+    current_section = ""  # "decision", "rationale", "status", or ""
     current_content = []
     decision_start_line = 0
     decision_end_line = 0
     
     for i, line in enumerate(lines, start=1):
         line_stripped = line.strip()
+        heading = _normalize_heading(line)
         
-        # Check for decision heading
-        is_decision_heading = False
-        for pattern in DECISION_HEADING_PATTERNS:
-            if re.match(pattern, line_stripped, re.IGNORECASE):
-                is_decision_heading = True
-                break
+        is_valid_decision_heading = heading in VALID_DECISION_HEADINGS
+        is_valid_rationale_heading = heading in VALID_RATIONALE_HEADINGS
+        is_valid_status_heading = heading in VALID_STATUS_HEADINGS
+        is_any_heading = line.startswith("#")
         
-        # Check for rationale/context heading
-        is_rationale_heading = False
-        for pattern in RATIONALE_HEADING_PATTERNS:
-            if re.match(pattern, line_stripped, re.IGNORECASE):
-                is_rationale_heading = True
-                break
-        
-        # Check for status heading
-        is_status_heading = False
-        for pattern in STATUS_HEADING_PATTERNS:
-            if re.match(pattern, line_stripped, re.IGNORECASE):
-                is_status_heading = True
-                break
-        
-        if is_decision_heading:
-            # Decision heading found - finalize any previous section and start decision
+        if is_valid_decision_heading:
+            # New valid decision heading found - finalize any previous section
             if current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
             elif current_section == "decision":
@@ -232,11 +237,15 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 decision_end_line = i - 1
             elif current_section == "status":
                 pass  # status section, just finalize
+            
+            # Start NEW decision section - reset BOTH start and end
             current_section = "decision"
             current_content = []
-            decision_start_line = i
+            decision_start_line = i + 1  # Body starts after heading
+            decision_end_line = 0  # Reset end line for new section
             continue
-        elif is_rationale_heading:
+        
+        elif is_valid_rationale_heading:
             if current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
                 decision_end_line = i - 1
@@ -245,16 +254,19 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
             current_section = "rationale"
             current_content = []
             continue
-        elif is_status_heading:
+        
+        elif is_valid_status_heading:
             if current_section == "rationale":
                 rationale = "\n".join(current_content).strip()
             elif current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
+                decision_end_line = i - 1
             current_section = "status"
             current_content = []
             continue
-        elif line.startswith("##") and current_section:
-            # Another heading - end current section
+        
+        elif is_any_heading and current_section:
+            # Another heading terminates current section
             if current_section == "decision":
                 decision_text = "\n".join(current_content).strip()
                 decision_end_line = i - 1
@@ -271,7 +283,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
                 decision_start_line = i
             current_content.append(line)
     
-    # Handle remaining content
+    # Handle remaining content at EOF
     if current_section == "decision":
         decision_text = "\n".join(current_content).strip()
         if not decision_end_line:
@@ -289,10 +301,12 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
         rel_path = file_path
     
     # Determine source lines for the decision section
-    if decision_start_line and decision_end_line:
+    # Only use exact range if both start and end are established and valid
+    if decision_start_line and decision_end_line and decision_end_line >= decision_start_line:
         source_lines = f"{decision_start_line}-{decision_end_line}"
     else:
-        source_lines = "1-" + str(min(len(lines), 100))
+        # Cannot establish exact range - return unknown rather than fabricated precision
+        source_lines = "unknown"
     
     # Generate title from filename if no title found
     title = title or file_path.stem.replace("_", " ").replace("-", " ").title()
@@ -301,7 +315,7 @@ def extract_loose_adr(file_path: Path, repo_root: Path) -> Optional[LooseADRDeci
         title=title,
         decision_text=decision_text[:2000],  # Limit size
         rationale=rationale[:2000],
-        source_path=str(file_path.relative_to(repo_root)) if file_path.is_absolute() else str(file_path),
+        source_path=str(rel_path),
         source_lines=source_lines,
         confidence=0.5,
     )

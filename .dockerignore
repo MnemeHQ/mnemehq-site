@@ -1,0 +1,51 @@
+# .dockerignore for repo-root build context (docker build -f audit/backend/Dockerfile .)
+
+# Dependencies
+node_modules/
+venv/
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test files (excluded from production image)
+test_*.py
+tests/
+audit/backend/test_*.py
+
+# Logs
+*.log
+npm-debug.log*
+
+# Misc
+*.md~
+.cache/
+.vercel
+.netlify
+
+# Frontend build (not needed for backend image)
+audit/frontend/node_modules/
+audit/frontend/dist/
+
+# Site build
+site/.vercel/
+site/public/
