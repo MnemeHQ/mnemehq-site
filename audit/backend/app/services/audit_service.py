@@ -26,6 +26,7 @@ from app.models.audit import (
 )
 from typing import Optional as TypingOptional
 from app.services.mneme_adapter import mneme_adapter, ProposedRuleInfo
+from app.services.loose_adr_parser import find_loose_adrs, LooseADRDecision
 from app.services.safe_extract import (
     safe_clone_repo,
     safe_extract_zip,
@@ -136,6 +137,22 @@ class AuditService:
                     confidence=assessment.confidence,
                 ))
             
+            # Source 2: Loose ADRs — common ADR formats not in Mneme's canonical format
+            # These are extracted as architectural intent findings but don't get manufactured rules
+            loose_adrs = find_loose_adrs(self.repo_path)
+            for loose_adr in loose_adrs:
+                decisions.append(ArchitecturalDecision(
+                    id=loose_adr.title.lower().replace(" ", "-").replace("_", "-"),
+                    title=loose_adr.title,
+                    summary=loose_adr.decision_text[:300].replace("\n", " ").strip(),
+                    requirement=loose_adr.decision_text + ("\n\nRationale: " + loose_adr.rationale if loose_adr.rationale else ""),
+                    source=Source(file=loose_adr.source_path, lines=loose_adr.source_lines),
+                    governability="guidance",
+                    appliesTo=[],
+                    proposedRule=None,  # No deterministic rule for loose ADRs
+                    confidence=loose_adr.confidence,
+                ))
+            
             # Source 2: Other architectural intent sources (non-ADR)
             # These are preserved as architectural intent findings but don't get manufactured rules
             sources = self._find_source_files()
@@ -230,11 +247,12 @@ class AuditService:
         return False
 
     def _deduplicate_decisions(self, decisions: List[ArchitecturalDecision]) -> List[ArchitecturalDecision]:
-        """Remove duplicate decisions based on title similarity."""
+        """Remove duplicate decisions based on normalized source file path."""
         seen = set()
         unique = []
         for d in decisions:
-            key = d.title.lower().strip()
+            # Normalize source file path for deduplication (handle both / and \ separators)
+            key = d.source.file.lower().replace("/", "\\").strip()
             if key not in seen:
                 seen.add(key)
                 unique.append(d)
