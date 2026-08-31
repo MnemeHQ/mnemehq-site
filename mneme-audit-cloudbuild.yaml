@@ -1,0 +1,13 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  args:
+    - build
+    - -f
+    - audit/backend/Dockerfile
+    - --label
+    - org.opencontainers.image.revision=3a5ba9d6fddd814efc8da41028d0fe1e363393c6
+    - -t
+    - gcr.io/mneme-hq-prod/mneme-audit-api:3a5ba9d6fddd814efc8da41028d0fe1e363393c6
+    - .
+images:
+- gcr.io/mneme-hq-prod/mneme-audit-api:3a5ba9d6fddd814efc8da41028d0fe1e363393c6

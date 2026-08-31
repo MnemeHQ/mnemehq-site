@@ -6,14 +6,19 @@ export function AuditNav() {
   
   return (
     <nav className="audit-nav" role="navigation" aria-label="Audit navigation">
-      <Link to="/" className="audit-nav-logo" aria-label="Mneme HQ - Home">
-        <img src="/logo-v3.png" alt="Mneme HQ" />
-      </Link>
+      <div className="audit-nav-brand">
+        <a href="https://mnemehq.com/" className="audit-nav-logo" aria-label="Mneme HQ - Home" target="_blank" rel="noopener noreferrer">
+          <img src="/logo-v3.png" alt="Mneme HQ" />
+        </a>
+        <Link to="/" className="audit-nav-product" aria-label="Architecture Audit">
+          Architecture Audit
+        </Link>
+      </div>
       <div className="audit-nav-links">
         <Link 
           to="/" 
           className={location.pathname === '/' ? 'active' : ''}
-          data-cta-intent="nav_home"
+          data-cta-intent="nav_new_audit"
           data-cta-position="audit_nav"
         >
           New Audit
@@ -26,16 +31,6 @@ export function AuditNav() {
           data-cta-position="audit_nav"
         >
           <Github className="flex items-center gap-2" size={16} /> GitHub
-        </Link>
-        <Link 
-          to="https://mnemehq.com/demo/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="btn btn-primary"
-          data-cta-intent="nav_demo"
-          data-cta-position="audit_nav"
-        >
-          Try Demo
         </Link>
       </div>
     </nav>
