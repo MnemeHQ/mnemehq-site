@@ -48,6 +48,7 @@ export interface NewAuditRequest {
   repositoryUrl?: string;
   zipFile?: File;
   localPath?: string;
+  source?: 'repository_url' | 'zip' | 'demo';
 }
 
 export interface ApiResponse<T> {

@@ -4,6 +4,7 @@ import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
 import { Copy, CheckCircle, AlertTriangle, Circle, FileText, AlertCircle } from 'lucide-react';
 import type { ArchitecturalDecision, Governability } from '../types/audit';
+import { trackAuditEvent } from '../analytics';
 
 const GOVERNABILITY_LABELS: Record<Governability, string> = {
   enforceable: 'ENFORCEABLE',
@@ -52,9 +53,17 @@ export function DecisionDetailPage() {
   const copyRule = async () => {
     if (!decision || !decision.proposedRule) return;
     const ruleText = `${decision.proposedRule.type} "${decision.proposedRule.pattern}"`;
-    await navigator.clipboard.writeText(ruleText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(ruleText);
+      trackAuditEvent('audit_rule_copy', {
+        governability: decision.governability,
+        rule_type: decision.proposedRule.type,
+      });
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      trackAuditEvent('audit_error', { stage: 'copy_rule', error_code: 'clipboard_unavailable' });
+    }
   };
 
   if (loading) {
@@ -171,6 +180,7 @@ export function DecisionDetailPage() {
                 className="btn btn-ghost btn-sm mt-3 flex items-center gap-2"
                 data-cta-intent="copy_rule"
                 data-cta-position="decision_detail"
+                data-cta-component="audit_rule"
               >
                 <Copy size={14} /> {copied ? 'Copied!' : 'Copy rule'}
               </button>

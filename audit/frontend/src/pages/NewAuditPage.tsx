@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { trackAuditEvent } from '../analytics';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
@@ -47,8 +48,10 @@ export function NewAuditPage() {
       if (file.name.endsWith('.zip')) {
         setZipFile(file);
         setRepositoryUrl('');
+        trackAuditEvent('audit_input_selected', { input_type: 'zip', selection_method: 'drop' });
       } else {
         setSubmitError('Please upload a .zip file');
+        trackAuditEvent('audit_error', { stage: 'validation', error_code: 'invalid_zip' });
       }
     }
   };
@@ -60,8 +63,10 @@ export function NewAuditPage() {
         setZipFile(file);
         setRepositoryUrl('');
         setSubmitError('');
+        trackAuditEvent('audit_input_selected', { input_type: 'zip', selection_method: 'file_picker' });
       } else {
         setSubmitError('Please upload a .zip file');
+        trackAuditEvent('audit_error', { stage: 'validation', error_code: 'invalid_zip' });
       }
     }
   };
@@ -73,11 +78,15 @@ export function NewAuditPage() {
 
     if (!repositoryUrl && !zipFile) {
       setSubmitError('Please provide a repository URL or upload a ZIP file');
+      trackAuditEvent('audit_error', { stage: 'validation', error_code: 'missing_input' });
       return;
     }
-    if (repositoryUrl && urlError) return;
+    if (repositoryUrl && urlError) {
+      trackAuditEvent('audit_error', { stage: 'validation', error_code: 'invalid_repository_url' });
+      return;
+    }
 
-    const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
+    const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined, source: zipFile ? 'zip' : 'repository_url' });
     
     if (result.success && result.data) {
       navigate(`/audit/${result.data.id}`);
@@ -88,7 +97,7 @@ export function NewAuditPage() {
 
   const handleDemoClick = async () => {
     setSubmitError('');
-    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
+    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme', source: 'demo' });
     if (result.success && result.data) {
       navigate(`/audit/${result.data.id}`);
     } else {
@@ -175,6 +184,7 @@ export function NewAuditPage() {
                 disabled={loading}
                 data-cta-intent="run_audit"
                 data-cta-position="new_audit"
+                data-cta-component="audit_input"
               >
                 {loading ? (
                   <>
@@ -192,6 +202,7 @@ export function NewAuditPage() {
                 disabled={loading}
                 data-cta-intent="try_demo"
                 data-cta-position="new_audit"
+                data-cta-component="audit_input"
               >
                 Try Demo Repository
               </button>

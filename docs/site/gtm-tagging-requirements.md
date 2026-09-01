@@ -17,6 +17,14 @@ events to measurement ID `G-ZZ9YG12PPX` (property `534820916`).
 | `pilot_form_attempt` | A locally valid form was sent to Formspree | No |
 | `pilot_form_error` | Validation or network/server failure | No |
 | `pilot_form_success` | Formspree returned HTTP success | **Yes** |
+| `audit_screen_view` | A stable screen in the hash-routed audit app was shown | No |
+| `audit_input_selected` | A repository ZIP input was selected | No |
+| `audit_start` | An audit request was submitted | No |
+| `audit_complete` | An audit request returned a report | No |
+| `audit_error` | Audit validation, request, load, export, or copy failed | No |
+| `audit_export` | An audit report was exported | No |
+| `audit_decision_view` | A decision detail was opened | No |
+| `audit_rule_copy` | A deterministic rule was copied | No |
 
 `pilot_form_success` is the sole primary conversion. CTA clicks, code copies,
 and page views remain funnel signals rather than GA4 key events.
@@ -100,6 +108,14 @@ Realtime/DebugView:
 | Page type | `page_type` |
 | Form ID | `form_id` |
 | Form error type | `error_type` |
+| Audit screen | `audit_screen` |
+| Audit input type | `input_type` |
+| Audit duration | `duration_ms` |
+| Audit error stage | `stage` |
+| Audit error code | `error_code` |
+| Audit export format | `format` |
+| Decision governability | `governability` |
+| Proposed rule type | `rule_type` |
 
 Keep raw `cta_destination` and `copy_context` in BigQuery. They can have many
 distinct values and do not need GA4 custom-dimension quota for current reports.
@@ -115,7 +131,39 @@ also previously fired `cta_clicked` directly.
 3. Verify one daily BigQuery export.
 4. Pause overlapping legacy tags; do not repoint them to `cta_click` because
    both the legacy click trigger and the data-layer trigger would then send the
-   same event.
+same event.
+
+## 4a. Architecture Audit workspace
+
+The hash-routed React app at `/audit/workspace/` is separate from the static
+site handler. Add Data Layer Variables for `audit_screen`, `page_path`,
+`input_type`, `selection_method`, `duration_ms`, `decision_count`,
+`enforceable_count`, `partial_count`, `guidance_count`, `gap_count`, `stage`,
+`error_code`, `format`, `governability`, and `rule_type`.
+
+Route these events through the canonical GA4 router (add them to its regex):
+
+| Data Layer event | Parameters |
+|---|---|
+| `audit_screen_view` | `audit_screen`, `page_path`, `page_type` |
+| `audit_input_selected` | `input_type`, `selection_method`, `page_type` |
+| `audit_start` | `input_type`, `page_type` |
+| `audit_complete` | `input_type`, `duration_ms`, decision and gap counts, `page_type` |
+| `audit_error` | `stage`, `error_code`, optional `format`, `page_type` |
+| `audit_decision_view` | `governability`, `rule_type`, `page_type` |
+| `audit_rule_copy` | `governability`, `rule_type`, `page_type` |
+| `audit_export` | `format`, `page_type` |
+
+Add a separate GA4 Event tag named `GA4 - Audit virtual page view`, triggered
+by `audit_screen_view`, with event name `page_view` and parameters
+`page_type`, `audit_screen`, and `page_path`. Exclude `/audit/workspace/` from
+the normal automatic page-view tag, so its initial load does not duplicate this
+virtual page view. Screen names are stable (`new_audit`, `audit_overview`,
+`decision_detail`, and `governance_gaps`) and deliberately omit audit and
+decision IDs.
+
+Never send repository URLs, ZIP filenames, audit IDs, decision titles, source
+paths, rule patterns, or copied rule text to GA4.
 5. Confirm legacy counts fall to zero before deleting anything.
 
 ## 7. Verification checklist

@@ -6,6 +6,7 @@ import { StatsGrid } from '../components/StatsGrid';
 import { DecisionItem } from '../components/DecisionItem';
 import { Loader2, Download, FileText, AlertCircle } from 'lucide-react';
 import type { AuditResult } from '../types/audit';
+import { trackAuditEvent } from '../analytics';
 
 export function AuditOverviewPage() {
   const navigate = useNavigate();
@@ -95,6 +96,7 @@ export function AuditOverviewPage() {
               className="btn btn-ghost flex items-center gap-2"
               data-cta-intent="export_markdown"
               data-cta-position="audit_overview"
+              data-cta-component="audit_export"
             >
               <Download size={16} /> Export Markdown
             </button>
@@ -104,6 +106,7 @@ export function AuditOverviewPage() {
               className="btn btn-ghost flex items-center gap-2"
               data-cta-intent="export_json"
               data-cta-position="audit_overview"
+              data-cta-component="audit_export"
             >
               <FileText size={16} /> Export JSON
             </button>
@@ -139,7 +142,13 @@ export function AuditOverviewPage() {
               <DecisionItem 
                 key={decision.id} 
                 decision={decision} 
-                onClick={() => navigate(`/audit/${id}/decisions/${decision.id}`)} 
+                onClick={() => {
+                  trackAuditEvent('audit_decision_view', {
+                    governability: decision.governability,
+                    rule_type: decision.proposedRule?.type || 'none',
+                  });
+                  navigate(`/audit/${id}/decisions/${decision.id}`);
+                }}
               />
             ))}
           </div>

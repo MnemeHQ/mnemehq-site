@@ -15,6 +15,7 @@ export function AuditNav() {
           className={location.pathname === '/' ? 'active' : ''}
           data-cta-intent="nav_home"
           data-cta-position="audit_nav"
+          data-cta-component="audit_nav"
         >
           New Audit
         </Link>
@@ -24,6 +25,7 @@ export function AuditNav() {
           rel="noopener noreferrer"
           data-cta-intent="nav_github"
           data-cta-position="audit_nav"
+          data-cta-component="audit_nav"
         >
           <Github className="flex items-center gap-2" size={16} /> GitHub
         </Link>
@@ -34,6 +36,7 @@ export function AuditNav() {
           className="btn btn-primary"
           data-cta-intent="nav_demo"
           data-cta-position="audit_nav"
+          data-cta-component="audit_nav"
         >
           Try Demo
         </Link>
@@ -51,7 +54,7 @@ export function BackLink({ to = '/' }: BackLinkProps) {
   if (location.pathname === '/') return null;
   
   return (
-    <Link to={to} className="btn btn-ghost btn-sm flex items-center gap-2 mt-2" data-cta-intent="back" data-cta-position="audit_detail">
+    <Link to={to} className="btn btn-ghost btn-sm flex items-center gap-2 mt-2" data-cta-intent="back" data-cta-position="audit_detail" data-cta-component="audit_nav">
       <ArrowLeft size={14} /> Back to Audit
     </Link>
   );
