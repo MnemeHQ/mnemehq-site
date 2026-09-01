@@ -4,6 +4,7 @@ import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
 import { InfoTooltip } from '../components/InfoTooltip';
+import { PilotLink } from '../components/PilotLink';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, AlertTriangle, Circle, ChevronRight } from 'lucide-react';
 import type { AuditResult, ArchitecturalDecision, Governability } from '../types/audit';
 import { FIELD_HELP, getDecisionRecommendations, getEvidenceLabel, getPlainLanguageSummary } from '../utils/auditInsights';
@@ -84,7 +85,7 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
 
   return (
     <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
-      <div className="decision-item-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
+      <button type="button" className="decision-item-header" onClick={onToggle} aria-expanded={isExpanded}>
         <div className={`decision-icon ${iconClass}`}>
           <Icon size={20} />
         </div>
@@ -101,7 +102,7 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
         <div className="decision-chevron">
           <ChevronRight size={18} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
         </div>
-      </div>
+      </button>
       
       {isExpanded && (
         <div className="decision-item-expanded">
@@ -213,6 +214,7 @@ export function AuditOverviewPage() {
     { id: 'decisions', label: 'Decisions' },
     { id: 'coverage', label: 'Coverage' },
     { id: 'sources', label: 'Sources' },
+    { id: 'pilot', label: 'Pilot' },
   ], []);
 
   // Guard: if no audit ID, redirect to new audit
@@ -260,6 +262,13 @@ export function AuditOverviewPage() {
 
   useEffect(() => {
     const handleScroll = () => {
+      const isAtPageEnd = window.innerHeight + window.pageYOffset
+        >= document.documentElement.scrollHeight - SECTION_ACTIVATION_TOLERANCE;
+      if (isAtPageEnd) {
+        setActiveSection(sections[sections.length - 1].id);
+        return;
+      }
+
       const scrollPosition = window.pageYOffset + getSectionScrollOffset();
       let currentSection = sections[0].id;
 
@@ -537,7 +546,7 @@ export function AuditOverviewPage() {
                   key={section.id}
                   type="button"
                   onClick={() => scrollToSection(section.id)}
-                  className={`audit-section-nav-item ${activeSection === section.id ? 'active' : ''}`}
+                  className={`audit-section-nav-item ${section.id === 'pilot' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-section={section.id}
                 >
@@ -769,7 +778,7 @@ export function AuditOverviewPage() {
               ))}
             </ul>
 
-            <aside className="pilot-cta" aria-labelledby="pilot-title">
+            <aside id="pilot" className="pilot-cta" aria-labelledby="pilot-title">
               <span className="pilot-cta-eyebrow">Turn this audit into action</span>
               <h2 id="pilot-title">Validate the highest-value findings in a Mneme pilot</h2>
               <p>Start with one representative repository. We’ll select 3–5 governance items, translate them into controls, run them in observe mode, and review the signal with your team before anything blocks delivery.</p>
@@ -778,7 +787,7 @@ export function AuditOverviewPage() {
                 <li><strong>Translate</strong> the most valuable gaps into deterministic rules.</li>
                 <li><strong>Measure</strong> prevented drift and false positives with decision owners.</li>
               </ol>
-              <a href="/pilot/" className="btn btn-primary" data-cta-intent="request_pilot" data-cta-position="audit_result">Request a pilot</a>
+              <PilotLink audit={audit} ctaPosition="audit_result">Request a pilot</PilotLink>
             </aside>
           </section>
         </div>

@@ -359,6 +359,30 @@
       border-top: 1px solid var(--border);
       padding-top: 2.5rem;
     }
+    .audit-context-card {
+      display: none;
+      align-items: flex-start;
+      gap: 0.85rem;
+      margin: 0 0 1.25rem;
+      padding: 1rem 1.1rem;
+      background: rgba(200,240,96,0.06);
+      border: 1px solid rgba(200,240,96,0.24);
+      border-radius: 10px;
+    }
+    .audit-context-card.visible { display: flex; }
+    .audit-context-mark {
+      width: 30px;
+      height: 30px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      border-radius: 8px;
+      background: rgba(200,240,96,0.14);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+    }
+    .audit-context-card strong { display: block; margin-bottom: 0.2rem; color: var(--text); font-size: 0.88rem; }
+    .audit-context-card p { margin: 0; color: var(--muted); font-size: 0.78rem; line-height: 1.55; overflow-wrap: anywhere; }
     .form-heading {
       font-size: 0.82rem;
       font-weight: 600;
@@ -600,7 +624,21 @@
   <div class="pilot-form-wrap">
     <div class="form-heading">Tell us about your team</div>
 
+    <div class="audit-context-card" id="pilot-audit-context" role="status" aria-live="polite">
+      <span class="audit-context-mark" aria-hidden="true">✓</span>
+      <div>
+        <strong>Architecture audit attached</strong>
+        <p id="pilot-audit-context-summary">Your repository findings will be included with this request.</p>
+      </div>
+    </div>
+
     <form class="field-group" id="pilot-form" method="POST" action="https://formspree.io/f/meennlwj" novalidate>
+
+      <input type="hidden" id="pilot-audit-id" name="audit_id" />
+      <input type="hidden" id="pilot-audit-repository" name="audit_repository" />
+      <input type="hidden" id="pilot-audit-summary" name="audit_summary" />
+      <input type="hidden" id="pilot-audit-gaps" name="audit_top_gaps" />
+      <input type="hidden" id="pilot-audit-selected-item" name="audit_selected_item" />
 
       <div class="field-row">
         <div class="field">
@@ -844,6 +882,56 @@
   var success = document.getElementById('pilot-success');
   var error = document.getElementById('pilot-error');
   if (!form) return;
+
+  var params = new URLSearchParams(window.location.search);
+  var auditContext = null;
+  try {
+    var storedContext = window.sessionStorage.getItem('mneme_pilot_context');
+    if (storedContext) auditContext = JSON.parse(storedContext);
+  } catch (e) {
+    auditContext = null;
+  }
+
+  if (!auditContext && params.get('source') === 'architecture-audit') {
+    auditContext = {
+      auditId: params.get('audit') || '',
+      repository: params.get('repository') || '',
+      topGaps: []
+    };
+  }
+
+  if (auditContext && (auditContext.auditId || auditContext.repository)) {
+    var contextCard = document.getElementById('pilot-audit-context');
+    var contextSummary = document.getElementById('pilot-audit-context-summary');
+    var summaryParts = [];
+    if (auditContext.repository) summaryParts.push(auditContext.repository);
+    if (typeof auditContext.totalItems === 'number') summaryParts.push(auditContext.totalItems + ' governance items');
+    if (typeof auditContext.coverage === 'number') summaryParts.push(auditContext.coverage + '% coverage');
+    contextSummary.textContent = (summaryParts.length ? summaryParts.join(' · ') + '. ' : '') + 'The audit summary and priority gaps will be included with your request.';
+    contextCard.classList.add('visible');
+
+    document.getElementById('pilot-audit-id').value = auditContext.auditId || '';
+    document.getElementById('pilot-audit-repository').value = auditContext.repository || '';
+    document.getElementById('pilot-audit-summary').value = JSON.stringify({
+      totalItems: auditContext.totalItems,
+      enforceable: auditContext.enforceable,
+      partial: auditContext.partial,
+      guidance: auditContext.guidance,
+      coverage: auditContext.coverage,
+      createdAt: auditContext.createdAt
+    });
+    document.getElementById('pilot-audit-gaps').value = (auditContext.topGaps || []).join('\n');
+    document.getElementById('pilot-audit-selected-item').value = auditContext.selectedDecisionId || '';
+
+    var challenge = document.getElementById('pilot-challenge');
+    if (challenge && !challenge.value) {
+      var repoLabel = auditContext.repository || ('audit ' + auditContext.auditId);
+      challenge.value = 'We want to pilot Mneme using ' + repoLabel + '. ' +
+        (auditContext.topGaps && auditContext.topGaps.length
+          ? 'Priority findings: ' + auditContext.topGaps.join('; ')
+          : 'Please use the attached architecture audit to identify the highest-value controls.');
+    }
+  }
 
   function track(event, extra){
     var payload = { event: event, page_type: 'pilot', form_id: 'pilot-form' };

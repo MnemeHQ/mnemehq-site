@@ -97,6 +97,7 @@ describe('AuditOverviewPage section navigation', () => {
   it.each([
     ['Coverage', 'coverage'],
     ['Sources', 'sources'],
+    ['Pilot', 'pilot'],
   ])('scrolls to and activates the %s section', (label, sectionId) => {
     renderOverview();
 
@@ -136,7 +137,7 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getAllByText(/Recommendation:/)).toHaveLength(2);
     expect(screen.getByText('How to read this audit')).toBeInTheDocument();
     expect(screen.getByText('Governance Items')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', '/pilot/');
+    expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', expect.stringContaining('/pilot/?source=architecture-audit'));
   });
 
   it('opens a bounded, accessible explanation from a metric info control', () => {

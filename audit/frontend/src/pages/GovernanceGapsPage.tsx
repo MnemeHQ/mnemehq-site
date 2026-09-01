@@ -3,14 +3,16 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
 import { InfoTooltip } from '../components/InfoTooltip';
+import { PilotLink } from '../components/PilotLink';
 import { AlertTriangle, ArrowRight, AlertCircle } from 'lucide-react';
-import type { ArchitecturalDecision, GovernanceGap } from '../types/audit';
+import type { ArchitecturalDecision, AuditResult, GovernanceGap } from '../types/audit';
 
 export function GovernanceGapsPage() {
   const { id } = useParams<{ id: string }>();
   const { getAudit, loading: apiLoading } = useAuditApi();
   const [gaps, setGaps] = useState<GovernanceGap[]>([]);
   const [decisions, setDecisions] = useState<ArchitecturalDecision[]>([]);
+  const [audit, setAudit] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,6 +22,7 @@ export function GovernanceGapsPage() {
         if (result.success && result.data) {
           setGaps(result.data.gaps);
           setDecisions(result.data.decisions);
+          setAudit(result.data);
         }
         setLoading(false);
       });
@@ -124,7 +127,7 @@ export function GovernanceGapsPage() {
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 <Link to={`/audit/${id}`} className="btn btn-ghost" data-cta-intent="back_to_overview" data-cta-position="gaps">Back to Audit Overview</Link>
-                <a href="/pilot/" className="btn btn-primary" data-cta-intent="request_pilot" data-cta-position="governance_gaps">Request a pilot</a>
+                {audit && <PilotLink audit={audit} ctaPosition="governance_gaps">Request a pilot</PilotLink>}
               </div>
             </div>
           </div>
