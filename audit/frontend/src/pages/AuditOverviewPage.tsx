@@ -3,8 +3,10 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
+import { InfoTooltip } from '../components/InfoTooltip';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, AlertTriangle, Circle, ChevronRight } from 'lucide-react';
 import type { AuditResult, ArchitecturalDecision, Governability } from '../types/audit';
+import { FIELD_HELP, getDecisionRecommendations, getEvidenceLabel, getPlainLanguageSummary } from '../utils/auditInsights';
 
 type FilterType = 'all' | 'enforceable' | 'partial' | 'guidance';
 type SourceTypeFilter = 'all' | 'adr' | 'agent-instructions' | 'config' | 'code';
@@ -77,6 +79,8 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
   const iconClass = ICON_CLASS[decision.governability];
   const badgeClass = BADGE_CLASS[decision.governability];
   const badgeLabel = BADGE_LABEL[decision.governability];
+  const recommendations = getDecisionRecommendations(decision);
+  const evidenceLabel = getEvidenceLabel(decision);
 
   return (
     <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
@@ -103,11 +107,17 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
         <div className="decision-item-expanded">
           <div className="decision-expanded-content">
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Requirement</span>
-              <p className="decision-expanded-value">{decision.requirement}</p>
+              <span className="decision-expanded-label-row">
+                <span className="decision-expanded-label">{evidenceLabel}</span>
+                <InfoTooltip label={evidenceLabel}>{FIELD_HELP.requirement}</InfoTooltip>
+              </span>
+              <p className="decision-expanded-value">{getPlainLanguageSummary(decision)}</p>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Applies To</span>
+              <span className="decision-expanded-label-row">
+                <span className="decision-expanded-label">Applies To</span>
+                <InfoTooltip label="Applies to">{FIELD_HELP.appliesTo}</InfoTooltip>
+              </span>
               <div className="decision-expanded-value">
                 {decision.appliesTo.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
@@ -121,7 +131,10 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
               </div>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Proposed Rule</span>
+              <span className="decision-expanded-label-row">
+                <span className="decision-expanded-label">Proposed Rule</span>
+                <InfoTooltip label="Proposed rule">{FIELD_HELP.proposedRule}</InfoTooltip>
+              </span>
               <div className="decision-expanded-value">
                 {decision.proposedRule ? (
                   <>
@@ -134,12 +147,23 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
               </div>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Confidence</span>
+              <span className="decision-expanded-label-row">
+                <span className="decision-expanded-label">Confidence</span>
+                <InfoTooltip label="Confidence">{FIELD_HELP.confidence}</InfoTooltip>
+              </span>
               <span className="decision-expanded-value font-mono text-teal">{Math.round(decision.confidence * 100)}%</span>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Source</span>
+              <span className="decision-expanded-label-row">
+                <span className="decision-expanded-label">Source</span>
+                <InfoTooltip label="Source">{FIELD_HELP.source}</InfoTooltip>
+              </span>
               <span className="decision-expanded-value font-mono text-xs">{decision.source.file} (Lines {decision.source.lines})</span>
+            </div>
+            <div className="decision-recommendation">
+              <span className="decision-expanded-label">Recommended next step</span>
+              <strong>{recommendations[0].title}</strong>
+              <p>{recommendations[0].description}</p>
             </div>
           </div>
           <button
@@ -523,12 +547,15 @@ export function AuditOverviewPage() {
             </div>
           </nav>
 
-          <section id="overview" className="audit-section" aria-labelledby="stats">
+          <section id="overview" className="audit-section" aria-labelledby="overview-title">
+            <h2 id="overview-title" className="audit-section-title">How to read this audit</h2>
+            <p className="audit-section-subtitle">These metrics show how much architectural intent Mneme found and how ready that intent is for deterministic enforcement. A low score identifies specification work to do; it does not mean the repository has no architecture.</p>
             <StatsGrid summary={summary} />
           </section>
 
           <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
             <h2 id="gaps-title" className="audit-section-title">Governance Gaps</h2>
+            <p className="audit-section-subtitle">A gap is the missing information that prevents Mneme from safely turning documented intent into a control. Resolve these first to increase coverage.</p>
             {showInlineGaps ? (
               audit.gaps.length > 0 ? (
                 <div className="audit-inline-gaps">
@@ -540,7 +567,10 @@ export function AuditOverviewPage() {
                     {audit.gaps.map((gap, index) => (
                       <li key={`${gap.decision}-${index}`}>
                         <strong>{gap.decision}</strong>
-                        <span>{gap.reason}</span>
+                        <span>
+                          {gap.reason}
+                          <small><b>Recommendation:</b> {gap.suggestedNextStep}</small>
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -550,7 +580,6 @@ export function AuditOverviewPage() {
               )
             ) : (
               <>
-                <p className="audit-section-subtitle">Decisions that cannot be fully enforced — with specific next steps to make them machine-testable.</p>
                 <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
                   View All Governance Gaps
                 </Link>
@@ -560,6 +589,7 @@ export function AuditOverviewPage() {
 
           <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
             <h2 id="decisions-title" className="audit-section-title">Governance Items</h2>
+            <p className="audit-section-subtitle">Review each extracted decision or evidence item, its governability rating, and the shortest recommended step toward enforcement. Expand an item for a concise explanation; open full details for all evidence.</p>
 
             {showFilters && (
               <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
@@ -677,6 +707,7 @@ export function AuditOverviewPage() {
 
           <section id="coverage" className="audit-section" aria-labelledby="coverage-title">
             <h2 id="coverage-title" className="audit-section-title">Coverage</h2>
+            <p className="audit-section-subtitle">Coverage is the share of findings that Mneme can test at least partially. Improve it by adding explicit scope and machine-testable constraints to high-value decisions.</p>
             <div className="audit-coverage">
               <div className="audit-coverage-bar">
                 <div 
@@ -686,6 +717,7 @@ export function AuditOverviewPage() {
               </div>
               <p className="audit-coverage-text">
                 {coveragePct}% of governance items have at least partial enforceability
+                <InfoTooltip label="Coverage">{FIELD_HELP.coverage}</InfoTooltip>
               </p>
             </div>
           </section>
@@ -715,6 +747,7 @@ export function AuditOverviewPage() {
                 )}
               </button>
             </div>
+            <p className="audit-section-subtitle">This inventory shows where Mneme looked for architectural intent. Use it to spot missing ADRs, agent instructions, or configuration sources that should be included in a pilot.</p>
             
             <div className="audit-sources-summary">
               <p>
@@ -735,6 +768,18 @@ export function AuditOverviewPage() {
                 </li>
               ))}
             </ul>
+
+            <aside className="pilot-cta" aria-labelledby="pilot-title">
+              <span className="pilot-cta-eyebrow">Turn this audit into action</span>
+              <h2 id="pilot-title">Validate the highest-value findings in a Mneme pilot</h2>
+              <p>Start with one representative repository. We’ll select 3–5 governance items, translate them into controls, run them in observe mode, and review the signal with your team before anything blocks delivery.</p>
+              <ol>
+                <li><strong>Choose</strong> a repository and recurring change path.</li>
+                <li><strong>Translate</strong> the most valuable gaps into deterministic rules.</li>
+                <li><strong>Measure</strong> prevented drift and false positives with decision owners.</li>
+              </ol>
+              <a href="/pilot/" className="btn btn-primary" data-cta-intent="request_pilot" data-cta-position="audit_result">Request a pilot</a>
+            </aside>
           </section>
         </div>
       </main>

@@ -33,6 +33,7 @@ vi.mock('lucide-react', () => {
     Upload: () => createElement('svg', { 'data-testid': 'upload-icon' }),
     Copy: () => createElement('svg', { 'data-testid': 'copy-icon' }),
     ArrowRight: () => createElement('svg', { 'data-testid': 'arrow-right-icon' }),
+    Info: () => createElement('svg', { 'data-testid': 'info-icon' }),
   };
 });
 

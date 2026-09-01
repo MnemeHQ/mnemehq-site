@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
+import { InfoTooltip } from '../components/InfoTooltip';
 import { Copy, CheckCircle, AlertTriangle, Circle, FileText, AlertCircle } from 'lucide-react';
 import type { ArchitecturalDecision, Governability } from '../types/audit';
+import { FIELD_HELP, getDecisionRecommendations, getEvidenceLabel, getPlainLanguageSummary } from '../utils/auditInsights';
 
 const GOVERNABILITY_LABELS: Record<Governability, string> = {
   enforceable: 'ENFORCEABLE',
@@ -94,6 +96,8 @@ export function DecisionDetailPage() {
   const Icon = ICONS[decision.governability];
   const iconColor = ICON_COLORS[decision.governability];
   const badgeClass = `badge-${decision.governability === 'enforceable' ? 'enforceable' : decision.governability === 'partial' ? 'partial' : 'guidance'}`;
+  const evidenceLabel = getEvidenceLabel(decision);
+  const recommendations = getDecisionRecommendations(decision);
 
   return (
     <div className="audit-layout">
@@ -108,7 +112,7 @@ export function DecisionDetailPage() {
               <div>
                 <span className={`badge ${badgeClass} mb-2`}>{GOVERNABILITY_LABELS[decision.governability]}</span>
                 <h1 className="detail-title">{decision.title}</h1>
-                <p className="text-muted" style={{ maxWidth: '700px' }}>{decision.requirement}</p>
+                <p className="text-muted" style={{ maxWidth: '700px' }}>{getPlainLanguageSummary(decision)}</p>
               </div>
               <div className="flex items-center gap-2" style={{ color: iconColor }}>
                 <Icon size={28} />
@@ -122,19 +126,38 @@ export function DecisionDetailPage() {
               <span className="font-mono text-sm" style={{ color: 'var(--muted)' }}>
                 Lines {decision.source.lines}
               </span>
-              <span className="font-mono text-sm text-teal">
+              <span className="detail-meta-item font-mono text-sm text-teal">
                 Confidence: {Math.round(decision.confidence * 100)}%
+                <InfoTooltip label="Confidence">{FIELD_HELP.confidence}</InfoTooltip>
               </span>
             </div>
           </header>
 
           <section className="detail-section" aria-labelledby="requirement">
-            <h2 id="requirement" className="detail-section-title">REQUIREMENT</h2>
-            <div className="detail-content">{decision.requirement}</div>
+            <div className="detail-section-heading">
+              <h2 id="requirement" className="detail-section-title">{evidenceLabel}</h2>
+              <InfoTooltip label={evidenceLabel}>{FIELD_HELP.requirement}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">What Mneme extracted from the repository and used to classify this governance item.</p>
+            {decision.category === 'config_evidence' ? (
+              <div className="detail-content">
+                <p className="detail-evidence-summary">{getPlainLanguageSummary(decision)}</p>
+                <details className="evidence-details">
+                  <summary>View source evidence excerpt</summary>
+                  <pre>{decision.requirement}</pre>
+                </details>
+              </div>
+            ) : (
+              <div className="detail-content">{decision.requirement}</div>
+            )}
           </section>
 
           <section className="detail-section" aria-labelledby="source">
-            <h2 id="source" className="detail-section-title">SOURCE</h2>
+            <div className="detail-section-heading">
+              <h2 id="source" className="detail-section-title">Source evidence</h2>
+              <InfoTooltip label="Source evidence">{FIELD_HELP.source}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">Validate the finding against this file and line range with the team that owns the decision.</p>
             <div className="detail-content">
               <p>{decision.source.file}</p>
               <p>Lines {decision.source.lines}</p>
@@ -142,7 +165,11 @@ export function DecisionDetailPage() {
           </section>
 
           <section className="detail-section" aria-labelledby="governability">
-            <h2 id="governability" className="detail-section-title">GOVERNABILITY</h2>
+            <div className="detail-section-heading">
+              <h2 id="governability" className="detail-section-title">Governability</h2>
+              <InfoTooltip label="Governability">{FIELD_HELP.governability}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">Whether this item is precise enough for Mneme to evaluate without relying on human interpretation.</p>
             <div className="flex items-start gap-3">
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: `${iconColor}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: iconColor }}>
                 <Icon size={24} />
@@ -153,20 +180,24 @@ export function DecisionDetailPage() {
               </div>
             </div>
             
-            {decision.appliesTo.length > 0 && (
-              <div className="mt-3">
-                <h4 className="font-mono text-xs text-muted mb-2">Applies to:</h4>
+            <div className="mt-3">
+                <h4 className="detail-field-label">Applies to <InfoTooltip label="Applies to">{FIELD_HELP.appliesTo}</InfoTooltip></h4>
+              {decision.appliesTo.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {decision.appliesTo.map((path, i) => (
                     <span key={i} className="font-mono text-xs px-2 py-1 bg-surface2 border border-border rounded">{path}</span>
                   ))}
                 </div>
-              </div>
-            )}
+              ) : <p className="text-muted">Not specified. Add explicit paths, services, or change types before enforcing this item.</p>}
+            </div>
           </section>
 
           <section className="detail-section" aria-labelledby="proposed-rule">
-            <h2 id="proposed-rule" className="detail-section-title">PROPOSED MNEM RULE</h2>
+            <div className="detail-section-heading">
+              <h2 id="proposed-rule" className="detail-section-title">Proposed Mneme rule</h2>
+              <InfoTooltip label="Proposed Mneme rule">{FIELD_HELP.proposedRule}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">The deterministic control Mneme could evaluate for this item. Treat it as a proposal to validate with the decision owner.</p>
             {decision.proposedRule ? (
               <div className="rule-box">
                 <div className="rule-box-label">Deterministic enforcement rule</div>
@@ -187,6 +218,29 @@ export function DecisionDetailPage() {
                 <p className="text-muted">No deterministic rule defined for this decision.</p>
               </div>
             )}
+          </section>
+
+          <section className="detail-section" aria-labelledby="recommendations">
+            <h2 id="recommendations" className="detail-section-title">Recommendations</h2>
+            <p className="detail-section-description">Practical next steps, ordered by what currently prevents safe enforcement.</p>
+            <ol className="recommendation-list">
+              {recommendations.map((recommendation, index) => (
+                <li key={recommendation.title}>
+                  <span>{index + 1}</span>
+                  <div>
+                    <strong>{recommendation.title}</strong>
+                    <p>{recommendation.description}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className="detail-pilot-prompt">
+              <div>
+                <strong>Want to validate this against real pull requests?</strong>
+                <p>A pilot starts in observe mode so your team can measure signal before enabling enforcement.</p>
+              </div>
+              <a href="/pilot/" className="btn btn-primary" data-cta-intent="request_pilot" data-cta-position="decision_detail">Request a pilot</a>
+            </div>
           </section>
 
           <div className="detail-section" style={{ paddingBottom: '4rem' }}>

@@ -2,13 +2,15 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
+import { InfoTooltip } from '../components/InfoTooltip';
 import { AlertTriangle, ArrowRight, AlertCircle } from 'lucide-react';
-import type { GovernanceGap } from '../types/audit';
+import type { ArchitecturalDecision, GovernanceGap } from '../types/audit';
 
 export function GovernanceGapsPage() {
   const { id } = useParams<{ id: string }>();
   const { getAudit, loading: apiLoading } = useAuditApi();
   const [gaps, setGaps] = useState<GovernanceGap[]>([]);
+  const [decisions, setDecisions] = useState<ArchitecturalDecision[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,6 +19,7 @@ export function GovernanceGapsPage() {
       getAudit(id).then((result) => {
         if (result.success && result.data) {
           setGaps(result.data.gaps);
+          setDecisions(result.data.decisions);
         }
         setLoading(false);
       });
@@ -67,13 +70,14 @@ export function GovernanceGapsPage() {
             <span className="audit-hero-tag">Governance Gaps</span>
             <h1>Decisions that can't be enforced <span className="font-serif" style={{ color: 'var(--accent)' }}>yet</span></h1>
             <p className="mt-2 text-muted">
-              {gaps.length} architectural decisions identified that lack machine-testable constraints. 
-              Each gap includes the specific next step to make it enforceable.
+              {gaps.length} governance {gaps.length === 1 ? 'item needs' : 'items need'} more specificity before Mneme can enforce {gaps.length === 1 ? 'it' : 'them'} safely.
+              Use this list to decide what to clarify with decision owners first.
             </p>
           </header>
 
           <section className="audit-section" aria-labelledby="gaps">
             <h2 id="gaps" className="audit-section-title">Governance Gaps</h2>
+            <p className="audit-section-subtitle">Each card connects the finding to its blocker and a recommended action. Open the governance item to review the evidence, confidence, applicability, and proposed rule.</p>
             
             {gaps.length === 0 ? (
               <div className="empty-state">
@@ -83,29 +87,46 @@ export function GovernanceGapsPage() {
               </div>
             ) : (
               <div className="decision-list" role="list" aria-label="Governance gaps">
-                {gaps.map((gap, index) => (
-                  <article key={index} className="decision-item" style={{ borderColor: 'var(--warning)' }}>
+                {gaps.map((gap, index) => {
+                  const decision = decisions.find((item) => item.title === gap.decision);
+                  return (
+                  <article key={index} className="governance-gap-card">
                     <div className="decision-icon partial" style={{ width: 48, height: 48 }}>
                       <AlertTriangle size={24} />
                     </div>
                     <div className="decision-content">
                       <h3 className="decision-title">{gap.decision}</h3>
-                      <p className="decision-summary" style={{ marginBottom: '0.75rem' }}><strong>Reason:</strong> {gap.reason}</p>
-                      <p className="decision-summary text-teal"><strong>Suggested next step:</strong> {gap.suggestedNextStep}</p>
+                      <p className="decision-summary gap-explanation"><strong>Why it is a gap <InfoTooltip label="Why it is a gap">This is the specific missing information that prevents Mneme from applying a deterministic control safely.</InfoTooltip></strong>{gap.reason}</p>
+                      <p className="decision-summary gap-recommendation"><strong>Recommendation <InfoTooltip label="Recommendation">A concrete documentation or rule-authoring change that would move this item closer to enforceability.</InfoTooltip></strong>{gap.suggestedNextStep}</p>
                     </div>
-                    <div className="decision-meta">
+                    <Link
+                      to={decision ? `/audit/${id}/decisions/${decision.id}` : `/audit/${id}`}
+                      className="gap-card-action"
+                      aria-label={decision ? `Review governance item: ${gap.decision}` : 'Return to audit overview'}
+                      data-cta-intent="review_gap_item"
+                      data-cta-position="governance_gaps"
+                    >
+                      <span>{decision ? 'Review item' : 'View overview'}</span>
                       <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
-                    </div>
+                    </Link>
                   </article>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
 
           <div className="audit-section text-center" style={{ paddingBottom: '4rem' }}>
-            <Link to={`/audit/${id}`} className="btn btn-primary" data-cta-intent="back_to_overview" data-cta-position="gaps">
-              Back to Audit Overview
-            </Link>
+            <div className="gap-next-actions">
+              <div>
+                <h2>Ready to test the recommendations?</h2>
+                <p>A Mneme pilot turns a small set of these gaps into controls and validates them in observe mode against your team’s real changes.</p>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <Link to={`/audit/${id}`} className="btn btn-ghost" data-cta-intent="back_to_overview" data-cta-position="gaps">Back to Audit Overview</Link>
+                <a href="/pilot/" className="btn btn-primary" data-cta-intent="request_pilot" data-cta-position="governance_gaps">Request a pilot</a>
+              </div>
+            </div>
           </div>
         </div>
       </main>
