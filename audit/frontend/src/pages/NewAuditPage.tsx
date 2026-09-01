@@ -6,7 +6,7 @@ import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
-  const { createAudit, loading, error } = useAuditApi();
+  const { createAudit, loading } = useAuditApi();
   const [repositoryUrl, setRepositoryUrl] = useState('');
   const [zipFile, setZipFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -160,12 +160,6 @@ export function NewAuditPage() {
               {submitError && (
                 <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
                   <AlertCircle size={16} /> {submitError}
-                </div>
-              )}
-
-              {error && (
-                <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
-                  <AlertCircle size={16} /> {error}
                 </div>
               )}
 

@@ -4,13 +4,13 @@ import { vi } from 'vitest';
 
 // Mock useAuditApi hook
 vi.mock('../hooks/useAuditApi', () => ({
-  useAuditApi: () => ({
+  useAuditApi: vi.fn(() => ({
     getAudit: vi.fn(),
     createAudit: vi.fn(),
     exportAudit: vi.fn(),
     loading: false,
     error: null,
-  }),
+  })),
 }));
 
 // Mock lucide-react icons

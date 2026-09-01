@@ -62,12 +62,13 @@ export function useAuditApi() {
         body: formData,
       });
       
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
       setLoading(false);
       
       if (!response.ok) {
-        setError(data.error || 'Failed to create audit');
-        return { success: false as const, error: data.error };
+        const message = data.error || data.detail || `Failed to create audit (HTTP ${response.status})`;
+        setError(message);
+        return { success: false as const, error: message };
       }
       
       const auditResult = data as AuditResult;
