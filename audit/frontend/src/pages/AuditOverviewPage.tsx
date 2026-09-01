@@ -147,6 +147,22 @@ export function AuditOverviewPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set());
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('overview');
+
+  const [displayLimits, setDisplayLimits] = useState<Record<Governability, number>>({
+    enforceable: DEFAULT_LIMITS.enforceable,
+    partial: DEFAULT_LIMITS.partial,
+    guidance: DEFAULT_LIMITS.guidance,
+  });
+
+  // Section navigation - reordered: Overview, Gaps, Decisions, Coverage, Sources
+  const sections = useMemo(() => [
+    { id: 'overview', label: 'Overview' },
+    { id: 'gaps', label: 'Governance Gaps' },
+    { id: 'decisions', label: 'Decisions' },
+    { id: 'coverage', label: 'Coverage' },
+    { id: 'sources', label: 'Sources' },
+  ], []);
 
   // Guard: if no audit ID, redirect to new audit
   useEffect(() => {
@@ -177,95 +193,29 @@ export function AuditOverviewPage() {
     });
   }, [id, getAudit]);
 
-  const handleExport = async (format: 'markdown' | 'json') => {
-    if (!id) return;
-    setExporting(true);
-    try {
-      const blob = await exportAudit(id, format);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `architecture-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error('Export failed:', err);
-    } finally {
-      setExporting(false);
-    }
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset + 150;
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [sections]);
 
-  if (loading || (!audit && !error && !apiError)) {
-    return (
-      <div className="audit-layout">
-        <AuditNav />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center max-w-md mx-auto px-6">
-            <Loader2 className="loading-spinner mx-auto mb-4" size={48} />
-            <p className="text-muted">Loading audit results...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const effectiveError = error || apiError;
-  const isNotFound = effectiveError && (effectiveError.includes('404') || effectiveError.includes('not found'));
-  const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
-  const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
-
-  if (effectiveError || !audit) {
-    let title = 'Audit unavailable';
-    let message = 'This audit may have expired or the link may be incorrect.';
-    let actionText = 'Run New Audit';
-    let showRetry = false;
-
-    if (isNotFound) {
-      title = 'Audit unavailable';
-      message = 'This audit may have expired or the link may be incorrect.';
-    } else if (isNetworkError) {
-      title = "Couldn't load audit";
-      message = 'A network error occurred. Please check your connection and try again.';
-      showRetry = true;
-      actionText = 'Retry';
-    } else if (isServerError) {
-      title = 'Server error';
-      message = 'The audit service is temporarily unavailable. Please try again in a moment.';
-      showRetry = true;
-      actionText = 'Retry';
-    }
-
-    return (
-      <div className="audit-layout">
-        <AuditNav />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center max-w-md mx-auto px-6">
-            <AlertCircle size={48} className="mx-auto mb-4" style={{ color: 'var(--red)' }} />
-            <h2 className="text-xl mb-2">{title}</h2>
-            <p className="text-muted mb-6">{message}</p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link to="/" className="btn btn-primary" data-cta-intent="new_audit" data-cta-position="error">
-                {actionText}
-              </Link>
-              {showRetry && id && (
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="btn btn-ghost"
-                  data-cta-intent="retry_audit"
-                  data-cta-position="error"
-                >
-                  Retry
-                </button>
-              )}
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const { summary, decisions = [], repository } = audit;
-  const sources = summary?.sources || [];
+  const summary = audit?.summary;
+  const decisions = useMemo(() => audit?.decisions || [], [audit]);
+  const repository = audit?.repository || '';
+  const sources = useMemo(() => summary?.sources || [], [summary]);
   const totalDecisions = summary?.totalDecisions || decisions.length;
   const enforceableCount = summary?.enforceable || 0;
   const partialCount = summary?.partial || 0;
@@ -344,13 +294,6 @@ export function AuditOverviewPage() {
     return groups;
   }, [filteredDecisions]);
 
-  // State for progressive disclosure limits
-  const [displayLimits, setDisplayLimits] = useState<Record<Governability, number>>({
-    enforceable: DEFAULT_LIMITS.enforceable,
-    partial: DEFAULT_LIMITS.partial,
-    guidance: DEFAULT_LIMITS.guidance,
-  });
-
   const toggleDecision = (decisionId: string) => {
     setExpandedDecisions(prev => {
       const next = new Set(prev);
@@ -377,17 +320,6 @@ export function AuditOverviewPage() {
     return missing.length > 0 ? missing[0] : '';
   };
 
-  // Section navigation - reordered: Overview, Gaps, Decisions, Coverage, Sources
-  const sections = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'gaps', label: 'Governance Gaps' },
-    { id: 'decisions', label: 'Decisions' },
-    { id: 'coverage', label: 'Coverage' },
-    { id: 'sources', label: 'Sources' },
-  ];
-
-  const [activeSection, setActiveSection] = useState<string>('overview');
-
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
@@ -400,24 +332,92 @@ export function AuditOverviewPage() {
     });
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.pageYOffset + 150;
-      for (const section of sections) {
-        const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const handleExport = async (format: 'markdown' | 'json') => {
+    if (!id) return;
+    setExporting(true);
+    try {
+      const blob = await exportAudit(id, format);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `architecture-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed:', err);
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  if (loading || (!audit && !error && !apiError)) {
+    return (
+      <div className="audit-layout">
+        <AuditNav />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-6">
+            <Loader2 className="loading-spinner mx-auto mb-4" size={48} />
+            <p className="text-muted">Loading audit results...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const effectiveError = error || apiError;
+  const isNotFound = effectiveError && (effectiveError.includes('404') || effectiveError.includes('not found'));
+  const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
+  const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
+
+  if (effectiveError || !audit || !summary) {
+    let title = 'Audit unavailable';
+    let message = 'This audit may have expired or the link may be incorrect.';
+    let actionText = 'Run New Audit';
+    let showRetry = false;
+
+    if (isNotFound) {
+      title = 'Audit unavailable';
+      message = 'This audit may have expired or the link may be incorrect.';
+    } else if (isNetworkError) {
+      title = "Couldn't load audit";
+      message = 'A network error occurred. Please check your connection and try again.';
+      showRetry = true;
+      actionText = 'Retry';
+    } else if (isServerError) {
+      title = 'Server error';
+      message = 'The audit service is temporarily unavailable. Please try again in a moment.';
+      showRetry = true;
+      actionText = 'Retry';
+    }
+
+    return (
+      <div className="audit-layout">
+        <AuditNav />
+        <main className="flex-1 flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-6">
+            <AlertCircle size={48} className="mx-auto mb-4" style={{ color: 'var(--red)' }} />
+            <h2 className="text-xl mb-2">{title}</h2>
+            <p className="text-muted mb-6">{message}</p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/" className="btn btn-primary" data-cta-intent="new_audit" data-cta-position="error">
+                {actionText}
+              </Link>
+              {showRetry && id && (
+                <button 
+                  onClick={() => window.location.reload()}
+                  className="btn btn-ghost"
+                  data-cta-intent="retry_audit"
+                  data-cta-position="error"
+                >
+                  Retry
+                </button>
+              )}
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="audit-layout">
