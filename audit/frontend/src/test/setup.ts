@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom';
+import { createElement } from 'react';
 import { vi } from 'vitest';
 
 // Mock useAuditApi hook
@@ -15,19 +16,23 @@ vi.mock('../hooks/useAuditApi', () => ({
 // Mock lucide-react icons
 vi.mock('lucide-react', () => {
   return {
-    Github: () => globalThis.React.createElement('svg', { 'data-testid': 'github-icon' }),
-    ArrowLeft: () => globalThis.React.createElement('svg', { 'data-testid': 'arrow-left-icon' }),
-    Loader2: () => globalThis.React.createElement('svg', { 'data-testid': 'loader-icon' }),
-    Download: () => globalThis.React.createElement('svg', { 'data-testid': 'download-icon' }),
-    FileText: () => globalThis.React.createElement('svg', { 'data-testid': 'file-text-icon' }),
-    AlertCircle: () => globalThis.React.createElement('svg', { 'data-testid': 'alert-circle-icon' }),
-    CheckCircle: () => globalThis.React.createElement('svg', { 'data-testid': 'check-circle-icon' }),
-    AlertTriangle: () => globalThis.React.createElement('svg', { 'data-testid': 'alert-triangle-icon' }),
-    Circle: () => globalThis.React.createElement('svg', { 'data-testid': 'circle-icon' }),
-    Target: () => globalThis.React.createElement('svg', { 'data-testid': 'target-icon' }),
-    Upload: () => globalThis.React.createElement('svg', { 'data-testid': 'upload-icon' }),
-    Copy: () => globalThis.React.createElement('svg', { 'data-testid': 'copy-icon' }),
-    ArrowRight: () => globalThis.React.createElement('svg', { 'data-testid': 'arrow-right-icon' }),
+    Github: () => createElement('svg', { 'data-testid': 'github-icon' }),
+    ArrowLeft: () => createElement('svg', { 'data-testid': 'arrow-left-icon' }),
+    Loader2: () => createElement('svg', { 'data-testid': 'loader-icon' }),
+    Download: () => createElement('svg', { 'data-testid': 'download-icon' }),
+    FileText: () => createElement('svg', { 'data-testid': 'file-text-icon' }),
+    AlertCircle: () => createElement('svg', { 'data-testid': 'alert-circle-icon' }),
+    CheckCircle: () => createElement('svg', { 'data-testid': 'check-circle-icon' }),
+    AlertTriangle: () => createElement('svg', { 'data-testid': 'alert-triangle-icon' }),
+    Circle: () => createElement('svg', { 'data-testid': 'circle-icon' }),
+    Search: () => createElement('svg', { 'data-testid': 'search-icon' }),
+    ChevronRight: () => createElement('svg', { 'data-testid': 'chevron-right-icon' }),
+    ChevronDown: () => createElement('svg', { 'data-testid': 'chevron-down-icon' }),
+    ChevronUp: () => createElement('svg', { 'data-testid': 'chevron-up-icon' }),
+    Target: () => createElement('svg', { 'data-testid': 'target-icon' }),
+    Upload: () => createElement('svg', { 'data-testid': 'upload-icon' }),
+    Copy: () => createElement('svg', { 'data-testid': 'copy-icon' }),
+    ArrowRight: () => createElement('svg', { 'data-testid': 'arrow-right-icon' }),
   };
 });
 

@@ -7,7 +7,7 @@ interface StatsGridProps {
 }
 
 const STATS = [
-  { key: 'totalDecisions', label: 'DECISIONS IDENTIFIED', icon: Target, color: 'var(--text)', tooltip: '' },
+  { key: 'totalDecisions', label: 'GOVERNANCE ITEMS', icon: Target, color: 'var(--text)', tooltip: '' },
   { 
     key: 'enforceable', 
     label: 'ENFORCEABLE NOW', 
@@ -27,6 +27,11 @@ const STATS = [
 
 export function StatsGrid({ summary }: StatsGridProps) {
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const categoryBreakdown = [
+    ['Architecture decisions', summary.byCategory?.architecture_decision],
+    ['Agent instructions', summary.byCategory?.agent_instruction],
+    ['Config evidence', summary.byCategory?.config_evidence],
+  ].filter((entry): entry is [string, number] => typeof entry[1] === 'number');
 
   const showTooltip = (tooltip: string) => {
     if (tooltip) setActiveTooltip(tooltip);
@@ -56,6 +61,13 @@ export function StatsGrid({ summary }: StatsGridProps) {
             </div>
             <div className="stat-value" style={{ color }}>{value}</div>
             <div className="stat-label">{label}</div>
+            {key === 'totalDecisions' && categoryBreakdown.length > 0 && (
+              <div className="stat-category-breakdown" aria-label="Governance item categories">
+                {categoryBreakdown.map(([category, count]) => (
+                  <span key={category}><strong>{count}</strong> {category}</span>
+                ))}
+              </div>
+            )}
             {activeTooltip === tooltip && (
               <div className="stat-tooltip" role="tooltip">
                 {tooltip}

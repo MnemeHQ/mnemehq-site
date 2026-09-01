@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
@@ -39,6 +39,30 @@ const BADGE_LABEL: Record<Governability, string> = {
   partial: 'PARTIALLY ENFORCEABLE',
   guidance: 'GUIDANCE ONLY',
 };
+
+const STICKY_SECTION_GAP = 16;
+const SECTION_ACTIVATION_TOLERANCE = 2;
+const DEFAULT_SECTION_OFFSET = 56;
+
+function getSectionScrollOffset(): number {
+  const stickySelectors = [
+    '.audit-section-nav',
+  ];
+
+  const stickyBottom = stickySelectors.reduce((maxBottom, selector) => {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (!element) return maxBottom;
+
+    const styles = window.getComputedStyle(element);
+    if (styles.position !== 'sticky') return maxBottom;
+
+    const stickyTop = Number.parseFloat(styles.top);
+    const top = Number.isFinite(stickyTop) ? stickyTop : 0;
+    return Math.max(maxBottom, top + element.getBoundingClientRect().height);
+  }, DEFAULT_SECTION_OFFSET);
+
+  return Math.ceil(stickyBottom + STICKY_SECTION_GAP);
+}
 
 interface CollapsibleDecisionItemProps {
   decision: ArchitecturalDecision;
@@ -150,6 +174,7 @@ export function AuditOverviewPage() {
   const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set());
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
+  const [sectionScrollOffset, setSectionScrollOffset] = useState(DEFAULT_SECTION_OFFSET);
 
   const [displayLimits, setDisplayLimits] = useState<Record<Governability, number>>({
     enforceable: DEFAULT_LIMITS.enforceable,
@@ -195,21 +220,35 @@ export function AuditOverviewPage() {
     });
   }, [id, getAudit]);
 
+  const measureSectionScrollOffset = useCallback(() => {
+    const nextOffset = getSectionScrollOffset();
+    setSectionScrollOffset((currentOffset) => (
+      currentOffset === nextOffset ? currentOffset : nextOffset
+    ));
+    return nextOffset;
+  }, []);
+
+  useEffect(() => {
+    measureSectionScrollOffset();
+    window.addEventListener('resize', measureSectionScrollOffset);
+    return () => window.removeEventListener('resize', measureSectionScrollOffset);
+  }, [measureSectionScrollOffset, audit]);
+
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.pageYOffset + 150;
+      const scrollPosition = window.pageYOffset + getSectionScrollOffset();
+      let currentSection = sections[0].id;
+
       for (const section of sections) {
         const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
+        if (!el || el.offsetTop > scrollPosition + SECTION_ACTIVATION_TOLERANCE) break;
+        currentSection = section.id;
       }
+
+      setActiveSection(currentSection);
     };
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections]);
@@ -220,9 +259,9 @@ export function AuditOverviewPage() {
   const sources = useMemo(() => summary?.sources || [], [summary]);
   const totalDecisions = summary?.totalDecisions || decisions.length;
   const enforceableCount = summary?.enforceable || 0;
-  const partialCount = summary?.partial || 0;
-  const guidanceCount = summary?.guidance || 0;
   const coveragePct = summary?.coverage || 0;
+  const showFilters = decisions.length >= 10;
+  const showInlineGaps = totalDecisions < 10;
 
   // Compute key finding
   const keyFinding = useMemo(() => {
@@ -326,7 +365,7 @@ export function AuditOverviewPage() {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (!element) return;
-    const navOffset = 130;
+    const navOffset = measureSectionScrollOffset();
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
       top: Math.max(0, elementPosition - navOffset),
@@ -466,95 +505,6 @@ export function AuditOverviewPage() {
             </div>
           </header>
 
-          {/* Sticky Filters */}
-          <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
-            <div className="audit-filters" role="region" aria-label="Filter decisions">
-              <div className="audit-filters-row">
-                <div className="audit-filter-group">
-                  <label htmlFor="governability-filter" className="audit-filter-label">Governability</label>
-                  <select
-                    id="governability-filter"
-                    value={governabilityFilter}
-                    onChange={(e) => setGovernabilityFilter(e.target.value as FilterType)}
-                    className="audit-filter-select"
-                    aria-label="Filter by governability"
-                  >
-                    <option value="all">All ({counts.all})</option>
-                    <option value="enforceable">Enforceable ({counts.enforceable})</option>
-                    <option value="partial">Partial ({counts.partial})</option>
-                    <option value="guidance">Guidance ({counts.guidance})</option>
-                  </select>
-                </div>
-                <div className="audit-filter-group">
-                  <label htmlFor="source-type-filter" className="audit-filter-label">Source Type</label>
-                  <select
-                    id="source-type-filter"
-                    value={sourceTypeFilter}
-                    onChange={(e) => setSourceTypeFilter(e.target.value as SourceTypeFilter)}
-                    className="audit-filter-select"
-                    aria-label="Filter by source type"
-                  >
-                    <option value="all">All Sources</option>
-                    <option value="adr">ADRs</option>
-                    <option value="agent-instructions">Agent Instructions</option>
-                    <option value="config">Configuration</option>
-                    <option value="code">Code Evidence</option>
-                  </select>
-                </div>
-                <div className="audit-filter-group audit-filter-search">
-                  <label htmlFor="decision-search" className="audit-filter-label sr-only">Search decisions</label>
-                  <div className="audit-search-input">
-                    <Search size={16} className="audit-search-icon" />
-                    <input
-                      id="decision-search"
-                      type="search"
-                      placeholder="Search decisions…"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="audit-search-field"
-                      aria-label="Search decisions"
-                    />
-                  </div>
-                </div>
-              </div>
-              <p className="audit-filter-results">
-                Showing {filteredDecisions.length} of {decisions.length} governance items
-              </p>
-            </div>
-          </div>
-
-          {/* Compact summary bar */}
-          <div className="audit-summary-bar" role="region" aria-label="Audit summary">
-            <div className="audit-summary-stats">
-              <span className="audit-summary-total">{totalDecisions} governance items</span>
-              <div className="audit-summary-breakdown">
-                <span className="audit-summary-item enforceable">
-                  <strong>{enforceableCount}</strong> Enforceable
-                </span>
-                <span className="audit-summary-item partial">
-                  <strong>{partialCount}</strong> Partial
-                </span>
-                <span className="audit-summary-item guidance">
-                  <strong>{guidanceCount}</strong> Guidance
-                </span>
-              </div>
-            </div>
-            <div className="audit-summary-actions">
-              <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-ghost btn-sm" data-cta-intent="view_gaps" data-cta-position="audit_summary">
-                Governance Gaps
-              </Link>
-              <button 
-                onClick={() => handleExport('markdown')} 
-                disabled={exporting}
-                className="btn btn-primary btn-sm"
-                data-cta-intent="export_markdown"
-                data-cta-position="audit_summary"
-              >
-                <Download size={14} /> Export
-              </button>
-            </div>
-          </div>
-
           {/* Sticky section navigator */}
           <nav className="audit-section-nav" aria-label="Audit sections">
             <div className="audit-section-nav-inner">
@@ -564,6 +514,7 @@ export function AuditOverviewPage() {
                   type="button"
                   onClick={() => scrollToSection(section.id)}
                   className={`audit-section-nav-item ${activeSection === section.id ? 'active' : ''}`}
+                  aria-current={activeSection === section.id ? 'location' : undefined}
                   data-section={section.id}
                 >
                   {section.label}
@@ -578,14 +529,95 @@ export function AuditOverviewPage() {
 
           <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
             <h2 id="gaps-title" className="audit-section-title">Governance Gaps</h2>
-            <p className="audit-section-subtitle">Decisions that cannot be fully enforced — with specific next steps to make them machine-testable.</p>
-            <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
-              View All Governance Gaps
-            </Link>
+            {showInlineGaps ? (
+              audit.gaps.length > 0 ? (
+                <div className="audit-inline-gaps">
+                  <p className="audit-inline-gaps-summary">
+                    <strong>{audit.gaps.length} governance {audit.gaps.length === 1 ? 'gap' : 'gaps'}</strong>
+                    {' '}prevent {audit.gaps.length === 1 ? 'this item' : 'these items'} from being safely enforced.
+                  </p>
+                  <ul>
+                    {audit.gaps.map((gap, index) => (
+                      <li key={`${gap.decision}-${index}`}>
+                        <strong>{gap.decision}</strong>
+                        <span>{gap.reason}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : (
+                <p className="audit-section-subtitle">No governance gaps were found in this audit.</p>
+              )
+            ) : (
+              <>
+                <p className="audit-section-subtitle">Decisions that cannot be fully enforced — with specific next steps to make them machine-testable.</p>
+                <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
+                  View All Governance Gaps
+                </Link>
+              </>
+            )}
           </section>
 
           <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
             <h2 id="decisions-title" className="audit-section-title">Governance Items</h2>
+
+            {showFilters && (
+              <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
+                <div className="audit-filters" role="region" aria-label="Filter decisions">
+                  <div className="audit-filters-row">
+                    <div className="audit-filter-group">
+                      <label htmlFor="governability-filter" className="audit-filter-label">Governability</label>
+                      <select
+                        id="governability-filter"
+                        value={governabilityFilter}
+                        onChange={(e) => setGovernabilityFilter(e.target.value as FilterType)}
+                        className="audit-filter-select"
+                        aria-label="Filter by governability"
+                      >
+                        <option value="all">All ({counts.all})</option>
+                        <option value="enforceable">Enforceable ({counts.enforceable})</option>
+                        <option value="partial">Partial ({counts.partial})</option>
+                        <option value="guidance">Guidance ({counts.guidance})</option>
+                      </select>
+                    </div>
+                    <div className="audit-filter-group">
+                      <label htmlFor="source-type-filter" className="audit-filter-label">Source Type</label>
+                      <select
+                        id="source-type-filter"
+                        value={sourceTypeFilter}
+                        onChange={(e) => setSourceTypeFilter(e.target.value as SourceTypeFilter)}
+                        className="audit-filter-select"
+                        aria-label="Filter by source type"
+                      >
+                        <option value="all">All Sources</option>
+                        <option value="adr">ADRs</option>
+                        <option value="agent-instructions">Agent Instructions</option>
+                        <option value="config">Configuration</option>
+                        <option value="code">Code Evidence</option>
+                      </select>
+                    </div>
+                    <div className="audit-filter-group audit-filter-search">
+                      <label htmlFor="decision-search" className="audit-filter-label sr-only">Search decisions</label>
+                      <div className="audit-search-input">
+                        <Search size={16} className="audit-search-icon" />
+                        <input
+                          id="decision-search"
+                          type="search"
+                          placeholder="Search decisions…"
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                          className="audit-search-field"
+                          aria-label="Search decisions"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="audit-filter-results">
+                    Showing {filteredDecisions.length} of {decisions.length} governance items
+                  </p>
+                </div>
+              </div>
+            )}
             
             {Object.entries(decisionsByGovernability).map(([governability, items]) => {
               const gov = governability as Governability;
@@ -658,7 +690,12 @@ export function AuditOverviewPage() {
             </div>
           </section>
 
-          <section id="sources" className="audit-section" aria-labelledby="sources-title">
+          <section
+            id="sources"
+            className="audit-section"
+            aria-labelledby="sources-title"
+            style={{ minHeight: `calc(100vh - ${sectionScrollOffset}px)` }}
+          >
             <div className="flex items-center justify-between mb-3">
               <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: 0 }}>Sources Examined</h2>
               <button

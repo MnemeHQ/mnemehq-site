@@ -202,22 +202,25 @@ export function NewAuditPage() {
 
           <section className="audit-section" aria-labelledby="how-it-works">
             <h2 id="how-it-works" className="audit-section-title">What the audit tells you</h2>
+            <p className="audit-section-subtitle">
+              The report separates documented intent from controls Mneme can evaluate deterministically, then shows the shortest path to close each gap.
+            </p>
             <div className="works-grid">
               <article className="works-card">
                 <h3>Decisions discovered</h3>
-                <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, config files — every source of architectural intent.</p>
+                <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, and configuration evidence are grouped into a single inventory of governance items.</p>
               </article>
               <article className="works-card">
                 <h3>Governability classified</h3>
-                <p>Each decision rated: <span className="text-teal">Enforceable</span>, <span className="text-warning">Partial</span>, or <span className="text-muted">Guidance only</span>.</p>
+                <p>Each item is rated <span className="text-teal">Enforceable</span>, <span className="text-warning">Partial</span>, or <span className="text-muted">Guidance only</span>, with the evidence behind that rating.</p>
               </article>
               <article className="works-card">
                 <h3>Proposed Mneme rules</h3>
-                <p>See the exact deterministic rule (FORBID_LITERAL, REQUIRE_PATTERN, etc.) Mneme would apply.</p>
+                <p>For machine-testable decisions, see the deterministic rule type, matcher, applicability, and confidence Mneme would use.</p>
               </article>
               <article className="works-card">
                 <h3>Governance gaps</h3>
-                <p>Decisions that can't be enforced yet — with specific next steps to make them machine-testable.</p>
+                <p>For decisions that cannot be safely enforced yet, get a concrete explanation of what is missing and the next step to add it.</p>
               </article>
             </div>
           </section>
