@@ -148,8 +148,12 @@ class AuditService:
             for loose_adr in loose_adrs:
                 # Extract constraints from loose ADR
                 constraints = self._extract_constraints(loose_adr.decision_text)
-                anti_patterns = [c for c in constraints if c.lower().startswith(("no ", "avoid ", "never ", "prohibit", "forbid"))]
-                other_constraints = [c for c in constraints if not c.lower().startswith(("no ", "avoid ", "never ", "prohibit", "forbid"))]
+                anti_pattern_keywords = ["no ", "avoid ", "never ", "prohibit", "forbid", "forbidden",
+                    "do not ", "don't ", "must not ", "shall not ", "should not ",
+                    "cannot ", "can't ", "disallow", "prohibited", "disallowed",
+                    "prevent", "preclude", "block", "ban ", "restrict",]
+                anti_patterns = [c for c in constraints if any(p in c.lower() for p in anti_pattern_keywords)]
+                other_constraints = [c for c in constraints if c not in anti_patterns]
                 
                 # Assess governability using Mneme core
                 assessment = mneme_adapter.assess_governability_from_text(
@@ -194,8 +198,12 @@ class AuditService:
                     relative_path = source.relative_to(self.repo_path)
                     constraints = self._extract_constraints(content)
                     if constraints:
-                        anti_patterns = [c for c in constraints if c.lower().startswith(("no ", "avoid ", "never ", "prohibit", "forbid", "must not", "shall not"))]
-                        other_constraints = [c for c in constraints if not c.lower().startswith(("no ", "avoid ", "never ", "prohibit", "forbid", "must not", "shall not"))]
+                        anti_pattern_keywords = ["no ", "avoid ", "never ", "prohibit", "forbid", "forbidden",
+                            "do not ", "don't ", "must not ", "shall not ", "should not ",
+                            "cannot ", "can't ", "disallow", "prohibited", "disallowed",
+                            "prevent", "preclude", "block", "ban ", "restrict",]
+                        anti_patterns = [c for c in constraints if any(p in c.lower() for p in anti_pattern_keywords)]
+                        other_constraints = [c for c in constraints if c not in anti_patterns]
                         
                         # Assess governability using Mneme core
                         assessment = mneme_adapter.assess_governability_from_text(
