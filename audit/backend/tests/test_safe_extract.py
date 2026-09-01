@@ -1,5 +1,7 @@
 import os
 import sys
+import io
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -80,5 +82,28 @@ def test_api_returns_structured_error_for_unsafe_repository(monkeypatch):
     assert response.json() == {
         "success": False,
         "error": "Repository contains unsafe symlink: escape.md",
+    }
+    assert response.headers["access-control-allow-origin"] == "https://mnemehq.com"
+
+
+def test_api_returns_zip_failure_detail_with_cors():
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w") as zip_file:
+        symlink = zipfile.ZipInfo("CLAUDE.md")
+        symlink.create_system = 3
+        symlink.external_attr = 0o120777 << 16
+        zip_file.writestr(symlink, "AGENTS.md")
+
+    with TestClient(app) as client:
+        response = client.post(
+            "/api/audit",
+            files={"zip_file": ("repository.zip", archive.getvalue(), "application/zip")},
+            headers={"Origin": "https://mnemehq.com"},
+        )
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "success": False,
+        "error": "ZIP contains symlink (rejected): CLAUDE.md",
     }
     assert response.headers["access-control-allow-origin"] == "https://mnemehq.com"
