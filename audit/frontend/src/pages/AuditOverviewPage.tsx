@@ -61,15 +61,17 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
           <Icon size={20} />
         </div>
         <div className="decision-content">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="decision-header-top">
             <h3 className="decision-title">{decision.title}</h3>
-            <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
+            <span className="decision-source-badge">{decision.source.file}</span>
           </div>
-          {showMissing && <p className="decision-missing">Missing: {showMissing}</p>}
+          <div className="flex flex-wrap items-center gap-2 mt-1">
+            <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
+            {showMissing && <span className="decision-missing">Missing: {showMissing}</span>}
+          </div>
         </div>
-        <div className="decision-meta">
-          <span className="decision-source">{decision.source.file}</span>
-          <ChevronRight size={16} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
+        <div className="decision-chevron">
+          <ChevronRight size={18} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
         </div>
       </div>
       
