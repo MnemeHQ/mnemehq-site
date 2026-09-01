@@ -7,6 +7,26 @@ import type { AuditResult, NewAuditRequest, ApiResponse } from '../types/audit';
 // Convention: VITE_API_BASE should NOT include trailing slash
 const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '');
 
+const STORAGE_PREFIX = 'mneme_audit_';
+
+function getStoredAudit(id: string): AuditResult | null {
+  try {
+    const raw = sessionStorage.getItem(`${STORAGE_PREFIX}${id}`);
+    if (raw) return JSON.parse(raw);
+  } catch {
+    // ignore storage error
+  }
+  return null;
+}
+
+function storeAudit(audit: AuditResult): void {
+  try {
+    sessionStorage.setItem(`${STORAGE_PREFIX}${audit.id}`, JSON.stringify(audit));
+  } catch {
+    // ignore storage error
+  }
+}
+
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
   try {
     const response = await fetch(`${API_BASE}${endpoint}`, {
@@ -36,28 +56,47 @@ export function useAuditApi() {
     if (request.zipFile) formData.append('zip_file', request.zipFile);
     if (request.localPath) formData.append('local_path', request.localPath);
 
-    const response = await fetch(`${API_BASE}/api/audit`, {
-      method: 'POST',
-      body: formData,
-    });
-    
-    const data = await response.json();
-    setLoading(false);
-    
-    if (!response.ok) {
-      setError(data.error || 'Failed to create audit');
-      return { success: false as const, error: data.error };
+    try {
+      const response = await fetch(`${API_BASE}/api/audit`, {
+        method: 'POST',
+        body: formData,
+      });
+      
+      const data = await response.json();
+      setLoading(false);
+      
+      if (!response.ok) {
+        setError(data.error || 'Failed to create audit');
+        return { success: false as const, error: data.error };
+      }
+      
+      const auditResult = data as AuditResult;
+      storeAudit(auditResult);
+      return { success: true as const, data: auditResult };
+    } catch (err) {
+      setLoading(false);
+      const msg = err instanceof Error ? err.message : 'Network error';
+      setError(msg);
+      return { success: false as const, error: msg };
     }
-    
-    return { success: true as const, data: data as AuditResult };
   }, []);
 
   const getAudit = useCallback(async (id: string) => {
+    // 1. Check local session cache first
+    const cached = getStoredAudit(id);
+    if (cached) {
+      return { success: true as const, data: cached };
+    }
+
     setLoading(true);
     setError(null);
     const result = await fetchApi<AuditResult>(`/api/audit/${id}`);
     setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
+    if (!result.success) {
+      setError(result.error ?? 'Unknown error');
+    } else if (result.data) {
+      storeAudit(result.data);
+    }
     return result;
   }, []);
 

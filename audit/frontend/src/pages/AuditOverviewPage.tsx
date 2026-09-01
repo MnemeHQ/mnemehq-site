@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
@@ -132,9 +132,15 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
 
 export function AuditOverviewPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
-  const { getAudit, exportAudit, loading, error } = useAuditApi();
-  const [audit, setAudit] = useState<AuditResult | null>(null);
+  const { getAudit, exportAudit, error: apiError } = useAuditApi();
+  
+  const stateAudit = (location.state as { audit?: AuditResult } | null)?.audit;
+  const [audit, setAudit] = useState<AuditResult | null>(stateAudit ?? null);
+  const [loading, setLoading] = useState<boolean>(!stateAudit);
+  const [error, setError] = useState<string | null>(null);
+  
   const [exporting, setExporting] = useState(false);
   const [governabilityFilter, setGovernabilityFilter] = useState<FilterType>('all');
   const [sourceTypeFilter, setSourceTypeFilter] = useState<SourceTypeFilter>('all');
@@ -150,14 +156,25 @@ export function AuditOverviewPage() {
     }
   }, [id, navigate]);
 
-useEffect(() => {
-    if (id) {
-      getAudit(id).then((result) => {
-        if (result.success && result.data) {
-          setAudit(result.data);
-        }
-      });
+  useEffect(() => {
+    if (!id) return;
+    
+    // If we already have this exact audit loaded from navigation state, don't re-fetch
+    if (audit && audit.id === id) {
+      setLoading(false);
+      return;
     }
+
+    setLoading(true);
+    setError(null);
+    getAudit(id).then((result) => {
+      setLoading(false);
+      if (result.success && result.data) {
+        setAudit(result.data);
+      } else {
+        setError(result.error || 'Failed to load audit');
+      }
+    });
   }, [id, getAudit]);
 
   const handleExport = async (format: 'markdown' | 'json') => {
@@ -178,26 +195,26 @@ useEffect(() => {
     }
   };
 
-  if (loading && !audit) {
+  if (loading || (!audit && !error && !apiError)) {
     return (
       <div className="audit-layout">
         <AuditNav />
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-6">
             <Loader2 className="loading-spinner mx-auto mb-4" size={48} />
-            <p className="text-muted">Analyzing repository...</p>
+            <p className="text-muted">Loading audit results...</p>
           </div>
         </main>
       </div>
     );
   }
 
-  // Determine error state
-  const isNotFound = error && (error.includes('404') || error.includes('not found'));
-  const isNetworkError = error && (error.includes('network') || error.includes('fetch') || error.includes('connection'));
-  const isServerError = error && (error.includes('500') || error.includes('server'));
+  const effectiveError = error || apiError;
+  const isNotFound = effectiveError && (effectiveError.includes('404') || effectiveError.includes('not found'));
+  const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
+  const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
 
-  if (error || !audit) {
+  if (effectiveError || !audit) {
     let title = 'Audit unavailable';
     let message = 'This audit may have expired or the link may be incorrect.';
     let actionText = 'Run New Audit';
@@ -216,9 +233,6 @@ useEffect(() => {
       message = 'The audit service is temporarily unavailable. Please try again in a moment.';
       showRetry = true;
       actionText = 'Retry';
-    } else if (!audit) {
-      title = 'Audit unavailable';
-      message = 'This audit may have expired or the link may be incorrect.';
     }
 
     return (
@@ -250,12 +264,18 @@ useEffect(() => {
     );
   }
 
-  const { summary, decisions, repository } = audit;
+  const { summary, decisions = [], repository } = audit;
+  const sources = summary?.sources || [];
+  const totalDecisions = summary?.totalDecisions || decisions.length;
+  const enforceableCount = summary?.enforceable || 0;
+  const partialCount = summary?.partial || 0;
+  const guidanceCount = summary?.guidance || 0;
+  const coveragePct = summary?.coverage || 0;
 
   // Compute key finding
   const keyFinding = useMemo(() => {
-    const enforceablePct = summary.totalDecisions > 0 
-      ? Math.round((summary.enforceable / summary.totalDecisions) * 100) 
+    const enforceablePct = totalDecisions > 0 
+      ? Math.round((enforceableCount / totalDecisions) * 100) 
       : 0;
     
     if (enforceablePct === 0) {
@@ -267,7 +287,7 @@ useEffect(() => {
     } else {
       return 'Strong governability foundation — most decisions have at least partial enforceability.';
     }
-  }, [summary]);
+  }, [totalDecisions, enforceableCount]);
 
   // Filter decisions
   const filteredDecisions = useMemo(() => {
@@ -279,7 +299,7 @@ useEffect(() => {
       
       // Source type filter
       if (sourceTypeFilter !== 'all') {
-        const sourceFile = decision.source.file.toLowerCase();
+        const sourceFile = (decision.source?.file || '').toLowerCase();
         let matches = false;
         if (sourceTypeFilter === 'adr' && (sourceFile.includes('adr') || sourceFile.includes('architecture'))) matches = true;
         if (sourceTypeFilter === 'agent-instructions' && (sourceFile.includes('agent') || sourceFile.includes('instruction') || sourceFile.includes('prompt'))) matches = true;
@@ -291,9 +311,9 @@ useEffect(() => {
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
-        const titleMatch = decision.title.toLowerCase().includes(query);
-        const summaryMatch = decision.summary.toLowerCase().includes(query);
-        const requirementMatch = decision.requirement.toLowerCase().includes(query);
+        const titleMatch = (decision.title || '').toLowerCase().includes(query);
+        const summaryMatch = (decision.summary || '').toLowerCase().includes(query);
+        const requirementMatch = (decision.requirement || '').toLowerCase().includes(query);
         if (!titleMatch && !summaryMatch && !requirementMatch) return false;
       }
       
@@ -317,7 +337,9 @@ useEffect(() => {
       guidance: [],
     };
     filteredDecisions.forEach(d => {
-      groups[d.governability].push(d);
+      if (groups[d.governability]) {
+        groups[d.governability].push(d);
+      }
     });
     return groups;
   }, [filteredDecisions]);
@@ -377,11 +399,11 @@ useEffect(() => {
             
             {/* Dominant totals headline */}
             <div className="audit-headline mt-4">
-              <span className="audit-headline-count">{summary.totalDecisions} governance items found</span>
+              <span className="audit-headline-count">{totalDecisions} governance items found</span>
               <span className="audit-headline-enforceable">
-                {summary.enforceable > 0 
-                  ? `${summary.enforceable} directly enforceable` 
-                  : '<strong>0</strong> directly enforceable'}
+                {enforceableCount > 0 
+                  ? `${enforceableCount} directly enforceable` 
+                  : <><strong>0</strong> directly enforceable</>}
               </span>
             </div>
             
@@ -390,6 +412,7 @@ useEffect(() => {
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
               <Link 
                 to={`/audit/${id}/gaps`} 
+                state={{ audit }}
                 className="btn btn-primary flex items-center gap-2"
                 data-cta-intent="view_gaps"
                 data-cta-position="audit_overview"
@@ -468,21 +491,21 @@ useEffect(() => {
           {/* Compact summary bar */}
           <div className="audit-summary-bar" role="region" aria-label="Audit summary">
             <div className="audit-summary-stats">
-              <span className="audit-summary-total">{summary.totalDecisions} governance items</span>
+              <span className="audit-summary-total">{totalDecisions} governance items</span>
               <div className="audit-summary-breakdown">
                 <span className="audit-summary-item enforceable">
-                  <strong>{summary.enforceable}</strong> Enforceable
+                  <strong>{enforceableCount}</strong> Enforceable
                 </span>
                 <span className="audit-summary-item partial">
-                  <strong>{summary.partial}</strong> Partial
+                  <strong>{partialCount}</strong> Partial
                 </span>
                 <span className="audit-summary-item guidance">
-                  <strong>{summary.guidance}</strong> Guidance
+                  <strong>{guidanceCount}</strong> Guidance
                 </span>
               </div>
             </div>
             <div className="audit-summary-actions">
-              <Link to={`/audit/${id}/gaps`} className="btn btn-ghost btn-sm" data-cta-intent="view_gaps" data-cta-position="audit_summary">
+              <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-ghost btn-sm" data-cta-intent="view_gaps" data-cta-position="audit_summary">
                 Governance Gaps
               </Link>
               <button 
@@ -520,7 +543,7 @@ useEffect(() => {
           <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
             <h2 id="gaps-title" className="audit-section-title">Governance Gaps</h2>
             <p className="audit-section-subtitle">Decisions that cannot be fully enforced — with specific next steps to make them machine-testable.</p>
-            <Link to={`/audit/${id}/gaps`} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
+            <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
               View All Governance Gaps
             </Link>
           </section>
@@ -556,7 +579,7 @@ useEffect(() => {
                         decision={decision}
                         isExpanded={isExpanded(decision.id)}
                         onToggle={() => toggleDecision(decision.id)}
-                        onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`)}
+                        onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
                         showMissing={getMissingInfo(decision)}
                       />
                     ))}
@@ -590,11 +613,11 @@ useEffect(() => {
               <div className="audit-coverage-bar">
                 <div 
                   className="audit-coverage-fill" 
-                  style={{ width: `${summary.coverage}%` }}
+                  style={{ width: `${coveragePct}%` }}
                 />
               </div>
               <p className="audit-coverage-text">
-                {summary.coverage}% of governance items have at least partial enforceability
+                {coveragePct}% of governance items have at least partial enforceability
               </p>
             </div>
           </section>
@@ -614,7 +637,7 @@ useEffect(() => {
                   </>
                 ) : (
                   <>
-                    <ChevronDown size={14} /> View Sources ({summary.sources.length})
+                    <ChevronDown size={14} /> View Sources ({sources.length})
                   </>
                 )}
               </button>
@@ -622,17 +645,17 @@ useEffect(() => {
             
             <div className="audit-sources-summary">
               <p>
-                <strong>{summary.sources.length} source files examined</strong>
+                <strong>{sources.length} source files examined</strong>
               </p>
               <p className="text-muted mt-1">
-                {summary.sources.filter(s => s.toLowerCase().includes('adr')).length} ADRs · 
-                {summary.sources.filter(s => s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt')).length} agent instruction files · 
-                {summary.sources.filter(s => s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml')).length} config/code evidence sources
+                {sources.filter(s => s && s.toLowerCase().includes('adr')).length} ADRs · 
+                {sources.filter(s => s && (s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt'))).length} agent instruction files · 
+                {sources.filter(s => s && (s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml'))).length} config/code evidence sources
               </p>
             </div>
             
             <ul id="sources-list" className="works-grid" style={{ listStyle: 'none', display: sourcesExpanded ? 'grid' : 'none' }}>
-              {summary.sources.map((source, i) => (
+              {sources.map((source, i) => (
                 <li key={i} className="works-card flex items-center gap-2">
                   <FileText size={20} className="text-teal" />
                   <span>{source}</span>
