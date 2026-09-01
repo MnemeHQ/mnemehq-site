@@ -5,6 +5,7 @@ This adapter translates the audit service's needs into Mneme operations:
 - Import ADRs from a repository
 - Evaluate governability of extracted decisions (via Mneme's assess_governability)
 - Generate proposed Mneme rules from decisions
+- Assess governability of arbitrary constraints (for non-ADR sources)
 
 All Mneme semantics (what is enforceable, how rules match, path applicability)
 are delegated to Mneme core. This adapter does NOT duplicate Mneme logic.
@@ -94,6 +95,49 @@ class MnemeAdapter:
         
         This is the single point where Mneme's authority on governability is invoked.
         """
+        return assess_governability(decision)
+    
+    def assess_governability_from_text(
+        self, 
+        decision_text: str, 
+        rationale: str = "",
+        constraints: list[str] | None = None,
+        anti_patterns: list[str] | None = None,
+        scope: list[str] | None = None,
+        decision_id: str = ""
+    ) -> GovernabilityAssessment:
+        """
+        Assess governability for arbitrary text/constraints by creating a Mneme Decision.
+        
+        This allows the audit to evaluate non-ADR sources (CLAUDE.md, AGENTS.md, 
+        loose ADRs, config files) using Mneme's authoritative governability logic.
+        
+        Args:
+            decision_text: The core decision/constraint statement
+            rationale: Why this decision was made
+            constraints: List of hard constraints (e.g., "no postgres", "use Ed25519")
+            anti_patterns: List of explicitly forbidden patterns
+            scope: List of areas this applies to (e.g., ["auth", "storage"])
+            decision_id: Optional ID for the decision
+            
+        Returns:
+            Mneme's authoritative GovernabilityAssessment
+        """
+        if not decision_id:
+            import uuid
+            decision_id = f"audit_{uuid.uuid4().hex[:8]}"
+        
+        decision = Decision(
+            id=decision_id,
+            decision=decision_text,
+            rationale=rationale or "",
+            scope=scope or [],
+            constraints=constraints or [],
+            anti_patterns=anti_patterns or [],
+            rules=[],  # Non-ADR sources don't have typed rules
+            source_path="",
+        )
+        
         return assess_governability(decision)
     
     def get_proposed_rules(self, decision: Decision) -> list[ProposedRuleInfo]:

@@ -2,8 +2,14 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Literal
 from datetime import datetime
 import uuid
+from enum import Enum
 
 Governability = Literal["enforceable", "partial", "guidance"]
+
+class DecisionCategory(str, Enum):
+    ARCHITECTURE_DECISION = "architecture_decision"
+    AGENT_INSTRUCTION = "agent_instruction"
+    CONFIG_EVIDENCE = "config_evidence"
 
 class ProposedRule(BaseModel):
     type: str
@@ -24,6 +30,7 @@ class ArchitecturalDecision(BaseModel):
     appliesTo: List[str] = []
     proposedRule: Optional[ProposedRule] = None
     confidence: float = 0.9
+    category: DecisionCategory = DecisionCategory.ARCHITECTURE_DECISION
 
 class GovernanceGap(BaseModel):
     decision: str
@@ -37,6 +44,7 @@ class AuditSummary(BaseModel):
     guidance: int
     coverage: int
     sources: List[str]
+    byCategory: dict[str, int] = {}
 
 class AuditResult(BaseModel):
     id: str
