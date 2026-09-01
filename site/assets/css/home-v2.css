@@ -683,7 +683,7 @@ body.home-v2 {
 
 .hm-activation-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
   gap: 1rem;
   margin-top: 3.25rem;
 }
@@ -724,6 +724,94 @@ body.home-v2 {
 }
 
 .hm-path > p { color: var(--muted); font-size: .84rem; line-height: 1.65; }
+
+.hm-path-secondary {
+  align-self: start;
+  background: rgba(255,255,255,.012);
+}
+
+.hm-proof-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 1.65rem 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--border);
+  list-style: none;
+}
+
+.hm-proof-steps li {
+  display: grid;
+  align-content: start;
+  gap: .45rem;
+  min-height: 142px;
+  padding: 1rem;
+  background: #0a0c0c;
+}
+
+.hm-proof-steps li > span {
+  color: var(--coral-soft);
+  font-family: var(--mono);
+  font-size: .58rem;
+  letter-spacing: .1em;
+}
+
+.hm-proof-steps strong {
+  color: var(--text);
+  font-size: .78rem;
+  font-weight: 500;
+}
+
+.hm-proof-steps small {
+  color: var(--quiet);
+  font-size: .68rem;
+  line-height: 1.55;
+}
+
+.hm-proof-verdict {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 1rem;
+  border: 1px solid var(--border);
+  border-top: 0;
+  background: rgba(242,193,78,.04);
+  font-family: var(--mono);
+}
+
+.hm-proof-verdict strong { color: var(--warn); font-size: .72rem; font-weight: 500; }
+.hm-proof-verdict span { color: var(--quiet); font-size: .58rem; letter-spacing: .06em; text-transform: uppercase; }
+
+.hm-boundary-list {
+  display: grid;
+  gap: 0;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+
+.hm-boundary-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hm-boundary-list span {
+  color: var(--quiet);
+  font-family: var(--mono);
+  font-size: .56rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.hm-boundary-list strong { color: var(--text); font-size: .76rem; font-weight: 500; text-align: right; }
 
 .hm-terminal {
   margin-top: 1.5rem;
@@ -916,6 +1004,7 @@ body.home-v2 {
   .hm-actions-grid { grid-template-columns: 1fr; }
   .hm-action-card { min-height: 250px; }
   .hm-activation-grid { grid-template-columns: 1fr; }
+  .hm-path-secondary { align-self: stretch; }
   .hm-evidence-grid { grid-template-columns: repeat(2, 1fr); }
   .hm-compare-grid { grid-template-columns: 1fr; }
   .hm-compare-card { min-height: 210px; }
@@ -952,6 +1041,9 @@ body.home-v2 {
   .hm-title { font-size: clamp(3rem, 14vw, 4.5rem); }
   .hm-paper-card h3 { font-size: 2rem; }
   .hm-activation-grid, .hm-evidence-grid, .hm-pathway-grid { grid-template-columns: 1fr; }
+  .hm-proof-steps { grid-template-columns: 1fr; }
+  .hm-proof-steps li { min-height: auto; }
+  .hm-proof-verdict { align-items: flex-start; flex-direction: column; gap: .35rem; }
   .hm-evidence-card { min-height: 205px; }
   .hm-team-grid { grid-template-columns: 1fr; }
   .hm-team-mask { width: 250px; height: 260px; margin: -1rem 0 0 auto; order: 2; opacity: .62; }

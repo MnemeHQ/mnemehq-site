@@ -332,6 +332,9 @@ TEMPLATE_MAP = {
     "og-insights-cyber-migration.html": "insights/ai-accelerating-cybersecurity-migration-problem/og.png",
     "og-insights-model-hardware-standard.html": "insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails/og.png",
     "og-insights-deepseek-harness.html": "insights/deepseek-agent-model-harness-architectural-governance/og.png",
+
+    # Insights — new
+    "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
 }
 
 PORT = 8765

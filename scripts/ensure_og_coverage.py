@@ -260,6 +260,14 @@ TEMPLATES = [
         "insights/kodekloud-definitive-guide-ai-for-devops",
     ),
     (
+        "og-insights-oreilly-architectural-guardrails.html",
+        "O'Reilly follow-up",
+        "Behind the O'Reilly Radar Article",
+        "46px",
+        "Why AI-generated code needs architectural guardrails, and how to test one real boundary.",
+        "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code",
+    ),
+    (
         "og-oss-governance-landing.html",
         "Category Map",
         "Open-Source Governance Tools for AI Coding Agents",
@@ -932,6 +940,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
     "og-insights-gartner-arch-debt.html": "insights/gartner-architectural-technical-debt-ai-coding-agents/og.png",
