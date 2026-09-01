@@ -320,9 +320,10 @@ def get_last_deployed_sha():
 
 def get_changed_site_files(since_sha):
     # ACM + D: deletions are included so the host copy can be removed.
-    # R (renames) stay excluded per PUBLISHING.md - the rename workaround
-    # is a content edit on the new path, which ACM already covers.
-    out = _git(['diff', '--name-only', '--diff-filter=ACMD', f'{since_sha}..HEAD', '--', ':(top)site/'], SCRIPT_DIR)
+    # --no-renames ensures renamed or re-hashed assets (e.g. Vite build hashes)
+    # are emitted as an addition of the new file and deletion of the old, rather
+    # than being classified as R and skipped by --diff-filter=ACMD.
+    out = _git(['diff', '--no-renames', '--name-only', '--diff-filter=ACMD', f'{since_sha}..HEAD', '--', ':(top)site/'], SCRIPT_DIR)
     return [l for l in out.splitlines() if l]
 
 def tag_deployed():
