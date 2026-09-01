@@ -386,6 +386,39 @@ export function AuditOverviewPage() {
     { id: 'sources', label: 'Sources' },
   ];
 
+  const [activeSection, setActiveSection] = useState<string>('overview');
+
+  const scrollToSection = (sectionId: string) => {
+    setActiveSection(sectionId);
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    const navOffset = 130;
+    const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({
+      top: Math.max(0, elementPosition - navOffset),
+      behavior: 'smooth',
+    });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.pageYOffset + 150;
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="audit-layout">
       <AuditNav />
@@ -524,14 +557,15 @@ export function AuditOverviewPage() {
           <nav className="audit-section-nav" aria-label="Audit sections">
             <div className="audit-section-nav-inner">
               {sections.map((section) => (
-                <a 
+                <button 
                   key={section.id}
-                  href={`#${section.id}`}
-                  className="audit-section-nav-item"
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className={`audit-section-nav-item ${activeSection === section.id ? 'active' : ''}`}
                   data-section={section.id}
                 >
                   {section.label}
-                </a>
+                </button>
               ))}
             </div>
           </nav>

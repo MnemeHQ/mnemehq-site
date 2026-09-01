@@ -13,6 +13,7 @@ function App() {
       <Route path="/audit/:id" element={<AuditOverviewPage />} />
       <Route path="/audit/:id/decisions/:decisionId" element={<DecisionDetailPage />} />
       <Route path="/audit/:id/gaps" element={<GovernanceGapsPage />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
