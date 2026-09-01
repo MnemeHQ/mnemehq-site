@@ -55,7 +55,7 @@ function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails
   const badgeLabel = BADGE_LABEL[decision.governability];
 
   return (
-    <article className="decision-item" role="listitem">
+    <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
       <div className="decision-item-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
         <div className={`decision-icon ${iconClass}`}>
           <Icon size={20} />
