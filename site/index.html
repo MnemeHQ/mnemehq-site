@@ -1052,7 +1052,6 @@
     </div>
   </aside>
 
-
   <!-- ONE FLAGSHIP SCENARIO -->
   <section class="hm-section hm-scenario" id="flagship-scenario" aria-labelledby="scenario-title">
     <div class="hm-shell">
@@ -1113,49 +1112,32 @@ trackCheckout(event) {
   <!-- ACTIVATION -->
   <section class="hm-section hm-activation" id="get-started" aria-labelledby="activation-title">
     <div class="hm-shell">
-      <div class="hm-section-label">Get to a verdict, not just an install</div>
-      <h2 class="hm-title" id="activation-title">Run the demo, or run it on your code.</h2>
+      <div class="hm-section-label">See the enforcement loop</div>
+      <h2 class="hm-title" id="activation-title">Start with proof. Then use a real boundary.</h2>
 
       <div class="hm-activation-grid">
-        <article class="hm-path">
-          <div class="hm-path-tag">Path 01 · runnable proof</div>
-          <h3>Try the demo.</h3>
-          <p>Clone the open-source repository and watch an architectural violation get caught before generation &mdash; no API key required.</p>
-          <div class="hm-terminal">
-            <div class="hm-terminal-head">Terminal · demo path</div>
-            <pre tabindex="0"><code><span class="hm-prompt">$</span> git clone https://github.com/MnemeHQ/mneme
-<span class="hm-prompt">$</span> cd mneme
-<span class="hm-prompt">$</span> pip install -e .
-<span class="hm-prompt">$</span> python examples/demo-adr-import.py
-
-<span class="hm-warn">WARN</span>  [ADR-005] constraint "no MnemeHQ" -- trigger: mnemehq
-      Brand vs Package Namespace Enforcement
-
-Result: WARN</code></pre>
-          </div>
-          <div class="hm-requirements"><span>No API key</span><span>Open source</span><span>Reproducible</span></div>
+        <article class="hm-path hm-path-primary">
+          <div class="hm-path-tag">Recommended · 2-minute proof</div>
+          <h3>Watch Mneme catch architectural drift.</h3>
+          <p>Follow one proposed change from an approved decision to a deterministic verdict. No API key or project setup required.</p>
+          <ol class="hm-proof-steps" aria-label="Demo flow">
+            <li><span>01</span><strong>Propose a change</strong><small>An agent requests a path the architecture forbids.</small></li>
+            <li><span>02</span><strong>Match the decision</strong><small>Mneme resolves the governing ADR and constraint.</small></li>
+            <li><span>03</span><strong>Return evidence</strong><small>The verdict names the source and permitted next action.</small></li>
+          </ol>
+          <div class="hm-proof-verdict"><strong>WARN · ADR-005</strong><span>Traceable · reproducible</span></div>
           <a class="hm-path-cta" href="/demo/">Walk the full demo</a>
         </article>
 
-        <article class="hm-path">
-          <div class="hm-path-tag">Path 02 · existing project</div>
-          <h3>Add Mneme to your repo.</h3>
-          <p>Install the owned package, initialize the decision corpus, add one approved decision, and check the first proposed change.</p>
-          <div class="hm-terminal">
-            <div class="hm-terminal-head">Terminal · project path</div>
-            <pre tabindex="0"><code><span class="hm-prompt">$</span> pip install mneme-hq>=0.6.0
-<span class="hm-prompt">$</span> mneme init
-Created .mneme/project_memory.json
-
-<span class="hm-prompt">$</span> mneme check \
-  --memory .mneme/project_memory.json \
-  --input proposed-change.diff \
-  --query "checkout analytics"
-
-<span class="hm-block">FAIL</span> · ADR-017 · exit 2
-Result: FAIL</code></pre>
-          </div>
-          <div class="hm-requirements"><span>Python 3.11+</span><span>macOS · Linux · Windows</span><span>Local CLI</span></div>
+        <article class="hm-path hm-path-secondary">
+          <div class="hm-path-tag">When the proof is clear</div>
+          <h3>Test one boundary from your system.</h3>
+          <p>The quickstart walks through the smallest useful evaluation: one approved decision, one proposed change, and one verdict your team can inspect.</p>
+          <ul class="hm-boundary-list">
+            <li><span>Decision</span><strong>One current ADR</strong></li>
+            <li><span>Change</span><strong>One representative diff</strong></li>
+            <li><span>Evidence</span><strong>One sourced verdict</strong></li>
+          </ul>
           <a class="hm-path-cta" href="/docs/">Read the quickstart</a>
         </article>
       </div>
@@ -1220,6 +1202,24 @@ Result: FAIL</code></pre>
       </div>
     </div>
   </section>
+
+  <!-- Editorial credibility, distinct from programme support -->
+  <aside class="hm-publications" aria-labelledby="home-publications-label">
+    <div class="hm-shell hm-publications-inner">
+      <span class="hm-publications-label" id="home-publications-label">Published &amp; contributed</span>
+      <div class="hm-publication-links">
+        <a class="hm-publication-mark" href="https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/" target="_blank" rel="noopener" aria-label="O'Reilly Radar, authored article">
+          <img src="/assets/images/publications/oreilly.svg" alt="O'Reilly" width="198" height="36">
+          <span>Authored article</span>
+        </a>
+        <a class="hm-publication-mark" href="/insights/kodekloud-definitive-guide-ai-for-devops/" aria-label="KodeKloud, contributed expert perspective">
+          <img src="/assets/images/publications/kodekloud.svg" alt="KodeKloud" width="186" height="54">
+          <span>Contributed perspective</span>
+        </a>
+      </div>
+      <a class="hm-publications-more" href="/about/#publications">View publications &rarr;</a>
+    </div>
+  </aside>
 
   <!-- CRAWLABLE PATHWAYS -->
   <section class="hm-section hm-pathways" aria-labelledby="explore-title">

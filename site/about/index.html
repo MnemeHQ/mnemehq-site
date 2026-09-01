@@ -71,7 +71,7 @@
       "description": "Mneme HQ is an open-source architectural governance layer for AI-assisted development. Self-hosted, MIT-licensed, framework-agnostic, hook-level enforcement.",
       "url": "https://mnemehq.com/about/",
       "datePublished": "2026-04-15",
-      "dateModified": "2026-05-10",
+      "dateModified": "2026-08-31",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -310,6 +310,90 @@
     }
     .link-row a:hover { color: var(--text); }
 
+    /* ── PUBLICATIONS ── */
+    .publications-intro {
+      max-width: 620px;
+      margin-bottom: 1.5rem;
+    }
+    .publications-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      margin: 1.5rem 0 2.5rem;
+    }
+    .publication-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+      padding: 1.35rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      text-decoration: none;
+      transition: border-color 0.15s, transform 0.15s, background 0.15s;
+    }
+    .publication-card:hover,
+    .publication-card:focus-visible {
+      border-color: var(--border2);
+      background: #18181b;
+      transform: translateY(-2px);
+    }
+    .publication-card:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+    .publication-logo-wrap {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.35rem;
+    }
+    .publication-logo {
+      display: block;
+      max-width: 142px;
+      max-height: 38px;
+      width: auto;
+      height: auto;
+      filter: grayscale(1) brightness(0) invert(1);
+      opacity: 0.72;
+      transition: opacity 0.15s;
+    }
+    .publication-logo.oreilly-logo { max-width: 142px; }
+    .publication-card:hover .publication-logo,
+    .publication-card:focus-visible .publication-logo { opacity: 1; }
+    .publication-kicker {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.66rem;
+      line-height: 1.4;
+      color: var(--accent);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+    .publication-card h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      line-height: 1.45;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin: 0 0 0.85rem;
+    }
+    .publication-meta {
+      font-size: 0.74rem;
+      line-height: 1.55;
+      color: var(--muted);
+      margin-top: auto;
+    }
+    .publication-link {
+      display: block;
+      margin-top: 0.9rem;
+      color: var(--teal);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+    }
+
     /* ── CTA FOOTER ── */
     .cta-footer {
       text-align: center;
@@ -386,6 +470,8 @@
 
     @media (max-width: 720px) {
       .pillars { grid-template-columns: 1fr; }
+      .publications-grid { grid-template-columns: 1fr; }
+      .publication-card { min-height: 225px; }
     }
 
     @media (max-width: 600px) {
@@ -516,7 +602,7 @@
 
   <!-- HEADER -->
   <div class="page-tag">About</div>
-  <h1 class="page-title">Architectural drift prevention for the AI&nbsp;SDLC.</h1>
+  <h1 class="page-title">Architectural drift prevention for the agentic AI&nbsp;SDLC.</h1>
   <p class="page-subtitle">Enforcing decisions before code is generated, not after drift reaches review.</p>
 
   <hr class="divider">
@@ -1087,6 +1173,32 @@
 
     <p>To give teams reliable architectural continuity across sessions, contributors, and agents, so they can scale AI&#8209;assisted development without losing architectural consistency.</p>
 
+    <h2 id="publications">Publications &amp; contributions</h2>
+
+    <p class="publications-intro">Independent publications where Mneme's architectural governance thesis has been authored or contributed by founder Theo Valmis.</p>
+
+    <div class="publications-grid">
+      <a class="publication-card" href="https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/" target="_blank" rel="noopener" aria-label="Read Architectural Guardrails for AI-Generated Code on O'Reilly Radar">
+        <div class="publication-logo-wrap">
+          <img class="publication-logo oreilly-logo" src="/assets/images/publications/oreilly.svg" alt="O'Reilly" loading="lazy">
+        </div>
+        <span class="publication-kicker">Published in O'Reilly Radar</span>
+        <h3>Architectural Guardrails for AI-Generated Code</h3>
+        <span class="publication-meta">Written by Theo Valmis &middot; August 31, 2026</span>
+        <span class="publication-link">Read on O'Reilly&nbsp;&rarr;</span>
+      </a>
+
+      <a class="publication-card" href="/insights/kodekloud-definitive-guide-ai-for-devops/" aria-label="Read about Theo Valmis's contribution to KodeKloud's Definitive Guide to AI for DevOps">
+        <div class="publication-logo-wrap">
+          <img class="publication-logo" src="/assets/images/publications/kodekloud.svg" alt="KodeKloud" loading="lazy">
+        </div>
+        <span class="publication-kicker">Contributed expert perspective</span>
+        <h3>The Definitive Guide to AI for DevOps</h3>
+        <span class="publication-meta">Guardrails, not gates &middot; 2026</span>
+        <span class="publication-link">Read the contribution&nbsp;&rarr;</span>
+      </a>
+    </div>
+
     <h2>What Mneme is not</h2>
 
     <p>Mneme is positioned deliberately. It is not:</p>
@@ -1138,13 +1250,13 @@
     <p>Quick&#8209;reference copy for directories, newsletters, and tool roundups.</p>
 
     <div class="callout">
-      <p>Mneme &mdash; Open&#8209;source architectural drift prevention for the AI&nbsp;SDLC. Turns architectural decisions and ADRs into deterministic guardrails that keep AI coding agents from introducing incompatible changes as they generate and modify code.</p>
+      <p>Mneme &mdash; Open&#8209;source architectural drift prevention for the agentic AI&nbsp;SDLC. Turns architectural decisions and ADRs into deterministic guardrails that keep AI coding agents from introducing incompatible changes as they generate and modify code.</p>
     </div>
 
     <p>Compact variant:</p>
 
     <div class="callout">
-      <p>Mneme &mdash; Architectural drift prevention for the AI&nbsp;SDLC, with deterministic guardrails that enforce repository architecture across AI coding agents.</p>
+      <p>Mneme &mdash; Architectural drift prevention for the agentic AI&nbsp;SDLC, with deterministic guardrails that enforce repository architecture across AI coding agents.</p>
     </div>
 
     <div class="links-grid">
@@ -1158,7 +1270,7 @@
       </div>
       <div class="link-row">
         <span class="link-row-label">Category</span>
-        <span style="color:var(--muted);font-size:0.85rem;">Architectural drift prevention &middot; AI SDLC &middot; AI coding governance &middot; Developer tools</span>
+        <span style="color:var(--muted);font-size:0.85rem;">Architectural drift prevention &middot; Agentic AI SDLC &middot; AI coding governance &middot; Developer tools</span>
       </div>
       <div class="link-row">
         <span class="link-row-label">License</span>
