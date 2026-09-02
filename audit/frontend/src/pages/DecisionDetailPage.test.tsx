@@ -49,7 +49,7 @@ describe('DecisionDetailPage', () => {
     expect(screen.getByText('State a machine-testable constraint')).toBeInTheDocument();
     expect(screen.getByText('Define where this applies')).toBeInTheDocument();
     const pilotLink = screen.getByRole('link', { name: 'Request a pilot' });
-    expect(pilotLink).toHaveAttribute('href', expect.stringContaining('/pilot/?source=architecture-audit'));
+    expect(pilotLink).toHaveAttribute('href', expect.stringContaining('https://mnemehq.com/pilot/?source=architecture-audit'));
     pilotLink.addEventListener('click', (event) => event.preventDefault(), { once: true });
     fireEvent.click(pilotLink);
     expect(JSON.parse(sessionStorage.getItem('mneme_pilot_context') || '{}')).toMatchObject({

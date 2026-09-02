@@ -211,8 +211,8 @@ export function DecisionDetailPage() {
             {audit && (
               <div className="detail-pilot-prompt">
                 <div>
-                  <strong>Test this item against real pull requests</strong>
-                  <p>Your audit summary and this selected item will be attached to the pilot request.</p>
+                  <strong>We’ll start from this recommendation</strong>
+                  <p>You won’t need to explain the finding again. We’ll review the attached audit before a short follow-up, agree on the intended scope, and test the recommendation safely against real changes.</p>
                 </div>
                 <PilotLink audit={audit} selectedDecisionId={decision.id} ctaPosition="decision_detail">Request a pilot</PilotLink>
               </div>

@@ -779,13 +779,13 @@ export function AuditOverviewPage() {
             </ul>
 
             <aside id="pilot" className="pilot-cta" aria-labelledby="pilot-title">
-              <span className="pilot-cta-eyebrow">Turn this audit into action</span>
-              <h2 id="pilot-title">Validate the highest-value findings in a Mneme pilot</h2>
-              <p>Start with one representative repository. We’ll select 3–5 governance items, translate them into controls, run them in observe mode, and review the signal with your team before anything blocks delivery.</p>
+              <span className="pilot-cta-eyebrow">Your audit is already the starting point</span>
+              <h2 id="pilot-title">Turn these recommendations into a small, safe pilot</h2>
+              <p>You won’t need to repeat the findings or prepare another report. We’ll review this audit before a short follow-up, agree on 3–5 priorities, and turn the recommendations into controls you can validate before anything blocks delivery.</p>
               <ol>
-                <li><strong>Choose</strong> a repository and recurring change path.</li>
-                <li><strong>Translate</strong> the most valuable gaps into deterministic rules.</li>
-                <li><strong>Measure</strong> prevented drift and false positives with decision owners.</li>
+                <li><strong>Confirm</strong> the recurring change or boundary that matters most.</li>
+                <li><strong>Address</strong> 3–5 recommendations as clear, testable controls.</li>
+                <li><strong>Validate</strong> the controls in observe mode with your team.</li>
               </ol>
               <PilotLink audit={audit} ctaPosition="audit_result">Request a pilot</PilotLink>
             </aside>

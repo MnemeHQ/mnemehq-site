@@ -122,8 +122,8 @@ export function GovernanceGapsPage() {
           <div className="audit-section text-center" style={{ paddingBottom: '4rem' }}>
             <div className="gap-next-actions">
               <div>
-                <h2>Ready to test the recommendations?</h2>
-                <p>A Mneme pilot turns a small set of these gaps into controls and validates them in observe mode against your team’s real changes.</p>
+                <h2>Use this audit as the pilot starting point</h2>
+                <p>We’ll review these recommendations before a short follow-up, select 3–5 priorities with you, and turn them into observe-mode controls. You won’t need to recreate the findings.</p>
               </div>
               <div className="flex flex-wrap gap-2 justify-center">
                 <Link to={`/audit/${id}`} className="btn btn-ghost" data-cta-intent="back_to_overview" data-cta-position="gaps">Back to Audit Overview</Link>

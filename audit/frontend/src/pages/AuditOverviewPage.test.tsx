@@ -137,7 +137,7 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getAllByText(/Recommendation:/)).toHaveLength(2);
     expect(screen.getByText('How to read this audit')).toBeInTheDocument();
     expect(screen.getByText('Governance Items')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', expect.stringContaining('/pilot/?source=architecture-audit'));
+    expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', expect.stringContaining('https://mnemehq.com/pilot/?source=architecture-audit'));
   });
 
   it('opens a bounded, accessible explanation from a metric info control', () => {

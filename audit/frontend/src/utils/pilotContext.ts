@@ -41,5 +41,5 @@ export function storePilotContext(audit: AuditResult, selectedDecisionId?: strin
 export function buildPilotHref(audit: AuditResult): string {
   const params = new URLSearchParams({ source: 'architecture-audit', audit: audit.id });
   if (audit.repository.startsWith('https://github.com/')) params.set('repository', audit.repository);
-  return `/pilot/?${params.toString()}`;
+  return `https://mnemehq.com/pilot/?${params.toString()}`;
 }
