@@ -1,11 +1,15 @@
 import { useState, useCallback } from 'react';
 import type { AuditResult, NewAuditRequest, ApiResponse } from '../types/audit';
 
-// API base is configurable via VITE_API_BASE env var
-// - unset → same-origin "/api/..." (production default)
-// - dev/staging → configurable host (e.g., "http://localhost:8001")
+// API base is configurable via VITE_API_BASE env var.
+// Local development uses the Vite /api proxy; production falls back to the
+// public Cloud Run service so a locally generated deploy bundle stays usable.
 // Convention: VITE_API_BASE should NOT include trailing slash
-const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '');
+const PRODUCTION_API_BASE = 'https://mneme-audit-api-842519822929.us-central1.run.app';
+const configuredApiBase = import.meta.env.VITE_API_BASE?.trim();
+const API_BASE = (
+  configuredApiBase || (import.meta.env.PROD ? PRODUCTION_API_BASE : '')
+).replace(/\/$/, '');
 
 const STORAGE_PREFIX = 'mneme_audit_';
 
