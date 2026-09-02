@@ -38,6 +38,7 @@ vi.mock('lucide-react', () => ({
   Upload: () => <svg data-testid="upload-icon" />,
   Copy: () => <svg data-testid="copy-icon" />,
   ArrowRight: () => <svg data-testid="arrow-right-icon" />,
+  Info: () => <svg data-testid="info-icon" />,
 }));
 
 // Mock window.location.reload

@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
+import { InfoTooltip } from '../components/InfoTooltip';
+import { PilotLink } from '../components/PilotLink';
 import { Copy, CheckCircle, AlertTriangle, Circle, FileText, AlertCircle } from 'lucide-react';
-import type { ArchitecturalDecision, Governability } from '../types/audit';
+import type { ArchitecturalDecision, AuditResult, Governability } from '../types/audit';
+import { FIELD_HELP, getDecisionRecommendations, getPlainLanguageSummary } from '../utils/auditInsights';
 
 const GOVERNABILITY_LABELS: Record<Governability, string> = {
   enforceable: 'ENFORCEABLE',
@@ -33,6 +36,7 @@ export function DecisionDetailPage() {
   const { id, decisionId } = useParams<{ id: string; decisionId: string }>();
   const { getAudit } = useAuditApi();
   const [decision, setDecision] = useState<ArchitecturalDecision | null>(null);
+  const [audit, setAudit] = useState<AuditResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
@@ -43,6 +47,7 @@ export function DecisionDetailPage() {
         if (result.success && result.data) {
           const found = result.data.decisions.find((d) => d.id === decisionId);
           setDecision(found || null);
+          setAudit(result.data);
         }
         setLoading(false);
       });
@@ -94,6 +99,7 @@ export function DecisionDetailPage() {
   const Icon = ICONS[decision.governability];
   const iconColor = ICON_COLORS[decision.governability];
   const badgeClass = `badge-${decision.governability === 'enforceable' ? 'enforceable' : decision.governability === 'partial' ? 'partial' : 'guidance'}`;
+  const recommendations = getDecisionRecommendations(decision);
 
   return (
     <div className="audit-layout">
@@ -108,10 +114,7 @@ export function DecisionDetailPage() {
               <div>
                 <span className={`badge ${badgeClass} mb-2`}>{GOVERNABILITY_LABELS[decision.governability]}</span>
                 <h1 className="detail-title">{decision.title}</h1>
-                <p className="text-muted" style={{ maxWidth: '700px' }}>{decision.requirement}</p>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: iconColor }}>
-                <Icon size={28} />
+                <p className="text-muted" style={{ maxWidth: '700px' }}>{getPlainLanguageSummary(decision)}</p>
               </div>
             </div>
             
@@ -122,69 +125,96 @@ export function DecisionDetailPage() {
               <span className="font-mono text-sm" style={{ color: 'var(--muted)' }}>
                 Lines {decision.source.lines}
               </span>
-              <span className="font-mono text-sm text-teal">
+              <span className="detail-meta-item font-mono text-sm text-teal">
                 Confidence: {Math.round(decision.confidence * 100)}%
+                <InfoTooltip label="Confidence">{FIELD_HELP.confidence}</InfoTooltip>
               </span>
             </div>
           </header>
 
-          <section className="detail-section" aria-labelledby="requirement">
-            <h2 id="requirement" className="detail-section-title">REQUIREMENT</h2>
-            <div className="detail-content">{decision.requirement}</div>
-          </section>
-
-          <section className="detail-section" aria-labelledby="source">
-            <h2 id="source" className="detail-section-title">SOURCE</h2>
-            <div className="detail-content">
-              <p>{decision.source.file}</p>
-              <p>Lines {decision.source.lines}</p>
+          <section className="detail-section" aria-labelledby="assessment">
+            <div className="detail-section-heading">
+              <h2 id="assessment" className="detail-section-title">What this means</h2>
+              <InfoTooltip label="Governability assessment">{FIELD_HELP.governability}</InfoTooltip>
             </div>
-          </section>
-
-          <section className="detail-section" aria-labelledby="governability">
-            <h2 id="governability" className="detail-section-title">GOVERNABILITY</h2>
-            <div className="flex items-start gap-3">
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `${iconColor}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: iconColor }}>
-                <Icon size={24} />
-              </div>
-              <div>
-                <h3 className="font-medium mb-1" style={{ color: iconColor }}>{GOVERNABILITY_LABELS[decision.governability]}</h3>
-                <p className="text-muted">{GOVERNABILITY_DESC[decision.governability]}</p>
-              </div>
-            </div>
-            
-            {decision.appliesTo.length > 0 && (
-              <div className="mt-3">
-                <h4 className="font-mono text-xs text-muted mb-2">Applies to:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {decision.appliesTo.map((path, i) => (
-                    <span key={i} className="font-mono text-xs px-2 py-1 bg-surface2 border border-border rounded">{path}</span>
-                  ))}
+            <p className="detail-section-description">The classification, current blocker, and control readiness in one view.</p>
+            <div className="detail-assessment-card">
+              <div className="detail-assessment-row">
+                <span className="detail-assessment-icon" style={{ color: iconColor, background: `${iconColor}15` }}><Icon size={20} /></span>
+                <div>
+                  <span className="detail-assessment-label">Status</span>
+                  <strong style={{ color: iconColor }}>{GOVERNABILITY_LABELS[decision.governability]}</strong>
+                  <p>{GOVERNABILITY_DESC[decision.governability]}</p>
                 </div>
               </div>
-            )}
+              <div className="detail-assessment-row">
+                <div>
+                  <span className="detail-assessment-label">Scope <InfoTooltip label="Applies to">{FIELD_HELP.appliesTo}</InfoTooltip></span>
+                  {decision.appliesTo.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {decision.appliesTo.map((path, index) => <code key={index}>{path}</code>)}
+                    </div>
+                  ) : (
+                    <><strong>Not specified</strong><p>Add paths, services, or change types before enabling enforcement.</p></>
+                  )}
+                </div>
+              </div>
+              <div className="detail-assessment-row">
+                <div>
+                  <span className="detail-assessment-label">Control readiness <InfoTooltip label="Proposed Mneme rule">{FIELD_HELP.proposedRule}</InfoTooltip></span>
+                  {decision.proposedRule ? (
+                    <>
+                      <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
+                      <p>{decision.proposedRule.description}</p>
+                      <button onClick={copyRule} className="btn btn-secondary btn-sm mt-2" data-cta-intent="copy_rule" data-cta-position="decision_detail">
+                        <Copy size={14} /> {copied ? 'Copied' : 'Copy rule'}
+                      </button>
+                    </>
+                  ) : (
+                    <><strong>No deterministic rule yet</strong><p>Clarify the scope and pass/fail condition before Mneme proposes a control.</p></>
+                  )}
+                </div>
+              </div>
+            </div>
           </section>
 
-          <section className="detail-section" aria-labelledby="proposed-rule">
-            <h2 id="proposed-rule" className="detail-section-title">PROPOSED MNEM RULE</h2>
-            {decision.proposedRule ? (
-              <div className="rule-box">
-                <div className="rule-box-label">Deterministic enforcement rule</div>
-                <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
-                <p className="mt-2 text-sm text-muted font-normal font-sans">{decision.proposedRule.description}</p>
-                <button 
-                  onClick={copyRule}
-                  className="btn btn-ghost btn-sm mt-3 flex items-center gap-2"
-                  data-cta-intent="copy_rule"
-                  data-cta-position="decision_detail"
-                >
-                  <Copy size={14} /> {copied ? 'Copied!' : 'Copy rule'}
-                </button>
+          <section className="detail-section" aria-labelledby="evidence">
+            <div className="detail-section-heading">
+              <h2 id="evidence" className="detail-section-title">Evidence</h2>
+              <InfoTooltip label="Evidence">{FIELD_HELP.source}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">Open this only when you need to validate Mneme’s interpretation against the repository.</p>
+            <details className="detail-evidence-disclosure">
+              <summary>
+                <span><FileText size={16} /> {decision.source.file}</span>
+                <span>Lines {decision.source.lines}</span>
+                <span className="detail-evidence-action">View evidence</span>
+              </summary>
+              <div className="detail-evidence-body">
+                <p>{getPlainLanguageSummary(decision)}</p>
+                <pre>{decision.requirement}</pre>
               </div>
-            ) : (
-              <div className="rule-box" style={{ background: 'var(--surface2)', borderColor: 'var(--border2)' }}>
-                <div className="rule-box-label">Deterministic enforcement rule</div>
-                <p className="text-muted">No deterministic rule defined for this decision.</p>
+            </details>
+          </section>
+
+          <section className="detail-section" aria-labelledby="recommendations">
+            <h2 id="recommendations" className="detail-section-title">Recommended next steps</h2>
+            <p className="detail-section-description">Start with the first action; each completed step moves this item closer to safe enforcement.</p>
+            <ol className="recommendation-list recommendation-list-compact">
+              {recommendations.map((recommendation, index) => (
+                <li key={recommendation.title}>
+                  <span>{index + 1}</span>
+                  <div><strong>{recommendation.title}</strong><p>{recommendation.description}</p></div>
+                </li>
+              ))}
+            </ol>
+            {audit && (
+              <div className="detail-pilot-prompt">
+                <div>
+                  <strong>We’ll start from this recommendation</strong>
+                  <p>You won’t need to explain the finding again. We’ll review the attached audit before a short follow-up, agree on the intended scope, and test the recommendation safely against real changes.</p>
+                </div>
+                <PilotLink audit={audit} selectedDecisionId={decision.id} ctaPosition="decision_detail">Request a pilot</PilotLink>
               </div>
             )}
           </section>

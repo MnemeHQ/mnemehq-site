@@ -97,6 +97,7 @@ describe('AuditOverviewPage section navigation', () => {
   it.each([
     ['Coverage', 'coverage'],
     ['Sources', 'sources'],
+    ['Pilot', 'pilot'],
   ])('scrolls to and activates the %s section', (label, sectionId) => {
     renderOverview();
 
@@ -133,5 +134,23 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getByText('Architecture decisions')).toBeInTheDocument();
     expect(screen.getByText('2 governance gaps')).toBeInTheDocument();
     expect(screen.getAllByText('Missing explicit applicability.')).toHaveLength(2);
+    expect(screen.getAllByText(/Recommendation:/)).toHaveLength(2);
+    expect(screen.getByText('How to read this audit')).toBeInTheDocument();
+    expect(screen.getByText('Governance Items')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', expect.stringContaining('https://mnemehq.com/pilot/?source=architecture-audit'));
+  });
+
+  it('opens a bounded, accessible explanation from a metric info control', () => {
+    renderOverview();
+
+    const trigger = screen.getByRole('button', { name: 'More information: ENFORCEABLE NOW' });
+    fireEvent.mouseEnter(trigger);
+
+    expect(screen.getByRole('tooltip')).toHaveTextContent('deterministic control');
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.mouseLeave(trigger);
+    fireEvent.click(trigger);
+    expect(screen.getByRole('tooltip')).toHaveTextContent('deterministic control');
   });
 });
