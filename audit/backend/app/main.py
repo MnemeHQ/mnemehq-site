@@ -6,6 +6,7 @@ from fastapi.exceptions import HTTPException
 import os
 
 from app.api import audit
+from app.api import v1 as api_v1
 
 app = FastAPI(
     title="Mneme Architecture Audit API",
@@ -37,6 +38,7 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(audit.router, prefix="/api")
+app.include_router(api_v1.router, prefix="")
 
 # Health check
 @app.get("/health")

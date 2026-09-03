@@ -40,6 +40,10 @@ WORKDIR /app
 
 # Copy application code
 COPY --chown=mneme:mneme audit/backend/app/ ./app/
+COPY --chown=mneme:mneme audit/backend/alembic/ ./alembic/
+COPY --chown=mneme:mneme audit/backend/alembic.ini ./alembic.ini
+# Copy test fixtures for local path auditing
+COPY --chown=mneme:mneme tests/fixtures/ ./tests/fixtures/
 
 # Create temp directory for uploads/clones with proper permissions
 RUN mkdir -p /tmp/mneme-audit && chown mneme:mneme /tmp/mneme-audit
@@ -61,5 +65,5 @@ USER mneme
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=5).raise_for_status()" || exit 1
 
-# Run the application (honor $PORT env var for Cloud Run)
-CMD ["sh", "-c", "exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Run migrations on startup, then start the application (honor $PORT env var for Cloud Run)
+CMD ["sh", "-c", "cd /app/alembic && python -m alembic -c alembic.ini upgrade head && cd /app && exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
