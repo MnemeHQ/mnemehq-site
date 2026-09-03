@@ -177,6 +177,7 @@ export interface ArchitecturalDecision {
     description: string;
   } | null;
   confidence: number;
+  category?: 'architecture_decision' | 'agent_instruction' | 'config_evidence';
 }
 
 export interface AuditSummary {
@@ -186,6 +187,11 @@ export interface AuditSummary {
   guidance: number;
   coverage: number;
   sources: string[];
+  byCategory?: {
+    architecture_decision?: number;
+    agent_instruction?: number;
+    config_evidence?: number;
+  };
 }
 
 export interface GovernanceGap {

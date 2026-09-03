@@ -1,5 +1,7 @@
 import { type ProtectionDecision, type ProtectionClassification } from '../types/audit';
 import { CheckCircle, AlertTriangle, Circle, ChevronRight, Zap, Brain } from 'lucide-react';
+import { InfoTooltip } from './InfoTooltip';
+import { FIELD_HELP, getPlainLanguageSummary, getDecisionRecommendations } from '../utils/auditInsights';
 
 const ICONS: Record<ProtectionClassification, typeof CheckCircle> = {
   Protected: CheckCircle,
@@ -31,7 +33,7 @@ const BADGE_LABEL: Record<ProtectionClassification, string> = {
 
 const CLASSIFICATION_DESC: Record<ProtectionClassification, string> = {
   Protected: 'The audit identified deterministic Mneme enforcement evidence.',
-  'Mneme-ready': 'Complete specification exists; ready for rule generation.',
+  'Mneme-ready': 'A concrete supported guardrail is identified, but not yet enforced.',
   'Requires modelling': 'Needs architectural modelling before protection is possible.',
   Guidance: 'Expresses intent without machine-testable constraints.',
 };
@@ -69,7 +71,7 @@ export function DecisionItem({ decision, onClick }: DecisionItemProps) {
           <h3 className="decision-title">{decision.title}</h3>
           <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
         </div>
-        <p className="decision-summary">{decision.summary}</p>
+        <p className="decision-summary">{getPlainLanguageSummary(decision)}</p>
       </div>
       <div className="decision-meta">
         <span className="decision-source">{decision.source.file}</span>
@@ -98,8 +100,7 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
 
   return (
     <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
-      <div className="decision-item-header" onClick={onToggle} role="button" tabIndex={0} aria-expanded={isExpanded}
-        onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onToggle(); } }} style={{ cursor: 'pointer' }}>
+      <button type="button" className="decision-item-header" onClick={onToggle} aria-expanded={isExpanded}>
         <div className={`decision-icon ${iconClass}`}>
           <Icon size={20} />
         </div>
@@ -116,17 +117,17 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
         <div className="decision-chevron">
           <ChevronRight size={18} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
         </div>
-      </div>
+      </button>
 
       {isExpanded && (
         <div className="decision-item-expanded">
           <div className="decision-expanded-content">
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Requirement</span>
-              <p className="decision-expanded-value">{decision.requirement}</p>
+              <span className="decision-expanded-label">What this means <InfoTooltip label="Requirement">{FIELD_HELP.requirement}</InfoTooltip></span>
+              <p className="decision-expanded-value">{getPlainLanguageSummary(decision)}</p>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Applies To</span>
+              <span className="decision-expanded-label">Applies To <InfoTooltip label="Applies To">{FIELD_HELP.appliesTo}</InfoTooltip></span>
               <div className="decision-expanded-value">
                 {decision.applies_to.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
@@ -140,7 +141,7 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
               </div>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Proposed Mneme Rule</span>
+              <span className="decision-expanded-label">Mneme Guardrail <InfoTooltip label="Mneme Guardrail">{FIELD_HELP.proposedRule}</InfoTooltip></span>
               <div className="decision-expanded-value">
                 {decision.proposed_rule ? (
                   <>
@@ -148,12 +149,12 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
                     <p className="mt-1 text-sm text-muted font-normal font-sans">{decision.proposed_rule.description}</p>
                   </>
                 ) : (
-                  <span className="text-muted">No deterministic rule defined</span>
+                  <span className="text-muted">{decision.protection_classification === 'Guidance' ? 'Deterministic enforcement is not appropriate for this guidance.' : 'A safe concrete guardrail has not been identified.'}</span>
                 )}
               </div>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Evidence Confidence</span>
+              <span className="decision-expanded-label">Evidence Confidence <InfoTooltip label="Evidence Confidence">{FIELD_HELP.confidence}</InfoTooltip></span>
               <div className="flex items-center gap-2">
                 <ConfidenceIcon size={16} style={{ color: confidenceColor }} />
                 <span className="decision-expanded-value font-mono" style={{ color: confidenceColor }}>
@@ -162,9 +163,13 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
               </div>
             </div>
             <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Source</span>
+              <span className="decision-expanded-label">Source <InfoTooltip label="Source">{FIELD_HELP.source}</InfoTooltip></span>
               <span className="decision-expanded-value font-mono text-xs">{decision.source.file} (Lines {decision.source.lines})</span>
             </div>
+          </div>
+          <details className="decision-evidence-disclosure"><summary>View evidence</summary><pre className="decision-raw-evidence">{decision.requirement}</pre></details>
+          <div className="decision-recommendations">
+            {getDecisionRecommendations(decision).map(item => <p key={item.title}><strong>{item.title}</strong><br />{item.description}</p>)}
           </div>
           <button
             onClick={(e) => { e.stopPropagation(); onViewDetails(); }}

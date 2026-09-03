@@ -8,6 +8,7 @@ import re
 
 from app.models.audit import AuditResult
 from app.services.audit_service import audit_service
+from app.services.safe_extract import SafeExtractionError
 
 router = APIRouter(prefix="/audit", tags=["audit"])
 
@@ -82,6 +83,8 @@ async def create_audit(
         audit_storage[result.id] = result
         
         return result
+    except SafeExtractionError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     finally:
         # Cleanup temp zip file
         if zip_path and os.path.exists(zip_path):

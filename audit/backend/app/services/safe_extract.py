@@ -18,7 +18,7 @@ from git import Repo, GitCommandError
 # Hard limits for repository ingestion
 MAX_REPO_SIZE_BYTES = 50 * 1024 * 1024      # 50 MB total
 MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024       # 2 MB per file
-MAX_FILE_COUNT = 5000                       # max files to process
+MAX_FILE_COUNT = 10_000                     # max files to process
 MAX_ZIP_RATIO = 100                         # max uncompressed/compressed ratio (zip bomb)
 CLONE_TIMEOUT_SECONDS = 30                  # git clone timeout
 READ_CHUNK_SIZE = 8192                      # bounded reads
@@ -63,6 +63,75 @@ def _is_symlink(member: zipfile.ZipInfo) -> bool:
     # external_attr upper 16 bits contain the Unix mode
     mode = (member.external_attr >> 16) & 0xFFFF
     return (mode & S_IFMT) == S_IFLNK
+
+
+def _resolve_repo_symlink(link_path: Path, repo_root: Path) -> Path:
+    """Resolve a cloned-repository symlink without allowing it to escape."""
+    try:
+        target = link_path.resolve(strict=True)
+        relative_target = target.relative_to(repo_root)
+    except (OSError, RuntimeError, ValueError) as exc:
+        relative_link = link_path.relative_to(repo_root)
+        raise SafeExtractionError(
+            f"Repository contains unsafe symlink: {relative_link}"
+        ) from exc
+
+    if relative_target.parts and relative_target.parts[0] == ".git":
+        relative_link = link_path.relative_to(repo_root)
+        raise SafeExtractionError(
+            f"Repository symlink targets Git metadata: {relative_link}"
+        )
+
+    return target
+
+
+def _materialize_safe_repo_symlinks(repo_root: Path) -> None:
+    """
+    Materialize safe internal file symlinks in a Git checkout.
+
+    Git repositories commonly use symlinks for documentation and agent
+    instruction aliases. Internal file links are copied into place so later
+    scanners never follow a link. Internal directory links are removed because
+    their target is already present elsewhere in the checkout. Broken links or
+    links that escape the checkout remain hard failures.
+    """
+    repo_root = repo_root.resolve()
+
+    for root, dirs, files in os.walk(repo_root, topdown=True, followlinks=False):
+        if ".git" in dirs:
+            dirs.remove(".git")
+
+        root_path = Path(root)
+
+        for dirname in list(dirs):
+            link_path = root_path / dirname
+            if not link_path.is_symlink():
+                continue
+
+            target = _resolve_repo_symlink(link_path, repo_root)
+            if not target.is_dir():
+                relative_link = link_path.relative_to(repo_root)
+                raise SafeExtractionError(
+                    f"Repository directory symlink has invalid target: {relative_link}"
+                )
+
+            link_path.unlink()
+            dirs.remove(dirname)
+
+        for filename in files:
+            link_path = root_path / filename
+            if not link_path.is_symlink():
+                continue
+
+            target = _resolve_repo_symlink(link_path, repo_root)
+            if not target.is_file():
+                relative_link = link_path.relative_to(repo_root)
+                raise SafeExtractionError(
+                    f"Repository file symlink has invalid target: {relative_link}"
+                )
+
+            link_path.unlink()
+            shutil.copy2(target, link_path)
 
 
 def _validate_zip_member(member: zipfile.ZipInfo, base_path: Path) -> Path:
@@ -217,7 +286,12 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
         if result.returncode != 0:
             raise SafeExtractionError(f"Git clone failed: {result.stderr}")
         
-        # Verify repo size after clone and check for symlinks
+        # Replace safe in-repository links with ordinary files before scanning.
+        # ZIP uploads remain stricter because their symlink metadata is supplied
+        # directly by an untrusted archive rather than a Git checkout.
+        _materialize_safe_repo_symlinks(dest_dir)
+
+        # Verify repo size after clone.
         total_size = 0
         file_count = 0
         for root, dirs, files in os.walk(dest_dir):
@@ -226,9 +300,12 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
             for f in files:
                 fp = Path(root) / f
                 try:
-                    # Check for symlinks
+                    # No symlink should remain after materialization.
                     if fp.is_symlink():
-                        raise SafeExtractionError(f"Repository contains symlink (rejected): {fp}")
+                        relative_path = fp.relative_to(dest_dir)
+                        raise SafeExtractionError(
+                            f"Repository contains unresolved symlink: {relative_path}"
+                        )
                     total_size += fp.stat().st_size
                     file_count += 1
                     if total_size > MAX_REPO_SIZE_BYTES:

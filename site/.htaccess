@@ -12,6 +12,12 @@ RewriteRule ^demo\.html$ /demo/ [R=301,L]
 RewriteRule ^insights/ai-code-review/?$ /insights/ai-code-review-does-not-scale-linearly/ [R=301,L]
 RewriteRule ^insights/cursor-rules-for-teams/?$ /insights/mneme-vs-cursor-rules/ [R=301,L]
 
+# Architecture Audit SPA: serve the app shell for clean client-side routes.
+# Existing files (including hashed assets) continue to be served directly.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^audit/workspace(?:/.*)?$ /audit/workspace/index.html [L]
+
 # Branded 404 page
 ErrorDocument 404 /404.html
 

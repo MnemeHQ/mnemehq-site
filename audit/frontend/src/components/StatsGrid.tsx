@@ -1,12 +1,12 @@
 import { type ProtectionSummary } from '../types/audit';
 import { Shield, CheckCircle, AlertTriangle, Circle, Target } from 'lucide-react';
-import { useState } from 'react';
+import { InfoTooltip } from './InfoTooltip';
 
 const STATS = [
   { key: 'decisions_discovered', label: 'DECISIONS IDENTIFIED', icon: Target, color: 'var(--text)', tooltip: 'Total architectural decisions discovered in the repository' },
   { key: 'protection_relevant', label: 'PROTECTION-RELEVANT', icon: Shield, color: 'var(--accent)', tooltip: 'Decisions that can meaningfully be protected by Mneme (excludes pure guidance)' },
   { key: 'protected_count', label: 'PROTECTED', icon: CheckCircle, color: 'var(--teal)', tooltip: 'Decisions with deterministic Mneme enforcement evidence identified by the audit' },
-  { key: 'mneme_ready_count', label: 'MNEME-READY', icon: AlertTriangle, color: 'var(--warning)', tooltip: 'Decisions with complete specifications ready for rule generation' },
+  { key: 'mneme_ready_count', label: 'MNEME-READY', icon: AlertTriangle, color: 'var(--warning)', tooltip: 'Decisions with a concrete supported Mneme guardrail identified, but not yet enforced' },
   { key: 'requires_modelling_count', label: 'REQUIRES MODELLING', icon: AlertTriangle, color: 'var(--warning)', tooltip: 'Decisions needing architectural modelling before they can be protected' },
   { key: 'guidance_count', label: 'GUIDANCE ONLY', icon: Circle, color: 'var(--muted)', tooltip: 'Decisions expressing intent without machine-testable constraints' },
 ] as const;
@@ -16,39 +16,34 @@ interface StatsGridProps {
 }
 
 export function StatsGrid({ summary }: StatsGridProps) {
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-
-  const showTooltip = (tooltip: string) => {
-    if (tooltip) setActiveTooltip(tooltip);
-  };
-
-  const hideTooltip = () => setActiveTooltip(null);
+  const categoryBreakdown = [
+    ['Architecture decisions', summary.by_category?.architecture_decision],
+    ['Agent instructions', summary.by_category?.agent_instruction],
+    ['Config evidence', summary.by_category?.config_evidence],
+  ].filter((entry): entry is [string, number] => typeof entry[1] === 'number');
 
   return (
     <div className="stats-grid" role="region" aria-label="Protection audit statistics">
       {STATS.map(({ key, label, icon: Icon, color, tooltip }) => {
         const value = summary[key as keyof ProtectionSummary] as number;
-        const isZero = value === 0 && tooltip;
         return (
           <div
             key={key}
             className="stat-card"
-            onMouseEnter={() => showTooltip(tooltip)}
-            onMouseLeave={hideTooltip}
-            onFocus={() => showTooltip(tooltip)}
-            onBlur={hideTooltip}
-            tabIndex={isZero ? 0 : -1}
-            role={isZero ? 'button' : undefined}
-            aria-label={isZero ? tooltip : undefined}
           >
             <div style={{ color }} className="flex items-center justify-center gap-2 mb-2">
               <Icon size={20} />
             </div>
             <div className="stat-value" style={{ color }}>{value}</div>
-            <div className="stat-label">{label}</div>
-            {activeTooltip === tooltip && (
-              <div className="stat-tooltip" role="tooltip">
-                {tooltip}
+            <div className="stat-label-row">
+              <div className="stat-label">{label}</div>
+              <InfoTooltip label={label}>{tooltip}</InfoTooltip>
+            </div>
+            {key === 'decisions_discovered' && categoryBreakdown.length > 0 && (
+              <div className="stat-category-breakdown" aria-label="Governance item categories">
+                {categoryBreakdown.map(([category, count]) => (
+                  <span key={category}><strong>{count}</strong> {category}</span>
+                ))}
               </div>
             )}
           </div>

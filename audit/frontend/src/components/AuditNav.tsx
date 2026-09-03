@@ -46,7 +46,7 @@ export function BackLink({ to = '/' }: BackLinkProps) {
   if (location.pathname === '/') return null;
   
   return (
-    <Link to={to} className="btn btn-ghost btn-sm flex items-center gap-2 mt-2" data-cta-intent="back" data-cta-position="audit_detail">
+    <Link to={to} className="btn btn-tertiary btn-sm audit-back-link mt-2" data-cta-intent="back" data-cta-position="audit_detail">
       <ArrowLeft size={14} /> Back to Audit
     </Link>
   );

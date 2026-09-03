@@ -4,7 +4,10 @@ import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
 import { Copy, CheckCircle, Zap, Brain, Circle, FileText, AlertCircle, Eye, Search } from 'lucide-react';
-import type { ProtectionDecision, ProtectionClassification, EvidenceConfidence } from '../types/audit';
+import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification, EvidenceConfidence } from '../types/audit';
+import { InfoTooltip } from '../components/InfoTooltip';
+import { PilotLink } from '../components/PilotLink';
+import { FIELD_HELP, getDecisionRecommendations, getPlainLanguageSummary } from '../utils/auditInsights';
 
 const CLASSIFICATION_LABELS: Record<ProtectionClassification, string> = {
   Protected: 'PROTECTED',
@@ -57,6 +60,7 @@ export function DecisionDetailPage() {
   const { id, decisionId } = useParams<{ id: string; decisionId: string }>();
   const { getAudit } = useAuditApi();
   const [decision, setDecision] = useState<ProtectionDecision | null>(null);
+  const [audit, setAudit] = useState<ProtectionAuditResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
@@ -67,6 +71,7 @@ export function DecisionDetailPage() {
         if (result.success && result.data) {
           const found = result.data.decisions.find((d) => d.id === decisionId);
           setDecision(found || null);
+          setAudit(result.data);
         }
         setLoading(false);
       });
@@ -116,6 +121,7 @@ export function DecisionDetailPage() {
   }
 
   const Icon = ICONS[decision.protection_classification];
+  const recommendations = getDecisionRecommendations(decision);
   const iconColor = ICON_COLORS[decision.protection_classification];
   const badgeClass = `badge-${decision.protection_classification === 'Protected' ? 'protected' : 
     decision.protection_classification === 'Mneme-ready' ? 'mneme-ready' : 
@@ -134,10 +140,7 @@ export function DecisionDetailPage() {
               <div>
                 <span className={`badge ${badgeClass} mb-2`}>{CLASSIFICATION_LABELS[decision.protection_classification]}</span>
                 <h1 className="detail-title">{decision.title}</h1>
-                <p className="text-muted" style={{ maxWidth: '700px' }}>{decision.requirement}</p>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: iconColor }}>
-                <Icon size={28} />
+                <p className="text-muted" style={{ maxWidth: '700px' }}>{getPlainLanguageSummary(decision)}</p>
               </div>
             </div>
             
@@ -156,99 +159,98 @@ export function DecisionDetailPage() {
             </div>
           </header>
 
-          <section className="detail-section" aria-labelledby="classification">
-            <h2 id="classification" className="detail-section-title">PROTECTION CLASSIFICATION</h2>
-            <div className="flex items-start gap-3">
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: `${iconColor}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: iconColor }}>
-                <Icon size={24} />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-medium mb-1" style={{ color: iconColor }}>{CLASSIFICATION_LABELS[decision.protection_classification]}</h3>
-                <p className="text-muted">{CLASSIFICATION_DESC[decision.protection_classification]}</p>
-                
-                {CLASSIFICATION_CTA[decision.protection_classification] && (
-                  <button 
+          <section className="detail-section" aria-labelledby="assessment">
+            <div className="detail-section-heading">
+              <h2 id="assessment" className="detail-section-title">What this means</h2>
+              <InfoTooltip label="Protection classification">{FIELD_HELP.protection}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">The classification, current blocker, and control readiness in one view.</p>
+            <div className="detail-assessment-card">
+              <div className="detail-assessment-row">
+                <span className="detail-assessment-icon" style={{ color: iconColor, background: `${iconColor}15` }}><Icon size={20} /></span>
+                <div>
+                  <span className="detail-assessment-label">Status</span>
+                  <strong style={{ color: iconColor }}>{CLASSIFICATION_LABELS[decision.protection_classification]}</strong>
+                  <p>{CLASSIFICATION_DESC[decision.protection_classification]}</p>
+                  {CLASSIFICATION_CTA[decision.protection_classification] && <button
+                    className="btn btn-primary btn-sm mt-3"
                     onClick={() => {
-                      const target = document.getElementById(decision.protection_classification === 'Requires modelling' ? 'requirement' : 'proposed-rule');
+                      const target = document.getElementById(decision.protection_classification === 'Requires modelling' ? 'recommendations' : 'guardrail');
                       target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                       target?.focus({ preventScroll: true });
-                    }}
-                    className="btn btn-primary btn-sm mt-3"
-                    data-cta-intent={CLASSIFICATION_CTA[decision.protection_classification]!.intent}
-                    data-cta-position="decision_detail"
-                  >
-                    {React.createElement(CLASSIFICATION_CTA[decision.protection_classification]!.icon, { size: 14, className: 'inline' })}
+                    }}>
                     {CLASSIFICATION_CTA[decision.protection_classification]!.label}
-                  </button>
-                )}
-              </div>
-            </div>
-            
-            {decision.applies_to.length > 0 && (
-              <div className="mt-3">
-                <h4 className="font-mono text-xs text-muted mb-2">Applies to:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {decision.applies_to.map((path, i) => (
-                    <span key={i} className="font-mono text-xs px-2 py-1 bg-surface2 border border-border rounded">{path}</span>
-                  ))}
+                  </button>}
                 </div>
               </div>
-            )}
-          </section>
-
-          <section className="detail-section" aria-labelledby="requirement">
-            <h2 id="requirement" tabIndex={-1} className="detail-section-title">REQUIREMENT</h2>
-            <div className="detail-content">{decision.requirement}</div>
-          </section>
-
-          <section className="detail-section" aria-labelledby="source">
-            <h2 id="source" className="detail-section-title">SOURCE</h2>
-            <div className="detail-content">
-              <p>{decision.source.file}</p>
-              <p>Lines {decision.source.lines}</p>
+              <div className="detail-assessment-row">
+                <div>
+                  <span className="detail-assessment-label">Scope <InfoTooltip label="Applies to">{FIELD_HELP.appliesTo}</InfoTooltip></span>
+                  {decision.applies_to.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {decision.applies_to.map((path, index) => <code key={index}>{path}</code>)}
+                    </div>
+                  ) : (
+                    <><strong>Not specified</strong><p>Add paths, services, or change types before enabling enforcement.</p></>
+                  )}
+                </div>
+              </div>
+              <div className="detail-assessment-row">
+                <div>
+                  <span id="guardrail" tabIndex={-1} className="detail-assessment-label">Control readiness <InfoTooltip label="Proposed Mneme rule">{FIELD_HELP.proposedRule}</InfoTooltip></span>
+                  {decision.proposed_rule ? (
+                    <>
+                      <code>{decision.proposed_rule.type} "{decision.proposed_rule.pattern}"</code>
+                      <p>{decision.proposed_rule.description}</p>
+                      <button onClick={copyRule} className="btn btn-secondary btn-sm mt-2" data-cta-intent="copy_rule" data-cta-position="decision_detail">
+                        <Copy size={14} /> {copied ? 'Copied' : 'Copy rule'}
+                      </button>
+                    </>
+                  ) : (
+                    <><strong>No deterministic rule yet</strong><p>{decision.protection_classification === 'Guidance' ? 'Deterministic enforcement is not appropriate for this guidance.' : 'A safe supported guardrail has not been identified. Review the protection gap with the decision owner.'}</p></>
+                  )}
+                </div>
+              </div>
             </div>
           </section>
 
-          <section className="detail-section" aria-labelledby="proposed-rule">
-            <h2 id="proposed-rule" tabIndex={-1} className="detail-section-title">MNEME GUARDRAIL EVIDENCE</h2>
-            {decision.proposed_rule ? (
-              <div className="rule-box">
-                <div className="rule-box-label">Deterministic enforcement rule</div>
-                <code>{decision.proposed_rule.type} "{decision.proposed_rule.pattern}"</code>
-                <p className="mt-2 text-sm text-muted font-normal font-sans">{decision.proposed_rule.description}</p>
-                {decision.proposed_rule.include_paths && decision.proposed_rule.include_paths.length > 0 && (
-                  <div className="mt-2">
-                    <p className="font-mono text-xs text-muted">Include paths:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {decision.proposed_rule.include_paths.map((path, i) => (
-                        <span key={i} className="font-mono text-xs px-2 py-0.5 bg-surface2 border border-border rounded">{path}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {decision.proposed_rule.exclude_paths && decision.proposed_rule.exclude_paths.length > 0 && (
-                  <div className="mt-2">
-                    <p className="font-mono text-xs text-muted">Exclude paths:</p>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {decision.proposed_rule.exclude_paths.map((path, i) => (
-                        <span key={i} className="font-mono text-xs px-2 py-0.5 bg-surface2 border border-border rounded">{path}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                <button 
-                  onClick={copyRule}
-                  className="btn btn-ghost btn-sm mt-3 flex items-center gap-2"
-                  data-cta-intent="copy_rule"
-                  data-cta-position="decision_detail"
-                >
-                  <Copy size={14} /> {copied ? 'Copied!' : 'Copy rule'}
-                </button>
+          <section className="detail-section" aria-labelledby="evidence">
+            <div className="detail-section-heading">
+              <h2 id="evidence" className="detail-section-title">Evidence</h2>
+              <InfoTooltip label="Evidence">{FIELD_HELP.source}</InfoTooltip>
+            </div>
+            <p className="detail-section-description">Open this only when you need to validate Mneme’s interpretation against the repository.</p>
+            <details className="detail-evidence-disclosure">
+              <summary>
+                <span><FileText size={16} /> {decision.source.file}</span>
+                <span>Lines {decision.source.lines}</span>
+                <span className="detail-evidence-action">View evidence</span>
+              </summary>
+              <div className="detail-evidence-body">
+                <p>{getPlainLanguageSummary(decision)}</p>
+                <pre>{decision.requirement}</pre>
               </div>
-            ) : (
-              <div className="rule-box" style={{ background: 'var(--surface2)', borderColor: 'var(--border2)' }}>
-                <div className="rule-box-label">Deterministic enforcement rule</div>
-                <p className="text-muted">No deterministic rule defined for this decision.</p>
+            </details>
+          </section>
+
+          <section className="detail-section" aria-labelledby="recommendations">
+            <h2 id="recommendations" tabIndex={-1} className="detail-section-title">Recommended next steps</h2>
+            <p className="detail-section-description">Review these suggestions in the context of the backend's protection classification.</p>
+            <ol className="recommendation-list recommendation-list-compact">
+              {recommendations.map((recommendation, index) => (
+                <li key={recommendation.title}>
+                  <span>{index + 1}</span>
+                  <div><strong>{recommendation.title}</strong><p>{recommendation.description}</p></div>
+                </li>
+              ))}
+            </ol>
+            {audit && (
+              <div className="detail-pilot-prompt">
+                <div>
+                  <strong>We’ll start from this recommendation</strong>
+                  <p>You won’t need to explain the finding again. We’ll review the attached audit before a short follow-up, agree on the intended scope, and test the recommendation safely against real changes.</p>
+                </div>
+                <PilotLink audit={audit} selectedDecisionId={decision.id} ctaPosition="decision_detail">Request a pilot</PilotLink>
               </div>
             )}
           </section>

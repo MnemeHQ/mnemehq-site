@@ -202,10 +202,13 @@ export function NewAuditPage() {
 
           <section className="audit-section" aria-labelledby="how-it-works">
             <h2 id="how-it-works" className="audit-section-title">What the audit tells you</h2>
+            <p className="audit-section-subtitle">
+              The report separates documented intent from controls Mneme can evaluate deterministically, then shows the shortest path to close each gap.
+            </p>
             <div className="works-grid">
               <article className="works-card">
                 <h3>Decisions discovered</h3>
-                <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, config files — every source of architectural intent.</p>
+                <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, and configuration evidence are grouped into a single inventory of governance items.</p>
               </article>
               <article className="works-card">
                 <h3>Protection classified</h3>

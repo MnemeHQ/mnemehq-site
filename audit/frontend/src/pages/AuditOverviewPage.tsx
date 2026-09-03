@@ -1,8 +1,10 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
+import { PilotLink } from '../components/PilotLink';
+import { deriveGaps } from './GovernanceGapsPage';
 import { AuditProvenance } from './ProjectPage';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
@@ -41,6 +43,30 @@ const BADGE_LABEL: Record<ProtectionClassification, string> = {
   Guidance: 'GUIDANCE ONLY',
 };
 
+const STICKY_SECTION_GAP = 16;
+const SECTION_ACTIVATION_TOLERANCE = 2;
+const DEFAULT_SECTION_OFFSET = 56;
+
+function getSectionScrollOffset(): number {
+  const stickySelectors = [
+    '.audit-section-nav',
+  ];
+
+  const stickyBottom = stickySelectors.reduce((maxBottom, selector) => {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (!element) return maxBottom;
+
+    const styles = window.getComputedStyle(element);
+    if (styles.position !== 'sticky') return maxBottom;
+
+    const stickyTop = Number.parseFloat(styles.top);
+    const top = Number.isFinite(stickyTop) ? stickyTop : 0;
+    return Math.max(maxBottom, top + element.getBoundingClientRect().height);
+  }, DEFAULT_SECTION_OFFSET);
+
+  return Math.ceil(stickyBottom + STICKY_SECTION_GAP);
+}
+
 function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails }: {
   decision: ProtectionDecision;
   isExpanded: boolean;
@@ -70,6 +96,7 @@ export function AuditOverviewPage() {
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [savingBaseline, setSavingBaseline] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [sectionScrollOffset, setSectionScrollOffset] = useState(DEFAULT_SECTION_OFFSET);
 
   const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
     Protected: DEFAULT_LIMITS.Protected,
@@ -80,8 +107,10 @@ export function AuditOverviewPage() {
 
   const sections = useMemo(() => [
     { id: 'overview', label: 'Overview' },
+    { id: 'gaps', label: 'Protection gaps' },
     { id: 'decisions', label: 'Decisions' },
     { id: 'sources', label: 'Sources' },
+    { id: 'pilot', label: 'Pilot' },
   ], []);
 
   useEffect(() => {
@@ -111,21 +140,42 @@ export function AuditOverviewPage() {
     });
   }, [id, getAudit]);
 
+  const measureSectionScrollOffset = useCallback(() => {
+    const nextOffset = getSectionScrollOffset();
+    setSectionScrollOffset((currentOffset) => (
+      currentOffset === nextOffset ? currentOffset : nextOffset
+    ));
+    return nextOffset;
+  }, []);
+
+  useEffect(() => {
+    measureSectionScrollOffset();
+    window.addEventListener('resize', measureSectionScrollOffset);
+    return () => window.removeEventListener('resize', measureSectionScrollOffset);
+  }, [measureSectionScrollOffset, audit]);
+
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.pageYOffset + 150;
+      const isAtPageEnd = window.innerHeight + window.pageYOffset
+        >= document.documentElement.scrollHeight - SECTION_ACTIVATION_TOLERANCE;
+      if (isAtPageEnd) {
+        setActiveSection(sections[sections.length - 1].id);
+        return;
+      }
+
+      const scrollPosition = window.pageYOffset + getSectionScrollOffset();
+      let currentSection = sections[0].id;
+
       for (const section of sections) {
         const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
+        if (!el || el.offsetTop > scrollPosition + SECTION_ACTIVATION_TOLERANCE) break;
+        currentSection = section.id;
       }
+
+      setActiveSection(currentSection);
     };
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections]);
@@ -234,7 +284,7 @@ export function AuditOverviewPage() {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (!element) return;
-    const navOffset = 130;
+    const navOffset = measureSectionScrollOffset();
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
       top: Math.max(0, elementPosition - navOffset),
@@ -331,7 +381,7 @@ export function AuditOverviewPage() {
                 {actionText}
               </Link>
               {showRetry && id && (
-                <button 
+                <button
                   onClick={() => window.location.reload()}
                   className="btn btn-ghost"
                   data-cta-intent="retry_audit"
@@ -438,6 +488,63 @@ export function AuditOverviewPage() {
           {actionError && <p role="alert" className="action-error">{actionError} Your audit is still available.</p>}
           <AuditProvenance audit={audit} />
 
+          <nav className="audit-section-nav" aria-label="Audit sections">
+            <div className="audit-section-nav-inner">
+              {sections.map((section) => (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className={`audit-section-nav-item ${section.id === 'pilot' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
+                  aria-current={activeSection === section.id ? 'location' : undefined}
+                  data-section={section.id}
+                >
+                  {section.label}
+                </button>
+              ))}
+            </div>
+          </nav>
+
+          <section id="overview" className="audit-section" aria-labelledby="overview-title">
+            <h2 id="overview-title" className="audit-section-title">How to read this audit</h2>
+            <p className="audit-section-subtitle">These metrics show how much architectural intent Mneme found and how ready that intent is for deterministic enforcement. A low score identifies specification work to do; it does not mean the repository has no architecture.</p>
+            <StatsGrid summary={summary} />
+
+            <div className="protection-summary-detail">
+              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
+              <div className="protection-detail-grid">
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Decisions Discovered</span>
+                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Protection-Relevant</span>
+                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Guidance Only</span>
+                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
+            <h2 id="gaps-title" className="audit-section-title">Protection Gaps</h2>
+            {deriveGaps(decisions).length === 0 ? <p>No protection gaps were found in this audit.</p> :
+              <div className="audit-inline-gaps"><ul>{deriveGaps(decisions).map(gap => <li key={gap.decisionId}>
+                <Link to={`/audit/${id}/decisions/${gap.decisionId}`}>{gap.decision}</Link>
+                <span>{gap.reason}<small><b>Recommendation:</b> {gap.suggestedNextStep}</small></span>
+              </li>)}</ul></div>}
+          </section>
+
+          <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
+            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
+            <p className="audit-section-subtitle">
+              Each decision shows its protection classification. Evidence and reasoning available on expand.
+            </p>
+
+            {decisions.length > 5 && (<>
           <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">
               <div className="audit-filters-row">
@@ -494,79 +601,8 @@ export function AuditOverviewPage() {
               </p>
             </div>
           </div>
+            </>)}
 
-          <nav className="audit-section-nav" aria-label="Audit sections">
-            <div className="audit-section-nav-inner">
-              {sections.map((section) => (
-                <button 
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollToSection(section.id)}
-                  className={`audit-section-nav-item ${activeSection === section.id ? 'active' : ''}`}
-                  data-section={section.id}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </div>
-          </nav>
-
-          <section id="overview" className="audit-section" aria-labelledby="stats">
-            <StatsGrid summary={summary} />
-            
-            <div className="protection-summary-detail">
-              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
-              <div className="protection-detail-grid">
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Decisions Discovered</span>
-                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
-                </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Protection-Relevant</span>
-                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
-                </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Guidance Only</span>
-                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
-                </div>
-              </div>
-              
-              {protectionRelevant > 0 && (
-                <div className="protection-progress-bar mt-4">
-                  <div className="protection-progress-track">
-                    <div 
-                      className="protection-progress-segment protected"
-                      style={{ width: `${(protectedCount / protectionRelevant) * 100}%` }}
-                    />
-                    {mnemeReadyCount > 0 && (
-                      <div 
-                        className="protection-progress-segment mneme-ready"
-                        style={{ width: `${(mnemeReadyCount / protectionRelevant) * 100}%` }}
-                      />
-                    )}
-                    {requiresModellingCount > 0 && (
-                      <div 
-                        className="protection-progress-segment requires-modelling"
-                        style={{ width: `${(requiresModellingCount / protectionRelevant) * 100}%` }}
-                      />
-                    )}
-                  </div>
-                  <div className="protection-progress-legend">
-                    <span className="legend-item protected"><span className="legend-color" /><span>Protected ({protectedCount})</span></span>
-                    {mnemeReadyCount > 0 && <span className="legend-item mneme-ready"><span className="legend-color" /><span>Mneme-ready ({mnemeReadyCount})</span></span>}
-                    {requiresModellingCount > 0 && <span className="legend-item requires-modelling"><span className="legend-color" /><span>Requires modelling ({requiresModellingCount})</span></span>}
-                  </div>
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
-            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
-            <p className="audit-section-subtitle">
-              Each decision shows its protection classification. Evidence and reasoning available on expand.
-            </p>
-            
             {CLASSIFICATION_ORDER.map((classification) => {
               const items = decisionsByClassification[classification];
               if (items.length === 0) return null;
@@ -623,7 +659,12 @@ export function AuditOverviewPage() {
             )}
           </section>
 
-          <section id="sources" className="audit-section" aria-labelledby="sources-title">
+          <section
+            id="sources"
+            className="audit-section"
+            aria-labelledby="sources-title"
+            style={{ minHeight: `calc(100vh - ${sectionScrollOffset}px)` }}
+          >
             <div className="flex items-center justify-between mb-3">
               <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: 0 }}>Sources Examined</h2>
               <button
@@ -643,6 +684,7 @@ export function AuditOverviewPage() {
                 )}
               </button>
             </div>
+            <p className="audit-section-subtitle">This inventory shows where Mneme looked for architectural intent. Use it to spot missing ADRs, agent instructions, or configuration sources that should be included in a pilot.</p>
             
             <div className="audit-sources-summary">
               <p>
@@ -663,6 +705,18 @@ export function AuditOverviewPage() {
                 </li>
               ))}
             </ul>
+
+            <aside id="pilot" className="pilot-cta" aria-labelledby="pilot-title">
+              <span className="pilot-cta-eyebrow">Your audit is already the starting point</span>
+              <h2 id="pilot-title">Turn these recommendations into a small, safe pilot</h2>
+              <p>You won’t need to repeat the findings or prepare another report. We’ll review this audit before a short follow-up, agree on 3–5 priorities, and turn the recommendations into controls you can validate before anything blocks delivery.</p>
+              <ol>
+                <li><strong>Confirm</strong> the recurring change or boundary that matters most.</li>
+                <li><strong>Address</strong> 3–5 recommendations as clear, testable controls.</li>
+                <li><strong>Validate</strong> the controls in observe mode with your team.</li>
+              </ol>
+              <PilotLink audit={audit} ctaPosition="audit_result">Request a pilot</PilotLink>
+            </aside>
           </section>
         </div>
       </main>

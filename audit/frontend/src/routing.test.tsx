@@ -30,10 +30,15 @@ vi.mock('lucide-react', () => ({
   CheckCircle: () => <svg data-testid="check-circle-icon" />,
   AlertTriangle: () => <svg data-testid="alert-triangle-icon" />,
   Circle: () => <svg data-testid="circle-icon" />,
+  Search: () => <svg data-testid="search-icon" />,
+  ChevronRight: () => <svg data-testid="chevron-right-icon" />,
+  ChevronDown: () => <svg data-testid="chevron-down-icon" />,
+  ChevronUp: () => <svg data-testid="chevron-up-icon" />,
   Target: () => <svg data-testid="target-icon" />,
   Upload: () => <svg data-testid="upload-icon" />,
   Copy: () => <svg data-testid="copy-icon" />,
   ArrowRight: () => <svg data-testid="arrow-right-icon" />,
+  Info: () => <svg data-testid="info-icon" />,
 }));
 
 // Mock window.location.reload

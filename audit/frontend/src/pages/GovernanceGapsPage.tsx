@@ -2,27 +2,31 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
-import { ArrowRight, AlertCircle, Brain, Zap } from 'lucide-react';
-import type { ProtectionDecision, ProtectionClassification } from '../types/audit';
+import { ArrowRight, AlertCircle, AlertTriangle } from 'lucide-react';
+import { InfoTooltip } from '../components/InfoTooltip';
+import { PilotLink } from '../components/PilotLink';
+import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
-interface DerivedGap {
+export interface DerivedGap {
+  decisionId: string;
   decision: string;
   reason: string;
   suggestedNextStep: string;
   classification: ProtectionClassification;
 }
 
-function deriveGaps(decisions: ProtectionDecision[]): DerivedGap[] {
+export function deriveGaps(decisions: ProtectionDecision[]): DerivedGap[] {
   return decisions
     .filter(d => d.protection_classification === 'Requires modelling' || d.protection_classification === 'Mneme-ready')
     .map(d => ({
+      decisionId: d.id,
       decision: d.title,
       reason: d.protection_classification === 'Requires modelling'
         ? 'Needs architectural modelling (scope, constraints, patterns) before protection is possible.'
-        : 'Complete specification exists; ready for rule generation and CI/CD integration.',
+        : 'A concrete supported guardrail has been identified, but is not yet enforced.',
       suggestedNextStep: d.protection_classification === 'Requires modelling'
         ? 'Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.'
-        : 'Generate Mneme rule and integrate into CI/CD pipeline.',
+        : 'Review the identified guardrail and validate it before enabling enforcement.',
       classification: d.protection_classification,
     }));
 }
@@ -31,6 +35,8 @@ export function GovernanceGapsPage() {
   const { id } = useParams<{ id: string }>();
   const { getAudit } = useAuditApi();
   const [gaps, setGaps] = useState<DerivedGap[]>([]);
+  const [decisions, setDecisions] = useState<ProtectionDecision[]>([]);
+  const [audit, setAudit] = useState<ProtectionAuditResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,6 +45,8 @@ export function GovernanceGapsPage() {
       getAudit(id).then((result) => {
         if (result.success && result.data) {
           setGaps(deriveGaps(result.data.decisions));
+          setDecisions(result.data.decisions);
+          setAudit(result.data);
         }
         setLoading(false);
       });
@@ -59,7 +67,7 @@ export function GovernanceGapsPage() {
     );
   }
 
-  if (!id) {
+  if (!id || !audit) {
     return (
       <div className="audit-layout">
         <AuditNav />
@@ -87,7 +95,7 @@ export function GovernanceGapsPage() {
           
           <header className="audit-hero" style={{ textAlign: 'left', paddingTop: '2rem', paddingBottom: '1.5rem' }}>
             <span className="audit-hero-tag">Protection Gaps</span>
-            <h1>Decisions not yet protected <span className="font-serif" style={{ color: 'var(--accent)' }}>yet</span></h1>
+            <h1>Decisions not yet <span className="font-serif" style={{ color: 'var(--accent)' }}>protected</span></h1>
             <p className="mt-2 text-muted">
               {gaps.length} protection-relevant decisions lack deterministic enforcement. 
               Each gap shows the classification and specific next step.
@@ -104,31 +112,30 @@ export function GovernanceGapsPage() {
                 <p className="empty-text">All protection-relevant architectural decisions in this repository are protected by Mneme.</p>
               </div>
             ) : (
-              <div className="decision-list" role="list" aria-label="Protection gaps">
+              <div className="decision-list" role="list" aria-label="Governance gaps">
                 {gaps.map((gap, index) => {
-                  const isModelling = gap.classification === 'Requires modelling';
-                  const Icon = isModelling ? Brain : Zap;
-                  const iconClass = isModelling ? 'requires-modelling' : 'mneme-ready';
-                  const badgeClass = isModelling ? 'badge-requires-modelling' : 'badge-mneme-ready';
-                  const badgeLabel = isModelling ? 'REQUIRES MODELLING' : 'MNEME-READY';
-                  
+                  const decision = decisions.find((item) => item.id === gap.decisionId);
                   return (
-                    <article key={index} className="decision-item" style={{ borderColor: 'var(--warning)' }}>
-                      <div className={`decision-icon ${iconClass}`} style={{ width: 48, height: 48 }}>
-                        <Icon size={24} />
-                      </div>
-                      <div className="decision-content">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="decision-title">{gap.decision}</h3>
-                          <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
-                        </div>
-                        <p className="decision-summary" style={{ marginBottom: '0.75rem' }}><strong>Reason:</strong> {gap.reason}</p>
-                        <p className="decision-summary text-teal"><strong>Suggested next step:</strong> {gap.suggestedNextStep}</p>
-                      </div>
-                      <div className="decision-meta">
-                        <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
-                      </div>
-                    </article>
+                  <article key={index} className="governance-gap-card">
+                    <div className="decision-icon partial" style={{ width: 48, height: 48 }}>
+                      <AlertTriangle size={24} />
+                    </div>
+                    <div className="decision-content">
+                      <h3 className="decision-title">{gap.decision}</h3>
+                      <p className="decision-summary gap-explanation"><strong>Why it is a gap <InfoTooltip label="Why it is a gap">This is the specific missing information that prevents Mneme from applying a deterministic control safely.</InfoTooltip></strong>{gap.reason}</p>
+                      <p className="decision-summary gap-recommendation"><strong>Recommendation <InfoTooltip label="Recommendation">A concrete documentation or rule-authoring change that would move this item closer to enforceability.</InfoTooltip></strong>{gap.suggestedNextStep}</p>
+                    </div>
+                    <Link
+                      to={decision ? `/audit/${id}/decisions/${decision.id}` : `/audit/${id}`}
+                      className="gap-card-action"
+                      aria-label={decision ? `Review governance item: ${gap.decision}` : 'Return to audit overview'}
+                      data-cta-intent="review_gap_item"
+                      data-cta-position="governance_gaps"
+                    >
+                      <span>{decision ? 'Review item' : 'View overview'}</span>
+                      <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
+                    </Link>
+                  </article>
                   );
                 })}
               </div>
@@ -136,9 +143,16 @@ export function GovernanceGapsPage() {
           </section>
 
           <div className="audit-section text-center" style={{ paddingBottom: '4rem' }}>
-            <Link to={`/audit/${id}`} className="btn btn-primary" data-cta-intent="back_to_overview" data-cta-position="gaps">
-              Back to Audit Overview
-            </Link>
+            <div className="gap-next-actions">
+              <div>
+                <h2>Use this audit as the pilot starting point</h2>
+                <p>We’ll review these recommendations before a short follow-up, select 3–5 priorities with you, and turn them into observe-mode controls. You won’t need to recreate the findings.</p>
+              </div>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <Link to={`/audit/${id}`} className="btn btn-ghost" data-cta-intent="back_to_overview" data-cta-position="gaps">Back to Audit Overview</Link>
+                {audit && <PilotLink audit={audit} ctaPosition="governance_gaps">Request a pilot</PilotLink>}
+              </div>
+            </div>
           </div>
         </div>
       </main>
