@@ -7,7 +7,7 @@ delegates to the canonical classifier in app.services.p12_classifier.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 from uuid import uuid4
@@ -144,17 +144,17 @@ def build_protection_audit_response(
         guidance_count=guidance_count,
         current_protection=current_protection,
         identified_mneme_potential=identified_mneme_potential,
-        sources=list(set(source_files)),
+        sources=sorted(set(source_files)),
         by_category=by_category,
     )
     
     return ProtectionAuditResponse(
-        audit_id=str(uuid4())[:8],
+        audit_id=str(uuid4()),
         repository=project_name,
         repository_url=repository_url,
         commit_sha=commit_sha,
         mneme_version=mneme_version,
-        timestamp=datetime.utcnow(),
+        timestamp=datetime.now(timezone.utc),
         summary=summary,
         decisions=protection_decisions,
     )

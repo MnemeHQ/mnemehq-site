@@ -60,14 +60,27 @@ class AuditComparison:
     current_schema: str
     schema_compatibility: SchemaCompatibility
     decisions: list[DecisionComparison] = field(default_factory=list)
+    summary: dict[str, int] = field(default_factory=dict)
+    baseline_summary: Optional[dict] = None
+    current_summary: Optional[dict] = None
+    current_protection_delta: Optional[float] = None
+    identified_mneme_potential_delta: Optional[float] = None
 
-    @property
-    def summary(self) -> dict[str, int]:
-        """High-level summary counts."""
+    def __post_init__(self):
+        """Serialize semantics from this engine, including canonical scores."""
         counts = {state.value: 0 for state in ComparisonState}
         for d in self.decisions:
             counts[d.state.value] += 1
-        return counts
+        object.__setattr__(self, "summary", counts)
+        if self.baseline_schema == self.current_schema == "mneme.audit/v1":
+            for metric, output in (
+                ("current_protection", "current_protection_delta"),
+                ("identified_mneme_potential", "identified_mneme_potential_delta"),
+            ):
+                before = (self.baseline_summary or {}).get(metric)
+                after = (self.current_summary or {}).get(metric)
+                if isinstance(before, (int, float)) and isinstance(after, (int, float)):
+                    object.__setattr__(self, output, after - before)
 
     @property
     def has_uncomparable(self) -> bool:
@@ -148,7 +161,7 @@ class ComparisonEngine:
 
         comparisons = []
 
-        for key in all_keys:
+        for key in sorted(all_keys):
             base_dec = baseline_decisions.get(key)
             curr_dec = current_decisions.get(key)
 
@@ -212,6 +225,8 @@ class ComparisonEngine:
             current_schema=current_schema,
             schema_compatibility=schema_compatibility,
             decisions=comparisons,
+            baseline_summary=baseline_result.get("summary"),
+            current_summary=current_result.get("summary"),
         )
 
     def _detect_schema(self, result: dict, schema_version: int) -> str:

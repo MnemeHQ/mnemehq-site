@@ -6,7 +6,7 @@ All methods are async and use SQLAlchemy async session.
 """
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 from uuid import UUID
 
@@ -170,10 +170,12 @@ class AuditRepository:
             commit_sha=commit_sha,
             mneme_version=mneme_version,
             schema_version=schema_version,
-            audit_schema="mneme.audit/v1",
+            audit_schema=audit_schema,
             result_payload=result_payload,
             summary_payload=summary_payload,
             status=status,
+            started_at=datetime.now(timezone.utc),
+            created_at=datetime.now(timezone.utc),
         )
         self.session.add(audit)
         await self.session.flush()
@@ -207,7 +209,7 @@ class AuditRepository:
         audit.status = AuditStatus.COMPLETED
         audit.result_payload = result_payload
         audit.summary_payload = summary_payload
-        audit.completed_at = datetime.utcnow()
+        audit.completed_at = datetime.now(timezone.utc)
         await self.session.flush()
         return audit
 

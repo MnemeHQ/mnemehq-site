@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.pool import NullPool, QueuePool
+from sqlalchemy.pool import NullPool, AsyncAdaptedQueuePool
 
 from app.core.config import settings
 
@@ -25,7 +25,7 @@ def _create_engine():
         pool_kwargs = {}
     else:
         # Production (Cloud Run) -> QueuePool with sensible defaults
-        pool_class = QueuePool
+        pool_class = AsyncAdaptedQueuePool
         pool_kwargs = {
             "pool_size": settings.DB_POOL_SIZE,
             "max_overflow": settings.DB_MAX_OVERFLOW,

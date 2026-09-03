@@ -19,6 +19,9 @@ Run with: pytest audit/backend/tests/test_m1_acceptance_gates.py -v
 from __future__ import annotations
 
 import asyncio
+import shutil
+from git import Repo, Actor
+from importlib.metadata import version
 import os
 import sys
 import tempfile
@@ -91,9 +94,27 @@ async def db_session():
 
 
 @pytest.fixture
-def fixture_repo_path() -> Path:
+def fixture_repo_path(tmp_path) -> Path:
     """Path to the audit fixture repository."""
-    return Path(__file__).parent.parent.parent.parent / "tests" / "fixtures" / "audit-repo"
+    source = Path(__file__).parent.parent.parent.parent / "tests" / "fixtures" / "audit-repo"
+    target = tmp_path / "repository"
+    shutil.copytree(source, target)
+    repo = Repo.init(target)
+    repo.index.add([str(p.relative_to(target)) for p in target.rglob("*") if p.is_file() and ".git" not in p.parts])
+    actor = Actor("Contract Test", "test@example.invalid")
+    repo.index.commit("fixture", author=actor, committer=actor)
+    return target
+
+
+def fixture_sha(path, label):
+    """Real commits, not caller-invented provenance strings."""
+    repo = Repo(path)
+    if label in [tag.name for tag in repo.tags]:
+        return repo.commit(label).hexsha
+    actor = Actor("Contract Test", "test@example.invalid")
+    commit = repo.index.commit(label, author=actor, committer=actor)
+    repo.create_tag(label, ref=commit)
+    return commit.hexsha
 
 
 @pytest.fixture
@@ -136,7 +157,7 @@ async def test_g1_durable_save(persistence_service: AuditPersistenceService, fix
     assert audit.result_payload != {}
     assert audit.summary_payload != {}
     assert audit.commit_sha is not None
-    assert audit.mneme_version == "0.1.0"
+    assert audit.mneme_version == version("mneme-hq")
     assert audit.schema_version == 1
 
     # Simulate "restart" - create new session and retrieve
@@ -183,7 +204,7 @@ async def test_g2_source_provenance(persistence_service: AuditPersistenceService
     await persistence_service.session.commit()
 
     # Run audit with explicit commit SHA
-    test_commit_sha = "abc123def4567890abcdef1234567890abcdef12"
+    test_commit_sha = fixture_sha(fixture_repo_path, "abc123def4567890abcdef1234567890abcdef12")
     audit = await persistence_service.run_and_save_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
@@ -194,7 +215,7 @@ async def test_g2_source_provenance(persistence_service: AuditPersistenceService
 
     # Verify provenance envelope
     assert audit.commit_sha == test_commit_sha
-    assert audit.mneme_version == "0.1.0"  # Server-side, not client-supplied
+    assert audit.mneme_version == version("mneme-hq")  # Server-side, not client-supplied
     assert audit.schema_version == 1  # Explicit schema version
     assert audit.source_ref is not None or audit.source_ref is None  # Optional
 
@@ -226,7 +247,7 @@ async def test_g3_immutable_historical_audit(persistence_service: AuditPersisten
         project_id=project.id,
         local_path=str(fixture_repo_path),
         trigger_type=AuditTriggerType.INITIAL,
-        commit_sha="aaa111aaa111aaa111aaa111aaa111aaa111aaa1",
+        commit_sha=fixture_sha(fixture_repo_path, "aaa111aaa111aaa111aaa111aaa111aaa111aaa1"),
     )
     await persistence_service.session.commit()
 
@@ -241,7 +262,7 @@ async def test_g3_immutable_historical_audit(persistence_service: AuditPersisten
     audit_b = await persistence_service.re_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="bbb222bbb222bbb222bbb222bbb222bbb222bbb2",
+        commit_sha=fixture_sha(fixture_repo_path, "bbb222bbb222bbb222bbb222bbb222bbb222bbb2"),
     )
     await persistence_service.session.commit()
 
@@ -294,7 +315,7 @@ async def test_g4_baseline_assignment(persistence_service: AuditPersistenceServi
     audit_1 = await persistence_service.run_and_save_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="commit-111",
+        commit_sha=fixture_sha(fixture_repo_path, "commit-111"),
     )
     await persistence_service.session.commit()
 
@@ -302,7 +323,7 @@ async def test_g4_baseline_assignment(persistence_service: AuditPersistenceServi
     audit_2 = await persistence_service.re_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="commit-222",
+        commit_sha=fixture_sha(fixture_repo_path, "commit-222"),
     )
     await persistence_service.session.commit()
 
@@ -316,7 +337,7 @@ async def test_g4_baseline_assignment(persistence_service: AuditPersistenceServi
     baseline = await persistence_service.get_baseline(project.id)
     assert baseline is not None
     assert baseline.id == audit_2.id
-    assert baseline.commit_sha == "commit-222"
+    assert baseline.commit_sha == fixture_sha(fixture_repo_path, "commit-222")
 
     # Simulate restart - retrieve again
     retrieved_baseline = await persistence_service.get_baseline(project.id)
@@ -349,21 +370,21 @@ async def test_g5_re_audit_history(persistence_service: AuditPersistenceService,
     audit_1 = await persistence_service.run_and_save_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="history-commit-1",
+        commit_sha=fixture_sha(fixture_repo_path, "history-commit-1"),
     )
     await persistence_service.session.commit()
 
     audit_2 = await persistence_service.re_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="history-commit-2",
+        commit_sha=fixture_sha(fixture_repo_path, "history-commit-2"),
     )
     await persistence_service.session.commit()
 
     audit_3 = await persistence_service.re_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="history-commit-3",
+        commit_sha=fixture_sha(fixture_repo_path, "history-commit-3"),
     )
     await persistence_service.session.commit()
 
@@ -373,21 +394,21 @@ async def test_g5_re_audit_history(persistence_service: AuditPersistenceService,
 
     # Verify each audit is independent with correct metadata
     audits_by_sha = {a.commit_sha: a for a in history}
-    assert "history-commit-1" in audits_by_sha
-    assert "history-commit-2" in audits_by_sha
-    assert "history-commit-3" in audits_by_sha
+    assert fixture_sha(fixture_repo_path, "history-commit-1") in audits_by_sha
+    assert fixture_sha(fixture_repo_path, "history-commit-2") in audits_by_sha
+    assert fixture_sha(fixture_repo_path, "history-commit-3") in audits_by_sha
 
     # Verify ordering (newest first)
-    assert history[0].commit_sha == "history-commit-3"
-    assert history[1].commit_sha == "history-commit-2"
-    assert history[2].commit_sha == "history-commit-1"
+    assert history[0].commit_sha == fixture_sha(fixture_repo_path, "history-commit-3")
+    assert history[1].commit_sha == fixture_sha(fixture_repo_path, "history-commit-2")
+    assert history[2].commit_sha == fixture_sha(fixture_repo_path, "history-commit-1")
 
     # Verify no overwrites - each has unique ID and metadata
     audit_ids = {a.id for a in history}
     assert len(audit_ids) == 3
 
     for a in history:
-        assert a.mneme_version == "0.1.0"
+        assert a.mneme_version == version("mneme-hq")
         assert a.schema_version == 1
         assert a.status == AuditStatus.COMPLETED
         assert a.completed_at is not None
@@ -419,7 +440,7 @@ async def test_g6_deterministic_comparison(persistence_service: AuditPersistence
     baseline_audit = await persistence_service.run_and_save_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="baseline-commit",
+        commit_sha=fixture_sha(fixture_repo_path, "baseline-commit"),
     )
     await persistence_service.session.commit()
 
@@ -427,7 +448,7 @@ async def test_g6_deterministic_comparison(persistence_service: AuditPersistence
     current_audit = await persistence_service.re_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="current-commit",
+        commit_sha=fixture_sha(fixture_repo_path, "current-commit"),
     )
     await persistence_service.session.commit()
 
@@ -448,8 +469,8 @@ async def test_g6_deterministic_comparison(persistence_service: AuditPersistence
     # Verify comparison structure
     assert comparison.baseline_audit_id == baseline_audit.id
     assert comparison.current_audit_id == current_audit.id
-    assert comparison.baseline_commit_sha == "baseline-commit"
-    assert comparison.current_commit_sha == "current-commit"
+    assert comparison.baseline_commit_sha == fixture_sha(fixture_repo_path, "baseline-commit")
+    assert comparison.current_commit_sha == fixture_sha(fixture_repo_path, "current-commit")
 
     # Since same fixture, ADR decisions should be unchanged
     # Loose decisions (CLAUDE.md, pyproject.toml) have random IDs each run
@@ -502,7 +523,7 @@ async def test_g7_lifecycle_transitions(persistence_service: AuditPersistenceSer
     audit = await persistence_service.run_and_save_audit(
         project_id=project.id,
         local_path=str(fixture_repo_path),
-        commit_sha="lifecycle-commit",
+        commit_sha=fixture_sha(fixture_repo_path, "lifecycle-commit"),
     )
     await persistence_service.session.commit()
 
@@ -706,7 +727,7 @@ async def test_g10_database_reconstruction(fixture_repo_path: Path):
         audit = await persistence.run_and_save_audit(
             project_id=project.id,
             local_path=str(fixture_repo_path),
-            commit_sha="reconstruct-commit",
+            commit_sha=fixture_sha(fixture_repo_path, "reconstruct-commit"),
         )
         await session1.commit()
 
@@ -749,7 +770,7 @@ async def test_g10_database_reconstruction(fixture_repo_path: Path):
         history = await audits_repo.get_project_audits(project_id)
         assert len(history) == 1
         assert history[0].id == audit_id
-        assert history[0].commit_sha == "reconstruct-commit"
+        assert history[0].commit_sha == fixture_sha(fixture_repo_path, "reconstruct-commit")
         assert history[0].result_payload != {}
         assert history[0].summary_payload != {}
 

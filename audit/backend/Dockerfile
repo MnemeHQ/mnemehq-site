@@ -42,8 +42,6 @@ WORKDIR /app
 COPY --chown=mneme:mneme audit/backend/app/ ./app/
 COPY --chown=mneme:mneme audit/backend/alembic/ ./alembic/
 COPY --chown=mneme:mneme audit/backend/alembic.ini ./alembic.ini
-# Copy test fixtures for local path auditing
-COPY --chown=mneme:mneme tests/fixtures/ ./tests/fixtures/
 
 # Create temp directory for uploads/clones with proper permissions
 RUN mkdir -p /tmp/mneme-audit && chown mneme:mneme /tmp/mneme-audit
@@ -52,8 +50,7 @@ RUN mkdir -p /tmp/mneme-audit && chown mneme:mneme /tmp/mneme-audit
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PORT=8000 \
-    ALLOWED_ORIGINS="http://localhost:3001,http://127.0.0.1:3001" \
-    PYTHONUNBUFFERED=1
+    ALLOWED_ORIGINS="https://mnemehq.com,https://www.mnemehq.com"
 
 # Expose port
 EXPOSE 8000
@@ -66,4 +63,5 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "import httpx; httpx.get('http://localhost:8000/health', timeout=5).raise_for_status()" || exit 1
 
 # Run migrations on startup, then start the application (honor $PORT env var for Cloud Run)
-CMD ["sh", "-c", "cd /app/alembic && python -m alembic -c alembic.ini upgrade head && cd /app && exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Run migrations as a separately approved deployment job, not per web replica.
+CMD ["sh", "-c", "exec python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]

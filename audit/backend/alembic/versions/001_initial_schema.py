@@ -26,12 +26,8 @@ depends_on = None
 
 
 def upgrade() -> None:
-    # Drop existing tables if they exist (for idempotent migrations)
-    # This ensures a clean slate for each migration run
-    op.execute('DROP TABLE IF EXISTS project_contacts CASCADE')
-    op.execute('DROP TABLE IF EXISTS contacts CASCADE')
-    op.execute('DROP TABLE IF EXISTS projects CASCADE')
-    op.execute('DROP TABLE IF EXISTS audits CASCADE')
+    # A fresh schema only. Existing installations require an explicit, reviewed
+    # baseline/stamp procedure; never erase data to make an upgrade "idempotent".
     
     # Create audits table first (no foreign key dependencies initially)
     op.create_table(
@@ -77,13 +73,6 @@ def upgrade() -> None:
     # Add foreign key constraints after both tables exist
     op.create_foreign_key('fk_audits_project_id', 'audits', 'projects', ['project_id'], ['id'], ondelete='CASCADE')
     op.create_foreign_key('fk_projects_baseline_audit_id', 'projects', 'audits', ['baseline_audit_id'], ['id'], ondelete='SET NULL')
-    
-    op.create_index('ix_audits_project_created', 'audits', ['project_id', 'created_at'])
-    op.create_index('ix_audits_status', 'audits', ['status'])
-    op.create_index('ix_audits_commit_sha', 'audits', ['commit_sha'])
-    
-    op.create_index('ix_projects_source_locator', 'projects', ['source_locator'])
-    op.create_index('ix_projects_lifecycle', 'projects', ['lifecycle'])
     
     # Create contacts table
     op.create_table(

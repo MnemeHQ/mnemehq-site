@@ -178,7 +178,7 @@ def safe_extract_zip(zip_path: str, dest_dir: Optional[Path] = None) -> Path:
         raise SafeExtractionError(f"ZIP extraction failed: {e}") from e
 
 
-def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int = 1) -> Path:
+def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int = 1, source_ref: Optional[str] = None) -> Path:
     """
     Safely clone a Git repository with timeout and size limits.
     
@@ -197,12 +197,13 @@ def safe_clone_repo(repo_url: str, dest_dir: Optional[Path] = None, depth: int =
         # Use subprocess with timeout for reliable timeout enforcement
         # GitPython's clone_from doesn't expose timeout parameter
         cmd = [
-            "git", "clone",
+            "git", "-c", "core.longpaths=true", "clone",
             "--depth", str(depth),
             "--single-branch",
-            repo_url,
-            str(dest_dir),
         ]
+        if source_ref:
+            cmd.extend(["--branch", source_ref])
+        cmd.extend(["--", repo_url, str(dest_dir)])
         env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
         
         result = subprocess.run(

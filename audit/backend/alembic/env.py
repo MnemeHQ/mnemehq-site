@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Import the models
 from app.db.models import Base
+from app.core.config import settings
 
 # this is the Alembic Config object
 config = context.config
@@ -30,13 +31,9 @@ target_metadata = Base.metadata
 def get_database_url() -> str:
     """Get database URL from environment or config."""
     # Priority: environment variable > alembic.ini config
-    url = os.environ.get("DATABASE_URL")
-    if url:
-        # Convert asyncpg URL to synchronous psycopg2 for migrations
-        if url.startswith("postgresql+asyncpg://"):
-            url = url.replace("postgresql+asyncpg://", "postgresql://")
-        return url
-    return config.get_main_option("sqlalchemy.url")
+    return settings.resolved_database_url.replace(
+        "postgresql+asyncpg://", "postgresql+psycopg2://"
+    ).replace("sqlite+aiosqlite://", "sqlite://")
 
 
 def run_migrations_offline() -> None:

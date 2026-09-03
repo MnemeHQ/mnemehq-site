@@ -7,7 +7,7 @@ They are distinct from the legacy M0.1 models in app.models.audit.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
 from uuid import UUID
@@ -113,11 +113,12 @@ class ProtectionAuditResponse(BaseModel):
     """
     schema: str = "mneme.audit/v1"
     audit_id: str
+    project_id: Optional[str] = None
     repository: str
     repository_url: Optional[str] = None
     commit_sha: str
     mneme_version: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     summary: ProtectionSummary
     decisions: List[ProtectionDecision]
     model_config = ConfigDict(extra="allow")
