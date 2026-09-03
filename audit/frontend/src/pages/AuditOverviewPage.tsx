@@ -155,7 +155,7 @@ export function AuditOverviewPage() {
     } else if (protectionPct < 25) {
       return `Low architecture protection (${protectionPct}%). ${mnemeReadyCount} decisions are Mneme-ready for immediate protection gains.`;
     } else if (protectionPct < 50) {
-      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions need modelling to reach full coverage.`;
+      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions require modelling.`;
     } else {
       return `Strong architecture protection (${protectionPct}%). Well-governed architectural baseline.`;
     }
