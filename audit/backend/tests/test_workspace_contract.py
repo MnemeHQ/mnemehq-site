@@ -147,3 +147,16 @@ def test_comparison_preserves_authoritative_scores_not_row_reconstruction():
     assert result.baseline_summary == baseline["summary"]
     assert result.current_summary == current["summary"]
     assert result.current_protection_delta == pytest.approx(.4)
+
+
+def test_same_filename_at_different_paths_preserves_both_decisions(tmp_path):
+    from types import SimpleNamespace
+    from app.services.p12_adapter import collect_p12_inputs, build_protection_audit_response
+    files = [{"name": "requirements.txt", "path": path, "content": "httpx", "lines": "1"}
+             for path in ("api/requirements.txt", "tools/requirements.txt")]
+    inputs = collect_p12_inputs(SimpleNamespace(decisions=[]), [], [], files, tmp_path)
+    result = build_protection_audit_response("fixture", None, "test", "0.6.0", inputs, []).model_dump(mode="json")
+    assert len({d["id"] for d in result["decisions"]}) == 2
+    compared = comparison_engine.compare(result, result, uuid4(), uuid4(), "a", "a", "0.6.0", "0.6.0", 1, 1)
+    assert compared.summary["unchanged"] == len(compared.decisions) == 2
+    assert result["summary"]["guidance_count"] == 2

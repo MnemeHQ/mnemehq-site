@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Optional
 from uuid import uuid4
+from hashlib import sha256
 
 from mneme.enforcer import (
     assess_governability,
@@ -173,6 +174,13 @@ def collect_p12_inputs(
     Mirrors the audit_service sources but produces P1.2 format.
     """
     inputs = []
+
+    def source_id(prefix: str, path: str) -> str:
+        source = Path(path)
+        if source.is_absolute():
+            source = source.relative_to(repo_path)
+        normalized = source.as_posix().replace("\\", "/")
+        return f"{prefix}_{sha256(normalized.encode()).hexdigest()[:16]}"
     
     # Source 1: Mneme's authoritative ADR import
     for mneme_decision in mneme_report.decisions:
@@ -206,7 +214,7 @@ def collect_p12_inputs(
             constraints=other_constraints,
             anti_patterns=anti_patterns,
             scope=[],
-            decision_id=f"loose_{loose_adr.title.lower().replace(' ', '_').replace('-', '_')}",
+            decision_id=source_id("loose", loose_adr.source_path),
         )
         
         # Create a Mneme Decision from the loose ADR
@@ -246,7 +254,7 @@ def collect_p12_inputs(
             constraints=other_constraints,
             anti_patterns=anti_patterns,
             scope=[],
-            decision_id=f"agent_{instr['name'].lower().replace('.', '_')}",
+            decision_id=source_id("agent", instr['path']),
         )
         
         from mneme.schemas import Decision as MnemeDecision
@@ -279,7 +287,7 @@ def collect_p12_inputs(
             constraints=[],
             anti_patterns=[],
             scope=[],
-            decision_id=f"config_{cfg['name'].lower().replace('.', '_')}",
+            decision_id=source_id("config", cfg['path']),
         )
         
         from mneme.schemas import Decision as MnemeDecision
