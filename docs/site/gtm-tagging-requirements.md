@@ -28,19 +28,55 @@ and page views remain funnel signals rather than GA4 key events.
 ```js
 {
   event: 'cta_click',
-  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute',
+  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit',
   cta_position: 'nav|hero|mid|end',
-  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card',
+  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card|context',
   cta_destination: '<href>',
-  page_type: 'homepage|docs|demo|integration|use_case|insight|concept|team|pilot|pricing|benchmark|other'
+  link_text: '<visible label, trimmed to 100 chars>',
+  source_page: '<pathname of the page the click came from>',
+  content_segment: 'developer_evaluation|problem_awareness',   // omitted if unsegmented
+  page_type: 'homepage|docs|demo|audit|integration|use_case|insight|concept|team|pilot|pricing|benchmark|other'
 }
 ```
 
 ### `code_copy`
 
 ```js
-{ event: 'code_copy', copy_context: '<copied command>', page_type: '<page type>' }
+{
+  event: 'code_copy',
+  copy_context: '<copied command>',
+  source_page: '<pathname>',
+  content_segment: '<segment>',   // omitted if unsegmented
+  page_type: '<page type>'
+}
 ```
+
+### Attribution parameters
+
+`source_page`, `link_text` and `content_segment` exist so a report can ask
+which *content type* produced a conversion, not merely how many fired.
+
+`content_segment` is declared per page by the CTA routing work as
+`<meta name="mneme:content-segment" content="...">`. Pages that have not been
+segmented omit the parameter rather than guessing a value. The two values
+correspond to the two organic conversion motions:
+
+| Segment | Motion |
+|---|---|
+| `developer_evaluation` | insight → demo/quickstart/compare → install / GitHub → usage → audit/pilot |
+| `problem_awareness` | insight → Architecture Audit → baseline → demo → pilot |
+
+### Dev-host suppression
+
+`cta-analytics.js` returns before registering any listener when
+`location.hostname` is a dev host (`localhost`, `127.0.0.0/8`, `::1`, `0.0.0.0`,
+`*.local`, `*.test`, `*.localhost`) or the page is `file://`.
+
+This is deliberate: localhost events reached the production property and were
+visible in the BigQuery export as `page_location = http://localhost:3456/...`,
+inflating `outbound_link_clicked` and corrupting landing-page attribution.
+Suppressing at the source keeps BigQuery clean as well as GA4, which a GA4-side
+data filter would not.
 
 ### Pilot form
 
@@ -65,6 +101,9 @@ Create Data Layer Variables (version 2) with these exact names:
 | `DLV - copy_context` | `copy_context` |
 | `DLV - form_id` | `form_id` |
 | `DLV - error_type` | `error_type` |
+| `DLV - link_text` | `link_text` |
+| `DLV - source_page` | `source_page` |
+| `DLV - content_segment` | `content_segment` |
 
 Do not rely on Event Settings to discover arbitrary data-layer keys. Each GA4
 event parameter must be explicitly mapped to the corresponding DLV.
@@ -81,7 +120,7 @@ Attach it to one GA4 Event tag named `GA4 - Canonical dataLayer event`:
 
 - Measurement ID: `G-ZZ9YG12PPX`
 - Event name: `{{Event}}`
-- Event parameters: explicitly map all eight DLVs listed in section 3
+- Event parameters: explicitly map all eleven DLVs listed in section 3
 
 Parameters that are not present on an event resolve to `undefined` and are not
 sent. This router preserves the originating event name while keeping one
@@ -100,9 +139,11 @@ Realtime/DebugView:
 | Page type | `page_type` |
 | Form ID | `form_id` |
 | Form error type | `error_type` |
+| Content segment | `content_segment` |
 
-Keep raw `cta_destination` and `copy_context` in BigQuery. They can have many
-distinct values and do not need GA4 custom-dimension quota for current reports.
+Keep raw `cta_destination`, `copy_context`, `link_text` and `source_page` in
+BigQuery. They can have many distinct values and do not need GA4
+custom-dimension quota for current reports.
 
 ## 6. Legacy cutover
 
@@ -120,9 +161,14 @@ also previously fired `cta_clicked` directly.
 
 ## 7. Verification checklist
 
-- [ ] Homepage hero Install sends one `cta_click` with all five parameters.
+- [ ] Homepage hero Install sends one `cta_click` with all parameters.
+- [ ] Copy sends one `code_copy` and no `cta_click`, with
+      `copy_context = pip install mneme-hq`.
+- [ ] An Insight Audit CTA sends `cta_click` with `cta_intent=audit`,
+      `cta_component=context`, and the article path in `source_page`.
+- [ ] `content_segment` is present on segmented Insights and absent elsewhere.
+- [ ] No event arrives with `page_location` on a localhost/dev host.
 - [ ] Homepage team Pilot sends one `cta_click` with `cta_position=mid`.
-- [ ] Copy sends one `code_copy` and no `cta_click`.
 - [ ] Invalid pilot form sends `pilot_form_start` and `pilot_form_error` only.
 - [ ] Valid pilot submission sends `pilot_form_attempt`, then
       `pilot_form_success` only after Formspree returns HTTP success.
@@ -136,6 +182,9 @@ also previously fired `cta_clicked` directly.
 
 - [x] 2026-08-30 — live GTM/GA4 configuration audited
 - [x] 2026-08-30 — canonical event taxonomy and explicit parameter map defined
+- [x] 2026-09-03 — attribution parameters (`source_page`, `link_text`,
+      `content_segment`), dev-host suppression, `/audit/` nav tagging and the
+      `audit` page_type added to `cta-analytics.js`; synced to all pages
 - [ ] date — site event normalization deployed
 - [x] 2026-08-30 — GTM variables, regex trigger, and router tag staged and verified in Preview
 - [ ] date — staged GTM workspace published
