@@ -1,7 +1,9 @@
 # GTM/GA4 canonical tagging requirements
 
-Status: site changes and GTM workspace staged; production publish pending.
-Last verified against GTM container `GTM-KL7FB67N`: 2026-08-30.
+Status: canonical tags LIVE since 2026-08-30 (container version 5,
+"Canonical analytics event normalization"). Legacy duplicate tags are still
+running alongside them -- see section 7, which is the outstanding work.
+Last verified against GTM container `GTM-KL7FB67N`: 2026-09-03.
 
 This document is the source of truth for site event delivery. The site pushes
 structured objects to `window.dataLayer`; GTM reads those objects and sends GA4
@@ -160,9 +162,13 @@ activation from 0% to ~5.4%, and the proposed blanket re-route would have
 removed working developer activation paths from technical articles.
 
 Compounding it, the single most important activation action -- copying
-`pip install mneme-hq` -- was invisible, because `code_copy` reaches the data
-layer but no published GTM tag forwards it (see section 7). An unmeasured
-action is not an absent one.
+`pip install mneme-hq` -- appeared to be invisible. That was a second
+measurement error, not a second bug: `code_copy` was absent from the query
+window only because the canonical tags went live on 2026-08-30 and the window
+ended 2026-09-01. `code_copy` fires correctly (first observed 2026-09-02).
+Always check the window against the container's publish date before concluding
+an event does not exist. An unmeasured action is not an absent one, and a
+recently-instrumented one is not an unmeasured one.
 
 Always report against all three buckets:
 
@@ -181,11 +187,25 @@ Corollary for any future query: enumerate the event names in the window first
 (`SELECT event_name, COUNT(*) ... GROUP BY event_name`) rather than filtering
 to a remembered list, and exclude dev hosts.
 
-## 7. Legacy cutover
+## 7. Legacy cutover -- OUTSTANDING, actively corrupting counts
 
 The live container still has click-triggered legacy tags including
 `cta_demo_click`, `cta_github_click`, and `install_command_copied`. The homepage
 also previously fired `cta_clicked` directly.
+
+Canonical and legacy have both been live since 2026-08-30, so every tagged
+click is currently counted more than once. Measured 2026-09-03, grouping events
+by session and second:
+
+| One user action | Events actually recorded |
+|---|---|
+| GitHub link click | `cta_github_click` + `outbound_link_clicked` (2x) |
+| GitHub link click (worst observed) | `click` + `cta_github_click` x2 + `outbound_link_clicked` x2 (5x) |
+| Demo CTA click | `cta_click` + `cta_demo_click` (2x) |
+
+Any raw event count spanning 2026-08-30 onward is inflated. Session-level
+metrics that use `MAX(...)` per session are unaffected. Complete steps 1-5
+below before quoting event totals from this period.
 
 1. Publish the canonical tags while legacy tags remain unchanged.
 2. Verify exactly one canonical event per action in GTM Preview and DebugView.
