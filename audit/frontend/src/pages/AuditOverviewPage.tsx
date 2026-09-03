@@ -3,170 +3,85 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
-import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, AlertTriangle, Circle, ChevronRight } from 'lucide-react';
-import type { AuditResult, ArchitecturalDecision, Governability } from '../types/audit';
+import { CollapsibleDecisionItem } from '../components/DecisionItem';
+import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
+import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
-type FilterType = 'all' | 'enforceable' | 'partial' | 'guidance';
+type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
 type SourceTypeFilter = 'all' | 'adr' | 'agent-instructions' | 'config' | 'code';
 
-// Limits for progressive disclosure
-const DEFAULT_LIMITS = {
-  enforceable: 10,
-  partial: 10,
-  guidance: 5,
+const DEFAULT_LIMITS: Record<ProtectionClassification, number> = {
+  Protected: 10,
+  'Mneme-ready': 10,
+  'Requires modelling': 10,
+  Guidance: 5,
 };
 
-const ICONS: Record<Governability, typeof CheckCircle> = {
-  enforceable: CheckCircle,
-  partial: AlertTriangle,
-  guidance: Circle,
+const CLASSIFICATION_ORDER: ProtectionClassification[] = ['Protected', 'Mneme-ready', 'Requires modelling', 'Guidance'];
+
+const ICON_CLASS: Record<ProtectionClassification, string> = {
+  Protected: 'protected',
+  'Mneme-ready': 'mneme-ready',
+  'Requires modelling': 'requires-modelling',
+  Guidance: 'guidance',
 };
 
-const ICON_CLASS: Record<Governability, string> = {
-  enforceable: 'enforceable',
-  partial: 'partial',
-  guidance: 'guidance',
+const BADGE_CLASS: Record<ProtectionClassification, string> = {
+  Protected: 'badge-protected',
+  'Mneme-ready': 'badge-mneme-ready',
+  'Requires modelling': 'badge-requires-modelling',
+  Guidance: 'badge-guidance',
 };
 
-const BADGE_CLASS: Record<Governability, string> = {
-  enforceable: 'badge-enforceable',
-  partial: 'badge-partial',
-  guidance: 'badge-guidance',
+const BADGE_LABEL: Record<ProtectionClassification, string> = {
+  Protected: 'PROTECTED',
+  'Mneme-ready': 'MNEME-READY',
+  'Requires modelling': 'REQUIRES MODELLING',
+  Guidance: 'GUIDANCE ONLY',
 };
 
-const BADGE_LABEL: Record<Governability, string> = {
-  enforceable: 'ENFORCEABLE',
-  partial: 'PARTIALLY ENFORCEABLE',
-  guidance: 'GUIDANCE ONLY',
-};
-
-interface CollapsibleDecisionItemProps {
-  decision: ArchitecturalDecision;
+function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails }: {
+  decision: ProtectionDecision;
   isExpanded: boolean;
   onToggle: () => void;
   onViewDetails: () => void;
-  showMissing?: string;
-}
-
-function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails, showMissing }: CollapsibleDecisionItemProps) {
-  const Icon = ICONS[decision.governability];
-  const iconClass = ICON_CLASS[decision.governability];
-  const badgeClass = BADGE_CLASS[decision.governability];
-  const badgeLabel = BADGE_LABEL[decision.governability];
-
-  return (
-    <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
-      <div className="decision-item-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
-        <div className={`decision-icon ${iconClass}`}>
-          <Icon size={20} />
-        </div>
-        <div className="decision-content">
-          <div className="decision-header-top">
-            <h3 className="decision-title">{decision.title}</h3>
-            <span className="decision-source-badge">{decision.source.file}</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
-            {showMissing && <span className="decision-missing">Missing: {showMissing}</span>}
-          </div>
-        </div>
-        <div className="decision-chevron">
-          <ChevronRight size={18} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
-        </div>
-      </div>
-      
-      {isExpanded && (
-        <div className="decision-item-expanded">
-          <div className="decision-expanded-content">
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Requirement</span>
-              <p className="decision-expanded-value">{decision.requirement}</p>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Applies To</span>
-              <div className="decision-expanded-value">
-                {decision.appliesTo.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {decision.appliesTo.map((path, i) => (
-                      <span key={i} className="font-mono text-xs px-2 py-1 bg-surface2 border border-border rounded">{path}</span>
-                    ))}
-                  </div>
-                ) : (
-                  <span className="text-muted">Not specified</span>
-                )}
-              </div>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Proposed Rule</span>
-              <div className="decision-expanded-value">
-                {decision.proposedRule ? (
-                  <>
-                    <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
-                    <p className="mt-1 text-sm text-muted font-normal font-sans">{decision.proposedRule.description}</p>
-                  </>
-                ) : (
-                  <span className="text-muted">No deterministic rule defined</span>
-                )}
-              </div>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Confidence</span>
-              <span className="decision-expanded-value font-mono text-teal">{Math.round(decision.confidence * 100)}%</span>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label">Source</span>
-              <span className="decision-expanded-value font-mono text-xs">{decision.source.file} (Lines {decision.source.lines})</span>
-            </div>
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
-            className="btn btn-ghost btn-sm mt-3"
-            data-cta-intent="view_details"
-            data-cta-position="decision_list"
-          >
-            View Full Details
-          </button>
-        </div>
-      )}
-    </article>
-  );
+}) {
+  return <CollapsibleDecisionItem decision={decision} isExpanded={isExpanded} onToggle={onToggle} onViewDetails={onViewDetails} />;
 }
 
 export function AuditOverviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
-  const { getAudit, exportAudit, error: apiError } = useAuditApi();
+  const { getAudit, exportAudit, error: apiError, createProject } = useAuditApi();
   
-  const stateAudit = (location.state as { audit?: AuditResult } | null)?.audit;
-  const [audit, setAudit] = useState<AuditResult | null>(stateAudit ?? null);
+  const stateAudit = (location.state as { audit?: ProtectionAuditResponse } | null)?.audit;
+  const [audit, setAudit] = useState<ProtectionAuditResponse | null>(stateAudit ?? null);
   const [loading, setLoading] = useState<boolean>(!stateAudit);
   const [error, setError] = useState<string | null>(null);
   
   const [exporting, setExporting] = useState(false);
-  const [governabilityFilter, setGovernabilityFilter] = useState<FilterType>('all');
+  const [classificationFilter, setClassificationFilter] = useState<FilterType>('all');
   const [sourceTypeFilter, setSourceTypeFilter] = useState<SourceTypeFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set());
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
+  const [savingBaseline, setSavingBaseline] = useState(false);
 
-  const [displayLimits, setDisplayLimits] = useState<Record<Governability, number>>({
-    enforceable: DEFAULT_LIMITS.enforceable,
-    partial: DEFAULT_LIMITS.partial,
-    guidance: DEFAULT_LIMITS.guidance,
+  const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
+    Protected: DEFAULT_LIMITS.Protected,
+    'Mneme-ready': DEFAULT_LIMITS['Mneme-ready'],
+    'Requires modelling': DEFAULT_LIMITS['Requires modelling'],
+    Guidance: DEFAULT_LIMITS.Guidance,
   });
 
-  // Section navigation - reordered: Overview, Gaps, Decisions, Coverage, Sources
   const sections = useMemo(() => [
     { id: 'overview', label: 'Overview' },
-    { id: 'gaps', label: 'Governance Gaps' },
     { id: 'decisions', label: 'Decisions' },
-    { id: 'coverage', label: 'Coverage' },
     { id: 'sources', label: 'Sources' },
   ], []);
 
-  // Guard: if no audit ID, redirect to new audit
   useEffect(() => {
     if (!id) {
       navigate('/', { replace: true });
@@ -177,8 +92,7 @@ export function AuditOverviewPage() {
   useEffect(() => {
     if (!id) return;
     
-    // If we already have this exact audit loaded from navigation state, don't re-fetch
-    if (audit && audit.id === id) {
+    if (audit && audit.audit_id === id) {
       setLoading(false);
       return;
     }
@@ -218,38 +132,39 @@ export function AuditOverviewPage() {
   const decisions = useMemo(() => audit?.decisions || [], [audit]);
   const repository = audit?.repository || '';
   const sources = useMemo(() => summary?.sources || [], [summary]);
-  const totalDecisions = summary?.totalDecisions || decisions.length;
-  const enforceableCount = summary?.enforceable || 0;
-  const partialCount = summary?.partial || 0;
-  const guidanceCount = summary?.guidance || 0;
-  const coveragePct = summary?.coverage || 0;
+  const totalDecisions = summary?.decisions_discovered || decisions.length;
+  const protectionRelevant = summary?.protection_relevant || 0;
+  const protectedCount = summary?.protected_count || 0;
+  const mnemeReadyCount = summary?.mneme_ready_count || 0;
+  const requiresModellingCount = summary?.requires_modelling_count || 0;
+  const guidanceCount = summary?.guidance_count || 0;
+  const currentProtection = summary?.current_protection || 0;
+  const mnemePotential = summary?.identified_mneme_potential || 0;
 
-  // Compute key finding
   const keyFinding = useMemo(() => {
-    const enforceablePct = totalDecisions > 0 
-      ? Math.round((enforceableCount / totalDecisions) * 100) 
-      : 0;
-    
-    if (enforceablePct === 0) {
-      return 'Most architectural intent is documented, but little is expressed in a form that can be deterministically enforced.';
-    } else if (enforceablePct < 25) {
-      return 'A small fraction of architectural intent is directly enforceable. Most decisions need stronger machine-testable constraints.';
-    } else if (enforceablePct < 50) {
-      return 'About half of architectural decisions can be enforced. The remainder need explicit applicability or deterministic rules.';
-    } else {
-      return 'Strong governability foundation — most decisions have at least partial enforceability.';
+    if (protectionRelevant === 0) {
+      return 'No protection-relevant architectural decisions found. All identified decisions are guidance-only.';
     }
-  }, [totalDecisions, enforceableCount]);
+    
+    const protectionPct = Math.round(currentProtection * 100);
+    
+    if (protectedCount === 0) {
+      return `${mnemeReadyCount + requiresModellingCount} protection gaps identified — ${mnemeReadyCount} Mneme-ready, ${requiresModellingCount} require modelling.`;
+    } else if (protectionPct < 25) {
+      return `Low architecture protection (${protectionPct}%). ${mnemeReadyCount} decisions are Mneme-ready for immediate protection gains.`;
+    } else if (protectionPct < 50) {
+      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions need modelling to reach full coverage.`;
+    } else {
+      return `Strong architecture protection (${protectionPct}%). Well-governed architectural baseline.`;
+    }
+  }, [protectionRelevant, protectedCount, mnemeReadyCount, requiresModellingCount, currentProtection, mnemePotential]);
 
-  // Filter decisions
   const filteredDecisions = useMemo(() => {
     return decisions.filter((decision) => {
-      // Governability filter
-      if (governabilityFilter !== 'all' && decision.governability !== governabilityFilter) {
+      if (classificationFilter !== 'all' && decision.protection_classification !== classificationFilter) {
         return false;
       }
       
-      // Source type filter
       if (sourceTypeFilter !== 'all') {
         const sourceFile = (decision.source?.file || '').toLowerCase();
         let matches = false;
@@ -260,7 +175,6 @@ export function AuditOverviewPage() {
         if (!matches) return false;
       }
       
-      // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         const titleMatch = (decision.title || '').toLowerCase().includes(query);
@@ -271,26 +185,26 @@ export function AuditOverviewPage() {
       
       return true;
     });
-  }, [decisions, governabilityFilter, sourceTypeFilter, searchQuery]);
+  }, [decisions, classificationFilter, sourceTypeFilter, searchQuery]);
 
-  // Count by governability
   const counts = useMemo(() => ({
     all: decisions.length,
-    enforceable: decisions.filter(d => d.governability === 'enforceable').length,
-    partial: decisions.filter(d => d.governability === 'partial').length,
-    guidance: decisions.filter(d => d.governability === 'guidance').length,
+    Protected: decisions.filter(d => d.protection_classification === 'Protected').length,
+    'Mneme-ready': decisions.filter(d => d.protection_classification === 'Mneme-ready').length,
+    'Requires modelling': decisions.filter(d => d.protection_classification === 'Requires modelling').length,
+    Guidance: decisions.filter(d => d.protection_classification === 'Guidance').length,
   }), [decisions]);
 
-  // Group decisions by governability for collapsible sections
-  const decisionsByGovernability = useMemo(() => {
-    const groups: Record<Governability, ArchitecturalDecision[]> = {
-      enforceable: [],
-      partial: [],
-      guidance: [],
+  const decisionsByClassification = useMemo(() => {
+    const groups: Record<ProtectionClassification, ProtectionDecision[]> = {
+      Protected: [],
+      'Mneme-ready': [],
+      'Requires modelling': [],
+      Guidance: [],
     };
     filteredDecisions.forEach(d => {
-      if (groups[d.governability]) {
-        groups[d.governability].push(d);
+      if (groups[d.protection_classification]) {
+        groups[d.protection_classification].push(d);
       }
     });
     return groups;
@@ -310,16 +224,8 @@ export function AuditOverviewPage() {
 
   const isExpanded = (decisionId: string) => expandedDecisions.has(decisionId);
 
-  const showAllForGovernability = (gov: Governability) => {
-    setDisplayLimits(prev => ({ ...prev, [gov]: Infinity }));
-  };
-
-  const getMissingInfo = (decision: ArchitecturalDecision): string => {
-    const missing: string[] = [];
-    if (!decision.appliesTo || decision.appliesTo.length === 0) missing.push('explicit applicability');
-    if (!decision.proposedRule) missing.push('enforceable matcher');
-    if (decision.confidence < 0.7) missing.push('high-confidence rule');
-    return missing.length > 0 ? missing[0] : '';
+  const showAllForClassification = (classification: ProtectionClassification) => {
+    setDisplayLimits(prev => ({ ...prev, [classification]: Infinity }));
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -342,13 +248,38 @@ export function AuditOverviewPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `architecture-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
+      a.download = `protection-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Export failed:', err);
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleSaveBaseline = async () => {
+    if (!audit) return;
+    setSavingBaseline(true);
+    try {
+      const slug = audit.repository.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase().substring(0, 50);
+      const projectName = audit.repository;
+      const result = await createProject({
+        name: projectName,
+        slug: slug,
+        source_locator: audit.repository_url || audit.repository,
+        source_type: 'github',
+      });
+      if (result.success && result.data) {
+        navigate(`/project/${result.data.id}`, { state: { audit } });
+      } else {
+        setError(result.error || 'Failed to save baseline');
+      }
+    } catch (err) {
+      console.error('Save baseline failed:', err);
+      setError('Failed to save baseline');
+    } finally {
+      setSavingBaseline(false);
     }
   };
 
@@ -359,7 +290,7 @@ export function AuditOverviewPage() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-6">
             <Loader2 className="loading-spinner mx-auto mb-4" size={48} />
-            <p className="text-muted">Loading audit results...</p>
+            <p className="text-muted">Loading protection audit...</p>
           </div>
         </main>
       </div>
@@ -421,38 +352,73 @@ export function AuditOverviewPage() {
     );
   }
 
+  const protectionPct = Math.round(currentProtection * 100);
+
   return (
     <div className="audit-layout">
       <AuditNav />
       
       <main className="flex-1">
         <div className="audit-container">
-          {/* Above-fold hero: repo, totals, key finding, primary action */}
           <header className="audit-hero" style={{ paddingTop: '2rem', paddingBottom: '2rem', textAlign: 'center' }}>
-            <span className="audit-hero-tag">Architecture Governability Audit</span>
+            <span className="audit-hero-tag">Architecture Protection Audit</span>
             <h1>{repository}</h1>
             
-            {/* Dominant totals headline */}
-            <div className="audit-headline mt-4">
-              <span className="audit-headline-count">{totalDecisions} governance items found</span>
-              <span className="audit-headline-enforceable">
-                {enforceableCount > 0 
-                  ? `${enforceableCount} directly enforceable` 
-                  : <><strong>0</strong> directly enforceable</>}
-              </span>
+            <div className="audit-protection-headline mt-4">
+              <div className="protection-score-large">
+                <span className="protection-score-value">{protectionPct}%</span>
+                <span className="protection-score-label">Current Protection</span>
+              </div>
+              <p className="protection-subtext">
+                {protectedCount} of {protectionRelevant} protection-relevant decisions protected
+              </p>
             </div>
             
-            <p className="mt-2 audit-key-finding">{keyFinding}</p>
+            <div className="protection-breakdown mt-4 flex flex-wrap gap-3 justify-center">
+              <span className="badge badge-protected flex items-center gap-1">
+                <CheckCircle size={12} /> {protectedCount} Protected
+              </span>
+              {mnemeReadyCount > 0 && (
+                <span className="badge badge-mneme-ready flex items-center gap-1">
+                  <Zap size={12} /> {mnemeReadyCount} Mneme-ready
+                </span>
+              )}
+              {requiresModellingCount > 0 && (
+                <span className="badge badge-requires-modelling flex items-center gap-1">
+                  <Brain size={12} /> {requiresModellingCount} Requires modelling
+                </span>
+              )}
+              {guidanceCount > 0 && (
+                <span className="badge badge-guidance flex items-center gap-1">
+                  <Circle size={12} /> {guidanceCount} Guidance
+                </span>
+              )}
+            </div>
+
+            {mnemeReadyCount > 0 && protectionRelevant > 0 && (
+              <div className="mneme-potential-uplift mt-3">
+                <p className="text-muted">
+                  Current: <strong>{protectionPct}%</strong>
+                  {' '}
+                  <span style={{ color: 'var(--warning)' }}>
+                    With {mnemeReadyCount} identified Mneme guardrail{mnemeReadyCount > 1 ? 's' : ''}: 
+                    <strong>{Math.round(((protectedCount + mnemeReadyCount) / protectionRelevant) * 100)}%</strong>
+                  </span>
+                </p>
+              </div>
+            )}
+
+            <p className="mt-3 audit-key-finding">{keyFinding}</p>
 
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
               <Link 
-                to={`/audit/${id}/gaps`} 
+                to={`/audit/${id}/decisions`} 
                 state={{ audit }}
                 className="btn btn-primary flex items-center gap-2"
-                data-cta-intent="view_gaps"
+                data-cta-intent="view_all_decisions"
                 data-cta-position="audit_overview"
               >
-                View Governance Gaps
+                View All Decisions
               </Link>
               <button 
                 onClick={() => handleExport('markdown')} 
@@ -463,26 +429,35 @@ export function AuditOverviewPage() {
               >
                 <Download size={16} /> Export
               </button>
+              <button 
+                onClick={handleSaveBaseline}
+                disabled={savingBaseline}
+                className="btn btn-ghost flex items-center gap-2"
+                data-cta-intent="save_baseline"
+                data-cta-position="audit_overview"
+              >
+                <Save size={16} /> Save Baseline
+              </button>
             </div>
           </header>
 
-          {/* Sticky Filters */}
           <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">
               <div className="audit-filters-row">
                 <div className="audit-filter-group">
-                  <label htmlFor="governability-filter" className="audit-filter-label">Governability</label>
+                  <label htmlFor="classification-filter" className="audit-filter-label">Protection Classification</label>
                   <select
-                    id="governability-filter"
-                    value={governabilityFilter}
-                    onChange={(e) => setGovernabilityFilter(e.target.value as FilterType)}
+                    id="classification-filter"
+                    value={classificationFilter}
+                    onChange={(e) => setClassificationFilter(e.target.value as FilterType)}
                     className="audit-filter-select"
-                    aria-label="Filter by governability"
+                    aria-label="Filter by protection classification"
                   >
                     <option value="all">All ({counts.all})</option>
-                    <option value="enforceable">Enforceable ({counts.enforceable})</option>
-                    <option value="partial">Partial ({counts.partial})</option>
-                    <option value="guidance">Guidance ({counts.guidance})</option>
+                    <option value="Protected">Protected ({counts.Protected})</option>
+                    <option value="Mneme-ready">Mneme-ready ({counts['Mneme-ready']})</option>
+                    <option value="Requires modelling">Requires modelling ({counts['Requires modelling']})</option>
+                    <option value="Guidance">Guidance ({counts.Guidance})</option>
                   </select>
                 </div>
                 <div className="audit-filter-group">
@@ -523,39 +498,6 @@ export function AuditOverviewPage() {
             </div>
           </div>
 
-          {/* Compact summary bar */}
-          <div className="audit-summary-bar" role="region" aria-label="Audit summary">
-            <div className="audit-summary-stats">
-              <span className="audit-summary-total">{totalDecisions} governance items</span>
-              <div className="audit-summary-breakdown">
-                <span className="audit-summary-item enforceable">
-                  <strong>{enforceableCount}</strong> Enforceable
-                </span>
-                <span className="audit-summary-item partial">
-                  <strong>{partialCount}</strong> Partial
-                </span>
-                <span className="audit-summary-item guidance">
-                  <strong>{guidanceCount}</strong> Guidance
-                </span>
-              </div>
-            </div>
-            <div className="audit-summary-actions">
-              <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-ghost btn-sm" data-cta-intent="view_gaps" data-cta-position="audit_summary">
-                Governance Gaps
-              </Link>
-              <button 
-                onClick={() => handleExport('markdown')} 
-                disabled={exporting}
-                className="btn btn-primary btn-sm"
-                data-cta-intent="export_markdown"
-                data-cta-position="audit_summary"
-              >
-                <Download size={14} /> Export
-              </button>
-            </div>
-          </div>
-
-          {/* Sticky section navigator */}
           <nav className="audit-section-nav" aria-label="Audit sections">
             <div className="audit-section-nav-inner">
               {sections.map((section) => (
@@ -574,55 +516,96 @@ export function AuditOverviewPage() {
 
           <section id="overview" className="audit-section" aria-labelledby="stats">
             <StatsGrid summary={summary} />
-          </section>
-
-          <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
-            <h2 id="gaps-title" className="audit-section-title">Governance Gaps</h2>
-            <p className="audit-section-subtitle">Decisions that cannot be fully enforced — with specific next steps to make them machine-testable.</p>
-            <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
-              View All Governance Gaps
-            </Link>
+            
+            <div className="protection-summary-detail">
+              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
+              <div className="protection-detail-grid">
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Decisions Discovered</span>
+                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Protection-Relevant</span>
+                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Guidance Only</span>
+                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
+                </div>
+              </div>
+              
+              {protectionRelevant > 0 && (
+                <div className="protection-progress-bar mt-4">
+                  <div className="protection-progress-track">
+                    <div 
+                      className="protection-progress-segment protected"
+                      style={{ width: `${(protectedCount / protectionRelevant) * 100}%` }}
+                    />
+                    {mnemeReadyCount > 0 && (
+                      <div 
+                        className="protection-progress-segment mneme-ready"
+                        style={{ width: `${(mnemeReadyCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                    {requiresModellingCount > 0 && (
+                      <div 
+                        className="protection-progress-segment requires-modelling"
+                        style={{ width: `${(requiresModellingCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                  </div>
+                  <div className="protection-progress-legend">
+                    <span className="legend-item protected"><span className="legend-color" /><span>Protected ({protectedCount})</span></span>
+                    {mnemeReadyCount > 0 && <span className="legend-item mneme-ready"><span className="legend-color" /><span>Mneme-ready ({mnemeReadyCount})</span></span>}
+                    {requiresModellingCount > 0 && <span className="legend-item requires-modelling"><span className="legend-color" /><span>Requires modelling ({requiresModellingCount})</span></span>}
+                  </div>
+                </div>
+              )}
+            </div>
           </section>
 
           <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
-            <h2 id="decisions-title" className="audit-section-title">Governance Items</h2>
+            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
+            <p className="audit-section-subtitle">
+              Each decision shows its protection classification. Evidence and reasoning available on expand.
+            </p>
             
-            {Object.entries(decisionsByGovernability).map(([governability, items]) => {
-              const gov = governability as Governability;
+            {CLASSIFICATION_ORDER.map((classification) => {
+              const items = decisionsByClassification[classification];
               if (items.length === 0) return null;
               
-              const Icon = ICONS[gov];
-              const badgeClass = BADGE_CLASS[gov];
-              const badgeLabel = BADGE_LABEL[gov];
-              const iconClass = ICON_CLASS[gov];
-              const limit = displayLimits[gov];
+              const Icon = classification === 'Protected' ? CheckCircle : 
+                          classification === 'Mneme-ready' ? Zap :
+                          classification === 'Requires modelling' ? Brain : Circle;
+              const badgeClass = BADGE_CLASS[classification];
+              const iconClass = ICON_CLASS[classification];
+              const limit = displayLimits[classification];
               const displayedItems = items.slice(0, limit);
               const hasMore = items.length > limit;
               
               return (
-                <div key={gov} className="decision-group">
+                <div key={classification} className="decision-group">
                   <h3 className="decision-group-title flex items-center gap-2">
                     <span className={`decision-group-icon ${iconClass}`}>
                       <Icon size={16} />
                     </span>
-                    <span>{badgeLabel}</span>
+                    <span>{BADGE_LABEL[classification]}</span>
                     <span className={`badge ${badgeClass}`}>{items.length} items</span>
                   </h3>
-                  <div className="decision-list" role="list" aria-label={`${badgeLabel} decisions`}>
+                  <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
                     {displayedItems.map((decision) => (
-                      <CollapsibleDecisionItem
+                      <CollapsibleDecisionItemWrapper
                         key={decision.id}
                         decision={decision}
                         isExpanded={isExpanded(decision.id)}
                         onToggle={() => toggleDecision(decision.id)}
                         onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
-                        showMissing={getMissingInfo(decision)}
                       />
                     ))}
                   </div>
                   {hasMore && (
                     <button
-                      onClick={() => showAllForGovernability(gov)}
+                      onClick={() => showAllForClassification(classification)}
                       className="btn btn-ghost btn-sm mt-2"
                       data-cta-intent="show_all"
                       data-cta-position="decision_group"
@@ -641,21 +624,6 @@ export function AuditOverviewPage() {
                 <p className="empty-text">Try adjusting your filters or search query.</p>
               </div>
             )}
-          </section>
-
-          <section id="coverage" className="audit-section" aria-labelledby="coverage-title">
-            <h2 id="coverage-title" className="audit-section-title">Coverage</h2>
-            <div className="audit-coverage">
-              <div className="audit-coverage-bar">
-                <div 
-                  className="audit-coverage-fill" 
-                  style={{ width: `${coveragePct}%` }}
-                />
-              </div>
-              <p className="audit-coverage-text">
-                {coveragePct}% of governance items have at least partial enforceability
-              </p>
-            </div>
           </section>
 
           <section id="sources" className="audit-section" aria-labelledby="sources-title">
