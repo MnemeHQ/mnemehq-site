@@ -168,6 +168,11 @@ export function DecisionDetailPage() {
                 
                 {CLASSIFICATION_CTA[decision.protection_classification] && (
                   <button 
+                    onClick={() => {
+                      const target = document.getElementById(decision.protection_classification === 'Requires modelling' ? 'requirement' : 'proposed-rule');
+                      target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      target?.focus({ preventScroll: true });
+                    }}
                     className="btn btn-primary btn-sm mt-3"
                     data-cta-intent={CLASSIFICATION_CTA[decision.protection_classification]!.intent}
                     data-cta-position="decision_detail"
@@ -192,7 +197,7 @@ export function DecisionDetailPage() {
           </section>
 
           <section className="detail-section" aria-labelledby="requirement">
-            <h2 id="requirement" className="detail-section-title">REQUIREMENT</h2>
+            <h2 id="requirement" tabIndex={-1} className="detail-section-title">REQUIREMENT</h2>
             <div className="detail-content">{decision.requirement}</div>
           </section>
 
@@ -205,7 +210,7 @@ export function DecisionDetailPage() {
           </section>
 
           <section className="detail-section" aria-labelledby="proposed-rule">
-            <h2 id="proposed-rule" className="detail-section-title">PROPOSED MNEM RULE</h2>
+            <h2 id="proposed-rule" tabIndex={-1} className="detail-section-title">MNEME GUARDRAIL EVIDENCE</h2>
             {decision.proposed_rule ? (
               <div className="rule-box">
                 <div className="rule-box-label">Deterministic enforcement rule</div>

@@ -103,9 +103,9 @@ export function NewAuditPage() {
       <main className="flex-1">
         <div className="audit-container">
           <header className="audit-hero">
-            <span className="audit-hero-tag">Architecture Governability Audit</span>
-            <h1>Understand which architectural decisions <br />can actually be governed.</h1>
-            <p>Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules.</p>
+            <span className="audit-hero-tag">Architecture Protection Audit</span>
+            <h1>Understand which architectural decisions <br />are protected.</h1>
+            <p>Give Mneme a repository. It identifies architectural decisions, reports their protection level, and shows guardrails and protection gaps.</p>
             
             <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
               <div className="mb-4">
@@ -163,7 +163,7 @@ export function NewAuditPage() {
                 </div>
               )}
 
-              {error && (
+              {error && !submitError && (
                 <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
                   <AlertCircle size={16} /> {error}
                 </div>
@@ -208,15 +208,15 @@ export function NewAuditPage() {
                 <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, config files — every source of architectural intent.</p>
               </article>
               <article className="works-card">
-                <h3>Governability classified</h3>
-                <p>Each decision rated: <span className="text-teal">Enforceable</span>, <span className="text-warning">Partial</span>, or <span className="text-muted">Guidance only</span>.</p>
+                <h3>Protection classified</h3>
+                <p>Each decision is <span className="text-teal">Protected</span>, <span className="text-warning">Mneme-ready</span>, <span className="text-warning">Requires modelling</span>, or <span className="text-muted">Guidance</span>.</p>
               </article>
               <article className="works-card">
-                <h3>Proposed Mneme rules</h3>
-                <p>See the exact deterministic rule (FORBID_LITERAL, REQUIRE_PATTERN, etc.) Mneme would apply.</p>
+                <h3>Mneme guardrails</h3>
+                <p>Inspect deterministic guardrails and the evidence behind each decision.</p>
               </article>
               <article className="works-card">
-                <h3>Governance gaps</h3>
+                <h3>Protection gaps</h3>
                 <p>Decisions that can't be enforced yet — with specific next steps to make them machine-testable.</p>
               </article>
             </div>

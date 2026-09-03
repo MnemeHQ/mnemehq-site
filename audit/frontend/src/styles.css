@@ -1172,6 +1172,16 @@ a:hover { color: var(--teal); }
   gap: 0.35rem;
 }
 
+.audit-provenance { display: grid; gap: 0.75rem; margin: 1.5rem 0; }
+.audit-provenance div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 0.75rem; }
+.audit-provenance dt { color: var(--muted); }
+.audit-provenance dd { margin: 0; overflow-wrap: anywhere; }
+.audit-history { list-style: none; padding: 0; }
+.audit-history li { display: grid; gap: 0.5rem; padding: 1rem 0; border-bottom: 1px solid var(--border); overflow-wrap: anywhere; }
+.action-error { border: 1px solid var(--warning); padding: 1rem; border-radius: 8px; }
+.comparison-row p, .comparison-row h3 { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .audit-provenance div { grid-template-columns: 1fr; gap: 0.25rem; } }
+
 /* ── COMPARISON PAGE ── */
 .comparison-headline {
   margin-top: 1.5rem;

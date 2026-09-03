@@ -44,8 +44,9 @@ export interface ProtectionSummary {
 export interface ProtectionAuditResponse {
   schema: string;
   audit_id: string;
+  project_id?: string;
   repository: string;
-  repository_url?: string;
+  repository_url?: string | null;
   commit_sha: string;
   mneme_version: string;
   timestamp: string;
@@ -54,11 +55,11 @@ export interface ProtectionAuditResponse {
 }
 
 // M1 Persistence Types
-export type ProjectLifecycle = 'ephemeral' | 'saved' | 'pilot' | 'archived';
+export type ProjectLifecycle = 'ephemeral' | 'saved' | 'pilot';
 
-export type AuditTriggerType = 'initial' | 're_audit' | 'baseline_reset';
+export type AuditTriggerType = 'initial' | 're_audit' | 'manual';
 
-export type AuditStatus = 'pending' | 'running' | 'completed' | 'failed';
+export type AuditStatus = 'running' | 'completed' | 'failed';
 
 export interface Project {
   id: string;
@@ -86,7 +87,6 @@ export interface ProjectAudit {
 
 export interface ProjectWithHistory extends Project {
   audits: ProjectAudit[];
-  baseline_audit: ProjectAudit | null;
 }
 
 export type ComparisonState = 'improved' | 'regressed' | 'unchanged' | 'added' | 'removed' | 'uncomparable';
@@ -115,6 +115,10 @@ export interface AuditComparison {
   schema_compatibility: SchemaCompatibility;
   decisions: DecisionComparison[];
   summary: Record<string, number>;
+  baseline_summary: ProtectionSummary;
+  current_summary: ProtectionSummary;
+  current_protection_delta: number;
+  identified_mneme_potential_delta: number;
 }
 
 export interface CreateProjectRequest {
@@ -127,10 +131,7 @@ export interface CreateProjectRequest {
 
 export interface RunAuditRequest {
   repository_url?: string;
-  zip_path?: string;
-  local_path?: string;
   source_ref?: string;
-  commit_sha?: string;
   trigger_type?: AuditTriggerType;
 }
 

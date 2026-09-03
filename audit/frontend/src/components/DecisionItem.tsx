@@ -30,7 +30,7 @@ const BADGE_LABEL: Record<ProtectionClassification, string> = {
 };
 
 const CLASSIFICATION_DESC: Record<ProtectionClassification, string> = {
-  Protected: 'Mneme enforces this decision deterministically in CI/CD.',
+  Protected: 'The audit identified deterministic Mneme enforcement evidence.',
   'Mneme-ready': 'Complete specification exists; ready for rule generation.',
   'Requires modelling': 'Needs architectural modelling before protection is possible.',
   Guidance: 'Expresses intent without machine-testable constraints.',
@@ -98,7 +98,8 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
 
   return (
     <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
-      <div className="decision-item-header" onClick={onToggle} style={{ cursor: 'pointer' }}>
+      <div className="decision-item-header" onClick={onToggle} role="button" tabIndex={0} aria-expanded={isExpanded}
+        onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onToggle(); } }} style={{ cursor: 'pointer' }}>
         <div className={`decision-icon ${iconClass}`}>
           <Icon size={20} />
         </div>

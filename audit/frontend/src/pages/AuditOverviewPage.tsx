@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
+import { AuditProvenance } from './ProjectPage';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
@@ -53,7 +54,7 @@ export function AuditOverviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
-  const { getAudit, exportAudit, error: apiError, createProject } = useAuditApi();
+  const { getAudit, exportAudit, error: apiError, saveBaseline } = useAuditApi();
   
   const stateAudit = (location.state as { audit?: ProtectionAuditResponse } | null)?.audit;
   const [audit, setAudit] = useState<ProtectionAuditResponse | null>(stateAudit ?? null);
@@ -68,6 +69,7 @@ export function AuditOverviewPage() {
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [savingBaseline, setSavingBaseline] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
     Protected: DEFAULT_LIMITS.Protected,
@@ -132,7 +134,7 @@ export function AuditOverviewPage() {
   const decisions = useMemo(() => audit?.decisions || [], [audit]);
   const repository = audit?.repository || '';
   const sources = useMemo(() => summary?.sources || [], [summary]);
-  const totalDecisions = summary?.decisions_discovered || decisions.length;
+  const totalDecisions = summary?.decisions_discovered ?? 0;
   const protectionRelevant = summary?.protection_relevant || 0;
   const protectedCount = summary?.protected_count || 0;
   const mnemeReadyCount = summary?.mneme_ready_count || 0;
@@ -261,23 +263,16 @@ export function AuditOverviewPage() {
   const handleSaveBaseline = async () => {
     if (!audit) return;
     setSavingBaseline(true);
+    setActionError(null);
     try {
-      const slug = audit.repository.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase().substring(0, 50);
-      const projectName = audit.repository;
-      const result = await createProject({
-        name: projectName,
-        slug: slug,
-        source_locator: audit.repository_url || audit.repository,
-        source_type: 'github',
-      });
+      const result = await saveBaseline(audit.audit_id);
       if (result.success && result.data) {
         navigate(`/project/${result.data.id}`, { state: { audit } });
       } else {
-        setError(result.error || 'Failed to save baseline');
+        setActionError(result.error || 'Failed to save baseline');
       }
     } catch (err) {
-      console.error('Save baseline failed:', err);
-      setError('Failed to save baseline');
+      setActionError('Failed to save baseline. Please retry.');
     } finally {
       setSavingBaseline(false);
     }
@@ -302,7 +297,7 @@ export function AuditOverviewPage() {
   const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
   const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
 
-  if (effectiveError || !audit || !summary) {
+  if (!audit || !summary) {
     let title = 'Audit unavailable';
     let message = 'This audit may have expired or the link may be incorrect.';
     let actionText = 'Run New Audit';
@@ -411,15 +406,14 @@ export function AuditOverviewPage() {
             <p className="mt-3 audit-key-finding">{keyFinding}</p>
 
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
-              <Link 
-                to={`/audit/${id}/decisions`} 
-                state={{ audit }}
+              <button
+                onClick={() => scrollToSection('decisions')}
                 className="btn btn-primary flex items-center gap-2"
                 data-cta-intent="view_all_decisions"
                 data-cta-position="audit_overview"
               >
                 View All Decisions
-              </Link>
+              </button>
               <button 
                 onClick={() => handleExport('markdown')} 
                 disabled={exporting}
@@ -440,6 +434,9 @@ export function AuditOverviewPage() {
               </button>
             </div>
           </header>
+
+          {actionError && <p role="alert" className="action-error">{actionError} Your audit is still available.</p>}
+          <AuditProvenance audit={audit} />
 
           <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">

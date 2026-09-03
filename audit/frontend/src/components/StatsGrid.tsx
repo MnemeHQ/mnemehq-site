@@ -5,7 +5,7 @@ import { useState } from 'react';
 const STATS = [
   { key: 'decisions_discovered', label: 'DECISIONS IDENTIFIED', icon: Target, color: 'var(--text)', tooltip: 'Total architectural decisions discovered in the repository' },
   { key: 'protection_relevant', label: 'PROTECTION-RELEVANT', icon: Shield, color: 'var(--accent)', tooltip: 'Decisions that can meaningfully be protected by Mneme (excludes pure guidance)' },
-  { key: 'protected_count', label: 'PROTECTED', icon: CheckCircle, color: 'var(--teal)', tooltip: 'Decisions with deterministic Mneme rules enforced in CI/CD' },
+  { key: 'protected_count', label: 'PROTECTED', icon: CheckCircle, color: 'var(--teal)', tooltip: 'Decisions with deterministic Mneme enforcement evidence identified by the audit' },
   { key: 'mneme_ready_count', label: 'MNEME-READY', icon: AlertTriangle, color: 'var(--warning)', tooltip: 'Decisions with complete specifications ready for rule generation' },
   { key: 'requires_modelling_count', label: 'REQUIRES MODELLING', icon: AlertTriangle, color: 'var(--warning)', tooltip: 'Decisions needing architectural modelling before they can be protected' },
   { key: 'guidance_count', label: 'GUIDANCE ONLY', icon: Circle, color: 'var(--muted)', tooltip: 'Decisions expressing intent without machine-testable constraints' },

@@ -1,339 +1,69 @@
 import { useState, useCallback } from 'react';
-import type {
-  ProtectionAuditResponse,
-  ProtectionSummary,
-  NewAuditRequest,
-  ApiResponse,
-  Project,
-  ProjectWithHistory,
-  ProjectAudit,
-  AuditComparison,
-  CreateProjectRequest,
-  RunAuditRequest,
-  UpdateProjectRequest,
-  ProjectLifecycle,
-} from '../types/audit';
+import type { ApiResponse, AuditComparison, NewAuditRequest, ProjectWithHistory, ProtectionAuditResponse, RunAuditRequest } from '../types/audit';
+import { parseAudit, parseComparison } from '../utils/contracts';
 
-const API_BASE = (import.meta.env.VITE_API_BASE ?? '').replace(/\/$/, '');
+// Preserve main's production endpoint fallback. Explicit preview base overrides it.
+const configured = import.meta.env.VITE_API_BASE?.trim();
+const API_BASE = (configured || (import.meta.env.PROD
+  ? 'https://mneme-audit-api-842519822929.us-central1.run.app' : '')).replace(/\/$/, '');
 
-const STORAGE_PREFIX = 'mneme_audit_';
-
-function getStoredAudit(id: string): ProtectionAuditResponse | null {
-  try {
-    const raw = sessionStorage.getItem(`${STORAGE_PREFIX}${id}`);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // ignore storage error
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, options);
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message = data?.error || data?.detail;
+    throw new Error(typeof message === 'string' ? message : `Request failed (HTTP ${response.status}). Please retry.`);
   }
-  return null;
+  if (data === null) throw new Error('The server returned an invalid response. Please retry.');
+  return data as T;
 }
 
-function storeAudit(audit: ProtectionAuditResponse): void {
-  try {
-    sessionStorage.setItem(`${STORAGE_PREFIX}${audit.audit_id}`, JSON.stringify(audit));
-  } catch {
-    // ignore storage error
-  }
-}
-
-async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
-  try {
-    const response = await fetch(`${API_BASE}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      ...options,
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      return { success: false, error: data.error || data.detail || `HTTP ${response.status}` };
-    }
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
-  }
-}
-
-function toLegacyAudit(p12: ProtectionAuditResponse) {
-  const decisions = p12.decisions.map((d) => {
-    let governability: 'enforceable' | 'partial' | 'guidance';
-    switch (d.protection_classification) {
-      case 'Protected':
-        governability = 'enforceable';
-        break;
-      case 'Mneme-ready':
-      case 'Requires modelling':
-        governability = 'partial';
-        break;
-      default:
-        governability = 'guidance';
-    }
-
-    let confidence = 0.9;
-    if (d.evidence_confidence === 'medium') confidence = 0.6;
-    else if (d.evidence_confidence === 'low') confidence = 0.3;
-
-    return {
-      id: d.id,
-      title: d.title,
-      summary: d.summary,
-      requirement: d.requirement,
-      source: d.source,
-      governability,
-      appliesTo: d.applies_to,
-      proposedRule: d.proposed_rule ? {
-        type: d.proposed_rule.type,
-        pattern: d.proposed_rule.pattern,
-        description: d.proposed_rule.description,
-      } : null,
-      confidence,
-    };
-  });
-
-  const summary = p12.summary;
-  const enforceable = decisions.filter(d => d.governability === 'enforceable').length;
-  const partial = decisions.filter(d => d.governability === 'partial').length;
-  const guidance = decisions.filter(d => d.governability === 'guidance').length;
-  const total = decisions.length;
-  const coverage = total > 0 ? Math.round(((enforceable + partial * 0.5) / total) * 100) : 0;
-
-  return {
-    id: p12.audit_id,
-    repository: p12.repository,
-    repositoryUrl: p12.repository_url,
-    createdAt: p12.timestamp,
-    summary: {
-      totalDecisions: total,
-      enforceable,
-      partial,
-      guidance,
-      coverage,
-      sources: summary.sources,
-    },
-    decisions,
-    gaps: [],
-  };
-}
+const json = (body: unknown): RequestInit => ({
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+});
 
 export function useAuditApi() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // --- Legacy ephemeral audit API ---
-  const createAudit = useCallback(async (request: NewAuditRequest) => {
+  const run = useCallback(async <T,>(action: () => Promise<T>): Promise<ApiResponse<T>> => {
     setLoading(true);
     setError(null);
-
-    const formData = new FormData();
-    if (request.repositoryUrl) formData.append('repository_url', request.repositoryUrl);
-    if (request.zipFile) formData.append('zip_file', request.zipFile);
-    if (request.localPath) formData.append('local_path', request.localPath);
-
-    try {
-      const response = await fetch(`${API_BASE}/api/audit`, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      setLoading(false);
-
-      if (!response.ok) {
-        setError(data.error || 'Failed to create audit');
-        return { success: false as const, error: data.error };
-      }
-
-      const p12Result = data as ProtectionAuditResponse;
-      storeAudit(p12Result);
-      return { success: true as const, data: p12Result };
-    } catch (err) {
-      setLoading(false);
-      const msg = err instanceof Error ? err.message : 'Network error';
-      setError(msg);
-      return { success: false as const, error: msg };
-    }
+    try { return { success: true, data: await action() }; }
+    catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Request failed';
+      setError(message);
+      return { success: false, error: message };
+    } finally { setLoading(false); }
   }, []);
 
-  const getAudit = useCallback(async (id: string) => {
-    const cached = getStoredAudit(id);
-    if (cached) {
-      return { success: true as const, data: cached };
-    }
+  const createAudit = useCallback((input: NewAuditRequest) => run(async () => {
+    const form = new FormData();
+    if (input.repositoryUrl) form.append('repository_url', input.repositoryUrl);
+    if (input.zipFile) form.append('zip_file', input.zipFile);
+    return parseAudit(await request('/api/v1/audit', { method: 'POST', body: form }));
+  }), [run]);
 
-    setLoading(true);
-    setError(null);
-    const result = await fetchApi<ProtectionAuditResponse>(`/api/audit/${id}`);
-    setLoading(false);
-    if (!result.success) {
-      setError(result.error ?? 'Unknown error');
-    } else if (result.data) {
-      storeAudit(result.data);
-    }
-    return result;
-  }, []);
+  const getProjectAudit = useCallback((id: string) => run(async () => {
+    const record = await request<{ id: string; project_id: string; result: ProtectionAuditResponse; summary_payload: ProtectionAuditResponse['summary'] }>(`/api/v1/audits/${encodeURIComponent(id)}`);
+    const result = parseAudit({ ...record.result, summary: record.summary_payload });
+    if (result.audit_id !== record.id) throw new Error('Audit identity does not match the persisted record.');
+    return { ...record, result };
+  }), [run]);
 
-  const getAuditLegacy = useCallback(async (id: string) => {
-    const result = await getAudit(id);
-    if (result.success && result.data) {
-      return { success: true as const, data: toLegacyAudit(result.data) };
-    }
-    return { success: false as const, error: result.error };
-  }, [getAudit]);
+  const getAudit = useCallback(async (id: string): Promise<ApiResponse<ProtectionAuditResponse>> => {
+    const record = await getProjectAudit(id);
+    return record.success ? { success: true, data: record.data!.result } : { success: false, error: record.error };
+  }, [getProjectAudit]);
 
+  const getProject = useCallback((id: string) => run(() => request<ProjectWithHistory>(`/api/v1/projects/${encodeURIComponent(id)}`)), [run]);
+  const saveBaseline = useCallback((auditId: string) => run(() => request<ProjectWithHistory>('/api/v1/baselines', json({ audit_id: auditId }))), [run]);
+  const runProjectAudit = useCallback((id: string, input: RunAuditRequest) => run(() => request<{id: string}>(`/api/v1/projects/${encodeURIComponent(id)}/audits`, json(input))), [run]);
+  const compareAudits = useCallback((id: string) => run(async (): Promise<AuditComparison> =>
+    parseComparison(await request(`/api/v1/projects/${encodeURIComponent(id)}/compare`))), [run]);
   const exportAudit = useCallback(async (id: string, format: 'markdown' | 'json' = 'markdown') => {
-    const response = await fetch(`${API_BASE}/api/audit/${id}/export?format=${format}`);
-    if (!response.ok) throw new Error('Export failed');
+    const response = await fetch(`${API_BASE}/api/v1/audits/${encodeURIComponent(id)}/export?format=${format}`);
+    if (!response.ok) throw new Error('Export failed. Please retry.');
     return response.blob();
   }, []);
-
-  // --- M1 Persistence API ---
-  const createProject = useCallback(async (request: CreateProjectRequest) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await fetchApi<{ id: string; slug: string; lifecycle: ProjectLifecycle }>(
-        '/api/v1/projects',
-        {
-          method: 'POST',
-          body: JSON.stringify(request),
-        }
-      );
-      setLoading(false);
-      if (!result.success) setError(result.error ?? 'Failed to create project');
-      return result;
-    } catch (err) {
-      setLoading(false);
-      const msg = err instanceof Error ? err.message : 'Network error';
-      setError(msg);
-      return { success: false as const, error: msg };
-    }
-  }, []);
-
-  const getProject = useCallback(async (projectId: string) => {
-    setLoading(true);
-    setError(null);
-    const result = await fetchApi<ProjectWithHistory>(`/api/v1/projects/${projectId}`);
-    setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
-    return result;
-  }, []);
-
-  const listProjects = useCallback(async (lifecycle?: ProjectLifecycle, limit = 50, offset = 0) => {
-    setLoading(true);
-    setError(null);
-    const params = new URLSearchParams();
-    if (lifecycle) params.set('lifecycle', lifecycle);
-    params.set('limit', String(limit));
-    params.set('offset', String(offset));
-    const result = await fetchApi<Project[]>(`/api/v1/projects?${params.toString()}`);
-    setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
-    return result;
-  }, []);
-
-  const updateProject = useCallback(async (projectId: string, request: UpdateProjectRequest) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await fetchApi<ProjectWithHistory>(
-        `/api/v1/projects/${projectId}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify(request),
-        }
-      );
-      setLoading(false);
-      if (!result.success) setError(result.error ?? 'Failed to update project');
-      return result;
-    } catch (err) {
-      setLoading(false);
-      const msg = err instanceof Error ? err.message : 'Network error';
-      setError(msg);
-      return { success: false as const, error: msg };
-    }
-  }, []);
-
-  const runProjectAudit = useCallback(async (projectId: string, request: RunAuditRequest) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await fetchApi<{ id: string; status: string; commit_sha: string; mneme_version: string; schema_version: number }>(
-        `/api/v1/projects/${projectId}/audits`,
-        {
-          method: 'POST',
-          body: JSON.stringify(request),
-        }
-      );
-      setLoading(false);
-      if (!result.success) setError(result.error ?? 'Failed to run audit');
-      return result;
-    } catch (err) {
-      setLoading(false);
-      const msg = err instanceof Error ? err.message : 'Network error';
-      setError(msg);
-      return { success: false as const, error: msg };
-    }
-  }, []);
-
-  const getProjectAudit = useCallback(async (auditId: string) => {
-    setLoading(true);
-    setError(null);
-    const result = await fetchApi<{
-      id: string;
-      project_id: string;
-      status: string;
-      trigger_type: string;
-      source_ref: string | null;
-      commit_sha: string;
-      mneme_version: string;
-      schema_version: number;
-      result: ProtectionAuditResponse;
-      summary: ProtectionSummary;
-      started_at: string;
-      completed_at: string | null;
-      created_at: string;
-    }>(`/api/v1/audits/${auditId}`);
-    setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
-    return result;
-  }, []);
-
-  const listProjectAudits = useCallback(async (projectId: string, limit = 50, offset = 0) => {
-    setLoading(true);
-    setError(null);
-    const params = new URLSearchParams();
-    params.set('limit', String(limit));
-    params.set('offset', String(offset));
-    const result = await fetchApi<ProjectAudit[]>(`/api/v1/projects/${projectId}/audits?${params.toString()}`);
-    setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
-    return result;
-  }, []);
-
-  const compareAudits = useCallback(async (projectId: string, currentAuditId?: string) => {
-    setLoading(true);
-    setError(null);
-    const params = currentAuditId ? `?current_audit_id=${currentAuditId}` : '';
-    const result = await fetchApi<AuditComparison>(`/api/v1/projects/${projectId}/compare${params}`);
-    setLoading(false);
-    if (!result.success) setError(result.error ?? 'Unknown error');
-    return result;
-  }, []);
-
-  return {
-    // Legacy
-    createAudit,
-    getAudit,
-    getAuditLegacy,
-    exportAudit,
-    // M1 Persistence
-    createProject,
-    getProject,
-    listProjects,
-    updateProject,
-    runProjectAudit,
-    getProjectAudit,
-    listProjectAudits,
-    compareAudits,
-    loading,
-    error,
-  };
+  return { createAudit, getAudit, getProject, getProjectAudit, saveBaseline, runProjectAudit, compareAudits, exportAudit, loading, error };
 }
