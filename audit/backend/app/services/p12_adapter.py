@@ -39,7 +39,6 @@ class P12DecisionInput:
     assessment: GovernabilityAssessment
     source_path: str
     source_lines: str
-    has_explicit_guardrail: bool = False
 
 
 def map_confidence_to_evidence(confidence: float) -> EvidenceConfidence:
@@ -60,9 +59,9 @@ def build_protection_decision(
     decision = input_data.decision
     
     # DELEGATE to canonical classifier - single source of truth
-    protection_class = classify_protection(assessment, has_explicit_guardrail=input_data.has_explicit_guardrail)
-    evidence_confidence = map_confidence_to_evidence(assessment.confidence)
     proposed_rule = extract_proposed_rule(decision)
+    protection_class = classify_protection(assessment, guardrail=proposed_rule)
+    evidence_confidence = map_confidence_to_evidence(assessment.confidence)
     
     return ProtectionDecision(
         id=decision.id,
@@ -274,7 +273,6 @@ def collect_p12_inputs(
             assessment=assessment,
             source_path=instr['path'],
             source_lines=instr['lines'],
-            has_explicit_guardrail=True,  # Agent instructions have explicit safe guardrails
         ))
     
     # Source 4: Config files

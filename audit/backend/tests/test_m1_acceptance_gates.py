@@ -1260,8 +1260,8 @@ async def test_multi_term_anti_pattern_with_guardrail_is_mneme_ready():
     from app.services.p12_classifier import classify_protection
     from app.models.protection_audit import ProtectionClassification
     
-    # Multi-term anti-pattern that CAN be decomposed into safe single-term guardrails
-    # Example: "no external database calls" -> safe guardrail: FORBID_LITERAL "postgresql" + FORBID_LITERAL "mysql"
+    # This unit fixture supplies an explicitly reviewed literal strategy below.
+    # Production extraction does not invent guardrails from this multi-term prose.
     d = Decision(
         id="test-multi-with-guardrail",
         decision="No external database dependencies",
@@ -1279,11 +1279,15 @@ async def test_multi_term_anti_pattern_with_guardrail_is_mneme_ready():
     assert not assessment.has_single_term_anti_patterns
     
     # Without explicit guardrail -> Requires modelling
-    result = classify_protection(assessment, has_explicit_guardrail=False)
+    result = classify_protection(assessment)
     assert result == ProtectionClassification.REQUIRES_MODELLING
     
     # WITH explicit guardrail -> Mneme-ready
-    result = classify_protection(assessment, has_explicit_guardrail=True)
+    from app.models.protection_audit import MnemeRule
+    # Explicit fixture strategy, not an inferred decomposition of vague prose.
+    guardrail = MnemeRule(type="FORBID_LITERAL", pattern="direct db access",
+                         description="Reject the explicitly prohibited literal direct db access")
+    result = classify_protection(assessment, guardrail=guardrail)
     assert result == ProtectionClassification.MNEME_READY
     
     print("✅ Multi-term anti-pattern with guardrail test PASSED")
@@ -1321,12 +1325,12 @@ async def test_multi_term_anti_pattern_without_guardrail_is_requires_modelling()
     assert not assessment.has_single_term_anti_patterns
     
     # Default (no explicit guardrail) -> Requires modelling
-    result = classify_protection(assessment, has_explicit_guardrail=False)
+    result = classify_protection(assessment)
     assert result == ProtectionClassification.REQUIRES_MODELLING
     
-    # Explicit guardrail -> Mneme-ready
-    result = classify_protection(assessment, has_explicit_guardrail=True)
-    assert result == ProtectionClassification.MNEME_READY
+    # A boolean assertion can no longer upgrade this ambiguous intent.
+    with pytest.raises(TypeError):
+        classify_protection(assessment, has_explicit_guardrail=True)
     
     print("✅ Multi-term anti-pattern without guardrail test PASSED")
 
@@ -1410,13 +1414,14 @@ async def test_p12_compatibility_fixture_integrity(persistence_service: AuditPer
         ProtectionDecision(
             id="agent_claude_md",
             title="Agent Instructions: CLAUDE.md",
-            summary="Follow ADR-001: Use PostgreSQL, never SQLite in production\nFollow ADR-002: Use uv for package ma",
-            requirement="Follow ADR-001: Use PostgreSQL, never SQLite in production\nFollow ADR-002: Use uv for package management\nUse type hints everywhere\nNever commit secrets or API keys\nUse environment variables for configuration\n\nRationale: Agent instructions from CLAUDE.md",
+            summary="Prohibit the literal sqlite3 dependency",
+            requirement="Prohibit the literal sqlite3 dependency. This fixture explicitly identifies the supported literal guardrail.",
             source=DecisionSource(file="CLAUDE.md", lines="1-50"),
             protection_classification=ProtectionClassification.MNEME_READY,
             evidence_confidence=EvidenceConfidence.MEDIUM,
             applies_to=[],
-            proposed_rule=None,
+            proposed_rule=MnemeRule(type="FORBID_LITERAL", pattern="sqlite3",
+                                   description="Reject the literal sqlite3 dependency"),
             category="architecture_decision",
         ),
         # 1 Guidance (config evidence)

@@ -9,10 +9,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_validator, model_validator
 
 
 class ProtectionClassification(str, Enum):
@@ -39,12 +39,19 @@ class DecisionSource(BaseModel):
 
 class MnemeRule(BaseModel):
     """A Mneme rule associated with a decision."""
-    type: str
+    type: Literal["FORBID_LITERAL"]
     pattern: str
     description: str
     include_paths: Optional[List[str]] = None
     exclude_paths: List[str] = field(default_factory=list)
     model_config = ConfigDict(extra="allow")
+
+    @field_validator("pattern", "description")
+    @classmethod
+    def require_nonempty_evidence(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("A supported guardrail requires non-empty pattern and description")
+        return value
 
 
 class ProtectionDecision(BaseModel):
@@ -64,6 +71,13 @@ class ProtectionDecision(BaseModel):
     proposed_rule: Optional[MnemeRule] = None
     category: str = "architecture_decision"
     model_config = ConfigDict(extra="allow")
+
+    @model_validator(mode="after")
+    def require_mneme_ready_guardrail(self):
+        if (self.protection_classification == ProtectionClassification.MNEME_READY
+                and self.proposed_rule is None):
+            raise ValueError("Mneme-ready requires a concrete supported guardrail payload")
+        return self
 
 
 class ProtectionSummary(BaseModel):

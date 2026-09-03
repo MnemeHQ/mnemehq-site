@@ -65,6 +65,8 @@ async def test_exact_workspace_http_journey(workspace):
     assert result["mneme_version"] == version("mneme-hq")
     assert datetime.fromisoformat(result["timestamp"]).tzinfo is not None
     assert result["decisions"]
+    assert all(d.get("proposed_rule", {}).get("pattern", "").strip()
+               for d in result["decisions"] if d["protection_classification"] == "Mneme-ready")
     assert len(result["decisions"]) == result["summary"]["decisions_discovered"]
     assert all(not Path(d["source"]["file"]).is_absolute() for d in result["decisions"])
     original = copy.deepcopy(result)

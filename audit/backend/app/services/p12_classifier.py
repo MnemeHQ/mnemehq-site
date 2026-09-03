@@ -22,12 +22,12 @@ from __future__ import annotations
 
 from mneme.enforcer import GovernabilityAssessment
 
-from app.models.protection_audit import ProtectionClassification
+from app.models.protection_audit import MnemeRule, ProtectionClassification
 
 
 def classify_protection(
     assessment: GovernabilityAssessment,
-    has_explicit_guardrail: bool = False,
+    guardrail: MnemeRule | None = None,
 ) -> ProtectionClassification:
     """
     Canonical P1.2 protection classification from Mneme governability assessment.
@@ -57,31 +57,20 @@ def classify_protection(
     if assessment.has_literal_rules:
         return ProtectionClassification.PROTECTED
 
-    # 2. Mneme-ready: CONCRETE safe Mneme guardrail identified
-    # Single-term anti-patterns = always enforced as FORBID_LITERAL (concrete guardrail)
-    if assessment.has_single_term_anti_patterns:
+    # 2. Evidence, not a source-type/boolean assertion, makes a decision ready.
+    # The adapter extracts this from supported core rules before classification.
+    if guardrail is not None:
+        MnemeRule.model_validate(guardrail)
         return ProtectionClassification.MNEME_READY
 
-    # Multi-term anti-patterns: ONLY Mneme-ready if explicit safe guardrail exists
-    if assessment.has_multi_term_anti_patterns:
-        if has_explicit_guardrail:
-            return ProtectionClassification.MNEME_READY
-        # No explicit guardrail signal -> Requires modelling
-        return ProtectionClassification.REQUIRES_MODELLING
-
-    # 3. Requires modelling: deterministic intent exists but NO safe concrete guardrail
-    # "no X" constraints produce WARN only, need formal modelling
-    if assessment.has_no_constraints:
-        return ProtectionClassification.REQUIRES_MODELLING
-
-    # 4. Guidance: no deterministic intent for enforcement
-    return ProtectionClassification.GUIDANCE
+    # 3. Deterministic intent without a serializable safe strategy needs modelling.
+    return ProtectionClassification.REQUIRES_MODELLING
 
 
 def extract_proposed_rule(decision) -> "MnemeRule | None":
     """Extract proposed Mneme rule from decision's typed rules."""
     from app.models.protection_audit import MnemeRule
-    from mneme.enforcer import _is_literal_rule
+    from mneme.enforcer import _is_literal_rule, _rule_terms
 
     # Priority: FORBID_LITERAL rules first (Protected evidence)
     for rule in decision.rules:
@@ -97,10 +86,13 @@ def extract_proposed_rule(decision) -> "MnemeRule | None":
     # Single-term anti-patterns (Mneme-ready evidence - concrete guardrail)
     for ap in decision.anti_patterns:
         if _is_literal_rule(ap):
+            # Use the core's sole significant literal, not surrounding prose
+            # such as "no postgres". Do not guess a token from multi-term intent.
+            literal = _rule_terms(ap)[0]
             return MnemeRule(
                 type="FORBID_LITERAL",
-                pattern=ap,
-                description=f"FORBID_LITERAL: {ap}",
+                pattern=literal,
+                description=f"FORBID_LITERAL: {literal}",
             )
 
     # Multi-term anti-patterns: NO proposed rule returned
