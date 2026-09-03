@@ -145,7 +145,43 @@ Keep raw `cta_destination`, `copy_context`, `link_text` and `source_page` in
 BigQuery. They can have many distinct values and do not need GA4
 custom-dimension quota for current reports.
 
-## 6. Legacy cutover
+## 6. Reading the funnel: three buckets, not "key events"
+
+GA4 key events alone are NOT Mneme's activation metric. Treating them as such
+produces a materially wrong picture of the site.
+
+A September 2026 analysis of organic Insight landing pages concluded that the
+top articles produced "zero key events" and should therefore all be re-routed
+to the Architecture Audit. That conclusion was wrong. The query counted a
+hand-picked set of `cta_*` events and omitted `outbound_link_clicked`, which
+had 393 events in the window -- 95 of them to the GitHub repository. Those are
+product activations. Re-measuring with them included moved organic Insight
+activation from 0% to ~5.4%, and the proposed blanket re-route would have
+removed working developer activation paths from technical articles.
+
+Compounding it, the single most important activation action -- copying
+`pip install mneme-hq` -- was invisible, because `code_copy` reaches the data
+layer but no published GTM tag forwards it (see section 7). An unmeasured
+action is not an absent one.
+
+Always report against all three buckets:
+
+| Bucket | Signals | Question it answers |
+|---|---|---|
+| **Activation** | `code_copy` (install), GitHub outbound, `/docs/` + quickstart, demo | Did they start using the product? |
+| **Evaluation** | Audit start/completion, `/compare/` pages, benchmark | Are they assessing fit? |
+| **Commercial** | Baseline saved, pilot form, contact | Are they buying? |
+
+The two organic motions in section 2 map onto these differently: the
+developer/evaluation motion terminates in Activation, the architecture-leader
+motion in Commercial. Optimising one bucket while blind to another is how a
+product-led funnel gets traded away for a small number of commercial leads.
+
+Corollary for any future query: enumerate the event names in the window first
+(`SELECT event_name, COUNT(*) ... GROUP BY event_name`) rather than filtering
+to a remembered list, and exclude dev hosts.
+
+## 7. Legacy cutover
 
 The live container still has click-triggered legacy tags including
 `cta_demo_click`, `cta_github_click`, and `install_command_copied`. The homepage
@@ -159,7 +195,7 @@ also previously fired `cta_clicked` directly.
    same event.
 5. Confirm legacy counts fall to zero before deleting anything.
 
-## 7. Verification checklist
+## 8. Verification checklist
 
 - [ ] Homepage hero Install sends one `cta_click` with all parameters.
 - [ ] Copy sends one `code_copy` and no `cta_click`, with
@@ -178,7 +214,7 @@ also previously fired `cta_clicked` directly.
 - [ ] Obsolete key-event flags and overlapping legacy tags are removed only
       after the daily-export check.
 
-## 8. Change log
+## 9. Change log
 
 - [x] 2026-08-30 — live GTM/GA4 configuration audited
 - [x] 2026-08-30 — canonical event taxonomy and explicit parameter map defined
