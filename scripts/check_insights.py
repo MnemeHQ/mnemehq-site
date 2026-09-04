@@ -411,7 +411,11 @@ def check_slug(
     return errors
 
 
-FUNNEL_RE = re.compile(r'href="/(?:pilot|demo|use-cases|compare)/')
+# /audit/ joined the funnel with the Wave 1 CTA routing (sweep_audit_cta.py):
+# it is the primary conversion target on problem-awareness articles and the
+# secondary on developer/evaluation ones, so a page whose only in-body funnel
+# link is the Audit is correctly routed, not unrouted.
+FUNNEL_RE = re.compile(r'href="/(?:pilot|demo|use-cases|compare|audit)/')
 
 # Every article carries a topic-matched contextual conversion CTA, inserted by
 # scripts/insert_contextual_ctas.py and marked with this attribute.
@@ -461,7 +465,7 @@ def slug_warnings(slug: str, html: str, inbound: int) -> list[str]:
     region = article_region(html)
     if not FUNNEL_RE.search(region):
         warns.append(
-            "no in-body funnel link (/pilot, /demo, /use-cases, or /compare) "
+            "no in-body funnel link (/pilot, /demo, /use-cases, /compare, or /audit) "
             "beyond the global nav and GitHub CTA"
         )
     if CONTEXT_CTA_MARKER not in region:
