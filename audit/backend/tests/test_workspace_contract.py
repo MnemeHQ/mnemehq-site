@@ -141,6 +141,24 @@ async def test_zip_contract_has_honest_provenance(workspace):
     assert (await client.post("/api/v1/baselines", json={"audit_id": response.json()["audit_id"]})).status_code == 200
 
 
+@pytest.mark.asyncio
+async def test_real_zip_pipeline_provides_a_concrete_ready_guardrail(workspace):
+    client, _, _ = workspace
+    fixture = Path(__file__).parents[3] / "tests/fixtures/guardrail-ready/AGENTS.md"
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w") as zipped:
+        zipped.writestr("AGENTS.md", fixture.read_text())
+    response = await client.post("/api/v1/audit", files={"zip_file": ("guardrail-ready.zip", archive.getvalue(), "application/zip")})
+    assert response.status_code == 201, response.text
+    result = response.json()
+    assert result["summary"]["mneme_ready_count"] == 1
+    ready = next(d for d in result["decisions"] if d["protection_classification"] == "Mneme-ready")
+    assert ready["proposed_rule"]["type"] == "FORBID_LITERAL"
+    assert ready["proposed_rule"]["pattern"] == "sqlite3"
+    assert ready["proposed_rule"]["description"].strip()
+    assert result["commit_sha"] == "not-applicable:archive"
+
+
 def test_comparison_preserves_authoritative_scores_not_row_reconstruction():
     # Deliberately distinct stored summaries prove comparison transports them.
     baseline = {"schema": "mneme.audit/v1", "summary": {"current_protection": .2, "identified_mneme_potential": .6}, "decisions": []}
