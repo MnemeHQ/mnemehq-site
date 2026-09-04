@@ -52,6 +52,24 @@ async def workspace(tmp_path, monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_reference_only_claude_http_response_is_valid(workspace):
+    client, repo, actor = workspace
+    root = Path(repo.working_tree_dir)
+    (root / "CLAUDE.md").write_text("@AGENTS.md\n", encoding="utf-8")
+    (root / "AGENTS.md").write_text("Never make external database calls from handlers.\n", encoding="utf-8")
+    repo.index.add(["CLAUDE.md", "AGENTS.md"])
+    repo.index.commit("reference-only instruction fixture", author=actor, committer=actor)
+    response = await client.post("/api/v1/audit", data={
+        "repository_url": "https://github.com/example/contract-fixture"})
+    assert response.status_code == 201, response.text
+    result = response.json()
+    decisions = result['decisions']
+    assert all(d['title'].strip() and d['requirement'].strip() for d in decisions)
+    assert not any(d['source']['file'] == 'CLAUDE.md' for d in decisions)
+    assert len([d for d in decisions if d['source']['file'] == 'AGENTS.md']) == 1
+
+
+@pytest.mark.asyncio
 async def test_exact_workspace_http_journey(workspace):
     client, repo, actor = workspace
     created = await client.post("/api/v1/audit", data={
