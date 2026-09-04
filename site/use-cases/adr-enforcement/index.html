@@ -200,10 +200,10 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          {"@type": "Question", "name": "What is ADR enforcement?", "acceptedAnswer": {"@type": "Answer", "text": "ADR enforcement is the layer between a written architectural decision and the change an AI coding agent proposes. Recording a decision in an ADR does not create a control: the document is human-readable, and nothing sits between it and the generated diff. Enforcement means the decisions that can be checked mechanically are applied to changes before they land."}},
-          {"@type": "Question", "name": "Does every ADR become an enforceable rule?", "acceptedAnswer": {"@type": "Answer", "text": "No, and Mneme does not claim otherwise. The Architecture Protection Audit classifies each decision as Protected, Mneme-ready, Requires modelling, or Guidance. Only some decisions reduce to a concrete supported guardrail; others carry real architectural intent that should stay guidance rather than becoming a literal rule."}},
-          {"@type": "Question", "name": "What is the difference between Mneme-ready and Requires modelling?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme-ready means the Audit reduced the decision to one concrete supported guardrail without guessing which words carry the meaning. Requires modelling means the intent looks enforceable but the phrasing spans several independent terms, so turning it directly into a rule would risk false positives. The Audit declines to invent a guardrail in that case."}},
-          {"@type": "Question", "name": "Why does Mneme refuse to enforce multi-term decisions automatically?", "acceptedAnswer": {"@type": "Answer", "text": "Because it was tried and it failed. Treating the words of a multi-term architectural instruction as independent forbidden literals caused benign uses of individual words to be rejected. Mneme therefore does not promote ambiguous multi-term prose into deterministic enforcement without modelling it first."}}
+          {"@type": "Question", "name": "Does every ADR become an enforceable rule?", "acceptedAnswer": {"@type": "Answer", "text": "No, and Mneme does not claim otherwise. The Audit classifies each decision as Protected, Mneme-ready, Requires modelling, or Guidance. Only some decisions reduce to a concrete supported guardrail, and some carry real architectural intent that should stay guidance rather than becoming a literal rule."}},
+          {"@type": "Question", "name": "What is the difference between Mneme-ready and Requires modelling?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme-ready means the Audit has a concrete supported guardrail it can represent without guessing. In the automatic literal path, a single significant term is enough; multi-term intent remains Requires modelling unless a safe explicit guardrail is available. The Audit declines to invent a guardrail it cannot stand behind."}},
+          {"@type": "Question", "name": "Why not enforce multi-term decisions automatically anyway?", "acceptedAnswer": {"@type": "Answer", "text": "Because it was tried and it failed. Treating the words of a multi-term architectural instruction as independent forbidden literals caused benign uses of individual words to be rejected, and enforcement that produces false positives gets switched off. Mneme therefore does not promote ambiguous multi-term prose into deterministic enforcement without modelling it first."}},
+          {"@type": "Question", "name": "Does installing Mneme raise my Architecture Protection figure?", "acceptedAnswer": {"@type": "Answer", "text": "No. Current Protection increases when a decision gains active deterministic protection. Modelling a harder decision may first move it to Mneme-ready, which raises the protection Mneme has identified as achievable rather than the protection you currently have; it becomes Protected only when that guardrail is activated."}}
         ]
       }
     ]
@@ -312,7 +312,7 @@
     <p>Protected and Guidance are the easy ends of the range. The commercially useful distinction is between the two in between, and it is mechanical rather than editorial:</p>
 
     <ul>
-      <li><strong>Mneme-ready</strong> means the Audit can reduce the decision to a concrete supported guardrail <em>without guessing</em>. The decision names one significant thing, so there is no ambiguity about which word carries the meaning. The Audit emits the rule and you can copy it.</li>
+      <li><strong>Mneme-ready</strong> means the Audit has a concrete supported guardrail it can represent <em>without guessing</em>. In the automatic literal path shown here, a single significant term is enough. Multi-term intent remains Requires modelling unless a safe explicit guardrail is available. When a guardrail exists, the Audit emits it and you can copy it.</li>
       <li><strong>Requires modelling</strong> means the architectural intent appears enforceable, but turning the prose directly into a rule would risk false positives or misrepresent what the decision actually says.</li>
     </ul>
 
@@ -322,13 +322,13 @@
 
     <p>It would be easy to be more generous here. A decision like &ldquo;no vector DBs, agent loops, or LiteLLM&rdquo; obviously carries enforceable intent, and a tool that wanted a better-looking number could simply treat each word in it as a forbidden literal.</p>
 
-    <p>That approach was tried, and it failed in a specific and instructive way. Treating the words of a multi-term architectural instruction as independent forbidden literals means the rule fires on any one of them in isolation. The sentence above decomposes into five separate terms &mdash; <code>vector</code>, <code>dbs</code>, <code>agent</code>, <code>loops</code>, <code>litellm</code> &mdash; and the first four appear constantly in code that does nothing wrong. Benign prose started failing. The enforcement layer became noise, and noisy enforcement gets switched off.</p>
+    <p>That approach was tried, and it failed in a specific and instructive way. Treating the words of a multi-term architectural instruction as independent forbidden literals means the rule fires on any one of them in isolation. The sentence above decomposes into five separate terms &mdash; <code>vector</code>, <code>dbs</code>, <code>agent</code>, <code>loops</code>, <code>litellm</code> &mdash; and several of those can appear innocently in code or documentation. Earlier dogfooding showed that treating them independently produced false positives. The enforcement layer became noise, and noisy enforcement gets switched off.</p>
 
     <div class="callout">
-      <p><strong>The design principle.</strong> Mneme does not automatically promote ambiguous multi-term prose into deterministic enforcement. A single-term decision is safe to enforce because there is no phrase to take apart and therefore no guess about which word means something. A multi-term decision needs modelling first &mdash; scoping it to the paths it governs, or splitting it into the separate constraints it actually contains.</p>
+      <p><strong>The design principle.</strong> Mneme does not automatically promote ambiguous multi-term prose into deterministic enforcement. For a single-term anti-pattern, the Audit can formulate a literal guardrail without decomposing the prose. A multi-term decision needs modelling first &mdash; scoping it to the paths it governs, or splitting it into the separate constraints it actually contains.</p>
     </div>
 
-    <p>&ldquo;Requires modelling&rdquo; is therefore not a gap in the product. It is the Audit declining to manufacture a guardrail it cannot stand behind, and it is the reason the Mneme-ready count means something when you see it.</p>
+    <p>&ldquo;Requires modelling&rdquo; is therefore not a failure state. It marks a boundary of what can be enforced automatically today, and the useful thing is that the Audit exposes that boundary rather than fabricating a rule to hide it. It is also the reason the Mneme-ready count means something when you see it.</p>
 
     <h2>What this is not</h2>
 
@@ -353,7 +353,7 @@
       <p><strong>Audit &rarr; install &rarr; review your protection gaps &rarr; activate guardrails deliberately.</strong></p>
     </div>
 
-    <p>Nothing in that sequence happens to your repository without you choosing it. Installing Mneme does not silently switch on the guardrails the Audit identified, and it does not change your Architecture Protection figure on its own &mdash; that figure moves when you activate protection for a decision, or when you do the modelling work that makes one of the harder decisions enforceable. Guardrails for Requires modelling decisions are not generated automatically; that is the point of the classification.</p>
+    <p>Nothing in that sequence happens to your repository without you choosing it. Installing Mneme does not silently switch on the guardrails the Audit identified, and it does not change your Architecture Protection figure on its own. Current Protection increases when a decision gains active deterministic protection. Modelling a harder decision may first move it to Mneme-ready, increasing the protection Mneme has identified as achievable; it becomes Protected only when that guardrail is activated. Guardrails for Requires modelling decisions are not generated automatically; that is the point of the classification.</p>
 
     <p>Start with the decisions you already have, and find out which state they are in.</p>
 
@@ -366,7 +366,7 @@
 
     <details>
       <summary>What is the difference between Mneme-ready and Requires modelling?</summary>
-      <div class="faq-body">Mneme-ready means the Audit reduced the decision to one concrete supported guardrail without guessing which words carry the meaning. Requires modelling means the intent looks enforceable but the phrasing spans several independent terms, so turning it directly into a rule would risk false positives. The Audit declines to invent a guardrail in that case.</div>
+      <div class="faq-body">Mneme-ready means the Audit has a concrete supported guardrail it can represent without guessing. In the automatic literal path, a single significant term is enough; multi-term intent remains Requires modelling unless a safe explicit guardrail is available. The Audit declines to invent a guardrail it cannot stand behind.</div>
     </details>
 
     <details>
@@ -376,7 +376,7 @@
 
     <details>
       <summary>Does installing Mneme raise my Architecture Protection figure?</summary>
-      <div class="faq-body">No. The figure moves when a decision actually becomes protected &mdash; when you activate a guardrail the Audit identified, or when you model one of the harder decisions into an enforceable form. Installation on its own changes nothing about your repository.</div>
+      <div class="faq-body">No. Current Protection increases when a decision gains active deterministic protection. Modelling a harder decision may first move it to Mneme-ready, which raises the protection Mneme has identified as achievable rather than the protection you currently have; it becomes Protected only when that guardrail is activated.</div>
     </details>
 
 
