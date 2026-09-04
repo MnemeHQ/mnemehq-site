@@ -3,7 +3,7 @@
 **Prepared, not executed. This checklist is not authorization to rotate credentials,
 change production permissions, provision resources, or deploy. #90 is not merge-ready.**
 
-Use the final clean `codex/m12-release-fixes` HEAD recorded in the release handoff.
+Use the final clean `fix/m12-release-fixes` HEAD recorded in the release handoff.
 Build both images from that same checkout. Do not use the dirty `C:/dev` checkout,
 its deployment scripts, or the earlier local-only proxy/bootstrap helper.
 
