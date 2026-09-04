@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import type { ApiResponse, AuditComparison, NewAuditRequest, ProjectWithHistory, ProtectionAuditResponse, RunAuditRequest } from '../types/audit';
-import { parseAudit, parseComparison } from '../utils/contracts';
+import type { ApiResponse, AuditComparison, NewAuditRequest, ProtectionAuditResponse, RunAuditRequest } from '../types/audit';
+import { parseAudit, parseComparison, parseProject } from '../utils/contracts';
 
 // Preserve main's production endpoint fallback. Explicit preview base overrides it.
 const configured = import.meta.env.VITE_API_BASE?.trim();
@@ -46,7 +46,7 @@ export function useAuditApi() {
   const getProjectAudit = useCallback((id: string) => run(async () => {
     const record = await request<{ id: string; project_id: string; result: ProtectionAuditResponse; summary_payload: ProtectionAuditResponse['summary'] }>(`/api/v1/audits/${encodeURIComponent(id)}`);
     const result = parseAudit({ ...record.result, summary: record.summary_payload });
-    if (result.audit_id !== record.id) throw new Error('Audit identity does not match the persisted record.');
+    if (result.audit_id !== record.id || record.id !== id) throw new Error('Audit identity does not match the requested persisted record.');
     return { ...record, result };
   }), [run]);
 
@@ -55,8 +55,16 @@ export function useAuditApi() {
     return record.success ? { success: true, data: record.data!.result } : { success: false, error: record.error };
   }, [getProjectAudit]);
 
-  const getProject = useCallback((id: string) => run(() => request<ProjectWithHistory>(`/api/v1/projects/${encodeURIComponent(id)}`)), [run]);
-  const saveBaseline = useCallback((auditId: string) => run(() => request<ProjectWithHistory>('/api/v1/baselines', json({ audit_id: auditId }))), [run]);
+  const getProject = useCallback((id: string) => run(async () => {
+    const project = parseProject(await request(`/api/v1/projects/${encodeURIComponent(id)}`));
+    if (project.id !== id) throw new Error('Project identity does not match the requested record.');
+    return project;
+  }), [run]);
+  const saveBaseline = useCallback((auditId: string) => run(async () => {
+    const project = parseProject(await request('/api/v1/baselines', json({ audit_id: auditId })));
+    if (project.baseline_audit_id !== auditId) throw new Error('Saved baseline does not match the requested audit.');
+    return project;
+  }), [run]);
   const runProjectAudit = useCallback((id: string, input: RunAuditRequest) => run(() => request<{id: string}>(`/api/v1/projects/${encodeURIComponent(id)}/audits`, json(input))), [run]);
   const compareAudits = useCallback((id: string) => run(async (): Promise<AuditComparison> =>
     parseComparison(await request(`/api/v1/projects/${encodeURIComponent(id)}/compare`))), [run]);

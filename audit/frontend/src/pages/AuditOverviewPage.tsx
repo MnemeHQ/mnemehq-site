@@ -240,12 +240,12 @@ export function AuditOverviewPage() {
   }, [decisions, classificationFilter, sourceTypeFilter, searchQuery]);
 
   const counts = useMemo(() => ({
-    all: decisions.length,
-    Protected: decisions.filter(d => d.protection_classification === 'Protected').length,
-    'Mneme-ready': decisions.filter(d => d.protection_classification === 'Mneme-ready').length,
-    'Requires modelling': decisions.filter(d => d.protection_classification === 'Requires modelling').length,
-    Guidance: decisions.filter(d => d.protection_classification === 'Guidance').length,
-  }), [decisions]);
+    all: summary?.decisions_discovered ?? 0,
+    Protected: summary?.protected_count ?? 0,
+    'Mneme-ready': summary?.mneme_ready_count ?? 0,
+    'Requires modelling': summary?.requires_modelling_count ?? 0,
+    Guidance: summary?.guidance_count ?? 0,
+  }), [summary]);
 
   const decisionsByClassification = useMemo(() => {
     const groups: Record<ProtectionClassification, ProtectionDecision[]> = {

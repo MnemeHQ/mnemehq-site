@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
-import { parseAudit, parseComparison } from './utils/contracts';
+import { parseAudit, parseComparison, parseProject } from './utils/contracts';
 
 const summary = { decisions_discovered: 1, protection_relevant: 0, protected_count: 0,
   mneme_ready_count: 0, requires_modelling_count: 0, guidance_count: 1,
@@ -41,6 +41,48 @@ it('rejects legacy/missing/non-finite fields before rendering an audit', () => {
   expect(() => parseAudit({...audit, summary: {...summary, current_protection: NaN}})).toThrow();
   expect(parseAudit(audit).audit_id).toBe(audit.audit_id);
   expect(() => parseComparison({...comparison, summary: undefined})).toThrow('incompatible comparison');
+});
+
+it.each([null, {}, {type: 'FORBID_LITERAL', pattern: ' ', description: 'Reject token'},
+  {type: 'UNSUPPORTED', pattern: 'sqlite3', description: 'Reject token'}])(
+  'rejects an invalid Mneme-ready guardrail without reclassifying or hiding it: %j', rule => {
+    expect(() => parseAudit({...audit, decisions: [{...decision,
+      protection_classification: 'Mneme-ready', proposed_rule: rule}]})).toThrow('incompatible audit');
+  });
+
+it('rejects unsafe render shapes and missing project identity', () => {
+  expect(() => parseAudit({...audit, decisions: [{...decision, evidence_confidence: 'unknown'}]})).toThrow();
+  expect(() => parseProject({...project, id: undefined})).toThrow('incompatible project');
+  expect(() => parseProject({...project, id: 'undefined'})).toThrow();
+  expect(() => parseComparison({...comparison, decisions: [{...comparison.decisions[0], current_decision: {id: 'bad'}}]})).toThrow();
+});
+
+it('opens a concrete guardrail supplied by the backend', async () => {
+  const ready = {...decision, protection_classification: 'Mneme-ready', proposed_rule: {
+    type: 'FORBID_LITERAL', pattern: 'sqlite3', description: 'Reject the sqlite3 literal',
+  }};
+  vi.mocked(fetch).mockImplementation(() => respond({id: audit.audit_id,
+    project_id: project.id, result: {...audit, decisions: [ready]}, summary_payload: summary}));
+  mount('/audit/baseline-id/decisions/config');
+  const button = await screen.findByRole('button', {name: 'View guardrail'});
+  const target = document.getElementById('guardrail')!;
+  target.scrollIntoView = vi.fn();
+  fireEvent.click(button);
+  expect(target.scrollIntoView).toHaveBeenCalled();
+  expect(target).toHaveFocus();
+  expect(screen.getByText('FORBID_LITERAL "sqlite3"')).toBeInTheDocument();
+  expect(screen.getByText('Reject the sqlite3 literal')).toBeInTheDocument();
+});
+
+it('rejects a baseline response without a project ID instead of navigating to undefined', async () => {
+  vi.mocked(fetch).mockImplementation((input) => String(input).endsWith('/baselines')
+    ? respond({...project, id: undefined})
+    : respond({id: audit.audit_id, project_id: project.id, result: audit, summary_payload: summary}));
+  mount('/audit/baseline-id');
+  fireEvent.click(await screen.findByRole('button', {name: 'Save Baseline'}));
+  expect(await screen.findByRole('alert')).toHaveTextContent('incompatible project');
+  expect(screen.getByRole('button', {name: 'Save Baseline'})).toBeInTheDocument();
+  expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).includes('/undefined'))).toBe(false);
 });
 
 it('uses canonical multipart response and saves the exact audit ID as JSON', async () => {
