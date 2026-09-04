@@ -306,10 +306,12 @@ legacy event counts fall to zero. Delete the paused tags only after that.
 The BrowserRouter application at `/audit/workspace/` now owns a separate,
 production-host-gated data-layer adapter. The adapter loads `GTM-KL7FB67N`
 only for a production build running at exactly `https://mnemehq.com`; local,
-preview, test, non-HTTPS, and kill-switched builds neither load GTM nor push
-events. Do not merge or deploy the application change until the container work
-below is published, because the current Google tag could otherwise create an
-automatic page view containing a real BrowserRouter identifier.
+preview, test, non-HTTPS, and deployment/build-kill-switched builds neither
+load GTM nor push events. `VITE_AUDIT_GTM_ENABLED` is compiled into the bundle,
+so changing it requires a rebuild and redeploy. Do not merge or deploy the
+application change until the container work below is published, because the
+current Google tag could otherwise create an automatic page view containing a
+real BrowserRouter identifier.
 
 The application emits these canonical events:
 
@@ -356,9 +358,10 @@ destination. Screen paths use these templates only:
 /audit/workspace/project/:projectId/compare
 ```
 
-### Required GTM work before merge
+### Release sequence
 
-1. Add version-2 Data Layer Variables for every Audit parameter named above,
+1. Before merging PR #96, configure and publish GTM: add version-2 Data Layer
+   Variables for every Audit parameter named above,
    plus `page_location`, `page_title`, and `page_referrer`; retain the existing
    attribution DLVs from section 3.
 2. Extend `Custom Event - Canonical Analytics` and its single canonical GA4
@@ -374,9 +377,23 @@ destination. Screen paths use these templates only:
    Disable Enhanced Measurement browser-history page views so BrowserRouter
    transitions cannot transmit raw identifiers; the explicit virtual tag is
    the sole page-view source for the workspace.
-5. In GTM Preview and GA4 DebugView, verify one virtual page view per current
-   screen, no view for `/audit` redirect migration, correct success/failure
-   ordering, and no raw identifier in any event or page URL.
-6. Publish the container, record the new version/date here, then make PR #82
-   eligible for merge. Confirm the next BigQuery daily export before deleting
-   any paused legacy configuration.
+5. Publish the container and record the new version/date here. Do not weaken
+   the exact-production-host gate to force pre-merge application events into
+   GTM Preview; the app cannot emit them on localhost or a preview hostname by
+   design. Leave all four paused legacy tags untouched pending the separate
+   zero-legacy BigQuery confirmation.
+6. Immediately after the GTM publish, squash-merge PR #96 and allow the normal
+   production deployment to complete. A merge or started deployment is not
+   deployment proof; use the repository deployment evidence contract.
+7. Immediately validate the deployed production workspace with Tag Assistant
+   and GA4 DebugView: one templated `page_view` per screen; no raw identifiers;
+   fresh-create `audit_start` then `audit_complete`; no completion on refresh;
+   persistence-confirmed baseline events; mutually correct re-audit outcomes;
+   backend comparison values; pattern-free decision/copy events; export only
+   after body completion; and intact `source_page`, `link_text`, and
+   `content_segment` CTA attribution.
+8. If an identifier leaks or page views duplicate, disable the Audit GTM
+   configuration immediately (or deploy a build with
+   `VITE_AUDIT_GTM_ENABLED=false`) and roll back the application deployment as
+   appropriate. Confirm the next BigQuery daily export before deleting any
+   paused legacy configuration.
