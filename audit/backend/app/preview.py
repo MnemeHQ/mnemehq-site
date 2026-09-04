@@ -37,13 +37,18 @@ class PreviewSite(StaticFiles):
     async def get_response(self, path, scope):
         path = path.replace('\\', '/')
         try:
-            return await super().get_response(path, scope)
+            response = await super().get_response(path, scope)
         except HTTPException as error:
-            route = PurePosixPath(path)
-            if (error.status_code != 404 or not path.startswith('audit/workspace/')
-                    or route.suffix or '..' in route.parts):
+            if error.status_code != 404:
                 raise
-            return await super().get_response('audit/workspace/index.html', scope)
+            response = None
+        if response is None or response.status_code == 404:
+            route = PurePosixPath(path)
+            if path.startswith('audit/workspace/') and not route.suffix and '..' not in route.parts:
+                return await super().get_response('audit/workspace/index.html', scope)
+            if response is None:
+                raise HTTPException(status_code=404)
+        return response
 
 
 def create_preview_app():

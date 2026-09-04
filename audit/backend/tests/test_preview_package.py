@@ -32,11 +32,14 @@ def test_preview_runtime_and_migration_credentials_are_separate(monkeypatch):
         require_preview_database(MIGRATOR_USER)
 
 
-def test_preview_clean_deep_links_do_not_swallow_api_or_asset_errors(tmp_path):
+@pytest.mark.parametrize('custom_404', [False, True])
+def test_preview_clean_deep_links_do_not_swallow_api_or_asset_errors(tmp_path, custom_404):
     workspace = tmp_path / 'audit/workspace'
     workspace.mkdir(parents=True)
     (workspace / 'index.html').write_text('<main>Workspace shell</main>')
     (tmp_path / 'audit/index.html').write_text('<main>Architecture Protection</main>')
+    if custom_404:
+        (tmp_path / '404.html').write_text('<main>Site not found</main>')
     app = FastAPI()
 
     @app.get('/api/check')
