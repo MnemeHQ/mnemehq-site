@@ -1,9 +1,15 @@
 # GTM/GA4 canonical tagging requirements
 
-Status: canonical tags LIVE since 2026-08-30 (container version 5,
-"Canonical analytics event normalization"). Legacy duplicate tags are still
-running alongside them -- see section 7, which is the outstanding work.
+Status: canonical tags LIVE since 2026-08-30 (version 5). Legacy duplicate
+tags PAUSED 2026-09-03 (version 6, "Attribution params + legacy duplicate
+cutover"), which also added the three attribution DLVs.
 Last verified against GTM container `GTM-KL7FB67N`: 2026-09-03.
+
+**2026-09-03 is the clean measurement baseline.** Canonical analytics did not
+exist before 2026-08-30 and ran duplicated until 2026-09-03. Do not infer
+anything about install intent, CTA performance or activation from the absence
+or volume of these events before that date, and do not use pre-baseline data
+as a control for the Wave 1 CTA routing experiment.
 
 This document is the source of truth for site event delivery. The site pushes
 structured objects to `window.dataLayer`; GTM reads those objects and sends GA4
@@ -170,13 +176,33 @@ Always check the window against the container's publish date before concluding
 an event does not exist. An unmeasured action is not an absent one, and a
 recently-instrumented one is not an unmeasured one.
 
-Always report against all three buckets:
+### Mneme's funnel definition
 
-| Bucket | Signals | Question it answers |
-|---|---|---|
-| **Activation** | `code_copy` (install), GitHub outbound, `/docs/` + quickstart, demo | Did they start using the product? |
-| **Evaluation** | Audit start/completion, `/compare/` pages, benchmark | Are they assessing fit? |
-| **Commercial** | Baseline saved, pilot form, contact | Are they buying? |
+Stop treating a bag of GA4 events as "key events". These three states are the
+funnel; report against all of them or none:
+
+| State | Members |
+|---|---|
+| **PLG activation** | `code_copy`, Quickstart/docs CTA, GitHub CTA, demo activation |
+| **Evaluation** | Audit CTA, `audit_start`, `audit_complete`, comparison interaction |
+| **Commercial** | baseline saved, pilot CTA, contact/pilot submission |
+
+**Count unique sessions or users reaching a state -- never sum raw events.**
+A state is binary per session: reached or not. This is what makes the funnel
+robust even when a generic analytics event legitimately coexists with a
+canonical one, and it is why the 2x/5x duplication corrupted raw totals while
+leaving session-level rates intact.
+
+### One canonical event per action -- not one event per action
+
+The target is **one canonical Mneme event per user action, with no duplicate
+canonical/legacy equivalent.** It is NOT "exactly one GA4 event per click".
+
+GA4 Enhanced Measurement stays enabled, so a GitHub CTA click legitimately
+produces both a canonical `cta_click` and a generic Enhanced Measurement
+`click`. That is correct and useful. The rule is that the two must never be
+counted as the same conversion: canonical events define the funnel states
+above, and Enhanced Measurement events are generic context only.
 
 The two organic motions in section 2 map onto these differently: the
 developer/evaluation motion terminates in Activation, the architecture-leader
@@ -187,15 +213,15 @@ Corollary for any future query: enumerate the event names in the window first
 (`SELECT event_name, COUNT(*) ... GROUP BY event_name`) rather than filtering
 to a remembered list, and exclude dev hosts.
 
-## 7. Legacy cutover -- OUTSTANDING, actively corrupting counts
+## 7. Legacy cutover -- COMPLETED 2026-09-03 (version 6)
 
 The live container still has click-triggered legacy tags including
 `cta_demo_click`, `cta_github_click`, and `install_command_copied`. The homepage
 also previously fired `cta_clicked` directly.
 
-Canonical and legacy have both been live since 2026-08-30, so every tagged
-click is currently counted more than once. Measured 2026-09-03, grouping events
-by session and second:
+Canonical and legacy were both live from 2026-08-30 to 2026-09-03, so every
+tagged click in that window was counted more than once. Measured 2026-09-03,
+grouping events by session and second:
 
 | One user action | Events actually recorded |
 |---|---|
@@ -203,9 +229,32 @@ by session and second:
 | GitHub link click (worst observed) | `click` + `cta_github_click` x2 + `outbound_link_clicked` x2 (5x) |
 | Demo CTA click | `cta_click` + `cta_demo_click` (2x) |
 
-Any raw event count spanning 2026-08-30 onward is inflated. Session-level
-metrics that use `MAX(...)` per session are unaffected. Complete steps 1-5
-below before quoting event totals from this period.
+Any raw event count between 2026-08-30 and 2026-09-03 is inflated.
+Session-level metrics that use `MAX(...)` per session are unaffected.
+
+Paused in version 6, with the duplication each caused:
+
+| Paused tag | Trigger | Duplicated |
+|---|---|---|
+| `GA4 - cta_demo_click` | Click - Demo | canonical `cta_click` (demo CTAs carry `data-cta-intent="demo"`) |
+| `GA4 - cta_github_click` | Click - GitHub | canonical `cta_click` (GitHub CTAs carry `data-cta-intent="github"`) |
+| `GA4 - install_command_copied` | Custom Event | `code_copy`; also dead -- no page emits that event |
+| `GA4 - outbound_link_clicked` | Click - Outbound | Enhanced Measurement's native outbound `click` |
+
+Deliberately NOT paused: Enhanced Measurement (generic outbound continues via
+its native `click`), and `insight_article_clicked`, `use_case_viewed`,
+`demo_page_viewed`, `contact_method_clicked`, `community_engagement_click`,
+`benchmark_section_viewed`, `scroll_depth` -- none of which duplicate a
+canonical event.
+
+Verified against the live container (`gtm.js?id=GTM-KL7FB67N`) after publish:
+`cta_demo_click`, `cta_github_click` and `outbound_link_clicked` are absent
+entirely; `install_command_copied` survives only as an orphaned trigger
+predicate with no tag attached, so it cannot fire. `cta_click`, `code_copy`,
+the `pilot_form_*` regex, and all three new DLVs are present.
+
+Still to confirm from the daily BigQuery export (first clean day 2026-09-04):
+legacy event counts fall to zero. Delete the paused tags only after that.
 
 1. Publish the canonical tags while legacy tags remain unchanged.
 2. Verify exactly one canonical event per action in GTM Preview and DebugView.
@@ -244,5 +293,10 @@ below before quoting event totals from this period.
 - [ ] date — site event normalization deployed
 - [x] 2026-08-30 — GTM variables, regex trigger, and router tag staged and verified in Preview
 - [ ] date — staged GTM workspace published
+- [x] 2026-09-03 — version 6 published: `DLV - link_text`, `DLV - source_page`,
+      `DLV - content_segment` added and mapped onto the canonical tag (11
+      parameters); `cta_demo_click`, `cta_github_click`,
+      `install_command_copied` and `outbound_link_clicked` paused; verified
+      against the live container
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
