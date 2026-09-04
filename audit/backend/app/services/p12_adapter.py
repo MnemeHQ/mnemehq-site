@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import List, Optional
 from uuid import uuid4
 from hashlib import sha256
+import re
 
 from mneme.enforcer import (
     assess_governability,
@@ -238,7 +239,14 @@ def collect_p12_inputs(
     
     # Source 3: Agent instructions (CLAUDE.md, AGENTS.md)
     for instr in agent_instructions:
+        # Supported targets are already discovered independently and deduplicated
+        # by the source finder. Do not follow arbitrary includes or invent intent
+        # from a wrapper, including when its target is missing or outside the repo.
+        if _is_reference_only_instruction(instr['content']):
+            continue
         constraints = _extract_constraints_for_p12(instr['content'])
+        if not constraints:
+            continue
         anti_pattern_keywords = ["no ", "avoid ", "never ", "prohibit", "forbid", "forbidden",
             "do not ", "don't ", "must not ", "shall not ", "should not ",
             "cannot ", "can't ", "disallow", "prohibited", "disallowed",
@@ -308,6 +316,21 @@ def collect_p12_inputs(
         ))
     
     return inputs
+
+
+def _is_reference_only_instruction(text: str) -> bool:
+    """Recognize instruction pointers without opening or interpreting their targets."""
+    target = r"(?:`?@?[^\s`]+\.md`?|\[[^\]]+\]\([^\s)]+\.md\))"
+    pointer = re.compile(
+        rf"(?:@[^\s]+|{target}|"
+        rf"(?:see|read|follow|use|include|import|refer to|defer to)\s+"
+        rf"(?:the\s+)?(?:(?:instructions|guidelines)\s+(?:in|from)\s+)?{target}"
+        rf"(?:\s+for\s+(?:all\s+)?(?:instructions|guidelines))?)[.!]?",
+        re.IGNORECASE,
+    )
+    lines = [line.strip() for line in text.splitlines()
+             if line.strip() and not line.lstrip().startswith('#')]
+    return bool(lines) and all(pointer.fullmatch(line) for line in lines)
 
 
 def _extract_constraints_for_p12(text: str) -> List[str]:

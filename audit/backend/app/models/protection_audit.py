@@ -72,6 +72,13 @@ class ProtectionDecision(BaseModel):
     category: str = "architecture_decision"
     model_config = ConfigDict(extra="allow")
 
+    @field_validator("title", "requirement")
+    @classmethod
+    def require_decision_text(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("A protection decision requires non-empty title and requirement")
+        return value
+
     @model_validator(mode="after")
     def require_mneme_ready_guardrail(self):
         if (self.protection_classification == ProtectionClassification.MNEME_READY
