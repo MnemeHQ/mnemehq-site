@@ -2,9 +2,8 @@ import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
-import { StatsGrid } from '../components/StatsGrid';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
-import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
+import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save, ArrowRight } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
 type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
@@ -22,21 +21,21 @@ const CLASSIFICATION_ORDER: ProtectionClassification[] = ['Protected', 'Mneme-re
 const ICON_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'protected',
   'Mneme-ready': 'mneme-ready',
-  'Requires modelling': 'requires-modelling',
+  'Requires modelling': 'ready-to-protect',
   Guidance: 'guidance',
 };
 
 const BADGE_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'badge-protected',
   'Mneme-ready': 'badge-mneme-ready',
-  'Requires modelling': 'badge-requires-modelling',
+  'Requires modelling': 'badge-ready-to-protect',
   Guidance: 'badge-guidance',
 };
 
 const BADGE_LABEL: Record<ProtectionClassification, string> = {
   Protected: 'PROTECTED',
   'Mneme-ready': 'MNEME-READY',
-  'Requires modelling': 'REQUIRES MODELLING',
+  'Requires modelling': 'READY TO PROTECT',
   Guidance: 'GUIDANCE ONLY',
 };
 
@@ -353,6 +352,11 @@ export function AuditOverviewPage() {
   }
 
   const protectionPct = Math.round(currentProtection * 100);
+  const gapCount = mnemeReadyCount + requiresModellingCount;
+
+  const bridgeStatement = protectionRelevant > 0 && gapCount > 0
+    ? `${gapCount} architectural decision${gapCount > 1 ? 's' : ''} could be converted from guidance into enforceable protection.`
+    : '';
 
   return (
     <div className="audit-layout">
@@ -360,7 +364,8 @@ export function AuditOverviewPage() {
       
       <main className="flex-1">
         <div className="audit-container">
-          <header className="audit-hero" style={{ paddingTop: '2rem', paddingBottom: '2rem', textAlign: 'center' }}>
+          {/* ── HERO SECTION ── */}
+          <header className="audit-hero" style={{ paddingTop: '3rem', paddingBottom: '3rem', textAlign: 'center' }}>
             <span className="audit-hero-tag">Architecture Protection Audit</span>
             <h1>{repository}</h1>
             
@@ -374,7 +379,7 @@ export function AuditOverviewPage() {
               </p>
             </div>
             
-            <div className="protection-breakdown mt-4 flex flex-wrap gap-3 justify-center">
+            <div className="protection-breakdown mt-4 flex flex-wrap gap-2 justify-center">
               <span className="badge badge-protected flex items-center gap-1">
                 <CheckCircle size={12} /> {protectedCount} Protected
               </span>
@@ -384,8 +389,8 @@ export function AuditOverviewPage() {
                 </span>
               )}
               {requiresModellingCount > 0 && (
-                <span className="badge badge-requires-modelling flex items-center gap-1">
-                  <Brain size={12} /> {requiresModellingCount} Requires modelling
+                <span className="badge badge-ready-to-protect flex items-center gap-1">
+                  <Brain size={12} /> {requiresModellingCount} Ready to Protect
                 </span>
               )}
               {guidanceCount > 0 && (
@@ -406,6 +411,12 @@ export function AuditOverviewPage() {
                   </span>
                 </p>
               </div>
+            )}
+
+            {bridgeStatement && (
+              <p className="audit-bridge mt-4">
+                <strong>{bridgeStatement}</strong>
+              </p>
             )}
 
             <p className="mt-3 audit-key-finding">{keyFinding}</p>
@@ -441,6 +452,122 @@ export function AuditOverviewPage() {
             </div>
           </header>
 
+          {/* ── HOW TO READ / METRICS SECTION ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="overview" className="audit-section" aria-labelledby="stats" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <div className="metrics-primary">
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{totalDecisions}</span>
+                  <span className="metric-primary-label">Decisions Discovered</span>
+                </div>
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{protectionRelevant}</span>
+                  <span className="metric-primary-label">Protection Relevant</span>
+                </div>
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{protectionPct}%</span>
+                  <span className="metric-primary-label">Current Protection</span>
+                </div>
+              </div>
+              <div className="metrics-secondary">
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value protected">{protectedCount}</span>
+                  <span className="metric-secondary-label">Protected</span>
+                </div>
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value ready-to-protect">{mnemeReadyCount + requiresModellingCount}</span>
+                  <span className="metric-secondary-label">Ready to Protect</span>
+                </div>
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value guidance">{guidanceCount}</span>
+                  <span className="metric-secondary-label">Guidance Only</span>
+                </div>
+              </div>
+
+              {protectionRelevant > 0 && (
+                <div className="protection-progress-bar mt-4">
+                  <div className="protection-progress-track">
+                    <div 
+                      className="protection-progress-segment protected"
+                      style={{ width: `${(protectedCount / protectionRelevant) * 100}%` }}
+                    />
+                    {mnemeReadyCount > 0 && (
+                      <div 
+                        className="protection-progress-segment mneme-ready"
+                        style={{ width: `${(mnemeReadyCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                    {requiresModellingCount > 0 && (
+                      <div 
+                        className="protection-progress-segment ready-to-protect"
+                        style={{ width: `${(requiresModellingCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                  </div>
+                  <div className="protection-progress-legend">
+                    <span className="legend-item protected"><span className="legend-color" /><span>Protected ({protectedCount})</span></span>
+                    {mnemeReadyCount > 0 && <span className="legend-item mneme-ready"><span className="legend-color" /><span>Mneme-ready ({mnemeReadyCount})</span></span>}
+                    {requiresModellingCount > 0 && <span className="legend-item ready-to-protect"><span className="legend-color" /><span>Ready to Protect ({requiresModellingCount})</span></span>}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* ── PROTECTION GAPS SECTION ── */}
+          {(mnemeReadyCount > 0 || requiresModellingCount > 0) && (
+            <div className="audit-section-band audit-section-band-charcoal" style={{ background: 'rgba(245, 166, 35, 0.02)', borderTop: '1px solid rgba(245, 166, 35, 0.08)', borderBottom: '1px solid rgba(245, 166, 35, 0.08)' }}>
+              <section id="gaps" className="audit-section" aria-labelledby="gaps-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+                <h2 id="gaps-title" className="audit-section-title" style={{ marginBottom: '2rem' }}>Protection Gaps</h2>
+                <p className="audit-section-subtitle" style={{ marginBottom: '2rem' }}>
+                  {gapCount} protection-relevant decision{gapCount > 1 ? 's' : ''} lack deterministic enforcement. Each shows what's needed to convert guidance into enforceable protection.
+                </p>
+                
+                <div className="protection-gaps-list" role="list" aria-label="Protection gaps">
+                  {decisions
+                    .filter(d => d.protection_classification === 'Mneme-ready' || d.protection_classification === 'Requires modelling')
+                    .map((decision) => {
+                      const isModelling = decision.protection_classification === 'Requires modelling';
+                      const Icon = isModelling ? Brain : Zap;
+                      const iconClass = isModelling ? 'ready-to-protect' : 'mneme-ready';
+                      const badgeClass = isModelling ? 'badge-ready-to-protect' : 'badge-mneme-ready';
+                      const badgeLabel = isModelling ? 'READY TO PROTECT' : 'MNEME-READY';
+                      const humanReadableLead = decision.title
+                        .replace(/^Architectural decision: /i, '')
+                        .replace(/^(The|A|An)\s+/i, '')
+                        .trim();
+                      const reason = isModelling
+                        ? 'This intent appears mechanically enforceable, but a safe deterministic guardrail has not yet been identified.'
+                        : 'Complete specification exists; ready for rule generation and CI/CD integration.';
+                      const suggestedNextStep = isModelling
+                        ? 'Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.'
+                        : 'Generate Mneme rule and integrate into CI/CD pipeline.';
+                      
+                      return (
+                        <article key={decision.id} className="protection-gap-item" style={{ borderColor: 'var(--warning)' }}>
+                          <div className={`protection-gap-icon ${iconClass}`}>
+                            <Icon size={24} />
+                          </div>
+                          <div className="protection-gap-content">
+                            <h3 className="protection-gap-lead">{humanReadableLead}</h3>
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
+                            </div>
+                            <p className="protection-gap-reason" style={{ marginBottom: '0.75rem' }}>{reason}</p>
+                            <p className="protection-gap-next-step text-teal"><strong>Next step:</strong> {suggestedNextStep}</p>
+                          </div>
+                          <div className="protection-gap-action">
+                            <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
+                          </div>
+                        </article>
+                      );
+                    })}
+                </div>
+              </section>
+            </div>
+          )}
+
+          {/* ── FILTERS ── */}
           <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">
               <div className="audit-filters-row">
@@ -456,7 +583,7 @@ export function AuditOverviewPage() {
                     <option value="all">All ({counts.all})</option>
                     <option value="Protected">Protected ({counts.Protected})</option>
                     <option value="Mneme-ready">Mneme-ready ({counts['Mneme-ready']})</option>
-                    <option value="Requires modelling">Requires modelling ({counts['Requires modelling']})</option>
+                    <option value="Requires modelling">Ready to Protect ({counts['Requires modelling']})</option>
                     <option value="Guidance">Guidance ({counts.Guidance})</option>
                   </select>
                 </div>
@@ -514,159 +641,188 @@ export function AuditOverviewPage() {
             </div>
           </nav>
 
-          <section id="overview" className="audit-section" aria-labelledby="stats">
-            <StatsGrid summary={summary} />
-            
-            <div className="protection-summary-detail">
-              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
-              <div className="protection-detail-grid">
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Decisions Discovered</span>
-                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
-                </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Protection-Relevant</span>
-                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
-                </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Guidance Only</span>
-                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
-                </div>
-              </div>
+          {/* ── PROTECTION DECISIONS ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="decisions" className="audit-section" aria-labelledby="decisions-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <h2 id="decisions-title" className="audit-section-title" style={{ marginBottom: '0.5rem' }}>Protection Decisions</h2>
+              <p className="audit-section-subtitle" style={{ marginBottom: '2rem' }}>
+                Each decision shows its protection classification. Evidence and reasoning available on expand.
+              </p>
               
-              {protectionRelevant > 0 && (
-                <div className="protection-progress-bar mt-4">
-                  <div className="protection-progress-track">
-                    <div 
-                      className="protection-progress-segment protected"
-                      style={{ width: `${(protectedCount / protectionRelevant) * 100}%` }}
-                    />
-                    {mnemeReadyCount > 0 && (
-                      <div 
-                        className="protection-progress-segment mneme-ready"
-                        style={{ width: `${(mnemeReadyCount / protectionRelevant) * 100}%` }}
-                      />
-                    )}
-                    {requiresModellingCount > 0 && (
-                      <div 
-                        className="protection-progress-segment requires-modelling"
-                        style={{ width: `${(requiresModellingCount / protectionRelevant) * 100}%` }}
-                      />
+              {CLASSIFICATION_ORDER.map((classification) => {
+                const items = decisionsByClassification[classification];
+                if (items.length === 0) return null;
+                
+                const Icon = classification === 'Protected' ? CheckCircle : 
+                            classification === 'Mneme-ready' ? Zap :
+                            classification === 'Requires modelling' ? Brain : Circle;
+                const badgeClass = BADGE_CLASS[classification];
+                const iconClass = ICON_CLASS[classification];
+                const limit = displayLimits[classification];
+                const displayedItems = items.slice(0, limit);
+                const hasMore = items.length > limit;
+                
+                return (
+                  <div key={classification} className="decision-group">
+                    <h3 className="decision-group-title flex items-center gap-2">
+                      <span className={`decision-group-icon ${iconClass}`}>
+                        <Icon size={16} />
+                      </span>
+                      <span>{BADGE_LABEL[classification]}</span>
+                      <span className={`badge ${badgeClass}`}>{items.length} items</span>
+                    </h3>
+                    <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
+                      {displayedItems.map((decision) => (
+                        <CollapsibleDecisionItemWrapper
+                          key={decision.id}
+                          decision={decision}
+                          isExpanded={isExpanded(decision.id)}
+                          onToggle={() => toggleDecision(decision.id)}
+                          onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
+                        />
+                      ))}
+                    </div>
+                    {hasMore && (
+                      <button
+                        onClick={() => showAllForClassification(classification)}
+                        className="btn btn-ghost btn-sm mt-2"
+                        data-cta-intent="show_all"
+                        data-cta-position="decision_group"
+                      >
+                        View all {items.length}
+                      </button>
                     )}
                   </div>
-                  <div className="protection-progress-legend">
-                    <span className="legend-item protected"><span className="legend-color" /><span>Protected ({protectedCount})</span></span>
-                    {mnemeReadyCount > 0 && <span className="legend-item mneme-ready"><span className="legend-color" /><span>Mneme-ready ({mnemeReadyCount})</span></span>}
-                    {requiresModellingCount > 0 && <span className="legend-item requires-modelling"><span className="legend-color" /><span>Requires modelling ({requiresModellingCount})</span></span>}
-                  </div>
+                );
+              })}
+              
+              {filteredDecisions.length === 0 && (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <h3 className="empty-title">No items match your filters</h3>
+                  <p className="empty-text">Try adjusting your filters or search query.</p>
                 </div>
               )}
-            </div>
-          </section>
+            </section>
+          </div>
 
-          <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
-            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
-            <p className="audit-section-subtitle">
-              Each decision shows its protection classification. Evidence and reasoning available on expand.
-            </p>
-            
-            {CLASSIFICATION_ORDER.map((classification) => {
-              const items = decisionsByClassification[classification];
-              if (items.length === 0) return null;
-              
-              const Icon = classification === 'Protected' ? CheckCircle : 
-                          classification === 'Mneme-ready' ? Zap :
-                          classification === 'Requires modelling' ? Brain : Circle;
-              const badgeClass = BADGE_CLASS[classification];
-              const iconClass = ICON_CLASS[classification];
-              const limit = displayLimits[classification];
-              const displayedItems = items.slice(0, limit);
-              const hasMore = items.length > limit;
-              
-              return (
-                <div key={classification} className="decision-group">
-                  <h3 className="decision-group-title flex items-center gap-2">
-                    <span className={`decision-group-icon ${iconClass}`}>
-                      <Icon size={16} />
-                    </span>
-                    <span>{BADGE_LABEL[classification]}</span>
-                    <span className={`badge ${badgeClass}`}>{items.length} items</span>
-                  </h3>
-                  <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
-                    {displayedItems.map((decision) => (
-                      <CollapsibleDecisionItemWrapper
-                        key={decision.id}
-                        decision={decision}
-                        isExpanded={isExpanded(decision.id)}
-                        onToggle={() => toggleDecision(decision.id)}
-                        onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
-                      />
-                    ))}
-                  </div>
-                  {hasMore && (
-                    <button
-                      onClick={() => showAllForClassification(classification)}
-                      className="btn btn-ghost btn-sm mt-2"
-                      data-cta-intent="show_all"
-                      data-cta-position="decision_group"
-                    >
-                      View all {items.length}
-                    </button>
+          {/* ── SOURCES EXAMINED ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="sources" className="audit-section" aria-labelledby="sources-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <div className="flex items-center justify-between mb-3">
+                <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: 0 }}>Sources Examined</h2>
+                <button
+                  onClick={() => setSourcesExpanded(!sourcesExpanded)}
+                  className="btn btn-ghost btn-sm flex items-center gap-2"
+                  aria-expanded={sourcesExpanded}
+                  aria-controls="sources-list"
+                >
+                  {sourcesExpanded ? (
+                    <>
+                      <ChevronUp size={14} /> Hide Sources
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown size={14} /> View Sources ({sources.length})
+                    </>
                   )}
-                </div>
-              );
-            })}
-            
-            {filteredDecisions.length === 0 && (
-              <div className="empty-state">
-                <div className="empty-icon">🔍</div>
-                <h3 className="empty-title">No items match your filters</h3>
-                <p className="empty-text">Try adjusting your filters or search query.</p>
+                </button>
               </div>
-            )}
-          </section>
+              
+              <div className="audit-sources-summary">
+                <p>
+                  <strong>{sources.length} source files examined</strong>
+                </p>
+                <p className="text-muted mt-1">
+                  {sources.filter(s => s && s.toLowerCase().includes('adr')).length} ADRs · 
+                  {sources.filter(s => s && (s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt'))).length} agent instruction files · 
+                  {sources.filter(s => s && (s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml'))).length} config/code evidence sources
+                </p>
+              </div>
+              
+              <ul id="sources-list" className="works-grid" style={{ listStyle: 'none', display: sourcesExpanded ? 'grid' : 'none' }}>
+                {sources.map((source, i) => (
+                  <li key={i} className="works-card flex items-center gap-2">
+                    <FileText size={20} className="text-teal" />
+                    <span>{source}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
 
-          <section id="sources" className="audit-section" aria-labelledby="sources-title">
-            <div className="flex items-center justify-between mb-3">
-              <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: 0 }}>Sources Examined</h2>
-              <button
-                onClick={() => setSourcesExpanded(!sourcesExpanded)}
-                className="btn btn-ghost btn-sm flex items-center gap-2"
-                aria-expanded={sourcesExpanded}
-                aria-controls="sources-list"
-              >
-                {sourcesExpanded ? (
-                  <>
-                    <ChevronUp size={14} /> Hide Sources
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown size={14} /> View Sources ({sources.length})
-                  </>
-                )}
-              </button>
-            </div>
-            
-            <div className="audit-sources-summary">
+          {/* ── INSTALL / SETUP SECTION ── */}
+          <div className="install-section">
+            <div className="install-header">
+              <h2>Next step: Install Mneme</h2>
               <p>
-                <strong>{sources.length} source files examined</strong>
-              </p>
-              <p className="text-muted mt-1">
-                {sources.filter(s => s && s.toLowerCase().includes('adr')).length} ADRs · 
-                {sources.filter(s => s && (s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt'))).length} agent instruction files · 
-                {sources.filter(s => s && (s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml'))).length} config/code evidence sources
+                Turn your audit findings into active architectural protection. 
+                Mneme installs in your CI/CD pipeline and enforces the decisions you model.
               </p>
             </div>
             
-            <ul id="sources-list" className="works-grid" style={{ listStyle: 'none', display: sourcesExpanded ? 'grid' : 'none' }}>
-              {sources.map((source, i) => (
-                <li key={i} className="works-card flex items-center gap-2">
-                  <FileText size={20} className="text-teal" />
-                  <span>{source}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+            <div className="install-steps">
+              <span className="install-step">
+                <span>Audit</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Install</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step current">
+                <span>Review proposed controls</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Validate</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Enable</span>
+              </span>
+            </div>
+            
+            <div className="install-ctas">
+              <Link 
+                to="/install" 
+                className="btn btn-primary install-cta-primary"
+                data-cta-intent="install_mneme"
+                data-cta-position="audit_overview"
+              >
+                Install Mneme
+              </Link>
+              <a 
+                href="https://github.com/MnemeHQ/mneme/discussions/categories/pilots"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="install-cta-secondary"
+                data-cta-intent="discuss_pilot"
+                data-cta-position="audit_overview"
+              >
+                Discuss a pilot →
+              </a>
+            </div>
+
+            {/* Private repository setup note */}
+            <div className="install-private-note">
+              <p className="install-private-label">Private repository?</p>
+              <p className="install-private-body">
+                Run Mneme locally against your checkout. The Audit uses the same protection model — 
+                import your ADRs, then enforce with <code>mneme check</code>.
+              </p>
+              <a 
+                href="/docs/cli/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="install-private-link"
+                data-cta-intent="private_repo_setup"
+                data-cta-position="audit_overview"
+              >
+                Private repository setup →
+              </a>
+            </div>
+          </div>
         </div>
       </main>
 

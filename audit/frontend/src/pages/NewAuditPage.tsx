@@ -2,7 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
-import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Upload, Loader2, AlertCircle, CheckCircle, ExternalLink } from 'lucide-react';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ export function NewAuditPage() {
     const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
     
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to start audit');
     }
@@ -90,7 +90,7 @@ export function NewAuditPage() {
     setSubmitError('');
     const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to load demo');
     }
@@ -199,6 +199,75 @@ export function NewAuditPage() {
               </div>
             </form>
           </header>
+
+          {/* Private Repository Section — full-width charcoal band */}
+          <section className="audit-section private-repo-band" aria-labelledby="private-repo">
+            <div className="private-repo-content">
+              <div className="private-repo-copy">
+                <span className="private-repo-eyebrow">PRIVATE REPOSITORIES</span>
+                <h2 id="private-repo" className="private-repo-heading">Audit a private repository locally</h2>
+                <p className="private-repo-body">
+                  Run the Architecture Protection Audit against a local checkout. Mneme analyses the repository in your environment, so you do not need to grant Mneme HQ access to your source code.
+                </p>
+                <div className="private-repo-privacy">
+                  <div className="private-repo-privacy-item">
+                    <span className="private-repo-privacy-label">Local analysis</span>
+                    <span className="private-repo-privacy-value">Repository analysis runs against your checked-out code.</span>
+                  </div>
+                  <div className="private-repo-privacy-item">
+                    <span className="private-repo-privacy-label">Same Audit model</span>
+                    <span className="private-repo-privacy-value">Protected, protection-relevant and guidance decisions use the same semantics as the cloud Audit.</span>
+                  </div>
+                  <div className="private-repo-privacy-item">
+                    <span className="private-repo-privacy-label">Continue to setup</span>
+                    <span className="private-repo-privacy-value">After the Audit, use identified protection gaps as the starting point for Mneme setup.</span>
+                  </div>
+                </div>
+              </div>
+              <div className="private-repo-terminal">
+                <div className="terminal-block">
+                  <div className="terminal-header">
+                    <span className="terminal-dot"></span>
+                    <span className="terminal-dot"></span>
+                    <span className="terminal-dot"></span>
+                    <span className="terminal-title">terminal</span>
+                  </div>
+                  <div className="terminal-body">
+                    <div className="terminal-line">
+                      <span className="terminal-prompt">$</span>
+                      <span className="terminal-command">pip install mneme-hq</span>
+                    </div>
+                    <div className="terminal-line">
+                      <span className="terminal-prompt">$</span>
+                      <span className="terminal-command">mneme init</span>
+                    </div>
+                    <div className="terminal-line">
+                      <span className="terminal-prompt">$</span>
+                      <span className="terminal-command">mneme adr import docs/adr --memory .mneme/project_memory.json --apply</span>
+                    </div>
+                    <div className="terminal-line">
+                      <span className="terminal-prompt">$</span>
+                      <span className="terminal-command">mneme check --memory .mneme/project_memory.json --input {'<'}file{'>'} --query {'"'}context{'<'}{'>'}</span>
+                    </div>
+                  </div>
+                </div>
+                <a 
+                  href="/docs/cli/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="btn btn-primary private-repo-cta"
+                  data-cta-intent="run_private_audit"
+                  data-cta-position="new_audit_private"
+                >
+                  Run a private-repo audit
+                  <ExternalLink size={14} className="ml-2" />
+                </a>
+                <p className="private-repo-secondary-link">
+                  <a href="/docs/cli/" target="_blank" rel="noopener noreferrer">How private-repo auditing works →</a>
+                </p>
+              </div>
+            </div>
+          </section>
 
           <section className="audit-section" aria-labelledby="how-it-works">
             <h2 id="how-it-works" className="audit-section-title">What the audit tells you</h2>
