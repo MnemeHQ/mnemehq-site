@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react';
-import type { AuditResult } from '../types/audit';
+import type { ProtectionAuditResponse } from '../types/audit';
 import { buildPilotHref, storePilotContext } from '../utils/pilotContext';
 
 interface PilotLinkProps {
-  audit: AuditResult;
+  audit: ProtectionAuditResponse;
   children: ReactNode;
   className?: string;
   ctaPosition: string;

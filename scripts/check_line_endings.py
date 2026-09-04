@@ -28,9 +28,11 @@ are exempt.
 Usage:
   python scripts/check_line_endings.py              # diff against origin/main
   python scripts/check_line_endings.py <base-ref>   # diff against a ref
+  python scripts/check_line_endings.py --cached <base-ref>  # staged Git bytes
 """
 from __future__ import annotations
 
+import argparse
 import subprocess
 import sys
 from pathlib import Path
@@ -65,14 +67,22 @@ def dominant(crlf: int, lf: int) -> str | None:
 
 
 def main(argv: list[str]) -> int:
-    base = argv[1] if len(argv) > 1 else "origin/main"
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("base", nargs="?", default="origin/main")
+    parser.add_argument("--cached", action="store_true",
+                        help="compare the staged candidate, excluding Git checkout EOL conversion")
+    args = parser.parse_args(argv[1:])
+    base = args.base
     if not git("cat-file", "-e", f"{base}^{{commit}}") and subprocess.run(
         ["git", "cat-file", "-e", f"{base}^{{commit}}"], cwd=REPO_ROOT
     ).returncode:
         print(f"[eol-check] SKIP (base ref {base!r} not available)")
         return 0
 
-    changed = [n for n in git("diff", "--name-only", base).split() if n]
+    diff_args = ["diff", "--name-only"]
+    if args.cached:
+        diff_args.append("--cached")
+    changed = git(*diff_args, base).splitlines()
     findings: list[str] = []
     checked = 0
 
@@ -80,16 +90,25 @@ def main(argv: list[str]) -> int:
         if Path(name).suffix.lower() not in TEXT_SUFFIXES:
             continue
         path = REPO_ROOT / name
-        if not path.exists():
+        if not args.cached and not path.exists():
             continue
         before = subprocess.run(
             ["git", "show", f"{base}:{name}"], capture_output=True, cwd=REPO_ROOT
         ).stdout
         if not before:
             continue  # new file: it defines its own convention
+        if args.cached:
+            candidate = subprocess.run(
+                ["git", "show", f":{name}"], capture_output=True, cwd=REPO_ROOT
+            )
+            if candidate.returncode:
+                continue  # deleted from the candidate
+            after = candidate.stdout
+        else:
+            after = path.read_bytes()
         checked += 1
         b_crlf, b_lf = counts(before)
-        a_crlf, a_lf = counts(path.read_bytes())
+        a_crlf, a_lf = counts(after)
         was, now = dominant(b_crlf, b_lf), dominant(a_crlf, a_lf)
         if was and now and was != now:
             findings.append(

@@ -21,6 +21,8 @@ def _create_symlink(target: Path, link: Path, *, target_is_directory: bool = Fal
     try:
         os.symlink(target, link, target_is_directory=target_is_directory)
     except (NotImplementedError, OSError) as exc:
+        if sys.platform != "win32":
+            pytest.fail(f"Linux/CI release gate requires real symlink coverage: {exc}")
         pytest.skip(f"Symlinks are unavailable in this environment: {exc}")
 
 

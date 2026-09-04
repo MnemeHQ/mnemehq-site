@@ -203,21 +203,28 @@ def link(href: str, label: str, cls: str) -> str:
 
 
 def ensure_segment_meta(html: str, segment: str, nl: str) -> tuple[str, bool]:
-    """Stamp the page's content segment, replacing any earlier value."""
+    """Stamp a real head meta tag, never an example in a script or comment."""
     tag = f'<meta name="{SEGMENT_META}" content="{segment}" />'
-    existing = re.search(rf'<meta name="{re.escape(SEGMENT_META)}"[^>]*/?>', html)
+    head = re.search(r'<head\b[^>]*>(.*?)</head\s*>', html, re.I | re.S)
+    if head is None:
+        return html, False
+    # Preserve offsets while hiding non-markup examples, including analytics JS.
+    markup = re.sub(r'<!--.*?-->|<script\b[^>]*>.*?</script\s*>',
+                    lambda m: ' ' * len(m.group(0)), head.group(1),
+                    flags=re.I | re.S)
+    offset = head.start(1)
+    existing = re.search(rf'<meta name="{re.escape(SEGMENT_META)}"[^>]*/?>', markup)
     if existing:
         if existing.group(0) == tag:
             return html, False
-        return html[:existing.start()] + tag + html[existing.end():], True
-    robots = re.search(r'[ \t]*<meta name="robots"[^>]*/?>', html)
+        return html[:offset + existing.start()] + tag + html[offset + existing.end():], True
+    robots = re.search(r'[ \t]*<meta name="robots"[^>]*/?>', markup)
     if robots:
         indent = re.match(r'[ \t]*', robots.group(0)).group(0)
-        return html[:robots.end()] + nl + indent + tag + html[robots.end():], True
-    head = html.find("</head>")
-    if head == -1:
-        return html, False
-    return html[:head] + "  " + tag + nl + html[head:], True
+        end = offset + robots.end()
+        return html[:end] + nl + indent + tag + html[end:], True
+    end = head.end(1)
+    return html[:end] + "  " + tag + nl + html[end:], True
 
 
 def rewrite_block(block: str, segment: str, slug: str) -> tuple[str, dict] | None:
@@ -293,16 +300,15 @@ def process(slug: str, segment: str, write: bool) -> dict:
             return {"slug": slug, "status": "END-BLOCK-NEEDS-MANUAL"}
         block = m.group(0)
         if f'href="{AUDIT_HREF}"' in block:
-            return {"slug": slug, "status": "skip-current", "segment": segment,
-                    "old_primary": "(end-block)", "new_primary": "(unchanged)",
-                    "new_secondary": AUDIT_HREF}
-        pm = PILOT_LINK_RE.search(block)
-        if not pm:
-            return {"slug": slug, "status": "NO-PILOT-SECONDARY"}
-        label = SEGMENT_DEV_SLUGS[slug] or AUDIT_LABEL
-        new_link = (f'<a href="{AUDIT_HREF}"{pm.group(1)}data-cta-intent="audit"'
-                    f'{pm.group(2)}>{strip_arrow(label)}</a>')
-        new_block = PILOT_LINK_RE.sub(lambda _m: new_link, block, count=1)
+            new_block = block
+        else:
+            pm = PILOT_LINK_RE.search(block)
+            if not pm:
+                return {"slug": slug, "status": "NO-PILOT-SECONDARY"}
+            label = SEGMENT_DEV_SLUGS[slug] or AUDIT_LABEL
+            new_link = (f'<a href="{AUDIT_HREF}"{pm.group(1)}data-cta-intent="audit"'
+                        f'{pm.group(2)}>{strip_arrow(label)}</a>')
+            new_block = PILOT_LINK_RE.sub(lambda _m: new_link, block, count=1)
         info = {"old_primary": "(end-block)", "new_primary": "(unchanged)",
                 "new_secondary": AUDIT_HREF}
         new_html = html[:m.start()] + new_block + html[m.end():]
@@ -361,7 +367,8 @@ def main() -> int:
         print(f"  {k:<16} {by_status[k]}")
 
     bad = [r for r in results
-           if r["status"] in {"MISSING", "NO-CTA-BLOCK", "UNPARSED-BLOCK"}]
+           if r["status"] in {"MISSING", "NO-CTA-BLOCK", "UNPARSED-BLOCK",
+                              "END-BLOCK-NEEDS-MANUAL", "NO-PILOT-SECONDARY"}]
     if bad:
         print("\n!!! needs manual handling:")
         for r in bad:

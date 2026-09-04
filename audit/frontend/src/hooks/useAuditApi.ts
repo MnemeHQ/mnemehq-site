@@ -1,115 +1,77 @@
 import { useState, useCallback } from 'react';
-import type { AuditResult, NewAuditRequest, ApiResponse } from '../types/audit';
+import type { ApiResponse, AuditComparison, NewAuditRequest, ProtectionAuditResponse, RunAuditRequest } from '../types/audit';
+import { parseAudit, parseComparison, parseProject } from '../utils/contracts';
 
-// API base is configurable via VITE_API_BASE env var.
-// Local development uses the Vite /api proxy; production falls back to the
-// public Cloud Run service so a locally generated deploy bundle stays usable.
-// Convention: VITE_API_BASE should NOT include trailing slash
-const PRODUCTION_API_BASE = 'https://mneme-audit-api-842519822929.us-central1.run.app';
-const configuredApiBase = import.meta.env.VITE_API_BASE?.trim();
-const API_BASE = (
-  configuredApiBase || (import.meta.env.PROD ? PRODUCTION_API_BASE : '')
-).replace(/\/$/, '');
+// Preserve main's production endpoint fallback. Explicit preview base overrides it.
+const configured = import.meta.env.VITE_API_BASE?.trim();
+const API_BASE = (configured || (import.meta.env.PROD
+  ? 'https://mneme-audit-api-842519822929.us-central1.run.app' : '')).replace(/\/$/, '');
 
-const STORAGE_PREFIX = 'mneme_audit_';
-
-function getStoredAudit(id: string): AuditResult | null {
-  try {
-    const raw = sessionStorage.getItem(`${STORAGE_PREFIX}${id}`);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // ignore storage error
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_BASE}${path}`, options);
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    const message = data?.error || data?.detail;
+    throw new Error(typeof message === 'string' ? message : `Request failed (HTTP ${response.status}). Please retry.`);
   }
-  return null;
+  if (data === null) throw new Error('The server returned an invalid response. Please retry.');
+  return data as T;
 }
 
-function storeAudit(audit: AuditResult): void {
-  try {
-    sessionStorage.setItem(`${STORAGE_PREFIX}${audit.id}`, JSON.stringify(audit));
-  } catch {
-    // ignore storage error
-  }
-}
-
-async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<ApiResponse<T>> {
-  try {
-    const response = await fetch(`${API_BASE}${endpoint}`, {
-      headers: { 'Content-Type': 'application/json', ...options?.headers },
-      ...options,
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      return { success: false, error: data.error || `HTTP ${response.status}` };
-    }
-    return { success: true, data };
-  } catch (error) {
-    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
-  }
-}
+const json = (body: unknown): RequestInit => ({
+  method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+});
 
 export function useAuditApi() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const createAudit = useCallback(async (request: NewAuditRequest) => {
+  const run = useCallback(async <T,>(action: () => Promise<T>): Promise<ApiResponse<T>> => {
     setLoading(true);
     setError(null);
-    
-    const formData = new FormData();
-    if (request.repositoryUrl) formData.append('repository_url', request.repositoryUrl);
-    if (request.zipFile) formData.append('zip_file', request.zipFile);
-    if (request.localPath) formData.append('local_path', request.localPath);
-
-    try {
-      const response = await fetch(`${API_BASE}/api/audit`, {
-        method: 'POST',
-        body: formData,
-      });
-      
-      const data = await response.json().catch(() => ({}));
-      setLoading(false);
-      
-      if (!response.ok) {
-        const message = data.error || data.detail || `Failed to create audit (HTTP ${response.status})`;
-        setError(message);
-        return { success: false as const, error: message };
-      }
-      
-      const auditResult = data as AuditResult;
-      storeAudit(auditResult);
-      return { success: true as const, data: auditResult };
-    } catch (err) {
-      setLoading(false);
-      const msg = err instanceof Error ? err.message : 'Network error';
-      setError(msg);
-      return { success: false as const, error: msg };
-    }
+    try { return { success: true, data: await action() }; }
+    catch (cause) {
+      const message = cause instanceof Error ? cause.message : 'Request failed';
+      setError(message);
+      return { success: false, error: message };
+    } finally { setLoading(false); }
   }, []);
 
-  const getAudit = useCallback(async (id: string) => {
-    // 1. Check local session cache first
-    const cached = getStoredAudit(id);
-    if (cached) {
-      return { success: true as const, data: cached };
-    }
+  const createAudit = useCallback((input: NewAuditRequest) => run(async () => {
+    const form = new FormData();
+    if (input.repositoryUrl) form.append('repository_url', input.repositoryUrl);
+    if (input.zipFile) form.append('zip_file', input.zipFile);
+    return parseAudit(await request('/api/v1/audit', { method: 'POST', body: form }));
+  }), [run]);
 
-    setLoading(true);
-    setError(null);
-    const result = await fetchApi<AuditResult>(`/api/audit/${id}`);
-    setLoading(false);
-    if (!result.success) {
-      setError(result.error ?? 'Unknown error');
-    } else if (result.data) {
-      storeAudit(result.data);
-    }
-    return result;
-  }, []);
+  const getProjectAudit = useCallback((id: string) => run(async () => {
+    const record = await request<{ id: string; project_id: string; result: ProtectionAuditResponse; summary_payload: ProtectionAuditResponse['summary'] }>(`/api/v1/audits/${encodeURIComponent(id)}`);
+    const result = parseAudit({ ...record.result, summary: record.summary_payload });
+    if (result.audit_id !== record.id || record.id !== id) throw new Error('Audit identity does not match the requested persisted record.');
+    return { ...record, result };
+  }), [run]);
 
+  const getAudit = useCallback(async (id: string): Promise<ApiResponse<ProtectionAuditResponse>> => {
+    const record = await getProjectAudit(id);
+    return record.success ? { success: true, data: record.data!.result } : { success: false, error: record.error };
+  }, [getProjectAudit]);
+
+  const getProject = useCallback((id: string) => run(async () => {
+    const project = parseProject(await request(`/api/v1/projects/${encodeURIComponent(id)}`));
+    if (project.id !== id) throw new Error('Project identity does not match the requested record.');
+    return project;
+  }), [run]);
+  const saveBaseline = useCallback((auditId: string) => run(async () => {
+    const project = parseProject(await request('/api/v1/baselines', json({ audit_id: auditId })));
+    if (project.baseline_audit_id !== auditId) throw new Error('Saved baseline does not match the requested audit.');
+    return project;
+  }), [run]);
+  const runProjectAudit = useCallback((id: string, input: RunAuditRequest) => run(() => request<{id: string}>(`/api/v1/projects/${encodeURIComponent(id)}/audits`, json(input))), [run]);
+  const compareAudits = useCallback((id: string) => run(async (): Promise<AuditComparison> =>
+    parseComparison(await request(`/api/v1/projects/${encodeURIComponent(id)}/compare`))), [run]);
   const exportAudit = useCallback(async (id: string, format: 'markdown' | 'json' = 'markdown') => {
-    const response = await fetch(`${API_BASE}/api/audit/${id}/export?format=${format}`);
-    if (!response.ok) throw new Error('Export failed');
+    const response = await fetch(`${API_BASE}/api/v1/audits/${encodeURIComponent(id)}/export?format=${format}`);
+    if (!response.ok) throw new Error('Export failed. Please retry.');
     return response.blob();
   }, []);
-
-  return { createAudit, getAudit, exportAudit, loading, error };
+  return { createAudit, getAudit, getProject, getProjectAudit, saveBaseline, runProjectAudit, compareAudits, exportAudit, loading, error };
 }

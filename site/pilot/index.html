@@ -906,7 +906,7 @@
     var summaryParts = [];
     if (auditContext.repository) summaryParts.push(auditContext.repository);
     if (typeof auditContext.totalItems === 'number') summaryParts.push(auditContext.totalItems + ' governance items');
-    if (typeof auditContext.coverage === 'number') summaryParts.push(auditContext.coverage + '% coverage');
+    if (typeof auditContext.currentProtection === 'number') summaryParts.push(Math.round(auditContext.currentProtection * 100) + '% protection');
     contextSummary.textContent = (summaryParts.length ? summaryParts.join(' · ') + '. ' : '') + 'We already have the findings and recommendations. You won’t need to enter them again.';
     contextCard.classList.add('visible');
 
@@ -914,10 +914,11 @@
     document.getElementById('pilot-audit-repository').value = auditContext.repository || '';
     document.getElementById('pilot-audit-summary').value = JSON.stringify({
       totalItems: auditContext.totalItems,
-      enforceable: auditContext.enforceable,
-      partial: auditContext.partial,
+      protected: auditContext.protected,
+      mnemeReady: auditContext.mnemeReady,
+      requiresModelling: auditContext.requiresModelling,
       guidance: auditContext.guidance,
-      coverage: auditContext.coverage,
+      currentProtection: auditContext.currentProtection,
       createdAt: auditContext.createdAt
     });
     document.getElementById('pilot-audit-gaps').value = (auditContext.topGaps || []).join('\n');
@@ -1052,7 +1053,7 @@
   }
 
   /* Declared per page by the CTA routing work:
-   *   <meta name="mneme:content-segment" content="developer_evaluation">
+   *   head meta name mneme:content-segment, e.g. developer_evaluation.
    * Absent on pages that have not been segmented; the parameter is then
    * omitted rather than guessed. */
   function contentSegment() {

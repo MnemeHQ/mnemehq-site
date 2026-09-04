@@ -14,6 +14,7 @@ Fixture repo is designed to yield:
 import asyncio
 import sys
 from pathlib import Path
+import pytest
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -21,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from audit.backend.app.services.audit_service import audit_service
 
 
+@pytest.mark.asyncio
 async def test_vertical_slice():
     """Run the full audit pipeline on the fixture repo."""
     fixture_path = Path(__file__).parent / "fixtures" / "audit-repo"
@@ -61,13 +63,13 @@ async def test_vertical_slice():
         print(f"    Next step: {g.suggestedNextStep}")
         print()
     
-# Assertions - the fixture yields:
+# Assertions - the fixture yields (current M0.1 behavior):
     # - 1 enforceable (ADR-001: FORBID_LITERAL sqlite, mysql)
-    # - 1 partial (ADR-002: FORBID_DEPENDENCY pip, poetry)
-    # - 3 guidance (ADR-003: service boundaries; CLAUDE.md: agent instructions; pyproject.toml: config)
+    # - 2 partial (ADR-002: package manager constraints; CLAUDE.md: agent instructions with explicit constraints)
+    # - 2 guidance (ADR-003: service boundaries; pyproject.toml: config)
     assert result.summary.enforceable == 1, f"Expected 1 enforceable, got {result.summary.enforceable}"
-    assert result.summary.partial == 1, f"Expected 1 partial, got {result.summary.partial}"
-    assert result.summary.guidance == 3, f"Expected 3 guidance, got {result.summary.guidance}"
+    assert result.summary.partial == 2, f"Expected 2 partial, got {result.summary.partial}"
+    assert result.summary.guidance == 2, f"Expected 2 guidance, got {result.summary.guidance}"
     
     # Verify specific decisions
     enforceable_dec = next(d for d in result.decisions if d.governability == "enforceable")
@@ -75,12 +77,15 @@ async def test_vertical_slice():
     assert enforceable_dec.proposedRule is not None
     assert enforceable_dec.proposedRule.type == "FORBID_LITERAL"
     
-    partial_dec = next(d for d in result.decisions if d.governability == "partial")
-    assert "package" in partial_dec.title.lower() or "pip" in partial_dec.requirement.lower()
-    assert partial_dec.proposedRule is None  # No deterministic rule for partial (FORBID_DEPENDENCY only)
+    partial_decisions = [d for d in result.decisions if d.governability == "partial"]
+    assert len(partial_decisions) == 2
+    assert all(d.proposedRule is None for d in partial_decisions)
+    # One should be Package Manager, one should be Agent Instructions
+    assert any("package" in d.title.lower() or "pip" in d.requirement.lower() for d in partial_decisions)
+    assert any("agent" in d.title.lower() or "claude" in d.title.lower() for d in partial_decisions)
     
     guidance_decisions = [d for d in result.decisions if d.governability == "guidance"]
-    assert len(guidance_decisions) == 3
+    assert len(guidance_decisions) == 2
     assert all(d.proposedRule is None for d in guidance_decisions)
     assert any("service" in d.title.lower() or "boundar" in d.requirement.lower() for d in guidance_decisions)
     assert any("config" in d.title.lower() or "pyproject" in d.title.lower() for d in guidance_decisions)

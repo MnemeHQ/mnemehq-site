@@ -3,44 +3,44 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
-import { InfoTooltip } from '../components/InfoTooltip';
-import { PilotLink } from '../components/PilotLink';
-import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, AlertTriangle, Circle, ChevronRight } from 'lucide-react';
-import type { AuditResult, ArchitecturalDecision, Governability } from '../types/audit';
-import { FIELD_HELP, getDecisionRecommendations, getEvidenceLabel, getPlainLanguageSummary } from '../utils/auditInsights';
+import { AuditSetup } from '../components/AuditSetup';
+import { deriveGaps } from './GovernanceGapsPage';
+import { AuditProvenance } from './ProjectPage';
+import { CollapsibleDecisionItem } from '../components/DecisionItem';
+import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
+import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
-type FilterType = 'all' | 'enforceable' | 'partial' | 'guidance';
+type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
 type SourceTypeFilter = 'all' | 'adr' | 'agent-instructions' | 'config' | 'code';
 
-// Limits for progressive disclosure
-const DEFAULT_LIMITS = {
-  enforceable: 10,
-  partial: 10,
-  guidance: 5,
+const DEFAULT_LIMITS: Record<ProtectionClassification, number> = {
+  Protected: 10,
+  'Mneme-ready': 10,
+  'Requires modelling': 10,
+  Guidance: 5,
 };
 
-const ICONS: Record<Governability, typeof CheckCircle> = {
-  enforceable: CheckCircle,
-  partial: AlertTriangle,
-  guidance: Circle,
+const CLASSIFICATION_ORDER: ProtectionClassification[] = ['Protected', 'Mneme-ready', 'Requires modelling', 'Guidance'];
+
+const ICON_CLASS: Record<ProtectionClassification, string> = {
+  Protected: 'protected',
+  'Mneme-ready': 'mneme-ready',
+  'Requires modelling': 'requires-modelling',
+  Guidance: 'guidance',
 };
 
-const ICON_CLASS: Record<Governability, string> = {
-  enforceable: 'enforceable',
-  partial: 'partial',
-  guidance: 'guidance',
+const BADGE_CLASS: Record<ProtectionClassification, string> = {
+  Protected: 'badge-protected',
+  'Mneme-ready': 'badge-mneme-ready',
+  'Requires modelling': 'badge-requires-modelling',
+  Guidance: 'badge-guidance',
 };
 
-const BADGE_CLASS: Record<Governability, string> = {
-  enforceable: 'badge-enforceable',
-  partial: 'badge-partial',
-  guidance: 'badge-guidance',
-};
-
-const BADGE_LABEL: Record<Governability, string> = {
-  enforceable: 'ENFORCEABLE',
-  partial: 'PARTIALLY ENFORCEABLE',
-  guidance: 'GUIDANCE ONLY',
+const BADGE_LABEL: Record<ProtectionClassification, string> = {
+  Protected: 'PROTECTED',
+  'Mneme-ready': 'MNEME-READY',
+  'Requires modelling': 'REQUIRES MODELLING',
+  Guidance: 'GUIDANCE ONLY',
 };
 
 const STICKY_SECTION_GAP = 16;
@@ -67,157 +67,52 @@ function getSectionScrollOffset(): number {
   return Math.ceil(stickyBottom + STICKY_SECTION_GAP);
 }
 
-interface CollapsibleDecisionItemProps {
-  decision: ArchitecturalDecision;
+function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails }: {
+  decision: ProtectionDecision;
   isExpanded: boolean;
   onToggle: () => void;
   onViewDetails: () => void;
-  showMissing?: string;
-}
-
-function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails, showMissing }: CollapsibleDecisionItemProps) {
-  const Icon = ICONS[decision.governability];
-  const iconClass = ICON_CLASS[decision.governability];
-  const badgeClass = BADGE_CLASS[decision.governability];
-  const badgeLabel = BADGE_LABEL[decision.governability];
-  const recommendations = getDecisionRecommendations(decision);
-  const evidenceLabel = getEvidenceLabel(decision);
-
-  return (
-    <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
-      <button type="button" className="decision-item-header" onClick={onToggle} aria-expanded={isExpanded}>
-        <div className={`decision-icon ${iconClass}`}>
-          <Icon size={20} />
-        </div>
-        <div className="decision-content">
-          <div className="decision-header-top">
-            <h3 className="decision-title">{decision.title}</h3>
-            <span className="decision-source-badge">{decision.source.file}</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 mt-1">
-            <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
-            {showMissing && <span className="decision-missing">Missing: {showMissing}</span>}
-          </div>
-        </div>
-        <div className="decision-chevron">
-          <ChevronRight size={18} style={{ color: 'var(--muted)', transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.15s ease' }} />
-        </div>
-      </button>
-      
-      {isExpanded && (
-        <div className="decision-item-expanded">
-          <div className="decision-expanded-content">
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label-row">
-                <span className="decision-expanded-label">{evidenceLabel}</span>
-                <InfoTooltip label={evidenceLabel}>{FIELD_HELP.requirement}</InfoTooltip>
-              </span>
-              <p className="decision-expanded-value">{getPlainLanguageSummary(decision)}</p>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label-row">
-                <span className="decision-expanded-label">Applies To</span>
-                <InfoTooltip label="Applies to">{FIELD_HELP.appliesTo}</InfoTooltip>
-              </span>
-              <div className="decision-expanded-value">
-                {decision.appliesTo.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {decision.appliesTo.map((path, i) => (
-                      <span key={i} className="font-mono text-xs px-2 py-1 bg-surface2 border border-border rounded">{path}</span>
-                    ))}
-                  </div>
-                ) : (
-                  <span className="text-muted">Not specified</span>
-                )}
-              </div>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label-row">
-                <span className="decision-expanded-label">Proposed Rule</span>
-                <InfoTooltip label="Proposed rule">{FIELD_HELP.proposedRule}</InfoTooltip>
-              </span>
-              <div className="decision-expanded-value">
-                {decision.proposedRule ? (
-                  <>
-                    <code>{decision.proposedRule.type} "{decision.proposedRule.pattern}"</code>
-                    <p className="mt-1 text-sm text-muted font-normal font-sans">{decision.proposedRule.description}</p>
-                  </>
-                ) : (
-                  <span className="text-muted">No deterministic rule defined</span>
-                )}
-              </div>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label-row">
-                <span className="decision-expanded-label">Confidence</span>
-                <InfoTooltip label="Confidence">{FIELD_HELP.confidence}</InfoTooltip>
-              </span>
-              <span className="decision-expanded-value font-mono text-teal">{Math.round(decision.confidence * 100)}%</span>
-            </div>
-            <div className="decision-expanded-row">
-              <span className="decision-expanded-label-row">
-                <span className="decision-expanded-label">Source</span>
-                <InfoTooltip label="Source">{FIELD_HELP.source}</InfoTooltip>
-              </span>
-              <span className="decision-expanded-value font-mono text-xs">{decision.source.file} (Lines {decision.source.lines})</span>
-            </div>
-            <div className="decision-recommendation">
-              <span className="decision-expanded-label">Recommended next step</span>
-              <strong>{recommendations[0].title}</strong>
-              <p>{recommendations[0].description}</p>
-            </div>
-          </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
-            className="btn btn-ghost btn-sm mt-3"
-            data-cta-intent="view_details"
-            data-cta-position="decision_list"
-          >
-            View Full Details
-          </button>
-        </div>
-      )}
-    </article>
-  );
+}) {
+  return <CollapsibleDecisionItem decision={decision} isExpanded={isExpanded} onToggle={onToggle} onViewDetails={onViewDetails} />;
 }
 
 export function AuditOverviewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
-  const { getAudit, exportAudit, error: apiError } = useAuditApi();
+  const { getAudit, exportAudit, error: apiError, saveBaseline } = useAuditApi();
   
-  const stateAudit = (location.state as { audit?: AuditResult } | null)?.audit;
-  const [audit, setAudit] = useState<AuditResult | null>(stateAudit ?? null);
+  const stateAudit = (location.state as { audit?: ProtectionAuditResponse } | null)?.audit;
+  const [audit, setAudit] = useState<ProtectionAuditResponse | null>(stateAudit ?? null);
   const [loading, setLoading] = useState<boolean>(!stateAudit);
   const [error, setError] = useState<string | null>(null);
   
   const [exporting, setExporting] = useState(false);
-  const [governabilityFilter, setGovernabilityFilter] = useState<FilterType>('all');
+  const [classificationFilter, setClassificationFilter] = useState<FilterType>('all');
   const [sourceTypeFilter, setSourceTypeFilter] = useState<SourceTypeFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set());
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
+  const [savingBaseline, setSavingBaseline] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [sectionScrollOffset, setSectionScrollOffset] = useState(DEFAULT_SECTION_OFFSET);
 
-  const [displayLimits, setDisplayLimits] = useState<Record<Governability, number>>({
-    enforceable: DEFAULT_LIMITS.enforceable,
-    partial: DEFAULT_LIMITS.partial,
-    guidance: DEFAULT_LIMITS.guidance,
+  const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
+    Protected: DEFAULT_LIMITS.Protected,
+    'Mneme-ready': DEFAULT_LIMITS['Mneme-ready'],
+    'Requires modelling': DEFAULT_LIMITS['Requires modelling'],
+    Guidance: DEFAULT_LIMITS.Guidance,
   });
 
-  // Section navigation - reordered: Overview, Gaps, Decisions, Coverage, Sources
   const sections = useMemo(() => [
     { id: 'overview', label: 'Overview' },
-    { id: 'gaps', label: 'Governance Gaps' },
+    { id: 'gaps', label: 'Protection gaps' },
     { id: 'decisions', label: 'Decisions' },
-    { id: 'coverage', label: 'Coverage' },
     { id: 'sources', label: 'Sources' },
-    { id: 'pilot', label: 'Pilot' },
+    { id: 'setup', label: 'Setup' },
   ], []);
 
-  // Guard: if no audit ID, redirect to new audit
   useEffect(() => {
     if (!id) {
       navigate('/', { replace: true });
@@ -228,8 +123,7 @@ export function AuditOverviewPage() {
   useEffect(() => {
     if (!id) return;
     
-    // If we already have this exact audit loaded from navigation state, don't re-fetch
-    if (audit && audit.id === id) {
+    if (audit && audit.audit_id === id) {
       setLoading(false);
       return;
     }
@@ -290,38 +184,39 @@ export function AuditOverviewPage() {
   const decisions = useMemo(() => audit?.decisions || [], [audit]);
   const repository = audit?.repository || '';
   const sources = useMemo(() => summary?.sources || [], [summary]);
-  const totalDecisions = summary?.totalDecisions || decisions.length;
-  const enforceableCount = summary?.enforceable || 0;
-  const coveragePct = summary?.coverage || 0;
-  const showFilters = decisions.length >= 10;
-  const showInlineGaps = totalDecisions < 10;
+  const totalDecisions = summary?.decisions_discovered ?? 0;
+  const protectionRelevant = summary?.protection_relevant || 0;
+  const protectedCount = summary?.protected_count || 0;
+  const mnemeReadyCount = summary?.mneme_ready_count || 0;
+  const requiresModellingCount = summary?.requires_modelling_count || 0;
+  const guidanceCount = summary?.guidance_count || 0;
+  const currentProtection = summary?.current_protection || 0;
+  const mnemePotential = summary?.identified_mneme_potential || 0;
 
-  // Compute key finding
   const keyFinding = useMemo(() => {
-    const enforceablePct = totalDecisions > 0 
-      ? Math.round((enforceableCount / totalDecisions) * 100) 
-      : 0;
-    
-    if (enforceablePct === 0) {
-      return 'Most architectural intent is documented, but little is expressed in a form that can be deterministically enforced.';
-    } else if (enforceablePct < 25) {
-      return 'A small fraction of architectural intent is directly enforceable. Most decisions need stronger machine-testable constraints.';
-    } else if (enforceablePct < 50) {
-      return 'About half of architectural decisions can be enforced. The remainder need explicit applicability or deterministic rules.';
-    } else {
-      return 'Strong governability foundation — most decisions have at least partial enforceability.';
+    if (protectionRelevant === 0) {
+      return 'No protection-relevant architectural decisions found. All identified decisions are guidance-only.';
     }
-  }, [totalDecisions, enforceableCount]);
+    
+    const protectionPct = Math.round(currentProtection * 100);
+    
+    if (protectedCount === 0) {
+      return `${mnemeReadyCount + requiresModellingCount} protection gaps identified — ${mnemeReadyCount} Mneme-ready, ${requiresModellingCount} require modelling.`;
+    } else if (protectionPct < 25) {
+      return `Low architecture protection (${protectionPct}%). ${mnemeReadyCount} decisions are Mneme-ready for immediate protection gains.`;
+    } else if (protectionPct < 50) {
+      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions require modelling.`;
+    } else {
+      return `Strong architecture protection (${protectionPct}%). Well-governed architectural baseline.`;
+    }
+  }, [protectionRelevant, protectedCount, mnemeReadyCount, requiresModellingCount, currentProtection, mnemePotential]);
 
-  // Filter decisions
   const filteredDecisions = useMemo(() => {
     return decisions.filter((decision) => {
-      // Governability filter
-      if (governabilityFilter !== 'all' && decision.governability !== governabilityFilter) {
+      if (classificationFilter !== 'all' && decision.protection_classification !== classificationFilter) {
         return false;
       }
       
-      // Source type filter
       if (sourceTypeFilter !== 'all') {
         const sourceFile = (decision.source?.file || '').toLowerCase();
         let matches = false;
@@ -332,7 +227,6 @@ export function AuditOverviewPage() {
         if (!matches) return false;
       }
       
-      // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
         const titleMatch = (decision.title || '').toLowerCase().includes(query);
@@ -343,26 +237,26 @@ export function AuditOverviewPage() {
       
       return true;
     });
-  }, [decisions, governabilityFilter, sourceTypeFilter, searchQuery]);
+  }, [decisions, classificationFilter, sourceTypeFilter, searchQuery]);
 
-  // Count by governability
   const counts = useMemo(() => ({
-    all: decisions.length,
-    enforceable: decisions.filter(d => d.governability === 'enforceable').length,
-    partial: decisions.filter(d => d.governability === 'partial').length,
-    guidance: decisions.filter(d => d.governability === 'guidance').length,
-  }), [decisions]);
+    all: summary?.decisions_discovered ?? 0,
+    Protected: summary?.protected_count ?? 0,
+    'Mneme-ready': summary?.mneme_ready_count ?? 0,
+    'Requires modelling': summary?.requires_modelling_count ?? 0,
+    Guidance: summary?.guidance_count ?? 0,
+  }), [summary]);
 
-  // Group decisions by governability for collapsible sections
-  const decisionsByGovernability = useMemo(() => {
-    const groups: Record<Governability, ArchitecturalDecision[]> = {
-      enforceable: [],
-      partial: [],
-      guidance: [],
+  const decisionsByClassification = useMemo(() => {
+    const groups: Record<ProtectionClassification, ProtectionDecision[]> = {
+      Protected: [],
+      'Mneme-ready': [],
+      'Requires modelling': [],
+      Guidance: [],
     };
     filteredDecisions.forEach(d => {
-      if (groups[d.governability]) {
-        groups[d.governability].push(d);
+      if (groups[d.protection_classification]) {
+        groups[d.protection_classification].push(d);
       }
     });
     return groups;
@@ -382,16 +276,8 @@ export function AuditOverviewPage() {
 
   const isExpanded = (decisionId: string) => expandedDecisions.has(decisionId);
 
-  const showAllForGovernability = (gov: Governability) => {
-    setDisplayLimits(prev => ({ ...prev, [gov]: Infinity }));
-  };
-
-  const getMissingInfo = (decision: ArchitecturalDecision): string => {
-    const missing: string[] = [];
-    if (!decision.appliesTo || decision.appliesTo.length === 0) missing.push('explicit applicability');
-    if (!decision.proposedRule) missing.push('enforceable matcher');
-    if (decision.confidence < 0.7) missing.push('high-confidence rule');
-    return missing.length > 0 ? missing[0] : '';
+  const showAllForClassification = (classification: ProtectionClassification) => {
+    setDisplayLimits(prev => ({ ...prev, [classification]: Infinity }));
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -414,13 +300,31 @@ export function AuditOverviewPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `architecture-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
+      a.download = `protection-audit-${id}.${format === 'markdown' ? 'md' : 'json'}`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {
       console.error('Export failed:', err);
     } finally {
       setExporting(false);
+    }
+  };
+
+  const handleSaveBaseline = async () => {
+    if (!audit) return;
+    setSavingBaseline(true);
+    setActionError(null);
+    try {
+      const result = await saveBaseline(audit.audit_id);
+      if (result.success && result.data) {
+        navigate(`/project/${result.data.id}`, { state: { audit } });
+      } else {
+        setActionError(result.error || 'Failed to save baseline');
+      }
+    } catch (err) {
+      setActionError('Failed to save baseline. Please retry.');
+    } finally {
+      setSavingBaseline(false);
     }
   };
 
@@ -431,7 +335,7 @@ export function AuditOverviewPage() {
         <main className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-6">
             <Loader2 className="loading-spinner mx-auto mb-4" size={48} />
-            <p className="text-muted">Loading audit results...</p>
+            <p className="text-muted">Loading protection audit...</p>
           </div>
         </main>
       </div>
@@ -443,7 +347,7 @@ export function AuditOverviewPage() {
   const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
   const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
 
-  if (effectiveError || !audit || !summary) {
+  if (!audit || !summary) {
     let title = 'Audit unavailable';
     let message = 'This audit may have expired or the link may be incorrect.';
     let actionText = 'Run New Audit';
@@ -477,7 +381,7 @@ export function AuditOverviewPage() {
                 {actionText}
               </Link>
               {showRetry && id && (
-                <button 
+                <button
                   onClick={() => window.location.reload()}
                   className="btn btn-ghost"
                   data-cta-intent="retry_audit"
@@ -493,39 +397,73 @@ export function AuditOverviewPage() {
     );
   }
 
+  const protectionPct = Math.round(currentProtection * 100);
+
   return (
     <div className="audit-layout">
       <AuditNav />
       
       <main className="flex-1">
         <div className="audit-container">
-          {/* Above-fold hero: repo, totals, key finding, primary action */}
           <header className="audit-hero" style={{ paddingTop: '2rem', paddingBottom: '2rem', textAlign: 'center' }}>
-            <span className="audit-hero-tag">Architecture Governability Audit</span>
+            <span className="audit-hero-tag">Architecture Protection Audit</span>
             <h1>{repository}</h1>
             
-            {/* Dominant totals headline */}
-            <div className="audit-headline mt-4">
-              <span className="audit-headline-count">{totalDecisions} governance items found</span>
-              <span className="audit-headline-enforceable">
-                {enforceableCount > 0 
-                  ? `${enforceableCount} directly enforceable` 
-                  : <><strong>0</strong> directly enforceable</>}
-              </span>
+            <div className="audit-protection-headline mt-4">
+              <div className="protection-score-large">
+                <span className="protection-score-value">{protectionPct}%</span>
+                <span className="protection-score-label">Current Protection</span>
+              </div>
+              <p className="protection-subtext">
+                {protectedCount} of {protectionRelevant} protection-relevant decisions protected
+              </p>
             </div>
             
-            <p className="mt-2 audit-key-finding">{keyFinding}</p>
+            <div className="protection-breakdown mt-4 flex flex-wrap gap-3 justify-center">
+              <span className="badge badge-protected flex items-center gap-1">
+                <CheckCircle size={12} /> {protectedCount} Protected
+              </span>
+              {mnemeReadyCount > 0 && (
+                <span className="badge badge-mneme-ready flex items-center gap-1">
+                  <Zap size={12} /> {mnemeReadyCount} Mneme-ready
+                </span>
+              )}
+              {requiresModellingCount > 0 && (
+                <span className="badge badge-requires-modelling flex items-center gap-1">
+                  <Brain size={12} /> {requiresModellingCount} Requires modelling
+                </span>
+              )}
+              {guidanceCount > 0 && (
+                <span className="badge badge-guidance flex items-center gap-1">
+                  <Circle size={12} /> {guidanceCount} Guidance
+                </span>
+              )}
+            </div>
+
+            {mnemeReadyCount > 0 && protectionRelevant > 0 && (
+              <div className="mneme-potential-uplift mt-3">
+                <p className="text-muted">
+                  Current: <strong>{protectionPct}%</strong>
+                  {' '}
+                  <span style={{ color: 'var(--warning)' }}>
+                    With {mnemeReadyCount} identified Mneme guardrail{mnemeReadyCount > 1 ? 's' : ''}: 
+                    <strong>{Math.round(((protectedCount + mnemeReadyCount) / protectionRelevant) * 100)}%</strong>
+                  </span>
+                </p>
+              </div>
+            )}
+
+            <p className="mt-3 audit-key-finding">{keyFinding}</p>
 
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
-              <Link 
-                to={`/audit/${id}/gaps`} 
-                state={{ audit }}
+              <button
+                onClick={() => scrollToSection('decisions')}
                 className="btn btn-primary flex items-center gap-2"
-                data-cta-intent="view_gaps"
+                data-cta-intent="view_all_decisions"
                 data-cta-position="audit_overview"
               >
-                View Governance Gaps
-              </Link>
+                View All Decisions
+              </button>
               <button 
                 onClick={() => handleExport('markdown')} 
                 disabled={exporting}
@@ -535,18 +473,29 @@ export function AuditOverviewPage() {
               >
                 <Download size={16} /> Export
               </button>
+              <button 
+                onClick={handleSaveBaseline}
+                disabled={savingBaseline}
+                className="btn btn-ghost flex items-center gap-2"
+                data-cta-intent="save_baseline"
+                data-cta-position="audit_overview"
+              >
+                <Save size={16} /> Save Baseline
+              </button>
             </div>
           </header>
 
-          {/* Sticky section navigator */}
+          {actionError && <p role="alert" className="action-error">{actionError} Your audit is still available.</p>}
+          <AuditProvenance audit={audit} />
+
           <nav className="audit-section-nav" aria-label="Audit sections">
             <div className="audit-section-nav-inner">
               {sections.map((section) => (
-                <button 
+                <button
                   key={section.id}
                   type="button"
                   onClick={() => scrollToSection(section.id)}
-                  className={`audit-section-nav-item ${section.id === 'pilot' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
+                  className={`audit-section-nav-item ${section.id === 'setup' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-section={section.id}
                 >
@@ -560,140 +509,136 @@ export function AuditOverviewPage() {
             <h2 id="overview-title" className="audit-section-title">How to read this audit</h2>
             <p className="audit-section-subtitle">These metrics show how much architectural intent Mneme found and how ready that intent is for deterministic enforcement. A low score identifies specification work to do; it does not mean the repository has no architecture.</p>
             <StatsGrid summary={summary} />
+
+            <div className="protection-summary-detail">
+              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
+              <div className="protection-detail-grid">
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Decisions Discovered</span>
+                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Protection-Relevant</span>
+                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
+                </div>
+                <div className="protection-detail-item">
+                  <span className="protection-detail-label">Guidance Only</span>
+                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
+                </div>
+              </div>
+            </div>
           </section>
 
           <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
-            <h2 id="gaps-title" className="audit-section-title">Governance Gaps</h2>
-            <p className="audit-section-subtitle">A gap is the missing information that prevents Mneme from safely turning documented intent into a control. Resolve these first to increase coverage.</p>
-            {showInlineGaps ? (
-              audit.gaps.length > 0 ? (
-                <div className="audit-inline-gaps">
-                  <p className="audit-inline-gaps-summary">
-                    <strong>{audit.gaps.length} governance {audit.gaps.length === 1 ? 'gap' : 'gaps'}</strong>
-                    {' '}prevent {audit.gaps.length === 1 ? 'this item' : 'these items'} from being safely enforced.
-                  </p>
-                  <ul>
-                    {audit.gaps.map((gap, index) => (
-                      <li key={`${gap.decision}-${index}`}>
-                        <strong>{gap.decision}</strong>
-                        <span>
-                          {gap.reason}
-                          <small><b>Recommendation:</b> {gap.suggestedNextStep}</small>
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                <p className="audit-section-subtitle">No governance gaps were found in this audit.</p>
-              )
-            ) : (
-              <>
-                <Link to={`/audit/${id}/gaps`} state={{ audit }} className="btn btn-primary" data-cta-intent="view_gaps" data-cta-position="audit_overview">
-                  View All Governance Gaps
-                </Link>
-              </>
-            )}
+            <h2 id="gaps-title" className="audit-section-title">Protection Gaps</h2>
+            {deriveGaps(decisions).length === 0 ? <p>No protection gaps were found in this audit.</p> :
+              <div className="audit-inline-gaps"><ul>{deriveGaps(decisions).map(gap => <li key={gap.decisionId}>
+                <Link to={`/audit/${id}/decisions/${gap.decisionId}`}>{gap.decision}</Link>
+                <span>{gap.reason}<small><b>Recommendation:</b> {gap.suggestedNextStep}</small></span>
+              </li>)}</ul></div>}
           </section>
 
           <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
-            <h2 id="decisions-title" className="audit-section-title">Governance Items</h2>
-            <p className="audit-section-subtitle">Review each extracted decision or evidence item, its governability rating, and the shortest recommended step toward enforcement. Expand an item for a concise explanation; open full details for all evidence.</p>
+            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
+            <p className="audit-section-subtitle">
+              Each decision shows its protection classification. Evidence and reasoning available on expand.
+            </p>
 
-            {showFilters && (
-              <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
-                <div className="audit-filters" role="region" aria-label="Filter decisions">
-                  <div className="audit-filters-row">
-                    <div className="audit-filter-group">
-                      <label htmlFor="governability-filter" className="audit-filter-label">Governability</label>
-                      <select
-                        id="governability-filter"
-                        value={governabilityFilter}
-                        onChange={(e) => setGovernabilityFilter(e.target.value as FilterType)}
-                        className="audit-filter-select"
-                        aria-label="Filter by governability"
-                      >
-                        <option value="all">All ({counts.all})</option>
-                        <option value="enforceable">Enforceable ({counts.enforceable})</option>
-                        <option value="partial">Partial ({counts.partial})</option>
-                        <option value="guidance">Guidance ({counts.guidance})</option>
-                      </select>
-                    </div>
-                    <div className="audit-filter-group">
-                      <label htmlFor="source-type-filter" className="audit-filter-label">Source Type</label>
-                      <select
-                        id="source-type-filter"
-                        value={sourceTypeFilter}
-                        onChange={(e) => setSourceTypeFilter(e.target.value as SourceTypeFilter)}
-                        className="audit-filter-select"
-                        aria-label="Filter by source type"
-                      >
-                        <option value="all">All Sources</option>
-                        <option value="adr">ADRs</option>
-                        <option value="agent-instructions">Agent Instructions</option>
-                        <option value="config">Configuration</option>
-                        <option value="code">Code Evidence</option>
-                      </select>
-                    </div>
-                    <div className="audit-filter-group audit-filter-search">
-                      <label htmlFor="decision-search" className="audit-filter-label sr-only">Search decisions</label>
-                      <div className="audit-search-input">
-                        <Search size={16} className="audit-search-icon" />
-                        <input
-                          id="decision-search"
-                          type="search"
-                          placeholder="Search decisions…"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="audit-search-field"
-                          aria-label="Search decisions"
-                        />
-                      </div>
-                    </div>
+            {decisions.length > 5 && (<>
+          <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
+            <div className="audit-filters" role="region" aria-label="Filter decisions">
+              <div className="audit-filters-row">
+                <div className="audit-filter-group">
+                  <label htmlFor="classification-filter" className="audit-filter-label">Protection Classification</label>
+                  <select
+                    id="classification-filter"
+                    value={classificationFilter}
+                    onChange={(e) => setClassificationFilter(e.target.value as FilterType)}
+                    className="audit-filter-select"
+                    aria-label="Filter by protection classification"
+                  >
+                    <option value="all">All ({counts.all})</option>
+                    <option value="Protected">Protected ({counts.Protected})</option>
+                    <option value="Mneme-ready">Mneme-ready ({counts['Mneme-ready']})</option>
+                    <option value="Requires modelling">Requires modelling ({counts['Requires modelling']})</option>
+                    <option value="Guidance">Guidance ({counts.Guidance})</option>
+                  </select>
+                </div>
+                <div className="audit-filter-group">
+                  <label htmlFor="source-type-filter" className="audit-filter-label">Source Type</label>
+                  <select
+                    id="source-type-filter"
+                    value={sourceTypeFilter}
+                    onChange={(e) => setSourceTypeFilter(e.target.value as SourceTypeFilter)}
+                    className="audit-filter-select"
+                    aria-label="Filter by source type"
+                  >
+                    <option value="all">All Sources</option>
+                    <option value="adr">ADRs</option>
+                    <option value="agent-instructions">Agent Instructions</option>
+                    <option value="config">Configuration</option>
+                    <option value="code">Code Evidence</option>
+                  </select>
+                </div>
+                <div className="audit-filter-group audit-filter-search">
+                  <label htmlFor="decision-search" className="audit-filter-label sr-only">Search decisions</label>
+                  <div className="audit-search-input">
+                    <Search size={16} className="audit-search-icon" />
+                    <input
+                      id="decision-search"
+                      type="search"
+                      placeholder="Search decisions…"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="audit-search-field"
+                      aria-label="Search decisions"
+                    />
                   </div>
-                  <p className="audit-filter-results">
-                    Showing {filteredDecisions.length} of {decisions.length} governance items
-                  </p>
                 </div>
               </div>
-            )}
-            
-            {Object.entries(decisionsByGovernability).map(([governability, items]) => {
-              const gov = governability as Governability;
+              <p className="audit-filter-results">
+                Showing {filteredDecisions.length} of {decisions.length} governance items
+              </p>
+            </div>
+          </div>
+            </>)}
+
+            {CLASSIFICATION_ORDER.map((classification) => {
+              const items = decisionsByClassification[classification];
               if (items.length === 0) return null;
               
-              const Icon = ICONS[gov];
-              const badgeClass = BADGE_CLASS[gov];
-              const badgeLabel = BADGE_LABEL[gov];
-              const iconClass = ICON_CLASS[gov];
-              const limit = displayLimits[gov];
+              const Icon = classification === 'Protected' ? CheckCircle : 
+                          classification === 'Mneme-ready' ? Zap :
+                          classification === 'Requires modelling' ? Brain : Circle;
+              const badgeClass = BADGE_CLASS[classification];
+              const iconClass = ICON_CLASS[classification];
+              const limit = displayLimits[classification];
               const displayedItems = items.slice(0, limit);
               const hasMore = items.length > limit;
               
               return (
-                <div key={gov} className="decision-group">
+                <div key={classification} className="decision-group">
                   <h3 className="decision-group-title flex items-center gap-2">
                     <span className={`decision-group-icon ${iconClass}`}>
                       <Icon size={16} />
                     </span>
-                    <span>{badgeLabel}</span>
+                    <span>{BADGE_LABEL[classification]}</span>
                     <span className={`badge ${badgeClass}`}>{items.length} items</span>
                   </h3>
-                  <div className="decision-list" role="list" aria-label={`${badgeLabel} decisions`}>
+                  <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
                     {displayedItems.map((decision) => (
-                      <CollapsibleDecisionItem
+                      <CollapsibleDecisionItemWrapper
                         key={decision.id}
                         decision={decision}
                         isExpanded={isExpanded(decision.id)}
                         onToggle={() => toggleDecision(decision.id)}
                         onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
-                        showMissing={getMissingInfo(decision)}
                       />
                     ))}
                   </div>
                   {hasMore && (
                     <button
-                      onClick={() => showAllForGovernability(gov)}
+                      onClick={() => showAllForClassification(classification)}
                       className="btn btn-ghost btn-sm mt-2"
                       data-cta-intent="show_all"
                       data-cta-position="decision_group"
@@ -712,23 +657,6 @@ export function AuditOverviewPage() {
                 <p className="empty-text">Try adjusting your filters or search query.</p>
               </div>
             )}
-          </section>
-
-          <section id="coverage" className="audit-section" aria-labelledby="coverage-title">
-            <h2 id="coverage-title" className="audit-section-title">Coverage</h2>
-            <p className="audit-section-subtitle">Coverage is the share of findings that Mneme can test at least partially. Improve it by adding explicit scope and machine-testable constraints to high-value decisions.</p>
-            <div className="audit-coverage">
-              <div className="audit-coverage-bar">
-                <div 
-                  className="audit-coverage-fill" 
-                  style={{ width: `${coveragePct}%` }}
-                />
-              </div>
-              <p className="audit-coverage-text">
-                {coveragePct}% of governance items have at least partial enforceability
-                <InfoTooltip label="Coverage">{FIELD_HELP.coverage}</InfoTooltip>
-              </p>
-            </div>
           </section>
 
           <section
@@ -778,17 +706,7 @@ export function AuditOverviewPage() {
               ))}
             </ul>
 
-            <aside id="pilot" className="pilot-cta" aria-labelledby="pilot-title">
-              <span className="pilot-cta-eyebrow">Your audit is already the starting point</span>
-              <h2 id="pilot-title">Turn these recommendations into a small, safe pilot</h2>
-              <p>You won’t need to repeat the findings or prepare another report. We’ll review this audit before a short follow-up, agree on 3–5 priorities, and turn the recommendations into controls you can validate before anything blocks delivery.</p>
-              <ol>
-                <li><strong>Confirm</strong> the recurring change or boundary that matters most.</li>
-                <li><strong>Address</strong> 3–5 recommendations as clear, testable controls.</li>
-                <li><strong>Validate</strong> the controls in observe mode with your team.</li>
-              </ol>
-              <PilotLink audit={audit} ctaPosition="audit_result">Request a pilot</PilotLink>
-            </aside>
+            <AuditSetup audit={audit} ctaPosition="audit_result" />
           </section>
         </div>
       </main>

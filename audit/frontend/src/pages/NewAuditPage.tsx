@@ -6,7 +6,7 @@ import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
-  const { createAudit, loading } = useAuditApi();
+  const { createAudit, loading, error } = useAuditApi();
   const [repositoryUrl, setRepositoryUrl] = useState('');
   const [zipFile, setZipFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -80,7 +80,7 @@ export function NewAuditPage() {
     const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
     
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to start audit');
     }
@@ -90,7 +90,7 @@ export function NewAuditPage() {
     setSubmitError('');
     const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to load demo');
     }
@@ -103,9 +103,9 @@ export function NewAuditPage() {
       <main className="flex-1">
         <div className="audit-container">
           <header className="audit-hero">
-            <span className="audit-hero-tag">Architecture Governability Audit</span>
-            <h1>Understand which architectural decisions <br />can actually be governed.</h1>
-            <p>Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules.</p>
+            <span className="audit-hero-tag">Architecture Protection Audit</span>
+            <h1>Understand which architectural decisions <br />are protected.</h1>
+            <p>Give Mneme a repository. It identifies architectural decisions, reports their protection level, and shows guardrails and protection gaps.</p>
             
             <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
               <div className="mb-4">
@@ -163,6 +163,12 @@ export function NewAuditPage() {
                 </div>
               )}
 
+              {error && !submitError && (
+                <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
+                  <AlertCircle size={16} /> {error}
+                </div>
+              )}
+
               <div className="cta-group mt-4">
                 <button 
                   type="submit" 
@@ -205,16 +211,16 @@ export function NewAuditPage() {
                 <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, and configuration evidence are grouped into a single inventory of governance items.</p>
               </article>
               <article className="works-card">
-                <h3>Governability classified</h3>
-                <p>Each item is rated <span className="text-teal">Enforceable</span>, <span className="text-warning">Partial</span>, or <span className="text-muted">Guidance only</span>, with the evidence behind that rating.</p>
+                <h3>Protection classified</h3>
+                <p>Each decision is <span className="text-teal">Protected</span>, <span className="text-warning">Mneme-ready</span>, <span className="text-warning">Requires modelling</span>, or <span className="text-muted">Guidance</span>.</p>
               </article>
               <article className="works-card">
-                <h3>Proposed Mneme rules</h3>
-                <p>For machine-testable decisions, see the deterministic rule type, matcher, applicability, and confidence Mneme would use.</p>
+                <h3>Mneme guardrails</h3>
+                <p>Inspect deterministic guardrails and the evidence behind each decision.</p>
               </article>
               <article className="works-card">
-                <h3>Governance gaps</h3>
-                <p>For decisions that cannot be safely enforced yet, get a concrete explanation of what is missing and the next step to add it.</p>
+                <h3>Protection gaps</h3>
+                <p>Decisions that can't be enforced yet — with specific next steps to make them machine-testable.</p>
               </article>
             </div>
           </section>

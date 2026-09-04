@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Architecture Audit | Mneme HQ</title>
-  <meta name="description" content="Architecture Governability Audit — Give Mneme a repository and understand which architectural decisions can actually be governed." />
+  <meta name="description" content="Architecture Protection Audit — See how much protection-relevant architectural intent is currently protected from AI-generated drift, where gaps remain, and where Mneme can identify concrete deterministic guardrails." />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/audit/" />
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Architecture Governability Audit | Mneme HQ" />
-  <meta property="og:description" content="Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules." />
+  <meta property="og:title" content="Architecture Protection Audit | Mneme HQ" />
+  <meta property="og:description" content="See how much protection-relevant architectural intent is currently protected from AI-generated drift, where gaps remain, and where Mneme can identify concrete deterministic guardrails." />
   <meta property="og:url" content="https://mnemehq.com/audit/" />
   <meta property="og:image" content="https://mnemehq.com/audit/og.png" />
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Architecture Governability Audit | Mneme HQ" />
-  <meta name="twitter:description" content="Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules." />
+  <meta name="twitter:title" content="Architecture Protection Audit | Mneme HQ" />
+  <meta name="twitter:description" content="See how much protection-relevant architectural intent is currently protected from AI-generated drift, where gaps remain, and where Mneme can identify concrete deterministic guardrails." />
   <meta name="twitter:image" content="https://mnemehq.com/audit/og.png" />
   
   <!-- Fonts & Styles -->
@@ -232,9 +232,9 @@
 
   <!-- HERO -->
   <header class="audit-hero" aria-labelledby="audit-title">
-    <span class="audit-hero-tag">Architecture Governability Audit</span>
-    <h1 id="audit-title">Understand which architectural decisions <br />can actually be governed.</h1>
-    <p>Give Mneme a repository. It identifies architectural decisions, classifies their governability, and shows you exactly which ones translate to deterministic enforcement rules.</p>
+    <span class="audit-hero-tag">Architecture Protection Audit</span>
+    <h1 id="audit-title">See how much architectural intent is <br />protected from AI-generated drift.</h1>
+    <p>Give Mneme a repository. It identifies architectural decisions, classifies their protection level, and shows exactly which ones have deterministic Mneme guardrails — plus where protection gaps remain.</p>
     
     <div class="cta-group">
       <a href="/audit/workspace/" class="btn btn-primary" data-cta-intent="start_audit" data-cta-position="audit_hero" data-cta-component="hero_cluster">Run Architecture Audit</a>
@@ -261,15 +261,15 @@
       </article>
       
       <article class="screen-card">
-        <div class="screen-header">Screen 2 — Audit Overview</div>
+        <div class="screen-header">Screen 2 — Audit Result</div>
         <div class="screen-body">
-          <h3>Decisions summary</h3>
+          <h3>Protection summary</h3>
           <ul>
-            <li>Total decisions identified</li>
-            <li>Enforceable / Partial / Guidance counts</li>
-            <li>Coverage percentage</li>
-            <li>Sources found (ADRs, CLAUDE.md, etc.)</li>
-            <li>Clickable decision list with governability badges</li>
+            <li>Architecture Protection: X of Y protection-relevant decisions protected</li>
+            <li>Current Protection percentage</li>
+            <li>Protected / Mneme-ready / Requires modelling / Guidance counts</li>
+            <li>Sources found (ADRs, CLAUDE.md, AGENTS.md, config files)</li>
+            <li>Clickable decision list with protection badges</li>
           </ul>
         </div>
       </article>
@@ -277,13 +277,13 @@
       <article class="screen-card">
         <div class="screen-header">Screen 3 — Decision Detail</div>
         <div class="screen-body">
-          <h3>Source + rationale + rule</h3>
+          <h3>Source + rationale + guardrail</h3>
           <ul>
             <li>Full requirement text</li>
             <li>Source file and line numbers</li>
-            <li>Governability classification with reasoning</li>
+            <li>Protection classification with plain-English reason</li>
             <li>Applies-to paths</li>
-            <li>Proposed Mneme rule (copyable)</li>
+            <li>Proposed Mneme guardrail where Mneme-ready (copyable)</li>
           </ul>
         </div>
       </article>
@@ -300,16 +300,16 @@
         <p>ADRs, CLAUDE.md, AGENTS.md, architecture docs, config files — every source of architectural intent in the repository.</p>
       </article>
       <article class="works-card">
-        <h3>Governability classified</h3>
-        <p>Each decision rated: <span style="color: var(--teal);">Enforceable</span>, <span style="color: var(--warning);">Partial</span>, or <span style="color: var(--muted);">Guidance only</span>.</p>
+        <h3>Protection classified</h3>
+        <p>Each decision rated: <span style="color: var(--teal);">Protected</span>, <span style="color: var(--warning);">Mneme-ready</span>, <span style="color: var(--warning);">Requires modelling</span>, or <span style="color: var(--muted);">Guidance</span>.</p>
       </article>
       <article class="works-card">
-        <h3>Proposed Mneme rules</h3>
-        <p>See the exact deterministic Mneme rule where one exists (e.g., FORBID_LITERAL).</p>
+        <h3>Proposed Mneme guardrails</h3>
+        <p>See the exact deterministic Mneme guardrail where one exists (e.g., FORBID_LITERAL).</p>
       </article>
       <article class="works-card">
-        <h3>Governance gaps</h3>
-        <p>Decisions that can't be enforced yet — with specific next steps to make them machine-testable.</p>
+        <h3>Protection gaps</h3>
+        <p>Decisions that aren't yet protected — with specific next steps: modeling needed, or guardrail identified ready for CI/CD integration.</p>
       </article>
       <article class="works-card">
         <h3>Exportable report</h3>
@@ -320,6 +320,41 @@
         <p>This audit is the artifact you send after a design-partner call — concrete evidence of where their architecture is ambiguous to AI agents.</p>
       </article>
     </div>
+  </section>
+
+  <!-- PERSISTENT PILOT WORKFLOW (M1) -->
+  <section class="audit-section" aria-labelledby="pilot-workflow">
+    <h2 id="pilot-workflow" class="audit-section-title">Persistent pilot workflow</h2>
+    <p style="max-width: 700px; margin: 0 auto 2rem; color: var(--muted); text-align: center;">
+      M1 adds durable project identity so the audit is no longer a one-off report. Teams can now track protection improvement over time.
+    </p>
+    
+    <div class="works-grid" style="max-width: 900px; margin: 0 auto;">
+      <article class="works-card">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="background: var(--accent); color: #0c0c0d; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">1</span> Audit</h3>
+        <p>Run an Architecture Protection audit against any repository. Get baseline protection metrics and identified guardrails.</p>
+      </article>
+      <article class="works-card">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="background: var(--accent); color: #0c0c0d; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">2</span> Save Baseline</h3>
+        <p>Persist the audit as a project baseline with repository URL, commit SHA, Mneme version, and timestamp. Baseline is immutable.</p>
+      </article>
+      <article class="works-card">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="background: var(--accent); color: #0c0c0d; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">3</span> Improve Protection</h3>
+        <p>Implement Mneme-ready guardrails in CI/CD. Address "Requires modelling" gaps. Each change raises the protection percentage.</p>
+      </article>
+      <article class="works-card">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="background: var(--accent); color: #0c0c0d; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">4</span> Re-audit</h3>
+        <p>Run a re-audit against the new repository state. Creates a new immutable snapshot linked to the same project.</p>
+      </article>
+      <article class="works-card">
+        <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span style="background: var(--accent); color: #0c0c0d; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 700;">5</span> Compare</h3>
+        <p>Baseline vs. latest comparison shows: Architecture Protection delta (e.g., 20% → 60%), newly Protected decisions, new guardrails, regressions, added/removed decisions. All computed server-side from canonical P1.2 evidence.</p>
+      </article>
+    </div>
+    
+    <p style="margin-top: 2rem; text-align: center; color: var(--muted); font-size: 0.88rem;">
+      <em>Illustrative example: a team starting at 20% protection (1 of 5 decisions Protected) implements 2 Mneme-ready guardrails and reaches 60% (3 of 5 Protected). Results vary by repository.</em>
+    </p>
   </section>
 
   <!-- THE DISTINCTION -->
@@ -333,7 +368,7 @@
       </div>
       <div style="background: rgba(139, 224, 200, 0.05); border: 1px solid rgba(139, 224, 200, 0.3); border-radius: 8px; padding: 1.5rem;">
         <p style="color: var(--teal); font-family: 'DM Mono', monospace; font-size: 0.82rem; margin-bottom: 0.5rem;">The audit asks:</p>
-        <p style="font-size: 1.05rem; line-height: 1.6; font-weight: 500;">"Can this architectural intent be deterministically governed?"</p>
+        <p style="font-size: 1.05rem; line-height: 1.6; font-weight: 500;">"Can this architectural intent be deterministically protected from AI-generated drift?"</p>
       </div>
       <p style="margin-top: 1.5rem; color: var(--muted);">You don't have generalized drift detection yet. The audit is valuable precisely because it answers a narrower, answerable question — and that answer is what Mneme actually does today.</p>
       <p style="margin-top: 1.5rem; color: var(--muted);">Want to see what the answer looks like before running it? The <a href="/demo/adr-compiler/" data-cta-intent="demo" data-cta-position="mid" data-cta-component="context">ADR compiler demo</a> takes one written decision and shows it becoming an executable constraint, and <a href="/insights/how-ai-coding-agents-use-adrs/">how AI coding agents use ADRs</a> explains the ignored, advisory, and enforced progression the audit is measuring against.</p>
@@ -534,7 +569,7 @@
   }
 
   /* Declared per page by the CTA routing work:
-   *   <meta name="mneme:content-segment" content="developer_evaluation">
+   *   head meta name mneme:content-segment, e.g. developer_evaluation.
    * Absent on pages that have not been segmented; the parameter is then
    * omitted rather than guessed. */
   function contentSegment() {

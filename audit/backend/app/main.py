@@ -6,6 +6,8 @@ from fastapi.exceptions import HTTPException
 import os
 
 from app.api import audit
+from app.api import v1 as api_v1
+from app.api import workspace
 
 app = FastAPI(
     title="Mneme Architecture Audit API",
@@ -29,7 +31,6 @@ allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https://.*mnemehq\.com.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -37,6 +38,8 @@ app.add_middleware(
 
 # Include API routes
 app.include_router(audit.router, prefix="/api")
+app.include_router(api_v1.router, prefix="")
+app.include_router(workspace.router)
 
 # Health check
 @app.get("/health")

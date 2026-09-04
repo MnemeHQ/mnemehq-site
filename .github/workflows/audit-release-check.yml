@@ -1,0 +1,57 @@
+name: Audit release checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit-release:
+    name: Linux audit contracts, symlinks, and frontend build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATABASE_URL: 'sqlite+aiosqlite:///:memory:'
+      DB_ECHO: 'false'
+      DB_POOL_DISABLED: 'true'
+      CLOUD_SQL_CONNECTION_NAME: ''
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install backend test dependencies
+        run: python -m pip install -r audit/backend/requirements.txt
+      - name: Run backend contracts including all three real symlink tests
+        working-directory: audit/backend
+        run: python -m pytest -q -rs
+      - name: Run legacy audit pipeline fixtures
+        env:
+          PYTHONPATH: audit/backend
+        run: python -m pytest -q --asyncio-mode=auto tests
+      - name: Run site tooling regressions including CTA segmentation and line endings
+        env:
+          PYTHONPATH: scripts
+        run: python -m pytest -q scripts
+      - name: Install frontend dependencies
+        working-directory: audit/frontend
+        run: npm ci
+      - name: Run frontend tests and build the release assets
+        working-directory: audit/frontend
+        env:
+          VITE_API_BASE: ''
+        run: |
+          npm test
+          npm run build
+      - name: Build same-origin preview assets separately
+        working-directory: audit/frontend
+        env:
+          VITE_API_BASE: '/'
+        run: npm run build -- --outDir ../../scratch/m12-preview-workspace

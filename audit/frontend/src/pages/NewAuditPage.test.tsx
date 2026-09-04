@@ -4,6 +4,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { NewAuditPage } from './NewAuditPage';
 
+vi.mock('../hooks/useAuditApi', () => ({ useAuditApi: vi.fn() }));
+
 const mockedUseAuditApi = vi.mocked(useAuditApi);
 
 describe('NewAuditPage errors', () => {
@@ -21,6 +23,11 @@ describe('NewAuditPage errors', () => {
       createAudit,
       getAudit: vi.fn(),
       exportAudit: vi.fn(),
+      getProject: vi.fn(),
+      getProjectAudit: vi.fn(),
+      saveBaseline: vi.fn(),
+      runProjectAudit: vi.fn(),
+      compareAudits: vi.fn(),
       loading: false,
       error: 'Repository contains unsafe symlink: escape.md',
     });

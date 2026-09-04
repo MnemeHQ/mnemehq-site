@@ -2,6 +2,12 @@
 
 Notes for AI agents working in this repository.
 
+## Branch naming
+
+Use purpose-based prefixes: `feat/`, `fix/`, `site/`, `ci/`, `docs/`, or `refactor/`.
+Keep names short and kebab-case. Do not use an agent name such as `codex/` as the
+branch prefix; record agent identity in execution provenance instead.
+
 ## OG images are generated, not hand-made
 
 Every page's `og.png` is produced by the deploy/asset pipeline:
