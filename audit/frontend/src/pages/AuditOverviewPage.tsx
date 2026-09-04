@@ -5,6 +5,7 @@ import { AuditNav } from '../components/AuditNav';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save, ArrowRight } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
+import { decisionParams, track } from '../analytics';
 
 type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
 type SourceTypeFilter = 'all' | 'adr' | 'agent-instructions' | 'config' | 'code';
@@ -209,13 +210,15 @@ export function AuditOverviewPage() {
     return groups;
   }, [filteredDecisions]);
 
-  const toggleDecision = (decisionId: string) => {
+  const toggleDecision = (decision: ProtectionDecision) => {
+    const expanding = !expandedDecisions.has(decision.id);
+    track('audit_decision_toggle', { action: expanding ? 'expand' : 'collapse', ...decisionParams(decision) });
     setExpandedDecisions(prev => {
       const next = new Set(prev);
-      if (next.has(decisionId)) {
-        next.delete(decisionId);
+      if (next.has(decision.id)) {
+        next.delete(decision.id);
       } else {
-        next.add(decisionId);
+        next.add(decision.id);
       }
       return next;
     });
@@ -699,7 +702,7 @@ export function AuditOverviewPage() {
                           key={decision.id}
                           decision={decision}
                           isExpanded={isExpanded(decision.id)}
-                          onToggle={() => toggleDecision(decision.id)}
+                          onToggle={() => toggleDecision(decision)}
                           onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
                         />
                       ))}

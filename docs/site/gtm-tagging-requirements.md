@@ -300,3 +300,83 @@ legacy event counts fall to zero. Delete the paused tags only after that.
       against the live container
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
+
+## 10. Audit workspace extension — repository ready, container configuration pending
+
+The BrowserRouter application at `/audit/workspace/` now owns a separate,
+production-host-gated data-layer adapter. The adapter loads `GTM-KL7FB67N`
+only for a production build running at exactly `https://mnemehq.com`; local,
+preview, test, non-HTTPS, and kill-switched builds neither load GTM nor push
+events. Do not merge or deploy the application change until the container work
+below is published, because the current Google tag could otherwise create an
+automatic page view containing a real BrowserRouter identifier.
+
+The application emits these canonical events:
+
+| Event | Meaning | Parameters beyond attribution/context |
+|---|---|---|
+| `audit_screen_view` | One canonical Audit SPA screen became active | `audit_screen`, templated `page_path`, `page_location`, `page_title` |
+| `audit_input_selected` | A URL, ZIP, or demo input was selected | `input_type`, `selection_method` |
+| `audit_start` | A fresh create-audit request started | `input_type` |
+| `audit_complete` | A fresh create response passed `mneme.audit/v1` validation | `input_type`, `duration_ms`, the eight shipped summary fields below |
+| `audit_error` | A validation, API, re-audit, copy, or export operation failed | `stage`, allowlisted `error_code`, optional `format` |
+| `audit_baseline_saved` | Baseline persistence was confirmed by the backend | none |
+| `audit_reaudit_start` | A project re-audit request started | none |
+| `audit_reaudit_complete` | The backend returned a completed re-audit | `duration_ms` |
+| `audit_comparison_view` | A validated backend comparison loaded | compatibility, six backend state counts, two backend deltas |
+| `audit_decision_toggle` | A decision card expanded or collapsed | `action` plus safe decision fields |
+| `audit_decision_view` | A validated decision detail loaded | safe decision fields |
+| `audit_rule_copy` | A proposed rule was successfully copied | safe decision fields |
+| `audit_export` | An export response body was successfully read | `format` |
+
+The eight Audit summary fields are `decisions_discovered`,
+`protection_relevant`, `protected_count`, `mneme_ready_count`,
+`requires_modelling_count`, `guidance_count`, `current_protection`, and
+`identified_mneme_potential`. These values, all comparison counts, and both
+comparison deltas are copied verbatim from validated backend responses.
+Analytics must never calculate or reconstruct an Audit score.
+
+Safe decision fields are `protection_classification`, `evidence_confidence`,
+`has_proposed_rule`, and the allowlisted `rule_type`. Rule patterns, decision
+text, evidence/source paths, repository data, audit/project/decision IDs,
+commit SHAs, credentials, and tokens are never parameters.
+
+Every Audit event also carries `page_type=audit`, a templated `source_page`,
+and, where declared, `content_segment`. `cta_click` continues the existing
+canonical contract and carries sanitized `cta_destination` and bounded
+`link_text`; Audit and pilot identifiers/query values are stripped from the
+destination. Screen paths use these templates only:
+
+```
+/audit/workspace/
+/audit/workspace/audit/:auditId
+/audit/workspace/audit/:auditId/decisions/:decisionId
+/audit/workspace/audit/:auditId/gaps
+/audit/workspace/project/:projectId
+/audit/workspace/project/:projectId/compare
+```
+
+### Required GTM work before merge
+
+1. Add version-2 Data Layer Variables for every Audit parameter named above,
+   plus `page_location`, `page_title`, and `page_referrer`; retain the existing
+   attribution DLVs from section 3.
+2. Extend `Custom Event - Canonical Analytics` and its single canonical GA4
+   router tag to the Audit events. Explicitly map each event parameter; do not
+   enable arbitrary parameter collection and do not resurrect paused legacy
+   event tags.
+3. Add `GA4 - Audit virtual page view`, triggered only by
+   `audit_screen_view`, with GA4 event name `page_view` and the templated
+   `page_path`, `page_location`, `page_title`, `page_referrer`, `page_type`,
+   `audit_screen`, `source_page`, and `content_segment` values.
+4. Exclude `/audit/workspace/` from the existing automatic page-load tag and
+   configure its Audit-specific Google tag with `send_page_view=false`.
+   Disable Enhanced Measurement browser-history page views so BrowserRouter
+   transitions cannot transmit raw identifiers; the explicit virtual tag is
+   the sole page-view source for the workspace.
+5. In GTM Preview and GA4 DebugView, verify one virtual page view per current
+   screen, no view for `/audit` redirect migration, correct success/failure
+   ordering, and no raw identifier in any event or page URL.
+6. Publish the container, record the new version/date here, then make PR #82
+   eligible for merge. Confirm the next BigQuery daily export before deleting
+   any paused legacy configuration.

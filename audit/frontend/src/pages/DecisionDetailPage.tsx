@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
@@ -8,6 +8,7 @@ import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassificat
 import { InfoTooltip } from '../components/InfoTooltip';
 import { AuditSetup } from '../components/AuditSetup';
 import { FIELD_HELP, getDecisionRecommendations, getPlainLanguageSummary } from '../utils/auditInsights';
+import { decisionParams, track } from '../analytics';
 
 const CLASSIFICATION_LABELS: Record<ProtectionClassification, string> = {
   Protected: 'PROTECTED',
@@ -63,6 +64,7 @@ export function DecisionDetailPage() {
   const [audit, setAudit] = useState<ProtectionAuditResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const viewedDecision = useRef<string | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -78,12 +80,23 @@ export function DecisionDetailPage() {
     }
   }, [id, decisionId, getAudit]);
 
+  useEffect(() => {
+    if (!decision || viewedDecision.current === decision.id) return;
+    viewedDecision.current = decision.id;
+    track('audit_decision_view', decisionParams(decision));
+  }, [decision]);
+
   const copyRule = async () => {
     if (!decision || !decision.proposed_rule) return;
     const ruleText = `${decision.proposed_rule.type} "${decision.proposed_rule.pattern}"`;
-    await navigator.clipboard.writeText(ruleText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(ruleText);
+      track('audit_rule_copy', decisionParams(decision));
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      track('audit_error', { stage: 'copy_rule', error_code: 'clipboard_unavailable' });
+    }
   };
 
   if (loading) {

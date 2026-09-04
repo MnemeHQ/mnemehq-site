@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { track } from '../analytics';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
@@ -47,8 +48,11 @@ export function NewAuditPage() {
       if (file.name.endsWith('.zip')) {
         setZipFile(file);
         setRepositoryUrl('');
+        setSubmitError('');
+        track('audit_input_selected', { input_type: 'zip', selection_method: 'drop' });
       } else {
         setSubmitError('Please upload a .zip file');
+        track('audit_error', { stage: 'validation', error_code: 'invalid_zip' });
       }
     }
   };
@@ -60,8 +64,10 @@ export function NewAuditPage() {
         setZipFile(file);
         setRepositoryUrl('');
         setSubmitError('');
+        track('audit_input_selected', { input_type: 'zip', selection_method: 'file_picker' });
       } else {
         setSubmitError('Please upload a .zip file');
+        track('audit_error', { stage: 'validation', error_code: 'invalid_zip' });
       }
     }
   };
@@ -73,11 +79,23 @@ export function NewAuditPage() {
 
     if (!repositoryUrl && !zipFile) {
       setSubmitError('Please provide a repository URL or upload a ZIP file');
+      track('audit_error', { stage: 'validation', error_code: 'missing_input' });
       return;
     }
-    if (repositoryUrl && urlError) return;
+    const currentUrlError = validateUrl(repositoryUrl);
+    if (repositoryUrl && currentUrlError) {
+      track('audit_error', { stage: 'validation', error_code: 'invalid_repository_url' });
+      return;
+    }
 
-    const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
+    const inputType = zipFile ? 'zip' : 'repository_url';
+    if (inputType === 'repository_url') {
+      track('audit_input_selected', { input_type: inputType, selection_method: 'url' });
+    }
+    const result = await createAudit(
+      { repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined },
+      inputType,
+    );
     
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
@@ -88,7 +106,8 @@ export function NewAuditPage() {
 
   const handleDemoClick = async () => {
     setSubmitError('');
-    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
+    track('audit_input_selected', { input_type: 'demo', selection_method: 'url' });
+    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' }, 'demo');
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
