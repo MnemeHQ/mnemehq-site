@@ -80,7 +80,7 @@ export function NewAuditPage() {
     const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
     
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to start audit');
     }
@@ -90,7 +90,7 @@ export function NewAuditPage() {
     setSubmitError('');
     const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
     if (result.success && result.data) {
-      navigate(`/audit/${result.data.id}`, { state: { audit: result.data } });
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
       setSubmitError(result.error || 'Failed to load demo');
     }

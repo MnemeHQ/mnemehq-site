@@ -11,28 +11,28 @@ const ICONS: Record<ProtectionClassification, typeof CheckCircle> = {
 const ICON_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'protected',
   'Mneme-ready': 'mneme-ready',
-  'Requires modelling': 'requires-modelling',
+  'Requires modelling': 'ready-to-protect',
   Guidance: 'guidance',
 };
 
 const BADGE_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'badge-protected',
   'Mneme-ready': 'badge-mneme-ready',
-  'Requires modelling': 'badge-requires-modelling',
+  'Requires modelling': 'badge-ready-to-protect',
   Guidance: 'badge-guidance',
 };
 
 const BADGE_LABEL: Record<ProtectionClassification, string> = {
   Protected: 'PROTECTED',
   'Mneme-ready': 'MNEME-READY',
-  'Requires modelling': 'REQUIRES MODELLING',
+  'Requires modelling': 'READY TO PROTECT',
   Guidance: 'GUIDANCE ONLY',
 };
 
 const CLASSIFICATION_DESC: Record<ProtectionClassification, string> = {
   Protected: 'Mneme enforces this decision deterministically in CI/CD.',
   'Mneme-ready': 'Complete specification exists; ready for rule generation.',
-  'Requires modelling': 'Needs architectural modelling before protection is possible.',
+  'Requires modelling': 'Mneme needs the scope/constraints represented explicitly before protection is possible.',
   Guidance: 'Expresses intent without machine-testable constraints.',
 };
 
