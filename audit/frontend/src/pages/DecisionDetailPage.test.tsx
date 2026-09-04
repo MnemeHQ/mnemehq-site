@@ -31,6 +31,7 @@ describe('DecisionDetailPage', () => {
     expect(screen.getByText('View evidence')).toBeInTheDocument();
     expect(screen.getByText('Review this guidance with the decision owner')).toBeInTheDocument();
     expect(screen.queryByText('State a machine-testable constraint')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Install Mneme' })).toHaveAttribute('href', '/docs/#quickstart');
     const pilotLink = screen.getByRole('link', { name: 'Request a pilot' });
     expect(pilotLink).toHaveAttribute('href', expect.stringContaining('https://mnemehq.com/pilot/?source=architecture-audit'));
     pilotLink.addEventListener('click', (event) => event.preventDefault(), { once: true });

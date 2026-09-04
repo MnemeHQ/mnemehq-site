@@ -78,7 +78,7 @@ describe('AuditOverviewPage section navigation', () => {
   it.each([
     ['Protection gaps', 'gaps'],
     ['Sources', 'sources'],
-    ['Pilot', 'pilot'],
+    ['Setup', 'setup'],
   ])('scrolls to and activates the %s section', (label, sectionId) => {
     renderOverview();
 
@@ -119,6 +119,18 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getByText('How to read this audit')).toBeInTheDocument();
     expect(screen.getByText('Protection Decisions')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Request a pilot' })).toHaveAttribute('href', expect.stringContaining('https://mnemehq.com/pilot/?source=architecture-audit'));
+  });
+
+  it('offers setup before the downstream pilot without promising automatic enforcement', () => {
+    renderOverview();
+    const install = screen.getByRole('link', { name: 'Install Mneme' });
+    const pilot = screen.getByRole('link', { name: 'Request a pilot' });
+    expect(install).toHaveAttribute('href', '/docs/#quickstart');
+    expect(install).toHaveClass('btn-primary');
+    expect(pilot).toHaveClass('btn-ghost');
+    expect(install.compareDocumentPosition(pilot) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByText(/Installing Mneme does not automatically enable enforcement or activate the proposed guardrails/)).toBeInTheDocument();
+    expect(screen.getByText(/After setup, want help/)).toBeInTheDocument();
   });
 
   it('opens a bounded, accessible explanation from a metric info control', () => {

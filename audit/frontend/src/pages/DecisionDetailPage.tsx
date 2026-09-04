@@ -6,7 +6,7 @@ import { AuditNav, BackLink } from '../components/AuditNav';
 import { Copy, CheckCircle, Zap, Brain, Circle, FileText, AlertCircle, Eye, Search } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification, EvidenceConfidence } from '../types/audit';
 import { InfoTooltip } from '../components/InfoTooltip';
-import { PilotLink } from '../components/PilotLink';
+import { AuditSetup } from '../components/AuditSetup';
 import { FIELD_HELP, getDecisionRecommendations, getPlainLanguageSummary } from '../utils/auditInsights';
 
 const CLASSIFICATION_LABELS: Record<ProtectionClassification, string> = {
@@ -245,13 +245,7 @@ export function DecisionDetailPage() {
               ))}
             </ol>
             {audit && (
-              <div className="detail-pilot-prompt">
-                <div>
-                  <strong>We’ll start from this recommendation</strong>
-                  <p>You won’t need to explain the finding again. We’ll review the attached audit before a short follow-up, agree on the intended scope, and test the recommendation safely against real changes.</p>
-                </div>
-                <PilotLink audit={audit} selectedDecisionId={decision.id} ctaPosition="decision_detail">Request a pilot</PilotLink>
-              </div>
+              <AuditSetup audit={audit} selectedDecisionId={decision.id} ctaPosition="decision_detail" />
             )}
           </section>
 

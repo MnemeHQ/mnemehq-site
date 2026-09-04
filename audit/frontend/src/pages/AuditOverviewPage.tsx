@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
-import { PilotLink } from '../components/PilotLink';
+import { AuditSetup } from '../components/AuditSetup';
 import { deriveGaps } from './GovernanceGapsPage';
 import { AuditProvenance } from './ProjectPage';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
@@ -110,7 +110,7 @@ export function AuditOverviewPage() {
     { id: 'gaps', label: 'Protection gaps' },
     { id: 'decisions', label: 'Decisions' },
     { id: 'sources', label: 'Sources' },
-    { id: 'pilot', label: 'Pilot' },
+    { id: 'setup', label: 'Setup' },
   ], []);
 
   useEffect(() => {
@@ -495,7 +495,7 @@ export function AuditOverviewPage() {
                   key={section.id}
                   type="button"
                   onClick={() => scrollToSection(section.id)}
-                  className={`audit-section-nav-item ${section.id === 'pilot' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
+                  className={`audit-section-nav-item ${section.id === 'setup' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-section={section.id}
                 >
@@ -706,17 +706,7 @@ export function AuditOverviewPage() {
               ))}
             </ul>
 
-            <aside id="pilot" className="pilot-cta" aria-labelledby="pilot-title">
-              <span className="pilot-cta-eyebrow">Your audit is already the starting point</span>
-              <h2 id="pilot-title">Turn these recommendations into a small, safe pilot</h2>
-              <p>You won’t need to repeat the findings or prepare another report. We’ll review this audit before a short follow-up, agree on 3–5 priorities, and turn the recommendations into controls you can validate before anything blocks delivery.</p>
-              <ol>
-                <li><strong>Confirm</strong> the recurring change or boundary that matters most.</li>
-                <li><strong>Address</strong> 3–5 recommendations as clear, testable controls.</li>
-                <li><strong>Validate</strong> the controls in observe mode with your team.</li>
-              </ol>
-              <PilotLink audit={audit} ctaPosition="audit_result">Request a pilot</PilotLink>
-            </aside>
+            <AuditSetup audit={audit} ctaPosition="audit_result" />
           </section>
         </div>
       </main>

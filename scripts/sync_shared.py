@@ -1,17 +1,11 @@
 #!/usr/bin/env python3
 """
 Sync canonical nav and footer snippets across all site HTML files.
-Skips og-*.html templates and site/_snippets/.
+Skips og-*.html templates, site/_snippets/, and the generated audit SPA shell.
 Run before deploy or any time snippets change.
 """
-import os
 import re
 from pathlib import Path
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except Exception:
-    pass
 
 SITE = Path(__file__).parent.parent / "site"
 SNIPPETS = SITE / "_snippets"
@@ -70,6 +64,9 @@ skipped_og = []
 skipped_snippet = []
 
 for html in sorted(SITE.rglob("*.html")):
+    # Vite owns this shell; its nav is rendered by React at runtime.
+    if html.relative_to(SITE).as_posix() == "audit/workspace/index.html":
+        continue
     # Skip OG templates
     if html.name.startswith("og-"):
         skipped_og.append(html.name)

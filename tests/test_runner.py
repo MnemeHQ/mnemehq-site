@@ -24,8 +24,10 @@ async def test():
     print("Sources:", result.summary.sources)
     print("Gaps:", len(result.gaps))
     assert result.summary.enforceable == 1
-    assert result.summary.partial == 1
-    assert result.summary.guidance == 3
+    # The fixture's explicit CLAUDE.md constraints are partial, like ADR-002;
+    # service boundaries and project configuration remain guidance-only.
+    assert result.summary.partial == 2
+    assert result.summary.guidance == 2
     print("All assertions passed!")
 
 if __name__ == "__main__":

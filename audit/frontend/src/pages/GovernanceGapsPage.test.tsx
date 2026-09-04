@@ -31,6 +31,7 @@ describe('GovernanceGapsPage', () => {
 
     expect(await screen.findByText('Why it is a gap')).toBeInTheDocument();
     expect(screen.getByText(/Model the decision: define explicit applicability/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Install Mneme' })).toHaveAttribute('href', '/docs/#quickstart');
 
     fireEvent.click(screen.getByRole('link', { name: 'Review governance item: Project Config: pyproject.toml' }));
     expect(screen.getByText('Decision details destination')).toBeInTheDocument();

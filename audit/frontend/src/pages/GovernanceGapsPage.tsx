@@ -4,7 +4,7 @@ import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav, BackLink } from '../components/AuditNav';
 import { ArrowRight, AlertCircle, AlertTriangle } from 'lucide-react';
 import { InfoTooltip } from '../components/InfoTooltip';
-import { PilotLink } from '../components/PilotLink';
+import { AuditSetup } from '../components/AuditSetup';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
 export interface DerivedGap {
@@ -144,13 +144,9 @@ export function GovernanceGapsPage() {
 
           <div className="audit-section text-center" style={{ paddingBottom: '4rem' }}>
             <div className="gap-next-actions">
-              <div>
-                <h2>Use this audit as the pilot starting point</h2>
-                <p>We’ll review these recommendations before a short follow-up, select 3–5 priorities with you, and turn them into observe-mode controls. You won’t need to recreate the findings.</p>
-              </div>
+              {audit && <AuditSetup audit={audit} ctaPosition="governance_gaps" />}
               <div className="flex flex-wrap gap-2 justify-center">
                 <Link to={`/audit/${id}`} className="btn btn-ghost" data-cta-intent="back_to_overview" data-cta-position="gaps">Back to Audit Overview</Link>
-                {audit && <PilotLink audit={audit} ctaPosition="governance_gaps">Request a pilot</PilotLink>}
               </div>
             </div>
           </div>
