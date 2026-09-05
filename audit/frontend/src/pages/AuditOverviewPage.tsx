@@ -1,13 +1,9 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
-import { StatsGrid } from '../components/StatsGrid';
-import { AuditSetup } from '../components/AuditSetup';
-import { deriveGaps } from './GovernanceGapsPage';
-import { AuditProvenance } from './ProjectPage';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
-import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save } from 'lucide-react';
+import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save, ArrowRight } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 
 type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
@@ -25,47 +21,23 @@ const CLASSIFICATION_ORDER: ProtectionClassification[] = ['Protected', 'Mneme-re
 const ICON_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'protected',
   'Mneme-ready': 'mneme-ready',
-  'Requires modelling': 'requires-modelling',
+  'Requires modelling': 'ready-to-protect',
   Guidance: 'guidance',
 };
 
 const BADGE_CLASS: Record<ProtectionClassification, string> = {
   Protected: 'badge-protected',
   'Mneme-ready': 'badge-mneme-ready',
-  'Requires modelling': 'badge-requires-modelling',
+  'Requires modelling': 'badge-ready-to-protect',
   Guidance: 'badge-guidance',
 };
 
 const BADGE_LABEL: Record<ProtectionClassification, string> = {
   Protected: 'PROTECTED',
   'Mneme-ready': 'MNEME-READY',
-  'Requires modelling': 'REQUIRES MODELLING',
+  'Requires modelling': 'READY TO PROTECT',
   Guidance: 'GUIDANCE ONLY',
 };
-
-const STICKY_SECTION_GAP = 16;
-const SECTION_ACTIVATION_TOLERANCE = 2;
-const DEFAULT_SECTION_OFFSET = 56;
-
-function getSectionScrollOffset(): number {
-  const stickySelectors = [
-    '.audit-section-nav',
-  ];
-
-  const stickyBottom = stickySelectors.reduce((maxBottom, selector) => {
-    const element = document.querySelector<HTMLElement>(selector);
-    if (!element) return maxBottom;
-
-    const styles = window.getComputedStyle(element);
-    if (styles.position !== 'sticky') return maxBottom;
-
-    const stickyTop = Number.parseFloat(styles.top);
-    const top = Number.isFinite(stickyTop) ? stickyTop : 0;
-    return Math.max(maxBottom, top + element.getBoundingClientRect().height);
-  }, DEFAULT_SECTION_OFFSET);
-
-  return Math.ceil(stickyBottom + STICKY_SECTION_GAP);
-}
 
 function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails }: {
   decision: ProtectionDecision;
@@ -95,8 +67,6 @@ export function AuditOverviewPage() {
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [savingBaseline, setSavingBaseline] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
-  const [sectionScrollOffset, setSectionScrollOffset] = useState(DEFAULT_SECTION_OFFSET);
 
   const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
     Protected: DEFAULT_LIMITS.Protected,
@@ -107,10 +77,8 @@ export function AuditOverviewPage() {
 
   const sections = useMemo(() => [
     { id: 'overview', label: 'Overview' },
-    { id: 'gaps', label: 'Protection gaps' },
     { id: 'decisions', label: 'Decisions' },
     { id: 'sources', label: 'Sources' },
-    { id: 'setup', label: 'Setup' },
   ], []);
 
   useEffect(() => {
@@ -140,42 +108,21 @@ export function AuditOverviewPage() {
     });
   }, [id, getAudit]);
 
-  const measureSectionScrollOffset = useCallback(() => {
-    const nextOffset = getSectionScrollOffset();
-    setSectionScrollOffset((currentOffset) => (
-      currentOffset === nextOffset ? currentOffset : nextOffset
-    ));
-    return nextOffset;
-  }, []);
-
-  useEffect(() => {
-    measureSectionScrollOffset();
-    window.addEventListener('resize', measureSectionScrollOffset);
-    return () => window.removeEventListener('resize', measureSectionScrollOffset);
-  }, [measureSectionScrollOffset, audit]);
-
   useEffect(() => {
     const handleScroll = () => {
-      const isAtPageEnd = window.innerHeight + window.pageYOffset
-        >= document.documentElement.scrollHeight - SECTION_ACTIVATION_TOLERANCE;
-      if (isAtPageEnd) {
-        setActiveSection(sections[sections.length - 1].id);
-        return;
-      }
-
-      const scrollPosition = window.pageYOffset + getSectionScrollOffset();
-      let currentSection = sections[0].id;
-
+      const scrollPosition = window.pageYOffset + 150;
       for (const section of sections) {
         const el = document.getElementById(section.id);
-        if (!el || el.offsetTop > scrollPosition + SECTION_ACTIVATION_TOLERANCE) break;
-        currentSection = section.id;
+        if (el) {
+          const top = el.offsetTop;
+          const height = el.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            setActiveSection(section.id);
+            break;
+          }
+        }
       }
-
-      setActiveSection(currentSection);
     };
-
-    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [sections]);
@@ -184,7 +131,7 @@ export function AuditOverviewPage() {
   const decisions = useMemo(() => audit?.decisions || [], [audit]);
   const repository = audit?.repository || '';
   const sources = useMemo(() => summary?.sources || [], [summary]);
-  const totalDecisions = summary?.decisions_discovered ?? 0;
+  const totalDecisions = summary?.decisions_discovered || decisions.length;
   const protectionRelevant = summary?.protection_relevant || 0;
   const protectedCount = summary?.protected_count || 0;
   const mnemeReadyCount = summary?.mneme_ready_count || 0;
@@ -205,7 +152,7 @@ export function AuditOverviewPage() {
     } else if (protectionPct < 25) {
       return `Low architecture protection (${protectionPct}%). ${mnemeReadyCount} decisions are Mneme-ready for immediate protection gains.`;
     } else if (protectionPct < 50) {
-      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions require modelling.`;
+      return `Moderate protection (${protectionPct}%). ${requiresModellingCount} decisions need modelling to reach full coverage.`;
     } else {
       return `Strong architecture protection (${protectionPct}%). Well-governed architectural baseline.`;
     }
@@ -240,12 +187,12 @@ export function AuditOverviewPage() {
   }, [decisions, classificationFilter, sourceTypeFilter, searchQuery]);
 
   const counts = useMemo(() => ({
-    all: summary?.decisions_discovered ?? 0,
-    Protected: summary?.protected_count ?? 0,
-    'Mneme-ready': summary?.mneme_ready_count ?? 0,
-    'Requires modelling': summary?.requires_modelling_count ?? 0,
-    Guidance: summary?.guidance_count ?? 0,
-  }), [summary]);
+    all: decisions.length,
+    Protected: decisions.filter(d => d.protection_classification === 'Protected').length,
+    'Mneme-ready': decisions.filter(d => d.protection_classification === 'Mneme-ready').length,
+    'Requires modelling': decisions.filter(d => d.protection_classification === 'Requires modelling').length,
+    Guidance: decisions.filter(d => d.protection_classification === 'Guidance').length,
+  }), [decisions]);
 
   const decisionsByClassification = useMemo(() => {
     const groups: Record<ProtectionClassification, ProtectionDecision[]> = {
@@ -284,7 +231,7 @@ export function AuditOverviewPage() {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (!element) return;
-    const navOffset = measureSectionScrollOffset();
+    const navOffset = 130;
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
       top: Math.max(0, elementPosition - navOffset),
@@ -313,16 +260,16 @@ export function AuditOverviewPage() {
   const handleSaveBaseline = async () => {
     if (!audit) return;
     setSavingBaseline(true);
-    setActionError(null);
     try {
       const result = await saveBaseline(audit.audit_id);
       if (result.success && result.data) {
         navigate(`/project/${result.data.id}`, { state: { audit } });
       } else {
-        setActionError(result.error || 'Failed to save baseline');
+        setError(result.error || 'Failed to save baseline');
       }
     } catch (err) {
-      setActionError('Failed to save baseline. Please retry.');
+      console.error('Save baseline failed:', err);
+      setError('Failed to save baseline');
     } finally {
       setSavingBaseline(false);
     }
@@ -347,7 +294,7 @@ export function AuditOverviewPage() {
   const isNetworkError = effectiveError && (effectiveError.includes('network') || effectiveError.includes('fetch') || effectiveError.includes('connection'));
   const isServerError = effectiveError && (effectiveError.includes('500') || effectiveError.includes('server'));
 
-  if (!audit || !summary) {
+  if (effectiveError || !audit || !summary) {
     let title = 'Audit unavailable';
     let message = 'This audit may have expired or the link may be incorrect.';
     let actionText = 'Run New Audit';
@@ -381,7 +328,7 @@ export function AuditOverviewPage() {
                 {actionText}
               </Link>
               {showRetry && id && (
-                <button
+                <button 
                   onClick={() => window.location.reload()}
                   className="btn btn-ghost"
                   data-cta-intent="retry_audit"
@@ -398,6 +345,11 @@ export function AuditOverviewPage() {
   }
 
   const protectionPct = Math.round(currentProtection * 100);
+  const gapCount = mnemeReadyCount + requiresModellingCount;
+
+  const bridgeStatement = protectionRelevant > 0 && gapCount > 0
+    ? `${gapCount} architectural decision${gapCount > 1 ? 's' : ''} could be converted from guidance into enforceable protection.`
+    : '';
 
   return (
     <div className="audit-layout">
@@ -405,7 +357,8 @@ export function AuditOverviewPage() {
       
       <main className="flex-1">
         <div className="audit-container">
-          <header className="audit-hero" style={{ paddingTop: '2rem', paddingBottom: '2rem', textAlign: 'center' }}>
+          {/* ── HERO SECTION ── */}
+          <header className="audit-hero" style={{ paddingTop: '3rem', paddingBottom: '3rem', textAlign: 'center' }}>
             <span className="audit-hero-tag">Architecture Protection Audit</span>
             <h1>{repository}</h1>
             
@@ -419,7 +372,7 @@ export function AuditOverviewPage() {
               </p>
             </div>
             
-            <div className="protection-breakdown mt-4 flex flex-wrap gap-3 justify-center">
+            <div className="protection-breakdown mt-4 flex flex-wrap gap-2 justify-center">
               <span className="badge badge-protected flex items-center gap-1">
                 <CheckCircle size={12} /> {protectedCount} Protected
               </span>
@@ -429,8 +382,8 @@ export function AuditOverviewPage() {
                 </span>
               )}
               {requiresModellingCount > 0 && (
-                <span className="badge badge-requires-modelling flex items-center gap-1">
-                  <Brain size={12} /> {requiresModellingCount} Requires modelling
+                <span className="badge badge-ready-to-protect flex items-center gap-1">
+                  <Brain size={12} /> {requiresModellingCount} Ready to Protect
                 </span>
               )}
               {guidanceCount > 0 && (
@@ -453,17 +406,24 @@ export function AuditOverviewPage() {
               </div>
             )}
 
+            {bridgeStatement && (
+              <p className="audit-bridge mt-4">
+                <strong>{bridgeStatement}</strong>
+              </p>
+            )}
+
             <p className="mt-3 audit-key-finding">{keyFinding}</p>
 
             <div className="flex flex-wrap gap-2 mt-4 justify-center">
-              <button
-                onClick={() => scrollToSection('decisions')}
+              <Link 
+                to={`/audit/${id}/decisions`} 
+                state={{ audit }}
                 className="btn btn-primary flex items-center gap-2"
                 data-cta-intent="view_all_decisions"
                 data-cta-position="audit_overview"
               >
                 View All Decisions
-              </button>
+              </Link>
               <button 
                 onClick={() => handleExport('markdown')} 
                 disabled={exporting}
@@ -485,66 +445,141 @@ export function AuditOverviewPage() {
             </div>
           </header>
 
-          {actionError && <p role="alert" className="action-error">{actionError} Your audit is still available.</p>}
-          <AuditProvenance audit={audit} />
+          {/* ── HOW TO READ THIS AUDIT / METRICS ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="overview" className="audit-section" aria-labelledby="stats" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <h2 className="audit-section-title" style={{ marginBottom: '1.5rem' }}>How to read this audit</h2>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                Mneme identified <strong>{totalDecisions} architectural decisions and constraints</strong> across this repository. 
+                Most are guidance: useful context for developers and agents, but not decisions that should necessarily block code changes.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                <strong>{protectionRelevant} decisions are suitable for deterministic protection.</strong> 
+                {protectedCount} {protectedCount === 1 ? 'is' : 'are'} protected today. 
+                {gapCount} {gapCount === 1 ? 'still depends' : 'still depend'} on written guidance being interpreted correctly, 
+                which is where architectural drift can occur.
+              </p>
 
-          <nav className="audit-section-nav" aria-label="Audit sections">
-            <div className="audit-section-nav-inner">
-              {sections.map((section) => (
-                <button
-                  key={section.id}
-                  type="button"
-                  onClick={() => scrollToSection(section.id)}
-                  className={`audit-section-nav-item ${section.id === 'setup' ? 'audit-section-nav-pilot' : ''} ${activeSection === section.id ? 'active' : ''}`}
-                  aria-current={activeSection === section.id ? 'location' : undefined}
-                  data-section={section.id}
-                >
-                  {section.label}
-                </button>
-              ))}
-            </div>
-          </nav>
-
-          <section id="overview" className="audit-section" aria-labelledby="overview-title">
-            <h2 id="overview-title" className="audit-section-title">How to read this audit</h2>
-            <p className="audit-section-subtitle">These metrics show how much architectural intent Mneme found and how ready that intent is for deterministic enforcement. A low score identifies specification work to do; it does not mean the repository has no architecture.</p>
-            <StatsGrid summary={summary} />
-
-            <div className="protection-summary-detail">
-              <h3 className="audit-section-title" style={{ marginBottom: '1rem' }}>Protection Detail</h3>
-              <div className="protection-detail-grid">
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Decisions Discovered</span>
-                  <span className="protection-detail-value font-mono text-accent">{totalDecisions}</span>
+              <div className="metrics-primary">
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{totalDecisions}</span>
+                  <span className="metric-primary-label">Decisions Discovered</span>
                 </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Protection-Relevant</span>
-                  <span className="protection-detail-value font-mono text-accent">{protectionRelevant}</span>
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{protectionRelevant}</span>
+                  <span className="metric-primary-label">Protection Relevant</span>
                 </div>
-                <div className="protection-detail-item">
-                  <span className="protection-detail-label">Guidance Only</span>
-                  <span className="protection-detail-value font-mono text-muted">{guidanceCount}</span>
+                <div className="metric-primary-item">
+                  <span className="metric-primary-value">{protectionPct}%</span>
+                  <span className="metric-primary-label">Current Protection</span>
                 </div>
               </div>
+              <div className="metrics-secondary">
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value protected">{protectedCount}</span>
+                  <span className="metric-secondary-label">Protected</span>
+                </div>
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value ready-to-protect">{mnemeReadyCount + requiresModellingCount}</span>
+                  <span className="metric-secondary-label">Ready to Protect</span>
+                </div>
+                <div className="metric-secondary-item">
+                  <span className="metric-secondary-value guidance">{guidanceCount}</span>
+                  <span className="metric-secondary-label">Guidance Only</span>
+                </div>
+              </div>
+
+              {protectionRelevant > 0 && (
+                <div className="protection-progress-bar mt-4">
+                  <div className="protection-progress-track">
+                    <div 
+                      className="protection-progress-segment protected"
+                      style={{ width: `${(protectedCount / protectionRelevant) * 100}%` }}
+                    />
+                    {mnemeReadyCount > 0 && (
+                      <div 
+                        className="protection-progress-segment mneme-ready"
+                        style={{ width: `${(mnemeReadyCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                    {requiresModellingCount > 0 && (
+                      <div 
+                        className="protection-progress-segment ready-to-protect"
+                        style={{ width: `${(requiresModellingCount / protectionRelevant) * 100}%` }}
+                      />
+                    )}
+                  </div>
+                  <div className="protection-progress-legend">
+                    <span className="legend-item protected"><span className="legend-color" /><span>Protected ({protectedCount})</span></span>
+                    {mnemeReadyCount > 0 && <span className="legend-item mneme-ready"><span className="legend-color" /><span>Mneme-ready ({mnemeReadyCount})</span></span>}
+                    {requiresModellingCount > 0 && <span className="legend-item ready-to-protect"><span className="legend-color" /><span>Ready to Protect ({requiresModellingCount})</span></span>}
+                  </div>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* ── PROTECTION GAPS ── */}
+          {(mnemeReadyCount > 0 || requiresModellingCount > 0) && (
+            <div className="audit-section-band audit-section-band-warm">
+              <section id="gaps" className="audit-section" aria-labelledby="gaps-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+                <h2 id="gaps-title" className="audit-section-title" style={{ marginBottom: '1.5rem' }}>Protection Gaps</h2>
+                <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                  <strong>{gapCount} architectural decision{gapCount > 1 ? 's' : ''} could be protected more explicitly.</strong>
+                </p>
+                <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                  These decisions describe constraints that can be evaluated mechanically, but the repository currently expresses them primarily through prose or convention. 
+                  Mneme has not automatically turned them into controls. They need their scope and allowed behaviour modelled before enforcement can be enabled.
+                </p>
+                <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                  Review each gap below to see what Mneme found and what would be required to protect it.
+                </p>
+                
+                <div className="protection-gaps-list" role="list" aria-label="Protection gaps">
+                  {decisions
+                    .filter(d => d.protection_classification === 'Mneme-ready' || d.protection_classification === 'Requires modelling')
+                    .map((decision) => {
+                      const isModelling = decision.protection_classification === 'Requires modelling';
+                      const Icon = isModelling ? Brain : Zap;
+                      const iconClass = isModelling ? 'ready-to-protect' : 'mneme-ready';
+                      const badgeClass = isModelling ? 'badge-ready-to-protect' : 'badge-mneme-ready';
+                      const badgeLabel = isModelling ? 'READY TO PROTECT' : 'MNEME-READY';
+                      const humanReadableLead = decision.title
+                        .replace(/^Architectural decision: /i, '')
+                        .replace(/^(The|A|An)\s+/i, '')
+                        .trim();
+                      const reason = isModelling
+                        ? 'This intent appears mechanically enforceable, but a safe deterministic guardrail has not yet been identified.'
+                        : 'Complete specification exists; ready for rule generation and CI/CD integration.';
+                      const suggestedNextStep = isModelling
+                        ? 'Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.'
+                        : 'Generate Mneme rule and integrate into CI/CD pipeline.';
+                      
+                      return (
+                        <article key={decision.id} className="protection-gap-item" style={{ borderColor: 'var(--warning)' }}>
+                          <div className={`protection-gap-icon ${iconClass}`}>
+                            <Icon size={24} />
+                          </div>
+                          <div className="protection-gap-content">
+                            <h3 className="protection-gap-lead">{humanReadableLead}</h3>
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
+                            </div>
+                            <p className="protection-gap-reason" style={{ marginBottom: '0.75rem' }}>{reason}</p>
+                            <p className="protection-gap-next-step text-teal"><strong>Next step:</strong> {suggestedNextStep}</p>
+                          </div>
+                          <div className="protection-gap-action">
+                            <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
+                          </div>
+                        </article>
+                      );
+                    })}
+                </div>
+              </section>
             </div>
-          </section>
+          )}
 
-          <section id="gaps" className="audit-section" aria-labelledby="gaps-title">
-            <h2 id="gaps-title" className="audit-section-title">Protection Gaps</h2>
-            {deriveGaps(decisions).length === 0 ? <p>No protection gaps were found in this audit.</p> :
-              <div className="audit-inline-gaps"><ul>{deriveGaps(decisions).map(gap => <li key={gap.decisionId}>
-                <Link to={`/audit/${id}/decisions/${gap.decisionId}`}>{gap.decision}</Link>
-                <span>{gap.reason}<small><b>Recommendation:</b> {gap.suggestedNextStep}</small></span>
-              </li>)}</ul></div>}
-          </section>
-
-          <section id="decisions" className="audit-section" aria-labelledby="decisions-title">
-            <h2 id="decisions-title" className="audit-section-title">Protection Decisions</h2>
-            <p className="audit-section-subtitle">
-              Each decision shows its protection classification. Evidence and reasoning available on expand.
-            </p>
-
-            {decisions.length > 5 && (<>
+          {/* ── FILTERS ── */}
           <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">
               <div className="audit-filters-row">
@@ -560,7 +595,7 @@ export function AuditOverviewPage() {
                     <option value="all">All ({counts.all})</option>
                     <option value="Protected">Protected ({counts.Protected})</option>
                     <option value="Mneme-ready">Mneme-ready ({counts['Mneme-ready']})</option>
-                    <option value="Requires modelling">Requires modelling ({counts['Requires modelling']})</option>
+                    <option value="Requires modelling">Ready to Protect ({counts['Requires modelling']})</option>
                     <option value="Guidance">Guidance ({counts.Guidance})</option>
                   </select>
                 </div>
@@ -601,113 +636,215 @@ export function AuditOverviewPage() {
               </p>
             </div>
           </div>
-            </>)}
 
-            {CLASSIFICATION_ORDER.map((classification) => {
-              const items = decisionsByClassification[classification];
-              if (items.length === 0) return null;
-              
-              const Icon = classification === 'Protected' ? CheckCircle : 
-                          classification === 'Mneme-ready' ? Zap :
-                          classification === 'Requires modelling' ? Brain : Circle;
-              const badgeClass = BADGE_CLASS[classification];
-              const iconClass = ICON_CLASS[classification];
-              const limit = displayLimits[classification];
-              const displayedItems = items.slice(0, limit);
-              const hasMore = items.length > limit;
-              
-              return (
-                <div key={classification} className="decision-group">
-                  <h3 className="decision-group-title flex items-center gap-2">
-                    <span className={`decision-group-icon ${iconClass}`}>
-                      <Icon size={16} />
-                    </span>
-                    <span>{BADGE_LABEL[classification]}</span>
-                    <span className={`badge ${badgeClass}`}>{items.length} items</span>
-                  </h3>
-                  <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
-                    {displayedItems.map((decision) => (
-                      <CollapsibleDecisionItemWrapper
-                        key={decision.id}
-                        decision={decision}
-                        isExpanded={isExpanded(decision.id)}
-                        onToggle={() => toggleDecision(decision.id)}
-                        onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
-                      />
-                    ))}
-                  </div>
-                  {hasMore && (
-                    <button
-                      onClick={() => showAllForClassification(classification)}
-                      className="btn btn-ghost btn-sm mt-2"
-                      data-cta-intent="show_all"
-                      data-cta-position="decision_group"
-                    >
-                      View all {items.length}
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-            
-            {filteredDecisions.length === 0 && (
-              <div className="empty-state">
-                <div className="empty-icon">🔍</div>
-                <h3 className="empty-title">No items match your filters</h3>
-                <p className="empty-text">Try adjusting your filters or search query.</p>
-              </div>
-            )}
-          </section>
-
-          <section
-            id="sources"
-            className="audit-section"
-            aria-labelledby="sources-title"
-            style={{ minHeight: `calc(100vh - ${sectionScrollOffset}px)` }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: 0 }}>Sources Examined</h2>
-              <button
-                onClick={() => setSourcesExpanded(!sourcesExpanded)}
-                className="btn btn-ghost btn-sm flex items-center gap-2"
-                aria-expanded={sourcesExpanded}
-                aria-controls="sources-list"
-              >
-                {sourcesExpanded ? (
-                  <>
-                    <ChevronUp size={14} /> Hide Sources
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown size={14} /> View Sources ({sources.length})
-                  </>
-                )}
-              </button>
-            </div>
-            <p className="audit-section-subtitle">This inventory shows where Mneme looked for architectural intent. Use it to spot missing ADRs, agent instructions, or configuration sources that should be included in a pilot.</p>
-            
-            <div className="audit-sources-summary">
-              <p>
-                <strong>{sources.length} source files examined</strong>
-              </p>
-              <p className="text-muted mt-1">
-                {sources.filter(s => s && s.toLowerCase().includes('adr')).length} ADRs · 
-                {sources.filter(s => s && (s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt'))).length} agent instruction files · 
-                {sources.filter(s => s && (s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml'))).length} config/code evidence sources
-              </p>
-            </div>
-            
-            <ul id="sources-list" className="works-grid" style={{ listStyle: 'none', display: sourcesExpanded ? 'grid' : 'none' }}>
-              {sources.map((source, i) => (
-                <li key={i} className="works-card flex items-center gap-2">
-                  <FileText size={20} className="text-teal" />
-                  <span>{source}</span>
-                </li>
+          <nav className="audit-section-nav" aria-label="Audit sections">
+            <div className="audit-section-nav-inner">
+              {sections.map((section) => (
+                <button 
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className={`audit-section-nav-item ${activeSection === section.id ? 'active' : ''}`}
+                  data-section={section.id}
+                >
+                  {section.label}
+                </button>
               ))}
-            </ul>
+            </div>
+          </nav>
 
-            <AuditSetup audit={audit} ctaPosition="audit_result" />
-          </section>
+          {/* ── PROTECTION DECISIONS ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="decisions" className="audit-section" aria-labelledby="decisions-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <h2 id="decisions-title" className="audit-section-title" style={{ marginBottom: '1.5rem' }}>Protection Decisions</h2>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '800px' }}>
+                This is the decision-level evidence behind the Audit result. Mneme found <strong>{totalDecisions} architectural decisions and constraints</strong> 
+                across ADRs, agent instructions, configuration and repository conventions.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                Each decision is classified according to its role in architectural protection. 
+                <strong>Protected</strong> decisions already have deterministic controls. 
+                <strong>Ready to Protect</strong> decisions are suitable for protection but still need explicit scope or constraints. 
+                <strong>Guidance Only</strong> decisions remain useful architectural context but are not appropriate for mechanical enforcement.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                Expand any decision to see the source evidence and why Mneme assigned its classification.
+              </p>
+              
+              {CLASSIFICATION_ORDER.map((classification) => {
+                const items = decisionsByClassification[classification];
+                if (items.length === 0) return null;
+                
+                const Icon = classification === 'Protected' ? CheckCircle : 
+                            classification === 'Mneme-ready' ? Zap :
+                            classification === 'Requires modelling' ? Brain : Circle;
+                const badgeClass = BADGE_CLASS[classification];
+                const iconClass = ICON_CLASS[classification];
+                const limit = displayLimits[classification];
+                const displayedItems = items.slice(0, limit);
+                const hasMore = items.length > limit;
+                
+                return (
+                  <div key={classification} className="decision-group">
+                    <h3 className="decision-group-title flex items-center gap-2">
+                      <span className={`decision-group-icon ${iconClass}`}>
+                        <Icon size={16} />
+                      </span>
+                      <span>{BADGE_LABEL[classification]}</span>
+                      <span className={`badge ${badgeClass}`}>{items.length} items</span>
+                    </h3>
+                    <div className="decision-list" role="list" aria-label={`${BADGE_LABEL[classification]} decisions`}>
+                      {displayedItems.map((decision) => (
+                        <CollapsibleDecisionItemWrapper
+                          key={decision.id}
+                          decision={decision}
+                          isExpanded={isExpanded(decision.id)}
+                          onToggle={() => toggleDecision(decision.id)}
+                          onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
+                        />
+                      ))}
+                    </div>
+                    {hasMore && (
+                      <button
+                        onClick={() => showAllForClassification(classification)}
+                        className="btn btn-ghost btn-sm mt-2"
+                        data-cta-intent="show_all"
+                        data-cta-position="decision_group"
+                      >
+                        View all {items.length}
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+              
+              {filteredDecisions.length === 0 && (
+                <div className="empty-state">
+                  <div className="empty-icon">🔍</div>
+                  <h3 className="empty-title">No items match your filters</h3>
+                  <p className="empty-text">Try adjusting your filters or search query.</p>
+                </div>
+              )}
+            </section>
+          </div>
+
+          {/* ── SOURCES EXAMINED ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section id="sources" className="audit-section" aria-labelledby="sources-title" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+              <h2 id="sources-title" className="audit-section-title" style={{ marginBottom: '1.5rem' }}>Sources Examined</h2>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '1rem', maxWidth: '800px' }}>
+                Mneme looks for architectural intent across the repository, not only in ADRs.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                This Audit examined <strong>{sources.length} sources</strong>, including ADRs, agent instruction files and configuration evidence. 
+                These sources are used to discover decisions and determine whether existing repository mechanisms already protect them.
+              </p>
+              <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
+                Review the inventory to understand what contributed to this Audit or to identify architectural sources that may be missing.
+              </p>
+              
+              <div className="flex items-center justify-between mb-3">
+                <button
+                  onClick={() => setSourcesExpanded(!sourcesExpanded)}
+                  className="btn btn-ghost btn-sm flex items-center gap-2"
+                  aria-expanded={sourcesExpanded}
+                  aria-controls="sources-list"
+                >
+                  {sourcesExpanded ? (
+                    <>
+                      <ChevronUp size={14} /> Hide Sources
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown size={14} /> View Sources ({sources.length})
+                    </>
+                  )}
+                </button>
+              </div>
+              
+              <div className="audit-sources-summary">
+                <p>
+                  <strong>{sources.length} source files examined</strong>
+                </p>
+                <p className="text-muted mt-1">
+                  {sources.filter(s => s && s.toLowerCase().includes('adr')).length} ADRs · 
+                  {sources.filter(s => s && (s.toLowerCase().includes('agent') || s.toLowerCase().includes('instruction') || s.toLowerCase().includes('prompt'))).length} agent instruction files · 
+                  {sources.filter(s => s && (s.toLowerCase().includes('config') || s.toLowerCase().includes('.json') || s.toLowerCase().includes('.yaml') || s.toLowerCase().includes('.yml') || s.toLowerCase().includes('.toml'))).length} config/code evidence sources
+                </p>
+              </div>
+              
+              <ul id="sources-list" className="works-grid" style={{ listStyle: 'none', display: sourcesExpanded ? 'grid' : 'none' }}>
+                {sources.map((source, i) => (
+                  <li key={i} className="works-card flex items-center gap-2">
+                    <FileText size={20} className="text-teal" />
+                    <span>{source}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </div>
+
+          {/* ── NEXT STEP / INSTALL ── */}
+          <div className="install-section">
+            <div className="install-header">
+              <h2>Next step: Install Mneme</h2>
+              <p style={{ maxWidth: '600px', margin: '0 auto 1rem' }}>
+                The Audit identifies the gaps. Setup is where you decide what should become protected.
+              </p>
+              <p style={{ maxWidth: '600px', margin: '0 auto 2rem', color: 'var(--muted)', lineHeight: 1.7 }}>
+                Mneme does not automatically turn every architectural statement into a guardrail. During setup, you review the protection-relevant decisions, 
+                define their scope and constraints, and validate the resulting controls before enabling enforcement.
+              </p>
+              <p style={{ maxWidth: '600px', margin: '0 auto', color: 'var(--muted)', lineHeight: 1.7 }}>
+                This Audit becomes the baseline against which subsequent protection and re-audit can be measured.
+              </p>
+            </div>
+            
+            <div className="install-steps">
+              <span className="install-step">
+                <span>Audit</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Install</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step current">
+                <span>Review proposed controls</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Validate</span>
+              </span>
+              <span className="install-step-arrow" role="img" aria-label="arrow">→</span>
+              <span className="install-step">
+                <span>Enable</span>
+              </span>
+            </div>
+            
+            <div className="install-ctas">
+              <a 
+                href="https://github.com/MnemeHQ/mneme" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="btn btn-primary install-cta-primary"
+                data-cta-intent="install_mneme"
+                data-cta-position="audit_overview"
+              >
+                Install Mneme
+              </a>
+              <a 
+                href="https://github.com/MnemeHQ/mneme/discussions/categories/pilots"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="install-cta-secondary"
+                data-cta-intent="discuss_pilot"
+                data-cta-position="audit_overview"
+              >
+                Discuss a pilot →
+              </a>
+            </div>
+          </div>
         </div>
       </main>
 
