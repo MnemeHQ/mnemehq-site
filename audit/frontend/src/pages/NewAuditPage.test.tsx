@@ -142,3 +142,63 @@ describe('NewAuditPage private repository section', () => {
     expect(band?.querySelector('#private-repo-heading')).toBeInTheDocument();
   });
 });
+
+describe('NewAuditPage demo repository', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockedUseAuditApi.mockReturnValue({
+      createAudit: vi.fn().mockResolvedValue({
+        success: true,
+        data: { audit_id: 'test-audit-123' },
+      }),
+      getAudit: vi.fn(),
+      exportAudit: vi.fn(),
+      getProject: vi.fn(),
+      getProjectAudit: vi.fn(),
+      saveBaseline: vi.fn(),
+      runProjectAudit: vi.fn(),
+      compareAudits: vi.fn(),
+      loading: false,
+      error: null,
+    });
+  });
+
+  it('submits the canonical demo repository URL when Try Demo Repository is clicked', async () => {
+    const createAudit = vi.fn().mockResolvedValue({
+      success: true,
+      data: { audit_id: 'test-audit-123' },
+    });
+
+    mockedUseAuditApi.mockReturnValue({
+      createAudit,
+      getAudit: vi.fn(),
+      exportAudit: vi.fn(),
+      getProject: vi.fn(),
+      getProjectAudit: vi.fn(),
+      saveBaseline: vi.fn(),
+      runProjectAudit: vi.fn(),
+      compareAudits: vi.fn(),
+      loading: false,
+      error: null,
+    });
+
+    render(
+      <MemoryRouter>
+        <NewAuditPage />
+      </MemoryRouter>,
+    );
+
+    // Click the Try Demo Repository button
+    fireEvent.click(screen.getByRole('button', { name: 'Try Demo Repository' }));
+
+    // Wait for createAudit to be called
+    await waitFor(() => expect(createAudit).toHaveBeenCalledTimes(1));
+
+    // Verify the exact canonical demo URL was submitted
+    expect(createAudit).toHaveBeenCalledWith(
+      expect.objectContaining({
+        repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo',
+      })
+    );
+  });
+});

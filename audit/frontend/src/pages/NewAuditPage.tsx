@@ -50,7 +50,7 @@ export function NewAuditPage() {
 
   const handleDemoClick = async () => {
     setSubmitError('');
-    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/mneme' });
+    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo' });
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
