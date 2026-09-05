@@ -111,6 +111,10 @@ async def get_project(
         "source_locator": project.source_locator,
         "default_ref": project.default_ref,
         "lifecycle": project.lifecycle.value,
+        # M1.3 activation state — distinct from the Audit lifecycle above.
+        "activation_state": project.activation_state.value,
+        "setup_completed_at": iso_utc(project.setup_completed_at),
+        "setup_audit_id": str(project.setup_audit_id) if project.setup_audit_id else None,
         "baseline_audit_id": str(baseline.id) if baseline else None,
         "audits": [
             {
