@@ -108,5 +108,24 @@ describe('Audit analytics safety contract', () => {
     expect(JSON.stringify(params)).not.toContain('private');
     expect(declaredContentSegment()).toBe('problem_awareness');
     expect(sanitizeDestination('/audit/workspace/audit/raw-id')).toBe('https://mnemehq.com/audit/workspace/audit/:auditId');
+
+    expect(sanitizeEventParams('cta_click', {
+      cta_intent: 'install_mneme',
+      cta_position: 'audit_overview',
+      cta_destination: 'https://github.com/MnemeHQ/mneme',
+      link_text: 'Install Mneme',
+    })).toMatchObject({
+      cta_intent: 'install_mneme',
+      cta_destination: 'https://github.com/MnemeHQ/mneme',
+    });
+    expect(sanitizeEventParams('cta_click', {
+      cta_intent: 'discuss_pilot',
+      cta_position: 'audit_overview',
+      cta_destination: 'https://github.com/MnemeHQ/mneme/discussions/categories/pilots?audit=raw-id',
+      link_text: 'Discuss a pilot',
+    })).toMatchObject({
+      cta_intent: 'discuss_pilot',
+      cta_destination: 'https://github.com/MnemeHQ/mneme/discussions/categories/pilots',
+    });
   });
 });

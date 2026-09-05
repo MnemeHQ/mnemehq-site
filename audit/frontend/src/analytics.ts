@@ -66,8 +66,11 @@ export function sanitizeDestination(raw: string): string {
       if (/^\/(docs|pilot|demo|audit)\/?$/.test(url.pathname)) return ORIGIN + url.pathname;
       return ORIGIN + '/';
     }
-    if (url.origin === 'https://github.com' && url.pathname.replace(/\/$/, '') === '/MnemeHQ/mneme') {
-      return 'https://github.com/MnemeHQ/mneme';
+    if (url.origin === 'https://github.com') {
+      const path = url.pathname.replace(/\/$/, '');
+      if (path === '/MnemeHQ/mneme' || path === '/MnemeHQ/mneme/discussions/categories/pilots') {
+        return 'https://github.com' + path;
+      }
     }
   } catch { /* Unrecognized destinations are omitted. */ }
   return '';
@@ -87,7 +90,7 @@ const enums: Record<string, readonly string[]> = {
 const ctaIntents = ['run_audit', 'try_demo', 'nav_home', 'nav_new_audit', 'nav_github', 'nav_demo', 'back',
   'new_audit', 'retry_audit', 'back_to_audit', 'back_to_overview', 'view_gaps', 'export_markdown', 'export_json',
   'save_baseline', 'install', 'request_pilot', 'pilot', 'view_guardrail', 'review_gap', 'view_all_decisions',
-  'view_details', 'show_all', 'review_gap_item'];
+  'view_details', 'show_all', 'review_gap_item', 'install_mneme', 'discuss_pilot'];
 const ctaPositions = ['new_audit', 'audit_nav', 'audit_detail', 'audit_overview', 'audit_summary',
   'decision_detail', 'decision_list', 'decision_group', 'governance_gaps', 'gaps', 'error', 'audit_result'];
 const contextKeys = ['audit_screen', 'page_path', 'page_location', 'page_title', 'page_referrer', 'source_page', 'content_segment'];
