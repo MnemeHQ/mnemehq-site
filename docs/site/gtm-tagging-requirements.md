@@ -3,7 +3,7 @@
 Status: canonical tags LIVE since 2026-08-30 (version 5). Legacy duplicate
 tags PAUSED 2026-09-03 (version 6, "Attribution params + legacy duplicate
 cutover"), which also added the three attribution DLVs.
-Last verified against GTM container `GTM-KL7FB67N`: 2026-09-03.
+Last verified against GTM container `GTM-KL7FB67N`: 2026-09-05 (version 7).
 
 **2026-09-03 is the clean measurement baseline.** Canonical analytics did not
 exist before 2026-08-30 and ran duplicated until 2026-09-03. Do not infer
@@ -292,7 +292,10 @@ legacy event counts fall to zero. Delete the paused tags only after that.
       `audit` page_type added to `cta-analytics.js`; synced to all pages
 - [ ] date — site event normalization deployed
 - [x] 2026-08-30 — GTM variables, regex trigger, and router tag staged and verified in Preview
-- [ ] date — staged GTM workspace published
+- [x] 2026-09-05 — version 7 published: Audit workspace DLVs, canonical
+      event routing, sanitized virtual page views, automatic workspace
+      page-view suppression, and the Audit-only `send_page_view=false` Google
+      tag; GA4 browser-history page views disabled separately
 - [x] 2026-09-03 — version 6 published: `DLV - link_text`, `DLV - source_page`,
       `DLV - content_segment` added and mapped onto the canonical tag (11
       parameters); `cta_demo_click`, `cta_github_click`,
@@ -301,7 +304,7 @@ legacy event counts fall to zero. Delete the paused tags only after that.
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 
-## 10. Audit workspace extension — repository ready, container configuration pending
+## 10. Audit workspace extension — container live, application release pending
 
 The BrowserRouter application at `/audit/workspace/` now owns a separate,
 production-host-gated data-layer adapter. The adapter loads `GTM-KL7FB67N`
@@ -312,6 +315,10 @@ so changing it requires a rebuild and redeploy. Do not merge or deploy the
 application change until the container work below is published, because the
 current Google tag could otherwise create an automatic page view containing a
 real BrowserRouter identifier.
+
+GTM version 7, `Audit workspace analytics + SPA pageview privacy`, was
+published on 2026-09-05. It contains 37 additions and 3 modifications. The
+four paused legacy tags remain unchanged.
 
 The application emits these canonical events:
 
