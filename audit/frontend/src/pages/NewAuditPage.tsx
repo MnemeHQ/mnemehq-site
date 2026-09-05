@@ -135,7 +135,7 @@ export function NewAuditPage() {
                 Working with a private repository?
               </h2>
               <p style={{ textAlign: 'center', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
-                Install Mneme in your local checkout and run it against your repository without granting Mneme HQ access to the repository.
+                Install Mneme in your local checkout and use it without granting Mneme HQ access to your repository.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '720px', margin: '0 auto' }}>
@@ -161,7 +161,7 @@ export function NewAuditPage() {
                       color: 'var(--accent)',
                       overflowX: 'auto'
                     }}>
-                      npm install -g @mnemehq/mneme
+                      pip install mneme-hq
                     </div>
                     <div style={{ 
                       background: 'var(--bg)', 
@@ -175,23 +175,7 @@ export function NewAuditPage() {
                     }}>
                       mneme init
                     </div>
-                    <div style={{ 
-                      background: 'var(--bg)', 
-                      border: '1px solid var(--border)', 
-                      borderRadius: '8px', 
-                      padding: '1rem 1.25rem',
-                      fontFamily: '\'DM Mono\', monospace',
-                      fontSize: '0.85rem',
-                      color: 'var(--accent)',
-                      overflowX: 'auto'
-                    }}>
-                      mneme check
-                    </div>
                   </div>
-                  <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.6 }}>
-                    <Terminal size={12} className="inline" style={{ verticalAlign: 'middle', marginRight: '0.35rem' }} />
-                    Your code stays on your machine. Mneme runs locally and reports protection gaps directly in your terminal.
-                  </p>
                 </article>
 
                 <div style={{ textAlign: 'center' }}>
@@ -204,7 +188,7 @@ export function NewAuditPage() {
                     data-cta-intent="private_repo_docs"
                     data-cta-position="new_audit"
                   >
-                    <LinkIcon size={16} /> Quickstart: Local Architecture Audit
+                    <LinkIcon size={16} /> Set up Mneme locally
                     <ExternalLink size={12} style={{ marginLeft: '0.25rem' }} />
                   </a>
                   <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--muted)' }}>
