@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
+import { SetupCommandPanel } from '../components/SetupActivation';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save, ArrowRight } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 import { decisionParams, track } from '../analytics';
@@ -826,19 +827,10 @@ export function AuditOverviewPage() {
             </div>
             
             <div className="install-ctas">
-              <a 
-                href="https://github.com/MnemeHQ/mneme" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="btn btn-primary install-cta-primary"
-                data-cta-intent="install_mneme"
-                data-cta-position="audit_overview"
-              >
-                Install Mneme
-              </a>
-              <a 
+              <SetupCommandPanel auditId={audit.audit_id} ctaPosition="audit_overview" compact />
+              <a
                 href="https://github.com/MnemeHQ/mneme/discussions/categories/pilots"
-                target="_blank" 
+                target="_blank"
                 rel="noopener noreferrer"
                 className="install-cta-secondary"
                 data-cta-intent="discuss_pilot"

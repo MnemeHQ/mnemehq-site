@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuditOverviewPage } from './AuditOverviewPage';
 import { auditFixture, decisionFixture } from '../test/protectionFixture';
 
-const { getAudit, track } = vi.hoisted(() => ({
+const { getAudit, track, createSetupReference } = vi.hoisted(() => ({
   getAudit: vi.fn(),
   track: vi.fn(),
+  createSetupReference: vi.fn(),
 }));
 
 vi.mock('../hooks/useAuditApi', () => ({
@@ -16,6 +17,7 @@ vi.mock('../hooks/useAuditApi', () => ({
     error: null,
     saveBaseline: vi.fn(),
     createProject: vi.fn(),
+    createSetupReference,
   }),
 }));
 vi.mock('../analytics', async importActual => ({
@@ -89,6 +91,18 @@ describe('AuditOverviewPage section navigation', () => {
   beforeEach(() => {
     getAudit.mockReset();
     track.mockReset();
+    createSetupReference.mockReset();
+    createSetupReference.mockResolvedValue({
+      success: true,
+      data: {
+        reference: 'opaque-ref-overview',
+        audit_id: '424e1795',
+        project_id: 'project-1',
+        install_command: 'pipx install "mneme-hq>=0.6.0"',
+        setup_command: 'mneme setup --audit-ref opaque-ref-overview',
+        expires_at: '2026-09-19T00:00:00+00:00',
+      },
+    });
     vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
   });
 
@@ -222,7 +236,7 @@ describe('AuditOverviewPage section navigation', () => {
     expect(headerTexts.some(t => t.includes('PROTECTED') && t.includes('items'))).toBe(true);
   });
 
-  it('has Install section with state transition and canonical GitHub CTA', () => {
+  it('has Install section with state transition and setup-command CTA', async () => {
     renderOverview();
 
     // State transition
@@ -232,10 +246,13 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getByText('Validate')).toBeInTheDocument();
     expect(screen.getByText('Enable')).toBeInTheDocument();
 
-    // Primary CTA - Install Mneme (points to GitHub)
-    const install = screen.getByRole('link', { name: 'Install Mneme' });
-    expect(install).toHaveAttribute('href', 'https://github.com/MnemeHQ/mneme');
+    // Primary CTA - Install Mneme creates an opaque setup reference on demand.
+    const install = screen.getByRole('button', { name: 'Install Mneme' });
     expect(install).toHaveClass('btn-primary');
+    fireEvent.click(install);
+    expect(await screen.findByText(/mneme setup --audit-ref opaque-ref/)).toBeInTheDocument();
+    // The setup-mode promise must be explicit: nothing is blocked.
+    expect(screen.getByText(/nothing is blocked/i)).toBeInTheDocument();
 
     // Secondary CTA - Discuss a pilot
     const pilot = screen.getByRole('link', { name: 'Discuss a pilot →' });
