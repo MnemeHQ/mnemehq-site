@@ -1752,3 +1752,350 @@ a:hover { color: var(--teal); }
   .gap-card-action { grid-column: 1 / -1; justify-content: center; }
   .detail-pilot-prompt { align-items: flex-start; flex-direction: column; }
 }
+
+/* ── READY TO PROTECT BADGE ── */
+.badge-ready-to-protect {
+  background: rgba(245, 166, 35, 0.1);
+  color: var(--warning);
+  border: 1px solid rgba(245, 166, 35, 0.25);
+}
+
+/* ── DECISION ICONS ── */
+.decision-icon.ready-to-protect { background: rgba(245, 166, 35, 0.1); color: var(--warning); }
+.decision-group-icon.ready-to-protect { background: rgba(245, 166, 35, 0.1); color: var(--warning); }
+
+/* ── SECTION BANDS ── */
+.audit-section-band {
+  margin-left: calc(-24px);
+  margin-right: calc(-24px);
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.audit-section-band-charcoal {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.audit-section-band-warm {
+  background: rgba(245, 166, 35, 0.02);
+  border-top: 1px solid rgba(245, 166, 35, 0.08);
+  border-bottom: 1px solid rgba(245, 166, 35, 0.08);
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.audit-section-band-green {
+  background: rgba(200, 240, 96, 0.03);
+  border-top: 1px solid rgba(200, 240, 96, 0.15);
+  border-bottom: 1px solid rgba(200, 240, 96, 0.15);
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+/* ── SIMPLIFIED METRICS ── */
+.metrics-primary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.metric-primary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  text-align: center;
+}
+
+.metric-primary-value {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 400;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.metric-primary-label {
+  font-size: 0.75rem;
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.metrics-secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.metric-secondary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.metric-secondary-value {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.metric-secondary-value.protected { color: var(--teal); }
+.metric-secondary-value.ready-to-protect { color: var(--warning); }
+.metric-secondary-value.guidance { color: var(--muted); }
+
+.metric-secondary-label {
+  font-size: 0.7rem;
+  font-family: 'DM Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+/* ── BRIDGE STATEMENT ── */
+.audit-bridge {
+  font-size: 1.1rem;
+  color: var(--muted);
+  max-width: 700px;
+  line-height: 1.6;
+  margin-top: 1.5rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.audit-bridge strong {
+  color: var(--accent);
+}
+
+/* ── PROTECTION GAPS SECTION ── */
+.protection-gaps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.protection-gap-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 10px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.protection-gap-item:hover {
+  border-color: var(--border2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.protection-gap-icon {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.protection-gap-icon.mneme-ready {
+  background: rgba(245, 166, 35, 0.15);
+  color: var(--warning);
+}
+
+.protection-gap-icon.ready-to-protect {
+  background: rgba(245, 166, 35, 0.1);
+  color: var(--warning);
+}
+
+.protection-gap-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.protection-gap-lead {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem;
+  line-height: 1.35;
+}
+
+.protection-gap-reason {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.protection-gap-next-step {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
+}
+
+.protection-gap-action {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── INSTALL SECTION ── */
+.install-section {
+  background: rgba(200, 240, 96, 0.03);
+  border-top: 1px solid rgba(200, 240, 96, 0.15);
+  border-bottom: 1px solid rgba(200, 240, 96, 0.15);
+  margin-left: calc(-24px);
+  margin-right: calc(-24px);
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  text-align: center;
+}
+
+.install-header {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+.install-header h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.install-header p {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.install-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.install-step {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.install-step-arrow {
+  color: var(--accent);
+  opacity: 0.5;
+}
+
+.install-step.current {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.install-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.install-cta-primary {
+  display: inline-flex;
+}
+
+.install-cta-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-decoration: none;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.15s;
+}
+
+.install-cta-secondary:hover {
+  color: var(--accent);
+}
+
+.install-cta-secondary .arrow {
+  transition: transform 0.15s;
+}
+
+.install-cta-secondary:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ── PROTECTION PROGRESS SEGMENT ── */
+.protection-progress-segment.ready-to-protect {
+  background: rgba(245, 166, 35, 0.7);
+}
+
+/* ── PROGRESS LEGEND ── */
+.legend-color.ready-to-protect { background: rgba(245, 166, 35, 0.7); }
+
+/* ── MOBILE ADJUSTMENTS FOR SECTION BANDS ── */
+@media (max-width: 767px) {
+  .audit-section-band {
+    margin-left: calc(-16px);
+    margin-right: calc(-16px);
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  .audit-section-band-charcoal,
+  .audit-section-band-warm,
+  .audit-section-band-green {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  .metric-primary-value {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  
+  .metrics-primary {
+    gap: 1.5rem;
+  }
+  
+  .install-section {
+    margin-left: calc(-16px);
+    margin-right: calc(-16px);
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  .install-steps {
+    font-size: 0.75rem;
+    gap: 0.5rem;
+  }
+}
