@@ -1,18 +1,15 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
-import { Upload, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Loader2, AlertCircle, Terminal, Link as LinkIcon, ExternalLink } from 'lucide-react';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
   const { createAudit, loading, error } = useAuditApi();
   const [repositoryUrl, setRepositoryUrl] = useState('');
-  const [zipFile, setZipFile] = useState<File | null>(null);
-  const [dragActive, setDragActive] = useState(false);
   const [urlError, setUrlError] = useState('');
   const [submitError, setSubmitError] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateUrl = useCallback((url: string) => {
     if (!url) return '';
@@ -31,53 +28,18 @@ export function NewAuditPage() {
     setUrlError(validateUrl(value));
   };
 
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
-    else if (e.type === 'dragleave') setDragActive(false);
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      if (file.name.endsWith('.zip')) {
-        setZipFile(file);
-        setRepositoryUrl('');
-      } else {
-        setSubmitError('Please upload a .zip file');
-      }
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      if (file.name.endsWith('.zip')) {
-        setZipFile(file);
-        setRepositoryUrl('');
-        setSubmitError('');
-      } else {
-        setSubmitError('Please upload a .zip file');
-      }
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
     setUrlError(validateUrl(repositoryUrl));
 
-    if (!repositoryUrl && !zipFile) {
-      setSubmitError('Please provide a repository URL or upload a ZIP file');
+    if (!repositoryUrl) {
+      setSubmitError('Please provide a GitHub repository URL');
       return;
     }
     if (repositoryUrl && urlError) return;
 
-    const result = await createAudit({ repositoryUrl: repositoryUrl || undefined, zipFile: zipFile || undefined });
+    const result = await createAudit({ repositoryUrl });
     
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
@@ -123,40 +85,6 @@ export function NewAuditPage() {
                 {urlError && <p id="url-error" className="input-error" role="alert"><AlertCircle size={12} className="inline" /> {urlError}</p>}
               </div>
 
-              <div className="mb-4 text-center text-muted font-mono text-xs">or</div>
-
-              <div 
-                className={`upload-area ${dragActive ? 'drag-active' : ''}`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-                onClick={() => fileInputRef.current?.click()}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && fileInputRef.current?.click()}
-                aria-label="Upload repository ZIP file"
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept=".zip"
-                  className="upload-input"
-                  onChange={handleFileSelect}
-                  disabled={loading}
-                  aria-hidden="true"
-                />
-                <Upload className="upload-icon" size={48} />
-                <p className="upload-text">Upload repository ZIP</p>
-                <p className="upload-hint">Drag and drop a .zip file, or click to browse</p>
-              </div>
-
-              {zipFile && (
-                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-teal">
-                  <CheckCircle size={16} /> {zipFile.name} ({(zipFile.size / 1024).toFixed(1)} KB)
-                </div>
-              )}
-
               {submitError && (
                 <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
                   <AlertCircle size={16} /> {submitError}
@@ -200,6 +128,93 @@ export function NewAuditPage() {
             </form>
           </header>
 
+          {/* ── PRIVATE REPOSITORY SECTION ── */}
+          <div className="audit-section-band audit-section-band-charcoal">
+            <section aria-labelledby="private-repo-heading" style={{ maxWidth: '900px', margin: '0 auto' }}>
+              <h2 id="private-repo-heading" className="audit-section-title" style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
+                Working with a private repository?
+              </h2>
+              <p style={{ textAlign: 'center', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
+                Install Mneme in your local checkout and run it against your repository without granting Mneme HQ access to the repository.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '720px', margin: '0 auto' }}>
+                <article style={{ 
+                  background: 'var(--surface2)', 
+                  border: '1px solid var(--border)', 
+                  borderRadius: '10px', 
+                  padding: '1.5rem 2rem',
+                  textAlign: 'left'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
+                    <Terminal className="text-teal" size={20} />
+                    <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Verified local commands</h3>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div style={{ 
+                      background: 'var(--bg)', 
+                      border: '1px solid var(--border)', 
+                      borderRadius: '8px', 
+                      padding: '1rem 1.25rem',
+                      fontFamily: '\'DM Mono\', monospace',
+                      fontSize: '0.85rem',
+                      color: 'var(--accent)',
+                      overflowX: 'auto'
+                    }}>
+                      npm install -g @mnemehq/mneme
+                    </div>
+                    <div style={{ 
+                      background: 'var(--bg)', 
+                      border: '1px solid var(--border)', 
+                      borderRadius: '8px', 
+                      padding: '1rem 1.25rem',
+                      fontFamily: '\'DM Mono\', monospace',
+                      fontSize: '0.85rem',
+                      color: 'var(--accent)',
+                      overflowX: 'auto'
+                    }}>
+                      mneme init
+                    </div>
+                    <div style={{ 
+                      background: 'var(--bg)', 
+                      border: '1px solid var(--border)', 
+                      borderRadius: '8px', 
+                      padding: '1rem 1.25rem',
+                      fontFamily: '\'DM Mono\', monospace',
+                      fontSize: '0.85rem',
+                      color: 'var(--accent)',
+                      overflowX: 'auto'
+                    }}>
+                      mneme check
+                    </div>
+                  </div>
+                  <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.6 }}>
+                    <Terminal size={12} className="inline" style={{ verticalAlign: 'middle', marginRight: '0.35rem' }} />
+                    Your code stays on your machine. Mneme runs locally and reports protection gaps directly in your terminal.
+                  </p>
+                </article>
+
+                <div style={{ textAlign: 'center' }}>
+                  <a 
+                    href="/docs/quickstart"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-ghost"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                    data-cta-intent="private_repo_docs"
+                    data-cta-position="new_audit"
+                  >
+                    <LinkIcon size={16} /> Quickstart: Local Architecture Audit
+                    <ExternalLink size={12} style={{ marginLeft: '0.25rem' }} />
+                  </a>
+                  <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--muted)' }}>
+                    Full installation guide, configuration, and CI/CD integration
+                  </p>
+                </div>
+              </div>
+            </section>
+          </div>
+
           <section className="audit-section" aria-labelledby="how-it-works">
             <h2 id="how-it-works" className="audit-section-title">What the audit tells you</h2>
             <p className="audit-section-subtitle">
@@ -212,7 +227,7 @@ export function NewAuditPage() {
               </article>
               <article className="works-card">
                 <h3>Protection classified</h3>
-                <p>Each decision is <span className="text-teal">Protected</span>, <span className="text-warning">Mneme-ready</span>, <span className="text-warning">Requires modelling</span>, or <span className="text-muted">Guidance</span>.</p>
+                <p>Each decision is <span className="text-teal">Protected</span>, <span className="text-warning">Mneme-ready</span>, <span className="text-warning">Ready to Protect</span>, or <span className="text-muted">Guidance</span>.</p>
               </article>
               <article className="works-card">
                 <h3>Mneme guardrails</h3>
