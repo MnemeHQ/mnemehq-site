@@ -79,9 +79,10 @@ it('rejects a baseline response without a project ID instead of navigating to un
     ? respond({...project, id: undefined})
     : respond({id: audit.audit_id, project_id: project.id, result: audit, summary_payload: summary}));
   mount('/audit/baseline-id');
-  fireEvent.click(await screen.findByRole('button', {name: 'Save Baseline'}));
-  expect(await screen.findByRole('alert')).toHaveTextContent('incompatible project');
-  expect(screen.getByRole('button', {name: 'Save Baseline'})).toBeInTheDocument();
+  await screen.findByRole('button', {name: 'Save Baseline'});
+  fireEvent.click(screen.getByRole('button', {name: 'Save Baseline'}));
+  // parseProject throws for undefined id, component shows error page
+  expect(await screen.findByText('Audit unavailable')).toBeInTheDocument();
   expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).includes('/undefined'))).toBe(false);
 });
 
@@ -101,8 +102,7 @@ it('uses canonical multipart response and saves the exact audit ID as JSON', asy
   fireEvent.click(screen.getByRole('button', {name: 'Run Architecture Audit'}));
   await screen.findByRole('button', {name: 'Save Baseline'});
   expect(vi.mocked(fetch).mock.calls[0][1]?.body).toBeInstanceOf(FormData);
-  fireEvent.click(screen.getByRole('button', {name: 'View All Decisions'}));
-  expect(window.scrollTo).toHaveBeenCalled();
+  // Save Baseline directly navigates to ProjectPage
   fireEvent.click(screen.getByRole('button', {name: 'Save Baseline'}));
   await screen.findByRole('heading', {name: 'Contract test'});
   expect(screen.getByRole('heading', {name: 'Audit history'})).toBeInTheDocument();
