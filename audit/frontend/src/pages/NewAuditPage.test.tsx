@@ -198,7 +198,8 @@ describe('NewAuditPage demo repository', () => {
     expect(createAudit).toHaveBeenCalledWith(
       expect.objectContaining({
         repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo',
-      })
+      }),
+      'demo',
     );
   });
 });

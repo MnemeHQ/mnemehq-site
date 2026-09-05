@@ -4,8 +4,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuditOverviewPage } from './AuditOverviewPage';
 import { auditFixture, decisionFixture } from '../test/protectionFixture';
 
-const { getAudit } = vi.hoisted(() => ({
+const { getAudit, track } = vi.hoisted(() => ({
   getAudit: vi.fn(),
+  track: vi.fn(),
 }));
 
 vi.mock('../hooks/useAuditApi', () => ({
@@ -16,6 +17,10 @@ vi.mock('../hooks/useAuditApi', () => ({
     saveBaseline: vi.fn(),
     createProject: vi.fn(),
   }),
+}));
+vi.mock('../analytics', async importActual => ({
+  ...(await importActual<typeof import('../analytics')>()),
+  track,
 }));
 
 const audit = auditFixture({
@@ -83,6 +88,7 @@ function renderOverview() {
 describe('AuditOverviewPage section navigation', () => {
   beforeEach(() => {
     getAudit.mockReset();
+    track.mockReset();
     vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
   });
 
@@ -293,5 +299,21 @@ describe('AuditOverviewPage section navigation', () => {
     expect(screen.getAllByText('docs/adr/0001.md').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('CLAUDE.md').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('AGENTS.md').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('tracks decision expansion with classifications but no decision content', () => {
+    renderOverview();
+
+    fireEvent.click(screen.getByRole('button', { name: /Use Markdown ADRs/ }));
+
+    expect(track).toHaveBeenCalledWith('audit_decision_toggle', {
+      action: 'expand',
+      protection_classification: 'Requires modelling',
+      evidence_confidence: 'low',
+      has_proposed_rule: false,
+      rule_type: 'none',
+    });
+    expect(JSON.stringify(track.mock.calls)).not.toContain('decision-1');
+    expect(JSON.stringify(track.mock.calls)).not.toContain('Use Markdown ADRs');
   });
 });
