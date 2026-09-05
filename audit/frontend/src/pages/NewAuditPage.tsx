@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { Loader2, AlertCircle, Terminal, Link as LinkIcon, ExternalLink } from 'lucide-react';
+import { track } from '../analytics';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
@@ -31,15 +32,21 @@ export function NewAuditPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError('');
-    setUrlError(validateUrl(repositoryUrl));
+    const currentUrlError = validateUrl(repositoryUrl);
+    setUrlError(currentUrlError);
 
     if (!repositoryUrl) {
       setSubmitError('Please provide a GitHub repository URL');
+      track('audit_error', { stage: 'validation', error_code: 'missing_input' });
       return;
     }
-    if (repositoryUrl && urlError) return;
+    if (currentUrlError) {
+      track('audit_error', { stage: 'validation', error_code: 'invalid_repository_url' });
+      return;
+    }
 
-    const result = await createAudit({ repositoryUrl });
+    track('audit_input_selected', { input_type: 'repository_url', selection_method: 'url' });
+    const result = await createAudit({ repositoryUrl }, 'repository_url');
     
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
@@ -50,7 +57,11 @@ export function NewAuditPage() {
 
   const handleDemoClick = async () => {
     setSubmitError('');
-    const result = await createAudit({ repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo' });
+    track('audit_input_selected', { input_type: 'demo', selection_method: 'url' });
+    const result = await createAudit(
+      { repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo' },
+      'demo',
+    );
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
