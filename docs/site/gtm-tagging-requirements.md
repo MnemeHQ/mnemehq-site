@@ -337,6 +337,23 @@ The application emits these canonical events:
 | `audit_decision_view` | A validated decision detail loaded | safe decision fields |
 | `audit_rule_copy` | A proposed rule was successfully copied | safe decision fields |
 | `audit_export` | An export response body was successfully read | `format` |
+| `audit_setup_recognized` | The workspace surfaced a project in Mneme setup mode (M1.3) | none |
+
+### M1.3 activation funnel mapping
+
+The minimum activation funnel maps onto the existing analytics architecture
+as follows — no new analytics platform:
+
+| Funnel step | Mechanism |
+|---|---|
+| Audit completed | `audit_complete` event |
+| Baseline saved | `audit_baseline_saved` event |
+| Install intent | `cta_click` with `cta_intent=install_mneme_setup` (and `setup_command_copy`) |
+| Setup started / completed | Recorded server-side by the Audit pairing API (setup reference redemption: `setup_audit_id`, `setup_completed_at`, `redeemed_mneme_version`); observed by the workspace as `audit_setup_recognized` |
+| Pilot CTA clicked | `cta_click` with `cta_intent=start_pilot` (post-setup) or `request_pilot` |
+| Pilot started | Recorded server-side: project lifecycle transitions to `pilot` via the explicit project update endpoint |
+| Protection activated | Recorded server-side: project `activation_state=active` (explicit; post-M1.3) |
+| Re-audit completed | `audit_reaudit_start` / `audit_reaudit_complete` events |
 
 The eight Audit summary fields are `decisions_discovered`,
 `protection_relevant`, `protected_count`, `mneme_ready_count`,

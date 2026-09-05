@@ -7,7 +7,7 @@ export type Stage = 'create' | 'load_audit' | 'load_project' | 'save_baseline' |
 export type Event = 'audit_screen_view' | 'cta_click' | 'audit_input_selected' | 'audit_start' |
   'audit_complete' | 'audit_error' | 'audit_baseline_saved' | 'audit_reaudit_start' |
   'audit_reaudit_complete' | 'audit_comparison_view' | 'audit_decision_toggle' |
-  'audit_decision_view' | 'audit_rule_copy' | 'audit_export';
+  'audit_decision_view' | 'audit_rule_copy' | 'audit_export' | 'audit_setup_recognized';
 
 declare global { interface Window { dataLayer?: unknown[] } }
 
