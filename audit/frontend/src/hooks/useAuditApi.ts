@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { ApiResponse, AuditComparison, NewAuditRequest, ProtectionAuditResponse, RunAuditRequest } from '../types/audit';
+import type { ApiResponse, AuditComparison, NewAuditRequest, ProtectionAuditResponse, RunAuditRequest, SetupReferenceInfo } from '../types/audit';
 import { parseAudit, parseComparison, parseProject } from '../utils/contracts';
 import { comparisonParams, summaryParams, track, type InputType, type Stage } from '../analytics';
 
@@ -109,5 +109,13 @@ export function useAuditApi() {
       throw cause;
     }
   }, []);
-  return { createAudit, getAudit, getProject, getProjectAudit, saveBaseline, runProjectAudit, compareAudits, exportAudit, loading, error };
+  const createSetupReference = useCallback((auditId: string) => run(async () => {
+    const info = await request<SetupReferenceInfo>(
+      `/api/v1/audits/${encodeURIComponent(auditId)}/setup-reference`, { method: 'POST' });
+    if (info.audit_id !== auditId || typeof info.reference !== 'string' || !info.reference.trim()) {
+      throw new Error('Setup reference response did not match the requested audit.');
+    }
+    return info;
+  }, 'setup'), [run]);
+  return { createAudit, getAudit, getProject, getProjectAudit, saveBaseline, runProjectAudit, compareAudits, exportAudit, createSetupReference, loading, error };
 }

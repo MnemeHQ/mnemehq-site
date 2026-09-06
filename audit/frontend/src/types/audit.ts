@@ -57,6 +57,9 @@ export interface ProtectionAuditResponse {
 // M1 Persistence Types
 export type ProjectLifecycle = 'ephemeral' | 'saved' | 'pilot';
 
+// M1.3 Mneme activation state — distinct from the Audit lifecycle above.
+export type ActivationState = 'not_installed' | 'setup' | 'active';
+
 export type AuditTriggerType = 'initial' | 're_audit' | 'manual';
 
 export type AuditStatus = 'running' | 'completed' | 'failed';
@@ -70,6 +73,9 @@ export interface Project {
   default_ref: string | null;
   lifecycle: ProjectLifecycle;
   baseline_audit_id: string | null;
+  activation_state: ActivationState;
+  setup_completed_at: string | null;
+  setup_audit_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -139,6 +145,16 @@ export interface UpdateProjectRequest {
   name?: string;
   lifecycle?: ProjectLifecycle;
   baseline_audit_id?: string;
+}
+
+// M1.3b setup pairing
+export interface SetupReferenceInfo {
+  reference: string;
+  audit_id: string;
+  project_id: string;
+  install_command: string;
+  setup_command: string;
+  expires_at: string;
 }
 
 export interface ApiResponse<T> {

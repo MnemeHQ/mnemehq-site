@@ -63,10 +63,24 @@ export function parseProject(value: unknown): ProjectWithHistory {
   if (!object(value) || !identity(value.id) || !text(value.name) || !text(value.source_locator) ||
     !text(value.source_type) || !['ephemeral', 'saved', 'pilot'].includes(value.lifecycle) ||
     !(value.baseline_audit_id === null || identity(value.baseline_audit_id)) ||
+    !validActivationState(value.activation_state) ||
     !date(value.created_at) || !date(value.updated_at) || !Array.isArray(value.audits) ||
     !value.audits.every((a: any) => object(a) && identity(a.id) &&
       ['running', 'completed', 'failed'].includes(a.status) && text(a.trigger_type) && date(a.created_at))) {
     throw new Error('The backend returned an incompatible project. Its identity or audit history is unavailable.');
   }
-  return value as ProjectWithHistory;
+  const project = value as ProjectWithHistory;
+  // Lenient for deploy skew: an older backend without the fields reads as
+  // not_installed. A present-but-invalid value already failed above.
+  if (project.activation_state === undefined) project.activation_state = 'not_installed';
+  if (project.setup_completed_at === undefined) project.setup_completed_at = null;
+  if (project.setup_audit_id === undefined) project.setup_audit_id = null;
+  return project;
+}
+
+// Lenient for deploy skew: an older backend without the field reads as
+// not_installed; a present-but-invalid value fails closed.
+function validActivationState(value: unknown): boolean {
+  return value === undefined ||
+    (typeof value === 'string' && ['not_installed', 'setup', 'active'].includes(value));
 }

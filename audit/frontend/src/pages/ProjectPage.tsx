@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { StatsGrid } from '../components/StatsGrid';
+import { SetupCommandPanel, SetupStatePanel } from '../components/SetupActivation';
 import type { ProjectWithHistory, ProtectionAuditResponse } from '../types/audit';
 
 export function AuditProvenance({ audit }: { audit: ProtectionAuditResponse }) {
@@ -78,6 +79,12 @@ export function ProjectPage() {
           <Link className="btn btn-ghost" to={`/audit/${audit.audit_id}`}>View audit decisions</Link>
         </section>;
       })}
+      <SetupStatePanel project={project} baseline={baseline} />
+      {project.baseline_audit_id && project.activation_state === 'not_installed' &&
+        <section className="audit-section" aria-label="Install Mneme">
+          <h2>Install Mneme</h2>
+          <SetupCommandPanel auditId={project.baseline_audit_id} ctaPosition="project" />
+        </section>}
       <section className="audit-section" aria-label="Actions">
         <h2>Actions</h2><div className="flex flex-wrap gap-3">
           <button className="btn btn-primary" onClick={reaudit} disabled={running || project.lifecycle === 'ephemeral' || project.source_type !== 'github'}>

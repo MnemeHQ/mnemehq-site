@@ -366,8 +366,11 @@ destination. Screen paths use these templates only:
 ```
 
 Audit CTA intents include `run_audit`, `try_demo`, `private_repo_docs`,
-`install_mneme`, and `discuss_pilot`, alongside the existing navigation,
-report, export, baseline, and decision CTA intents.
+`install_mneme`, `discuss_pilot`, and the M1.3 activation intents
+`install_mneme_setup` (Install Mneme → creates an opaque setup reference),
+`setup_command_copy` (copy the setup command), and `start_pilot`
+(post-setup pilot CTA), alongside the existing navigation, report, export,
+baseline, and decision CTA intents.
 
 ### Release sequence
 

@@ -21,6 +21,7 @@ describe('NewAuditPage errors', () => {
 
     mockedUseAuditApi.mockReturnValue({
       createAudit,
+      createSetupReference: vi.fn(),
       getAudit: vi.fn(),
       exportAudit: vi.fn(),
       getProject: vi.fn(),
@@ -55,6 +56,7 @@ describe('NewAuditPage private repository section', () => {
     vi.clearAllMocks();
     mockedUseAuditApi.mockReturnValue({
       createAudit: vi.fn(),
+      createSetupReference: vi.fn(),
       getAudit: vi.fn(),
       exportAudit: vi.fn(),
       getProject: vi.fn(),
@@ -156,6 +158,7 @@ describe('NewAuditPage demo repository', () => {
       getProject: vi.fn(),
       getProjectAudit: vi.fn(),
       saveBaseline: vi.fn(),
+      createSetupReference: vi.fn(),
       runProjectAudit: vi.fn(),
       compareAudits: vi.fn(),
       loading: false,
@@ -176,6 +179,7 @@ describe('NewAuditPage demo repository', () => {
       getProject: vi.fn(),
       getProjectAudit: vi.fn(),
       saveBaseline: vi.fn(),
+      createSetupReference: vi.fn(),
       runProjectAudit: vi.fn(),
       compareAudits: vi.fn(),
       loading: false,

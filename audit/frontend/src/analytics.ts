@@ -3,7 +3,7 @@ import type { AuditComparison, ProtectionDecision, ProtectionSummary } from './t
 type Value = string | number | boolean | null;
 type Params = Record<string, Value>;
 export type InputType = 'repository_url' | 'zip' | 'demo';
-export type Stage = 'create' | 'load_audit' | 'load_project' | 'save_baseline' | 're_audit' | 'compare' | 'export' | 'copy_rule' | 'validation';
+export type Stage = 'create' | 'load_audit' | 'load_project' | 'save_baseline' | 're_audit' | 'compare' | 'export' | 'copy_rule' | 'validation' | 'setup';
 export type Event = 'audit_screen_view' | 'cta_click' | 'audit_input_selected' | 'audit_start' |
   'audit_complete' | 'audit_error' | 'audit_baseline_saved' | 'audit_reaudit_start' |
   'audit_reaudit_complete' | 'audit_comparison_view' | 'audit_decision_toggle' |
@@ -84,7 +84,7 @@ const numericKeys = [...metricKeys, 'duration_ms', 'improved_count', 'regressed_
   'added_count', 'removed_count', 'uncomparable_count', 'current_protection_delta', 'identified_mneme_potential_delta'];
 const enums: Record<string, readonly string[]> = {
   input_type: ['repository_url', 'zip', 'demo'], selection_method: ['drop', 'file_picker', 'url'],
-  stage: ['create', 'load_audit', 'load_project', 'save_baseline', 're_audit', 'compare', 'export', 'copy_rule', 'validation'],
+  stage: ['create', 'load_audit', 'load_project', 'save_baseline', 're_audit', 'compare', 'export', 'copy_rule', 'validation', 'setup'],
   format: ['markdown', 'json'], protection_classification: ['Protected', 'Mneme-ready', 'Requires modelling', 'Guidance'],
   evidence_confidence: ['high', 'medium', 'low'], rule_type: ['FORBID_LITERAL', 'none'],
   action: ['expand', 'collapse'], schema_compatibility: ['compatible', 'incompatible', 'unknown'],
@@ -92,9 +92,11 @@ const enums: Record<string, readonly string[]> = {
 const ctaIntents = ['run_audit', 'try_demo', 'nav_home', 'nav_new_audit', 'nav_github', 'nav_demo', 'back',
   'new_audit', 'retry_audit', 'back_to_audit', 'back_to_overview', 'view_gaps', 'export_markdown', 'export_json',
   'save_baseline', 'install', 'request_pilot', 'pilot', 'view_guardrail', 'review_gap', 'view_all_decisions',
-  'view_details', 'show_all', 'review_gap_item', 'private_repo_docs', 'install_mneme', 'discuss_pilot'];
+  'view_details', 'show_all', 'review_gap_item', 'private_repo_docs', 'install_mneme', 'discuss_pilot',
+  'install_mneme_setup', 'setup_command_copy', 'start_pilot'];
 const ctaPositions = ['new_audit', 'audit_nav', 'audit_detail', 'audit_overview', 'audit_summary',
-  'decision_detail', 'decision_list', 'decision_group', 'governance_gaps', 'gaps', 'error', 'audit_result'];
+  'decision_detail', 'decision_list', 'decision_group', 'governance_gaps', 'gaps', 'error', 'audit_result',
+  'project'];
 const contextKeys = ['audit_screen', 'page_path', 'page_location', 'page_title', 'page_referrer', 'source_page', 'content_segment'];
 const parameterKeys = [...numericKeys, ...Object.keys(enums), 'error_code', 'has_proposed_rule',
   'cta_intent', 'cta_position', 'cta_component', 'cta_destination', 'link_text'];
