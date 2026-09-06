@@ -62,6 +62,25 @@ class ContactRelationship(PyEnum):
     TECHNICAL = "technical"
 
 
+class ActivationState(PyEnum):
+    """
+    Mneme activation state for a project (M1.3, frozen contract section 3).
+
+    Distinct from the Audit lifecycle (ephemeral → saved → pilot):
+    - not_installed: no connected Mneme installation exists
+    - setup: initialized; context/integrations/non-blocking checks only
+    - active: at least one preventive protection explicitly enabled
+
+    Setup never sets this to active; activation is always an explicit,
+    separate user action. It is kept as a representable value so the Audit
+    product can distinguish all three states, but no M1.3 code path
+    transitions a project to active.
+    """
+    NOT_INSTALLED = "not_installed"
+    SETUP = "setup"
+    ACTIVE = "active"
+
+
 class Project(Base):
     """
     Durable identity of something being audited.
@@ -88,6 +107,22 @@ class Project(Base):
         default=ProjectLifecycle.EPHEMERAL,
     )
     baseline_audit_id: Mapped[Optional[uuid.UUID]] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("audits.id", ondelete="SET NULL"),
+        nullable=True,
+    )
+    # M1.3 activation state (distinct from lifecycle; see ActivationState).
+    activation_state: Mapped[ActivationState] = mapped_column(
+        Enum(ActivationState, native_enum=False),
+        nullable=False,
+        default=ActivationState.NOT_INSTALLED,
+    )
+    setup_completed_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    # Attribution: the baseline audit this setup was linked to (G7).
+    setup_audit_id: Mapped[Optional[uuid.UUID]] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("audits.id", ondelete="SET NULL"),
         nullable=True,
@@ -266,4 +301,56 @@ class ProjectContact(Base):
 
     __table_args__ = (
         Index("ix_project_contacts_contact", "contact_id"),
+    )
+
+
+class SetupReference(Base):
+    """
+    Opaque, scoped setup reference linking a saved Audit baseline to a
+    Mneme setup (M1.3b, frozen contract section 4).
+
+    The token is random, single-purpose, and scoped to exactly one audit and
+    one project. It is not a user/account credential: it grants nothing
+    beyond resolving the baseline provenance of this audit/project and
+    recording one setup completion. It expires, and completion is idempotent
+    per reference.
+    """
+    __tablename__ = "setup_references"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    reference: Mapped[str] = mapped_column(String(64), unique=True, nullable=False, index=True)
+    audit_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("audits.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    project_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("projects.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+    expires_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        nullable=False,
+    )
+    redeemed_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+    )
+    # Mneme version reported by the CLI at completion (provenance).
+    redeemed_mneme_version: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+
+    __table_args__ = (
+        Index("ix_setup_references_project", "project_id"),
     )

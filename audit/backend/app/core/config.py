@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     # Application
     APP_VERSION: str = os.getenv("APP_VERSION", "0.1.0")
     AUDIT_SCHEMA_VERSION: int = 1
+    # M1.3b: setup references expire (invalid/expired must fail safely).
+    SETUP_REFERENCE_TTL_HOURS: int = int(os.getenv("SETUP_REFERENCE_TTL_HOURS", "336"))
 
     # Frontend
     ALLOWED_ORIGINS: str = os.getenv(
