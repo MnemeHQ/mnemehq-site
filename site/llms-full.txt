@@ -46,6 +46,8 @@ The pipeline: project_memory.json into MemoryStore into Retriever into ContextBu
 
 Retrieval is deterministic. There is no embedding model, no vector store, and no ML dependency in the governance path. This is a deliberate architectural commitment.
 
+Beyond guidance and enforcement, Mneme closes a full protection loop. mneme audit classifies every active decision as Protected, Mneme-ready, Requires modelling, or Guidance. mneme protect validate deterministically proves a proposed rule through the existing enforcement engine without writing anything; mneme protect activate explicitly installs the typed rule for that one decision; and only a fresh canonical assessment that observes real enforcement evidence reports the decision Protected. A Mneme-ready decision is an opportunity, not a protection. Documented at https://mnemehq.com/docs/protection-activation/ (core source: MnemeHQ/mneme@91d71be7, docs/protect-activation.md).
+
 ## Governance Benchmark v1.1
 
 Governance Benchmark v1.1 methodology is published. The benchmark is deterministic and reproducible. It measures violation prevention rate, baseline drift rate, false positive rate, retrieval recall and precision at K, irrelevant injection rate, and the gap between end-to-end enforcement and oracle enforcement.
@@ -119,6 +121,7 @@ Mneme alignment is honest: tracking, design-aligned, planning to engage with fut
 - Works with (compatibility surface): https://mnemehq.com/works-with/
 - Platforms (Azure & GitHub Enterprise, AWS, Google Cloud, self-hosted): https://mnemehq.com/platforms/
 - CLI reference: https://mnemehq.com/docs/cli/
+- Protection activation (the audit-to-Protected loop: validate, activate, canonical verification): https://mnemehq.com/docs/protection-activation/
 - Governance violations (what Mneme prevents): https://mnemehq.com/docs/governance-violations/
 - Use cases: https://mnemehq.com/use-cases/
 - Insights: https://mnemehq.com/insights/
