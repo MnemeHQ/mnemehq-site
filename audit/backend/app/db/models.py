@@ -113,7 +113,15 @@ class Project(Base):
     )
     # M1.3 activation state (distinct from lifecycle; see ActivationState).
     activation_state: Mapped[ActivationState] = mapped_column(
-        Enum(ActivationState, native_enum=False),
+        Enum(
+            ActivationState,
+            native_enum=False,
+            # Migration 002 backfills existing rows with the frozen contract
+            # value ("not_installed"), not the Python member name
+            # ("NOT_INSTALLED").  Persist enum values so migrated and newly
+            # created rows use the same representation.
+            values_callable=lambda enum_type: [state.value for state in enum_type],
+        ),
         nullable=False,
         default=ActivationState.NOT_INSTALLED,
     )
