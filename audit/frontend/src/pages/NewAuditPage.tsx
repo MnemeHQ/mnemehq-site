@@ -1,16 +1,20 @@
-import { useState, useCallback } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
-import { Loader2, AlertCircle, Terminal, Link as LinkIcon, ExternalLink } from 'lucide-react';
+import { Upload, Loader2, AlertCircle, CheckCircle, Link as LinkIcon, ExternalLink } from 'lucide-react';
 import { track } from '../analytics';
 
 export function NewAuditPage() {
   const navigate = useNavigate();
   const { createAudit, loading, error } = useAuditApi();
   const [repositoryUrl, setRepositoryUrl] = useState('');
+  const [zipFile, setZipFile] = useState<File | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const [urlError, setUrlError] = useState('');
-  const [submitError, setSubmitError] = useState('');
+  const [repositorySubmitError, setRepositorySubmitError] = useState('');
+  const [zipSubmitError, setZipSubmitError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const validateUrl = useCallback((url: string) => {
     if (!url) return '';
@@ -29,14 +33,43 @@ export function NewAuditPage() {
     setUrlError(validateUrl(value));
   };
 
+  const selectZip = (file: File, selectionMethod: 'drop' | 'file_picker') => {
+    if (!file.name.toLowerCase().endsWith('.zip')) {
+      setZipFile(null);
+      setZipSubmitError('Please upload a .zip file');
+      return;
+    }
+    setZipFile(file);
+    setZipSubmitError('');
+    track('audit_input_selected', { input_type: 'zip', selection_method: selectionMethod });
+  };
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') setDragActive(true);
+    else if (e.type === 'dragleave') setDragActive(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    if (e.dataTransfer.files.length > 0) selectZip(e.dataTransfer.files[0], 'drop');
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.length) selectZip(e.target.files[0], 'file_picker');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError('');
+    setRepositorySubmitError('');
     const currentUrlError = validateUrl(repositoryUrl);
     setUrlError(currentUrlError);
 
     if (!repositoryUrl) {
-      setSubmitError('Please provide a GitHub repository URL');
+      setRepositorySubmitError('Please provide a GitHub repository URL');
       track('audit_error', { stage: 'validation', error_code: 'missing_input' });
       return;
     }
@@ -51,12 +84,29 @@ export function NewAuditPage() {
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
-      setSubmitError(result.error || 'Failed to start audit');
+      setRepositorySubmitError(result.error || 'Failed to start audit');
+    }
+  };
+
+  const handleZipSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setZipSubmitError('');
+    if (!zipFile) {
+      setZipSubmitError('Please upload a repository ZIP file');
+      track('audit_error', { stage: 'validation', error_code: 'missing_input' });
+      return;
+    }
+
+    const result = await createAudit({ zipFile }, 'zip');
+    if (result.success && result.data) {
+      navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
+    } else {
+      setZipSubmitError(result.error || 'Failed to start audit');
     }
   };
 
   const handleDemoClick = async () => {
-    setSubmitError('');
+    setRepositorySubmitError('');
     track('audit_input_selected', { input_type: 'demo', selection_method: 'url' });
     const result = await createAudit(
       { repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo' },
@@ -65,7 +115,7 @@ export function NewAuditPage() {
     if (result.success && result.data) {
       navigate(`/audit/${result.data.audit_id}`, { state: { audit: result.data } });
     } else {
-      setSubmitError(result.error || 'Failed to load demo');
+      setRepositorySubmitError(result.error || 'Failed to load demo');
     }
   };
 
@@ -96,13 +146,13 @@ export function NewAuditPage() {
                 {urlError && <p id="url-error" className="input-error" role="alert"><AlertCircle size={12} className="inline" /> {urlError}</p>}
               </div>
 
-              {submitError && (
+              {repositorySubmitError && (
                 <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
-                  <AlertCircle size={16} /> {submitError}
+                  <AlertCircle size={16} /> {repositorySubmitError}
                 </div>
               )}
 
-              {error && !submitError && (
+              {error && !repositorySubmitError && !zipSubmitError && (
                 <div className="mt-3 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
                   <AlertCircle size={16} /> {error}
                 </div>
@@ -146,52 +196,83 @@ export function NewAuditPage() {
                 Working with a private repository?
               </h2>
               <p style={{ textAlign: 'center', color: 'var(--muted)', maxWidth: '600px', margin: '0 auto 2.5rem', lineHeight: 1.7 }}>
-                Install Mneme in your local checkout and use it without granting Mneme HQ access to your repository.
+                Upload a repository ZIP for the Audit without granting Mneme HQ access to GitHub.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: '720px', margin: '0 auto' }}>
-                <article style={{ 
-                  background: 'var(--surface2)', 
-                  border: '1px solid var(--border)', 
-                  borderRadius: '10px', 
+                <article style={{
+                  background: 'var(--surface2)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '10px',
                   padding: '1.5rem 2rem',
                   textAlign: 'left'
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-                    <Terminal className="text-teal" size={20} />
-                    <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Verified local commands</h3>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                    <div style={{ 
-                      background: 'var(--bg)', 
-                      border: '1px solid var(--border)', 
-                      borderRadius: '8px', 
-                      padding: '1rem 1.25rem',
-                      fontFamily: '\'DM Mono\', monospace',
-                      fontSize: '0.85rem',
-                      color: 'var(--accent)',
-                      overflowX: 'auto'
-                    }}>
-                      pip install mneme-hq
+                  <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.5rem' }}>Prepare and upload the repository</h3>
+                  <p className="text-muted" style={{ marginBottom: '0.5rem' }}>
+                    Upload a ZIP of the repository source.
+                  </p>
+                  <p className="text-muted" style={{ marginBottom: '1rem' }}>
+                    Exclude <code>.git</code>, <code>node_modules</code>, build artifacts, <code>.env</code> files, credentials, and other secrets.
+                  </p>
+                  <form onSubmit={handleZipSubmit}>
+                    <div
+                      className={`upload-area ${dragActive ? 'drag-active' : ''}`}
+                      onDragEnter={handleDrag}
+                      onDragLeave={handleDrag}
+                      onDragOver={handleDrag}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && fileInputRef.current?.click()}
+                      aria-label="Upload repository ZIP file"
+                    >
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".zip,application/zip"
+                        className="upload-input"
+                        onChange={handleFileSelect}
+                        onClick={(e) => e.stopPropagation()}
+                        disabled={loading}
+                        aria-label="Choose repository ZIP"
+                      />
+                      <Upload className="upload-icon" size={40} />
+                      <p className="upload-text">Upload repository ZIP</p>
+                      <p className="upload-hint">Drag and drop a .zip file, or click to browse</p>
                     </div>
-                    <div style={{ 
-                      background: 'var(--bg)', 
-                      border: '1px solid var(--border)', 
-                      borderRadius: '8px', 
-                      padding: '1rem 1.25rem',
-                      fontFamily: '\'DM Mono\', monospace',
-                      fontSize: '0.85rem',
-                      color: 'var(--accent)',
-                      overflowX: 'auto'
-                    }}>
-                      mneme init
+
+                    {zipFile && (
+                      <div className="mt-2 flex items-center justify-center gap-2 text-sm text-teal">
+                        <CheckCircle size={16} /> {zipFile.name} ({(zipFile.size / 1024).toFixed(1)} KB)
+                      </div>
+                    )}
+
+                    {zipSubmitError && (
+                      <div className="mt-2 p-3 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2" role="alert">
+                        <AlertCircle size={16} /> {zipSubmitError}
+                      </div>
+                    )}
+
+                    <p className="text-muted" style={{ marginTop: '1rem', fontSize: '0.8rem' }}>
+                      The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.
+                    </p>
+                    <div className="cta-group mt-2">
+                      <button type="submit" className="btn btn-primary" disabled={loading}>
+                        {loading ? (
+                          <><Loader2 className="loading-spinner w-5 h-5" />Analyzing repository...</>
+                        ) : 'Run Private Repository Audit'}
+                      </button>
                     </div>
-                  </div>
+                  </form>
                 </article>
 
                 <div style={{ textAlign: 'center' }}>
+                  <p className="text-muted" style={{ marginBottom: '0.75rem', fontSize: '0.85rem' }}>
+                    After the Audit, save a baseline to generate the setup command for your local checkout.
+                  </p>
                   <a 
-                    href="/docs/quickstart"
+                    href="/docs/#quickstart"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-ghost"
@@ -206,6 +287,9 @@ export function NewAuditPage() {
                     Full installation guide, configuration, and CI/CD integration
                   </p>
                 </div>
+                <p className="font-mono text-muted text-center" style={{ fontSize: '0.78rem' }} aria-label="Private repository journey">
+                  Prepare ZIP → Upload → Audit → Save baseline → Install Mneme → Setup → Start Pilot
+                </p>
               </div>
             </section>
           </div>

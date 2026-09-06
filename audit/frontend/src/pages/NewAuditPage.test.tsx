@@ -77,21 +77,18 @@ describe('NewAuditPage private repository section', () => {
     );
 
     expect(screen.getByText('Working with a private repository?')).toBeInTheDocument();
-    expect(screen.getByText('Install Mneme in your local checkout and use it without granting Mneme HQ access to your repository.')).toBeInTheDocument();
+    expect(screen.getByText('Upload a repository ZIP for the Audit without granting Mneme HQ access to GitHub.')).toBeInTheDocument();
   });
 
-  it('shows verified local commands: pip install mneme-hq and mneme init', () => {
+  it('defers local setup until after the baseline is saved', () => {
     render(
       <MemoryRouter>
         <NewAuditPage />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText('pip install mneme-hq')).toBeInTheDocument();
-    expect(screen.getByText('mneme init')).toBeInTheDocument();
-    // Should NOT show npm install or mneme check
-    expect(screen.queryByText('npm install -g @mnemehq/mneme')).not.toBeInTheDocument();
-    expect(screen.queryByText('mneme check')).not.toBeInTheDocument();
+    expect(screen.getByText('After the Audit, save a baseline to generate the setup command for your local checkout.')).toBeInTheDocument();
+    expect(screen.queryByText('mneme init')).not.toBeInTheDocument();
   });
 
   it('shows Set up Mneme locally CTA link to quickstart docs', () => {
@@ -102,20 +99,62 @@ describe('NewAuditPage private repository section', () => {
     );
 
     const link = screen.getByRole('link', { name: 'Set up Mneme locally' });
-    expect(link).toHaveAttribute('href', '/docs/quickstart');
+    expect(link).toHaveAttribute('href', '/docs/#quickstart');
     expect(link).toHaveAttribute('target', '_blank');
     expect(link).toHaveClass('btn-ghost');
   });
 
-  it('does not show ZIP upload area', () => {
+  it('shows ZIP preparation, upload, retention, and journey guidance', () => {
     render(
       <MemoryRouter>
         <NewAuditPage />
       </MemoryRouter>,
     );
 
-    expect(screen.queryByText('Upload repository ZIP')).not.toBeInTheDocument();
-    expect(screen.queryByText('Drag and drop a .zip file')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Upload repository ZIP file' })).toBeInTheDocument();
+    expect(screen.getByText('Upload repository ZIP')).toBeInTheDocument();
+    expect(screen.getByText('Upload a ZIP of the repository source.')).toBeInTheDocument();
+    expect(screen.getByText(/Exclude/)).toHaveTextContent(
+      'Exclude .git, node_modules, build artifacts, .env files, credentials, and other secrets.',
+    );
+    expect(screen.getByText('The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.')).toBeInTheDocument();
+    expect(screen.getByLabelText('Private repository journey')).toHaveTextContent(
+      'Prepare ZIP → Upload → Audit → Save baseline → Install Mneme → Setup → Start Pilot',
+    );
+  });
+
+  it('submits the selected ZIP through the existing audit contract', async () => {
+    const createAudit = vi.fn().mockResolvedValue({
+      success: true,
+      data: { audit_id: 'private-audit-123' },
+    });
+    mockedUseAuditApi.mockReturnValue({
+      createAudit,
+      createSetupReference: vi.fn(),
+      getAudit: vi.fn(),
+      exportAudit: vi.fn(),
+      getProject: vi.fn(),
+      getProjectAudit: vi.fn(),
+      saveBaseline: vi.fn(),
+      runProjectAudit: vi.fn(),
+      compareAudits: vi.fn(),
+      loading: false,
+      error: null,
+    });
+    const archive = new File(['repository'], 'private-repository.zip', { type: 'application/zip' });
+
+    render(
+      <MemoryRouter>
+        <NewAuditPage />
+      </MemoryRouter>,
+    );
+
+    fireEvent.change(screen.getByLabelText('Choose repository ZIP'), { target: { files: [archive] } });
+    expect(screen.getByText(/private-repository\.zip/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Run Private Repository Audit' }));
+
+    await waitFor(() => expect(createAudit).toHaveBeenCalledTimes(1));
+    expect(createAudit).toHaveBeenCalledWith({ zipFile: archive }, 'zip');
   });
 
   it('does not claim local Architecture Audit or protection gaps reporting', () => {
