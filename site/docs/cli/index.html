@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, cursor generate, benchmark, and adr import. Flags, exit codes, and CI usage patterns." />
+  <meta name="description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, audit, setup, protect, cursor generate, benchmark, and adr import. Flags, exit codes, and CI usage patterns." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/cli/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme CLI Reference" />
-  <meta property="og:description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, cursor generate, benchmark, and adr import." />
+  <meta property="og:description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, audit, setup, protect, cursor generate, benchmark, and adr import." />
   <meta property="og:url" content="https://mnemehq.com/docs/cli/" />
   <meta property="og:image" content="https://mnemehq.com/docs/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -50,7 +50,7 @@
         "description": "Commands, flags, and exit codes for the mneme command-line interface.",
         "url": "https://mnemehq.com/docs/cli/",
         "datePublished": "2026-05-10",
-        "dateModified": "2026-05-10",
+        "dateModified": "2026-09-06",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
@@ -246,7 +246,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>The <code>mneme</code> CLI</strong> exposes <code>init</code>, <code>list_decisions</code>, <code>add_decision</code>, <code>test_query</code>, <code>check</code>, <code>cursor generate</code>, <code>benchmark</code>, and <code>adr import</code>. Every subcommand reads a <code>project_memory.json</code> corpus via <code>--memory</code> and returns Unix exit codes (0 pass, 1 warn, 2 fail).</div>
+<div class="answer-capsule"><strong>The <code>mneme</code> CLI</strong> exposes <code>init</code>, <code>list_decisions</code>, <code>add_decision</code>, <code>test_query</code>, <code>check</code>, <code>audit</code>, <code>setup</code>, <code>protect</code>, <code>cursor generate</code>, <code>benchmark</code>, and <code>adr import</code>. Every subcommand reads a <code>project_memory.json</code> corpus via <code>--memory</code> and returns Unix exit codes; <code>protect</code> uses 0 success / 1 actionable failure / 2 usage error.</div>
 
 <section class="hero">
   <div class="section-eyebrow">CLI reference</div>
@@ -265,6 +265,9 @@
       <li><a href="#cmd-add">mneme add_decision</a></li>
       <li><a href="#cmd-test">mneme test_query</a></li>
       <li><a href="#cmd-check">mneme check</a></li>
+      <li><a href="#cmd-audit">mneme audit</a></li>
+      <li><a href="#cmd-setup">mneme setup</a></li>
+      <li><a href="#cmd-protect">mneme protect</a></li>
       <li><a href="#cmd-cursor">mneme cursor generate</a></li>
       <li><a href="#cmd-benchmark">mneme benchmark</a></li>
       <li><a href="#cmd-adr-import">mneme adr import</a></li>
@@ -409,6 +412,95 @@ Created .mneme/project_memory.json</pre>
     </div>
   </section>
 
+  <!-- audit -->
+  <section class="section" id="cmd-audit">
+    <h2>audit</h2>
+    <p class="sub">Run the Architecture Protection Audit over project memory.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme audit</span><span class="ctag">Audit</span></div>
+      <p class="cdesc">Classifies every active decision in the corpus &mdash; Protected, Mneme-ready, Requires modelling, or Guidance &mdash; and reports the protection summary and per-decision detail. This is the classification surface <code>mneme protect</code> consumes; the tiers are frozen P1.2 semantics that activation never reinterprets.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
+      <div class="flags-title">Flags</div>
+      <table class="flags">
+        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+          <tr><td>--repo-root</td><td>no</td><td>Repository root scanned for external enforcement evidence (<code>.github/workflows</code>, <code>.gitlab-ci.yml</code>). Verified CI evidence upgrades a literalizable decision to protected; a bare token mention is candidate evidence and exits 1 as a warning.</td></tr>
+          <tr><td>--json</td><td>no</td><td>Write the <code>mneme.audit/v1</code> JSON report to <code>FILE</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- setup -->
+  <section class="section" id="cmd-setup">
+    <h2>setup</h2>
+    <p class="sub">Initialize Mneme project state in setup mode.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme setup</span><span class="ctag">Setup</span></div>
+      <p class="cdesc">Creates project state in <strong>setup mode</strong>: context and non-blocking checks only &mdash; never enforcement. Enabling protection is always a separate, explicit decision (<code>mneme protect activate</code>). Optionally records an opaque Architecture Audit setup reference, taken verbatim and resolved by Audit pairing.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme setup --memory .mneme/project_memory.json</pre>
+      <div class="flags-title">Flags</div>
+      <table class="flags">
+        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>--memory</td><td>no</td><td>Path to <code>project_memory.json</code>. Defaults to <code>&lt;repo-root&gt;/.mneme/project_memory.json</code>.</td></tr>
+          <tr><td>--audit-ref</td><td>no</td><td>Opaque Architecture Audit setup reference, recorded verbatim for Audit pairing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- protect -->
+  <section class="section" id="cmd-protect">
+    <h2>protect</h2>
+    <p class="sub">Per-decision protection activation: list candidates, inspect status, validate, activate.</p>
+
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme protect list</span><span class="ctag">Read</span></div>
+      <p class="cdesc">Lists decisions that are active, currently unprotected, and canonically Mneme-ready. Already-Protected, Requires-modelling, Guidance, and superseded decisions are never candidates, and no model decides eligibility &mdash; the audit's frozen classification decides it.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme protect list --memory .mneme/project_memory.json</pre>
+    </div>
+
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme protect status</span><span class="ctag">Read</span></div>
+      <p class="cdesc">Shows one decision's canonical tier, guardrail, evidence, and whether the activation rule is installed &mdash; all derived from the repository, never stored.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme protect status &lt;decision-id&gt; --memory .mneme/project_memory.json</pre>
+    </div>
+
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme protect validate</span><span class="ctag">Validate</span></div>
+      <p class="cdesc">Deterministically validates a decision's proposed protection against the existing enforcement engine &mdash; without writing anything and without enabling protection. Four checks: prohibited input detected as a typed FAIL; permitted input not blocked; path applicability respected (canonical policy sources exempt); unrelated paths unaffected.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme protect validate &lt;decision-id&gt; --memory .mneme/project_memory.json</pre>
+    </div>
+
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme protect activate</span><span class="ctag">Activate</span></div>
+      <p class="cdesc"><strong>Activation is an explicit user action</strong> &mdash; the only command that installs enforcement. It appends the typed <code>FORBID_LITERAL</code> rule to that one decision's record in project memory (idempotent; refuses on any unsafe or unsupported state), then re-loads from disk and re-runs the canonical assessment. Only an independently observed Protected tier is reported as verified.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme protect activate &lt;decision-id&gt; --memory .mneme/project_memory.json</pre>
+    </div>
+
+    <div class="cmd-card">
+      <div class="flags-title">Shared flags &mdash; all protect subcommands</div>
+      <table class="flags">
+        <thead><tr><th>Argument / flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>decision_id</td><td>yes (positional, except <code>list</code>)</td><td>Decision id, e.g. <code>config-format</code> or <code>mneme_042</code>.</td></tr>
+          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+          <tr><td>--repo-root</td><td>no</td><td>Repository root for the same external CI-evidence scan <code>mneme audit</code> performs; omitted means no CI-evidence scan.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <p><strong>Validation is not activation, and activation is not verified protection.</strong> A VALID result changes nothing in the repository; after activation the decision only counts as Protected when a fresh canonical assessment observes real enforcement evidence. Full semantics, result distinctions, and boundaries: <a href="/docs/protection-activation/">Protection activation</a>.</p>
+    </div>
+
+    <div class="callout">
+      <p><strong>Availability.</strong> Shipped in the Mneme core at <a class="ext" href="https://github.com/MnemeHQ/mneme/commit/91d71be7ad29c653c7dc16005a173725c98b3533" target="_blank" rel="noopener">MnemeHQ/mneme@91d71be7</a>. Not yet part of a released <code>mneme-hq</code> package on PyPI &mdash; until the next release, run it from a source checkout (<code>pip install -e .</code>).</p>
+    </div>
+  </section>
+
   <!-- cursor generate -->
   <section class="section" id="cmd-cursor">
     <h2>cursor generate</h2>
@@ -524,6 +616,18 @@ Created .mneme/project_memory.json</pre>
         </tbody>
       </table>
     </div>
+
+    <div class="exit-table">
+      <div class="et-title">mneme protect</div>
+      <table>
+        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>Success or desired state (including <code>already_protected</code>).</td></tr>
+          <tr><td>1</td><td>Actionable failure: not eligible, validation failed, or verification failed.</td></tr>
+          <tr><td>2</td><td>Usage error: missing file, unknown decision id, or refused unsafe record.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </section>
 
   <!-- CI -->
@@ -570,6 +674,11 @@ jobs:
   </section>
 
   <div class="cross-links">
+    <a class="cross-card" href="/docs/protection-activation/">
+      <span class="cl-label">Guide</span>
+      <span class="cl-title">Protection activation &rarr;</span>
+      <span class="cl-sub">The audit-to-Protected loop: validate, activate, canonical verification &mdash; and the guarantees behind it.</span>
+    </a>
     <a class="cross-card" href="/docs/governance-violations/">
       <span class="cl-label">What it catches</span>
       <span class="cl-title">Governance violations &rarr;</span>
