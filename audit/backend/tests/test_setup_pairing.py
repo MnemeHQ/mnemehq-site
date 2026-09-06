@@ -6,17 +6,60 @@ activation-state recording, and audit immutability after pairing.
 """
 import copy
 from datetime import datetime, timedelta, timezone
+from uuid import uuid4
 
 import httpx
 import pytest
-from sqlalchemy import update
+from sqlalchemy import select, text, update
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from app.db.models import Base, SetupReference
+from app.db.models import ActivationState, Base, Project, SetupReference
 from app.db.session import get_db
 from app.main import app
 from app.services import audit_persistence
 
 pytestmark = pytest.mark.asyncio
+
+
+async def test_migration_activation_value_loads_from_existing_row(tmp_path):
+    """Migration 002's lowercase backfill must load through the ORM.
+
+    Production already has saved M1.2 projects when 002 adds the column with
+    the server default ``not_installed``.  This catches an enum mapping that
+    expects the Python member name ``NOT_INSTALLED`` instead.
+    """
+    engine = create_async_engine(f"sqlite+aiosqlite:///{tmp_path / 'enum.db'}")
+    async with engine.begin() as connection:
+        await connection.run_sync(Base.metadata.create_all)
+    sessions = async_sessionmaker(engine, expire_on_commit=False)
+    project_id = uuid4()
+    async with sessions() as session:
+        await session.execute(
+            text(
+                """INSERT INTO projects
+                (id, name, slug, source_type, source_locator, lifecycle,
+                 activation_state)
+                VALUES
+                (:id, :name, :slug, :source_type, :source_locator, :lifecycle,
+                 :activation_state)"""
+            ),
+            {
+                "id": project_id.hex,
+                "name": "Migrated project",
+                "slug": "migrated-project",
+                "source_type": "zip",
+                "source_locator": "upload:repository.zip",
+                "lifecycle": "SAVED",
+                "activation_state": "not_installed",
+            },
+        )
+        await session.commit()
+        project = await session.scalar(
+            select(Project).where(Project.id == project_id)
+        )
+        assert project is not None
+        assert project.activation_state is ActivationState.NOT_INSTALLED
+    await engine.dispose()
 
 
 @pytest.fixture
