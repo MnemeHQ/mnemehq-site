@@ -267,7 +267,7 @@
           <tr><td>already_protected</td><td>The canonical assessment already observed Protected; nothing is written.</td></tr>
           <tr><td>verification_failed</td><td>The rule was written but the canonical assessment did not observe Protected: the decision remains NOT Protected (exit 1).</td></tr>
           <tr><td>validation_failed</td><td>Validation rejected the proposal; nothing is written.</td></tr>
-          <tr><td>not_eligible</td><td>Requires-modelling, Guidance, superseded/inactive, or already-Protected decisions are not activation candidates.</td></tr>
+          <tr><td>not_eligible</td><td>Requires-modelling, Guidance, or superseded/inactive decisions cannot be activated. (A decision that is already Protected has its own outcome above.)</td></tr>
         </tbody>
       </table>
     </div>
@@ -488,19 +488,6 @@ $ mneme audit --memory .mneme/project_memory.json --repo-root .</div>
   window.addEventListener('resize', function(){
     if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
   });
-})();
-</script>
-<script>
-(function(){
-  var path = window.location.pathname;
-  var best = null, bestLen = 0;
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    var href = a.getAttribute('href');
-    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
-      best = a; bestLen = href.length;
-    }
-  });
-  if (best) best.classList.add('active');
 })();
 </script>
 <script><!-- nav-active -->
