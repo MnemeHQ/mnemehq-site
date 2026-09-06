@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { PilotLink } from './PilotLink';
 import { track } from '../analytics';
@@ -97,6 +97,11 @@ export function SetupStatePanel({ project, baseline }: {
     </section>;
   }
   const decisions = baseline?.summary?.decisions_discovered;
+  // Funnel observation (M1.3d): the Audit product recognized that the CLI
+  // completed setup. The setup_started/setup_completed funnel steps
+  // themselves are recorded server-side by the pairing API; this event marks
+  // the first time the workspace surfaced that state.
+  useEffect(() => { track('audit_setup_recognized'); }, []);
   return <section className="audit-section setup-mode-panel" aria-label="Mneme setup status">
     <h2>Mneme installed — Setup mode</h2>
     <ul className="setup-checklist">
@@ -107,7 +112,7 @@ export function SetupStatePanel({ project, baseline }: {
     </ul>
     <p className="setup-note">Mneme is observing in setup mode. Nothing is blocked. Choosing which protections to activate starts the pilot — an explicit, separate decision.</p>
     <div className="flex flex-wrap gap-3">
-      {baseline && <PilotLink audit={baseline} ctaPosition="project" className="btn btn-primary">Start Pilot</PilotLink>}
+      {baseline && <PilotLink audit={baseline} ctaPosition="project" intent="start_pilot" className="btn btn-primary">Start Pilot</PilotLink>}
     </div>
   </section>;
 }

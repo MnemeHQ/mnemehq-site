@@ -267,6 +267,30 @@ async def test_setup_never_activates_or_starts_pilot(pairing):
     assert project["lifecycle"] == "saved"
 
 
+async def test_pilot_handoff_is_explicit_and_recorded(pairing):
+    """M1.3d: the pilot is entered only by an explicit lifecycle action after
+    setup, and that handoff is recorded — while the Mneme activation state
+    stays `setup` (activation is a separate, future decision)."""
+    client, result, repo = pairing
+    created = await client.post(f"/api/v1/audits/{result['audit_id']}/setup-reference")
+    reference = created.json()["reference"]
+    completed = await client.post(
+        f"/api/v1/setup-references/{reference}/complete",
+        json={"repository": None, "mneme_version": "0.6.0"})
+    setup_completed_at = completed.json()["setup_completed_at"]
+
+    handoff = await client.patch(
+        f"/api/v1/projects/{result['project_id']}",
+        params={"lifecycle": "pilot"})
+    assert handoff.status_code == 200, handoff.text
+    project = handoff.json()
+    assert project["lifecycle"] == "pilot"
+    # Attribution survives the handoff; activation state is unchanged.
+    assert project["setup_audit_id"] == result["audit_id"]
+    assert project["setup_completed_at"] == setup_completed_at
+    assert project["activation_state"] == "setup"
+
+
 async def test_no_setup_reference_in_metadata_endpoints(pairing):
     """The reference must not become a general-purpose credential: resolution
     exposes only this audit/project baseline provenance."""

@@ -8,14 +8,16 @@ interface PilotLinkProps {
   className?: string;
   ctaPosition: string;
   selectedDecisionId?: string;
+  /** Funnel intent; `start_pilot` distinguishes the post-setup CTA. */
+  intent?: 'request_pilot' | 'start_pilot';
 }
 
-export function PilotLink({ audit, children, className = 'btn btn-primary', ctaPosition, selectedDecisionId }: PilotLinkProps) {
+export function PilotLink({ audit, children, className = 'btn btn-primary', ctaPosition, selectedDecisionId, intent = 'request_pilot' }: PilotLinkProps) {
   return (
     <a
       href={buildPilotHref(audit)}
       className={className}
-      data-cta-intent="request_pilot"
+      data-cta-intent={intent}
       data-cta-position={ctaPosition}
       onClick={() => storePilotContext(audit, selectedDecisionId)}
     >

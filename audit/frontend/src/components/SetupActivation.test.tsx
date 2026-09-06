@@ -5,10 +5,18 @@ import { SetupCommandPanel, SetupStatePanel } from './SetupActivation';
 import { auditFixture } from '../test/protectionFixture';
 import type { ProjectWithHistory } from '../types/audit';
 
-const { createSetupReference } = vi.hoisted(() => ({ createSetupReference: vi.fn() }));
+const { createSetupReference, track } = vi.hoisted(() => ({
+  createSetupReference: vi.fn(),
+  track: vi.fn(),
+}));
 
 vi.mock('../hooks/useAuditApi', () => ({
   useAuditApi: () => ({ createSetupReference, error: null }),
+}));
+
+vi.mock('../analytics', async importActual => ({
+  ...(await importActual<typeof import('../analytics')>()),
+  track,
 }));
 
 vi.mock('../utils/pilotContext', () => ({
@@ -50,6 +58,7 @@ function projectFixture(overrides: Partial<ProjectWithHistory> = {}): ProjectWit
 describe('SetupCommandPanel (before setup)', () => {
   beforeEach(() => {
     createSetupReference.mockReset();
+    track.mockReset();
   });
 
   it('presents the no-enforcement promise and creates the reference on demand', async () => {
@@ -134,5 +143,34 @@ describe('SetupStatePanel (after setup, G6)', () => {
     expect(screen.getByRole('heading', { name: 'Mneme installed — Setup mode' })).toBeInTheDocument();
     expect(screen.queryByText(/decisions to review/)).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Start Pilot' })).not.toBeInTheDocument();
+  });
+});
+
+describe('M1.3d funnel instrumentation', () => {
+  beforeEach(() => {
+    createSetupReference.mockReset();
+    track.mockReset();
+  });
+
+  it('emits audit_setup_recognized exactly once when setup state surfaces', () => {
+    render(<SetupStatePanel
+      project={projectFixture({ activation_state: 'setup' })} baseline={baseline} />);
+    expect(track).toHaveBeenCalledTimes(1);
+    expect(track).toHaveBeenCalledWith('audit_setup_recognized');
+  });
+
+  it('does not emit setup recognition for not_installed or active states', () => {
+    const { rerender } = render(
+      <SetupStatePanel project={projectFixture()} baseline={baseline} />);
+    rerender(<SetupStatePanel
+      project={projectFixture({ activation_state: 'active' })} baseline={baseline} />);
+    expect(track).not.toHaveBeenCalled();
+  });
+
+  it('tags the post-setup Start Pilot CTA with the start_pilot funnel intent', () => {
+    render(<SetupStatePanel
+      project={projectFixture({ activation_state: 'setup' })} baseline={baseline} />);
+    expect(screen.getByRole('link', { name: 'Start Pilot' }))
+      .toHaveAttribute('data-cta-intent', 'start_pilot');
   });
 });
