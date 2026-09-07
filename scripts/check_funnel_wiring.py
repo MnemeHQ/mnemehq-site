@@ -112,6 +112,22 @@ REQUIRED = [
      ["Protect these decisions with Mneme", 'ctaPosition="audit_result"',
       'id="next-step-install"'],
      ["protection_score"]),
+    # P1-A: mid-page Audit bridges on the high-intent team/pricing pages.
+    ("site/for/index.html",
+     ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="cta_band"'],
+     FORBIDDEN_CTA_PHRASES),
+    ("site/for/cto/index.html",
+     ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="cta_band"'],
+     FORBIDDEN_CTA_PHRASES),
+    ("site/for/platform/index.html",
+     ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="cta_band"'],
+     FORBIDDEN_CTA_PHRASES),
+    ("site/for/principal-engineer/index.html",
+     ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="cta_band"'],
+     FORBIDDEN_CTA_PHRASES),
+    ("site/pricing/index.html",
+     ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="pricing_card"'],
+     FORBIDDEN_CTA_PHRASES),
 ]
 
 # Structural pairing checks: one anchor tag must carry both the destination
