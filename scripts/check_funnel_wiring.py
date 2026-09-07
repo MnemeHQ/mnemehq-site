@@ -106,6 +106,12 @@ REQUIRED = [
      ["data-cta-intent", "data-cta-position", "storePilotContext",
       "buildPilotHref"],
      []),
+    # P0-B: the post-audit pilot activation band (commercial motion) must sit
+    # beside, not replace, the self-serve install section on the audit result.
+    ("audit/frontend/src/pages/AuditOverviewPage.tsx",
+     ["Protect these decisions with Mneme", 'ctaPosition="audit_result"',
+      'id="next-step-install"'],
+     ["protection_score"]),
 ]
 
 # Structural pairing checks: one anchor tag must carry both the destination

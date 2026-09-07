@@ -333,4 +333,53 @@ describe('AuditOverviewPage section navigation', () => {
     expect(JSON.stringify(track.mock.calls)).not.toContain('decision-1');
     expect(JSON.stringify(track.mock.calls)).not.toContain('Use Markdown ADRs');
   });
+
+  it('shows the pilot activation band keyed to the verbatim result counts', () => {
+    renderOverview();
+
+    expect(screen.getByRole('heading', { level: 2, name: '1 of 3 protection-relevant decisions is protected today' })).toBeInTheDocument();
+    const cta = screen.getByRole('link', { name: 'Protect these decisions with Mneme' });
+    expect(cta).toHaveAttribute('data-cta-intent', 'request_pilot');
+    expect(cta).toHaveAttribute('data-cta-position', 'audit_result');
+    expect(cta).toHaveAttribute('href', 'https://mnemehq.com/pilot/?source=architecture-audit&audit=424e1795&repository=https%3A%2F%2Fgithub.com%2Fadr%2Fgadr');
+  });
+
+  it('the pilot activation CTA stores the audit context for the pilot handoff', () => {
+    renderOverview();
+
+    const cta = screen.getByRole('link', { name: 'Protect these decisions with Mneme' });
+    cta.addEventListener('click', (event) => event.preventDefault(), { once: true });
+    fireEvent.click(cta);
+
+    expect(JSON.parse(sessionStorage.getItem('mneme_pilot_context') || '{}')).toMatchObject({
+      auditId: '424e1795',
+      repository: 'https://github.com/adr/gadr',
+      protected: 1,
+      mnemeReady: 1,
+      requiresModelling: 1,
+    });
+  });
+
+  it('keeps the self-serve install path beside the pilot activation band', () => {
+    renderOverview();
+
+    const selfServe = screen.getByRole('link', { name: 'Or set up Mneme yourself' });
+    expect(selfServe).toHaveAttribute('data-cta-intent', 'install_mneme');
+    expect(selfServe).toHaveAttribute('href', '#next-step-install');
+    expect(document.getElementById('next-step-install')).not.toBeNull();
+  });
+
+  it('omits the pilot activation band when nothing is protection-relevant', () => {
+    const noProtectable = auditFixture({ audit_id: 'no-protectable' });
+    render(
+      <MemoryRouter initialEntries={[{ pathname: '/audit/no-protectable', state: { audit: noProtectable } }]}>
+        <Routes>
+          <Route path="/audit/:id" element={<AuditOverviewPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(screen.queryByRole('link', { name: 'Protect these decisions with Mneme' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: /protection-relevant decisions/ })).not.toBeInTheDocument();
+  });
 });

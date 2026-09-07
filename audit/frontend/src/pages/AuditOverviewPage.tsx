@@ -4,6 +4,7 @@ import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
 import { CollapsibleDecisionItem } from '../components/DecisionItem';
 import { SetupCommandPanel } from '../components/SetupActivation';
+import { PilotLink } from '../components/PilotLink';
 import { Loader2, Download, FileText, AlertCircle, ChevronDown, ChevronUp, Search, CheckCircle, Zap, Brain, Circle, Save, ArrowRight } from 'lucide-react';
 import type { ProtectionAuditResponse, ProtectionDecision, ProtectionClassification } from '../types/audit';
 import { decisionParams, track } from '../analytics';
@@ -523,6 +524,28 @@ export function AuditOverviewPage() {
             </section>
           </div>
 
+          {/* ── PROTECT THESE DECISIONS ── */}
+          {protectionRelevant > 0 && (
+            <div className="audit-section-band audit-section-band-charcoal">
+              <section id="pilot-activation" className="audit-section" aria-label="Pilot activation" style={{ maxWidth: '900px', margin: '0 auto', padding: 0 }}>
+                <h2 className="audit-section-title" style={{ marginBottom: '1rem' }}>
+                  {protectedCount} of {protectionRelevant} protection-relevant decisions {protectedCount === 1 ? 'is' : 'are'} protected today
+                </h2>
+                <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '1.5rem', maxWidth: '800px' }}>
+                  These constraints can move from documentation and convention into deterministic enforcement in your own workflow. A pilot operationalizes the applicable decisions into controls connected to your existing engineering workflows, then tests representative changes and produces evidence of what is now being protected.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <PilotLink audit={audit} ctaPosition="audit_result" className="btn btn-primary">
+                    Protect these decisions with Mneme
+                  </PilotLink>
+                  <a href="#next-step-install" className="btn btn-ghost" data-cta-intent="install_mneme" data-cta-position="audit_result">
+                    Or set up Mneme yourself
+                  </a>
+                </div>
+              </section>
+            </div>
+          )}
+
           {/* ── PROTECTION GAPS ── */}
           {(mnemeReadyCount > 0 || requiresModellingCount > 0) && (
             <div className="audit-section-band audit-section-band-warm">
@@ -789,7 +812,7 @@ export function AuditOverviewPage() {
           </div>
 
           {/* ── NEXT STEP / INSTALL ── */}
-          <div className="install-section">
+          <div className="install-section" id="next-step-install">
             <div className="install-header">
               <h2>Next step: Install Mneme</h2>
               <p style={{ maxWidth: '600px', margin: '0 auto 1rem' }}>
