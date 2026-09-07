@@ -56,7 +56,7 @@ distribution, recompiles the ADR corpus to catch stale memory, and applies
 Run the same local preflight with:
 
 ```
-python -m pip install "mneme-hq>=0.6.0"
+python -m pip install "mneme-hq>=0.7.0"
 mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
 git diff --name-only HEAD^ HEAD > .mneme/changed-paths.txt
 mneme check --memory .mneme/project_memory.json --input .mneme/changed-paths.txt --query "Assess these changed paths against Mneme HQ website publishing, shared site chrome, deployment, and validation governance." --top 10 --mode strict
