@@ -92,6 +92,8 @@ this table, it doesn't ship.
 | Insights articles    | Install Mneme (~45–60% down)   | Long-form readers hit proof mid-article, not only at the end   | See the demo             | Newsletter (end only)   |
 | Concept pages        | See this enforced (soft link)  | Conceptual readers need one concrete next step, not a form     | Relevant demo            | —                       |
 | Benchmark            | Run the benchmark (top)        | Page IS an action; GitHub scenarios at 89% was wasted intent   | Contribute a scenario    | —                       |
+| Compare detail (6 bridged) | **Run the Architecture Audit** | Comparison readers are mid-evaluation; the audit answers the exact comparison question on their own repository | View on GitHub (outline) | Request a pilot         |
+| Compare detail (7 control) | Request a pilot (tagged, unchanged) | Control group for the audit-primary routing experiment | View on GitHub (outline) | —                       |
 | `/for/` + role pages | **Request a pilot**            | Team-intent pages: audit/pilot is the correct first ask        | Run the demo             | Install                 |
 | Team-heavy use cases | Request a pilot                | Multi-agent/compliance/platform readers evaluate for teams     | See relevant demo        | Install                 |
 | Pilot page           | Submit pilot request           | Single-purpose conversion page                                 | See qualification criteria | Install               |

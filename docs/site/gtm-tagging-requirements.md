@@ -36,14 +36,14 @@ and page views remain funnel signals rather than GA4 key events.
 ```js
 {
   event: 'cta_click',
-  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit',
+  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit|compare',
   cta_position: 'nav|hero|mid|end',
   cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card|context',
   cta_destination: '<href>',
   link_text: '<visible label, trimmed to 100 chars>',
   source_page: '<pathname of the page the click came from>',
   content_segment: 'developer_evaluation|problem_awareness',   // omitted if unsegmented
-  page_type: 'homepage|docs|demo|audit|integration|use_case|insight|concept|team|pilot|pricing|benchmark|other'
+  page_type: 'homepage|docs|demo|audit|integration|use_case|insight|concept|team|pilot|pricing|benchmark|compare|other'
 }
 ```
 
@@ -337,6 +337,12 @@ sequence itself still requires a production GA4 session.
       site -> audit -> pilot sequence and its BigQuery export confirmation
       remain open (require a production GA4 session; the two open items below
       stay open until then)
+- [x] 2026-09-07 — P1 routing: `cta_intent=compare` and `page_type=compare`
+      added to the contract (Wave 1 held-back articles already emitted
+      `cta_intent=compare`; `pageType()` in `cta-analytics.js` previously
+      bucketed /compare/ pages as `other`); all 13 /compare/ detail pages
+      instrumented (`sweep_compare_cta.py`), six bridged pages carry
+      audit-primary bridges while seven remain the tagged control group
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 

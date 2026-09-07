@@ -101,8 +101,8 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
     .cta-secondary { display: block; margin-top: 0.75rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; }
     .cta-secondary:hover { color: var(--text); }
 
@@ -440,8 +440,8 @@
     <div class="cta-block">
       <h3>Governance that holds across long autonomous runs</h3>
       <p>Mneme HQ fires on every Edit and Write Cascade (or any other coding agent) proposes &mdash; independent of how many planning steps preceded it. Typed decisions, explicit scope, precedence engine. Open source, self-hosted, model-agnostic.</p>
-      <a href="/pilot/" class="btn-primary" style="margin-right:0.5rem;">Request a pilot &rarr;</a>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">View on GitHub &rarr;</a>
+      <a href="/pilot/" class="btn-primary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block" style="margin-right:0.5rem;">Request a pilot &rarr;</a>
+      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block" style="background:transparent;border:1px solid var(--border2);color:var(--text);">View on GitHub &rarr;</a>
       <a href="/insights/long-running-agents-need-governance/" class="cta-secondary">Read: Long-running agents need governance &rarr;</a>
     </div>
   </footer>
@@ -627,6 +627,7 @@
       ['/docs', 'docs'],
       ['/demo', 'demo'],
       ['/audit', 'audit'],
+      ['/compare', 'compare'],
       ['/integrations', 'integration'],
       ['/works-with', 'integration'],
       ['/use-cases', 'use_case'],
