@@ -1,11 +1,11 @@
 """PR3 sweep: team/role pages — pilot-first clusters per docs/site/cta-system.md.
-Replaces contact/GitHub lime primaries with coral 'Request a drift audit'.
+Replaces contact/GitHub lime primaries with coral 'Request a pilot'.
 """
 from pathlib import Path
 
 PILOT_PRIMARY = (
     '<a href="/pilot/" class="cta-btn-primary" data-cta-intent="pilot" '
-    'data-cta-position="{pos}" data-cta-component="hero_cluster">Request a drift audit</a>'
+    'data-cta-position="{pos}" data-cta-component="hero_cluster">Request a pilot</a>'
 )
 GITHUB_TEXT = (
     '<a href="https://github.com/MnemeHQ/mneme" class="cta-link" data-cta-intent="github" '

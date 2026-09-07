@@ -63,7 +63,7 @@
         "name": "Request a Mneme Pilot | Mneme HQ",
         "description": "Request a Mneme pilot using an existing repository or architecture audit as the starting point.",
         "datePublished": "2026-05-01",
-        "dateModified": "2026-09-01",
+        "dateModified": "2026-09-07",
         "author": {
           "@type": "Person",
           "name": "Theo Valmis",
@@ -292,6 +292,59 @@
       line-height: 1.75;
       margin-bottom: 2.5rem;
       max-width: 540px;
+    }
+
+    /* ── WHAT YOUR PILOT DELIVERS ── */
+    .pilot-deliverables {
+      border-top: 1px solid var(--border);
+      margin-bottom: 3rem;
+      padding-top: 2.25rem;
+    }
+    .pilot-deliverables h2 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      margin-bottom: 1.5rem;
+    }
+    .deliver-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    @media (max-width: 900px) {
+      .deliver-grid { grid-template-columns: 1fr; }
+    }
+    .deliver-step {
+      border-top: 2px solid var(--accent);
+      padding-top: 0.9rem;
+    }
+    .deliver-step .step-num {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .deliver-step h3 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.45rem;
+    }
+    .deliver-step p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin: 0;
     }
 
     /* ── FIT LIST ── */
@@ -608,6 +661,27 @@
   <h1>Request a Mneme Pilot</h1>
   <p class="page-sub">Send the request and we take it from there. No presentation, rewritten requirements, or second audit is needed.</p>
 
+  <section class="pilot-deliverables" aria-labelledby="pilot-delivers-title">
+    <h2 id="pilot-delivers-title">What your pilot delivers</h2>
+    <ol class="deliver-grid">
+      <li class="deliver-step">
+        <span class="step-num">Stage 1</span>
+        <h3>Establish the baseline</h3>
+        <p>We audit a real repository of yours and identify the architectural decisions worth protecting.</p>
+      </li>
+      <li class="deliver-step">
+        <span class="step-num">Stage 2</span>
+        <h3>Operationalize the decisions</h3>
+        <p>Applicable decisions become enforceable Mneme controls, connected to the engineering workflows your team already uses.</p>
+      </li>
+      <li class="deliver-step">
+        <span class="step-num">Stage 3</span>
+        <h3>Produce evidence</h3>
+        <p>We test representative changes and demonstrate which architectural constraints are now being protected&mdash;in observe mode first, before anything blocks delivery.</p>
+      </li>
+    </ol>
+  </section>
+
   <div class="pilot-grid">
 
   <div class="fit-section">
@@ -619,6 +693,7 @@
       <li>Platform, backend, infrastructure, or data-heavy systems with non-trivial architectural constraints</li>
     </ul>
     <div class="fit-callout"><strong>A short 20-minute follow-up.</strong> We review your material first, so the call can focus on priorities and practical next steps. Complimentary for qualified teams; we respond within 1&ndash;2 business days.</div>
+    <div class="fit-callout"><strong>Private repositories are welcome.</strong> Mneme&rsquo;s deterministic enforcement runs in your development or CI environment. A repository does not need to be public to participate in a pilot.</div>
   </div>
 
   <div class="pilot-form-wrap">
