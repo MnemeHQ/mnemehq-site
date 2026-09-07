@@ -128,6 +128,16 @@ REQUIRED = [
     ("site/pricing/index.html",
      ['data-cta-intent="audit" data-cta-position="mid" data-cta-component="pricing_card"'],
      FORBIDDEN_CTA_PHRASES),
+    # P1-2: /compare/ pages are instrumented (page_type=compare); the six
+    # bridged pages carry audit-primary, the rest remain the tagged control.
+    (CTA_ANALYTICS, ["['/compare', 'compare']"], []),
+    ("site/compare/cursor-rules/index.html",
+     ['data-cta-intent="audit" data-cta-position="end"',
+      'data-cta-intent="pilot"', 'data-cta-intent="github"'],
+     FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
+    ("site/compare/windsurf/index.html",
+     ['data-cta-intent="pilot"', 'data-cta-intent="github"'],
+     FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
 ]
 
 # Structural pairing checks: one anchor tag must carry both the destination

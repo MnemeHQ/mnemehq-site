@@ -90,8 +90,8 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
     .cta-secondary { display: block; margin-top: 0.75rem; font-size: 0.82rem; color: var(--muted); text-decoration: none; }
     .cta-secondary:hover { color: var(--text); }
 
@@ -580,8 +580,10 @@
     <div class="cta-block">
       <h3>Mneme HQ enforces architectural decisions at the source</h3>
       <p>Structured decision schema, deterministic precedence engine, and hook-level enforcement for Claude Code. Open source, self-hosted, MIT licence.</p>
-      <a href="/pilot/" class="btn-primary" style="margin-right:0.5rem;">Request a pilot &rarr;</a>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary" style="background:transparent;border:1px solid var(--accent);color:var(--accent);">View on GitHub →</a>
+      <p>Already using Cursor Rules? Run an audit to see which architectural rules could move from guidance to deterministic enforcement.</p>
+      <a href="/audit/" class="btn-primary" data-cta-intent="audit" data-cta-position="end" data-cta-component="end_block" style="margin-right:0.5rem;">Run the Architecture Audit &rarr;</a>
+      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block" style="background:transparent;border:1px solid var(--border2);color:var(--text);">View on GitHub →</a>
+      <a href="/pilot/" class="cta-secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Evaluating for your team? Request a pilot &rarr;</a>
       <a href="/insights/mneme-vs-cursor-rules/" class="cta-secondary">Read: Mneme vs Cursor Rules (editorial) →</a>
       <a href="/integrations/cursor/" style="display:block;margin-top:0.5rem;font-size:0.82rem;color:var(--muted);text-decoration:none;">Mneme + Cursor — integration guide →</a>
     </div>
@@ -771,6 +773,7 @@
       ['/docs', 'docs'],
       ['/demo', 'demo'],
       ['/audit', 'audit'],
+      ['/compare', 'compare'],
       ['/integrations', 'integration'],
       ['/works-with', 'integration'],
       ['/use-cases', 'use_case'],
