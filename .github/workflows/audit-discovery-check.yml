@@ -1,0 +1,55 @@
+name: audit discovery check
+
+# The /audit/ page is the top-of-funnel Audit surface and the one an AI answer
+# engine is most likely to cite. Two regressions have to stay impossible:
+#
+#   1. The retired public product name "Architecture Governability Audit"
+#      returning to a customer-facing surface. The public name is the
+#      "Architecture Protection Audit".
+#   2. /audit/ dropping out of its machine-readable discovery surfaces —
+#      sitemap.xml, llms.txt, its canonical <title>, and the noindex+canonical
+#      pair that keeps /audit/workspace/ from competing with it in search.
+#
+# The workspace app is built from audit/frontend/index.html into
+# site/audit/workspace/, so both the source and the committed build output are
+# checked: fixing only one of them regresses on the next `npm run build`.
+#
+# Validator: scripts/check_audit_discovery.py
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'site/**/*.txt'
+      - 'site/sitemap.xml'
+      - 'audit/frontend/index.html'
+      - 'scripts/check_audit_discovery.py'
+      - '.github/workflows/audit-discovery-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'site/**/*.txt'
+      - 'site/sitemap.xml'
+      - 'audit/frontend/index.html'
+      - 'scripts/check_audit_discovery.py'
+      - '.github/workflows/audit-discovery-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check-audit-discovery:
+    name: Verify /audit/ discovery contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run audit discovery check
+        run: python scripts/check_audit_discovery.py
