@@ -283,6 +283,36 @@ legacy event counts fall to zero. Delete the paused tags only after that.
 - [ ] Obsolete key-event flags and overlapping legacy tags are removed only
       after the daily-export check.
 
+### Cross-surface commercial funnel walkthrough (added 2026-09-07)
+
+One session, three surfaces, one canonical event per action. Verify in GA4
+DebugView with a production session; confirm parameters (not `(not set)`) and
+that no identifiers (`audit_id`, repository strings) and no reconstructed
+score (`protection_score`) appear anywhere in the payload:
+
+| # | Step | Canonical event | Surface |
+|---|------|-----------------|---------|
+| 1 | Land on a segmented page, click the Audit CTA | `cta_click` with `cta_intent=audit`, `cta_position`, `cta_component`, `cta_destination=/audit/`, `source_page`, `content_segment` | static site |
+| 2 | Start the audit from `/audit/` | `cta_click` with `cta_intent=start_audit`, `cta_destination=/audit/workspace/` | `/audit/` landing |
+| 3 | Submit a repo in the workspace | `audit_start` with `input_type` | Audit workspace |
+| 4 | Audit result rendered | `audit_complete` with `input_type`, `duration_ms` and the eight verbatim summary fields | Audit workspace |
+| 5 | Click the pilot CTA in the result | `cta_click` with `cta_intent=request_pilot` (or `start_pilot` post-setup), `cta_position=audit_result`/`project`, `cta_destination` sanitized to `https://mnemehq.com/pilot/` | Audit workspace |
+| 6 | First form interaction on `/pilot/` | `pilot_form_start` (`page_type=pilot`, `form_id=pilot-form`) | `/pilot/` |
+| 7 | Valid submission | `pilot_form_attempt`, then `pilot_form_success` only after Formspree returns HTTP success | `/pilot/` |
+
+Session-level rule: count sessions reaching the sequence (steps 1-7), never raw
+event sums; the two surfaces share measurement ID `G-ZZ9YG12PPX`, so the funnel
+is joinable, but steps 3-5 arrive from the workspace adapter (templated
+`page_path`, sanitized `page_referrer`) while 1-2 and 6-7 arrive from
+`cta-analytics.js` with the real pathname in `source_page`. Do not infer
+step 5 origin from `page_referrer` alone.
+
+A static emit-side gate for this contract is
+`scripts/check_funnel_wiring.py` (CI: funnel wiring check); it pins the event
+names, the one-`cta_click` taxonomy, the pilot handoff, and the identifier/score
+prohibitions at their sources. DebugView and BigQuery confirmation of the
+sequence itself still requires a production GA4 session.
+
 ## 9. Change log
 
 - [x] 2026-08-30 — live GTM/GA4 configuration audited
@@ -301,6 +331,12 @@ legacy event counts fall to zero. Delete the paused tags only after that.
       parameters); `cta_demo_click`, `cta_github_click`,
       `install_command_copied` and `outbound_link_clicked` paused; verified
       against the live container
+- [x] 2026-09-07 — cross-surface commercial funnel walkthrough added (§8);
+      static emit-side gate `scripts/check_funnel_wiring.py` added with the
+      funnel wiring check workflow. GA4 DebugView walkthrough of the full
+      site -> audit -> pilot sequence and its BigQuery export confirmation
+      remain open (require a production GA4 session; the two open items below
+      stay open until then)
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 

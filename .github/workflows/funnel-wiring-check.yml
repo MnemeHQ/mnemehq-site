@@ -1,0 +1,50 @@
+name: funnel wiring check
+
+# The canonical site -> Audit workspace -> /pilot/ commercial funnel is joined
+# across three surfaces that evolve independently. GTM v7 routes all events
+# through one GA4 router tag (docs/site/gtm-tagging-requirements.md), so the
+# funnel is only measurable while the emit-side contract holds:
+#
+#   - ONE cta_click + cta_intent (the per-intent event tags were paused in
+#     container v6 to end duplicate counting; they must not return)
+#   - pilot_form_start/attempt/error/success + the Formspree action
+#   - the Audit -> Pilot handoff (PilotLink, pilotContext, /pilot/?source=...)
+#   - the privacy contract: audit_id / protection_score never GA4 parameters
+#
+# Validator: scripts/check_funnel_wiring.py
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'site/_snippets/*'
+      - 'audit/frontend/src/**'
+      - 'scripts/check_funnel_wiring.py'
+      - '.github/workflows/funnel-wiring-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'site/_snippets/*'
+      - 'audit/frontend/src/**'
+      - 'scripts/check_funnel_wiring.py'
+      - '.github/workflows/funnel-wiring-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check-funnel-wiring:
+    name: Verify funnel emit-side wiring
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run funnel wiring check
+        run: python scripts/check_funnel_wiring.py
