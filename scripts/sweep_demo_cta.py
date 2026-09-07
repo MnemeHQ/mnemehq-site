@@ -24,7 +24,7 @@ INSTALL_MODULE = """<div class="install-module" id="install" style="text-align:l
 
 CLUSTER = """<div class="cta-actions">
           <a class="cta-btn-primary" href="/docs/#quickstart" data-cta-intent="install" data-cta-position="end" data-cta-component="install_module">Install Mneme</a>
-          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a drift audit &rarr;</a>
+          <a class="cta-link" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="install_module">Evaluating for your team? Request a pilot &rarr;</a>
         </div>"""
 
 NEW_SECTION = f"""<section class="cta-snippet" id="try">

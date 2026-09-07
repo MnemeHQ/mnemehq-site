@@ -27,7 +27,7 @@ never two in the same view.
 | Visitor             | Journey                                            | Outcome                        |
 | ------------------- | -------------------------------------------------- | ------------------------------ |
 | Developer/evaluator | Install → quickstart → first check → demo          | OSS activation                 |
-| Engineering team    | Evidence/use case → drift audit → complimentary pilot | Design-partner validation   |
+| Engineering team    | Evidence/use case → Architecture Audit → pilot | Design-partner validation   |
 
 Newsletter stays at article endings/footer only. Contact routes technical
 queries to GitHub Discussions and team evaluations to the pilot page.
@@ -87,7 +87,7 @@ this table, it doesn't ship.
 | Integration detail   | **Set up Mneme with [tool]** after first proof | Tool-specific intent is high-signal, but the page must establish compatibility and enforcement before asking | Evidence stays in content | Team rollout link at end |
 | Demo hub             | Install Mneme (right after flagship proof) | Proof just landed; convert uncertainty into action immediately | View another demo | Request a pilot |
 | Demo details         | Install Mneme (~50–60% down)   | Same as hub but placed at proof density peak, not 75%          | View source              | Request a pilot         |
-| Use-cases hub        | See the demo after first proof | First use-case creates the problem; demo resolves it           | Request a drift audit    | —                       |
+| Use-cases hub        | See the demo after first proof | First use-case creates the problem; demo resolves it           | Request a pilot          | —                       |
 | Use-case detail      | Install via quickstart         | Never label a GitHub link "Install" — destination must match   | View GitHub              | Pilot                   |
 | Insights articles    | Install Mneme (~45–60% down)   | Long-form readers hit proof mid-article, not only at the end   | See the demo             | Newsletter (end only)   |
 | Concept pages        | See this enforced (soft link)  | Conceptual readers need one concrete next step, not a form     | Relevant demo            | —                       |
@@ -180,7 +180,11 @@ Pilot page: form + criteria side-by-side above the fold; four required fields;
 Mid-article bands placed after first proof section (not by scroll percentage).
 
 ### Later / optimization
-- A/B "Request a drift audit" vs "Apply for a complimentary pilot" (only if traffic supports it).
+- Terminology (P0 decision): the retired compound Audit label is gone from all
+  customer-facing CTA copy. Canonical labels: Run Architecture Audit (analyze
+  a repository) · Run the 2-minute demo (experience Mneme) · Install Mneme
+  (self-serve) · Request a pilot (work with Mneme HQ). Zero-hit gate:
+  `scripts/check_drift_audit_cta.py`.
 - Per-tool integration CTAs ("Set up with Codex", "Set up with Claude Code").
 - Newsletter capture restricted to article endings + footer.
 

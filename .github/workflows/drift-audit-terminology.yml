@@ -1,0 +1,55 @@
+name: drift-audit terminology check
+
+# P0 terminology decision: "Request a drift audit" described an Audit action
+# but linked to /pilot/ (and the "drift audit" label is retired outright).
+# Canonical customer-facing language:
+#
+#   Analyze repository  -> Run Architecture Audit
+#   Experience Mneme    -> Run the 2-minute demo
+#   Self-serve          -> Install Mneme
+#   Work with Mneme HQ  -> Request a pilot
+#
+# This lint keeps the retired compound label out of customer-facing sources
+# (site pages, canonical CTA partials, site system docs). The one-time sweep
+# was scripts/sweep_drift_audit_cta.py, which also rewrote the legacy
+# sweep_team_cta.py / sweep_demo_cta.py strings that could regenerate it.
+#
+# Validator: scripts/check_drift_audit_cta.py
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'templates/**'
+      - 'docs/site/**'
+      - 'scripts/check_drift_audit_cta.py'
+      - 'scripts/sweep_drift_audit_cta.py'
+      - '.github/workflows/drift-audit-terminology.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**/*.html'
+      - 'templates/**'
+      - 'docs/site/**'
+      - 'scripts/check_drift_audit_cta.py'
+      - 'scripts/sweep_drift_audit_cta.py'
+      - '.github/workflows/drift-audit-terminology.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check-drift-audit-terminology:
+    name: Verify retired-label zero-hit gate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run drift-audit terminology check
+        run: python scripts/check_drift_audit_cta.py
