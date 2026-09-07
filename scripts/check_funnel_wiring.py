@@ -138,6 +138,11 @@ REQUIRED = [
     ("site/compare/windsurf/index.html",
      ['data-cta-intent="pilot"', 'data-cta-intent="github"'],
      FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
+    # P1-3: homepage buyer shortcut routes to the Audit (the nav already
+    # carries the Pilot link; Install/Demo hierarchy stays untouched).
+    ("site/index.html",
+     ['data-cta-intent="audit" data-cta-position="hero"'],
+     FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
 ]
 
 # Structural pairing checks: one anchor tag must carry both the destination
