@@ -335,6 +335,9 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
+
+    # Insights — new
+    "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
 }
 
 PORT = 8765
