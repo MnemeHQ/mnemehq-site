@@ -260,6 +260,14 @@ TEMPLATES = [
         "insights/kodekloud-definitive-guide-ai-for-devops",
     ),
     (
+        "og-insights-adrs-enforceable.html",
+        "Insights",
+        "Your ADRs Exist. Are They Enforceable?",
+        "44px",
+        "The count that matters is not how many decisions you recorded. It is how many an agent can be stopped from violating.",
+        "insights/are-your-adrs-enforceable",
+    ),
+    (
         "og-insights-oreilly-architectural-guardrails.html",
         "O'Reilly follow-up",
         "Behind the O'Reilly Radar Article",
@@ -940,6 +948,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
     "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
     "og-concepts-architectural-drift-prevention.html": "concepts/architectural-drift-prevention/og.png",
