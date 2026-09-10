@@ -346,6 +346,7 @@ TEMPLATE_MAP = {
 
     # Misc
     "og-audit-methodology.html": "audit/methodology/og.png",
+    "og-audit-vs-code-review-security-scanning-and-tests.html": "audit/vs-code-review-security-scanning-and-tests/og.png",
 }
 
 PORT = 8765
