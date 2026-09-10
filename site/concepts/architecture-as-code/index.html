@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Architecture as Code &mdash; Mneme HQ Concepts</title>
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <meta name="description" content="Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts that teams can analyze and continuously verify." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="canonical" href="https://mnemehq.com/concepts/architecture-as-code/" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Mneme HQ" />
+  <meta property="og:title" content="Architecture as Code &mdash; Mneme HQ Concepts" />
+  <meta property="og:description" content="Express architectural intent in machine-readable artifacts that teams can analyze and continuously verify." />
+  <meta property="og:url" content="https://mnemehq.com/concepts/architecture-as-code/" />
+  <meta property="og:image" content="https://mnemehq.com/concepts/architecture-as-code/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Architecture as Code &mdash; Mneme HQ Concepts" />
+  <meta name="twitter:description" content="Machine-readable architectural intent for continuous analysis and verification." />
+  <meta name="twitter:image" content="https://mnemehq.com/concepts/architecture-as-code/og.png" />
+  <meta name="author" content="Theo Valmis" />
+  <meta property="article:published_time" content="2026-09-10T00:00:00Z" />
+  <meta property="article:author" content="https://mnemehq.com/founder/" />
+  <meta property="article:section" content="Concepts" />
+
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
+  <link rel="icon" href="/favicon-v2.png" type="image/png">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
+    .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
+    .article-header { margin-bottom: 3.5rem; }
+    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
+    .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.4rem, 6vw, 3.7rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 1.5rem; }
+    .article-lede { font-size: 1.1rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
+    .article-body { font-size: 0.95rem; line-height: 1.9; color: var(--text); }
+    .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 3.25rem 0 1rem; color: var(--text); }
+    .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--text); }
+    .article-body p { margin-bottom: 1.25rem; color: var(--muted); }
+    .article-body p strong, .article-body li strong { color: var(--text); font-weight: 600; }
+    .article-body ul { margin: 0 0 1.25rem 1.5rem; color: var(--muted); }
+    .article-body li { margin-bottom: 0.55rem; }
+    .article-body a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,240,96,0.3); }
+    .article-body a:hover { border-color: var(--accent); }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule strong { color: var(--accent); }
+    .breadcrumb-nav { max-width: 720px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
+    .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb [aria-current="page"] { color: var(--text); }
+    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
+    .byline a { color: var(--muted); text-decoration: none; }
+    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
+    .definition { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.4rem 1.55rem; margin: 2rem 0; }
+    .definition p { margin: 0; }
+    .definition strong { color: var(--accent) !important; }
+    .concept-chain { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 2.5rem 0; }
+    .chain-step { background: var(--surface); padding: 1.2rem; min-height: 140px; }
+    .chain-num { display: block; color: var(--accent); font: 0.65rem 'DM Mono', monospace; letter-spacing: 0.08em; margin-bottom: 0.65rem; }
+    .chain-title { display: block; color: var(--text); font-size: 0.88rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .chain-desc { color: var(--muted); font-size: 0.76rem; line-height: 1.55; }
+    .comparison-wrap { overflow-x: auto; margin: 2rem 0; }
+    .comparison-table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.84rem; }
+    .comparison-table th { text-align: left; padding: 0.75rem 0.9rem; border-bottom: 1px solid var(--border2); color: var(--text); font-weight: 600; }
+    .comparison-table td { padding: 0.9rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--muted); }
+    .comparison-table td:first-child { color: var(--text); white-space: nowrap; }
+    .gap-panel { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 1rem; margin: 2.5rem 0; }
+    .gap-side { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.35rem; }
+    .gap-side strong { display: block; color: var(--text); margin-bottom: 0.55rem; }
+    .gap-side span { color: var(--muted); font-size: 0.8rem; line-height: 1.65; }
+    .gap-arrow { align-self: center; color: var(--accent); font: 1.3rem 'DM Mono', monospace; }
+    .source-list { padding-left: 1.2rem; }
+    .source-list li { font-size: 0.84rem; }
+    .article-faq { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .article-faq h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; }
+    .article-faq details { margin: 0.75rem 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .article-faq summary { padding: 1rem 1.25rem; cursor: pointer; font-size: 0.88rem; color: var(--text); background: var(--surface); list-style: none; }
+    .article-faq summary::before { content: '+ '; color: var(--accent); }
+    .article-faq details[open] summary::before { content: '\2212 '; }
+    .article-faq .faq-body { padding: 1.25rem; font-size: 0.86rem; color: var(--muted); line-height: 1.85; }
+    .related-panel { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+    .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .related-list li { margin: 0; }
+    .related-list a { display: block; padding: 1.15rem 1.35rem; background: var(--surface); text-decoration: none; }
+    .related-list a:hover { background: var(--surface2); }
+    .rel-title { color: var(--text); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .rel-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 0; }
+    .article-footer { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; }
+    .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; }
+    .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
+    .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
+    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; }
+    footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+    @media (max-width: 760px) {
+      .concept-chain { grid-template-columns: 1fr 1fr; }
+      .gap-panel { grid-template-columns: 1fr; }
+      .gap-arrow { transform: rotate(90deg); justify-self: center; }
+      .article-wrap { padding: 3rem 1.25rem 5rem; }
+      nav { padding: 1rem 1.25rem; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Concepts", "item": "https://mnemehq.com/concepts/"},
+          {"@type": "ListItem", "position": 3, "name": "Architecture as Code", "item": "https://mnemehq.com/concepts/architecture-as-code/"}
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "Architecture as Code",
+        "description": "Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts that teams can analyze and continuously verify.",
+        "url": "https://mnemehq.com/concepts/architecture-as-code/",
+        "datePublished": "2026-09-10",
+        "dateModified": "2026-09-10",
+        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
+        "image": "https://mnemehq.com/concepts/architecture-as-code/og.png",
+        "mainEntityOfPage": "https://mnemehq.com/concepts/architecture-as-code/",
+        "articleSection": "Concepts"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type": "Question", "name": "What is Architecture as Code?", "acceptedAnswer": {"@type": "Answer", "text": "Architecture as Code is the practice of expressing architectural structures, decisions, constraints, and quality properties in machine-readable, version-controlled artifacts that can be analyzed or verified automatically."}},
+          {"@type": "Question", "name": "How is Architecture as Code different from ADRs?", "acceptedAnswer": {"@type": "Answer", "text": "Architecture Decision Records preserve why a decision was made, its context, and its trade-offs. Architecture as Code expresses what the architecture contains or must satisfy in a form a machine can evaluate. The two are complementary: an ADR can be the authority behind an executable rule."}},
+          {"@type": "Question", "name": "How is Architecture as Code different from Infrastructure as Code?", "acceptedAnswer": {"@type": "Answer", "text": "Infrastructure as Code provisions and configures infrastructure resources. Architecture as Code describes or verifies broader architectural intent, including component boundaries, dependency direction, quality attributes, governance, and relationships that may span implementation, infrastructure, and teams."}},
+          {"@type": "Question", "name": "How is Architecture as Code different from Policy as Code?", "acceptedAnswer": {"@type": "Answer", "text": "Architecture as Code represents and verifies architectural intent. Policy as Code expresses executable decision logic that governs whether a state or action is allowed. Architectural policy can be derived from an architecture-as-code artifact, but representation and enforcement are separate responsibilities."}},
+          {"@type": "Question", "name": "Does Architecture as Code automatically prevent violations?", "acceptedAnswer": {"@type": "Answer", "text": "No. An architecture model, assertion, or fitness function can detect a violation without preventing the action that creates it. Prevention requires an enforcement point with authority to allow or block the action before the incompatible change is accepted."}},
+          {"@type": "Question", "name": "Why does Architecture as Code matter for AI coding agents?", "acceptedAnswer": {"@type": "Answer", "text": "AI coding agents act at machine speed and across long trajectories. Machine-readable architecture gives their harnesses a stable source of constraints, but safe execution also requires scope, enforcement timing, deterministic verdicts, and evidence linking each verdict to the source decision."}}
+        ]
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Architecture as Code",
+        "description": "The practice of expressing architectural structures, decisions, constraints, and quality properties in machine-readable, version-controlled artifacts that can be analyzed or verified automatically.",
+        "inDefinedTermSet": {"@type": "DefinedTermSet", "name": "Mneme HQ Concepts", "url": "https://mnemehq.com/concepts/"},
+        "url": "https://mnemehq.com/concepts/architecture-as-code/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
+    <a href="/docs/how-enforcement-works/">How it works</a>
+    <a href="/use-cases/">Use cases</a>
+    <a href="/demo/">Demo</a>
+    <a href="/audit/" data-cta-intent="audit" data-cta-position="nav" data-cta-component="nav">Architecture Audit</a>
+    <a href="/insights/">Insights</a>
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
+    <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
+  </div>
+</nav>
+
+<main id="main-content" tabindex="-1">
+  <div class="answer-capsule"><strong>Architecture as Code.</strong> Architectural intent expressed in machine-readable, version-controlled artifacts that can be analyzed and continuously verified.</div>
+
+  <nav aria-label="Breadcrumb" class="breadcrumb-nav">
+    <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li><a href="/concepts/">Concepts</a></li>
+      <li aria-current="page">Architecture as Code</li>
+    </ol>
+  </nav>
+
+  <article class="article-wrap">
+    <header class="article-header">
+      <div class="article-eyebrow">
+        <span class="eyebrow-tag">Concepts</span><span class="eyebrow-dot"></span><span class="eyebrow-meta">9 min read &nbsp;&middot;&nbsp; September 2026</span>
+      </div>
+      <h1>Architecture as Code</h1>
+      <p class="article-lede">Architecture as Code moves architecture from diagrams and prose alone into artifacts that software can parse, version, test, and use as a source of continuous feedback. It makes architectural intent operational without pretending that every part of architecture can be reduced to a rule.</p>
+      <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-09-10">Published September 2026</time></p>
+    </header>
+
+    <div class="article-body">
+      <p>Most software architecture is recorded for people. Teams draw system diagrams, write Architecture Decision Records, document standards, and explain trade-offs in design reviews. Those artifacts are valuable, but the implementation cannot usually ask them a precise question. A build cannot reliably determine whether a new dependency crosses a forbidden boundary by reading a diagram. An AI coding agent cannot infer which sentence in a six-page ADR is binding and which sentence records historical context.</p>
+      <p>Architecture as Code changes the medium. It expresses selected parts of architectural intent in a form that tools can evaluate. The result may be a textual architecture model, an architecture description language, a dependency rule, a fitness function, a schema, or a set of assertions. What matters is not the filename or syntax. What matters is that architecture becomes addressable by software.</p>
+
+      <div class="definition">
+        <p><strong>Architecture as Code is the practice of expressing architectural structures, decisions, constraints, and quality properties in machine-readable, version-controlled artifacts that can be analyzed or verified automatically.</strong></p>
+      </div>
+
+      <p>This definition is intentionally broader than &ldquo;diagrams as code.&rdquo; Generating a diagram from text is useful because the source can be reviewed and versioned. Architecture as Code goes further when the same source can answer questions, validate relationships, measure qualities, or produce feedback about whether implementation still matches intent.</p>
+
+      <h2>What becomes code?</h2>
+      <p>Architecture is not a single artifact. Different tools make different parts of it executable:</p>
+      <ul>
+        <li><strong>Structure:</strong> systems, containers, components, interfaces, and their allowed relationships.</li>
+        <li><strong>Constraints:</strong> dependency direction, approved technologies, data boundaries, and ownership rules.</li>
+        <li><strong>Quality attributes:</strong> measurable expectations for latency, resiliency, security, modifiability, or cost.</li>
+        <li><strong>Governance:</strong> rules about what changes require review, which exceptions are permitted, and where evidence must be recorded.</li>
+        <li><strong>Communication:</strong> generated views and reports that keep multiple stakeholders aligned around the same underlying model.</li>
+      </ul>
+      <p>Neal Ford and Mark Richards describe Architecture as Code as defining architecture in executable form and using fitness functions plus automated feedback across implementation, infrastructure, teams, governance, and security. Their framing is important because it treats code as a communication and feedback medium, not merely a test suite.</p>
+
+      <div class="concept-chain" aria-label="Architecture as Code feedback loop">
+        <div class="chain-step"><span class="chain-num">01</span><span class="chain-title">Express</span><span class="chain-desc">Represent selected architectural intent in a machine-readable form.</span></div>
+        <div class="chain-step"><span class="chain-num">02</span><span class="chain-title">Version</span><span class="chain-desc">Review changes to architecture with the same discipline as source code.</span></div>
+        <div class="chain-step"><span class="chain-num">03</span><span class="chain-title">Evaluate</span><span class="chain-desc">Analyze models or run fitness functions against implementation and operation.</span></div>
+        <div class="chain-step"><span class="chain-num">04</span><span class="chain-title">Respond</span><span class="chain-desc">Use the result as feedback, a gate, or an input to a governance decision.</span></div>
+      </div>
+
+      <h2>Architecture as Code vs Architecture Decision Records</h2>
+      <p><a href="/use-cases/adr-enforcement/">Architecture Decision Records</a> preserve why a decision was made: the context, alternatives, trade-offs, and consequences. Architecture as Code can express what the resulting architecture contains or must satisfy. Neither replaces the other.</p>
+      <p>Consider an ADR that chooses a shared HTTP client so retries, timeouts, and tracing remain centralized. The ADR explains the decision and gives it authority. An executable rule can state that service modules may not import a direct HTTP library. The rule is easier to evaluate; the ADR is easier to understand and revisit. The strongest system links the verdict back to the decision that justifies it.</p>
+
+      <h2>Architecture as Code vs Infrastructure as Code</h2>
+      <p>Infrastructure as Code describes and provisions resources such as networks, clusters, databases, and access configuration. It turns an intended infrastructure state into repeatable deployment operations.</p>
+      <p>Architecture as Code has a wider subject. It can describe the logical and physical architecture, the relationships between components, the qualities the system must preserve, and the constraints that apply across code, infrastructure, and organization. Infrastructure code can be one input to architectural verification, but provisioning a compliant cluster does not prove that the application respects its intended module boundaries.</p>
+
+      <h2>Architecture as Code vs Policy as Code</h2>
+      <div class="comparison-wrap">
+        <table class="comparison-table">
+          <thead><tr><th>Concept</th><th>Primary question</th><th>Typical artifact</th><th>Typical result</th></tr></thead>
+          <tbody>
+            <tr><td>Architecture as Code</td><td>What is the architecture, and does reality still conform to it?</td><td>Model, ADL, assertion, fitness function</td><td>Analysis, measurement, validation, feedback</td></tr>
+            <tr><td><a href="/concepts/policy-as-code/">Policy as Code</a></td><td>Is this state or action permitted under the applicable rules?</td><td>Executable decision logic</td><td>Allow, deny, warn, require review</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The concepts overlap when an architectural constraint becomes a policy decision. A model might state that only adapters may depend on a legacy subsystem. A policy evaluator can decide whether a proposed edit violates that relationship. The model supplies architectural meaning; the policy supplies executable decision logic; an enforcement point gives the decision practical authority.</p>
+
+      <div class="definition">
+        <p><strong>Architecture as Code describes and verifies architecture. Policy as Code makes rules executable. Mneme connects architectural decisions to enforceable controls at the point where AI agents change software.</strong></p>
+      </div>
+
+      <h2>ADLs and architectural fitness functions</h2>
+      <h3>Architecture description languages</h3>
+      <p>An architecture description language, or ADL, provides a formal or semi-formal notation for describing systems, components, connectors, and configuration rules. ADLs make architecture precise enough for automated analysis while keeping it above the level of implementation detail. Textual models such as <a href="https://calm.finos.org/" rel="noopener">FINOS CALM</a> illustrate the contemporary Architecture as Code direction: human-readable source, machine validation, and shared vocabulary.</p>
+      <p>Mneme does not need to become another general-purpose ADL. ADLs, ADRs, and other architecture-as-code formats can sit upstream. Their structured output can become input to the narrower job of scoping and enforcing decisions during software change.</p>
+      <h3>Architectural fitness functions</h3>
+      <p>An architectural fitness function is an objective assessment of an architectural characteristic. It can be a test, metric, monitor, or other automated check. Fitness functions turn qualities such as dependency direction, response time, coupling, or resiliency into repeatable feedback.</p>
+      <p>They are one of the most useful mechanisms inside Architecture as Code because they close part of the distance between architectural intent and implementation. They also reveal the next boundary: a check that reports failure is not automatically a control that prevents the incompatible action.</p>
+
+      <h2>Architecture as Code for AI coding agents</h2>
+      <p>Architecture as Code becomes more important when the primary implementer is an AI coding agent. Agents can generate plausible local changes faster than teams can restate system-wide context. Human-readable architecture helps, but machine-readable architecture gives the agent harness a stable surface it can retrieve, evaluate, and cite.</p>
+      <p>For an agentic workflow, a useful architecture-as-code artifact needs more than syntax. It needs:</p>
+      <ul>
+        <li><strong>Scope:</strong> the system must know which rules apply to the files, components, or services the agent intends to change.</li>
+        <li><strong>Timing:</strong> the relevant intent must reach the agent before it commits to an incompatible implementation.</li>
+        <li><strong>Determinism:</strong> the same proposed change and the same applicable rule should produce the same verdict.</li>
+        <li><strong>Authority:</strong> a blocking rule must be connected to an enforcement point that can stop or redirect the action.</li>
+        <li><strong>Evidence:</strong> the verdict should identify the source decision, rule, scope, and enforcement event.</li>
+      </ul>
+      <p>These requirements connect Architecture as Code to <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>, <a href="/concepts/governance-before-generation/">governance before generation</a>, and <a href="/concepts/enforcement-provenance/">enforcement provenance</a>. The architecture artifact is the beginning of the control chain, not the entire chain.</p>
+
+      <h2>Architecture as Code is not necessarily enforcement</h2>
+      <p>This distinction matters. An assertion, fitness function, or architecture specification can detect that something is wrong. That does not necessarily prevent an AI coding agent from making the incompatible change. The result may arrive after generation, after a commit, or during CI. It may be advisory. It may have no authority to block anything.</p>
+
+      <div class="gap-panel" aria-label="Difference between verification and enforcement">
+        <div class="gap-side"><strong>Representation and verification</strong><span>The architecture is machine-readable. A check can identify divergence and return feedback.</span></div>
+        <div class="gap-arrow" aria-hidden="true">&rarr;</div>
+        <div class="gap-side"><strong>Pre-action enforcement</strong><span>The applicable rule is evaluated at the agent's edit or write boundary, and an incompatible action can be blocked before it changes the codebase.</span></div>
+      </div>
+
+      <p>The gap is not a criticism of Architecture as Code. Feedback remains valuable, and not every architectural property should be enforced as a hard gate. It is a distinction about timing and authority. Teams need to decide which architecture-as-code checks are informative, which are merge gates, and which must become <a href="/concepts/deterministic-enforcement/">deterministic controls</a> at the agent action boundary.</p>
+
+      <h2>Where Mneme fits</h2>
+      <p>Mneme occupies the enforcement path downstream of architectural intent. It turns selected decisions into scoped rules, supplies the relevant constraints to agent workflows, evaluates proposed changes, and records why a verdict occurred. ADRs and architecture-as-code formats remain the sources of authority; Mneme makes their binding subset operational where AI agents edit software.</p>
+      <p>That makes Mneme an enforcement layer for Architecture as Code, not a replacement for architecture modeling, ADLs, ADRs, or fitness functions. The category connection is simple: architecture becomes machine-readable upstream, and the rules that must bind agents become enforceable downstream.</p>
+
+      <h2>Sources and further reading</h2>
+      <ul class="source-list">
+        <li><a href="https://www.oreilly.com/library/view/architecture-as-code/9798341640368/" rel="noopener">Neal Ford and Mark Richards, <em>Architecture as Code</em></a>: executable architecture, fitness functions, continuous validation, and feedback across organizational intersections.</li>
+        <li><a href="https://www.thoughtworks.com/content/dam/thoughtworks/documents/books/bk_building_evolutionary_architectures_second_edition_free_chapter.pdf" rel="noopener"><em>Building Evolutionary Architectures</em>, sample chapter</a>: architectural fitness functions as objective assessments that guide architectural evolution.</li>
+        <li><a href="https://calm.finos.org/" rel="noopener">FINOS Common Architecture Language Model</a>: a current example of human-readable, machine-validated software architecture as code.</li>
+      </ul>
+    </div>
+
+    <section class="article-faq">
+      <h2>Frequently asked questions</h2>
+      <details><summary>What is Architecture as Code?</summary><div class="faq-body">Architecture as Code is the practice of expressing architectural structures, decisions, constraints, and quality properties in machine-readable, version-controlled artifacts that can be analyzed or verified automatically.</div></details>
+      <details><summary>How is Architecture as Code different from ADRs?</summary><div class="faq-body">ADRs preserve why a decision was made, including its context and trade-offs. Architecture as Code expresses what the architecture contains or must satisfy in a form a machine can evaluate. An ADR can remain the source of authority behind an executable rule.</div></details>
+      <details><summary>How is Architecture as Code different from Infrastructure as Code?</summary><div class="faq-body">Infrastructure as Code provisions and configures infrastructure resources. Architecture as Code describes or verifies broader architectural intent, including component boundaries, dependency direction, quality attributes, governance, and relationships across implementation, infrastructure, and teams.</div></details>
+      <details><summary>How is Architecture as Code different from Policy as Code?</summary><div class="faq-body">Architecture as Code represents and verifies architectural intent. Policy as Code expresses executable decision logic that governs whether a state or action is allowed. Architectural policy can be derived from an architecture-as-code artifact, but representation and enforcement remain separate responsibilities.</div></details>
+      <details><summary>Does Architecture as Code automatically prevent violations?</summary><div class="faq-body">No. An architecture model, assertion, or fitness function can detect a violation without preventing the action that creates it. Prevention requires an enforcement point with authority to allow or block the action before the incompatible change is accepted.</div></details>
+      <details><summary>Why does Architecture as Code matter for AI coding agents?</summary><div class="faq-body">AI coding agents act at machine speed and across long trajectories. Machine-readable architecture gives their harnesses a stable source of constraints, but safe execution also requires scope, enforcement timing, deterministic verdicts, and evidence linking each verdict to the source decision.</div></details>
+    </section>
+
+    <aside class="related-panel" aria-labelledby="related-architecture-essays">
+      <div class="related-panel-label" id="related-architecture-essays">Related operational essays</div>
+      <ul class="related-list">
+        <li><a href="/insights/how-ai-coding-agents-use-adrs/"><div class="rel-title">How AI Coding Agents Use ADRs</div><p class="rel-desc">Where decision records help agent workflows, and where machine-readable enforcement must take over.</p></a></li>
+        <li><a href="/insights/runtime-verification-is-not-architectural-verification/"><div class="rel-title">Runtime Verification Is Not Architectural Verification</div><p class="rel-desc">Why correct execution does not prove that implementation still respects architectural intent.</p></a></li>
+        <li><a href="/insights/verification-starts-before-generation/"><div class="rel-title">Verification Starts Before Generation</div><p class="rel-desc">The enforcement-timing argument for moving applicable constraints into the agent loop.</p></a></li>
+      </ul>
+    </aside>
+
+    <footer class="article-footer">
+      <a href="/concepts/" class="back-link">&larr; Back to Concepts</a>
+      <div class="cta-block">
+        <h3>See architectural intent become a control</h3>
+        <p>Watch Mneme select an applicable decision, evaluate an agent change, and return a traceable verdict before the change lands.</p>
+        <a href="/demo/" class="btn-primary" data-cta-intent="demo" data-cta-position="end" data-cta-component="concept_link">View the demo &rarr;</a>
+      </div>
+    </footer>
+  </article>
+</main>
+
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+  <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/how-enforcement-works/">How it works</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+        <li><a href="/works-with/">Works with</a></li>
+        <li><a href="/platforms/">Platforms</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/compare/">Compare</a></li>
+        <li><a href="/demo/">Demo</a></li>
+        <li><a href="/benchmark/">Benchmark</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/cli/">CLI reference</a></li>
+        <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        <li><a href="/supported-languages/">Supported languages</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/standards/">Standards</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Learn</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/concepts/">Concepts</a></li>
+        <li><a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a></li>
+        <li><a href="/insights/what-is-the-ai-sdlc/">AI SDLC</a></li>
+        <li><a href="/insights/">Insights</a></li>
+        <li><a href="/qa-glossary/">Q&amp;A and Glossary</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
+        <li><a href="/for/">For teams</a></li>
+        <li><a href="/founder/">Founder</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/security/data-handling/">Security &amp; data</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Connect</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="https://github.com/MnemeHQ/mneme">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://dev.to/mnemehq" target="_blank" rel="noopener">DEV.to</a></li>
+        <li><a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://mnemehq.substack.com/" target="_blank" rel="noopener">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="max-width: 1080px; margin: 2rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em; opacity: 0.7;">
+    <span>Supported by</span>
+    <a href="https://cloud.google.com/startup" target="_blank" rel="noopener" aria-label="Google for Startups Cloud Program" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span>Google for Startups</span>
+    </a>
+    <span style="color: var(--border);">&middot;</span>
+    <a href="https://www.microsoft.com/en-us/startups" target="_blank" rel="noopener" aria-label="Microsoft for Startups Founders Hub" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="13" height="13" viewBox="0 0 23 23" fill="currentColor" aria-hidden="true"><path d="M0 0h11v11H0z"/><path d="M12 0h11v11H12z"/><path d="M0 12h11v11H0z"/><path d="M12 12h11v11H12z"/></svg>
+      <span>Microsoft for Startups</span>
+    </a>
+  </div>
+  <div style="max-width: 1080px; margin: 1.25rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em;">
+    <span style="display:inline-flex;align-items:center;gap:0.75rem;"><a href="/" aria-label="Mneme HQ home" style="display:inline-flex;opacity:0.75;"><img src="/favicon-v2.png" alt="Mneme HQ" height="22" style="display:block;"></a><span>Mneme HQ&trade; &middot; Open source &middot; MIT License</span></span>
+    <nav aria-label="Social media" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.16c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.12 3.04.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener" aria-label="YouTube" style="color: var(--muted); display: inline-flex;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.4.58A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12c1.85.58 9.4.58 9.4.58s7.55 0 9.4-.58a3 3 0 0 0 2.1-2.12A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.57V8.43L15.82 12 9.6 15.57z"/></svg>
+      </a>
+      <a href="https://dev.to/mnemehq" target="_blank" rel="noopener" aria-label="DEV.to" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M120.12 208.29c-3.88-2.9-7.77-4.35-11.65-4.35H91.03v104.47h17.45c3.88 0 7.77-1.45 11.65-4.35 3.88-2.9 5.82-7.25 5.82-13.06v-69.65c-.01-5.8-1.96-10.16-5.83-13.06zM404.1 32H43.9C19.7 32 .06 51.59 0 75.8v360.4C.06 460.41 19.7 480 43.9 480h360.2c24.21 0 43.84-19.59 43.9-43.8V75.8c-.06-24.21-19.7-43.8-43.9-43.8zM154.2 291.19c0 18.81-11.61 47.31-48.36 47.25h-46.4V172.98h47.38c35.44 0 47.36 28.46 47.36 47.28l.02 70.93zm100.68-88.66H201.6v38.42h32.57v29.57H201.6v38.41h53.29v29.57h-62.18c-11.16.29-20.44-8.53-20.72-19.69V193.7c-.27-11.15 8.56-20.41 19.71-20.69h63.19l-.01 29.52zm103.64 115.29c-13.2 30.75-36.85 24.63-47.44 0l-38.53-144.8h32.57l29.71 113.72 29.57-113.72h32.58l-38.46 144.8z"/></svg>
+      </a>
+    </nav>
+    <span>&copy; 2026</span>
+  </div>
+</footer>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  btn.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  });
+})();
+</script>
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
+<script><!-- cta-analytics -->
+(function(){
+  'use strict';
+  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
+   * consume these dataLayer events. Schema: docs/site/cta-system.md and
+   * docs/site/gtm-tagging-requirements.md
+   *
+   * cta_click  { cta_intent, cta_position, cta_component, cta_destination,
+   *              source_page, link_text, content_segment, page_type }
+   * code_copy  { copy_context, source_page, content_segment, page_type }
+   * pilot_form_* are emitted by the pilot form page using the same helpers.
+   *
+   * source_page/link_text/content_segment exist so a later report can ask which
+   * CONTENT TYPE produced a conversion, not merely how many fired. Without
+   * content_segment we cannot separate the developer/evaluation motion
+   * (insight -> demo/quickstart -> install) from the architecture-leader motion
+   * (insight -> audit -> pilot); both land in the same cta_click bucket.
+   */
+
+  /* Dev hosts must not reach the production property. localhost events were
+   * observed in the GA4 export (page_location http://localhost:3456/...),
+   * inflating outbound_link_clicked and landing-page counts. Suppress at the
+   * source rather than filtering downstream, so BigQuery stays clean too. */
+  function isDevHost() {
+    var h = window.location.hostname;
+    if (!h) return true;                       // file:// — never production
+    if (h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1') return true;
+    if (h.indexOf('127.') === 0) return true;
+    return /\.(local|test|localhost)$/.test(h);
+  }
+
+  if (isDevHost()) return;
+
+  function pageType() {
+    var p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'homepage';
+    var map = [
+      ['/docs', 'docs'],
+      ['/demo', 'demo'],
+      ['/audit', 'audit'],
+      ['/compare', 'compare'],
+      ['/integrations', 'integration'],
+      ['/works-with', 'integration'],
+      ['/use-cases', 'use_case'],
+      ['/insights', 'insight'],
+      ['/concepts', 'concept'],
+      ['/for', 'team'],
+      ['/pilot', 'pilot'],
+      ['/pricing', 'pricing'],
+      ['/benchmark', 'benchmark']
+    ];
+    for (var i = 0; i < map.length; i++) {
+      if (p.indexOf(map[i][0]) === 0) return map[i][1];
+    }
+    return 'other';
+  }
+
+  /* Declared per page by the CTA routing work:
+   *   head meta name mneme:content-segment, e.g. developer_evaluation.
+   * Absent on pages that have not been segmented; the parameter is then
+   * omitted rather than guessed. */
+  function contentSegment() {
+    var m = document.querySelector('meta[name="mneme:content-segment"]');
+    var v = m && m.getAttribute('content');
+    return v ? v.trim() : undefined;
+  }
+
+  var PAGE_TYPE = pageType();
+  var CONTENT_SEGMENT = contentSegment();
+  var SOURCE_PAGE = window.location.pathname.replace(/\/+$/, '') || '/';
+
+  function linkText(el) {
+    var t = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    return t ? t.slice(0, 100) : undefined;
+  }
+
+  function push(event, params) {
+    params.page_type = PAGE_TYPE;
+    params.source_page = SOURCE_PAGE;
+    if (CONTENT_SEGMENT) params.content_segment = CONTENT_SEGMENT;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params));
+  }
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
+    if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
+
+    push('cta_click', {
+      cta_intent: el.getAttribute('data-cta-intent'),
+      cta_position: el.getAttribute('data-cta-position'),
+      cta_component: el.getAttribute('data-cta-component'),
+      cta_destination: el.getAttribute('href'),
+      link_text: linkText(el)
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>
