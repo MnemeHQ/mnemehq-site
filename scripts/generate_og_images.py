@@ -341,6 +341,9 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-protection-states.html": "insights/four-architecture-protection-states/og.png",
+
+    # Misc
+    "og-audit-methodology.html": "audit/methodology/og.png",
 }
 
 PORT = 8765
