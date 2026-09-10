@@ -451,11 +451,11 @@
 
   <h2>What moves a decision between states</h2>
 
-  <p>Only two transitions are worth knowing, and they move in one direction.</p>
+  <p>For moving deterministic intent toward active protection, two transitions matter most.</p>
 
-  <p><strong>Requires modelling becomes Mneme-ready</strong> when a person decomposes the decision into the constraints it actually contains and records them separately. That is an afternoon of architectural thinking, and it converts directly into a guardrail the Audit can state.</p>
+  <p><strong>Requires modelling becomes Mneme-ready</strong> when a person decomposes or scopes the decision sufficiently to express a safe, explicit supported guardrail. The important change is not stronger prose; it is removing the ambiguity that prevented deterministic enforcement.</p>
 
-  <p><strong>Mneme-ready becomes Protected</strong> when the guardrail is activated. Take the decision whose anti-pattern is <code>orm</code>: Mneme-ready on its own, and Protected once a typed <code>FORBID_LITERAL orm</code> rule exists on it. Same decision, same wording, different repository state. Nothing about the document changed.</p>
+  <p><strong>Mneme-ready becomes Protected</strong> when the identified guardrail is activated and deterministic protection is verified. Take the decision whose anti-pattern is <code>orm</code>: Mneme-ready on its own, and Protected once a typed <code>FORBID_LITERAL orm</code> rule exists on it. Same decision, same wording, different repository state. Nothing about the document changed.</p>
 
   <p>Neither transition is automatic, and nothing here implies every Requires modelling decision is expected to reach Protected. Some record intent complicated enough that decomposing it is never worth the effort against how often that code path changes, and staying at Requires modelling is a legitimate resting place, not a stalled one.</p>
 
