@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security &amp; Data Handling | Mneme HQ</title>
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <meta name="description" content="How the Mneme Architecture Audit processes, stores and deletes repository data: what is received, where processing happens, what is retained, and what never leaves Mneme infrastructure." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="canonical" href="https://mnemehq.com/security/data-handling/" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Mneme HQ" />
+  <meta property="og:title" content="Security &amp; Data Handling | Mneme HQ" />
+  <meta property="og:description" content="How the Mneme Architecture Audit processes, stores and deletes repository data: what is received, where processing happens, what is retained, and what never leaves Mneme infrastructure." />
+  <meta property="og:url" content="https://mnemehq.com/security/data-handling/" />
+  <meta property="og:image" content="https://mnemehq.com/security/data-handling/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Security &amp; Data Handling | Mneme HQ" />
+  <meta name="twitter:description" content="How the Mneme Architecture Audit processes, stores and deletes repository data: what is received, where processing happens, what is retained, and what never leaves Mneme infrastructure." />
+  <meta name="twitter:image" content="https://mnemehq.com/security/data-handling/og.png" />
+
+    <!-- Consent defaults -->
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
+  <!-- End Google Tag Manager -->
+
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(12,12,13,0.95);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-family: 'DM Mono', monospace;
+      transition: color 0.15s;
+    }
+
+    /* ── LAYOUT ── */
+    .page-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb span { color: var(--border2); }
+
+    /* ── HEADER ── */
+    .page-tag {
+      display: inline-block;
+      background: rgba(200,240,96,0.07);
+      border: 1px solid rgba(200,240,96,0.22);
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .page-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 3.5rem;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── PROSE ── */
+    .prose h2 {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .prose p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .prose ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .prose ul li {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.8;
+      padding-left: 1.25rem;
+      position: relative;
+      margin-bottom: 0.25rem;
+    }
+    .prose ul li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--border2);
+    }
+    .prose a { color: var(--accent); text-decoration: none; }
+    .prose a:hover { text-decoration: underline; }
+    .prose strong { color: var(--text); font-weight: 500; }
+    .prose code {
+      font-family: inherit;
+      color: var(--teal);
+      font-size: 0.85em;
+    }
+
+    /* ── DATA FLOW ── */
+    .dataflow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text);
+      text-align: center;
+    }
+    .dataflow .stage { padding: 0.35rem 0.75rem; border: 1px solid var(--border2); border-radius: 6px; background: var(--surface2); white-space: nowrap; }
+    .dataflow .arrow { color: var(--accent); }
+    .dataflow .stage.terminal { border-color: rgba(200,240,96,0.35); color: var(--accent); }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      background: rgba(139, 224, 200, 0.05);
+      border: 1px solid rgba(139, 224, 200, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .callout p { margin-bottom: 0.5rem; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ── STATEMENT TABLE ── */
+    .claims {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0 1.75rem;
+      font-size: 0.84rem;
+    }
+    .claims th {
+      text-align: left;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .claims td {
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .claims td:first-child { color: var(--text); }
+    .status {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+    .status-verified { background: rgba(200,240,96,0.08); border: 1px solid rgba(200,240,96,0.3); color: var(--accent); }
+    .status-op { background: rgba(139,224,200,0.08); border: 1px solid rgba(139,224,200,0.3); color: var(--teal); }
+    .status-notyet { background: rgba(168,168,184,0.08); border: 1px solid var(--border2); color: var(--muted); }
+
+    /* ── SUBPROCESSOR TABLE ── */
+    .sptable {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0 1.75rem;
+      font-size: 0.84rem;
+    }
+    .sptable th {
+      text-align: left;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sptable td {
+      padding: 0.7rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      vertical-align: top;
+      line-height: 1.6;
+    }
+    .sptable td:first-child { color: var(--text); }
+
+    .last-updated {
+      font-size: 0.75rem;
+      color: var(--border2);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── TRUST NAV ── */
+    .trust-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+    .trust-link {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      text-decoration: none;
+      transition: border-color 0.15s;
+    }
+    .trust-link:hover { border-color: rgba(200,240,96,0.28); }
+    .trust-link .t-title { color: var(--text); font-size: 0.88rem; margin-bottom: 0.25rem; }
+    .trust-link .t-desc { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+    .trust-link .t-arrow { color: var(--accent); font-size: 0.78rem; display: inline-block; margin-top: 0.5rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 5rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.25rem; }
+      .page-wrap { padding: 3rem 1.25rem 5rem; }
+    }
+
+  /* === Nav upgrade (injected, overrides existing) === */
+  .nav-hamburger {
+    display: none;
+    background: none;
+    border: 1px solid var(--border2);
+    color: var(--text);
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+
+  @media (max-width: 900px) {
+    html, body { overflow-x: clip; }
+    body.menu-open { overflow: hidden; }
+    nav, nav.site-nav { padding: 1rem 1.25rem; }
+    .nav-hamburger { display: flex; }
+    .nav-links {
+      display: flex !important;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      gap: 0;
+      background: rgba(12,12,13,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1.25rem;
+      z-index: 99;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
+    }
+    .nav-links.open {
+      max-height: 80vh;
+      opacity: 1;
+      visibility: visible;
+      padding: 0.5rem 1.25rem 1.25rem;
+      transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
+      overflow-y: auto;
+    }
+    .nav-links a:not(.btn-nav-cta) {
+      display: block;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
+    .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
+  }
+
+    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- NAV -->
+<a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
+    <a href="/docs/how-enforcement-works/">How it works</a>
+    <a href="/use-cases/">Use cases</a>
+    <a href="/demo/">Demo</a>
+    <a href="/audit/" data-cta-intent="audit" data-cta-position="nav" data-cta-component="nav">Architecture Audit</a>
+    <a href="/insights/">Insights</a>
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
+    <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
+  </div>
+</nav>
+
+<main id="main-content" tabindex="-1">
+<div class="page-wrap">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="/">Mneme HQ</a>
+    <span>/</span>
+    <a href="/privacy/">Privacy</a>
+    <span>/</span>
+    <span>Security &amp; data handling</span>
+  </div>
+
+  <!-- HEADER -->
+  <div class="page-tag">Trust</div>
+  <h1>How Mneme handles your repository data</h1>
+  <p class="page-sub">The Mneme Architecture Audit analyses repository material to identify which documented architectural decisions are currently protected, potentially protectable, require additional modelling, or remain guidance. This page explains what data the Audit receives, where it goes, what is retained, and how it is deleted.</p>
+  <p class="last-updated">Version 1 &middot; Last updated: 10 September 2026 &middot; Describes the hosted Audit at mnemehq.com</p>
+
+  <div class="prose">
+
+    <h2 id="the-short-answer">The short answer</h2>
+    <p>Your repository is processed by a deterministic analysis engine — the same open-source Mneme engine that runs locally — on Mneme infrastructure. Original repository files are working material: they are extracted to a temporary directory, analysed, and deleted when the audit finishes, whether it succeeds or fails. What survives is the audit result: the architectural decisions it discovered, their classifications, and the proposed guardrails.</p>
+    <p>Repository material is never sent to an external AI model provider. The Audit does not train models on your code. There is nothing to train — the analysis is deterministic.</p>
+
+    <div class="dataflow" aria-label="Audit data flow">
+      <span class="stage">Your repository</span>
+      <span class="arrow">&rarr;</span>
+      <span class="stage">Audit processing</span>
+      <span class="arrow">&rarr;</span>
+      <span class="stage">Analysis</span>
+      <span class="arrow">&rarr;</span>
+      <span class="stage">Audit result</span>
+      <span class="arrow">&rarr;</span>
+      <span class="stage terminal">Retention / deletion</span>
+    </div>
+
+    <h2 id="what-the-audit-receives">What the Audit receives</h2>
+    <p>The hosted Audit accepts two input methods — matching what is actually implemented today:</p>
+    <ul>
+      <li><strong>Public GitHub repository URL.</strong> The Audit clones the public repository server-side. No GitHub account, OAuth, or token is involved; only material that is already public is received.</li>
+      <li><strong>ZIP upload.</strong> You prepare a ZIP of your repository and upload it in the browser. Recommended: exclude <code>.git</code>, <code>node_modules</code>, build artefacts, <code>.env</code> files, credentials and other secrets before packaging.</li>
+    </ul>
+    <p>The Audit also offers a demo repository (a public sample repo) if you want to see the output before submitting anything of your own.</p>
+    <p>Ingestion is bounded: maximum archive size 50&nbsp;MB, maximum 2&nbsp;MB per file, maximum 10,000 files, and a bounded clone window. Malicious archives (path traversal, symlinks pointing outside the working directory, zip bombs) are rejected.</p>
+    <p><strong>Private repository credentials are not accepted today.</strong> There is no GitHub App, no OAuth flow, and no token field. When repository integrations that require credentials are introduced, their handling will be documented here before launch.</p>
+
+    <h2 id="where-processing-happens">Where processing happens</h2>
+    <p>The Audit API runs on Google Cloud Run in region <code>us-central1</code> (Iowa, United States), with its database on Google Cloud SQL PostgreSQL in the same region. All public transport is encrypted (HTTPS/TLS). Data at rest in Cloud SQL is encrypted using Google Cloud's default storage encryption.</p>
+    <p>Processing happens in a fresh temporary working directory created for each audit on the Cloud Run instance filesystem. No customer repository is written to persistent storage as source material.</p>
+
+    <h2 id="how-the-analysis-works">How the analysis works</h2>
+    <p>The analysis is performed by Mneme's open-source engine — deterministic parsing and classification, no machine learning, no inference calls. It reads the architectural-intent sources in your repository:</p>
+    <ul>
+      <li>ADRs (Mneme's canonical format plus common loose ADR formats)</li>
+      <li>Agent instruction files such as <code>CLAUDE.md</code> and <code>AGENTS.md</code></li>
+      <li>Architecture documentation</li>
+      <li>Configuration evidence (<code>pyproject.toml</code>, <code>requirements.txt</code>, CI workflow files, Makefiles, and similar)</li>
+      <li>An existing <code>.mneme/project_memory.json</code> if present</li>
+    </ul>
+    <p>The engine's classifications are deterministic: the same governed inputs, Mneme version, and configuration produce the same classifications and verdicts. Audit identifiers and timestamps vary per run, and the surrounding pipeline is code-inspected rather than formally validated for bit-exact reproduction. The engine source is public on GitHub — you can verify what it does with your files, and you can run the identical analysis locally with the open-source CLI, which never leaves your machine.</p>
+
+    <div class="callout">
+      <p><strong>Mneme does not use customer source code to train models.</strong></p>
+      <p>There is no training pipeline in Mneme, and no external model provider in the Audit processing path. Repository content submitted to the hosted Audit does not reach any AI model, API, or training corpus.</p>
+    </div>
+
+    <h2 id="transient-source-data">Transient source data</h2>
+    <p>Cloned repositories and extracted ZIP contents live only in the per-audit temporary directory. That directory is deleted when the audit completes — including when the audit fails. The uploaded ZIP archive is deleted after Audit processing.</p>
+    <p>Original file contents are not persisted, not copied to object storage, and not kept "for later".</p>
+
+    <h2 id="what-is-retained-the-audit-result">What is retained: the audit result</h2>
+    <p>What the Audit keeps is the result, not the repository:</p>
+    <ul>
+      <li>The discovered architectural decisions: title, requirement text as written in your decision documents, and the source file path and line reference each came from</li>
+      <li>Each decision's classification: Protected, Mneme-ready, Requires modelling, or Guidance</li>
+      <li>Proposed Mneme guardrails where a deterministic one exists</li>
+      <li>Summary counts and protection metrics</li>
+      <li>The repository identity you submitted (public GitHub URL, or "upload" for ZIP submissions)</li>
+      <li>Timestamps and audit metadata</li>
+    </ul>
+    <p>If you save a baseline, the audit result is persisted as a project record tied to the repository identity so you can re-audit and compare over time. Baselines are immutable; re-audits create new snapshots linked to the same project.</p>
+    <p>You can export any audit result as Markdown or JSON. Exports are generated from the stored result — exporting does not give Mneme any additional access to your repository.</p>
+
+    <h2 id="logs">Logs</h2>
+    <p>Application logging is intended to capture operational metadata only: request timestamps, status codes, durations, and error classifications needed to operate and debug the service. Filenames and source paths appear in the audit result itself (that is the product); they are not intended to be echoed through infrastructure logs.</p>
+    <p>This is a code-inspection statement, not a runtime audit. The logging framework writes exception traces, and those traces can contain repository paths or filenames when processing fails. A runtime log audit and, where needed, log sanitisation are P0 engineering tasks on the trust track; until they are complete, treat this section as pending verification.</p>
+    <p>If you identify a case where repository content reaches Mneme's logs, report it — we treat that as a security defect.</p>
+
+    <h2 id="credentials-and-tokens">Credentials and tokens</h2>
+    <p>The hosted Audit does not collect, store, or process any repository credentials. There is nothing to leak because there is nothing accepted. See <a href="#what-the-audit-receives">What the Audit receives</a>.</p>
+
+    <h2 id="who-can-access-what">Who can access what</h2>
+    <p>Mneme HQ is a small, founder-operated company. The audit database is accessible only to Mneme HQ operators for the purpose of operating and supporting the service (for example, helping a design partner interpret a result). There is no formal access-control certification, no customer-facing audit log of internal access, and no dedicated security team — yet. Those are enterprise-track items on the <a href="/roadmap/">roadmap</a>, not current facts, and we won't describe them as current facts.</p>
+
+    <h2 id="isolation">Isolation</h2>
+    <p>The hosted Audit runs on shared hosted infrastructure: all audits are processed by the same service, and records are referenced by unguessable identifiers. There are no user accounts. There is no per-customer infrastructure isolation today; enterprise isolation guarantees are a future capability, not a present one.</p>
+
+    <h2 id="retention-and-deletion">Retention and deletion</h2>
+    <p>Audit records are retained until deletion is requested. There is no automated expiry of audit records yet — a defined default retention window is on the enterprise-track roadmap, and this page will be updated when it exists.</p>
+    <p>To request deletion of an audit record or project (including baselines), email <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a> with the audit ID or repository URL. Deletion is currently a manual process — we remove the record from the primary database and confirm the deletion to you. A normal in-application deletion path and a tested deletion runbook are pending P0 tasks on the trust track.</p>
+    <p><strong>Backups:</strong> the database has automated backups. A deletion removes the record from the live system immediately; residual copies in backups expire on the backup schedule rather than being surgically removed.</p>
+
+    <h2 id="third-party-services-and-infrastructure-providers">Third-party services and infrastructure providers</h2>
+    <p>Providers that may touch repository-derived or customer information in the hosted Audit flow. We call this list "providers" rather than "subprocessors" deliberately: which parties are legally processors, subprocessors, or independent controllers follows from the contractual and legal review in progress, not from code inspection.</p>
+    <table class="sptable">
+      <thead>
+        <tr><th>Provider</th><th>Service</th><th>Data involved</th><th>Location</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Google Cloud</td><td>Cloud Run (Audit API) + Cloud SQL (PostgreSQL)</td><td>Repository material during processing; audit results at rest</td><td>us-central1 (US)</td></tr>
+        <tr><td>GitHub</td><td>Public repository clone source</td><td>Public repository content you point the Audit at</td><td>Global</td></tr>
+        <tr><td>Cloudflare</td><td>CDN / edge for mnemehq.com</td><td>Website traffic (not audit payloads)</td><td>Global edge</td></tr>
+        <tr><td>Formspree</td><td>Pilot request form delivery</td><td>Contact details you submit on the pilot form</td><td>US</td></tr>
+        <tr><td>Google</td><td>Google Tag Manager / Analytics 4</td><td>Website analytics (see <a href="/privacy/">Privacy Policy</a>)</td><td>US and EU</td></tr>
+      </tbody>
+    </table>
+    <p>No AI model provider receives repository material, in any capacity.</p>
+
+    <h2 id="encryption">Encryption</h2>
+    <ul>
+      <li><strong>In transit:</strong> HTTPS/TLS on the public endpoints (website and Audit API).</li>
+      <li><strong>Cloud Run &rarr; Cloud SQL:</strong> traffic is protected through Google Cloud's managed Cloud SQL connectivity; the Cloud SQL Auth Proxy connection is TLS-encrypted by design.</li>
+      <li><strong>At rest:</strong> Google Cloud default storage encryption for Cloud SQL; transport-level encryption elsewhere where repository material is transient.</li>
+    </ul>
+
+    <h2 id="what-we-can-and-cannot-say-yet">What we can and cannot say yet</h2>
+    <p>We would rather publish a shorter list of true statements than a longer list of aspirational ones. Each statement below carries one of three verification states:</p>
+    <p style="margin-bottom: 0.75rem;">
+      <span class="status status-verified">Verified — technical</span>&nbsp; demonstrated by code/infrastructure inspection of what ships today &nbsp;&middot;&nbsp;
+      <span class="status status-op">Code-inspected</span>&nbsp; implementation checked, runtime/process audit still pending &nbsp;&middot;&nbsp;
+      <span class="status status-notyet">Not yet</span>&nbsp; does not exist today
+    </p>
+    <table class="claims">
+      <thead>
+        <tr><th>Statement</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>"Mneme does not use customer source code to train models."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository material is never sent to an external model provider."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Original repository files are deleted after each audit completes."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository credentials are never stored — none are accepted."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository file contents do not appear in application logs."</td><td><span class="status status-op">Code-inspected</span> — runtime logging audit pending (P0)</td></tr>
+        <tr><td>"Audit records are deleted on request from the live system."</td><td><span class="status status-op">Code-inspected</span> — manual process; in-app deletion path and tested runbook pending</td></tr>
+        <tr><td>"Source content is automatically deleted after a fixed retention window."</td><td><span class="status status-notyet">Not yet — no automated expiry exists</span></td></tr>
+        <tr><td>"Independent penetration testing has validated this page."</td><td><span class="status status-notyet">Not yet — on the enterprise roadmap</span></td></tr>
+        <tr><td>"SOC 2 / ISO 27001 certified."</td><td><span class="status status-notyet">Not certified — no claims made</span></td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="incident-handling-and-vulnerability-reporting">Incident handling and vulnerability reporting</h2>
+    <p>Report security issues or vulnerabilities to <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a> with the subject line "Security". Include reproduction steps where possible; encrypted disclosure channels and a dedicated security address are being established as part of the enterprise trust track.</p>
+    <p>If an incident affects customer repository material or audit records, then where we hold contact details for you and notification is required or appropriate, we will contact affected users directly and state what happened, what data was involved, and what changed. For anonymous audits (no contact details attached), we would publish notice on this page.</p>
+
+    <h2 id="related-pages">Related pages</h2>
+    <div class="trust-links">
+      <a class="trust-link" href="/privacy/">
+        <div class="t-title">Privacy Policy</div>
+        <div class="t-desc">The formal legal privacy document: personal data, legal bases, rights, retention.</div>
+        <span class="t-arrow">Read the policy &rarr;</span>
+      </a>
+      <a class="trust-link" href="/enterprise/trust/">
+        <div class="t-title">Enterprise Security &amp; Trust</div>
+        <div class="t-desc">What enterprise deployment requires: authentication, auditability, isolation, compliance posture.</div>
+        <span class="t-arrow">Enterprise trust &rarr;</span>
+      </a>
+      <a class="trust-link" href="/audit/">
+        <div class="t-title">Architecture Protection Audit</div>
+        <div class="t-desc">Run the audit — with this data-handling model one click away before you submit.</div>
+        <span class="t-arrow">Run the Audit &rarr;</span>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+</main>
+
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+  <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/how-enforcement-works/">How it works</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+        <li><a href="/works-with/">Works with</a></li>
+        <li><a href="/platforms/">Platforms</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/compare/">Compare</a></li>
+        <li><a href="/demo/">Demo</a></li>
+        <li><a href="/benchmark/">Benchmark</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/cli/">CLI reference</a></li>
+        <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        <li><a href="/supported-languages/">Supported languages</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/standards/">Standards</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Learn</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/concepts/">Concepts</a></li>
+        <li><a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a></li>
+        <li><a href="/insights/what-is-the-ai-sdlc/">AI SDLC</a></li>
+        <li><a href="/insights/">Insights</a></li>
+        <li><a href="/qa-glossary/">Q&amp;A and Glossary</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
+        <li><a href="/for/">For teams</a></li>
+        <li><a href="/founder/">Founder</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/security/data-handling/">Security &amp; data</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Connect</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="https://github.com/MnemeHQ/mneme">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://dev.to/mnemehq" target="_blank" rel="noopener">DEV.to</a></li>
+        <li><a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://mnemehq.substack.com/" target="_blank" rel="noopener">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="max-width: 1080px; margin: 2rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em; opacity: 0.7;">
+    <span>Supported by</span>
+    <a href="https://cloud.google.com/startup" target="_blank" rel="noopener" aria-label="Google for Startups Cloud Program" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span>Google for Startups</span>
+    </a>
+    <span style="color: var(--border);">&middot;</span>
+    <a href="https://www.microsoft.com/en-us/startups" target="_blank" rel="noopener" aria-label="Microsoft for Startups Founders Hub" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="13" height="13" viewBox="0 0 23 23" fill="currentColor" aria-hidden="true"><path d="M0 0h11v11H0z"/><path d="M12 0h11v11H12z"/><path d="M0 12h11v11H0z"/><path d="M12 12h11v11H12z"/></svg>
+      <span>Microsoft for Startups</span>
+    </a>
+  </div>
+  <div style="max-width: 1080px; margin: 1.25rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em;">
+    <span style="display:inline-flex;align-items:center;gap:0.75rem;"><a href="/" aria-label="Mneme HQ home" style="display:inline-flex;opacity:0.75;"><img src="/favicon-v2.png" alt="Mneme HQ" height="22" style="display:block;"></a><span>Mneme HQ&trade; &middot; Open source &middot; MIT License</span></span>
+    <nav aria-label="Social media" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.16c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.12 3.04.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener" aria-label="YouTube" style="color: var(--muted); display: inline-flex;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.4.58A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12c1.85.58 9.4.58 9.4.58s7.55 0 9.4-.58a3 3 0 0 0 2.1-2.12A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.57V8.43L15.82 12 9.6 15.57z"/></svg>
+      </a>
+      <a href="https://dev.to/mnemehq" target="_blank" rel="noopener" aria-label="DEV.to" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M120.12 208.29c-3.88-2.9-7.77-4.35-11.65-4.35H91.03v104.47h17.45c3.88 0 7.77-1.45 11.65-4.35 3.88-2.9 5.82-7.25 5.82-13.06v-69.65c-.01-5.8-1.96-10.16-5.83-13.06zM404.1 32H43.9C19.7 32 .06 51.59 0 75.8v360.4C.06 460.41 19.7 480 43.9 480h360.2c24.21 0 43.84-19.59 43.9-43.8V75.8c-.06-24.21-19.7-43.8-43.9-43.8zM154.2 291.19c0 18.81-11.61 47.31-48.36 47.25h-46.4V172.98h47.38c35.44 0 47.36 28.46 47.36 47.28l.02 70.93zm100.68-88.66H201.6v38.42h32.57v29.57H201.6v38.41h53.29v29.57h-62.18c-11.16.29-20.44-8.53-20.72-19.69V193.7c-.27-11.15 8.56-20.41 19.71-20.69h63.19l-.01 29.52zm103.64 115.29c-13.2 30.75-36.85 24.63-47.44 0l-38.53-144.8h32.57l29.71 113.72 29.57-113.72h32.58l-38.46 144.8z"/></svg>
+      </a>
+    </nav>
+    <span>&copy; 2026</span>
+  </div>
+</footer>
+
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  function setOpen(open){
+    links.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    setOpen(!links.classList.contains('open'));
+  });
+  document.addEventListener('click', function(e){
+    if (!links.classList.contains('open')) return;
+    if (links.contains(e.target) || btn.contains(e.target)) return;
+    setOpen(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
+  });
+  links.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') setOpen(false);
+  });
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
+  });
+})();
+</script>
+
+
+
+<script><!-- cta-analytics -->
+(function(){
+  'use strict';
+  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
+   * consume these dataLayer events. Schema: docs/site/cta-system.md and
+   * docs/site/gtm-tagging-requirements.md
+   *
+   * cta_click  { cta_intent, cta_position, cta_component, cta_destination,
+   *              source_page, link_text, content_segment, page_type }
+   * code_copy  { copy_context, source_page, content_segment, page_type }
+   * pilot_form_* are emitted by the pilot form page using the same helpers.
+   *
+   * source_page/link_text/content_segment exist so a later report can ask which
+   * CONTENT TYPE produced a conversion, not merely how many fired. Without
+   * content_segment we cannot separate the developer/evaluation motion
+   * (insight -> demo/quickstart -> install) from the architecture-leader motion
+   * (insight -> audit -> pilot); both land in the same cta_click bucket.
+   */
+
+  /* Dev hosts must not reach the production property. localhost events were
+   * observed in the GA4 export (page_location http://localhost:3456/...),
+   * inflating outbound_link_clicked and landing-page counts. Suppress at the
+   * source rather than filtering downstream, so BigQuery stays clean too. */
+  function isDevHost() {
+    var h = window.location.hostname;
+    if (!h) return true;                       // file:// — never production
+    if (h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1') return true;
+    if (h.indexOf('127.') === 0) return true;
+    return /\.(local|test|localhost)$/.test(h);
+  }
+
+  if (isDevHost()) return;
+
+  function pageType() {
+    var p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'homepage';
+    var map = [
+      ['/docs', 'docs'],
+      ['/demo', 'demo'],
+      ['/audit', 'audit'],
+      ['/compare', 'compare'],
+      ['/integrations', 'integration'],
+      ['/works-with', 'integration'],
+      ['/use-cases', 'use_case'],
+      ['/insights', 'insight'],
+      ['/concepts', 'concept'],
+      ['/for', 'team'],
+      ['/pilot', 'pilot'],
+      ['/pricing', 'pricing'],
+      ['/benchmark', 'benchmark']
+    ];
+    for (var i = 0; i < map.length; i++) {
+      if (p.indexOf(map[i][0]) === 0) return map[i][1];
+    }
+    return 'other';
+  }
+
+  /* Declared per page by the CTA routing work:
+   *   head meta name mneme:content-segment, e.g. developer_evaluation.
+   * Absent on pages that have not been segmented; the parameter is then
+   * omitted rather than guessed. */
+  function contentSegment() {
+    var m = document.querySelector('meta[name="mneme:content-segment"]');
+    var v = m && m.getAttribute('content');
+    return v ? v.trim() : undefined;
+  }
+
+  var PAGE_TYPE = pageType();
+  var CONTENT_SEGMENT = contentSegment();
+  var SOURCE_PAGE = window.location.pathname.replace(/\/+$/, '') || '/';
+
+  function linkText(el) {
+    var t = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    return t ? t.slice(0, 100) : undefined;
+  }
+
+  function push(event, params) {
+    params.page_type = PAGE_TYPE;
+    params.source_page = SOURCE_PAGE;
+    if (CONTENT_SEGMENT) params.content_segment = CONTENT_SEGMENT;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params));
+  }
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
+    if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
+
+    push('cta_click', {
+      cta_intent: el.getAttribute('data-cta-intent'),
+      cta_position: el.getAttribute('data-cta-position'),
+      cta_component: el.getAttribute('data-cta-component'),
+      cta_destination: el.getAttribute('href'),
+      link_text: linkText(el)
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>
