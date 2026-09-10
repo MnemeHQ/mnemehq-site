@@ -159,8 +159,8 @@ export function NewAuditPage() {
               )}
 
               <div className="cta-group mt-4">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="btn btn-primary flex-1 sm:flex-none"
                   disabled={loading}
                   data-cta-intent="run_audit"
@@ -175,8 +175,8 @@ export function NewAuditPage() {
                     'Run Architecture Audit'
                   )}
                 </button>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   className="btn btn-ghost flex-1 sm:flex-none"
                   onClick={handleDemoClick}
                   disabled={loading}
@@ -186,6 +186,11 @@ export function NewAuditPage() {
                   Try Demo Repository
                 </button>
               </div>
+
+              <p className="text-muted" style={{ marginTop: '0.85rem', fontSize: '0.8rem', textAlign: 'center' }}>
+                {'\uf023'} See exactly how Mneme processes, stores and deletes repository data —{' '}
+                <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
+              </p>
             </form>
           </header>
 
@@ -257,6 +262,9 @@ export function NewAuditPage() {
                     <p className="text-muted" style={{ marginTop: '1rem', fontSize: '0.8rem' }}>
                       The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.
                     </p>
+                    <p className="text-muted" style={{ marginTop: '0.35rem', fontSize: '0.8rem' }}>
+                      Full data-handling model: <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
+                    </p>
                     <div className="cta-group mt-2">
                       <button type="submit" className="btn btn-primary" disabled={loading}>
                         {loading ? (
@@ -327,6 +335,8 @@ export function NewAuditPage() {
           <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener noreferrer">Open source on GitHub</a>
           {' · '}
           <a href="/docs/">Documentation</a>
+          {' · '}
+          <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
         </p>
       </footer>
     </div>

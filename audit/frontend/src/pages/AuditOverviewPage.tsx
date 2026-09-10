@@ -438,7 +438,7 @@ export function AuditOverviewPage() {
               >
                 <Download size={16} /> Export
               </button>
-              <button 
+              <button
                 onClick={handleSaveBaseline}
                 disabled={savingBaseline}
                 className="btn btn-ghost flex items-center gap-2"
@@ -448,6 +448,10 @@ export function AuditOverviewPage() {
                 <Save size={16} /> Save Baseline
               </button>
             </div>
+
+            <p className="text-muted mt-4" style={{ fontSize: '0.8rem', textAlign: 'center' }}>
+              How your repository data was handled: <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
+            </p>
           </header>
 
           {/* ── HOW TO READ THIS AUDIT / METRICS ── */}
