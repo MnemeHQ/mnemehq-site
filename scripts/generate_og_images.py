@@ -347,6 +347,10 @@ TEMPLATE_MAP = {
     # Misc
     "og-audit-methodology.html": "audit/methodology/og.png",
     "og-audit-vs-code-review-security-scanning-and-tests.html": "audit/vs-code-review-security-scanning-and-tests/og.png",
+
+    # Concepts
+    "og-concepts-architecture-as-code.html": "concepts/architecture-as-code/og.png",
+    "og-concepts-policy-as-code.html": "concepts/policy-as-code/og.png",
 }
 
 PORT = 8765
