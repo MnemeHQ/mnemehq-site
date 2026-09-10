@@ -143,6 +143,42 @@ describe('AuditOverviewPage section navigation', () => {
     expect(window.scrollTo).toHaveBeenCalled();
   });
 
+  it('uses the rendered sticky controls to calculate the section offset', () => {
+    renderOverview();
+
+    const nav = screen.getByRole('navigation', { name: 'Audit sections' });
+    const filters = document.querySelector('.audit-filters-sticky');
+    const section = document.getElementById('decisions');
+    const decisionsButton = screen.getByRole('button', { name: 'Decisions' });
+    expect(filters).not.toBeNull();
+    expect(section).not.toBeNull();
+
+    const rect = (top: number, height: number): DOMRect => ({
+      top,
+      bottom: top + height,
+      left: 0,
+      right: 640,
+      width: 640,
+      height,
+      x: 0,
+      y: top,
+      toJSON: () => ({}),
+    });
+    vi.spyOn(nav, 'getBoundingClientRect').mockReturnValue(rect(0, 56));
+    vi.spyOn(filters!, 'getBoundingClientRect').mockReturnValue(rect(56, 104));
+    vi.spyOn(section!, 'getBoundingClientRect').mockReturnValue(rect(1200, 200));
+    vi.spyOn(window, 'getComputedStyle').mockImplementation(element => ({
+      position: element === filters ? 'sticky' : 'static',
+    }) as CSSStyleDeclaration);
+
+    fireEvent.click(decisionsButton);
+
+    expect(window.scrollTo).toHaveBeenLastCalledWith({
+      top: 1024,
+      behavior: 'smooth',
+    });
+  });
+
   it('shows hero with protection score and bridge statement', () => {
     renderOverview();
 
@@ -381,5 +417,23 @@ describe('AuditOverviewPage section navigation', () => {
 
     expect(screen.queryByRole('link', { name: 'Protect these decisions with Mneme' })).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /protection-relevant decisions/ })).not.toBeInTheDocument();
+  });
+
+  it('groups expanded evidence, recommendations, and the detail action', () => {
+    renderOverview();
+
+    fireEvent.click(screen.getByRole('button', { name: /Use Markdown ADRs/ }));
+
+    const evidence = screen.getByText('View evidence').closest('details');
+    const rawEvidence = screen.getByText('Architectural decisions should use Markdown.');
+    const recommendations = screen.getByRole('heading', { name: 'Recommendations' }).parentElement;
+    const detailsButton = screen.getByRole('button', { name: 'View Full Details' });
+
+    expect(evidence).toHaveClass('decision-evidence-disclosure');
+    expect(rawEvidence).toHaveClass('decision-raw-evidence');
+    expect(recommendations).toHaveClass('decision-recommendations');
+    expect(detailsButton.parentElement).toHaveClass('decision-expanded-footer');
+    expect(detailsButton).toHaveAttribute('data-cta-intent', 'view_details');
+    expect(detailsButton).toHaveAttribute('data-cta-position', 'decision_list');
   });
 });

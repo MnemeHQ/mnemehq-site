@@ -96,6 +96,17 @@
       border: 1px solid var(--border);
       border-radius: 10px;
     }
+    .audit-processing-note {
+      margin-top: 1rem;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface2);
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+    .audit-processing-note strong { color: var(--text); }
     
     .works-grid {
       display: grid;
@@ -294,7 +305,8 @@
             <li>ZIP file upload</li>
             <li>Local path (internal use)</li>
           </ul>
-          <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--muted);">No GitHub OAuth required for MVP. OAuth and GitHub App come later.</p>
+            <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--muted);">No GitHub OAuth required for MVP. OAuth and GitHub App come later.</p>
+            <p class="audit-processing-note"><strong>How code is handled:</strong> Repository code is temporarily processed on Mneme&rsquo;s servers to perform the Audit. Uploaded ZIPs and extracted code are deleted when processing finishes; Mneme retains the resulting Audit record.</p>
         </div>
       </article>
       
