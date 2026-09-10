@@ -37,7 +37,7 @@
         "@id": "https://mnemehq.com/audit/methodology/",
         "name": "Architecture Protection Audit Methodology",
         "url": "https://mnemehq.com/audit/methodology/",
-        "description": "Architecture Protection measures the share of protection-relevant architectural decisions that currently have deterministic protection. Guidance decisions are excluded because they are not intended to become deterministic rules.",
+        "description": "Architecture Protection measures the share of protection-relevant architectural decisions that currently have deterministic protection. Guidance is excluded because the Audit does not currently treat those decisions as candidates for deterministic protection.",
         "isPartOf": {"@type": "WebSite", "name": "Mneme HQ", "url": "https://mnemehq.com/"}
       },
       {
@@ -64,7 +64,7 @@
             "name": "Why is Guidance excluded from the denominator?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Guidance decisions are the ones that should not become deterministic rules at all. Counting them as unprotected would depress the protection figure for decisions nobody intends to mechanize, and would push teams toward turning architectural judgment into literal checks that fire on innocent code."
+              "text": "Guidance means the recorded decision does not currently have an appropriate deterministic enforcement shape. It is excluded from the denominator because the Audit does not count contextual guidance as missing protection."
             }
           },
           {
@@ -219,7 +219,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Architecture Protection measures the share of protection-relevant architectural decisions that currently have deterministic protection.</strong> Guidance decisions are excluded because they are not intended to become deterministic rules.</div>
+<div class="answer-capsule"><strong>Architecture Protection measures the share of protection-relevant architectural decisions that currently have deterministic protection.</strong> Guidance is excluded because the Audit does not currently treat those decisions as candidates for deterministic protection.</div>
 
 <section class="hero">
   <div class="section-eyebrow">Methodology</div>
@@ -278,7 +278,7 @@
 Current Protection = Protected / Protection-relevant
 
 Identified Mneme Potential = (Protected + Mneme-ready) / Protection-relevant</div>
-    <p>Guidance is excluded from the denominator. Including decisions that should not become deterministic rules would artificially depress the protection figure. Including Guidance would treat decisions that should remain contextual as if they were missing deterministic protection.</p>
+    <p>Guidance is excluded from the denominator: the Audit does not currently treat those decisions as candidates for deterministic protection. Including them in the denominator would treat contextual decisions as though they were missing protection and would distort the metric.</p>
     <p>Both figures are stored as fractions and presented on the page as percentages. Where a repository has no protection-relevant decisions at all, both figures are reported as zero rather than as an undefined ratio.</p>
     <p>A worked example. A repository returns ten discovered decisions: three Protected, two Mneme-ready, one Requires modelling, four Guidance.</p>
     <div class="term-block">Protection-relevant = 3 + 2 + 1 = 6
@@ -321,7 +321,7 @@ Identified Mneme Potential = (3 + 2) / 6 = 83.3%</div>
   <section aria-labelledby="faq-heading" style="margin-top:3rem;">
     <h2 id="faq-heading">Frequently asked questions</h2>
     <details><summary>How is Architecture Protection calculated?</summary><p>Current Protection is the number of Protected decisions divided by the number of protection-relevant decisions, where protection-relevant means Protected plus Mneme-ready plus Requires modelling. Identified Mneme Potential is Protected plus Mneme-ready over the same denominator. Both are reported as shares of the protection-relevant set, not of every decision discovered.</p></details>
-    <details><summary>Why is Guidance excluded from the denominator?</summary><p>Guidance decisions are the ones that should not become deterministic rules at all. Counting them as unprotected would depress the protection figure for decisions nobody intends to mechanize, and would push teams toward turning architectural judgment into literal checks that fire on innocent code.</p></details>
+    <details><summary>Why is Guidance excluded from the denominator?</summary><p>Guidance means the recorded decision does not currently have an appropriate deterministic enforcement shape. It is excluded from the denominator because the Audit does not count contextual guidance as missing protection.</p></details>
     <details><summary>What does Mneme-ready mean?</summary><p>Mneme-ready means a concrete supported guardrail can be represented from the recorded decision without guessing, but that guardrail is not active protection yet. The Audit reports the proposed rule so it can be read and validated before anything acts on it.</p></details>
     <details><summary>Does the Architecture Protection Audit detect architectural drift?</summary><p>No. The Audit examines architectural intent already recorded in the repository and determines how much of it has a deterministic protection path. It does not scan history for past deviations and does not claim that drift has already occurred.</p></details>
     <details><summary>Does a high Architecture Protection score mean the architecture is good?</summary><p>No. The Audit measures protection of recorded intent, not the quality of that intent. A repository can score highly while still containing poor architectural decisions, because the metric describes how much of what was written down is deterministically protected, not whether the right things were written down.</p></details>
