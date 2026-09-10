@@ -117,7 +117,7 @@ describe('NewAuditPage private repository section', () => {
     expect(screen.getByText(/Exclude/)).toHaveTextContent(
       'Exclude .git, node_modules, build artifacts, .env files, credentials, and other secrets.',
     );
-    expect(screen.getByText('The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.')).toBeInTheDocument();
+    expect(screen.getByText('Repository code is temporarily processed on Mneme’s servers to perform the Audit. The uploaded ZIP and extracted repository are deleted when processing finishes; Mneme retains the resulting Audit record.')).toBeInTheDocument();
     expect(screen.getByLabelText('Private repository journey')).toHaveTextContent(
       'Prepare ZIP → Upload → Audit → Save baseline → Install Mneme → Setup → Start Pilot',
     );

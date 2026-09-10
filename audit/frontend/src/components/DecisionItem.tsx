@@ -167,18 +167,32 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
               <span className="decision-expanded-value font-mono text-xs">{decision.source.file} (Lines {decision.source.lines})</span>
             </div>
           </div>
-          <details className="decision-evidence-disclosure"><summary>View evidence</summary><pre className="decision-raw-evidence">{decision.requirement}</pre></details>
-          <div className="decision-recommendations">
-            {getDecisionRecommendations(decision).map(item => <p key={item.title}><strong>{item.title}</strong><br />{item.description}</p>)}
+          <details className="decision-evidence-disclosure">
+            <summary>
+              <span>View evidence</span>
+              <ChevronRight size={16} aria-hidden="true" />
+            </summary>
+            <pre className="decision-raw-evidence">{decision.requirement}</pre>
+          </details>
+          <div className="decision-recommendations" aria-label="Recommendations">
+            <h4>Recommendations</h4>
+            {getDecisionRecommendations(decision).map(item => (
+              <p key={item.title}>
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </p>
+            ))}
           </div>
-          <button
-            onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
-            className="btn btn-ghost btn-sm mt-3"
-            data-cta-intent="view_details"
-            data-cta-position="decision_list"
-          >
-            View Full Details
-          </button>
+          <div className="decision-expanded-footer">
+            <button
+              onClick={(e) => { e.stopPropagation(); onViewDetails(); }}
+              className="btn btn-ghost btn-sm"
+              data-cta-intent="view_details"
+              data-cta-position="decision_list"
+            >
+              View Full Details
+            </button>
+          </div>
         </div>
       )}
     </article>

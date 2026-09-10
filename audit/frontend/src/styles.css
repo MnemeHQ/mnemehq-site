@@ -268,6 +268,9 @@ a:hover { color: var(--teal); }
   margin: 0 auto;
   padding: 3rem 2rem;
 }
+.audit-section[id] {
+  scroll-margin-top: var(--audit-sticky-offset, 72px);
+}
 .audit-section + .audit-section {
   border-top: 1px solid var(--border);
 }
@@ -1174,6 +1177,8 @@ a:hover { color: var(--teal); }
   border-radius: 0 0 10px 10px;
   background: var(--surface2);
   margin-top: -1px;
+  min-width: 0;
+  overflow: hidden;
   animation: expandDown 0.15s ease;
 }
 @keyframes expandDown {
@@ -1203,6 +1208,9 @@ a:hover { color: var(--teal); }
   font-size: 0.82rem;
   color: var(--text);
   line-height: 1.6;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 .decision-expanded-value code {
   font-family: 'DM Mono', monospace;
@@ -1222,6 +1230,98 @@ a:hover { color: var(--teal); }
 }
 .decision-recommendation strong { color: var(--text); }
 .decision-recommendation p { color: var(--muted); font-size: 0.82rem; line-height: 1.55; }
+
+.decision-evidence-disclosure {
+  margin: 0 1.25rem;
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.decision-evidence-disclosure > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.8rem 1rem;
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  list-style: none;
+}
+.decision-evidence-disclosure > summary::-webkit-details-marker { display: none; }
+.decision-evidence-disclosure > summary:hover { background: rgba(255, 255, 255, 0.025); }
+.decision-evidence-disclosure > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.decision-evidence-disclosure > summary svg {
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.15s ease;
+}
+.decision-evidence-disclosure[open] > summary svg { transform: rotate(90deg); }
+.decision-raw-evidence {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 1rem;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.14);
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.76rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overflow-x: hidden;
+}
+.decision-recommendations {
+  display: grid;
+  gap: 0;
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.decision-recommendations h4 {
+  margin: 0 0 0.85rem;
+  color: var(--muted);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.decision-recommendations p {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.85rem 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+.decision-recommendations p:first-of-type { padding-top: 0; }
+.decision-recommendations p:last-child { padding-bottom: 0; }
+.decision-recommendations p + p { border-top: 1px solid var(--border); }
+.decision-recommendations strong { color: var(--text); }
+.decision-recommendations span { overflow-wrap: anywhere; }
+.decision-expanded-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.08);
+}
 
 /* ── SOURCES ── */
 .audit-sources-summary {
@@ -1299,8 +1399,24 @@ a:hover { color: var(--teal); }
 .audit-inline-gaps li small { display: block; margin-top: 0.35rem; color: var(--text); line-height: 1.5; }
 .audit-inline-gaps li small b { color: var(--teal); }
 
+@media (max-width: 768px) {
+  .audit-filters-sticky {
+    position: static;
+    top: auto;
+    z-index: auto;
+    backdrop-filter: none;
+  }
+}
+
 @media (max-width: 640px) {
   .audit-inline-gaps li { grid-template-columns: 1fr; gap: 0.25rem; }
+  .audit-section-nav-inner { padding: 0.5rem 1.75rem 0.5rem 1rem; }
+  .audit-section-nav-item { padding: 0.45rem 0.75rem; }
+  .decision-expanded-content,
+  .decision-recommendations,
+  .decision-expanded-footer { padding-right: 1rem; padding-left: 1rem; }
+  .decision-evidence-disclosure { margin-right: 1rem; margin-left: 1rem; }
+  .decision-expanded-footer .btn { width: 100%; justify-content: center; }
 }
 
 /* ── DECISION MISSING INFO ── */

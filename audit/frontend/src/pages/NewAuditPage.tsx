@@ -260,7 +260,7 @@ export function NewAuditPage() {
                     )}
 
                     <p className="text-muted" style={{ marginTop: '1rem', fontSize: '0.8rem' }}>
-                      The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.
+                      Repository code is temporarily processed on Mneme’s servers to perform the Audit. The uploaded ZIP and extracted repository are deleted when processing finishes; Mneme retains the resulting Audit record.
                     </p>
                     <p className="text-muted" style={{ marginTop: '0.35rem', fontSize: '0.8rem' }}>
                       Full data-handling model: <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
