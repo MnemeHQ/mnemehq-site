@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuditApi } from '../hooks/useAuditApi';
 import { AuditNav } from '../components/AuditNav';
@@ -70,6 +70,8 @@ export function AuditOverviewPage() {
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [savingBaseline, setSavingBaseline] = useState(false);
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const sectionNavRef = useRef<HTMLElement>(null);
 
   const [displayLimits, setDisplayLimits] = useState<Record<ProtectionClassification, number>>({
     Protected: DEFAULT_LIMITS.Protected,
@@ -83,6 +85,15 @@ export function AuditOverviewPage() {
     { id: 'decisions', label: 'Decisions' },
     { id: 'sources', label: 'Sources' },
   ], []);
+
+  const getStickyOffset = useCallback(() => {
+    const navHeight = sectionNavRef.current?.getBoundingClientRect().height ?? 0;
+    const filters = filtersRef.current;
+    const filtersAreSticky = filters ? window.getComputedStyle(filters).position === 'sticky' : false;
+    const filtersHeight = filtersAreSticky ? filters?.getBoundingClientRect().height ?? 0 : 0;
+
+    return Math.ceil(navHeight + filtersHeight + 16);
+  }, []);
 
   useEffect(() => {
     if (!id) {
@@ -112,23 +123,49 @@ export function AuditOverviewPage() {
   }, [id, getAudit]);
 
   useEffect(() => {
+    if (!audit) return;
+
+    const updateStickyOffset = () => {
+      document.documentElement.style.setProperty('--audit-sticky-offset', `${getStickyOffset()}px`);
+    };
+    const observedElements = [filtersRef.current, sectionNavRef.current].filter(
+      (element): element is HTMLElement => element !== null,
+    );
+    const resizeObserver = typeof ResizeObserver === 'undefined'
+      ? null
+      : new ResizeObserver(updateStickyOffset);
+
+    observedElements.forEach(element => resizeObserver?.observe(element));
+    window.addEventListener('resize', updateStickyOffset);
+    updateStickyOffset();
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateStickyOffset);
+      document.documentElement.style.removeProperty('--audit-sticky-offset');
+    };
+  }, [audit, getStickyOffset]);
+
+  useEffect(() => {
+    if (!audit) return;
+
     const handleScroll = () => {
-      const scrollPosition = window.pageYOffset + 150;
+      const activationLine = getStickyOffset();
+      let nextSection = sections[0].id;
+
       for (const section of sections) {
         const el = document.getElementById(section.id);
-        if (el) {
-          const top = el.offsetTop;
-          const height = el.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveSection(section.id);
-            break;
-          }
-        }
+        if (!el || el.getBoundingClientRect().top > activationLine) break;
+        nextSection = section.id;
       }
+
+      setActiveSection(current => current === nextSection ? current : nextSection);
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [sections]);
+  }, [audit, getStickyOffset, sections]);
 
   const summary = audit?.summary;
   const decisions = useMemo(() => audit?.decisions || [], [audit]);
@@ -236,10 +273,9 @@ export function AuditOverviewPage() {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
     if (!element) return;
-    const navOffset = 130;
     const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({
-      top: Math.max(0, elementPosition - navOffset),
+      top: Math.max(0, elementPosition - getStickyOffset()),
       behavior: 'smooth',
     });
   };
@@ -607,7 +643,7 @@ export function AuditOverviewPage() {
           )}
 
           {/* ── FILTERS ── */}
-          <div className="audit-filters-sticky" role="region" aria-label="Filter decisions">
+          <div ref={filtersRef} className="audit-filters-sticky" role="region" aria-label="Filter decisions">
             <div className="audit-filters" role="region" aria-label="Filter decisions">
               <div className="audit-filters-row">
                 <div className="audit-filter-group">
@@ -664,7 +700,7 @@ export function AuditOverviewPage() {
             </div>
           </div>
 
-          <nav className="audit-section-nav" aria-label="Audit sections">
+          <nav ref={sectionNavRef} className="audit-section-nav" aria-label="Audit sections">
             <div className="audit-section-nav-inner">
               {sections.map((section) => (
                 <button 

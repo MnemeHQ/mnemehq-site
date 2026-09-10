@@ -255,7 +255,7 @@ export function NewAuditPage() {
                     )}
 
                     <p className="text-muted" style={{ marginTop: '1rem', fontSize: '0.8rem' }}>
-                      The ZIP and extracted repository are deleted after Audit processing. Mneme retains the resulting Audit record.
+                      Repository code is temporarily processed on Mneme’s servers to perform the Audit. The uploaded ZIP and extracted repository are deleted when processing finishes; Mneme retains the resulting Audit record.
                     </p>
                     <div className="cta-group mt-2">
                       <button type="submit" className="btn btn-primary" disabled={loading}>
