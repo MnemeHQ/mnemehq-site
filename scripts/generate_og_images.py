@@ -338,6 +338,9 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
+
+    # Insights — new
+    "og-insights-protection-states.html": "insights/four-architecture-protection-states/og.png",
 }
 
 PORT = 8765
