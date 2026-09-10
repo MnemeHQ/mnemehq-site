@@ -146,6 +146,8 @@ TEMPLATE_MAP = {
     "og-pilot.html": "pilot/og.png",
     "og-platforms.html": "platforms/og.png",
     "og-privacy.html": "privacy/og.png",
+    "og-security-data-handling.html": "security/data-handling/og.png",
+    "og-enterprise-trust.html": "enterprise/trust/og.png",
     "og-works-with.html": "works-with/og.png",
     "og-integration-claude-agent-sdk.html": "integrations/claude-agent-sdk/og.png",
 

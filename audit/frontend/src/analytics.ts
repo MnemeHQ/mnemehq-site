@@ -180,7 +180,7 @@ export function comparisonParams(comparison: AuditComparison): Params {
 export function initializeAnalytics() {
   if (!analyticsAllowed() || document.getElementById('audit-gtm')) return;
   // Sanitize defaults BEFORE any third-party script can initialize a Google tag.
-  layer().push(['consent', 'default', { analytics_storage: 'granted', ad_storage: 'denied',
+  layer().push(['consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied',
     ad_user_data: 'denied', ad_personalization: 'denied' }]);
   layer().push(['set', { ...context(), send_page_view: false }]);
   layer().push({ 'gtm.start': Date.now(), event: 'gtm.js' });

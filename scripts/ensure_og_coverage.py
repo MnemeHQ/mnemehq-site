@@ -812,6 +812,22 @@ TEMPLATES = [
         "privacy",
     ),
     (
+        "og-security-data-handling.html",
+        "Trust",
+        "Security & Data Handling",
+        "56px",
+        "What the Architecture Audit receives, where it processes, what it retains — and what it deletes.",
+        "security/data-handling",
+    ),
+    (
+        "og-enterprise-trust.html",
+        "Enterprise",
+        "Enterprise Security & Trust",
+        "56px",
+        "The open-source engine remains MIT-licensed. Enterprise adds organisation-wide governance, administration, evidence and support.",
+        "enterprise/trust",
+    ),
+    (
         "og-works-with.html",
         "Works With",
         "Governance across AI coding models and agent frameworks",
@@ -1049,6 +1065,8 @@ NEW_MAP_ENTRIES = {
     "og-pilot.html": "pilot/og.png",
     "og-platforms.html": "platforms/og.png",
     "og-privacy.html": "privacy/og.png",
+    "og-security-data-handling.html": "security/data-handling/og.png",
+    "og-enterprise-trust.html": "enterprise/trust/og.png",
     "og-works-with.html": "works-with/og.png",
     "og-integration-claude-agent-sdk.html": "integrations/claude-agent-sdk/og.png",
     # Batch May 2026: insights
