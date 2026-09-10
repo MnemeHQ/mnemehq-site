@@ -260,6 +260,14 @@ TEMPLATES = [
         "insights/kodekloud-definitive-guide-ai-for-devops",
     ),
     (
+        "og-insights-protection-states.html",
+        "Insights",
+        "Four Architecture Protection States",
+        "46px",
+        "Protected, Mneme-ready, Requires modelling, Guidance. What each one means and what moves a decision between them.",
+        "insights/four-architecture-protection-states",
+    ),
+    (
         "og-insights-adrs-enforceable.html",
         "Insights",
         "Your ADRs Exist. Are They Enforceable?",
@@ -948,6 +956,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    "og-insights-protection-states.html": "insights/four-architecture-protection-states/og.png",
     "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
     "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
     "og-oss-governance-landing.html": "open-source-ai-coding-agent-governance/og.png",
