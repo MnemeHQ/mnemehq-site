@@ -260,6 +260,14 @@ TEMPLATES = [
         "insights/kodekloud-definitive-guide-ai-for-devops",
     ),
     (
+        "og-audit-methodology.html",
+        "Methodology",
+        "Architecture Protection Audit Methodology",
+        "44px",
+        "What the Audit reads, how decisions are classified, and how the protection metrics are calculated.",
+        "audit/methodology",
+    ),
+    (
         "og-insights-protection-states.html",
         "Insights",
         "Four Architecture Protection States",
@@ -972,6 +980,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-migration-adrs.html": "insights/adrs-for-software-migrations/og.png",
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
+    "og-audit-methodology.html": "audit/methodology/og.png",
     "og-insights-protection-states.html": "insights/four-architecture-protection-states/og.png",
     "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
     "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
