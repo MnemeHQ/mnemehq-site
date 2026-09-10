@@ -268,6 +268,14 @@ TEMPLATES = [
         "audit/methodology",
     ),
     (
+        "og-audit-vs-code-review-security-scanning-and-tests.html",
+        "Audit · Comparison",
+        "The Audit vs Code Review, Security Scanning & Tests",
+        "44px",
+        "Different tools answer different questions. The Audit examines architectural intent already recorded by the team.",
+        "audit/vs-code-review-security-scanning-and-tests",
+    ),
+    (
         "og-insights-protection-states.html",
         "Insights",
         "Four Architecture Protection States",
@@ -983,6 +991,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-supabase-startups.html": "insights/supabase-state-of-startups-2026-ai-written-codebases/og.png",
     "og-insights-kodekloud-devops-guide.html": "insights/kodekloud-definitive-guide-ai-for-devops/og.png",
     "og-audit-methodology.html": "audit/methodology/og.png",
+    "og-audit-vs-code-review-security-scanning-and-tests.html": "audit/vs-code-review-security-scanning-and-tests/og.png",
     "og-insights-protection-states.html": "insights/four-architecture-protection-states/og.png",
     "og-insights-adrs-enforceable.html": "insights/are-your-adrs-enforceable/og.png",
     "og-insights-oreilly-architectural-guardrails.html": "insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/og.png",
