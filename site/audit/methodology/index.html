@@ -24,7 +24,7 @@
   <meta name="twitter:description" content="What the Audit reads, how decisions are classified, how the protection metrics are calculated, and what the results do and do not mean." />
   <meta name="twitter:image" content="https://mnemehq.com/audit/methodology/og.png" />
   <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
 
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
   <link rel="icon" href="/favicon-v2.png" type="image/png">
@@ -243,7 +243,7 @@
     <div class="callout">
       <p><strong>The Audit evaluates intent that has been recorded.</strong> It does not decide whether your architecture contains every decision it ought to contain.</p>
     </div>
-    <p><strong>How code is handled:</strong> Repository code is temporarily processed on Mneme&rsquo;s servers to produce the Audit, then deleted once processing finishes. The resulting Audit record is retained so the result can be reviewed and compared over time. See <a href="/audit/">how code is handled</a> for the full statement.</p>
+    <p><strong>How code is handled:</strong> Repository source is processed under Mneme&rsquo;s documented data-handling model. See <a href="/security/data-handling/">Security &amp; Data Handling</a> for processing, retention and infrastructure details.</p>
   </div>
 
   <div class="prose-section">
@@ -278,7 +278,7 @@
 Current Protection = Protected / Protection-relevant
 
 Identified Mneme Potential = (Protected + Mneme-ready) / Protection-relevant</div>
-    <p>Guidance is excluded from the denominator. Including decisions that should not become deterministic rules would artificially depress the protection figure and would encourage teams to mechanize architectural judgment that should remain human.</p>
+    <p>Guidance is excluded from the denominator. Including decisions that should not become deterministic rules would artificially depress the protection figure. Including Guidance would treat decisions that should remain contextual as if they were missing deterministic protection.</p>
     <p>Both figures are stored as fractions and presented on the page as percentages. Where a repository has no protection-relevant decisions at all, both figures are reported as zero rather than as an undefined ratio.</p>
     <p>A worked example. A repository returns ten discovered decisions: three Protected, two Mneme-ready, one Requires modelling, four Guidance.</p>
     <div class="term-block">Protection-relevant = 3 + 2 + 1 = 6
@@ -289,10 +289,10 @@ Identified Mneme Potential = (3 + 2) / 6 = 83.3%</div>
 
   <div class="prose-section">
     <h2>5. What makes a result reproducible</h2>
-    <p>An Audit result is a snapshot of a specific repository at a specific commit, produced by a specific version of Mneme.</p>
-    <div class="term-block">repository &rarr; commit SHA &rarr; Mneme version &rarr; timestamp &rarr; source decision &rarr; classification</div>
-    <p>Each persisted result carries the repository identity, the commit it was taken against, the Mneme version that produced it, the timestamp, the summary counts, and the decision-level records those counts were derived from. Because the summary is derived from the per-decision records rather than stored independently of them, any reported figure can be recomputed from the decisions in the same result.</p>
-    <p>Re-running an Audit against a changed repository creates a new snapshot rather than rewriting the previous result.</p>
+    <p>An Audit result is a snapshot of a specific evaluated repository state, with a commit SHA where Git provenance is available, produced by a specific version of Mneme.</p>
+    <div class="term-block">repository state &rarr; commit SHA where applicable &rarr; Mneme version &rarr; timestamp &rarr; source decision &rarr; classification</div>
+    <p>Each persisted result carries the repository identity, the commit SHA where Git provenance is available, the Mneme version that produced it, the timestamp, the summary counts, and the decision-level records those counts were derived from. The summary counts are computed from the per-decision records when the result is produced, so the reported protection figures can be recomputed from the decisions in the same result.</p>
+    <p>For a saved project, re-auditing a changed repository creates a new immutable snapshot rather than rewriting the previous result.</p>
   </div>
 
   <div class="prose-section">
@@ -380,6 +380,7 @@ Identified Mneme Potential = (3 + 2) / 6 = 83.3%</div>
         <li><a href="/about/">About</a></li>
         <li><a href="/roadmap/">Roadmap</a></li>
         <li><a href="/contact/">Contact</a></li>
+        <li><a href="/security/data-handling/">Security &amp; data</a></li>
         <li><a href="/privacy/">Privacy</a></li>
       </ul>
     </div>
