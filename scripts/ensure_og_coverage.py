@@ -893,6 +893,8 @@ TEMPLATES = [
     ("og-concepts-antigravity-governance.html", "Concept", "Antigravity Governance", "62px", "Architectural control for agent-first IDEs.", "concepts/antigravity-governance"),
     ("og-concepts-ai-governance-infrastructure.html", "Concept", "AI Governance Infrastructure", "52px", "The deterministic enforcement layer for AI-assisted software development.", "concepts/ai-governance-infrastructure"),
     ("og-concepts-spec-driven-development.html", "Concept", "Spec-Driven Development", "56px", "A structured spec as the source of truth for what an agent builds — and the architectural layer it leaves open.", "concepts/spec-driven-development"),
+    ("og-concepts-architecture-as-code.html", "Concepts", "Architecture as Code", "62px", "Machine-readable architectural intent for continuous analysis and verification.", "concepts/architecture-as-code"),
+    ("og-concepts-policy-as-code.html", "Concepts", "Policy as Code", "62px", "Executable decision logic for governing software states and actions automatically.", "concepts/policy-as-code"),
     ("og-insights-spec-driven-dev.html", "Insights", "Spec-Driven Development Still Needs Governance", "40px", "A spec defines what to build, not which architectural decisions must hold while the agent builds it.", "insights/spec-driven-development-still-needs-governance"),
     # === BATCH: New integrations ===
     ("og-integration-ms-agent-forge.html", "Integration", "Architectural Governance for Microsoft Agent Forge", "40px", "Mneme adds deterministic governance on top of Agent Forge's execution substrate.", "integrations/microsoft-agent-forge"),
@@ -1117,6 +1119,8 @@ NEW_MAP_ENTRIES = {
     "og-concepts-antigravity-governance.html": "concepts/antigravity-governance/og.png",
     "og-concepts-ai-governance-infrastructure.html": "concepts/ai-governance-infrastructure/og.png",
     "og-concepts-spec-driven-development.html": "concepts/spec-driven-development/og.png",
+    "og-concepts-architecture-as-code.html": "concepts/architecture-as-code/og.png",
+    "og-concepts-policy-as-code.html": "concepts/policy-as-code/og.png",
     "og-insights-spec-driven-dev.html": "insights/spec-driven-development-still-needs-governance/og.png",
     # Batch May 2026: integrations
     "og-integration-ms-agent-forge.html": "integrations/microsoft-agent-forge/og.png",
