@@ -25,7 +25,7 @@
   <meta name="twitter:image" content="https://mnemehq.com/security/data-handling/og.png" />
 
     <!-- Consent defaults -->
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
 
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
@@ -239,6 +239,7 @@
       white-space: nowrap;
     }
     .status-verified { background: rgba(200,240,96,0.08); border: 1px solid rgba(200,240,96,0.3); color: var(--accent); }
+    .status-op { background: rgba(139,224,200,0.08); border: 1px solid rgba(139,224,200,0.3); color: var(--teal); }
     .status-notyet { background: rgba(168,168,184,0.08); border: 1px solid var(--border2); color: var(--muted); }
 
     /* ── SUBPROCESSOR TABLE ── */
@@ -424,7 +425,7 @@
 
   <div class="prose">
 
-    <h2>The short answer</h2>
+    <h2 id="the-short-answer">The short answer</h2>
     <p>Your repository is processed by a deterministic analysis engine — the same open-source Mneme engine that runs locally — on Mneme infrastructure. Original repository files are working material: they are extracted to a temporary directory, analysed, and deleted when the audit finishes, whether it succeeds or fails. What survives is the audit result: the architectural decisions it discovered, their classifications, and the proposed guardrails.</p>
     <p>Repository material is never sent to an external AI model provider. The Audit does not train models on your code. There is nothing to train — the analysis is deterministic.</p>
 
@@ -440,7 +441,7 @@
       <span class="stage terminal">Retention / deletion</span>
     </div>
 
-    <h2>What the Audit receives</h2>
+    <h2 id="what-the-audit-receives">What the Audit receives</h2>
     <p>The hosted Audit accepts two input methods — matching what is actually implemented today:</p>
     <ul>
       <li><strong>Public GitHub repository URL.</strong> The Audit clones the public repository server-side. No GitHub account, OAuth, or token is involved; only material that is already public is received.</li>
@@ -450,11 +451,11 @@
     <p>Ingestion is bounded: maximum archive size 50&nbsp;MB, maximum 2&nbsp;MB per file, maximum 10,000 files, and a bounded clone window. Malicious archives (path traversal, symlinks pointing outside the working directory, zip bombs) are rejected.</p>
     <p><strong>Private repository credentials are not accepted today.</strong> There is no GitHub App, no OAuth flow, and no token field. When repository integrations that require credentials are introduced, their handling will be documented here before launch.</p>
 
-    <h2>Where processing happens</h2>
-    <p>The Audit API runs on Google Cloud Run in region <code>us-central1</code> (Iowa, United States), with its database on Google Cloud SQL PostgreSQL in the same region. All transport is encrypted (HTTPS/TLS). Data at rest in Cloud SQL is encrypted using Google Cloud's default storage encryption.</p>
+    <h2 id="where-processing-happens">Where processing happens</h2>
+    <p>The Audit API runs on Google Cloud Run in region <code>us-central1</code> (Iowa, United States), with its database on Google Cloud SQL PostgreSQL in the same region. All public transport is encrypted (HTTPS/TLS). Data at rest in Cloud SQL is encrypted using Google Cloud's default storage encryption.</p>
     <p>Processing happens in a fresh temporary working directory created for each audit on the Cloud Run instance filesystem. No customer repository is written to persistent storage as source material.</p>
 
-    <h2>How the analysis works</h2>
+    <h2 id="how-the-analysis-works">How the analysis works</h2>
     <p>The analysis is performed by Mneme's open-source engine — deterministic parsing and classification, no machine learning, no inference calls. It reads the architectural-intent sources in your repository:</p>
     <ul>
       <li>ADRs (Mneme's canonical format plus common loose ADR formats)</li>
@@ -463,18 +464,18 @@
       <li>Configuration evidence (<code>pyproject.toml</code>, <code>requirements.txt</code>, CI workflow files, Makefiles, and similar)</li>
       <li>An existing <code>.mneme/project_memory.json</code> if present</li>
     </ul>
-    <p>Because the engine is deterministic, the same repository state produces the same audit result every time. The engine source is public on GitHub — you can verify what it does with your files, and you can run the identical analysis locally with the open-source CLI, which never leaves your machine.</p>
+    <p>The engine's classifications are deterministic: the same governed inputs, Mneme version, and configuration produce the same classifications and verdicts. Audit identifiers and timestamps vary per run, and the surrounding pipeline is code-inspected rather than formally validated for bit-exact reproduction. The engine source is public on GitHub — you can verify what it does with your files, and you can run the identical analysis locally with the open-source CLI, which never leaves your machine.</p>
 
     <div class="callout">
       <p><strong>Mneme does not use customer source code to train models.</strong></p>
       <p>There is no training pipeline in Mneme, and no external model provider in the Audit processing path. Repository content submitted to the hosted Audit does not reach any AI model, API, or training corpus.</p>
     </div>
 
-    <h2>Transient source data</h2>
-    <p>Cloned repositories and extracted ZIP contents live only in the per-audit temporary directory. That directory is deleted when the audit completes — including when the audit fails. The uploaded ZIP archive itself is deleted immediately after extraction.</p>
+    <h2 id="transient-source-data">Transient source data</h2>
+    <p>Cloned repositories and extracted ZIP contents live only in the per-audit temporary directory. That directory is deleted when the audit completes — including when the audit fails. The uploaded ZIP archive is deleted after Audit processing.</p>
     <p>Original file contents are not persisted, not copied to object storage, and not kept "for later".</p>
 
-    <h2>What is retained: the audit result</h2>
+    <h2 id="what-is-retained-the-audit-result">What is retained: the audit result</h2>
     <p>What the Audit keeps is the result, not the repository:</p>
     <ul>
       <li>The discovered architectural decisions: title, requirement text as written in your decision documents, and the source file path and line reference each came from</li>
@@ -487,26 +488,27 @@
     <p>If you save a baseline, the audit result is persisted as a project record tied to the repository identity so you can re-audit and compare over time. Baselines are immutable; re-audits create new snapshots linked to the same project.</p>
     <p>You can export any audit result as Markdown or JSON. Exports are generated from the stored result — exporting does not give Mneme any additional access to your repository.</p>
 
-    <h2>Logs</h2>
-    <p>Application logging is limited to operational metadata: request timestamps, status codes, durations, and error classifications needed to operate and debug the service. Repository file contents are not logged. Filenames and source paths appear in the audit result itself (that is the product); they are not echoed through infrastructure logs.</p>
+    <h2 id="logs">Logs</h2>
+    <p>Application logging is intended to capture operational metadata only: request timestamps, status codes, durations, and error classifications needed to operate and debug the service. Filenames and source paths appear in the audit result itself (that is the product); they are not intended to be echoed through infrastructure logs.</p>
+    <p>This is a code-inspection statement, not a runtime audit. The logging framework writes exception traces, and those traces can contain repository paths or filenames when processing fails. A runtime log audit and, where needed, log sanitisation are P0 engineering tasks on the trust track; until they are complete, treat this section as pending verification.</p>
     <p>If you identify a case where repository content reaches Mneme's logs, report it — we treat that as a security defect.</p>
 
-    <h2>Credentials and tokens</h2>
+    <h2 id="credentials-and-tokens">Credentials and tokens</h2>
     <p>The hosted Audit does not collect, store, or process any repository credentials. There is nothing to leak because there is nothing accepted. See <a href="#what-the-audit-receives">What the Audit receives</a>.</p>
 
-    <h2>Who can access what</h2>
+    <h2 id="who-can-access-what">Who can access what</h2>
     <p>Mneme HQ is a small, founder-operated company. The audit database is accessible only to Mneme HQ operators for the purpose of operating and supporting the service (for example, helping a design partner interpret a result). There is no formal access-control certification, no customer-facing audit log of internal access, and no dedicated security team — yet. Those are enterprise-track items on the <a href="/roadmap/">roadmap</a>, not current facts, and we won't describe them as current facts.</p>
 
-    <h2>Isolation</h2>
-    <p>The hosted Audit runs as shared single-tenant infrastructure: all audits are processed by the same service, and records are referenced by unguessable identifiers. There are no user accounts. There is no per-customer infrastructure isolation today; enterprise isolation guarantees are a future capability, not a present one.</p>
+    <h2 id="isolation">Isolation</h2>
+    <p>The hosted Audit runs on shared hosted infrastructure: all audits are processed by the same service, and records are referenced by unguessable identifiers. There are no user accounts. There is no per-customer infrastructure isolation today; enterprise isolation guarantees are a future capability, not a present one.</p>
 
-    <h2>Retention and deletion</h2>
+    <h2 id="retention-and-deletion">Retention and deletion</h2>
     <p>Audit records are retained until deletion is requested. There is no automated expiry of audit records yet — a defined default retention window is on the enterprise-track roadmap, and this page will be updated when it exists.</p>
-    <p>To request deletion of an audit record or project (including baselines), email <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a> with the audit ID or repository URL. We delete the record from the primary database, and confirm the deletion to you.</p>
+    <p>To request deletion of an audit record or project (including baselines), email <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a> with the audit ID or repository URL. Deletion is currently a manual process — we remove the record from the primary database and confirm the deletion to you. A normal in-application deletion path and a tested deletion runbook are pending P0 tasks on the trust track.</p>
     <p><strong>Backups:</strong> the database has automated backups. A deletion removes the record from the live system immediately; residual copies in backups expire on the backup schedule rather than being surgically removed.</p>
 
-    <h2>Subprocessors</h2>
-    <p>Providers that may touch repository-derived or customer information in the hosted Audit flow:</p>
+    <h2 id="third-party-services-and-infrastructure-providers">Third-party services and infrastructure providers</h2>
+    <p>Providers that may touch repository-derived or customer information in the hosted Audit flow. We call this list "providers" rather than "subprocessors" deliberately: which parties are legally processors, subprocessors, or independent controllers follows from the contractual and legal review in progress, not from code inspection.</p>
     <table class="sptable">
       <thead>
         <tr><th>Provider</th><th>Service</th><th>Data involved</th><th>Location</th></tr>
@@ -521,36 +523,42 @@
     </table>
     <p>No AI model provider receives repository material, in any capacity.</p>
 
-    <h2>Encryption</h2>
+    <h2 id="encryption">Encryption</h2>
     <ul>
-      <li><strong>In transit:</strong> HTTPS/TLS on all endpoints (website, Audit API, database connections).</li>
-      <li><strong>At rest:</strong> Google Cloud default storage encryption for Cloud SQL; transport-level encryption on all other surfaces where repository material is transient.</li>
+      <li><strong>In transit:</strong> HTTPS/TLS on the public endpoints (website and Audit API).</li>
+      <li><strong>Cloud Run &rarr; Cloud SQL:</strong> traffic is protected through Google Cloud's managed Cloud SQL connectivity; the Cloud SQL Auth Proxy connection is TLS-encrypted by design.</li>
+      <li><strong>At rest:</strong> Google Cloud default storage encryption for Cloud SQL; transport-level encryption elsewhere where repository material is transient.</li>
     </ul>
 
-    <h2>What we can and cannot say yet</h2>
-    <p>We would rather publish a shorter list of true statements than a longer list of aspirational ones. Each strong claim below is marked with its actual status:</p>
+    <h2 id="what-we-can-and-cannot-say-yet">What we can and cannot say yet</h2>
+    <p>We would rather publish a shorter list of true statements than a longer list of aspirational ones. Each statement below carries one of three verification states:</p>
+    <p style="margin-bottom: 0.75rem;">
+      <span class="status status-verified">Verified — technical</span>&nbsp; demonstrated by code/infrastructure inspection of what ships today &nbsp;&middot;&nbsp;
+      <span class="status status-op">Code-inspected</span>&nbsp; implementation checked, runtime/process audit still pending &nbsp;&middot;&nbsp;
+      <span class="status status-notyet">Not yet</span>&nbsp; does not exist today
+    </p>
     <table class="claims">
       <thead>
         <tr><th>Statement</th><th>Status</th></tr>
       </thead>
       <tbody>
-        <tr><td>"Mneme does not use customer source code to train models."</td><td><span class="status status-verified">Verified today</span></td></tr>
-        <tr><td>"Repository material is never sent to an external model provider."</td><td><span class="status status-verified">Verified today</span></td></tr>
-        <tr><td>"Original repository files are deleted after each audit completes."</td><td><span class="status status-verified">Verified today</span></td></tr>
-        <tr><td>"Repository credentials are never stored — none are accepted."</td><td><span class="status status-verified">Verified today</span></td></tr>
-        <tr><td>"Repository file contents do not appear in application logs."</td><td><span class="status status-verified">Verified today</span> (design intent; report any violation as a security defect)</td></tr>
-        <tr><td>"Audit records are deleted on request from the live system."</td><td><span class="status status-verified">Verified today</span></td></tr>
+        <tr><td>"Mneme does not use customer source code to train models."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository material is never sent to an external model provider."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Original repository files are deleted after each audit completes."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository credentials are never stored — none are accepted."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
+        <tr><td>"Repository file contents do not appear in application logs."</td><td><span class="status status-op">Code-inspected</span> — runtime logging audit pending (P0)</td></tr>
+        <tr><td>"Audit records are deleted on request from the live system."</td><td><span class="status status-op">Code-inspected</span> — manual process; in-app deletion path and tested runbook pending</td></tr>
         <tr><td>"Source content is automatically deleted after a fixed retention window."</td><td><span class="status status-notyet">Not yet — no automated expiry exists</span></td></tr>
         <tr><td>"Independent penetration testing has validated this page."</td><td><span class="status status-notyet">Not yet — on the enterprise roadmap</span></td></tr>
         <tr><td>"SOC 2 / ISO 27001 certified."</td><td><span class="status status-notyet">Not certified — no claims made</span></td></tr>
       </tbody>
     </table>
 
-    <h2>Incident handling and vulnerability reporting</h2>
+    <h2 id="incident-handling-and-vulnerability-reporting">Incident handling and vulnerability reporting</h2>
     <p>Report security issues or vulnerabilities to <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a> with the subject line "Security". Include reproduction steps where possible; encrypted disclosure channels and a dedicated security address are being established as part of the enterprise trust track.</p>
-    <p>If an incident affects customer repository material or audit records, we will notify affected contacts directly and describe what happened, what data was involved, and what changed.</p>
+    <p>If an incident affects customer repository material or audit records, then where we hold contact details for you and notification is required or appropriate, we will contact affected users directly and state what happened, what data was involved, and what changed. For anonymous audits (no contact details attached), we would publish notice on this page.</p>
 
-    <h2>Related pages</h2>
+    <h2 id="related-pages">Related pages</h2>
     <div class="trust-links">
       <a class="trust-link" href="/privacy/">
         <div class="t-title">Privacy Policy</div>

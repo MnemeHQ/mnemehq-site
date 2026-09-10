@@ -824,7 +824,7 @@ TEMPLATES = [
         "Enterprise",
         "Enterprise Security & Trust",
         "56px",
-        "Keep the enforcement engine open. Charge for organisational governance.",
+        "The open-source engine remains MIT-licensed. Enterprise adds organisation-wide governance, administration, evidence and support.",
         "enterprise/trust",
     ),
     (
