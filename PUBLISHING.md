@@ -365,6 +365,21 @@ propagation" (not "rule sync" / "config distribution"), "drift" (not "regression
 the AI-coding sense), and "enforcement" (not "validation" / "checking" for the governance layer).
 New terminology requires explicit consideration and a documented amendment to this file.
 
+**[ED] Terminology amendment, 2026-09-11: "decision layer" / "decision infrastructure".** Admitted as
+thesis-level vocabulary for the layer that answers whether a proposed agent action is consistent with
+decisions the organization already made, as distinct from identity (who the agent is), authorization
+(what it may reach), and observability (what it did). Rules of use:
+
+- It names an *architectural position*, not a Mneme feature. Never write it as something Mneme ships.
+  Mneme's shipped scope stays "architectural governance" / "architectural drift prevention" over
+  architectural decisions in a repository.
+- Use it only on thesis and concept surfaces (`/insights/`, `/concepts/`, `/about/`). It does not
+  belong on the homepage, product, pricing, or audit pages.
+- "decision corpus" remains the term for the decisions themselves. The decision layer is what acts on
+  the corpus; the corpus is not renamed.
+- Do not introduce "agent economy" as Mneme positioning. It may be cited as a third-party framing with
+  attribution, as in `/insights/agent-economy-needs-decision-infrastructure/`.
+
 ---
 
 ## Validators
