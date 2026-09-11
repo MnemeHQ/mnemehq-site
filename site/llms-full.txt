@@ -48,6 +48,8 @@ Retrieval is deterministic. There is no embedding model, no vector store, and no
 
 Beyond guidance and enforcement, Mneme closes a full protection loop. mneme audit classifies every active decision as Protected, Mneme-ready, Requires modelling, or Guidance. mneme protect validate deterministically proves a proposed rule through the existing enforcement engine without writing anything; mneme protect activate explicitly installs the typed rule for that one decision; and only a fresh canonical assessment that observes real enforcement evidence reports the decision Protected. A Mneme-ready decision is an opportunity, not a protection. Documented at https://mnemehq.com/docs/protection-activation/ (core source: MnemeHQ/mneme@91d71be7, docs/protect-activation.md).
 
+The hosted Architecture Protection Audit at https://mnemehq.com/audit/ runs this classification against a repository and reports how much recorded intent is deterministically protected. Its methodology page documents what the Audit reads, how the four states are assigned, and how Current Protection and Identified Mneme Potential are calculated. Repository material is processed deterministically and never reaches an external AI model provider.
+
 ## Governance Benchmark v1.1
 
 Governance Benchmark v1.1 methodology is published. The benchmark is deterministic and reproducible. It measures violation prevention rate, baseline drift rate, false positive rate, retrieval recall and precision at K, irrelevant injection rate, and the gap between end-to-end enforcement and oracle enforcement.
@@ -115,6 +117,15 @@ Mneme alignment is honest: tracking, design-aligned, planning to engage with fut
 ## Project links
 
 - Homepage: https://mnemehq.com/
+- Architecture Protection Audit (hosted, hosted-audit data model at /security/data-handling/): https://mnemehq.com/audit/
+- Architecture Protection Audit Methodology (what it reads, four states, metrics, reproducibility): https://mnemehq.com/audit/methodology/
+- Audit vs Code Review, Security Scanning and Tests (what the Audit adds alongside existing controls): https://mnemehq.com/audit/vs-code-review-security-scanning-and-tests/
+- Architecture as Code (concept): https://mnemehq.com/concepts/architecture-as-code/
+- Policy as Code (concept): https://mnemehq.com/concepts/policy-as-code/
+- Security & Data Handling (how the hosted Audit handles repository data): https://mnemehq.com/security/data-handling/
+- Enterprise Security & Trust: https://mnemehq.com/enterprise/trust/
+- Privacy Policy: https://mnemehq.com/privacy/
+- Security contact (RFC 9116): https://mnemehq.com/.well-known/security.txt
 - Governance Benchmark v1.1 methodology: https://mnemehq.com/benchmark/
 - Demo: https://mnemehq.com/demo/
 - Standards landscape: https://mnemehq.com/standards/
