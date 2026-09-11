@@ -164,6 +164,54 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-fde-agents.html",
+        "Insights",
+        "Supervising the System That Writes",
+        "40px",
+        "The context deficit did not grow. The rate at which it reaches production did.",
+        "insights/fde-coding-agents",
+    ),
+    (
+        "og-insights-fde-architecture.html",
+        "Insights",
+        "Inherited Consequences, Not Reasoning",
+        "40px",
+        "The code shows which structures exist. It says nothing about which ones are deliberate.",
+        "insights/forward-deployed-engineering-architecture",
+    ),
+    (
+        "og-insights-fde-enterprise.html",
+        "Insights",
+        "Product-Environment Fit",
+        "44px",
+        "AI products adapt to the customer. That moves the burden of adaptation onto the vendor.",
+        "insights/forward-deployed-engineers-enterprise-ai",
+    ),
+    (
+        "og-insights-fde-pillar.html",
+        "Insights",
+        "Forward-Deployed Engineering",
+        "44px",
+        "Changing a system whose architectural reasoning you never inherited, at agent speed.",
+        "insights/forward-deployed-engineering-ai-sdlc",
+    ),
+    (
+        "og-insights-decision-layer.html",
+        "Insights",
+        "The Agent Economy Needs a Decision Layer",
+        "40px",
+        "Identity, authorization and observability do not answer whether an action contradicts what the organization decided.",
+        "insights/agent-economy-needs-decision-infrastructure",
+    ),
+    (
+        "og-insights-decision-dataset.html",
+        "Insights",
+        "The Decisions Are the Dataset",
+        "42px",
+        "Three AI companies bid $7.5M to $12.5M for a bankrupt airline's deidentified records. The value was the decisions inside.",
+        "insights/most-valuable-ai-dataset-decisions-already-made",
+    ),
+    (
         "og-insights-cyber-migration.html",
         "Insights",
         "Collective Cyber Defense",
@@ -970,6 +1018,12 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-fde-agents.html": "insights/fde-coding-agents/og.png",
+    "og-insights-fde-architecture.html": "insights/forward-deployed-engineering-architecture/og.png",
+    "og-insights-fde-enterprise.html": "insights/forward-deployed-engineers-enterprise-ai/og.png",
+    "og-insights-fde-pillar.html": "insights/forward-deployed-engineering-ai-sdlc/og.png",
+    "og-insights-decision-layer.html": "insights/agent-economy-needs-decision-infrastructure/og.png",
+    "og-insights-decision-dataset.html": "insights/most-valuable-ai-dataset-decisions-already-made/og.png",
     "og-insights-cyber-migration.html": "insights/ai-accelerating-cybersecurity-migration-problem/og.png",
     "og-insights-model-hardware-standard.html": "insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails/og.png",
     "og-insights-deepseek-harness.html": "insights/deepseek-agent-model-harness-architectural-governance/og.png",

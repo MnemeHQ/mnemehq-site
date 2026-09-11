@@ -350,6 +350,18 @@ TEMPLATE_MAP = {
     # Concepts
     "og-concepts-architecture-as-code.html": "concepts/architecture-as-code/og.png",
     "og-concepts-policy-as-code.html": "concepts/policy-as-code/og.png",
+
+    # Insights — new
+    "og-insights-decision-dataset.html": "insights/most-valuable-ai-dataset-decisions-already-made/og.png",
+
+    # Insights — new
+    "og-insights-decision-layer.html": "insights/agent-economy-needs-decision-infrastructure/og.png",
+
+    # Insights — new
+    "og-insights-fde-agents.html": "insights/fde-coding-agents/og.png",
+    "og-insights-fde-architecture.html": "insights/forward-deployed-engineering-architecture/og.png",
+    "og-insights-fde-enterprise.html": "insights/forward-deployed-engineers-enterprise-ai/og.png",
+    "og-insights-fde-pillar.html": "insights/forward-deployed-engineering-ai-sdlc/og.png",
 }
 
 PORT = 8765

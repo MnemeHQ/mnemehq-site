@@ -508,6 +508,16 @@
 
     <p>The investment in governance infrastructure pays off not as a process improvement but as a structural multiplier: it is what makes the rest of the AI-native SDLC tractable.</p>
 
+    <h2>Why governance must sit outside the agent</h2>
+
+    <p>The layering above implies something that is worth stating directly, because it is the property that makes architectural governance a separate layer rather than an agent feature: <strong>the constraint cannot live inside the thing it constrains.</strong></p>
+
+    <p>Every component below the governance layer is mutable, and mutable on a shorter cycle than the decisions being enforced. Models are swapped when a better one ships. Agent runtimes are replaced as teams move between Claude Code, Cursor, Copilot or whatever follows them. Harness configuration and instruction files are edited routinely, increasingly by the same automated workflows they are meant to govern. And context is compacted, which drops whatever the summarizer judged least relevant to the immediate step, frequently the rule rather than the task.</p>
+
+    <p>An architectural decision made in 2024 may still be load-bearing in 2027, by which point none of the components that were asked to respect it are the same components. A constraint expressed as a prompt, an instruction file, or agent configuration has a lifetime bounded by the thing carrying it. That is what makes it a default rather than a guarantee, and it is why <a href="/concepts/model-independent-governance/">model-independent governance</a> and <a href="/concepts/governance-propagation/">governance propagation</a> are requirements rather than conveniences: the same compiled constraint has to reach every surface, and produce the same verdict, regardless of which agent is operating.</p>
+
+    <p>The principle is not specific to code. Any autonomous system acting on an organization's behalf needs a source of decision authority that is independent of the system itself, evaluated at a point the system does not control. Coding agents are where this becomes concrete first, because architectural decisions are already written down, proposed changes can be inspected mechanically, and a verdict has somewhere to land before the change is real. Mneme HQ implements this for architectural decisions in a repository; the broader case is <a href="/insights/agent-economy-needs-decision-infrastructure/">argued separately</a> and is not a description of current capability.</p>
+
     <h2>Related concepts</h2>
 
     <p>Architectural governance does not operate in isolation. Three concepts are structurally adjacent and together form the full picture of how governance works in an AI-native codebase:</p>
