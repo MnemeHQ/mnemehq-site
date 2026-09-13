@@ -1,0 +1,61 @@
+<div id="mneme-consent-banner" class="mneme-consent-banner" role="dialog" aria-live="polite" aria-label="Cookie consent" hidden>
+  <p class="mneme-consent-copy">We use privacy-friendly analytics to see which pages are useful. Nothing is stored until you choose. See our <a href="/privacy/">privacy policy</a>.</p>
+  <div class="mneme-consent-actions">
+    <button type="button" class="mneme-consent-btn mneme-consent-reject" data-consent-choice="denied">Reject</button>
+    <button type="button" class="mneme-consent-btn mneme-consent-accept" data-consent-choice="granted">Accept analytics</button>
+  </div>
+</div>
+<style>
+  .mneme-consent-banner { position: fixed; left: 1rem; right: 1rem; bottom: 1rem; z-index: 200; max-width: 560px; margin: 0 auto; background: var(--surface, #141416); border: 1px solid var(--border2, #2e2e34); border-radius: 12px; padding: 1.1rem 1.25rem; box-shadow: 0 8px 30px rgba(0,0,0,0.35); font-family: 'Inter', sans-serif; }
+  .mneme-consent-banner[hidden] { display: none; }
+  .mneme-consent-copy { margin: 0 0 0.85rem; font-size: 0.85rem; line-height: 1.55; color: var(--text, #e8e8ec); }
+  .mneme-consent-copy a { color: var(--teal, #8be0c8); }
+  .mneme-consent-actions { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .mneme-consent-btn { font-family: 'DM Mono', monospace; font-size: 0.78rem; padding: 0.55rem 1rem; border-radius: 8px; cursor: pointer; border: 1px solid var(--border2, #2e2e34); background: transparent; color: var(--text, #e8e8ec); }
+  .mneme-consent-btn:hover { border-color: var(--text, #e8e8ec); }
+  .mneme-consent-accept { background: var(--accent, #c8f060); color: #0c0c0d; border-color: var(--accent, #c8f060); font-weight: 600; }
+  .mneme-consent-accept:hover { background: var(--accent-dim, #a8d040); border-color: var(--accent-dim, #a8d040); }
+  @media (max-width: 480px) { .mneme-consent-banner { left: 0.5rem; right: 0.5rem; bottom: 0.5rem; padding: 1rem; } }
+</style>
+<script>
+(function(){
+  'use strict';
+  var KEY = 'mneme_consent';
+  var banner = document.getElementById('mneme-consent-banner');
+  if (!banner) return;
+
+  function stored() {
+    try { return localStorage.getItem(KEY); } catch (e) { return null; }
+  }
+  function store(v) {
+    try { localStorage.setItem(KEY, v); } catch (e) {}
+  }
+  function applyConsent(v) {
+    window.dataLayer = window.dataLayer || [];
+    if (typeof gtag !== 'function') { window.gtag = function(){ dataLayer.push(arguments); }; }
+    gtag('consent', 'update', {
+      'analytics_storage': v,
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+  }
+
+  banner.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('[data-consent-choice]');
+    if (!btn) return;
+    var choice = btn.getAttribute('data-consent-choice');
+    store(choice);
+    applyConsent(choice);
+    banner.hidden = true;
+  });
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest || !e.target.closest('[data-consent-manage]')) return;
+    e.preventDefault();
+    banner.hidden = false;
+  });
+
+  if (!stored()) banner.hidden = false;
+})();
+</script>
