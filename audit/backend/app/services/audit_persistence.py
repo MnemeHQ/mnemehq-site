@@ -40,6 +40,7 @@ from app.services.p12_adapter import (
     collect_p12_inputs,
     ProtectionAuditResponse,
 )
+from app.services.markdown_discovery import discover_architecture_statements
 from app.services.audit_service import audit_service
 from app.services.mneme_adapter import MnemeAdapter
 from app.services.loose_adr_parser import find_loose_adrs
@@ -283,12 +284,14 @@ class AuditPersistenceService:
                     })
             
             # Collect all P1.2 decision inputs
+            markdown_statements = discover_architecture_statements(repo_path)
             p12_inputs = collect_p12_inputs(
                 mneme_report=mneme_report,
                 loose_adrs=loose_adrs,
                 agent_instructions=agent_instructions,
                 config_files=config_files,
                 repo_path=repo_path,
+                markdown_statements=markdown_statements,
             )
             for item in p12_inputs:
                 source_path = Path(item.source_path)
@@ -299,9 +302,10 @@ class AuditPersistenceService:
                         item.source_path = source_path.name
                 else:
                     item.source_path = item.source_path.replace("\\", "/")
-            
+
             # Collect source file paths for summary
             source_file_paths = [str(s.relative_to(repo_path)) for s in sources]
+            source_file_paths.extend(sorted({s.file for s in markdown_statements}))
             
             # Build complete P1.2 response
             return build_protection_audit_response(
