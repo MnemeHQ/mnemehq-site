@@ -17,6 +17,7 @@ import re
 from mneme.enforcer import (
     assess_governability,
     GovernabilityAssessment,
+    ProtectionDecisionReport,
 )
 from mneme.schemas import Decision
 from mneme.pipeline import PipelineResult, ScoredDecision
@@ -31,6 +32,11 @@ from app.models.protection_audit import (
     ProtectionClassification,
 )
 from app.services.p12_classifier import classify_protection, extract_proposed_rule
+from app.services.markdown_discovery import (
+    DiscoveredStatement,
+    assess_statement,
+    statement_to_decision,
+)
 
 
 @dataclass
@@ -40,6 +46,23 @@ class P12DecisionInput:
     assessment: GovernabilityAssessment
     source_path: str
     source_lines: str
+    # ADR-026 tier semantics for doc-discovered candidates: when present,
+    # the canonical core protection report is authoritative and the legacy
+    # governability mapping is bypassed.
+    protection: Optional[ProtectionDecisionReport] = None
+    # Honest source category for the by_category summary (matches the
+    # legacy M0.1 DecisionCategory vocabulary).
+    category: str = "architecture_decision"
+
+
+# Canonical tier -> P1.2 classification mapping (Mneme core is the sole
+# authority on the tier; this is a straight label translation).
+_TIER_TO_CLASSIFICATION = {
+    "protected": ProtectionClassification.PROTECTED,
+    "mneme_ready": ProtectionClassification.MNEME_READY,
+    "requires_modelling": ProtectionClassification.REQUIRES_MODELLING,
+    "guidance": ProtectionClassification.GUIDANCE,
+}
 
 
 def map_confidence_to_evidence(confidence: float) -> EvidenceConfidence:
@@ -58,12 +81,34 @@ def build_protection_decision(
     """Build a P1.2 ProtectionDecision from Mneme decision and assessment."""
     assessment = input_data.assessment
     decision = input_data.decision
-    
-    # DELEGATE to canonical classifier - single source of truth
-    proposed_rule = extract_proposed_rule(decision)
-    protection_class = classify_protection(assessment, guardrail=proposed_rule)
-    evidence_confidence = map_confidence_to_evidence(assessment.confidence)
-    
+
+    if input_data.protection is not None:
+        # ADR-026 tier semantics: Mneme core's protection report is
+        # authoritative for doc-discovered candidates. The only supported
+        # guardrail material is the literal rule core proposes from the
+        # text itself — never invented here.
+        tier = input_data.protection.protection_tier
+        protection_class = _TIER_TO_CLASSIFICATION[tier]
+        proposed_rule = None
+        if tier == "mneme_ready":
+            rule = _proposed_literal_rule(decision)
+            if rule is not None:
+                proposed_rule = MnemeRule(
+                    type=rule.type,
+                    pattern=rule.value,
+                    description=f"{rule.type}: {rule.value}",
+                )
+        evidence_confidence = (
+            EvidenceConfidence.MEDIUM
+            if tier in ("protected", "mneme_ready", "requires_modelling")
+            else EvidenceConfidence.LOW
+        )
+    else:
+        # DELEGATE to canonical classifier - single source of truth
+        proposed_rule = extract_proposed_rule(decision)
+        protection_class = classify_protection(assessment, guardrail=proposed_rule)
+        evidence_confidence = map_confidence_to_evidence(assessment.confidence)
+
     return ProtectionDecision(
         id=decision.id,
         title=decision.decision[:100] if len(decision.decision) > 100 else decision.decision,
@@ -77,8 +122,15 @@ def build_protection_decision(
         evidence_confidence=evidence_confidence,
         applies_to=list(assessment.applicable_paths),
         proposed_rule=proposed_rule,
-        category="architecture_decision",
+        category=input_data.category,
     )
+
+
+def _proposed_literal_rule(decision: Decision):
+    """Canonical FORBID_LITERAL rule proposed by core from decision text."""
+    from mneme.enforcer import propose_literal_rule
+
+    return propose_literal_rule(decision)
 
 
 def build_protection_audit_response(
@@ -167,10 +219,11 @@ def collect_p12_inputs(
     agent_instructions: List,
     config_files: List,
     repo_path: Path,
+    markdown_statements: Optional[List[DiscoveredStatement]] = None,
 ) -> List[P12DecisionInput]:
     """
     Collect all decisions and assessments for P1.2 audit.
-    
+
     Mirrors the audit_service sources but produces P1.2 format.
     """
     inputs = []
@@ -181,7 +234,7 @@ def collect_p12_inputs(
             source = source.relative_to(repo_path)
         normalized = source.as_posix().replace("\\", "/")
         return f"{prefix}_{sha256(normalized.encode()).hexdigest()[:16]}"
-    
+
     # Source 1: Mneme's authoritative ADR import
     for mneme_decision in mneme_report.decisions:
         assessment = assess_governability(mneme_decision)
@@ -281,8 +334,9 @@ def collect_p12_inputs(
             assessment=assessment,
             source_path=instr['path'],
             source_lines=instr['lines'],
+            category="agent_instruction",
         ))
-    
+
     # Source 4: Config files
     for cfg in config_files:
         # Config files are typically guidance in P1.2
@@ -295,7 +349,7 @@ def collect_p12_inputs(
             scope=[],
             decision_id=source_id("config", cfg['path']),
         )
-        
+
         from mneme.schemas import Decision as MnemeDecision
         mneme_decision = MnemeDecision(
             id=assessment.decision_id,
@@ -307,14 +361,32 @@ def collect_p12_inputs(
             rules=[],
             source_path=cfg['path'],
         )
-        
+
         inputs.append(P12DecisionInput(
             decision=mneme_decision,
             assessment=assessment,
             source_path=cfg['path'],
             source_lines=cfg['lines'],
+            # Honest provenance: a config file's existence is configuration
+            # evidence, not an architectural decision. It stays a
+            # low-confidence Guidance context row — never a fake
+            # architecture decision in by_category.
+            category="config_evidence",
         ))
-    
+
+    # Source 5: Ordinary docs/ Markdown architecture documentation.
+    # Statements are candidate decisions; Mneme core (assess_statement)
+    # is the sole authority on tier. Filename shape never creates one.
+    for statement in (markdown_statements or []):
+        decision = statement_to_decision(statement)
+        inputs.append(P12DecisionInput(
+            decision=decision,
+            assessment=assess_governability(decision),
+            source_path=statement.file,
+            source_lines=statement.lines,
+            protection=assess_statement(statement),
+        ))
+
     return inputs
 
 
