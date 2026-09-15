@@ -268,7 +268,7 @@
         <span class="std-tag">Spec 2025-11-25</span>
       </div>
       <h3>Model Context Protocol (MCP)</h3>
-      <p>An open, JSON-RPC-based protocol for exposing context, tools, and resources to AI clients. MCP does not specify a governance content format, but it is the substrate over which a structured decision store can be made queryable to any compliant agent. A decision corpus exposed as an MCP server is consumable by every MCP-aware client (Claude Code, Cursor's MCP support, custom SDK agents) without per-tool integration.</p>
+      <p>An open, JSON-RPC-based protocol for exposing context, tools, and resources to AI clients. MCP does not specify a governance content format, but it is the substrate over which a structured decision store can be made queryable. Mneme 0.9.0 implements that boundary as a local stdio server; compatibility with individual MCP hosts is claimed only where separately validated.</p>
       <div class="std-links">
         <a href="https://modelcontextprotocol.io/specification/" target="_blank" rel="noopener">Specification &rarr;</a>
         <a href="https://modelcontextprotocol.io/" target="_blank" rel="noopener">Project home &rarr;</a>
@@ -308,7 +308,7 @@
         <tr>
           <td>MCP</td>
           <td>JSON-RPC protocol for exposing context, tools, and resources to AI clients.</td>
-          <td>Mneme's decision store is exposed as an MCP server, so any MCP-aware agent can query which decisions apply without a bespoke per-tool integration.</td>
+          <td>Mneme 0.9.0 exposes six local stdio tools for decision retrieval and non-authoritative proposals. Accept, reject, activation, and supersession remain outside MCP.</td>
         </tr>
         <tr>
           <td>AGENTS.md</td>
@@ -358,7 +358,7 @@
     <li><strong>Open source under MIT license.</strong> The decision-store schema, the precedence engine, and the Claude Code hook integration are public on <a class="ext" href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener">GitHub</a>. Anyone evaluating an emerging standard can read, fork, and reference the design.</li>
     <li><strong>Structured project memory format.</strong> Mneme's <code>project_memory.json</code> schema is documented and stable; it is the artifact a future cross-tool format would either consume or be compared against.</li>
     <li><strong>Public benchmark methodology.</strong> The Mneme governance benchmark is published with reproducible methodology, intended as a citable reference for evaluating governance-layer behavior.</li>
-    <li><strong>MCP server for the decision store.</strong> Mneme's decision store is exposed via MCP, so any MCP-aware client can query which decisions apply to a task without a bespoke integration. This addresses discovery; enforcement remains a separate, deterministic check against the proposed change.</li>
+    <li><strong>MCP server for the decision store &mdash; shipped in 0.9.0.</strong> Mneme exposes six local stdio tools for decision retrieval and non-authoritative proposals. See the <a href="/docs/mcp/">operator reference</a>. This addresses interoperability; enforcement and human decision authority remain separate.</li>
   </ul>
 
   <h3>Planned</h3>

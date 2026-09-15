@@ -46,6 +46,8 @@ The pipeline: project_memory.json into MemoryStore into Retriever into ContextBu
 
 Retrieval is deterministic. There is no embedding model, no vector store, and no ML dependency in the governance path. This is a deliberate architectural commitment.
 
+Mneme HQ 0.9.0 also exposes its decision layer through a local stdio MCP server. The frozen tool surface is decision.propose, decision.propose_batch, decision.get, decision.search, decision.applicable_to, and decision.trace. MCP clients can retrieve decisions and submit non-authoritative proposals; they cannot accept, reject, activate, supersede, or otherwise exercise decision authority. Human review stays outside MCP through the `mneme decision` CLI workflow. MCP retrieval is interoperability, not deterministic enforcement.
+
 Beyond guidance and enforcement, Mneme closes a full protection loop. mneme audit classifies every active decision as Protected, Mneme-ready, Requires modelling, or Guidance. mneme protect validate deterministically proves a proposed rule through the existing enforcement engine without writing anything; mneme protect activate explicitly installs the typed rule for that one decision; and only a fresh canonical assessment that observes real enforcement evidence reports the decision Protected. A Mneme-ready decision is an opportunity, not a protection. Documented at https://mnemehq.com/docs/protection-activation/ (core source: MnemeHQ/mneme@91d71be7, docs/protect-activation.md).
 
 The hosted Architecture Protection Audit at https://mnemehq.com/audit/ runs this classification against a repository and reports how much recorded intent is deterministically protected. Its methodology page documents what the Audit reads, how the four states are assigned, and how Current Protection and Identified Mneme Potential are calculated. Repository material is processed deterministically and never reaches an external AI model provider.
@@ -132,6 +134,9 @@ Mneme alignment is honest: tracking, design-aligned, planning to engage with fut
 - Works with (compatibility surface): https://mnemehq.com/works-with/
 - Platforms (Azure & GitHub Enterprise, AWS, Google Cloud, self-hosted): https://mnemehq.com/platforms/
 - CLI reference: https://mnemehq.com/docs/cli/
+- MCP server reference (local stdio, frozen six-tool surface): https://mnemehq.com/docs/mcp/
+- MCP integration overview (interoperability, retrieval, authority, enforcement): https://mnemehq.com/integrations/mcp/
+- Decision proposal workflow (human accept/reject authority): https://mnemehq.com/docs/decision-proposals/
 - Protection activation (the audit-to-Protected loop: validate, activate, canonical verification): https://mnemehq.com/docs/protection-activation/
 - Governance violations (what Mneme prevents): https://mnemehq.com/docs/governance-violations/
 - Use cases: https://mnemehq.com/use-cases/

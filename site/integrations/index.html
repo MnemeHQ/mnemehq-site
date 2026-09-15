@@ -46,10 +46,11 @@
       {
         "@type": "CollectionPage",
         "name": "AI Coding Agent Integrations — Mneme HQ",
-        "description": "One architectural decision corpus across agent hooks, generated rules and CI gates. Each integration is labelled by its actual support level: native, compatibility-validated, rules export, CI integration, experimental or planned.",
+        "description": "One architectural decision corpus across MCP interoperability, agent hooks, generated rules and CI gates. Each integration is labelled by its actual support level.",
         "url": "https://mnemehq.com/integrations/",
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
+          {"@type": "WebPage", "name": "Model Context Protocol", "url": "https://mnemehq.com/integrations/mcp/"},
           {"@type": "WebPage", "name": "Claude Code", "url": "https://mnemehq.com/integrations/claude-code/"},
           {"@type": "WebPage", "name": "Claude Agent SDK", "url": "https://mnemehq.com/integrations/claude-agent-sdk/"},
           {"@type": "WebPage", "name": "Google Antigravity", "url": "https://mnemehq.com/integrations/antigravity/"},
@@ -224,13 +225,25 @@
 <div class="hero">
   <div class="section-eyebrow">Integrations</div>
   <h1>Architectural drift prevention across your AI coding stack</h1>
-  <p class="hero-sub">One decision corpus, enforced at three layers: agent hooks, generated editor rules, and a deterministic CI gate. Every integration below is labelled with its real support level.</p>
+  <p class="hero-sub">One decision layer connected through local MCP, agent hooks, generated editor rules, and deterministic CI gates. Every integration below is labelled with its real support level.</p>
 </div>
 
 <div class="layers">
 
   <section class="layer">
-    <div class="layer-head"><span class="layer-num">01</span><h2>Enforcement &mdash; native and validated</h2></div>
+    <div class="layer-head"><span class="layer-num">01</span><h2>Interoperability &mdash; decision exchange</h2></div>
+    <p class="layer-desc">A protocol boundary for retrieving decisions and submitting non-authoritative proposals. Connection is not enforcement, and MCP does not receive human decision authority.</p>
+    <div class="layer-grid">
+      <a class="int-card" href="/integrations/mcp/">
+        <div class="int-status">Local stdio &middot; Shipped in 0.9.0</div>
+        <h3>Model Context Protocol</h3>
+        <p>Six frozen Decision Index tools for retrieval and proposal submission, with accept, reject, activation, and supersession deliberately excluded.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="layer">
+    <div class="layer-head"><span class="layer-num">02</span><h2>Enforcement &mdash; native and validated</h2></div>
     <p class="layer-desc">A shipped adapter checks proposed changes against the decision corpus before they reach disk. Maintained code, tests on main, published evidence.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/claude-code/">
@@ -272,7 +285,7 @@
   </section>
 
   <section class="layer">
-    <div class="layer-head"><span class="layer-num">02</span><h2>Propagation &mdash; rules export and CI gates</h2></div>
+    <div class="layer-head"><span class="layer-num">03</span><h2>Propagation &mdash; rules export and CI gates</h2></div>
     <p class="layer-desc">The same corpus carried into tools without a runtime adapter: generated editor rules, and a deterministic gate in pipelines you own.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/cursor/">
@@ -304,7 +317,7 @@
   </figure>
 
   <section class="layer">
-    <div class="layer-head"><span class="layer-num">03</span><h2>Host environments</h2></div>
+    <div class="layer-head"><span class="layer-num">04</span><h2>Host environments</h2></div>
     <p class="layer-desc">No dedicated adapters. Governance reaches these tools through the layers above &mdash; an underlying supported agent, generated rules, or CI.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/vscode/">
@@ -331,7 +344,7 @@
   </section>
 
   <section class="layer">
-    <div class="layer-head"><span class="layer-num">04</span><h2>Experimental and planned</h2></div>
+    <div class="layer-head"><span class="layer-num">05</span><h2>Experimental and planned</h2></div>
     <p class="layer-desc">Nothing here carries production support yet. Experimental means code exists and specific boundaries are tested, but validation or coverage remains incomplete; planned means design work only.</p>
     <div class="layer-grid">
       <a class="int-card muted" href="/integrations/opencode/">

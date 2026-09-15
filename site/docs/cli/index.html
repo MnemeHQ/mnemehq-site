@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
-  <meta name="description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, audit, setup, protect, cursor generate, benchmark, and adr import. Flags, exit codes, and CI usage patterns." />
+  <meta name="description" content="Reference for the mneme-hq 0.9.0 CLI, including Decision MCP, proposal review and authority, setup, protect, audit, checks, exports, and exit codes." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/cli/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme CLI Reference" />
-  <meta property="og:description" content="Reference for the mneme command-line interface — init, list_decisions, add_decision, test_query, check, audit, setup, protect, cursor generate, benchmark, and adr import." />
+  <meta property="og:description" content="Reference for the mneme-hq 0.9.0 CLI, including Decision MCP and the proposal authority workflow." />
   <meta property="og:url" content="https://mnemehq.com/docs/cli/" />
   <meta property="og:image" content="https://mnemehq.com/docs/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -50,7 +50,7 @@
         "description": "Commands, flags, and exit codes for the mneme command-line interface.",
         "url": "https://mnemehq.com/docs/cli/",
         "datePublished": "2026-05-10",
-        "dateModified": "2026-09-06",
+        "dateModified": "2026-09-15",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
@@ -246,12 +246,12 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>The <code>mneme</code> CLI</strong> exposes <code>init</code>, <code>list_decisions</code>, <code>add_decision</code>, <code>test_query</code>, <code>check</code>, <code>audit</code>, <code>setup</code>, <code>protect</code>, <code>cursor generate</code>, <code>benchmark</code>, and <code>adr import</code>. Every subcommand reads a <code>project_memory.json</code> corpus via <code>--memory</code> and returns Unix exit codes; <code>protect</code> uses 0 success / 1 actionable failure / 2 usage error.</div>
+<div class="answer-capsule"><strong>The <code>mneme</code> 0.9.0 CLI</strong> adds <code>decision-mcp</code> plus the <code>decision proposals|show|accept|reject</code> group. MCP can retrieve and propose; only the separate human authority commands can accept or reject. Acceptance does not activate deterministic protection.</div>
 
 <section class="hero">
   <div class="section-eyebrow">CLI reference</div>
   <h1>The <code style="font-family:'DM Mono',monospace;font-size:0.78em;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.05em 0.4em;color:var(--accent);">mneme</code> command-line interface</h1>
-  <p class="lede">Reference for every subcommand the OSS <code>mneme</code> CLI ships with: managing the decision corpus, querying it, enforcing it against generated content, exporting to editor surfaces, and running the governance benchmark suite. The CLI is the deterministic surface; the same operations are available programmatically.</p>
+  <p class="lede">Reference for the OSS <code>mneme</code> CLI: manage and audit the decision corpus, operate the local MCP server, review decision proposals, enforce generated content, export to editor surfaces, and run the governance benchmark.</p>
 </section>
 
 <div class="wrap">
@@ -268,6 +268,8 @@
       <li><a href="#cmd-audit">mneme audit</a></li>
       <li><a href="#cmd-setup">mneme setup</a></li>
       <li><a href="#cmd-protect">mneme protect</a></li>
+      <li><a href="#cmd-decision-mcp">mneme decision-mcp</a></li>
+      <li><a href="#cmd-decision">mneme decision</a></li>
       <li><a href="#cmd-cursor">mneme cursor generate</a></li>
       <li><a href="#cmd-benchmark">mneme benchmark</a></li>
       <li><a href="#cmd-adr-import">mneme adr import</a></li>
@@ -281,8 +283,9 @@
     <h2>Install</h2>
     <p class="sub">Python 3.11+. MIT-licensed. No vector store, no ML runtime.</p>
     <div class="cmd-card">
-<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq&gt;=0.7.0"
-<span class="cc"># or: pip install mneme-hq>=0.7.0</span></pre>
+<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq==0.9.0"
+<span class="cc"># Include the optional MCP runtime:</span>
+<span class="cp">$</span> pipx install "mneme-hq[mcp]==0.9.0"</pre>
       <p class="cdesc">Installs the <code>mneme</code> entry point on your PATH. Scaffold a new corpus with <code><a href="#cmd-init">mneme init</a></code>; every other subcommand requires <code>--memory</code> pointing at a <code>project_memory.json</code> file. An example corpus ships at <code>examples/project_memory.json</code>.</p>
       <p class="cdesc" style="margin-bottom:0;">From source (contributors): <code>git clone https://github.com/MnemeHQ/mneme &amp;&amp; cd mneme &amp;&amp; pip install -e .</code></p>
     </div>
@@ -498,6 +501,42 @@ Created .mneme/project_memory.json</pre>
 
     <div class="callout">
       <p><strong>Availability.</strong> Shipped in the Mneme core at <a class="ext" href="https://github.com/MnemeHQ/mneme/commit/91d71be7ad29c653c7dc16005a173725c98b3533" target="_blank" rel="noopener">MnemeHQ/mneme@91d71be7</a> and part of the released <code>mneme-hq</code> package on PyPI since <a class="ext" href="https://pypi.org/project/mneme-hq/0.7.0/" target="_blank" rel="noopener"><code>mneme-hq==0.7.0</code></a>. Install with <code>pipx install "mneme-hq==0.7.0"</code>.</p>
+    </div>
+  </section>
+
+  <!-- decision-mcp -->
+  <section class="section" id="cmd-decision-mcp">
+    <h2>decision-mcp</h2>
+    <p class="sub">Serve the frozen six-tool Decision Index surface over local stdio.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme decision-mcp</span><span class="ctag">MCP server</span></div>
+      <p class="cdesc">Starts the local server with proposal storage enabled. Add a schema-valid ADR directory when canonical decision reads are required. The server exposes proposal and read tools only; no MCP authority operation exists.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme decision-mcp
+<span class="cp">$</span> mneme decision-mcp --proposals .mneme/decision_proposals.json --adr-dir docs/adr</pre>
+      <div class="flags-title">Flags</div>
+      <table class="flags">
+        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>--proposals</td><td>no</td><td>Proposal-store JSON path. Defaults to <code>.mneme/decision_proposals.json</code>; an explicit empty string selects an in-memory store.</td></tr>
+          <tr><td>--adr-dir</td><td>no</td><td>ADR directory compiled into the canonical read index. No default. Invalid or ambiguous input prevents startup.</td></tr>
+        </tbody>
+      </table>
+      <p class="cdesc">Requires <code>mneme-hq[mcp]</code>. Full tool, storage, error, and authority reference: <a href="/docs/mcp/">MCP server</a>.</p>
+    </div>
+  </section>
+
+  <!-- decision authority -->
+  <section class="section" id="cmd-decision">
+    <h2>decision</h2>
+    <p class="sub">Inspect proposals and exercise explicit human accept/reject authority.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme decision proposals | show | accept | reject</span><span class="ctag">Authority workflow</span></div>
+<pre tabindex="0"><span class="cp">$</span> mneme decision proposals
+<span class="cp">$</span> mneme decision show &lt;proposal-id&gt;
+<span class="cp">$</span> mneme decision accept &lt;proposal-id&gt; --memory .mneme/project_memory.json
+<span class="cp">$</span> mneme decision reject &lt;proposal-id&gt;</pre>
+      <p class="cdesc"><code>proposals</code> and <code>show</code> are read-only. <code>accept</code> materializes a canonical decision into project memory but does not run Audit or activate protection. <code>reject</code> makes no project-memory change. All four default to <code>.mneme/decision_proposals.json</code>; <code>accept</code> also accepts <code>--decision-id</code>.</p>
+      <p class="cdesc">Full lifecycle, provenance, flags, exit codes, and known 0.9.0 limitations: <a href="/docs/decision-proposals/">Decision proposals</a>.</p>
     </div>
   </section>
 
