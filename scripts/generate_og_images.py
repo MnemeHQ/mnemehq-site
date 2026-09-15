@@ -366,6 +366,10 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-fde-decision-layer.html": "insights/forward-deployed-architects-need-a-decision-layer/og.png",
+
+    # Insights — new
+    "og-insights-ai-throughput.html": "insights/ai-throughput-is-not-engineering-throughput/og.png",
+    "og-insights-ai-engineering-roi.html": "insights/ai-engineering-roi/og.png",
 }
 
 PORT = 8765

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Throughput Is Not Engineering Throughput &mdash; Mneme HQ</title>
+  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/assets/css/fonts.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <meta name="description" content="NBER research tracking 500,000+ GitHub developers found autonomous coding agents produce a 240% increase in coding activity, attenuating to a 30% increase in actual releases. The gap is not a measurement error." />
+  <meta name="robots" content="index, follow" />
+  <meta name="mneme:content-segment" content="problem_awareness" />
+  <meta name="theme-color" content="#0c0c0d" />
+  <link rel="canonical" href="https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/" />
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Mneme HQ" />
+  <meta property="og:title" content="AI Throughput Is Not Engineering Throughput" />
+  <meta property="og:description" content="NBER research tracking 500,000+ GitHub developers found autonomous coding agents produce a 240% increase in coding activity, attenuating to a 30% increase in actual releases. The gap is not a measurement error." />
+  <meta property="og:url" content="https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/" />
+  <meta property="og:image" content="https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI Throughput Is Not Engineering Throughput" />
+  <meta name="twitter:description" content="NBER research tracking 500,000+ GitHub developers found autonomous coding agents produce a 240% increase in coding activity, attenuating to a 30% increase in actual releases. The gap is not a measurement error." />
+  <meta name="twitter:image" content="https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/og.png" />
+  <meta name="author" content="Theo Valmis" />
+  <meta property="article:published_time" content="2026-09-15T00:00:00Z" />
+  <meta property="article:author" content="https://mnemehq.com/founder/" />
+  <meta property="article:section" content="Analysis" />
+
+  <!-- Consent defaults -->
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KL7FB67N');</script>
+  <!-- End Google Tag Manager -->
+
+  <link rel="icon" href="/favicon-v2.png" type="image/png">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
+          {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"},
+          {"@type": "ListItem", "position": 3, "name": "AI Throughput Is Not Engineering Throughput", "item": "https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/"}
+        ]
+      },
+      {
+        "@type": "TechArticle",
+        "headline": "AI Throughput Is Not Engineering Throughput",
+        "description": "NBER research tracking 500,000+ GitHub developers found autonomous coding agents produce a 240% increase in coding activity, attenuating to a 30% increase in actual releases. The gap is not a measurement error.",
+        "url": "https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/",
+        "datePublished": "2026-09-15",
+        "dateModified": "2026-09-15",
+        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+        "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
+        "image": "https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/og.png",
+        "mainEntityOfPage": "https://mnemehq.com/insights/ai-throughput-is-not-engineering-throughput/"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
+
+    .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
+    .article-header { margin-bottom: 3.5rem; }
+    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
+    .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
+    .article-lede { font-size: 1.1rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
+
+    .article-body { font-size: 0.92rem; line-height: 1.9; color: var(--text); }
+    .article-body h2 { font-family: 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.015em; margin: 3rem 0 1rem; color: var(--text); }
+    .article-body h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.75rem; color: var(--text); }
+    .article-body p { margin-bottom: 1.25rem; color: var(--muted); }
+    .article-body a { color: #8be0c8; text-decoration: none; border-bottom: 1px solid rgba(139,224,200,0.4); transition: border-color 0.15s; }
+    .article-body a:hover { border-bottom-color: #8be0c8; }
+    .article-body p strong { color: var(--text); font-weight: 500; }
+    .article-body ul, .article-body ol { margin: 0 0 1.25rem 1.5rem; color: var(--muted); }
+    .article-body li { margin-bottom: 0.5rem; }
+    .article-body li strong { color: var(--text); font-weight: 500; }
+
+    .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 2rem 0; }
+    .callout p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+    .callout p strong { color: var(--accent); }
+
+    .article-footer { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .back-link { color: var(--muted); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .back-link:hover { color: var(--text); }
+    .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
+    .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
+    .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
+    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--accent-dim); }
+
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
+    footer a { color: var(--muted); text-decoration: none; }
+
+    .breadcrumb-nav { max-width: 720px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
+    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
+    .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text); }
+    .breadcrumb [aria-current="page"] { color: var(--text); }
+
+    .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
+
+    @media (max-width: 640px) {
+      .article-wrap { padding: 3rem 1.25rem 5rem; }
+    }
+
+    .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
+    .byline a { color: var(--muted); text-decoration: none; }
+    .byline a:hover { color: var(--text); }
+    .byline .sep { color: var(--border2); margin: 0 0.5rem; }
+
+    /* === Nav upgrade === */
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    @media (max-width: 900px) {
+      html, body { overflow-x: clip; }
+      body.menu-open { overflow: hidden; }
+      nav, nav.site-nav { padding: 1rem 1.25rem; }
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        display: flex !important;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        gap: 0;
+        background: rgba(12,12,13,0.98);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        padding: 0 1.25rem;
+        z-index: 99;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        visibility: hidden;
+        transition: max-height 0.28s ease, opacity 0.2s ease, padding 0.28s ease, visibility 0s linear 0.28s;
+      }
+      .nav-links.open {
+        max-height: 80vh;
+        opacity: 1;
+        visibility: visible;
+        padding: 0.5rem 1.25rem 1.25rem;
+        transition: max-height 0.32s ease, opacity 0.25s ease, padding 0.32s ease, visibility 0s;
+        overflow-y: auto;
+      }
+      .nav-links a:not(.btn-nav-cta) {
+        display: block;
+        color: var(--text);
+        font-size: 0.92rem;
+        padding: 0.85rem 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-links a:not(.btn-nav-cta):last-of-type { border-bottom: none; }
+      .nav-links a:not(.btn-nav-cta).active { color: var(--accent); }
+      .nav-links .btn-nav-cta { margin-top: 1rem; text-align: center; display: block; }
+    }
+
+    /* === Related reading === */
+    .related-panel { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
+    .related-panel-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; }
+    .related-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden; }
+    .related-list li { margin: 0; }
+    .related-list a { display: block; padding: 1.15rem 1.35rem; background: var(--surface); text-decoration: none; transition: background 0.15s; }
+    .related-list a:hover { background: var(--surface2); }
+    .related-list .rel-title { color: var(--text); font-size: 0.92rem; font-weight: 600; margin-bottom: 0.35rem; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; letter-spacing: -0.005em; transition: color 0.15s; }
+    .related-list .rel-title::after { content: '\2192'; color: var(--accent); opacity: 0.4; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; }
+    .related-list a:hover .rel-title { color: var(--accent); }
+    .related-list a:hover .rel-title::after { opacity: 1; transform: translateX(3px); }
+    .related-list .rel-desc { color: var(--muted); font-size: 0.82rem; line-height: 1.65; margin: 0; }
+
+    @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
+
+    /* === Diagram styles === */
+    .diag-box { fill: #141416; stroke: #2e2e34; }
+    .diag-box-active { fill: rgba(200,240,96,0.05); stroke: #c8f060; stroke-width: 1.5; }
+    .diag-box-teal { fill: rgba(139,224,200,0.05); stroke: #8be0c8; stroke-width: 1.2; }
+    .diag-text { fill: #e8e8ec; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; }
+    .diag-meta { fill: #88889a; font-family: 'DM Mono', monospace; font-size: 10px; }
+    .diag-accent-text { fill: #c8f060; }
+    .diag-teal-text { fill: #8be0c8; }
+    .diag-mono { font-family: 'DM Mono', monospace; }
+    .diag-arrow { stroke: #2e2e34; stroke-width: 1; fill: none; }
+    .diag-arrow-active { stroke: #c8f060; stroke-width: 1.5; fill: none; }
+    .diag-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin: 2.5rem 0; }
+    .diag-caption { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); margin-top: 1rem; text-align: center; letter-spacing: 0.06em; text-transform: uppercase; }
+    .gov-table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.85rem; }
+    .gov-table th { background: var(--surface); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border2); }
+    .gov-table td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+    .gov-table tr:last-child td { border-bottom: none; }
+    .gov-table td:first-child { color: var(--text); font-weight: 500; }
+    .gov-table tr.accent-row td { color: var(--accent); }
+    .gov-table tr.accent-row td:first-child { color: var(--accent); }
+    /* mneme:context-cta-css */
+    .context-cta { margin: 3rem 0 0; background: rgba(139,224,200,0.06); border: 1px solid #8be0c8; border-radius: 12px; padding: 1.5rem 1.75rem; }
+    .context-cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #8be0c8; margin-bottom: 0.6rem; }
+    .context-cta-copy { font-size: 0.92rem; color: #e8e8ec; line-height: 1.65; margin: 0 0 1.15rem; }
+    .context-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
+    .context-cta-primary { display: inline-flex; align-items: center; background: #8be0c8; color: #0c0c0d; padding: 0.7rem 1.4rem; border: 1px solid #8be0c8; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; text-decoration: none; transition: background 0.15s, border-color 0.15s; }
+    .context-cta-primary:hover { background: #6fcbb0; }
+    .context-cta-secondary { display: inline-flex; align-items: center; color: #8be0c8; padding: 0.7rem 1.25rem; border: 1px solid rgba(139,224,200,0.45); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; line-height: 1.3; text-decoration: none; transition: border-color 0.15s, background 0.15s; }
+    .context-cta-secondary:hover { border-color: #8be0c8; background: rgba(139,224,200,0.08); }
+  
+    @media (prefers-reduced-motion: reduce) {
+          html { scroll-behavior: auto !important; }
+          *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+        }
+  
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+  </style>
+  <link rel="stylesheet" href="/assets/css/video.css">
+
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KL7FB67N" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<a href="#main-content" class="skip-link">Skip to content</a>
+<nav>
+  <a href="/" class="logo"><img src="/logo-v3.png" alt="Mneme HQ" width="123" height="36" style="display:block;"></a>
+  <button class="nav-hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="primary-nav"><span></span><span></span><span></span></button>
+  <div class="nav-links" id="primary-nav">
+    <a href="/docs/how-enforcement-works/">How it works</a>
+    <a href="/use-cases/">Use cases</a>
+    <a href="/demo/">Demo</a>
+    <a href="/audit/" data-cta-intent="audit" data-cta-position="nav" data-cta-component="nav">Architecture Audit</a>
+    <a href="/insights/">Insights</a>
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
+    <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
+  </div>
+</nav>
+
+<main id="main-content" tabindex="-1">
+<nav class="breadcrumb-nav" aria-label="Breadcrumb">
+  <ol class="breadcrumb">
+    <li><a href="/">Home</a></li>
+    <li><a href="/insights/">Insights</a></li>
+    <li aria-current="page">AI Throughput Is Not Engineering Throughput</li>
+  </ol>
+</nav>
+
+<article class="article-wrap">
+  <header class="article-header">
+    <div class="article-eyebrow">
+      <span class="eyebrow-tag">Analysis</span>
+      <span class="eyebrow-dot"></span>
+      <span class="eyebrow-meta">10 min read</span>
+    </div>
+    <h1>AI Throughput Is Not Engineering Throughput</h1>
+    <p class="article-lede">A 2026 NBER study of more than 500,000 GitHub developers found autonomous coding agents increase coding activity by 240% and releases by 30%. The gap between those numbers is not noise, and it is not evidence the agents don't work. It's evidence that coding activity was never the right thing to count.</p>
+    <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-09-15">September 2026</time></p>
+  </header>
+
+  <div class="article-body">
+
+    <h2>Two numbers from the same study</h2>
+    <p>NBER Working Paper 35275, published in May 2026 and revised that September, tracked more than 500,000 GitHub developers alongside their AI-tool usage. Its authors, Mert Demirer, Leon Musolff, and Liyuan Yang, isolated the effect of three tool generations on coding activity: autocomplete produced a 30% cumulative increase, interactive coding agents 180%, and autonomous coding agents 240%.</p>
+    <p>Then they followed that activity downstream. The 240% gain in coding activity from autonomous agents falls to an 80% gain at the project level, and to 30% by the time it reaches an actual software release.</p>
+    <p>Both numbers are real. Coding activity really did increase 240%. Releases really did increase only 30%. The interesting question isn&rsquo;t which number to believe. It&rsquo;s why anyone expected them to be the same number in the first place.</p>
+
+    <h2>The number that gets quoted, and the number that matters</h2>
+    <p>240% is the number that shows up in headlines, because it's the biggest and it's the one closest to what a vendor demo optimizes for. It is also the number furthest from anything a business cares about. Coding activity in this study means commits, PRs, and similar developer-visible actions, the raw exhaust of an agent working. An organization does not derive value from exhaust. It derives value from software that reaches users and keeps working.</p>
+    <p>30% is closer to that, and it's still not quite it, because a release can ship and still be the wrong thing, or ship and quietly make the next six releases harder. But it's a much better proxy than activity, and the distance between the two numbers, 240% down to 30%, is a more honest picture of what autonomous agents currently deliver than either number alone.</p>
+
+    <h2>Throughput was always the wrong unit</h2>
+    <p>Commits, PRs opened, and lines generated share a property that made them convenient proxies for engineering output during the era when producing code was the expensive part: they correlated reasonably well with delivered software, because a human being writing code was also, in the same act, applying judgment about whether that code belonged in the system. Slow generation and considered generation were, for most of software history, close to the same thing.</p>
+    <p>Coding agents break that correlation on purpose. They are explicitly built to separate the two: generate fast, let something else decide whether the output is right. That's a legitimate design, and it's exactly why counting what an agent generates no longer tells you what the organization received. A commit an agent produced in nine seconds and a commit a senior engineer spent two hours writing are not comparable units just because a version-control system logs them the same way.</p>
+    <div class="callout"><p><strong>The relevant unit of AI coding productivity was never generated code. It is production-ready change &mdash; the subset of what an agent produces that survives contact with review, integration, and operation without being rewritten.</strong> Coding activity measures the numerator. Releases measure something closer to the thing that actually matters.</p></div>
+
+    <aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
+    <h2>Why the paper calls it complementarity, not substitution</h2>
+    <p>The paper estimates an elasticity of substitution of 0.23 between AI output and human review effort. That figure is doing more work than it looks like it's doing. An elasticity near zero would mean AI output and human effort are strong complements: more AI-generated code does not reduce the need for human review, it increases the total amount of review-equivalent work in the system. An elasticity near one would mean they substitute for each other more freely, AI output standing in for human effort rather than adding a new category of it.</p>
+    <p>0.23 sits close to the complements end. In plain terms: agents did not make review optional, or even make it scale down. They made there be more to review, faster, than there used to be. The 240%-to-30% gap is what that complementarity looks like when the review-and-reconciliation side of the system doesn&rsquo;t scale at the same rate the generation side just did.</p>
+    <p>This is worth contrasting with what a substitution story would predict, because it's the intuitive but wrong mental model many teams are still running on. If AI output substituted for human review effort, the story would be: agents write the code, humans do less checking, throughput and releases rise together because the whole pipeline sped up. That's not what a 0.23 elasticity describes. It describes a pipeline where the input got dramatically cheaper and the rest of the pipeline is now the binding constraint, which is a different problem with a different fix. You don't fix an overloaded review stage by generating more for reviewers to look at. You fix it by reducing how much of what reaches review needs a human to catch it in the first place.</p>
+
+    <h2>Projects attenuate less than releases, and that's informative too</h2>
+    <p>The middle data point matters as much as the endpoints. Coding activity attenuates to 80% at the project level before it attenuates further to 30% at the release level. That two-stage drop maps onto two different failure modes. Between activity and projects, the loss looks like work that never coheres into something worth continuing, agents producing plausible-looking changes that don&rsquo;t survive a second look. Between projects and releases, the loss looks like the verification and integration tax this cluster has <a href="/insights/ai-coding-agent-verification-tax/">measured elsewhere</a>: work that is directionally right but has to be reconciled with everything around it before it&rsquo;s safe to ship.</p>
+    <p>Architectural drift lives specifically in that second stage. A change can be internally correct, pass its own tests, and still be the thing a reviewer has to catch because it contradicts a decision the codebase already depends on. Multiply that reconciliation cost by however much faster generation has gotten, and the release-stage attenuation stops being surprising. It's what you'd expect from a system where the input rate tripled and the checking mechanism did not.</p>
+
+    <h2>What this changes about how you measure</h2>
+    <p>If throughput isn&rsquo;t the unit, the metrics built around throughput need a caveat attached to every one of them. Commits per day, tasks completed, and adoption rate are still worth tracking as leading indicators of how much an organization is using its AI tools. None of them tell you what fraction of that activity turned into something the organization kept.</p>
+    <p>The number that answers that question sits at the project-to-release boundary, and it's rarely instrumented directly. It requires distinguishing generation volume from delivered volume, which is the <a href="/insights/ai-engineering-roi/">generation/delivery/governance framework</a> this cluster uses, and then asking a further, more specific question inside the delivery layer: of what didn&rsquo;t survive to release, how much failed because it was wrong, and how much failed because it was right but incompatible with a decision nobody encoded anywhere an agent could check it against.</p>
+    <p>The second category is the one that's actually preventable before the fact rather than only catchable after it. That's the gap between a 30% release rate and something closer to the 80% project-level number: not more review capacity, but fewer of the incompatible changes reaching review in the first place.</p>
+
+    <h2>What a higher release-attenuation number would take</h2>
+    <p>There are only two ways to close the gap between 240% and 30%, and only one of them is available to an individual engineering organization. The first is slower, more conservative agents that generate less in the first place, which nobody buying these tools actually wants, and which would just move the industry back toward the throughput numbers the field is trying to leave behind. The second is a review-and-reconciliation layer that scales with generation instead of staying fixed at human-review speed.</p>
+    <p>For the specific slice of reconciliation cost this site addresses, architectural incompatibility, that means moving part of the check earlier: evaluating a proposed change against the decisions a codebase already depends on before the change is written, rather than discovering the conflict when a reviewer happens to notice it. That doesn't touch the requirements-churn or organizational-friction share of the 240%-to-30% gap. It targets the share that is mechanical, and mechanical costs are the ones a deterministic check can remove rather than merely detect.</p>
+    <p>None of that changes what the NBER numbers say happened in 2026. It changes what the same measurement would show for an organization that closed part of the gap: a smaller drop from project-level activity to shipped releases, because fewer of the changes reaching that boundary needed a human to catch what should have been caught earlier.</p>
+  </div><!-- /.article-body -->
+
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
+    <div class="context-cta-eyebrow">Operationalize this</div>
+    <p class="context-cta-copy">Prevent the incompatible change instead of catching it in review. See what's already enforceable in your repository.</p>
+    <div class="context-cta-actions">
+      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="footer" data-cta-component="context_cta">Run the Architecture Audit &rarr;</a>
+      <a href="/pilot/" class="context-cta-secondary" data-cta-intent="pilot" data-cta-position="footer" data-cta-component="context_cta">Request a pilot &rarr;</a>
+    </div>
+  </aside>
+
+  <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
+    <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
+    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What exactly did NBER Working Paper 35275 measure?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Demirer, Musolff, and Yang tracked coding activity and AI-tool usage across more than 500,000 GitHub developers. They found autonomous coding agents produced a 240% cumulative increase in coding activity, attenuating to an 80% increase at the project level and a 30% increase in actual releases. The paper was published May 2026 and revised September 2026.</div>
+    </details>
+    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does this mean coding agents are overhyped?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. The paper finds an elasticity of substitution of 0.23 between AI output and human review effort, meaning the two are strong complements: more AI-generated code increases the total review-equivalent work in the system rather than replacing it. That is a finding about what needs to scale alongside generation, not a finding that generation itself doesn't work.</div>
+    </details>
+    <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Why do projects attenuate less than releases?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">The two stages capture different losses. Activity-to-project loss looks like generated work that doesn't cohere into something worth continuing. Project-to-release loss looks like verification and integration cost: work that's directionally correct but has to be reconciled with the rest of the system, including architectural decisions it may conflict with, before it's safe to ship.</div>
+    </details>
+    <details style="border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What should replace throughput as a productivity metric?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Not a single replacement metric, but a layered view: generation activity as a leading indicator, delivery metrics (DORA-style) for what survives to production, and a governance layer measuring whether what shipped preserved the architectural decisions the organization already made. Coding activity alone answers none of the questions that determine whether the organization is better off.</div>
+    </details>
+  </section>
+
+  <aside class="related-panel" aria-labelledby="related-cluster-label" style="margin-top:3rem;">
+    <div class="related-panel-label" id="related-cluster-label">AI engineering ROI cluster</div>
+    <ul class="related-list">
+      <li><a href="/insights/ai-engineering-roi/"><div class="rel-title">AI Engineering ROI: How to Measure the Real Return From AI Coding</div><p class="rel-desc">The cluster pillar: where AI spend goes, and the three-layer framework for measuring what it buys.</p></a></li>
+      <li><a href="/insights/ai-coding-agent-verification-tax/"><div class="rel-title">The Verification Tax of AI Coding Agents</div><p class="rel-desc">Time saved in generation reappears as time spent reviewing whether the change is safe.</p></a></li>
+      <li><a href="/insights/ai-coding-productivity-gains-rework/"><div class="rel-title">Why AI Coding Productivity Gains Often Lead to More Rework</div><p class="rel-desc">Faros AI's 2026 telemetry: throughput up, bugs per developer up 54%, churn up 861%.</p></a></li>
+      <li><a href="/insights/dora-metrics-insufficient-for-agentic-development/"><div class="rel-title">DORA Metrics Are Necessary But Insufficient for Agentic Development</div><p class="rel-desc">Delivery metrics don't answer whether autonomous development preserves architectural intent.</p></a></li>
+    </ul>
+  </aside>
+
+  <aside class="related-panel" aria-labelledby="related-concepts-label" style="margin-top:1.5rem;padding-top:0;border-top:none;">
+    <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
+    <ul class="related-list">
+      <li><a href="/insights/four-architecture-protection-states/"><div class="rel-title">Four Architecture Protection States for AI Coding Agents</div><p class="rel-desc">Protected, Mneme-ready, Requires modelling, Guidance, and what moves a decision between them.</p></a></li>
+      <li><a href="/concepts/architectural-drift-prevention/"><div class="rel-title">Architectural Drift Prevention</div><p class="rel-desc">Stopping the incompatible change before it is written, not reconciling it after.</p></a></li>
+    </ul>
+  </aside>
+
+  <footer class="article-footer">
+    <a href="/insights/" class="back-link">&larr; Back to Insights</a>
+  </footer>
+</article>
+</main>
+<footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
+  <style>
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  </style>
+  <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Product</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/how-enforcement-works/">How it works</a></li>
+        <li><a href="/use-cases/">Use cases</a></li>
+        <li><a href="/works-with/">Works with</a></li>
+        <li><a href="/platforms/">Platforms</a></li>
+        <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/compare/">Compare</a></li>
+        <li><a href="/demo/">Demo</a></li>
+        <li><a href="/benchmark/">Benchmark</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/cli/">CLI reference</a></li>
+        <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        <li><a href="/supported-languages/">Supported languages</a></li>
+        <li><a href="/architecture/">Architecture</a></li>
+        <li><a href="/standards/">Standards</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Learn</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="/concepts/">Concepts</a></li>
+        <li><a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a></li>
+        <li><a href="/insights/what-is-the-ai-sdlc/">AI SDLC</a></li>
+        <li><a href="/insights/">Insights</a></li>
+        <li><a href="/qa-glossary/">Q&amp;A and Glossary</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Company</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li style="margin-bottom:0.35rem;"><a href="/pilot/" class="footer-pilot">Request a pilot</a></li>
+        <li><a href="/for/">For teams</a></li>
+        <li><a href="/founder/">Founder</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/roadmap/">Roadmap</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/security/data-handling/">Security &amp; data</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Connect</div>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
+        <li><a href="https://github.com/MnemeHQ/mneme">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://dev.to/mnemehq" target="_blank" rel="noopener">DEV.to</a></li>
+        <li><a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener">YouTube</a></li>
+        <li><a href="https://mnemehq.substack.com/" target="_blank" rel="noopener">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div style="max-width: 1080px; margin: 2rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em; opacity: 0.7;">
+    <span>Supported by</span>
+    <a href="https://cloud.google.com/startup" target="_blank" rel="noopener" aria-label="Google for Startups Cloud Program" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      <span>Google for Startups</span>
+    </a>
+    <span style="color: var(--border);">&middot;</span>
+    <a href="https://www.microsoft.com/en-us/startups" target="_blank" rel="noopener" aria-label="Microsoft for Startups Founders Hub" style="color: var(--muted); display: inline-flex; align-items: center; gap: 0.35rem; text-decoration: none;">
+      <svg width="13" height="13" viewBox="0 0 23 23" fill="currentColor" aria-hidden="true"><path d="M0 0h11v11H0z"/><path d="M12 0h11v11H12z"/><path d="M0 12h11v11H0z"/><path d="M12 12h11v11H12z"/></svg>
+      <span>Microsoft for Startups</span>
+    </a>
+  </div>
+  <div style="max-width: 1080px; margin: 1.25rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; font-size: 0.76rem; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.03em;">
+    <span style="display:inline-flex;align-items:center;gap:0.75rem;"><a href="/" aria-label="Mneme HQ home" style="display:inline-flex;opacity:0.75;"><img src="/favicon-v2.png" alt="Mneme HQ" height="22" style="display:block;"></a><span>Mneme HQ&trade; &middot; Open source &middot; MIT License</span></span>
+    <nav aria-label="Social media" style="display: flex; align-items: center; gap: 1rem;">
+      <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener" aria-label="GitHub" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55v-2.16c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.27-1.69-1.27-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.76 2.69 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18.92-.26 1.91-.39 2.89-.39.98 0 1.97.13 2.89.39 2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.12 3.04.73.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.26 5.68.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.55C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/company/mnemehq" target="_blank" rel="noopener" aria-label="LinkedIn" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@MnemeHQ" target="_blank" rel="noopener" aria-label="YouTube" style="color: var(--muted); display: inline-flex;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.12C19.55 3.5 12 3.5 12 3.5s-7.55 0-9.4.58A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.12c1.85.58 9.4.58 9.4.58s7.55 0 9.4-.58a3 3 0 0 0 2.1-2.12A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8zM9.6 15.57V8.43L15.82 12 9.6 15.57z"/></svg>
+      </a>
+      <a href="https://dev.to/mnemehq" target="_blank" rel="noopener" aria-label="DEV.to" style="color: var(--muted); display: inline-flex;">
+        <svg width="16" height="16" viewBox="0 0 448 512" fill="currentColor" aria-hidden="true"><path d="M120.12 208.29c-3.88-2.9-7.77-4.35-11.65-4.35H91.03v104.47h17.45c3.88 0 7.77-1.45 11.65-4.35 3.88-2.9 5.82-7.25 5.82-13.06v-69.65c-.01-5.8-1.96-10.16-5.83-13.06zM404.1 32H43.9C19.7 32 .06 51.59 0 75.8v360.4C.06 460.41 19.7 480 43.9 480h360.2c24.21 0 43.84-19.59 43.9-43.8V75.8c-.06-24.21-19.7-43.8-43.9-43.8zM154.2 291.19c0 18.81-11.61 47.31-48.36 47.25h-46.4V172.98h47.38c35.44 0 47.36 28.46 47.36 47.28l.02 70.93zm100.68-88.66H201.6v38.42h32.57v29.57H201.6v38.41h53.29v29.57h-62.18c-11.16.29-20.44-8.53-20.72-19.69V193.7c-.27-11.15 8.56-20.41 19.71-20.69h63.19l-.01 29.52zm103.64 115.29c-13.2 30.75-36.85 24.63-47.44 0l-38.53-144.8h32.57l29.71 113.72 29.57-113.72h32.58l-38.46 144.8z"/></svg>
+      </a>
+    </nav>
+    <span>&copy; 2026</span>
+  </div>
+</footer>
+
+<script><!-- nav-active -->
+(function(){
+  var path = window.location.pathname;
+  var best = null, bestLen = 0;
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    var href = a.getAttribute('href');
+    if (href && href.charAt(0) === '/' && href !== '/' && path.indexOf(href) === 0 && href.length > bestLen) {
+      best = a; bestLen = href.length;
+    }
+  });
+  if (best) best.classList.add('active');
+})();
+</script>
+<script>
+(function(){
+  var btn = document.querySelector('.nav-hamburger');
+  var links = document.querySelector('.nav-links');
+  if (!btn || !links) return;
+  function setOpen(open){
+    links.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('menu-open', open);
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    setOpen(!links.classList.contains('open'));
+  });
+  document.addEventListener('click', function(e){
+    if (!links.classList.contains('open')) return;
+    if (links.contains(e.target) || btn.contains(e.target)) return;
+    setOpen(false);
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && links.classList.contains('open')) setOpen(false);
+  });
+  links.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') setOpen(false);
+  });
+  window.addEventListener('resize', function(){
+    if (window.innerWidth > 900 && links.classList.contains('open')) setOpen(false);
+  });
+})();
+</script>
+
+
+
+<script src="/assets/js/video.js" defer></script>
+<script><!-- cta-analytics -->
+(function(){
+  'use strict';
+  /* CTA analytics — synced by scripts/sync_shared.py. Inert until GTM tags
+   * consume these dataLayer events. Schema: docs/site/cta-system.md and
+   * docs/site/gtm-tagging-requirements.md
+   *
+   * cta_click  { cta_intent, cta_position, cta_component, cta_destination,
+   *              source_page, link_text, content_segment, page_type }
+   * code_copy  { copy_context, source_page, content_segment, page_type }
+   * pilot_form_* are emitted by the pilot form page using the same helpers.
+   *
+   * source_page/link_text/content_segment exist so a later report can ask which
+   * CONTENT TYPE produced a conversion, not merely how many fired. Without
+   * content_segment we cannot separate the developer/evaluation motion
+   * (insight -> demo/quickstart -> install) from the architecture-leader motion
+   * (insight -> audit -> pilot); both land in the same cta_click bucket.
+   */
+
+  /* Dev hosts must not reach the production property. localhost events were
+   * observed in the GA4 export (page_location http://localhost:3456/...),
+   * inflating outbound_link_clicked and landing-page counts. Suppress at the
+   * source rather than filtering downstream, so BigQuery stays clean too. */
+  function isDevHost() {
+    var h = window.location.hostname;
+    if (!h) return true;                       // file:// — never production
+    if (h === 'localhost' || h === '127.0.0.1' || h === '0.0.0.0' || h === '::1') return true;
+    if (h.indexOf('127.') === 0) return true;
+    return /\.(local|test|localhost)$/.test(h);
+  }
+
+  if (isDevHost()) return;
+
+  function pageType() {
+    var p = window.location.pathname;
+    if (p === '/' || p === '/index.html') return 'homepage';
+    var map = [
+      ['/docs', 'docs'],
+      ['/demo', 'demo'],
+      ['/audit', 'audit'],
+      ['/compare', 'compare'],
+      ['/integrations', 'integration'],
+      ['/works-with', 'integration'],
+      ['/use-cases', 'use_case'],
+      ['/insights', 'insight'],
+      ['/concepts', 'concept'],
+      ['/for', 'team'],
+      ['/pilot', 'pilot'],
+      ['/pricing', 'pricing'],
+      ['/benchmark', 'benchmark']
+    ];
+    for (var i = 0; i < map.length; i++) {
+      if (p.indexOf(map[i][0]) === 0) return map[i][1];
+    }
+    return 'other';
+  }
+
+  /* Declared per page by the CTA routing work:
+   *   head meta name mneme:content-segment, e.g. developer_evaluation.
+   * Absent on pages that have not been segmented; the parameter is then
+   * omitted rather than guessed. */
+  function contentSegment() {
+    var m = document.querySelector('meta[name="mneme:content-segment"]');
+    var v = m && m.getAttribute('content');
+    return v ? v.trim() : undefined;
+  }
+
+  var PAGE_TYPE = pageType();
+  var CONTENT_SEGMENT = contentSegment();
+  var SOURCE_PAGE = window.location.pathname.replace(/\/+$/, '') || '/';
+
+  function linkText(el) {
+    var t = (el.textContent || '').replace(/\s+/g, ' ').trim();
+    return t ? t.slice(0, 100) : undefined;
+  }
+
+  function push(event, params) {
+    params.page_type = PAGE_TYPE;
+    params.source_page = SOURCE_PAGE;
+    if (CONTENT_SEGMENT) params.content_segment = CONTENT_SEGMENT;
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(Object.assign({ event: event }, params));
+  }
+
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var el = e.target.closest('[data-cta-intent], [data-code-copy]');
+    if (!el) return;
+
+    // Copy controls report code_copy, not cta_click.
+    if (el.hasAttribute('data-code-copy')) {
+      var ctx = el.getAttribute('data-copy-text');
+      if (!ctx) {
+        var codeEl = el.closest('.install-module');
+        if (!codeEl) codeEl = el.parentElement;
+        if (codeEl) {
+          var found = codeEl.querySelector('pre code') || codeEl.querySelector('code');
+          ctx = found ? (found.textContent || '').trim() : 'unknown';
+        } else {
+          ctx = 'unknown';
+        }
+      }
+      push('code_copy', { copy_context: ctx });
+      return;
+    }
+
+    push('cta_click', {
+      cta_intent: el.getAttribute('data-cta-intent'),
+      cta_position: el.getAttribute('data-cta-position'),
+      cta_component: el.getAttribute('data-cta-component'),
+      cta_destination: el.getAttribute('href'),
+      link_text: linkText(el)
+    });
+  }, true);
+})();
+</script>
+</body>
+</html>
