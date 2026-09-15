@@ -164,6 +164,22 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-ai-throughput.html",
+        "Insights",
+        "240% Activity. 30% Releases.",
+        "40px",
+        "Coding activity was never the unit that mattered. Production-ready change is.",
+        "insights/ai-throughput-is-not-engineering-throughput",
+    ),
+    (
+        "og-insights-ai-engineering-roi.html",
+        "Insights",
+        "AI Engineering ROI",
+        "44px",
+        "28x more AI spend. Feature delivery unchanged. Where the value actually leaks.",
+        "insights/ai-engineering-roi",
+    ),
+    (
         "og-insights-fde-decision-layer.html",
         "Insights",
         "The Architect's Knowledge Outlives Them",
@@ -1034,6 +1050,8 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-ai-throughput.html": "insights/ai-throughput-is-not-engineering-throughput/og.png",
+    "og-insights-ai-engineering-roi.html": "insights/ai-engineering-roi/og.png",
     "og-insights-fde-decision-layer.html": "insights/forward-deployed-architects-need-a-decision-layer/og.png",
     "og-insights-fde-agents.html": "insights/fde-coding-agents/og.png",
     "og-insights-fde-architecture.html": "insights/forward-deployed-engineering-architecture/og.png",
