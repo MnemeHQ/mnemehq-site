@@ -363,6 +363,9 @@ TEMPLATE_MAP = {
     "og-insights-fde-architecture.html": "insights/forward-deployed-engineering-architecture/og.png",
     "og-insights-fde-enterprise.html": "insights/forward-deployed-engineers-enterprise-ai/og.png",
     "og-insights-fde-pillar.html": "insights/forward-deployed-engineering-ai-sdlc/og.png",
+
+    # Insights — new
+    "og-insights-fde-decision-layer.html": "insights/forward-deployed-architects-need-a-decision-layer/og.png",
 }
 
 PORT = 8765

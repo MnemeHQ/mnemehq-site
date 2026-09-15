@@ -164,6 +164,14 @@ def make_template(tag: str, heading: str, font_size: str, subtitle: str, url_pat
 
 TEMPLATES = [
     (
+        "og-insights-fde-decision-layer.html",
+        "Insights",
+        "The Architect's Knowledge Outlives Them",
+        "40px",
+        "What a forward-deployed architect discovers has to survive them as something a system can act on.",
+        "insights/forward-deployed-architects-need-a-decision-layer",
+    ),
+    (
         "og-insights-fde-agents.html",
         "Insights",
         "Supervising the System That Writes",
@@ -1026,6 +1034,7 @@ TEMPLATES = [
 # ---------------------------------------------------------------------------
 
 NEW_MAP_ENTRIES = {
+    "og-insights-fde-decision-layer.html": "insights/forward-deployed-architects-need-a-decision-layer/og.png",
     "og-insights-fde-agents.html": "insights/fde-coding-agents/og.png",
     "og-insights-fde-architecture.html": "insights/forward-deployed-engineering-architecture/og.png",
     "og-insights-fde-enterprise.html": "insights/forward-deployed-engineers-enterprise-ai/og.png",
