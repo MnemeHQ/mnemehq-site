@@ -366,19 +366,28 @@ the AI-coding sense), and "enforcement" (not "validation" / "checking" for the g
 New terminology requires explicit consideration and a documented amendment to this file.
 
 **[ED] Terminology amendment, 2026-09-11: "decision layer" / "decision infrastructure".** Admitted as
-thesis-level vocabulary for the layer that answers whether a proposed agent action is consistent with
-decisions the organization already made, as distinct from identity (who the agent is), authorization
-(what it may reach), and observability (what it did). Rules of use:
+thesis-level vocabulary for the *industry-wide* layer that would answer whether a proposed agent action
+is consistent with decisions the organization already made, as distinct from identity (who the agent
+is), authorization (what it may reach), and observability (what it did). Rules of use:
 
-- It names an *architectural position*, not a Mneme feature. Never write it as something Mneme ships.
-  Mneme's shipped scope stays "architectural governance" / "architectural drift prevention" over
-  architectural decisions in a repository.
-- Use it only on thesis and concept surfaces (`/insights/`, `/concepts/`, `/about/`). It does not
-  belong on the homepage, product, pricing, or audit pages.
+- In this thesis sense, it names an *architectural position*, not a Mneme feature. Never write the
+  thesis-level claim as something Mneme ships in full. Mneme's shipped scope stays "architectural
+  governance" / "architectural drift prevention" over architectural decisions in a repository — write
+  "implements" or "applies to one class of decision," never "builds"/"provides" the layer itself.
+- Use the thesis framing only on thesis and concept surfaces (`/insights/`, `/concepts/`, `/about/`).
+  It does not belong on the homepage, product, pricing, or audit pages.
 - "decision corpus" remains the term for the decisions themselves. The decision layer is what acts on
   the corpus; the corpus is not renamed.
 - Do not introduce "agent economy" as Mneme positioning. It may be cited as a third-party framing with
   attribution, as in `/insights/agent-economy-needs-decision-infrastructure/`.
+- **Carve-out, pre-existing product usage.** "Decision layer" / "typed-decision layer" already describes
+  Mneme's shipped rule-evaluation component — the thing that serves the same decision corpus to every
+  agent/tool touching one repo or org (see `/use-cases/multi-agent-workflow-governance/`,
+  `/compare/aider/`, `/compare/rag-coding-memory/`). That product-level usage is unaffected by this
+  amendment and may appear on any surface, including product/pricing/compare pages, because it
+  describes a scoped, shipped capability rather than the thesis claim above. The distinction: "the
+  decision layer" naming Mneme's own component is fine everywhere; "a/the decision layer for the agent
+  economy" naming the broader industry primitive is thesis-only.
 
 ---
 
