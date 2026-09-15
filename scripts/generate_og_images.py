@@ -127,6 +127,8 @@ TEMPLATE_MAP = {
     "og-concepts-model-independent-governance.html": "concepts/model-independent-governance/og.png",
     # Docs
     "og-docs.html": "docs/og.png",
+    "og-docs-mcp.html": "docs/mcp/og.png",
+    "og-docs-decision-proposals.html": "docs/decision-proposals/og.png",
     # Architecture
     "og-architecture-index.html": "architecture/og.png",
     "og-architecture-decision-memory.html": "architecture/decision-memory-vs-documentation/og.png",
@@ -150,6 +152,7 @@ TEMPLATE_MAP = {
     "og-enterprise-trust.html": "enterprise/trust/og.png",
     "og-works-with.html": "works-with/og.png",
     "og-integration-claude-agent-sdk.html": "integrations/claude-agent-sdk/og.png",
+    "og-integration-mcp.html": "integrations/mcp/og.png",
 
     # Insights — new
     "og-insights-governance-perimeter-endpoint.html": "insights/governance-perimeter-is-moving-to-the-endpoint/og.png",
