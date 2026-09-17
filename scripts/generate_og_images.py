@@ -373,6 +373,9 @@ TEMPLATE_MAP = {
     # Insights — new
     "og-insights-ai-throughput.html": "insights/ai-throughput-is-not-engineering-throughput/og.png",
     "og-insights-ai-engineering-roi.html": "insights/ai-engineering-roi/og.png",
+
+    # Insights — new
+    "og-insights-agentic-change-management.html": "insights/agentic-change-management-needs-a-decision-layer/og.png",
 }
 
 PORT = 8765
