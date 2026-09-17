@@ -138,6 +138,14 @@
     .layer-row.highlighted .layer-num { background: rgba(200,240,96,0.08); color: var(--accent); border-right-color: rgba(200,240,96,0.3); }
     .layer-row.highlighted .layer-content { background: rgba(200,240,96,0.05); border-left: 2px solid var(--accent); }
     .layer-row.highlighted .layer-content strong { color: var(--accent); }
+    .plane-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; margin:1.5rem 0 1.25rem; border-radius:10px; overflow:hidden; background:var(--border2); }
+    .plane-card { background:var(--surface); padding:1.1rem 1.25rem; }
+    .plane-card.decision { border-top:2px solid var(--accent); }
+    .plane-card.change { border-top:2px solid var(--border2); }
+    .plane-card h3 { font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin:0 0 0.6rem; }
+    .plane-card.decision h3 { color:var(--accent); }
+    .plane-card ul { margin:0; padding-left:1.1rem; font-size:0.82rem; color:var(--text); line-height:1.75; }
+    @media (max-width:640px){ .plane-grid{ grid-template-columns:1fr; } }
     .stack-xrefs { font-size: 0.82rem; color: var(--muted); line-height: 1.8; margin-top: 0.75rem; }
     .stack-xrefs a { color: var(--teal); text-decoration: none; }
     .stack-xrefs a:hover { color: var(--accent); }
@@ -297,6 +305,34 @@
       </div>
     </div>
     <p class="stack-xrefs">Harnesses coordinate execution; governance defines constraints; verification enforces invariants. None of those layers can do the others' jobs. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/">Harness Engineering Still Needs Governance</a>. The concept page that anchors this stack: <a href="/concepts/governance-infrastructure/">Governance Infrastructure</a>.</p>
+  </section>
+
+  <section class="stack-section" id="decision-vs-change-plane" aria-labelledby="plane-heading">
+    <div class="section-label" id="plane-heading">Decision governance and change governance are different layers</div>
+    <p class="stack-lede">Layer 4 above answers what has been decided and whether it applies. A separate class of tooling &mdash; code review, PR prioritization, change-management systems &mdash; answers what changed and whether it is safe to ship. Both are necessary. Neither can do the other's job.</p>
+    <div class="plane-grid">
+      <div class="plane-card decision">
+        <h3>Decision plane &middot; Mneme</h3>
+        <ul>
+          <li>What architecture has been decided?</li>
+          <li>Which decision applies here?</li>
+          <li>Is it authoritative?</li>
+          <li>What constraint follows?</li>
+          <li>Can this action proceed?</li>
+        </ul>
+      </div>
+      <div class="plane-card change">
+        <h3>Change plane &middot; review &amp; change management</h3>
+        <ul>
+          <li>What changed?</li>
+          <li>Is the implementation correct?</li>
+          <li>What risk does it introduce?</li>
+          <li>Which PR deserves attention?</li>
+          <li>Is it ready to merge?</li>
+        </ul>
+      </div>
+    </div>
+    <p class="stack-xrefs">The two planes compose over MCP rather than merge: a change-management system can ask Mneme's Decision Index which decisions govern a proposed change, while keeping full ownership of review, risk scoring, and merge readiness. See <a href="/integrations/mcp/">the MCP integration overview</a> for how that boundary works.</p>
   </section>
 
 <figure class="doc-figure">
