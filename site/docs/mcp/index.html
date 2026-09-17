@@ -159,6 +159,7 @@
         <li><a href="#tools">Six-tool reference</a></li>
         <li><a href="#errors">Errors and fail-closed behavior</a></li>
         <li><a href="#authority">Authority boundary</a></li>
+        <li><a href="#downstream-consumers">Downstream governance consumers</a></li>
         <li><a href="#limitations">Known limitations</a></li>
       </ol>
     </nav>
@@ -293,6 +294,23 @@ mneme decision-mcp</code></pre>
       <p>MCP may submit a candidate and read the state Mneme exposes. It cannot accept, reject, activate, supersede, create an exception, install a typed rule, submit trusted evidence, or bypass review. Those operations are deliberately absent from the registered tool list.</p>
       <div class="callout"><p><strong>Human authority stays in the CLI.</strong> Review proposals with <code>mneme decision proposals</code> and <code>mneme decision show</code>, then use <code>mneme decision accept</code> or <code>mneme decision reject</code>. See the <a href="/docs/decision-proposals/">decision proposal workflow</a>.</p></div>
       <p>Acceptance materializes a canonical decision into project memory. It still does not install deterministic protection or run the Architecture Audit. Retrieval, authority, Audit, and enforcement remain distinct.</p>
+    </section>
+
+    <section class="section" id="downstream-consumers">
+      <h2>Downstream governance consumers</h2>
+      <p>A downstream system does not need to adopt Mneme's data model, storage, or workflow to use the Decision Index. A consumer that can launch the local <code>mneme decision-mcp</code> process calls <code>decision.applicable_to</code> for a proposed change, receives the governing decisions with provenance, and folds that into whatever review, risk-scoring, or triage logic it already runs. In 0.9.0 this requires local stdio access; there is no hosted endpoint a remote service could call.</p>
+      <pre tabindex="0"><code>Change proposed (PR, agent patch, generated diff)
+        |
+        v
+Consumer calls decision.applicable_to(...)
+        |
+        v
+Mneme returns applicable decisions + provenance
+        |
+        v
+Consumer performs its own review, risk scoring,
+prioritization, or workflow routing</code></pre>
+      <p>This is the boundary the MCP server is built for: a stable protocol surface for exchanging decision context, not a shared implementation. See <a href="/integrations/mcp/">the integration overview</a> for how this boundary is intended to compose with review and change-management tooling.</p>
     </section>
 
     <section class="section" id="limitations">

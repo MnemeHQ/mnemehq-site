@@ -1042,6 +1042,14 @@ TEMPLATES = [
     ("og-insights-mckinsey-adoption-gap.html", "Report Analysis", "How to Close the Agentic Adoption Gap", "44px", "McKinsey's Enforce stage meets software engineering governance and agent execution.", "insights/mckinsey-agentic-adoption-gap-enforce-software-engineering"),
     ("og-insights-openai-symphony.html", "Insights", "OpenAI Symphony", "58px", "The issue becomes durable. Architectural authority must outlive every disposable agent session.", "insights/openai-symphony-architectural-context"),
     ("og-insights-ai-native-sdlc-arch-layer.html", "Insights", "The Architecture Layer the AI-Native SDLC Needs", "40px", "Anthropic's playbook validates governance in the loop. Architecture needs a policy layer on top.", "insights/ai-native-sdlc-architecture-layer"),
+    (
+        "og-insights-agentic-change-management.html",
+        "Insights",
+        "Two Control Planes, Not One",
+        "42px",
+        "CodeRabbit scores the PR. Mneme governs the decision it has to obey.",
+        "insights/agentic-change-management-needs-a-decision-layer",
+    ),
 ]
 
 # ---------------------------------------------------------------------------
@@ -1261,6 +1269,7 @@ NEW_MAP_ENTRIES = {
     "og-insights-agentic-governance-execution.html": "insights/agentic-ai-governance-closer-to-execution/og.png",
     # July 2026: architectural-intent cluster
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
+    "og-insights-agentic-change-management.html": "insights/agentic-change-management-needs-a-decision-layer/og.png",
 }
 
 # ---------------------------------------------------------------------------

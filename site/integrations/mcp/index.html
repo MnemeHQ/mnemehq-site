@@ -184,6 +184,25 @@ Audit, modelling, protection, enforcement</code></pre>
       <p>MCP is an interoperability boundary for Mneme's decision layer. It lets heterogeneous systems exchange decision context without redefining governance in each system. The deterministic enforcement layer still operates at execution boundaries such as agent hooks and CI, where actual changes can be evaluated against applicable rules.</p>
       <p>See <a href="/docs/decision-proposals/">Decision proposals</a> for the full human review workflow and <a href="/docs/how-enforcement-works/">How enforcement works</a> for the prevent, catch, and verify layers that MCP complements.</p>
       <p>Related implementation paths include <a href="/integrations/adr-import/">ADR import</a> for compiling an existing decision corpus and the <a href="/integrations/claude-agent-sdk/">Claude Agent SDK integration</a> for enforcement around agent execution. The released implementation is available in the <a href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener">Mneme source repository</a>.</p>
+
+      <h2>Decision layer for the wider agentic SDLC</h2>
+      <p>Mneme is not a substitute for code review, CI, issue tracking, or change-management tooling. Those systems decide what changed, whether the implementation is correct, what risk it introduces, and which change deserves attention next. Mneme answers a different, earlier question: what has the organization already decided about the architecture this change has to obey?</p>
+      <pre tabindex="0"><code>Decision Index
+        |
+        v
+       MCP
+        |
+        v
+agent / review system / change-management system
+        |
+        v
+      change</code></pre>
+      <p>A downstream system that can launch the local server does not need Mneme's internals to use this. It calls the Decision Index through MCP, retrieves the architectural decisions applicable to a proposed action, and keeps its own responsibility for code quality, risk, prioritization, and workflow. The 0.9.0 transport is local stdio, so this composes today with tools running beside the checkout, not with hosted services.</p>
+      <p><strong>Example, not a shipped integration:</strong> CodeRabbit's Triage feature, launched September 15, 2026, assigns every pull request a deterministic priority from P0 to P3 as the "prioritization layer" of what CodeRabbit calls Agentic Change Management &mdash; its system for governing change from both humans and agents (<a href="https://www.coderabbit.ai/blog/coderabbit-triage" target="_blank" rel="noopener">CodeRabbit, September 2026</a>). A change-management system built this way could query Mneme's Decision Index over MCP to retrieve the architectural decisions governing a change, while continuing to own its own review, impact analysis, and prioritization. Mneme has no CodeRabbit integration today; this illustrates the interoperability pattern MCP was built for, not a supported connector.</p>
+      <p>Review systems govern changes. Mneme governs the decisions those changes have to obey.</p>
+
+      <h2>Native integrations</h2>
+      <p>MCP is one access path to the Decision Index. Several coding agents and IDEs integrate natively instead: <a href="/integrations/claude-code/">Claude Code</a>, <a href="/integrations/codex-cli/">Codex CLI</a>, and <a href="/integrations/kiro/">Kiro</a>, with an experimental adapter for <a href="/integrations/hermes/">Hermes</a>. It is a retrieval and proposal surface only. Native integrations go further: they inject decision context at agent runtime and enforce applicable constraints at the write boundary through <code>mneme check</code>. Use MCP when you need decision context in a tool Mneme has no adapter for; use a native integration when you need enforcement.</p>
     </div>
 
     <footer class="article-footer">
