@@ -276,6 +276,15 @@
         }
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    /* mneme:context-cta-css */
+    .context-cta { margin: 3rem 0 0; background: rgba(139,224,200,0.06); border: 1px solid #8be0c8; border-radius: 12px; padding: 1.5rem 1.75rem; }
+    .context-cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #8be0c8; margin-bottom: 0.6rem; }
+    .context-cta-copy { font-size: 0.92rem; color: #e8e8ec; line-height: 1.65; margin: 0 0 1.15rem; }
+    .context-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
+    .context-cta-primary { display: inline-block; background: #8be0c8; color: #0c0c0d; padding: 0.55rem 1.25rem; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: background 0.15s; }
+    .context-cta-primary:hover { background: #6fcbb0; }
+    .context-cta-secondary { color: #8be0c8; font-family: 'DM Mono', monospace; font-size: 0.82rem; text-decoration: none; border-bottom: 1px solid rgba(139,224,200,0.4); transition: border-color 0.15s; }
+    .context-cta-secondary:hover { border-bottom-color: #8be0c8; }
   </style>
 </head>
 <body>
@@ -359,6 +368,15 @@ Review / risk / prioritization
 
 <h2>Where to start</h2>
 <p>Before a system can decide which change deserves attention, the organization needs a durable, enforceable answer to what it has already decided about the architecture. Most codebases do not have one: the decisions exist in someone's memory, an old ADR, or a chat thread, not in a form any system, human or agent, can query. The decision-plane-versus-change-plane distinction only pays off once decisions are actually represented in enforceable form. The <a href="/audit/">Architecture Audit</a> is the place to find out how much of your architecture already is, using the same <a href="/insights/four-architecture-protection-states/">four protection states</a> that turn "we decided this once" into a queue you can act on.</p>
+
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">
+    <div class="context-cta-eyebrow">Operationalize this</div>
+    <p class="context-cta-copy">See Mneme enforce an architectural decision against AI-generated code, deterministically, in the live demo.</p>
+    <div class="context-cta-actions">
+      <a href="/demo/" class="context-cta-primary">See the live demo &rarr;</a>
+      <a href="/pilot/" class="context-cta-secondary">Request a pilot &rarr;</a>
+    </div>
+  </aside>
 
   <footer class="article-footer">
     <a href="/insights/" class="back-link">&larr; Back to Insights</a>
