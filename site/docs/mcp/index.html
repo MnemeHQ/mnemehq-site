@@ -298,7 +298,7 @@ mneme decision-mcp</code></pre>
 
     <section class="section" id="downstream-consumers">
       <h2>Downstream governance consumers</h2>
-      <p>A downstream system does not need to adopt Mneme's data model, storage, or workflow to use the Decision Index. It calls <code>decision.applicable_to</code> for a proposed change, receives the governing decisions with provenance, and folds that into whatever review, risk-scoring, or triage logic it already runs. Mneme does not see, and does not need to see, the consumer's priority score, risk model, or merge queue.</p>
+      <p>A downstream system does not need to adopt Mneme's data model, storage, or workflow to use the Decision Index. A consumer that can launch the local <code>mneme decision-mcp</code> process calls <code>decision.applicable_to</code> for a proposed change, receives the governing decisions with provenance, and folds that into whatever review, risk-scoring, or triage logic it already runs. In 0.9.0 this requires local stdio access; there is no hosted endpoint a remote service could call.</p>
       <pre tabindex="0"><code>Change proposed (PR, agent patch, generated diff)
         |
         v
@@ -310,7 +310,8 @@ Mneme returns applicable decisions + provenance
         v
 Consumer performs its own review, risk scoring,
 prioritization, or workflow routing</code></pre>
-      <p>This is the boundary the MCP server is built for: a stable protocol surface for exchanging decision context, not a shared implementation. See <a href="/integrations/mcp/">the integration overview</a> for how this composes with review and change-management tooling in practice.</p>
+      <p><em>(0.9.0: the consumer must be able to launch the local stdio server; there is no remote transport a hosted service could call.)</em></p>
+      <p>This is the boundary the MCP server is built for: a stable protocol surface for exchanging decision context, not a shared implementation. See <a href="/integrations/mcp/">the integration overview</a> for how this boundary is intended to compose with review and change-management tooling.</p>
     </section>
 
     <section class="section" id="limitations">

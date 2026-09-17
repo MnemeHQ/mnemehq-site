@@ -320,6 +320,7 @@
     <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-09-16">September 2026</time></p>
   </header>
 
+<div class="article-body">
 <h2>The PR queue is becoming a decision system</h2>
 <p>CodeRabbit calls Triage the "prioritization layer" of what it calls Agentic Change Management: its system for governing software change from both people and agents (<a href="https://www.coderabbit.ai/blog/coderabbit-triage" target="_blank" rel="noopener">CodeRabbit, September 2026</a>). Triage replaces FIFO ordering with a deterministic P0-to-P3 score per pull request, and it shows the evidence behind each score. That is not marketing language stretched onto a review feature. It is a genuine move from probabilistic AI review toward deterministic, evidence-backed governance output, and it is the clearest signal yet that agentic development is pushing governance into the delivery pipeline itself.</p>
 
@@ -353,11 +354,18 @@ Review / risk / prioritization
 <p>The decision plane sits before the change exists: what has been decided, what applies, what is enforced before generation. The change plane sits after: what changed, is it correct, what risk it carries, whether it is ready to merge. Neither plane can do the other's job. A prioritization engine that tries to encode architectural authority ends up re-deriving governance ad hoc, per repository, per rule. A decision layer that tries to score PR risk ends up duplicating review tooling it has no advantage building. See the full breakdown in <a href="/architecture/#decision-vs-change-plane">Mneme's architecture overview</a>.</p>
 
 <h2>MCP is the interoperability boundary between them</h2>
-<p>Until recently, connecting the two planes meant one of two bad options: a change-management system re-implements architectural governance itself, or a governance system builds bespoke adapters into every review and CI product it wants to reach. Mneme's Decision MCP server, shipped in 0.9.0, is built for the second boundary: a stable, six-tool protocol surface a reviewer, agent, IDE, or change-management system can call to retrieve the architectural decisions applicable to a proposed action, with provenance attached, without adopting Mneme's storage model or internals.</p>
-<p>To be precise about maturity: Mneme has no CodeRabbit integration today, and this is not a roadmap announcement. It is the shape of what MCP enables. A change-management system built the way CodeRabbit describes Triage could call <code>decision.applicable_to</code> to retrieve the decisions governing a change, while continuing to own its own review, impact analysis, and prioritization entirely. See <a href="/integrations/mcp/">how that boundary works today</a> and the <a href="/docs/mcp/">full six-tool reference</a>.</p>
+<p>Until recently, connecting the two planes meant one of two bad options: a change-management system re-implements architectural governance itself, or a governance system builds bespoke adapters into every review and CI product it wants to reach. Mneme's Decision MCP server, shipped in 0.9.0, is built for the second boundary: a stable, six-tool protocol surface an agent, IDE, or other MCP host can call to retrieve the architectural decisions applicable to a proposed action, with provenance attached, without adopting Mneme's storage model or internals. It runs as a local stdio process in 0.9.0, so a hosted reviewer or change-management service is a pattern the protocol enables, not a connection available today.</p>
+<p>To be precise about maturity: Mneme has no CodeRabbit integration today, and this is not a roadmap announcement. It is the shape of what MCP enables. A change-management system built the way CodeRabbit describes Triage could call <code>decision.applicable_to</code> to retrieve the decisions governing a change, while continuing to own its own review, impact analysis, and prioritization entirely. See <a href="/integrations/mcp/">how that boundary is designed to work</a> and the <a href="/docs/mcp/">full six-tool reference</a>.</p>
 
 <h2>Where to start</h2>
 <p>Before a system can decide which change deserves attention, the organization needs a durable, enforceable answer to what it has already decided about the architecture. Most codebases do not have one: the decisions exist in someone's memory, an old ADR, or a chat thread, not in a form any system, human or agent, can query. The decision-plane-versus-change-plane distinction only pays off once decisions are actually represented in enforceable form. The <a href="/audit/">Architecture Audit</a> is the place to find out how much of your architecture already is, using the same <a href="/insights/four-architecture-protection-states/">four protection states</a> that turn "we decided this once" into a queue you can act on.</p>
+
+  <footer class="article-footer">
+    <a href="/insights/" class="back-link">&larr; Back to Insights</a>
+  </footer>
+</div>
+</article>
+</main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
