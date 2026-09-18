@@ -563,7 +563,9 @@ body.home-v2 {
 .hm-paper-card {
   position: relative;
   min-height: 390px;
-  padding: 1.75rem;
+  /* bottom padding reserves the absolutely-positioned signature's space so
+     flow content cannot run underneath it */
+  padding: 1.75rem 1.75rem 4.25rem;
   overflow: hidden;
   color: var(--ink);
   background:
