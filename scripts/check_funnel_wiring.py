@@ -138,10 +138,13 @@ REQUIRED = [
     ("site/compare/windsurf/index.html",
      ['data-cta-intent="pilot"', 'data-cta-intent="github"'],
      FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
-    # P1-3: homepage buyer shortcut routes to the Audit (the nav already
-    # carries the Pilot link; Install/Demo hierarchy stays untouched).
+    # P1-4: homepage hero carries exactly one CTA (Install Mneme). The
+    # Audit buyer-shortcut link that used to sit in the hero was cut
+    # (2026-09-18) -- Audit is still one click away via nav and is the
+    # primary CTA in the closing section instead.
     ("site/index.html",
-     ['data-cta-intent="audit" data-cta-position="hero"'],
+     ['data-cta-intent="install" data-cta-position="hero"',
+      'data-cta-intent="audit" data-cta-position="end"'],
      FORBIDDEN_EVENT_NAMES + FORBIDDEN_CTA_PHRASES),
 ]
 
