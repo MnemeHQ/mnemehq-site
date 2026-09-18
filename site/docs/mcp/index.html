@@ -138,7 +138,53 @@
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/docs/">Docs</a></li>
-      <li aria-current="page">MCP server</li>
+      <!-- mneme:docs-nav:start --><li class="docs-switcher-item">
+    <details class="docs-switcher">
+      <summary><span class="docs-switcher-sr">Current page: </span>MCP server <svg class="docs-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="docs-switcher-sr"> (show all docs)</span></summary>
+      <div class="docs-switcher-panel" role="navigation" aria-label="All docs">
+      <div class="docs-switcher-group">
+        <div class="docs-switcher-label">Start here</div>
+        <ul>
+          <li><a href="/docs/">Docs overview</a></li>
+          <li><a href="/docs/how-enforcement-works/">How enforcement works</a></li>
+        </ul>
+      </div>
+      <div class="docs-switcher-group">
+        <div class="docs-switcher-label">Guides</div>
+        <ul>
+          <li><a href="/docs/protection-activation/">Protection activation</a></li>
+          <li><a href="/docs/decision-proposals/">Decision proposals</a></li>
+        </ul>
+      </div>
+      <div class="docs-switcher-group">
+        <div class="docs-switcher-label">Reference</div>
+        <ul>
+          <li><a href="/docs/cli/">CLI reference</a></li>
+          <li><a href="/docs/mcp/" aria-current="page">MCP server</a></li>
+          <li><a href="/docs/supported-languages/">Supported languages</a></li>
+          <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        </ul>
+      </div>
+      <div class="docs-switcher-group">
+        <div class="docs-switcher-label">Methodology</div>
+        <ul>
+          <li><a href="/docs/benchmark-methodology/">Benchmark methodology</a></li>
+        </ul>
+      </div>
+      <a class="docs-switcher-more" href="/integrations/">Integration guides &rarr;</a>
+      </div>
+    </details>
+<script>
+(function(){
+  var d = document.currentScript.parentNode.querySelector('.docs-switcher');
+  if (!d) return;
+  document.addEventListener('click', function(e){ if (d.open && !d.contains(e.target)) d.open = false; });
+  d.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); }
+  });
+})();
+</script>
+    </li><!-- mneme:docs-nav:end -->
     </ol>
   </nav>
   <div class="answer-capsule"><strong>Released in mneme-hq 0.9.0:</strong> a local stdio MCP server with exactly six Decision Index tools. It can read decisions and record non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>

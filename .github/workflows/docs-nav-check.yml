@@ -1,0 +1,29 @@
+name: docs-nav check
+
+# Every /docs/* page carries a breadcrumb dropdown listing all docs,
+# generated from the DOCS list in scripts/sync_docs_nav.py. This fails
+# when a page is hand-edited or a doc is added without re-running the sync.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-docs-nav:
+    name: Verify docs switcher is in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run docs-nav check
+        run: python scripts/sync_docs_nav.py --check
