@@ -135,7 +135,17 @@
   margin-left: auto !important;
 }
 
-.article-header { margin-bottom: clamp(3.25rem, 7vw, 5rem) !important; }
+.article-header {
+  margin-bottom: clamp(3.25rem, 7vw, 5rem) !important;
+  /* base.css writes this hero as a full-bleed card and insets its padding by
+     calc((100vw - 720px)/2 + 2rem) to re-center a 720px column inside a
+     100vw-wide box. Here .article-header is capped at --integration-reading
+     (760px) instead of bleeding to the viewport, so that vw-based padding
+     over-insets it -- on a ~1260px viewport it eats ~300px per side, leaving
+     a ~150px sliver for the heading and lede. Override it to a fixed pad
+     sized for the actual (already narrow) card. */
+  padding: clamp(2.5rem, 5vw, 3.8rem) clamp(1.5rem, 4vw, 2.5rem) clamp(2.2rem, 4vw, 3.2rem) !important;
+}
 
 .article-header h1,
 .hero h1 {

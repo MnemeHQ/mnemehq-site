@@ -5,21 +5,21 @@ Each doc page's last breadcrumb item is a <details> dropdown listing every
 doc, grouped, with the current page marked. DOCS below is the single source
 of truth: add a page here, then run this script.
 
+Rendering is shared with scripts/sync_integrations_nav.py via
+scripts/page_switcher.py.
+
 Usage:
     python scripts/sync_docs_nav.py          # rewrite pages in place
     python scripts/sync_docs_nav.py --check  # CI: fail if any page is stale
-
-The block lives between <!-- mneme:docs-nav:start --> and
-<!-- mneme:docs-nav:end -->. On a page without markers, the script replaces
-the breadcrumb's `<li aria-current="page">...</li>` item. Styles live in
-site/assets/css/base.css under "Docs switcher".
 """
 from __future__ import annotations
 
 import argparse
-import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from page_switcher import render_block, splice  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS_DIR = ROOT / "site" / "docs"
@@ -45,64 +45,24 @@ DOCS: list[tuple[str, list[tuple[str, str]]]] = [
     ]),
 ]
 
-START = "<!-- mneme:docs-nav:start -->"
-END = "<!-- mneme:docs-nav:end -->"
-BLOCK_PAT = re.compile(re.escape(START) + r".*?" + re.escape(END), re.DOTALL)
-CURRENT_CRUMB_PAT = re.compile(r'<li aria-current="page">[^<]*</li>')
-
-CHEVRON = (
-    '<svg class="docs-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" '
-    'aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" '
-    'stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
-)
-
-# Close on Escape (returning focus to the toggle) and on outside click.
-SCRIPT = """<script>
-(function(){
-  var d = document.currentScript.parentNode.querySelector('.docs-switcher');
-  if (!d) return;
-  document.addEventListener('click', function(e){ if (d.open && !d.contains(e.target)) d.open = false; });
-  d.addEventListener('keydown', function(e){
-    if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); }
-  });
-})();
-</script>"""
-
 
 def href(slug: str) -> str:
     return f"/docs/{slug}/" if slug else "/docs/"
 
 
 def render(current: str) -> str:
-    label = next(l for _, items in DOCS for s, l in items if s == current)
-    groups = []
-    for group, items in DOCS:
-        links = "\n".join(
-            f'          <li><a href="{href(s)}"'
-            + (' aria-current="page"' if s == current else "")
-            + f">{l}</a></li>"
-            for s, l in items
-        )
-        groups.append(
-            '      <div class="docs-switcher-group">\n'
-            f'        <div class="docs-switcher-label">{group}</div>\n'
-            f"        <ul>\n{links}\n        </ul>\n"
-            "      </div>"
-        )
-    return (
-        f'{START}<li class="docs-switcher-item">\n'
-        '    <details class="docs-switcher">\n'
-        f'      <summary><span class="docs-switcher-sr">Current page: </span>{label} {CHEVRON}'
-        '<span class="docs-switcher-sr"> (show all docs)</span></summary>\n'
-        # A div, not <nav>: several pages carry bare `nav { position: sticky }`
-        # rules that would otherwise restyle the panel.
-        '      <div class="docs-switcher-panel" role="navigation" aria-label="All docs">\n'
-        + "\n".join(groups)
-        + '\n      <a class="docs-switcher-more" href="/integrations/">Integration guides &rarr;</a>\n'
-        "      </div>\n"
-        "    </details>\n"
-        f"{SCRIPT}\n"
-        f"    </li>{END}"
+    current_label = next(l for _, items in DOCS for s, l in items if s == current)
+    groups = [
+        (group, [(href(s), l, s == current) for s, l in items])
+        for group, items in DOCS
+    ]
+    return render_block(
+        current_label=current_label,
+        groups=groups,
+        more_href="/integrations/",
+        more_label="Integration guides",
+        aria_label="All docs",
+        sr_noun="page",
     )
 
 
@@ -122,11 +82,8 @@ def sync(check: bool) -> int:
         text = raw.decode("utf-8")
         eol = "\r\n" if "\r\n" in text else "\n"
         block = render(slug).replace("\n", eol)
-        if START in text:
-            new = BLOCK_PAT.sub(lambda _: block, text, count=1)
-        elif len(CURRENT_CRUMB_PAT.findall(text)) == 1:
-            new = CURRENT_CRUMB_PAT.sub(lambda _: block, text, count=1)
-        else:
+        new, ok = splice(text, block)
+        if not ok:
             print(f"sync_docs_nav: no breadcrumb anchor in {path.relative_to(ROOT)}")
             return 1
         if new != text:
