@@ -1035,7 +1035,7 @@
         <img src="/assets/images/photo-decision-wall.webp" width="1200" height="774"
              alt="Two people arranging a wall of hand-drawn application screens into one system"
              fetchpriority="high" decoding="async">
-        <figcaption>Architecture is decided by people. Mneme carries that decision to every agent.</figcaption>
+        <figcaption>Architecture is decided by people. Mneme carries those decisions into supported coding agents and evaluates changes deterministically at the earliest boundary each integration exposes.</figcaption>
       </figure>
     </div>
   </section>
@@ -1060,6 +1060,7 @@
       <h2 class="hm-title" id="scenario-title">The code can work and still violate the system.</h2>
       <div class="hm-scenario-flow">
         <article class="hm-paper-card">
+          <div class="hm-path-tag" style="margin-bottom:.5rem;">01 &middot; The decision</div>
           <div class="hm-paper-meta"><span>ADR-017</span><span>Approved · Platform team</span></div>
           <h3>Keep data access behind the service boundary.</h3>
           <p>Frontend surfaces may request analytics through the backend service. They must not instantiate data-platform clients directly.</p>
@@ -1070,7 +1071,7 @@
         <div class="hm-flow-arrow" aria-hidden="true">→</div>
 
         <article class="hm-system-card">
-          <h3>Agent proposal</h3>
+          <h3>02 &middot; The proposed change</h3>
           <code class="hm-code"><span class="comment">// frontend/checkout.ts</span>
 <span class="bad">import { BigQuery }</span>
 <span class="bad">  from '@google-cloud/bigquery';</span>
@@ -1086,7 +1087,7 @@ trackCheckout(event) {
         <div class="hm-flow-arrow" aria-hidden="true">→</div>
 
         <article class="hm-system-card">
-          <h3>Mneme verdict</h3>
+          <h3>03 &middot; The verdict</h3>
           <div class="hm-result">
             <strong>BLOCKED</strong>
             <p>ADR-017 forbids a data-platform client in the frontend checkout service.</p>
@@ -1299,7 +1300,7 @@ trackCheckout(event) {
   <section class="hm-final" aria-labelledby="final-title">
     <div class="hm-shell">
       <div class="hm-section-label">Architecture that holds</div>
-      <h2 id="final-title">Give every coding agent the decisions your team already made.</h2>
+      <h2 id="final-title">Give your coding agents the decisions your team already made.</h2>
       <div class="hm-actions">
         <a class="hm-btn hm-btn-primary" href="/pilot/" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Request a pilot</a>
         <a class="hm-btn" href="/demo/" data-cta-intent="demo" data-cta-position="end" data-cta-component="end_block">Run the 2-minute demo</a>
