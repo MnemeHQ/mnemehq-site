@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918-2">
   <meta name="description" content="Review MCP decision proposals and exercise human authority with the mneme-hq 0.9.0 proposals, show, accept, and reject CLI commands." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -62,7 +62,7 @@
   }
   </script>
   <style>
-    .breadcrumb-nav { max-width: 920px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
+    .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
     .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
     .breadcrumb a { color: var(--muted); text-decoration: none; }
@@ -70,14 +70,14 @@
     .breadcrumb [aria-current="page"] { color: var(--text); }
     .answer-capsule { max-width: 860px; margin: 0 auto; padding: 1.4rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
-    .hero { max-width: 920px; margin: 0 auto; padding: 4rem 2rem 2rem; }
+    .hero { max-width: 880px; margin: 0 auto; padding: 4rem 2rem 2rem; }
     .eyebrow { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.4rem, 6vw, 4.15rem); font-weight: 400; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 1.1rem; }
     .hero .lede { max-width: 760px; color: var(--muted); font-size: 1.04rem; line-height: 1.8; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
     .byline { margin-top: 1.1rem; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.04em; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline span { color: var(--border2); margin: 0 0.5rem; }
-    .wrap { max-width: 920px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
     .section { margin-top: 3.8rem; }
     .section:first-child { margin-top: 0; }
     .section h2 { font-family: 'Inter', sans-serif; font-size: 1.5rem; line-height: 1.25; margin-bottom: 0.65rem; }
@@ -134,7 +134,53 @@
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/docs/">Docs</a></li>
-      <li aria-current="page">Decision proposals</li>
+      <!-- mneme:page-switcher:start --><li class="page-switcher-item">
+    <details class="page-switcher">
+      <summary><span class="page-switcher-sr">Current page: </span>Decision proposals <svg class="page-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="page-switcher-sr"> (show all pages)</span></summary>
+      <div class="page-switcher-panel" role="navigation" aria-label="All docs">
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Start here</div>
+        <ul>
+          <li><a href="/docs/">Docs overview</a></li>
+          <li><a href="/docs/how-enforcement-works/">How enforcement works</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Guides</div>
+        <ul>
+          <li><a href="/docs/protection-activation/">Protection activation</a></li>
+          <li><a href="/docs/decision-proposals/" aria-current="page">Decision proposals</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Reference</div>
+        <ul>
+          <li><a href="/docs/cli/">CLI reference</a></li>
+          <li><a href="/docs/mcp/">MCP server</a></li>
+          <li><a href="/docs/supported-languages/">Supported languages</a></li>
+          <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Methodology</div>
+        <ul>
+          <li><a href="/docs/benchmark-methodology/">Benchmark methodology</a></li>
+        </ul>
+      </div>
+      <a class="page-switcher-more" href="/integrations/">Integration guides &rarr;</a>
+      </div>
+    </details>
+<script>
+(function(){
+  var d = document.currentScript.parentNode.querySelector('.page-switcher');
+  if (!d) return;
+  document.addEventListener('click', function(e){ if (d.open && !d.contains(e.target)) d.open = false; });
+  d.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); }
+  });
+})();
+</script>
+    </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
   <div class="answer-capsule"><strong>A proposal is a candidate, not a rule.</strong> In 0.9.0, MCP producers can submit proposals, but only a person using the <code>mneme decision</code> CLI can accept or reject them. Acceptance creates a canonical project-memory decision; it does not activate protection.</div>
@@ -142,7 +188,6 @@
     <div class="eyebrow">Workflow guide &middot; mneme-hq 0.9.0</div>
     <h1>Review the decision before it becomes authoritative.</h1>
     <p class="lede">Mneme separates systems that suggest architecture from the human action that adopts it. The proposal store preserves candidate text and provenance; the authority CLI makes the lifecycle transition explicit.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span>&middot;</span><time datetime="2026-09-15">Published September 2026</time></p>
   </header>
 
   <div class="wrap">
@@ -194,15 +239,17 @@ mneme decision accept dprop-example \
   --decision-id arch-storage-standard</code></pre>
         <p>Acceptance delegates to Mneme's authority service. It records the accepted state and stable <code>accepted_decision_id</code>, atomically materializes the canonical decision in <code>project_memory.json</code>, reloads it, and verifies both runtime and canonical representations before reporting success.</p>
       </div>
-      <table class="flags">
-        <thead><tr><th>Argument</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>&lt;proposal_id&gt;</td><td>Required proposal ID, normally beginning <code>dprop-</code>.</td></tr>
-          <tr><td>--proposals</td><td>Proposal-store path. Default: <code>.mneme/decision_proposals.json</code>. It must already exist.</td></tr>
-          <tr><td>--memory</td><td>Project-memory path. Default: <code>.mneme/project_memory.json</code>.</td></tr>
-          <tr><td>--decision-id</td><td>Optional explicit canonical decision ID. Without it, Core derives a deterministic ID from proposal identity.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Argument</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;proposal_id&gt;</td><td>Required proposal ID, normally beginning <code>dprop-</code>.</td></tr>
+            <tr><td>--proposals</td><td>Proposal-store path. Default: <code>.mneme/decision_proposals.json</code>. It must already exist.</td></tr>
+            <tr><td>--memory</td><td>Project-memory path. Default: <code>.mneme/project_memory.json</code>.</td></tr>
+            <tr><td>--decision-id</td><td>Optional explicit canonical decision ID. Without it, Core derives a deterministic ID from proposal identity.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="callout warning"><p><strong>Acceptance is not protection activation.</strong> A newly accepted proposal becomes an active decision in project memory with no typed rules, test evidence, or protection state added by acceptance. Run <a href="/docs/protection-activation/">the protection workflow</a> separately when deterministic enforcement is appropriate. Acceptance also does not run the Architecture Audit.</p></div>
     </section>
 
@@ -220,14 +267,16 @@ mneme decision reject dprop-example \
 
     <section class="section" id="exit-codes">
       <h2>Exit codes and failure behavior</h2>
-      <table class="flags">
-        <thead><tr><th>Exit</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Successful fresh, repeated, or recovered accept/reject; successful inspection.</td></tr>
-          <tr><td>1</td><td>Core authority refusal or another fail-closed authority error.</td></tr>
-          <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, or unknown ID supplied to <code>show</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Exit</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Successful fresh, repeated, or recovered accept/reject; successful inspection.</td></tr>
+            <tr><td>1</td><td>Core authority refusal or another fail-closed authority error.</td></tr>
+            <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, or unknown ID supplied to <code>show</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p>Authority failures are printed as <code>ERROR:</code> messages without a stack trace. Missing or corrupt proposal stores are errors; the authority CLI never falls back to an in-memory store.</p>
     </section>
 

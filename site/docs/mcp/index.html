@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918-2">
   <meta name="description" content="Install and operate the Mneme 0.9.0 local stdio MCP server. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -62,7 +62,7 @@
   }
   </script>
   <style>
-    .breadcrumb-nav { max-width: 920px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
+    .breadcrumb-nav { max-width: 880px; margin: 0 auto; padding: 1.75rem 2rem 0.85rem; }
     .breadcrumb { display: flex; align-items: center; gap: 0.5rem; list-style: none; font-size: 0.82rem; flex-wrap: wrap; }
     .breadcrumb li + li::before { content: '/'; color: var(--border2); margin-right: 0.5rem; }
     .breadcrumb a { color: var(--muted); text-decoration: none; }
@@ -70,14 +70,14 @@
     .breadcrumb [aria-current="page"] { color: var(--text); }
     .answer-capsule { max-width: 860px; margin: 0 auto; padding: 1.4rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); color: var(--muted); font-size: 0.9rem; line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
-    .hero { max-width: 920px; margin: 0 auto; padding: 4rem 2rem 2rem; }
+    .hero { max-width: 880px; margin: 0 auto; padding: 4rem 2rem 2rem; }
     .eyebrow { font-family: 'DM Mono', monospace; color: var(--accent); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.8rem; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.4rem, 6vw, 4.3rem); font-weight: 400; line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 1.1rem; }
     .hero .lede { max-width: 760px; color: var(--muted); font-size: 1.04rem; line-height: 1.8; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
     .byline { margin-top: 1.1rem; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.04em; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline span { color: var(--border2); margin: 0 0.5rem; }
-    .wrap { max-width: 920px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
     .toc { position: static; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.3rem; margin-bottom: 3rem; }
     .toc-title { font-family: 'DM Mono', monospace; color: var(--muted); font-size: 0.68rem; letter-spacing: 0.09em; text-transform: uppercase; margin-bottom: 0.8rem; }
     .toc ol { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 0.45rem 1.5rem; list-style: none; }
@@ -138,7 +138,53 @@
     <ol class="breadcrumb">
       <li><a href="/">Home</a></li>
       <li><a href="/docs/">Docs</a></li>
-      <li aria-current="page">MCP server</li>
+      <!-- mneme:page-switcher:start --><li class="page-switcher-item">
+    <details class="page-switcher">
+      <summary><span class="page-switcher-sr">Current page: </span>MCP server <svg class="page-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="page-switcher-sr"> (show all pages)</span></summary>
+      <div class="page-switcher-panel" role="navigation" aria-label="All docs">
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Start here</div>
+        <ul>
+          <li><a href="/docs/">Docs overview</a></li>
+          <li><a href="/docs/how-enforcement-works/">How enforcement works</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Guides</div>
+        <ul>
+          <li><a href="/docs/protection-activation/">Protection activation</a></li>
+          <li><a href="/docs/decision-proposals/">Decision proposals</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Reference</div>
+        <ul>
+          <li><a href="/docs/cli/">CLI reference</a></li>
+          <li><a href="/docs/mcp/" aria-current="page">MCP server</a></li>
+          <li><a href="/docs/supported-languages/">Supported languages</a></li>
+          <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Methodology</div>
+        <ul>
+          <li><a href="/docs/benchmark-methodology/">Benchmark methodology</a></li>
+        </ul>
+      </div>
+      <a class="page-switcher-more" href="/integrations/">Integration guides &rarr;</a>
+      </div>
+    </details>
+<script>
+(function(){
+  var d = document.currentScript.parentNode.querySelector('.page-switcher');
+  if (!d) return;
+  document.addEventListener('click', function(e){ if (d.open && !d.contains(e.target)) d.open = false; });
+  d.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); }
+  });
+})();
+</script>
+    </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
   <div class="answer-capsule"><strong>Released in mneme-hq 0.9.0:</strong> a local stdio MCP server with exactly six Decision Index tools. It can read decisions and record non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>
@@ -146,7 +192,6 @@
     <div class="eyebrow">Operator reference &middot; mneme-hq 0.9.0</div>
     <h1>Decision context over MCP, with authority kept outside the protocol.</h1>
     <p class="lede">Use <code>mneme decision-mcp</code> to let an MCP host query Mneme's Decision Index or submit candidate architectural decisions. The server is local and stdio-only in 0.9.0.</p>
-    <p class="byline">By <a href="/founder/">Theo Valmis</a><span>&middot;</span><time datetime="2026-09-15">Published September 2026</time></p>
   </header>
 
   <div class="wrap">
@@ -170,13 +215,15 @@
 <pre tabindex="0"><code>pipx install "mneme-hq[mcp]==0.9.0"
 mneme decision-mcp</code></pre>
       <p>The process communicates over standard input and standard output. Version 0.9.0 does not expose HTTP, SSE, a hosted endpoint, authentication, RBAC, or multi-tenant infrastructure.</p>
-      <table class="matrix">
-        <thead><tr><th>Option</th><th>Behavior in 0.9.0</th></tr></thead>
-        <tbody>
-          <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
-          <tr><td>--adr-dir &lt;path&gt;</td><td>Compile that ADR directory into the server's canonical read index. There is no default. The directory must pass parse, corpus validation, and precedence resolution before startup.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="matrix">
+          <thead><tr><th>Option</th><th>Behavior in 0.9.0</th></tr></thead>
+          <tbody>
+            <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
+            <tr><td>--adr-dir &lt;path&gt;</td><td>Compile that ADR directory into the server's canonical read index. There is no default. The directory must pass parse, corpus validation, and precedence resolution before startup.</td></tr>
+          </tbody>
+        </table>
+      </div>
 <pre tabindex="0"><code>mneme decision-mcp \
   --proposals .mneme/decision_proposals.json \
   --adr-dir docs/adr</code></pre>

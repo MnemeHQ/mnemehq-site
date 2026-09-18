@@ -1,0 +1,34 @@
+name: page-switcher check
+
+# Every /docs/* and /integrations/<slug>/ page carries a breadcrumb dropdown
+# listing all sibling pages, generated from scripts/sync_docs_nav.py and
+# scripts/sync_integrations_nav.py (shared rendering in
+# scripts/page_switcher.py). This fails when a page is hand-edited or a doc
+# / integration is added without re-running the matching sync script.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-page-switcher:
+    name: Verify docs and integrations switchers are in sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run docs-nav check
+        run: python scripts/sync_docs_nav.py --check
+
+      - name: Run integrations-nav check
+        run: python scripts/sync_integrations_nav.py --check

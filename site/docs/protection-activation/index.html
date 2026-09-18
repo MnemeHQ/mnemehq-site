@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918-2">
   <meta name="description" content="How a Mneme-ready architectural decision becomes a verified deterministic guardrail: mneme protect list, validate, activate, and status. Validation is not activation; activation is explicit and idempotent; protection is reported only when the canonical assessment observes enforcement." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -172,7 +172,53 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/docs/">Docs</a></li>
-    <li aria-current="page">Protection activation</li>
+    <!-- mneme:page-switcher:start --><li class="page-switcher-item">
+    <details class="page-switcher">
+      <summary><span class="page-switcher-sr">Current page: </span>Protection activation <svg class="page-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="page-switcher-sr"> (show all pages)</span></summary>
+      <div class="page-switcher-panel" role="navigation" aria-label="All docs">
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Start here</div>
+        <ul>
+          <li><a href="/docs/">Docs overview</a></li>
+          <li><a href="/docs/how-enforcement-works/">How enforcement works</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Guides</div>
+        <ul>
+          <li><a href="/docs/protection-activation/" aria-current="page">Protection activation</a></li>
+          <li><a href="/docs/decision-proposals/">Decision proposals</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Reference</div>
+        <ul>
+          <li><a href="/docs/cli/">CLI reference</a></li>
+          <li><a href="/docs/mcp/">MCP server</a></li>
+          <li><a href="/docs/supported-languages/">Supported languages</a></li>
+          <li><a href="/docs/governance-violations/">Governance violations</a></li>
+        </ul>
+      </div>
+      <div class="page-switcher-group">
+        <div class="page-switcher-label">Methodology</div>
+        <ul>
+          <li><a href="/docs/benchmark-methodology/">Benchmark methodology</a></li>
+        </ul>
+      </div>
+      <a class="page-switcher-more" href="/integrations/">Integration guides &rarr;</a>
+      </div>
+    </details>
+<script>
+(function(){
+  var d = document.currentScript.parentNode.querySelector('.page-switcher');
+  if (!d) return;
+  document.addEventListener('click', function(e){ if (d.open && !d.contains(e.target)) d.open = false; });
+  d.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && d.open) { d.open = false; d.querySelector('summary').focus(); }
+  });
+})();
+</script>
+    </li><!-- mneme:page-switcher:end -->
   </ol>
 </nav>
 
@@ -190,15 +236,17 @@
     <h2>The four tiers</h2>
     <p>The Architecture Protection Audit classifies every active decision into one of four canonical tiers. Activation consumes this frozen classification &mdash; it never reinterprets it:</p>
     <div class="ref-table">
-      <table>
-        <thead><tr><th>Tier</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>Protected</td><td>Deterministic intent with verified enforcement evidence.</td></tr>
-          <tr><td>Mneme-ready</td><td>Deterministic intent with a concrete safe guardrail identified &mdash; an opportunity.</td></tr>
-          <tr><td>Requires modelling</td><td>Deterministic intent that needs modelling before it can be a guardrail.</td></tr>
-          <tr><td>Guidance</td><td>Not appropriate for deterministic enforcement.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Tier</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>Protected</td><td>Deterministic intent with verified enforcement evidence.</td></tr>
+            <tr><td>Mneme-ready</td><td>Deterministic intent with a concrete safe guardrail identified &mdash; an opportunity.</td></tr>
+            <tr><td>Requires modelling</td><td>Deterministic intent that needs modelling before it can be a guardrail.</td></tr>
+            <tr><td>Guidance</td><td>Not appropriate for deterministic enforcement.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <p>Mneme-ready means <em>"Mneme knows exactly which deterministic rule would protect this, and none exists yet."</em> It does not mean the decision is protected.</p>
   </div>
@@ -260,16 +308,18 @@
     <p>If activation is requested but no enforcement evidence is observable, the decision remains NOT Protected, Current Protection does not increase, and the command says so. The audit score is always a consequence of canonical classification &mdash; never edited directly.</p>
     <div class="ref-table">
       <div class="rt-title">Result distinctions &mdash; never faked</div>
-      <table>
-        <thead><tr><th>Result</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>verified</td><td>The rule is installed (now or earlier) and the canonical assessment observes Protected.</td></tr>
-          <tr><td>already_protected</td><td>The canonical assessment already observed Protected; nothing is written.</td></tr>
-          <tr><td>verification_failed</td><td>The rule was written but the canonical assessment did not observe Protected: the decision remains NOT Protected (exit 1).</td></tr>
-          <tr><td>validation_failed</td><td>Validation rejected the proposal; nothing is written.</td></tr>
-          <tr><td>not_eligible</td><td>Requires-modelling, Guidance, or superseded/inactive decisions cannot be activated. (A decision that is already Protected has its own outcome above.)</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Result</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>verified</td><td>The rule is installed (now or earlier) and the canonical assessment observes Protected.</td></tr>
+            <tr><td>already_protected</td><td>The canonical assessment already observed Protected; nothing is written.</td></tr>
+            <tr><td>verification_failed</td><td>The rule was written but the canonical assessment did not observe Protected: the decision remains NOT Protected (exit 1).</td></tr>
+            <tr><td>validation_failed</td><td>Validation rejected the proposal; nothing is written.</td></tr>
+            <tr><td>not_eligible</td><td>Requires-modelling, Guidance, or superseded/inactive decisions cannot be activated. (A decision that is already Protected has its own outcome above.)</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -324,14 +374,16 @@ $ mneme audit --memory .mneme/project_memory.json --repo-root .</div>
     </ul>
     <div class="ref-table">
       <div class="rt-title">Exit codes</div>
-      <table>
-        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Success or desired state.</td></tr>
-          <tr><td>1</td><td>Actionable failure: not eligible, validation failed, or verification failed.</td></tr>
-          <tr><td>2</td><td>Usage error: missing file, unknown decision id, or refused unsafe record.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Success or desired state.</td></tr>
+            <tr><td>1</td><td>Actionable failure: not eligible, validation failed, or verification failed.</td></tr>
+            <tr><td>2</td><td>Usage error: missing file, unknown decision id, or refused unsafe record.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
