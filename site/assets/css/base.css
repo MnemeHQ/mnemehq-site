@@ -193,7 +193,10 @@ body {
 .skip-link:focus { left: 0; }
 
 /* ── Nav ── */
-nav:not(.breadcrumb-nav) { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
+/* Site header only: :where(body > *) keeps nested navs (article TOCs, footer
+   social links, pagination) from inheriting sticky header styling, without
+   raising specificity above page-local nav.site-nav / .section-nav rules. */
+nav:not(.breadcrumb-nav):where(body > *) { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
 .logo { display: flex; align-items: center; text-decoration: none; }
 .nav-links { display: flex; gap: 1.5rem; align-items: center; }
 .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
@@ -271,11 +274,16 @@ nav.breadcrumb-nav {
 .nav-hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .nav-hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
+/* ── Scrollable tables ── */
+/* Wide reference tables scroll inside their own box; the page itself clips
+   horizontal overflow on mobile, so an unwrapped table would be cut off. */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
+
 /* ── Mobile nav ── */
 @media (max-width: 900px) {
   html, body { overflow-x: clip; }
   body.menu-open { overflow: hidden; }
-  nav:not(.breadcrumb-nav) { padding: 1rem 1.25rem; }
+  nav:not(.breadcrumb-nav):where(body > *) { padding: 1rem 1.25rem; }
   .nav-hamburger { display: flex; }
   .nav-links {
     display: flex !important;

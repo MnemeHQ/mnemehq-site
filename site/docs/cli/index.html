@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918">
   <meta name="description" content="Reference for the mneme-hq 0.9.0 CLI, including Decision MCP, proposal review and authority, setup, protect, audit, checks, exports, and exit codes." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -301,13 +301,15 @@
 <pre tabindex="0"><span class="cp">$</span> mneme init
 Created .mneme/project_memory.json</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--path</td><td>no</td><td>Output path. Defaults to <code>.mneme/project_memory.json</code>.</td></tr>
-          <tr><td>--force</td><td>no</td><td>Overwrite an existing file at <code>--path</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--path</td><td>no</td><td>Output path. Defaults to <code>.mneme/project_memory.json</code>.</td></tr>
+            <tr><td>--force</td><td>no</td><td>Overwrite an existing file at <code>--path</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -320,12 +322,14 @@ Created .mneme/project_memory.json</pre>
       <p class="cdesc">Lists every decision in the corpus with id, summary, scope, and constraints. Read-only.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme list_decisions --memory examples/project_memory.json</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -343,18 +347,20 @@ Created .mneme/project_memory.json</pre>
     --constraint <span class="ck">"no postgres"</span> \
     --anti-pattern <span class="ck">"sqlalchemy"</span></pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--id</td><td>yes</td><td>Stable id for the decision (e.g. <code>mneme_042</code>).</td></tr>
-          <tr><td>--decision</td><td>yes</td><td>Short statement of the decision.</td></tr>
-          <tr><td>--rationale</td><td>no</td><td>Optional free-text explanation.</td></tr>
-          <tr><td>--scope</td><td>no, repeatable</td><td>One or more scope tags. Pass <code>--scope</code> multiple times.</td></tr>
-          <tr><td>--constraint</td><td>no, repeatable</td><td>One or more constraints the decision implies.</td></tr>
-          <tr><td>--anti-pattern</td><td>no, repeatable</td><td>One or more patterns to flag against.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--id</td><td>yes</td><td>Stable id for the decision (e.g. <code>mneme_042</code>).</td></tr>
+            <tr><td>--decision</td><td>yes</td><td>Short statement of the decision.</td></tr>
+            <tr><td>--rationale</td><td>no</td><td>Optional free-text explanation.</td></tr>
+            <tr><td>--scope</td><td>no, repeatable</td><td>One or more scope tags. Pass <code>--scope</code> multiple times.</td></tr>
+            <tr><td>--constraint</td><td>no, repeatable</td><td>One or more constraints the decision implies.</td></tr>
+            <tr><td>--anti-pattern</td><td>no, repeatable</td><td>One or more patterns to flag against.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -368,14 +374,16 @@ Created .mneme/project_memory.json</pre>
 <pre tabindex="0"><span class="cp">$</span> mneme test_query --memory examples/project_memory.json \
     --query <span class="ck">"should I add postgres?"</span></pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--query</td><td>yes</td><td>The task description / prompt context to retrieve against.</td></tr>
-          <tr><td>--top</td><td>no</td><td>How many top decisions to show in the injected packet. Defaults to the package default.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--query</td><td>yes</td><td>The task description / prompt context to retrieve against.</td></tr>
+            <tr><td>--top</td><td>no</td><td>How many top decisions to show in the injected packet. Defaults to the package default.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -391,19 +399,21 @@ Created .mneme/project_memory.json</pre>
     --query <span class="ck">"working on storage layer"</span> \
     --mode strict</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--input</td><td>yes</td><td>Path to the file to check. A filepath, not inline text &mdash; write generated content or a diff to a file first.</td></tr>
-          <tr><td>--query</td><td>yes</td><td>Provides retrieval context for relevance-scored decisions. Retrieval does not bound corpus-wide typed literal enforcement &mdash; those rules apply regardless of query relevance.</td></tr>
-          <tr><td>--target-path</td><td>no</td><td>Artifact path used for typed-rule path applicability when <code>--input</code> contains materialized or introduced content from another file (e.g. a hook checking staged edit content against the real target path).</td></tr>
-          <tr><td>--top</td><td>no</td><td>Size of the retrieval-gated tier: bounds how many decisions have their multi-term rules applied. Unambiguous literal rules are enforced across the whole corpus regardless (ADR-017).</td></tr>
-          <tr><td>--mode</td><td>no</td><td><code>strict</code> (default) or <code>warn</code>. See <a href="#exit-codes">exit codes</a>.</td></tr>
-          <tr><td>--json</td><td>no</td><td>Emit a machine-readable verdict payload (<code>schema: mneme.check/v1</code>, includes <code>evaluation_complete</code>, per-rule applicability, and freshness) as the only stdout content. Exit codes unchanged.</td></tr>
-          <tr><td>--adr-dir</td><td>no</td><td>Directory of ADR markdown files checked for freshness drift. Warn-only diagnostics that never affect the exit code; defaults to <code>docs/adr</code>, skipped silently when absent.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--input</td><td>yes</td><td>Path to the file to check. A filepath, not inline text &mdash; write generated content or a diff to a file first.</td></tr>
+            <tr><td>--query</td><td>yes</td><td>Provides retrieval context for relevance-scored decisions. Retrieval does not bound corpus-wide typed literal enforcement &mdash; those rules apply regardless of query relevance.</td></tr>
+            <tr><td>--target-path</td><td>no</td><td>Artifact path used for typed-rule path applicability when <code>--input</code> contains materialized or introduced content from another file (e.g. a hook checking staged edit content against the real target path).</td></tr>
+            <tr><td>--top</td><td>no</td><td>Size of the retrieval-gated tier: bounds how many decisions have their multi-term rules applied. Unambiguous literal rules are enforced across the whole corpus regardless (ADR-017).</td></tr>
+            <tr><td>--mode</td><td>no</td><td><code>strict</code> (default) or <code>warn</code>. See <a href="#exit-codes">exit codes</a>.</td></tr>
+            <tr><td>--json</td><td>no</td><td>Emit a machine-readable verdict payload (<code>schema: mneme.check/v1</code>, includes <code>evaluation_complete</code>, per-rule applicability, and freshness) as the only stdout content. Exit codes unchanged.</td></tr>
+            <tr><td>--adr-dir</td><td>no</td><td>Directory of ADR markdown files checked for freshness drift. Warn-only diagnostics that never affect the exit code; defaults to <code>docs/adr</code>, skipped silently when absent.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="callout">
@@ -424,14 +434,16 @@ Created .mneme/project_memory.json</pre>
       <p class="cdesc">Classifies every active decision in the corpus &mdash; Protected, Mneme-ready, Requires modelling, or Guidance &mdash; and reports the protection summary and per-decision detail. This is the classification surface <code>mneme protect</code> consumes; the tiers are frozen P1.2 semantics that activation never reinterprets.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--repo-root</td><td>no</td><td>Repository root scanned for external enforcement evidence (<code>.github/workflows</code>, <code>.gitlab-ci.yml</code>). Verified CI evidence upgrades a literalizable decision to protected; a bare token mention is candidate evidence and exits 1 as a warning.</td></tr>
-          <tr><td>--json</td><td>no</td><td>Write the <code>mneme.audit/v1</code> JSON report to <code>FILE</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--repo-root</td><td>no</td><td>Repository root scanned for external enforcement evidence (<code>.github/workflows</code>, <code>.gitlab-ci.yml</code>). Verified CI evidence upgrades a literalizable decision to protected; a bare token mention is candidate evidence and exits 1 as a warning.</td></tr>
+            <tr><td>--json</td><td>no</td><td>Write the <code>mneme.audit/v1</code> JSON report to <code>FILE</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -444,13 +456,15 @@ Created .mneme/project_memory.json</pre>
       <p class="cdesc">Creates project state in <strong>setup mode</strong>: context and non-blocking checks only &mdash; never enforcement. Enabling protection is always a separate, explicit decision (<code>mneme protect activate</code>). Optionally records an opaque Architecture Audit setup reference, taken verbatim and resolved by Audit pairing.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme setup --memory .mneme/project_memory.json</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>no</td><td>Path to <code>project_memory.json</code>. Defaults to <code>&lt;repo-root&gt;/.mneme/project_memory.json</code>.</td></tr>
-          <tr><td>--audit-ref</td><td>no</td><td>Opaque Architecture Audit setup reference, recorded verbatim for Audit pairing.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>no</td><td>Path to <code>project_memory.json</code>. Defaults to <code>&lt;repo-root&gt;/.mneme/project_memory.json</code>.</td></tr>
+            <tr><td>--audit-ref</td><td>no</td><td>Opaque Architecture Audit setup reference, recorded verbatim for Audit pairing.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -485,14 +499,16 @@ Created .mneme/project_memory.json</pre>
 
     <div class="cmd-card">
       <div class="flags-title">Shared flags &mdash; all protect subcommands</div>
-      <table class="flags">
-        <thead><tr><th>Argument / flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>decision_id</td><td>yes (positional, except <code>list</code>)</td><td>Decision id, e.g. <code>config-format</code> or <code>mneme_042</code>.</td></tr>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--repo-root</td><td>no</td><td>Repository root for the same external CI-evidence scan <code>mneme audit</code> performs; omitted means no CI-evidence scan.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Argument / flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>decision_id</td><td>yes (positional, except <code>list</code>)</td><td>Decision id, e.g. <code>config-format</code> or <code>mneme_042</code>.</td></tr>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--repo-root</td><td>no</td><td>Repository root for the same external CI-evidence scan <code>mneme audit</code> performs; omitted means no CI-evidence scan.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="callout">
@@ -514,13 +530,15 @@ Created .mneme/project_memory.json</pre>
 <pre tabindex="0"><span class="cp">$</span> mneme decision-mcp
 <span class="cp">$</span> mneme decision-mcp --proposals .mneme/decision_proposals.json --adr-dir docs/adr</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--proposals</td><td>no</td><td>Proposal-store JSON path. Defaults to <code>.mneme/decision_proposals.json</code>; an explicit empty string selects an in-memory store.</td></tr>
-          <tr><td>--adr-dir</td><td>no</td><td>ADR directory compiled into the canonical read index. No default. Invalid or ambiguous input prevents startup.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--proposals</td><td>no</td><td>Proposal-store JSON path. Defaults to <code>.mneme/decision_proposals.json</code>; an explicit empty string selects an in-memory store.</td></tr>
+            <tr><td>--adr-dir</td><td>no</td><td>ADR directory compiled into the canonical read index. No default. Invalid or ambiguous input prevents startup.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p class="cdesc">Requires <code>mneme-hq[mcp]</code>. Full tool, storage, error, and authority reference: <a href="/docs/mcp/">MCP server</a>.</p>
     </div>
   </section>
@@ -551,15 +569,17 @@ Created .mneme/project_memory.json</pre>
     --query <span class="ck">"working on storage layer"</span> \
     --output .cursor/rules/mneme.mdc</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--query</td><td>yes</td><td>Context query for retrieval.</td></tr>
-          <tr><td>--output</td><td>no</td><td>Output path. Defaults to <code>.cursor/rules/mneme.mdc</code>.</td></tr>
-          <tr><td>--top</td><td>no</td><td>How many top decisions to include.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--query</td><td>yes</td><td>Context query for retrieval.</td></tr>
+            <tr><td>--output</td><td>no</td><td>Output path. Defaults to <code>.cursor/rules/mneme.mdc</code>.</td></tr>
+            <tr><td>--top</td><td>no</td><td>How many top decisions to include.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -575,15 +595,17 @@ Created .mneme/project_memory.json</pre>
     --json reports/bench.json \
     --markdown reports/bench.md</pre>
       <div class="flags-title">Flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>benchmarks_dir</td><td>yes (positional)</td><td>Directory containing benchmark scenario subdirectories.</td></tr>
-          <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
-          <tr><td>--json</td><td>no</td><td>Write a JSON report to <code>FILE</code>.</td></tr>
-          <tr><td>--markdown</td><td>no</td><td>Write a Markdown report to <code>FILE</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>benchmarks_dir</td><td>yes (positional)</td><td>Directory containing benchmark scenario subdirectories.</td></tr>
+            <tr><td>--memory</td><td>yes</td><td>Path to <code>project_memory.json</code>.</td></tr>
+            <tr><td>--json</td><td>no</td><td>Write a JSON report to <code>FILE</code>.</td></tr>
+            <tr><td>--markdown</td><td>no</td><td>Write a Markdown report to <code>FILE</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -601,17 +623,19 @@ Created .mneme/project_memory.json</pre>
     --memory .mneme/project_memory.json \
     --apply</pre>
       <div class="flags-title">Arguments &amp; flags</div>
-      <table class="flags">
-        <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
-        <tbody>
-          <tr><td>adr_dir</td><td>yes (positional)</td><td>Directory containing ADR markdown files.</td></tr>
-          <tr><td>--memory</td><td>yes</td><td>Path to the target <code>project_memory.json</code>.</td></tr>
-          <tr><td>--dry-run</td><td>no</td><td>Print the preview without writing (default).</td></tr>
-          <tr><td>--apply</td><td>no</td><td>Write imported decisions to <code>--memory</code>.</td></tr>
-          <tr><td>--update-existing</td><td>no</td><td>Allow same-id overwrite of existing decisions.</td></tr>
-          <tr><td>--approve-conflicts</td><td>no</td><td>Proceed with apply even if active-active contradictions exist.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>adr_dir</td><td>yes (positional)</td><td>Directory containing ADR markdown files.</td></tr>
+            <tr><td>--memory</td><td>yes</td><td>Path to the target <code>project_memory.json</code>.</td></tr>
+            <tr><td>--dry-run</td><td>no</td><td>Print the preview without writing (default).</td></tr>
+            <tr><td>--apply</td><td>no</td><td>Write imported decisions to <code>--memory</code>.</td></tr>
+            <tr><td>--update-existing</td><td>no</td><td>Allow same-id overwrite of existing decisions.</td></tr>
+            <tr><td>--approve-conflicts</td><td>no</td><td>Proceed with apply even if active-active contradictions exist.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -622,50 +646,58 @@ Created .mneme/project_memory.json</pre>
 
     <div class="exit-table">
       <div class="et-title">mneme check &middot; by mode</div>
-      <table>
-        <thead><tr><th>Verdict</th><th>strict (default)</th><th>warn</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>PASS</td><td>0</td><td>0</td><td>No violations.</td></tr>
-          <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. In <code>strict</code> mode the verdict stays WARN but the process exits non-zero; <code>warn</code> mode exits zero.</td></tr>
-          <tr><td>FAIL</td><td>2</td><td>0</td><td>Typed rule or anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
-          <tr><td>INCOMPLETE</td><td>2</td><td>2</td><td>Evaluation could not complete (<code>evaluation_complete: false</code>). Never reported as PASS &mdash; machine consumers should fail open on their own terms.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Verdict</th><th>strict (default)</th><th>warn</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>PASS</td><td>0</td><td>0</td><td>No violations.</td></tr>
+            <tr><td>WARN</td><td>1</td><td>0</td><td>Constraint matched. In <code>strict</code> mode the verdict stays WARN but the process exits non-zero; <code>warn</code> mode exits zero.</td></tr>
+            <tr><td>FAIL</td><td>2</td><td>0</td><td>Typed rule or anti-pattern hit. In <code>strict</code> mode this is a hard fail.</td></tr>
+            <tr><td>INCOMPLETE</td><td>2</td><td>2</td><td>Evaluation could not complete (<code>evaluation_complete: false</code>). Never reported as PASS &mdash; machine consumers should fail open on their own terms.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="exit-table">
       <div class="et-title">mneme benchmark</div>
-      <table>
-        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>All scenarios passed.</td></tr>
-          <tr><td>1</td><td>At least one scenario failed, or a benign scenario was blocked (<code>FALSE_POSITIVE</code>).</td></tr>
-          <tr><td>2</td><td>Supplied <code>benchmarks_dir</code> is not a directory.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>All scenarios passed.</td></tr>
+            <tr><td>1</td><td>At least one scenario failed, or a benign scenario was blocked (<code>FALSE_POSITIVE</code>).</td></tr>
+            <tr><td>2</td><td>Supplied <code>benchmarks_dir</code> is not a directory.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="exit-table">
       <div class="et-title">mneme add_decision</div>
-      <table>
-        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Decision appended.</td></tr>
-          <tr><td>2</td><td>A decision with the supplied <code>--id</code> already exists.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Decision appended.</td></tr>
+            <tr><td>2</td><td>A decision with the supplied <code>--id</code> already exists.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <div class="exit-table">
       <div class="et-title">mneme protect</div>
-      <table>
-        <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Success or desired state (including <code>already_protected</code>).</td></tr>
-          <tr><td>1</td><td>Actionable failure: not eligible, validation failed, or verification failed.</td></tr>
-          <tr><td>2</td><td>Usage error: missing file, unknown decision id, or refused unsafe record.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Success or desired state (including <code>already_protected</code>).</td></tr>
+            <tr><td>1</td><td>Actionable failure: not eligible, validation failed, or verification failed.</td></tr>
+            <tr><td>2</td><td>Usage error: missing file, unknown decision id, or refused unsafe record.</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 

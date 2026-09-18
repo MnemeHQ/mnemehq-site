@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918">
   <meta name="description" content="Install and operate the Mneme 0.9.0 local stdio MCP server. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -170,13 +170,15 @@
 <pre tabindex="0"><code>pipx install "mneme-hq[mcp]==0.9.0"
 mneme decision-mcp</code></pre>
       <p>The process communicates over standard input and standard output. Version 0.9.0 does not expose HTTP, SSE, a hosted endpoint, authentication, RBAC, or multi-tenant infrastructure.</p>
-      <table class="matrix">
-        <thead><tr><th>Option</th><th>Behavior in 0.9.0</th></tr></thead>
-        <tbody>
-          <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
-          <tr><td>--adr-dir &lt;path&gt;</td><td>Compile that ADR directory into the server's canonical read index. There is no default. The directory must pass parse, corpus validation, and precedence resolution before startup.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="matrix">
+          <thead><tr><th>Option</th><th>Behavior in 0.9.0</th></tr></thead>
+          <tbody>
+            <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
+            <tr><td>--adr-dir &lt;path&gt;</td><td>Compile that ADR directory into the server's canonical read index. There is no default. The directory must pass parse, corpus validation, and precedence resolution before startup.</td></tr>
+          </tbody>
+        </table>
+      </div>
 <pre tabindex="0"><code>mneme decision-mcp \
   --proposals .mneme/decision_proposals.json \
   --adr-dir docs/adr</code></pre>

@@ -7,7 +7,7 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20260826">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20260918">
   <meta name="description" content="Review MCP decision proposals and exercise human authority with the mneme-hq 0.9.0 proposals, show, accept, and reject CLI commands." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -194,15 +194,17 @@ mneme decision accept dprop-example \
   --decision-id arch-storage-standard</code></pre>
         <p>Acceptance delegates to Mneme's authority service. It records the accepted state and stable <code>accepted_decision_id</code>, atomically materializes the canonical decision in <code>project_memory.json</code>, reloads it, and verifies both runtime and canonical representations before reporting success.</p>
       </div>
-      <table class="flags">
-        <thead><tr><th>Argument</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>&lt;proposal_id&gt;</td><td>Required proposal ID, normally beginning <code>dprop-</code>.</td></tr>
-          <tr><td>--proposals</td><td>Proposal-store path. Default: <code>.mneme/decision_proposals.json</code>. It must already exist.</td></tr>
-          <tr><td>--memory</td><td>Project-memory path. Default: <code>.mneme/project_memory.json</code>.</td></tr>
-          <tr><td>--decision-id</td><td>Optional explicit canonical decision ID. Without it, Core derives a deterministic ID from proposal identity.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Argument</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>&lt;proposal_id&gt;</td><td>Required proposal ID, normally beginning <code>dprop-</code>.</td></tr>
+            <tr><td>--proposals</td><td>Proposal-store path. Default: <code>.mneme/decision_proposals.json</code>. It must already exist.</td></tr>
+            <tr><td>--memory</td><td>Project-memory path. Default: <code>.mneme/project_memory.json</code>.</td></tr>
+            <tr><td>--decision-id</td><td>Optional explicit canonical decision ID. Without it, Core derives a deterministic ID from proposal identity.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <div class="callout warning"><p><strong>Acceptance is not protection activation.</strong> A newly accepted proposal becomes an active decision in project memory with no typed rules, test evidence, or protection state added by acceptance. Run <a href="/docs/protection-activation/">the protection workflow</a> separately when deterministic enforcement is appropriate. Acceptance also does not run the Architecture Audit.</p></div>
     </section>
 
@@ -220,14 +222,16 @@ mneme decision reject dprop-example \
 
     <section class="section" id="exit-codes">
       <h2>Exit codes and failure behavior</h2>
-      <table class="flags">
-        <thead><tr><th>Exit</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>0</td><td>Successful fresh, repeated, or recovered accept/reject; successful inspection.</td></tr>
-          <tr><td>1</td><td>Core authority refusal or another fail-closed authority error.</td></tr>
-          <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, or unknown ID supplied to <code>show</code>.</td></tr>
-        </tbody>
-      </table>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Exit</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Successful fresh, repeated, or recovered accept/reject; successful inspection.</td></tr>
+            <tr><td>1</td><td>Core authority refusal or another fail-closed authority error.</td></tr>
+            <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, or unknown ID supplied to <code>show</code>.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <p>Authority failures are printed as <code>ERROR:</code> messages without a stack trace. Missing or corrupt proposal stores are errors; the authority CLI never falls back to an in-memory store.</p>
     </section>
 
