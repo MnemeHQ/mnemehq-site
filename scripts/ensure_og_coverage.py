@@ -1050,6 +1050,10 @@ TEMPLATES = [
         "CodeRabbit scores the PR. Mneme governs the decision it has to obey.",
         "insights/agentic-change-management-needs-a-decision-layer",
     ),
+    ("og-insights-software-factory.html", "Insights", "The Software Factory Needs a Governance Layer", "42px", "Agents supply the production capacity. Architecture still has to decide what ships.", "insights/software-factory-governance-layer"),
+    ("og-insights-conways-law-ai.html", "Insights", "Conway's Law in the Age of AI Coding Agents", "42px", "The agent writing your code was never in the architecture meeting.", "insights/conways-law-ai-coding-agents"),
+    ("og-insights-brooks-law-ai.html", "Insights", "Brooks's Law After AI", "52px", "Agents remove ramp-up time. They do not remove coordination cost.", "insights/brooks-law-ai-coding-agents"),
+    ("og-insights-private-ai-governance.html", "Insights", "Private AI Needs Private Governance", "46px", "Owning the compute controls where AI runs. Owning the decisions controls how it acts.", "insights/private-ai-infrastructure-governance"),
 ]
 
 # ---------------------------------------------------------------------------
@@ -1270,6 +1274,10 @@ NEW_MAP_ENTRIES = {
     # July 2026: architectural-intent cluster
     "og-insights-how-to-maintain-intent.html": "insights/how-to-maintain-architectural-intent-with-ai-coding-agents/og.png",
     "og-insights-agentic-change-management.html": "insights/agentic-change-management-needs-a-decision-layer/og.png",
+    "og-insights-software-factory.html": "insights/software-factory-governance-layer/og.png",
+    "og-insights-conways-law-ai.html": "insights/conways-law-ai-coding-agents/og.png",
+    "og-insights-brooks-law-ai.html": "insights/brooks-law-ai-coding-agents/og.png",
+    "og-insights-private-ai-governance.html": "insights/private-ai-infrastructure-governance/og.png",
 }
 
 # ---------------------------------------------------------------------------

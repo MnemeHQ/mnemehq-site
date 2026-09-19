@@ -376,6 +376,12 @@ TEMPLATE_MAP = {
 
     # Insights — new
     "og-insights-agentic-change-management.html": "insights/agentic-change-management-needs-a-decision-layer/og.png",
+
+    # Insights — new
+    "og-insights-software-factory.html": "insights/software-factory-governance-layer/og.png",
+    "og-insights-conways-law-ai.html": "insights/conways-law-ai-coding-agents/og.png",
+    "og-insights-brooks-law-ai.html": "insights/brooks-law-ai-coding-agents/og.png",
+    "og-insights-private-ai-governance.html": "insights/private-ai-infrastructure-governance/og.png",
 }
 
 PORT = 8765
