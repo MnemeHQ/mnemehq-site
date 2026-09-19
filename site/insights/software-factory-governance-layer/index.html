@@ -322,7 +322,7 @@
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Analysis</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">5 min read</span>
+      <span class="eyebrow-meta">7 min read</span>
     </div>
     <h1>The Software Factory Is Finally Here. Its Governance Layer Is Missing.</h1>
     <p class="article-lede">Factory, a startup building coding agents for enterprise teams, tripled its valuation to $5 billion this month (<a href="https://www.tradingview.com/news/reuters.com,2026:newsml_L4N4571DR:0-ai-coding-agent-startup-factory-triples-valuation-to-5-billion-in-latest-funding-round/" target="_blank" rel="noopener">Reuters</a>). Engineering leaders now talk about software factories without irony. The idea is older than most people using it, and the problem it was invented to solve has not gone away.</p>
@@ -381,6 +381,21 @@
 <h2>Where Mneme fits</h2>
 <p>Mneme does not operate a software factory, and it does not replace orchestrators, execution platforms, coding agents, or review tools. It applies to one class of decision inside the factory: architectural decisions in a repository. Mneme is open source. It turns accepted architectural decisions into scoped rules and returns deterministic PASS, WARN, or FAIL verdicts (or an explicit INCOMPLETE) against proposed changes, as described in <a href="/docs/how-enforcement-works/">how enforcement works</a>. Its local MCP server, shipped in 0.9.0, lets an agent retrieve the decisions that apply to a path and trace a decision's lineage, and lets agents propose new decisions that only a human can accept. See the <a href="/docs/mcp/">MCP reference</a>.</p>
 <p>That is a narrower claim than "Mneme governs the factory." It is the part of factory governance that can be made deterministic today.</p>
+
+<h2>The same wall, at Netflix scale</h2>
+<p>Conductor 4.0, Netflix's workflow orchestration engine, changed one specific thing. Earlier versions loaded the complete workflow state into memory for every evaluation. Conductor 4.0 instead uses a lightweight workflow blueprint and loads only the task data the next decision needs. Netflix reports this raised the largest supported workflow from roughly 2,500 tasks to 30,000, and cut p99 evaluation latency by about 40 percent, across 200,000 workflow definitions in 150 applications executing roughly 420 million workflows a month (<a href="https://www.infoq.com/news/2026/09/netflix-conductor-4-workflow/" target="_blank" rel="noopener">InfoQ</a>).</p>
+<p>Conductor is a workflow engine, not an architectural governance system, and this is not a claim that it solves the same problem as Mneme. The relevant part is narrower. Netflix hit a real scaling limit by treating "the state needed for the next decision" as the same thing as "the entire state," and the fix was separating the two.</p>
+<p>A software factory running many coding agents hits the same wall with architectural context, usually before it hits it anywhere else. An agent does not need every accepted decision in the organization to make its next change. It needs the decisions applicable to the file, service, or boundary it is about to touch.</p>
+<table class="gov-table">
+  <thead><tr><th>Conductor 4.0</th><th>Software factory governance</th></tr></thead>
+  <tbody>
+    <tr><td>Lightweight workflow blueprint</td><td>Decisions retrievable by scope, not the full decision corpus</td></tr>
+    <tr><td>Loads only the task data needed next</td><td>Retrieves only the decisions applicable to the proposed change</td></tr>
+    <tr><td>Deterministic state precedence</td><td>Deterministic PASS, WARN, or FAIL verdicts, not a model's judgment</td></tr>
+    <tr><td>150 applications, 420 million executions monthly</td><td>The scale a governance layer eventually has to survive</td></tr>
+  </tbody>
+</table>
+<p>Mneme's <code>decision.applicable_to</code> tool, shipped in 0.9.0, already works on this principle: an agent asks which decisions apply to a set of paths and gets scoped matches back, not the full decision corpus. Conductor's numbers matter less as a template to copy than as evidence that the failure mode is real. A system that has to hydrate everything to decide anything does not stay fast as the factory scales, whether what gets loaded is workflow state or architectural context.</p>
 
 <h2>Scaling the factory without losing the architecture</h2>
 <p>The organizations that get value from software factories will not be the ones that run the most agents. They will be the ones that can raise autonomous output without losing architectural coherence. Before scaling agent throughput, it is worth knowing which architectural decisions are already protected, which could become enforceable, and which still live only in documents and people's heads.</p>
