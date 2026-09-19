@@ -23,10 +23,13 @@ not every chat in the project.
 | ***Post-Conway's Law Relevance | 2026-09-18 | `conways-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Brooks Law Relevance | 2026-09-18 | `brooks-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Strategic Signal local infra | 2026-09-16 | `private-ai-infrastructure-governance` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
+| ***Architecture Support Rules | 2026-09-19 | Netflix Conductor 4.0 case study added to `software-factory-governance-layer` | [#141](https://github.com/MnemeHQ/mnemehq-site/pull/141) | 2026-09-19 |
 
 Notes carried over: the software-factory pillar is one article refined across two chats (the 2nd adds the Bob Bemer/1968 historical framing) — it's the pillar of a planned 5-article cluster, only the pillar is scoped/shipped so far. Conway and Brooks are cross-linked as a pair. The private AI piece's Latham facts were verified against Bloomberg Law and Legal IT Insider; the FT citation named in the original scope chat could not be located and was dropped.
 
 All five ChatGPT chats were renamed with the `***` marker on 2026-09-19 after this PR went live.
+
+`***Architecture Support Rules` (a mixed chat covering EDA roadmap discussion plus the Netflix Conductor scope) was renamed with the `***` marker on 2026-09-19 after PR #141 shipped its one content-publishing item, the Conductor case study. The EDA roadmap discussion in that same chat was not acted on here, since it's internal roadmap sequencing, not a content ask.
 
 ## In review (drafted, not merged, not yet marked `***`)
 
