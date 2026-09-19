@@ -18,7 +18,7 @@ not every chat in the project.
 | ***Post-FDE ICP Content Cluster | 2026-09-15 | `most-valuable-ai-dataset-decisions-already-made`, `agent-economy-needs-decision-infrastructure`, + FDE cluster pages | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129) | 2026-09-15 |
 | ***Post-Mneme Decision Data | 2026-09-15 | folded into #129 (decision-dataset article) — **not independently verified, confirm before trusting** | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129)? | 2026-09-15 |
 | ***Post-Positioning strategy analysis | 2026-09-15 | not independently verified — likely folded into #129's "decision-layer thesis" | unknown | unknown |
-| (unmarked chat, not yet located) | — | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135) | 2026-09-15 |
+| Post-Writing ROI Content — **no `***`, see "Partially processed" below** | 2026-09-08/10 | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` only | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135) | 2026-09-15 |
 | ***Post-software factories + ***Post-Scope software factories | 2026-09-19 | `software-factory-governance-layer` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Conway's Law Relevance | 2026-09-18 | `conways-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Brooks Law Relevance | 2026-09-18 | `brooks-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
@@ -34,6 +34,23 @@ All five ChatGPT chats were renamed with the `***` marker on 2026-09-19 after th
 ## In review (drafted, not merged, not yet marked `***`)
 
 None currently.
+
+## Partially processed — do not mark done
+
+**Post-Writing ROI Content** (located 2026-09-19) scoped a full pillar + ~10 supporting-article cluster for AI Engineering ROI. Only the pillar and one deferred spoke shipped, in PR #135 ("pillar + AI Throughput Is Not Engineering Throughput only, hold the rest for a follow-up round"). The five *other* articles named in that PR's description as "already-published spokes" (`ai-roi-problem-is-about-systems-not-models`, `ai-coding-agent-verification-tax`, `dora-metrics-insufficient-for-agentic-development`, `acceleration-whiplash-governance-gap`, `ai-coding-productivity-gains-rework`) predate this chat's scoping and are unrelated to its backlog.
+
+**Confirmed unpublished** (checked against `git log` and `site/insights/` on 2026-09-19), still scoped inside this chat and not marked — the chat itself should stay `***`-free as a reminder there's a backlog:
+
+- How to Measure AI Coding ROI Without Counting Lines of Code (P0)
+- The Hidden Cost of AI-Generated Rework (P0)
+- When AI Saves Developer Time but Creates More Work for Senior Engineers (P0)
+- Architectural Drift Is an AI ROI Leak (P1)
+- What CTOs Should Measure Before Renewing Their AI Coding Tools (P1)
+- The Economics of Preventing an Incompatible Change Before It Is Written (P2)
+- From AI Adoption to AI Value: A Maturity Model for Engineering Organizations (P2)
+
+Do not rename this chat with `***` until these are either shipped or explicitly dropped. Note the chat's own guidance: keep the cluster 60–70% neutral executive/engineering economics, only 10–20% explicitly Mneme/audit — write these as standalone economics pieces, not governance pitches.
+
 
 **Last insight-article PR before this ledger was created:** [#136](https://github.com/MnemeHQ/mnemehq-site/pull/136),
 merged 2026-09-17T13:37:05Z — "Position Mneme's Decision Index against post-MCP
