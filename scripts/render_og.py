@@ -69,12 +69,109 @@ def _lines_html(lines: list[str], accent: str | None) -> str:
     return out
 
 
+# ---------------------------------------------------------------------------
+# Structured-family builders. Markup reproduced faithfully from the
+# owner-approved reference at
+# .superpowers/sdd/2026-09-21-og-card-system/approved-mockup-reference.py
+# (_ROW, _BOX, _PILL, _ARROW and the CARDS["2-proof"] / ["3-integration"] /
+# ["5-compare"] entries). Do not redesign.
+# ---------------------------------------------------------------------------
+
+_ROW = ('<div style="display:flex;align-items:center;gap:30px;background:{bg};border:2px solid {bd};'
+        'border-left:8px solid {ac};border-radius:10px;padding:26px 34px">'
+        '<span style="font-family:\'DM\';font-size:36px;font-weight:500;color:{ac};'
+        'letter-spacing:.06em;min-width:220px">{k}</span>'
+        '<span style="font-family:\'IN\';font-size:48px;color:{tc};font-weight:600;'
+        'letter-spacing:-.6px">{v}</span></div>')
+
+_ROW_STYLES = {
+    "held": dict(bg="var(--surface)", bd="var(--border2)", ac="var(--accent)", tc="var(--text)"),
+    "neutral": dict(bg="var(--surface)", bd="var(--border)", ac="var(--quiet)", tc="var(--muted)"),
+    "denied": dict(bg="rgba(255,92,122,.08)", bd="rgba(255,92,122,.34)",
+                   ac="var(--error)", tc="var(--text)"),
+}
+
+_BOX = ('<div style="flex:1;background:{bg};border:2px solid {bd};border-radius:12px;padding:30px 34px">'
+        '<div style="font-family:\'DM\';font-size:36px;font-weight:500;color:{lc};'
+        'letter-spacing:.06em;margin-bottom:20px">{label}</div>'
+        '<div style="font-family:\'IN\';font-size:50px;color:{vc};font-weight:600;'
+        'letter-spacing:-.6px;margin-bottom:22px">{value}</div>'
+        '<div style="font-family:\'DM\';font-size:36px;font-weight:500;color:{lc};'
+        'letter-spacing:.04em">{verdict}</div></div>')
+
+_BOX_STYLES = {
+    "warn": dict(bg="var(--surface)", bd="var(--border2)", lc="var(--warn)", vc="var(--muted)"),
+    "accent": dict(bg="var(--surface)", bd="rgba(181,204,122,.36)", lc="var(--accent)", vc="var(--text)"),
+}
+
+_PILL = ('<span style="font-family:\'DM\';font-size:36px;font-weight:500;color:{c};'
+         'border:2px solid {b};background:{bg};border-radius:8px;padding:14px 24px;'
+         'letter-spacing:.04em;white-space:nowrap">{t}</span>')
+_ARROW = ('<span style="font-family:\'DM\';font-size:40px;color:var(--quiet);'
+          'padding:0 6px;line-height:1">&rarr;</span>')
+
+_PILL_STYLES = {
+    "plain": dict(c="var(--text)", b="var(--border2)", bg="var(--surface)"),
+    "accent": dict(c="var(--accent)", b="rgba(181,204,122,.42)", bg="rgba(181,204,122,.08)"),
+}
+
+
+def _rows_html(rows: list) -> str:
+    parts = []
+    for label, value, kind in rows:
+        style = _ROW_STYLES[kind]
+        parts.append(_ROW.format(k=html_mod.escape(label), v=html_mod.escape(value), **style))
+    return "".join(parts)
+
+
+def _boxes_html(boxes: list) -> str:
+    parts = []
+    for box in boxes:
+        style = _BOX_STYLES[box["kind"]]
+        parts.append(_BOX.format(
+            label=html_mod.escape(box["label"]),
+            value=html_mod.escape(box["value"]),
+            verdict=html_mod.escape(box["verdict"]),
+            **style))
+    return "".join(parts)
+
+
+def _chain_html(chain: list) -> str:
+    parts = []
+    for i, item in enumerate(chain):
+        if i:
+            parts.append(_ARROW)
+        style = _PILL_STYLES[item["kind"]]
+        parts.append(_PILL.format(t=html_mod.escape(item["text"]), **style))
+    return "".join(parts)
+
+
+# Dev-only fallback for a structured family missing its required fields.
+# Never a production success path: `og_manifest.resolve(strict=True)`
+# raises before build_html ever sees such a record, so this branch is only
+# reachable in non-strict/local-preview runs. It reuses the generic
+# headline+sup tokens so it needs no family-specific data.
+_FALLBACK_TPL = (
+    '<!DOCTYPE html><html><head><meta charset="utf-8">\n'
+    '<link rel="stylesheet" href="_base.css"></head>\n'
+    '<body>\n'
+    '<div class="frame">\n'
+    '  <div class="top"><span class="id">Mneme HQ</span>'
+    '<span class="fam">{{family_label}}</span><span class="rule"></span></div>\n'
+    '  <div class="body" style="max-width:668px">'
+    '<h1 style="font-size:{{headline_px}}px">{{lines_html}}</h1>'
+    '<div class="sup" style="margin-top:28px;color:var(--muted)">{{sup}}</div></div>\n'
+    '</div>\n'
+    '</body></html>'
+)
+
+
 def build_html(record: dict) -> str:
-    tpl = (TPL / f"{record['family']}.html").read_text(encoding="utf-8")
+    family = record["family"]
     is_hub = record.get("variant") == "hub"
     geometry = ""
     # Hub cards render no geometry: "no motif pretending it is an article."
-    if record["family"] == "editorial" and not is_hub:
+    if family == "editorial" and not is_hub:
         geometry = og_geometry.render(
             record["path"].rstrip("/").rsplit("/", 1)[-1],
             record["motif"], record["tone"])
@@ -85,13 +182,45 @@ def build_html(record: dict) -> str:
     subtitle_html = ""
     if is_hub and record.get("subtitle"):
         subtitle_html = f'<div class="hub-sub">{html_mod.escape(record["subtitle"])}</div>'
-    return (tpl
-            .replace("{{geometry}}", geometry)
-            .replace("{{family_label}}", html_mod.escape(label))
-            .replace("{{headline_px}}", str(fit(record["lines"])))
-            .replace("{{lines_html}}", _lines_html(record["lines"], accent))
-            .replace("{{sup}}", html_mod.escape(record.get("sup") or ""))
-            .replace("{{subtitle_html}}", subtitle_html))
+
+    # Structured-family tokens. In strict mode a missing field never reaches
+    # here (og_manifest.resolve already raised); in non-strict/dev mode a
+    # gap falls back to the plain headline+sup layout below.
+    extra: dict[str, str] = {}
+    use_fallback = False
+    if family == "proof":
+        rows = record.get("rows")
+        if rows:
+            extra["rows_html"] = _rows_html(rows)
+        else:
+            use_fallback = True
+    elif family == "comparison":
+        boxes = record.get("boxes")
+        if boxes:
+            extra["box_html"] = _boxes_html(boxes)
+        else:
+            use_fallback = True
+    elif family == "integration":
+        badge, name, chain = record.get("badge"), record.get("name"), record.get("chain")
+        if badge and name and chain:
+            extra["badge"] = html_mod.escape(badge)
+            extra["name"] = html_mod.escape(name)
+            extra["chain_html"] = _chain_html(chain)
+        else:
+            use_fallback = True
+
+    tpl = _FALLBACK_TPL if use_fallback else (TPL / f"{family}.html").read_text(encoding="utf-8")
+
+    out = (tpl
+           .replace("{{geometry}}", geometry)
+           .replace("{{family_label}}", html_mod.escape(label))
+           .replace("{{headline_px}}", str(fit(record["lines"])))
+           .replace("{{lines_html}}", _lines_html(record["lines"], accent))
+           .replace("{{sup}}", html_mod.escape(record.get("sup") or ""))
+           .replace("{{subtitle_html}}", subtitle_html))
+    for token, value in extra.items():
+        out = out.replace("{{%s}}" % token, value)
+    return out
 
 
 def assert_versions() -> None:

@@ -144,6 +144,137 @@ class TestResolve(unittest.TestCase):
             m.resolve("qa-glossary/", {"headline": "X"}, strict=True)
 
 
+class TestRowsBoxesBadgeNameChain(unittest.TestCase):
+    """Validation + strict-mode requirement for the fields the 85 broken
+    proof/comparison/integration cards were missing."""
+
+    # -- rows (proof) --------------------------------------------------
+    def test_rows_are_carried_when_present(self):
+        rows = [["ADR-014", "Postgres is the record.", "held"]]
+        r = m.resolve("demo/x/", {"headline": "H", "rows": rows})
+        self.assertEqual(r["rows"], rows)
+
+    def test_rows_default_to_none(self):
+        r = m.resolve("demo/x/", {"headline": "H"})
+        self.assertIsNone(r["rows"])
+
+    def test_rows_must_be_a_list(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("demo/x/", {"headline": "H", "rows": "nope"})
+
+    def test_rows_entries_must_be_three_element(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("demo/x/", {"headline": "H", "rows": [["A", "B"]]})
+
+    def test_rows_entries_must_have_a_valid_kind(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("demo/x/", {"headline": "H", "rows": [["A", "B", "bogus"]]})
+
+    def test_proof_requires_rows_in_strict_mode(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("demo/x/", {"headline": "H"}, strict=True)
+
+    def test_proof_with_rows_passes_strict_mode(self):
+        rows = [["A", "B", "held"], ["C", "D", "neutral"], ["E", "F", "denied"]]
+        r = m.resolve("demo/x/", {"headline": "H", "rows": rows}, strict=True)
+        self.assertEqual(r["rows"], rows)
+
+    def test_strict_error_names_the_page_and_the_missing_field(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/storage-decision/", {"headline": "H"}, strict=True)
+        msg = str(ctx.exception)
+        self.assertIn("demo/storage-decision/", msg)
+        self.assertIn("rows", msg)
+
+    # -- boxes (comparison) ---------------------------------------------
+    def test_boxes_are_carried_when_present(self):
+        boxes = [
+            {"label": "A", "value": "1", "verdict": "V1", "kind": "warn"},
+            {"label": "B", "value": "2", "verdict": "V2", "kind": "accent"},
+        ]
+        r = m.resolve("compare/x/", {"headline": "H", "boxes": boxes})
+        self.assertEqual(r["boxes"], boxes)
+
+    def test_boxes_must_be_exactly_two(self):
+        boxes = [{"label": "A", "value": "1", "verdict": "V", "kind": "warn"}]
+        with self.assertRaises(m.ManifestError):
+            m.resolve("compare/x/", {"headline": "H", "boxes": boxes})
+
+    def test_boxes_require_all_keys(self):
+        boxes = [{"label": "A", "value": "1", "kind": "warn"},
+                 {"label": "B", "value": "2", "verdict": "V", "kind": "accent"}]
+        with self.assertRaises(m.ManifestError):
+            m.resolve("compare/x/", {"headline": "H", "boxes": boxes})
+
+    def test_boxes_require_a_valid_kind(self):
+        boxes = [{"label": "A", "value": "1", "verdict": "V", "kind": "bogus"},
+                 {"label": "B", "value": "2", "verdict": "V", "kind": "accent"}]
+        with self.assertRaises(m.ManifestError):
+            m.resolve("compare/x/", {"headline": "H", "boxes": boxes})
+
+    def test_comparison_requires_boxes_in_strict_mode(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("compare/x/", {"headline": "H"}, strict=True)
+
+    def test_comparison_with_boxes_passes_strict_mode(self):
+        boxes = [{"label": "A", "value": "1", "verdict": "V1", "kind": "warn"},
+                 {"label": "B", "value": "2", "verdict": "V2", "kind": "accent"}]
+        r = m.resolve("compare/x/", {"headline": "H", "boxes": boxes}, strict=True)
+        self.assertEqual(r["boxes"], boxes)
+
+    # -- badge / name / chain (integration) ------------------------------
+    def test_badge_name_carried_when_present(self):
+        r = m.resolve("integrations/x/", {"headline": "H", "badge": "NATIVE SUPPORT",
+                                          "name": "Claude Code"})
+        self.assertEqual(r["badge"], "NATIVE SUPPORT")
+        self.assertEqual(r["name"], "Claude Code")
+
+    def test_badge_must_be_a_string(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/", {"headline": "H", "badge": 5})
+
+    def test_name_must_be_a_string(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/", {"headline": "H", "name": 5})
+
+    def test_chain_carried_when_present(self):
+        chain = [{"text": "DECISION", "kind": "plain"}, {"text": "MNEME", "kind": "accent"}]
+        r = m.resolve("integrations/x/", {"headline": "H", "chain": chain})
+        self.assertEqual(r["chain"], chain)
+
+    def test_chain_entries_require_text(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/", {"headline": "H", "chain": [{"kind": "plain"}]})
+
+    def test_chain_entries_require_a_valid_kind(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/",
+                      {"headline": "H", "chain": [{"text": "X", "kind": "bogus"}]})
+
+    def test_integration_requires_badge_name_and_chain_in_strict_mode(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/", {"headline": "H"}, strict=True)
+
+    def test_integration_missing_one_field_still_raises_in_strict_mode(self):
+        chain = [{"text": "DECISION", "kind": "plain"}]
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("integrations/x/",
+                      {"headline": "H", "badge": "B", "chain": chain}, strict=True)
+        self.assertIn("name", str(ctx.exception))
+
+    def test_integration_with_all_fields_passes_strict_mode(self):
+        chain = [{"text": "DECISION", "kind": "plain"}, {"text": "MNEME", "kind": "accent"}]
+        r = m.resolve("integrations/x/", {
+            "headline": "H", "badge": "NATIVE SUPPORT", "name": "Claude Code",
+            "chain": chain}, strict=True)
+        self.assertEqual(r["name"], "Claude Code")
+
+    # -- other families are unaffected -----------------------------------
+    def test_brand_and_editorial_do_not_require_structured_fields_in_strict_mode(self):
+        m.resolve("about/", {"headline": "H"}, strict=True)
+        m.resolve("insights/x/", {"headline": "H"}, strict=True)
+
+
 class TestVariant(unittest.TestCase):
     def test_variant_defaults_to_none(self):
         r = m.resolve("insights/x/", {"headline": "X"})

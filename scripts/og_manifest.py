@@ -97,6 +97,58 @@ class ManifestError(Exception):
     """A manifest record is missing, malformed, or internally inconsistent."""
 
 
+ROW_KINDS = ("held", "neutral", "denied")
+BOX_KINDS = ("warn", "accent")
+CHAIN_KINDS = ("plain", "accent")
+
+
+def _validate_rows(rel: str, rows: object) -> None:
+    """rows (proof): a list of [label, value, kind] triples."""
+    if not isinstance(rows, list):
+        raise ManifestError(f"{rel or '<home>'}: rows must be a list")
+    for i, row in enumerate(rows):
+        if (not isinstance(row, (list, tuple))) or len(row) != 3:
+            raise ManifestError(
+                f"{rel or '<home>'}: rows[{i}] must be a 3-element [label, value, kind] sequence")
+        label, value, kind = row
+        if not isinstance(label, str) or not isinstance(value, str):
+            raise ManifestError(f"{rel or '<home>'}: rows[{i}] label and value must be strings")
+        if kind not in ROW_KINDS:
+            raise ManifestError(
+                f"{rel or '<home>'}: rows[{i}] kind must be one of {ROW_KINDS}, got {kind!r}")
+
+
+def _validate_boxes(rel: str, boxes: object) -> None:
+    """boxes (comparison): exactly two {label, value, verdict, kind} mappings."""
+    if not isinstance(boxes, list) or len(boxes) != 2:
+        raise ManifestError(f"{rel or '<home>'}: boxes must be a list of exactly two mappings")
+    for i, box in enumerate(boxes):
+        if not isinstance(box, dict):
+            raise ManifestError(f"{rel or '<home>'}: boxes[{i}] must be a mapping")
+        for key in ("label", "value", "verdict"):
+            if not isinstance(box.get(key), str):
+                raise ManifestError(f"{rel or '<home>'}: boxes[{i}] missing/invalid {key!r}")
+        if box.get("kind") not in BOX_KINDS:
+            raise ManifestError(
+                f"{rel or '<home>'}: boxes[{i}] kind must be one of {BOX_KINDS}, "
+                f"got {box.get('kind')!r}")
+
+
+def _validate_chain(rel: str, chain: object) -> None:
+    """chain (integration): a list of {text, kind} pills."""
+    if not isinstance(chain, list):
+        raise ManifestError(f"{rel or '<home>'}: chain must be a list")
+    for i, item in enumerate(chain):
+        if not isinstance(item, dict):
+            raise ManifestError(f"{rel or '<home>'}: chain[{i}] must be a mapping")
+        if not isinstance(item.get("text"), str):
+            raise ManifestError(f"{rel or '<home>'}: chain[{i}] missing/invalid 'text'")
+        if item.get("kind") not in CHAIN_KINDS:
+            raise ManifestError(
+                f"{rel or '<home>'}: chain[{i}] kind must be one of {CHAIN_KINDS}, "
+                f"got {item.get('kind')!r}")
+
+
 def load(path: Path) -> dict[str, dict]:
     """Read cards.yaml into {page-path: raw record}."""
     with open(path, encoding="utf-8") as fh:
@@ -172,6 +224,44 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
             f"{rel or '<home>'}: variant: hub is only valid on the editorial family, "
             f"got family {family!r}")
 
+    rows = raw.get("rows")
+    if rows is not None:
+        _validate_rows(rel, rows)
+
+    boxes = raw.get("boxes")
+    if boxes is not None:
+        _validate_boxes(rel, boxes)
+
+    badge = raw.get("badge")
+    if badge is not None and not isinstance(badge, str):
+        raise ManifestError(f"{rel or '<home>'}: badge must be a string")
+
+    name = raw.get("name")
+    if name is not None and not isinstance(name, str):
+        raise ManifestError(f"{rel or '<home>'}: name must be a string")
+
+    chain = raw.get("chain")
+    if chain is not None:
+        _validate_chain(rel, chain)
+
+    # The owner's explicit ruling: these family-specific fields are what
+    # the template tokens need to render. Missing them in strict mode is
+    # exactly the data gap that shipped 85 cards with literal {{token}}
+    # text on the card face -- strict must catch it, not paper over it.
+    if strict:
+        if family == "proof" and not rows:
+            raise ManifestError(f"{rel or '<home>'}: family 'proof' requires 'rows' (strict mode)")
+        if family == "comparison" and not boxes:
+            raise ManifestError(
+                f"{rel or '<home>'}: family 'comparison' requires 'boxes' (strict mode)")
+        if family == "integration":
+            missing = [name_ for name_, value in
+                       (("badge", badge), ("name", name), ("chain", chain)) if not value]
+            if missing:
+                raise ManifestError(
+                    f"{rel or '<home>'}: family 'integration' requires "
+                    f"{', '.join(missing)} (strict mode)")
+
     return {
         "path": rel,
         "family": family,
@@ -179,7 +269,11 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
         "lines": lines,
         "accent": raw.get("accent"),
         "sup": raw.get("sup"),
-        "rows": raw.get("rows"),
+        "rows": rows,
+        "boxes": boxes,
+        "badge": badge,
+        "name": name,
+        "chain": chain,
         "tone": tone,
         "motif": motif,
         "alt": raw.get("alt") or headline,
