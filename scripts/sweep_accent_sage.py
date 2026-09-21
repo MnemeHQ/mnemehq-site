@@ -133,7 +133,7 @@ def site_files() -> list[Path]:
         out.append(path)
     # Page templates ship the same CSS into every new article/page, so they
     # have to move with the site or the next `new_article.py` regresses.
-    for tpl in (REPO_ROOT / "templates").glob("*"):
+    for tpl in (REPO_ROOT / "templates").rglob("*"):
         if tpl.suffix in {".html", ".css"} and tpl.is_file():
             out.append(tpl)
     return [p for p in out if p.exists()]
