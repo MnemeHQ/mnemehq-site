@@ -86,6 +86,28 @@ class TestHubVariant(unittest.TestCase):
         html = r.build_html(self._rec())
         self.assertNotIn("<em>", html)
 
+    def test_hub_has_no_category_label(self):
+        """Hub cards carry the identity alone -- the subtitle is the
+        descriptor, so a category label in the top bar would duplicate it
+        (e.g. "INSIGHT" in the top bar and "INSIGHTS" again as subtitle)."""
+        self.assertEqual(r.label_for(self._rec()), "")
+
+    def test_hub_concepts_path_also_has_no_category_label(self):
+        self.assertEqual(
+            r.label_for(self._rec(path="concepts/some-topic-hub/")), "")
+
+
+class TestLabelFor(unittest.TestCase):
+    def test_normal_editorial_insight_gets_label(self):
+        rec = {"family": "editorial", "path": "insights/rag-is-not-memory/",
+               "variant": None}
+        self.assertEqual(r.label_for(rec), "Insight")
+
+    def test_normal_editorial_concept_gets_label(self):
+        rec = {"family": "editorial", "path": "concepts/architectural-drift/",
+               "variant": None}
+        self.assertEqual(r.label_for(rec), "Concept")
+
 
 if __name__ == "__main__":
     unittest.main()

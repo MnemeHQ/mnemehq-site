@@ -35,9 +35,16 @@ TYPE_FLOOR = 30
 def label_for(record: dict) -> str:
     """Category label. Editorial resolves from the PATH, not the family:
     one family carries two labels (INSIGHT / CONCEPT), so a family-keyed
-    dict cannot express it. Brand cards carry the identity alone."""
+    dict cannot express it. Brand cards carry the identity alone.
+
+    Hub cards (editorial listing pages) also carry the identity alone: the
+    subtitle is already the descriptor, so a category label in the top bar
+    would duplicate it (e.g. "INSIGHT" in the top bar and "INSIGHTS" again
+    as the hub subtitle)."""
     fam, path = record["family"], record["path"]
     if fam == "brand":
+        return ""
+    if record.get("variant") == "hub":
         return ""
     if fam == "editorial":
         return "Concept" if path.startswith("concepts/") else "Insight"
