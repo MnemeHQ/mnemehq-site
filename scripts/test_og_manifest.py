@@ -242,6 +242,15 @@ class TestRowsBoxesBadgeNameChain(unittest.TestCase):
         r = m.resolve("integrations/x/", {"headline": "H", "chain": chain})
         self.assertEqual(r["chain"], chain)
 
+    def test_chain_accepts_dim_kind(self):
+        """A third kind for the de-emphasized tool-name pill (e.g. the
+        reference's muted "CLAUDE CODE" pill) -- two kinds cannot express
+        three approved pill styles."""
+        chain = [{"text": "DECISION", "kind": "plain"}, {"text": "MNEME", "kind": "accent"},
+                 {"text": "CLAUDE CODE", "kind": "dim"}]
+        r = m.resolve("integrations/x/", {"headline": "H", "chain": chain})
+        self.assertEqual(r["chain"], chain)
+
     def test_chain_entries_require_text(self):
         with self.assertRaises(m.ManifestError):
             m.resolve("integrations/x/", {"headline": "H", "chain": [{"kind": "plain"}]})

@@ -113,6 +113,10 @@ _ARROW = ('<span style="font-family:\'DM\';font-size:40px;color:var(--quiet);'
 _PILL_STYLES = {
     "plain": dict(c="var(--text)", b="var(--border2)", bg="var(--surface)"),
     "accent": dict(c="var(--accent)", b="rgba(181,204,122,.42)", bg="rgba(181,204,122,.08)"),
+    # The reference's third pill (the tool name, e.g. "CLAUDE CODE") is
+    # deliberately de-emphasized -- same border/background as "plain",
+    # muted text -- since the h1 already names it.
+    "dim": dict(c="var(--muted)", b="var(--border2)", bg="var(--surface)"),
 }
 
 

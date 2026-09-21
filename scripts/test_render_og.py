@@ -148,13 +148,27 @@ class TestStructuredBuilders(unittest.TestCase):
     def test_integration_has_no_leftover_tokens(self):
         chain = [{"text": "DECISION", "kind": "plain"},
                  {"text": "MNEME", "kind": "accent"},
-                 {"text": "CLAUDE CODE", "kind": "plain"}]
+                 {"text": "CLAUDE CODE", "kind": "dim"}]
         html = r.build_html(self._base(
             family="integration", path="integrations/x/",
             badge="NATIVE SUPPORT", name="Claude Code", chain=chain))
         self.assertNotIn("{{", html)
         self.assertIn("NATIVE SUPPORT", html)
         self.assertIn("Claude Code", html)
+
+    def test_integration_third_pill_renders_dim_muted_style(self):
+        """The approved reference renders the tool-name pill muted (the h1
+        already names it) while the origin pill stays full-text color --
+        two kinds cannot express three approved pill styles."""
+        chain = [{"text": "DECISION", "kind": "plain"},
+                 {"text": "MNEME", "kind": "accent"},
+                 {"text": "CLAUDE CODE", "kind": "dim"}]
+        html = r.build_html(self._base(
+            family="integration", path="integrations/x/",
+            badge="NATIVE SUPPORT", name="Claude Code", chain=chain))
+        self.assertIn("var(--muted)", html)
+        self.assertIn("var(--text)", html)
+        self.assertIn("var(--accent)", html)
 
     def test_proof_missing_rows_falls_back_with_no_leftover_tokens(self):
         """Dev-only fallback: non-strict local preview must never leak a

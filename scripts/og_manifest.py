@@ -99,7 +99,7 @@ class ManifestError(Exception):
 
 ROW_KINDS = ("held", "neutral", "denied")
 BOX_KINDS = ("warn", "accent")
-CHAIN_KINDS = ("plain", "accent")
+CHAIN_KINDS = ("plain", "accent", "dim")
 
 
 def _validate_rows(rel: str, rows: object) -> None:

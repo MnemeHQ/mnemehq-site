@@ -34,7 +34,7 @@ MANIFEST = REPO / "site" / "og" / "cards.yaml"
 BOTTLENECK_RE = re.compile(r"\bbottleneck\b", re.IGNORECASE)
 EM_DASH = "—"  # U+2014 only -- not U+2013 (en dash) or "-" (hyphen).
 
-_SCALAR_FIELDS = ("headline", "sup", "alt", "subtitle")
+_SCALAR_FIELDS = ("headline", "sup", "alt", "subtitle", "badge", "name")
 
 
 def _check_text(label: str, text: str) -> list[str]:
@@ -46,26 +46,56 @@ def _check_text(label: str, text: str) -> list[str]:
     return out
 
 
+def _check_field(out: list[str], label: str, value: object) -> None:
+    if isinstance(value, str) and value:
+        out.extend(_check_text(label, value))
+
+
 def findings(record: dict) -> list[str]:
-    """Return house-voice violations for one resolved (or raw) record."""
+    """Return house-voice violations for one resolved (or raw) record.
+
+    Structured fields render copy on the card face exactly like the scalar
+    ones do, so they get walked too: every string in a `rows` triple (the
+    proof family), every `label`/`value`/`verdict` in a `boxes` entry (the
+    comparison family), and every `text` in a `chain` pill (the integration
+    family). The `kind` discriminator in each of those is an enum value,
+    not prose, so it is deliberately skipped.
+    """
     if record.get("voice_ok"):
         return []
 
     out: list[str] = []
     for field in _SCALAR_FIELDS:
-        value = record.get(field)
-        if isinstance(value, str) and value:
-            out.extend(_check_text(field, value))
+        _check_field(out, field, record.get(field))
 
+    # rows (proof): [label, value, kind] triples, or a legacy flat
+    # list/dict of strings -- kind (index 2) is never checked.
     rows = record.get("rows")
     if isinstance(rows, list):
-        for i, value in enumerate(rows):
-            if isinstance(value, str) and value:
-                out.extend(_check_text(f"rows[{i}]", value))
+        for i, row in enumerate(rows):
+            if isinstance(row, str):
+                _check_field(out, f"rows[{i}]", row)
+            elif isinstance(row, (list, tuple)):
+                for j, value in enumerate(row[:2]):
+                    _check_field(out, f"rows[{i}][{j}]", value)
     elif isinstance(rows, dict):
         for key, value in rows.items():
-            if isinstance(value, str) and value:
-                out.extend(_check_text(f"rows[{key}]", value))
+            _check_field(out, f"rows[{key}]", value)
+
+    # boxes (comparison): {label, value, verdict, kind} mappings.
+    boxes = record.get("boxes")
+    if isinstance(boxes, list):
+        for i, box in enumerate(boxes):
+            if isinstance(box, dict):
+                for key in ("label", "value", "verdict"):
+                    _check_field(out, f"boxes[{i}].{key}", box.get(key))
+
+    # chain (integration): {text, kind} pills.
+    chain = record.get("chain")
+    if isinstance(chain, list):
+        for i, item in enumerate(chain):
+            if isinstance(item, dict):
+                _check_field(out, f"chain[{i}].text", item.get("text"))
 
     return out
 
