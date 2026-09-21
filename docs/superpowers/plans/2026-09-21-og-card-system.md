@@ -776,7 +776,7 @@ git commit -m "feat(og): five family templates on a shared 30px-floor scale"
 
 **Interfaces:**
 - Consumes: `og_manifest.load/resolve`, `og_geometry.render`, `templates/og/*`.
-- Produces: `fit(text: str) -> int`; `build_html(record: dict) -> str`; `assert_versions() -> None`; CLI `python scripts/render_og.py [--strict] [--out DIR] [--only PATH]`.
+- Produces: `fit(text: str) -> int`; `build_html(record: dict) -> str`; `assert_versions() -> None`; CLI `python scripts/render_og.py [--strict] [--out DIR] [--only PATH] [--dry-run]`. `--dry-run` resolves and validates every record and writes nothing, so the manifest gate can run with no browser present..
 
 - [ ] **Step 1: Write the failing test**
 
@@ -861,6 +861,7 @@ how a regenerate-and-diff gate turns into noise.
 
 Usage:
   python scripts/render_og.py --strict --out site
+  python scripts/render_og.py --strict --dry-run
   python scripts/render_og.py --only insights/rag-is-not-memory/
 """
 from __future__ import annotations
@@ -883,8 +884,17 @@ PLAYWRIGHT_PIN = "1.58.0"
 CHROMIUM_PIN = "145.0.7632.6"
 TYPE_FLOOR = 30
 
-FAMILY_LABEL = {"editorial": None, "integration": "Integration",
-                "comparison": "Comparison", "proof": "Demo", "brand": None}
+def label_for(record: dict) -> str:
+    """Category label. Editorial resolves from the PATH, not the family:
+    one family carries two labels (INSIGHT / CONCEPT), so a family-keyed
+    dict cannot express it. Brand cards carry the identity alone."""
+    fam, path = record["family"], record["path"]
+    if fam == "brand":
+        return ""
+    if fam == "editorial":
+        return "Concept" if path.startswith("concepts/") else "Insight"
+    return {"integration": "Integration", "comparison": "Comparison",
+            "proof": "Demo"}[fam]
 
 
 def fit(lines: list[str]) -> int:
@@ -909,7 +919,7 @@ def build_html(record: dict) -> str:
         geometry = og_geometry.render(
             record["path"].rstrip("/").rsplit("/", 1)[-1],
             record["motif"], record["tone"])
-    label = FAMILY_LABEL.get(record["family"]) or ""
+    label = label_for(record)
     return (tpl
             .replace("{{geometry}}", geometry)
             .replace("{{family_label}}", html_mod.escape(label))
@@ -925,6 +935,11 @@ def assert_versions() -> None:
     if got != PLAYWRIGHT_PIN:
         raise SystemExit(f"ERROR -- playwright {got}, pinned {PLAYWRIGHT_PIN}")
 ```
+
+**Import `playwright` and `PIL` inside the render functions, never at module
+scope.** CI installs only `pyyaml` and runs `test_render_og.py`, which imports
+this module; a module-scope import of either would fail CI on a machine that
+renders nothing.
 
 Add the async render loop: start a `SimpleHTTPRequestHandler` rooted at the
 repo so `_base.css` and `site/assets/fonts/*.woff2` resolve, assert
@@ -1158,6 +1173,7 @@ Expected: FAIL with `ModuleNotFoundError`
 
 - [ ] **Step 3: Write the implementation**
 
+Read every field with `.get()`, never `[]` — the tests pass sparse records.
 Scan `headline`, `sup`, `alt` and each `rows` value for `bottleneck`
 (case-insensitive, word boundary) and `—` (U+2014 only — **not** `–` U+2013
 or `-`). A truthy `voice_ok` on the record suppresses that record's
