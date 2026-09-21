@@ -38,7 +38,7 @@ SKIP_LINK_HTML = (
 )
 SKIP_LINK_CSS = (
     ".skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; "
-    "background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; "
+    "background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; "
     "border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; "
     "text-decoration: none; }\n"
     "    .skip-link:focus { left: 0; }"

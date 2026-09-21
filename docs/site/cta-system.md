@@ -64,10 +64,29 @@ Known GA4 limitations to plan around:
 | `--action-dim`       | `#c95a46`  | Hover state for primary                    |
 | Neutral outline      | `var(--border2)` / `var(--text)` | Secondary action     |
 | Text link            | mint `#8be0c8` | Tertiary action, editorial references  |
-| Lime (`--accent`)    | `#c8f060`  | Success, shipped/validated status, evidence — **never a button fill** |
+| Sage (`--accent`)    | `#b5cc7a`  | Success, shipped/validated status, evidence — **never a button fill** |
+| Quiet grey (`--quiet`) | `#88889a` | Eyebrows, kickers, metadata labels, axis text |
+| Error (`--error`)    | `#ff5c7a`  | Deny verdicts and failures — the ONE red |
+| Warn (`--warn`)      | `#f6b94b`  | Partial/at-risk states — the ONE amber   |
 
-Contrast (all pass WCAG AA): black-on-coral 6.76:1 · black-on-lime 14.98:1 ·
-mint-on-dark 12.66:1 · grey-on-dark 8.31:1.
+Contrast on `#0c0c0d` (all pass WCAG AA): black-on-coral 6.62:1 · sage 11.06:1 ·
+mint 12.66:1 · muted grey 8.34:1 · quiet grey 5.62:1 · error 6.58:1 · warn 11.14:1.
+
+### Why sage and not the original lime (Sept 2026 colour audit)
+
+The audit found lime `#c8f060` doing five jobs at once — eyebrows, active nav,
+link colour, pull-quote rules and status — and appearing nowhere in the logo,
+which is white plus coral (`#d97361`/`#da5749`). At 83% saturation beside
+coral on near-black it read as signage rather than as a status colour. Sage
+keeps the hue (77°) and drops saturation to 45%, so "green means pass" survives
+while the pairing goes quiet. Eyebrows moved to `--quiet`; the accent is now
+status and evidence only.
+
+The eight reds and four ambers collapsed to one of each at the same time. The
+old error reds sat 0–9° from coral, so a DENY verdict and an Install button
+shared a hue family; `#ff5c7a` sits at 349° and is clear of it.
+
+`scripts/sweep_accent_sage.py --check` fails if any of this drifts back.
 
 Button spec: ~14px text, 44–48px height, DM Mono labels, focus ring per base.css.
 Integration detail CTAs are the deliberate exception: Inter 500 reduces the

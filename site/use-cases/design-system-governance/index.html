@@ -31,11 +31,11 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
     .btn-ghost { display: inline-block; background: transparent; border: 1px solid var(--border2); color: var(--text); padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.88rem; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
     .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
-    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
     .hero { max-width: 800px; margin: 0 auto; padding: 5rem 2rem 4rem; text-align: center; }
     .hero-tag { display: inline-block; color: var(--muted); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
@@ -43,7 +43,7 @@
     .hero-sub { font-size: 1rem; color: var(--muted); max-width: 540px; margin: 0 auto 2.5rem; }
     .cta-group { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
     .section-wrap { max-width: 860px; margin: 0 auto; padding: 4.5rem 2rem; border-top: 1px solid var(--border); }
-    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.75rem; }
     .section-title { font-family: 'Inter', sans-serif; font-size: clamp(1.5rem, 2.8vw, 2rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: 2rem; }
     .prose { font-size: 0.88rem; color: var(--muted); line-height: 1.9; max-width: 680px; }
     .demo-panels { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 2rem 0; }
@@ -52,7 +52,7 @@
     .panel-header { display: flex; align-items: center; gap: 0.4rem; padding: 0.65rem 1rem; background: var(--surface2); border-bottom: 1px solid var(--border); }
     .panel-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); }
     .panel-label { font-size: 0.72rem; color: var(--muted); margin-left: 0.25rem; }
-    .panel-label.bad { color: #ff7070; }
+    .panel-label.bad { color: #ff5c7a; }
     .panel-label.good { color: var(--accent); }
     .panel-body { padding: 1.25rem; font-size: 0.78rem; line-height: 1.8; color: var(--muted); }
     .panel-body.good-response { color: var(--text); }
@@ -67,7 +67,7 @@
     .rag-table tr:last-child td { border-bottom: none; }
     .steps { display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; }
     .step { display: flex; gap: 1.25rem; align-items: flex-start; }
-    .step-num { flex-shrink: 0; width: 32px; height: 32px; border: 1px solid rgba(200,240,96,0.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--accent); }
+    .step-num { flex-shrink: 0; width: 32px; height: 32px; border: 1px solid rgba(181, 204, 122,0.28); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--accent); }
     .step-body h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; margin-bottom: 0.3rem; }
     .step-body p { font-size: 0.82rem; color: var(--muted); }
     .code-block { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
@@ -173,7 +173,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 <script type="application/ld+json">
 {
@@ -283,8 +283,8 @@
       <line x1="185" y1="58" x2="218" y2="58" stroke="#2e2e34" stroke-width="1.5"/>
       <polygon points="214,54 225,58 214,62" fill="#2e2e34"/>
       <!-- Mneme HQ node -->
-      <rect x="225" y="18" width="215" height="80" rx="8" fill="#141416" stroke="#c8f060" stroke-width="1.5"/>
-      <text x="332" y="42" font-family="monospace" font-size="9" fill="#c8f060" text-anchor="middle" letter-spacing="4">Mneme HQ</text>
+      <rect x="225" y="18" width="215" height="80" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
+      <text x="332" y="42" font-family="monospace" font-size="9" fill="#b5cc7a" text-anchor="middle" letter-spacing="4">Mneme HQ</text>
       <text x="332" y="64" font-family="monospace" font-size="13" fill="#e8e8ec" text-anchor="middle">Design Token Filter</text>
       <text x="332" y="82" font-family="monospace" font-size="9" fill="#88889a" text-anchor="middle">mneme check --tags design-system</text>
       <!-- Arrow Mneme HQ→B -->
@@ -299,16 +299,16 @@
       <!-- Horizontal branch (pass-cx=102, fail-cx=572) -->
       <line x1="102" y1="124" x2="572" y2="124" stroke="#2e2e34" stroke-width="1.5"/>
       <!-- Branch down to pass -->
-      <line x1="102" y1="124" x2="102" y2="136" stroke="#c8f060" stroke-width="1.5"/>
+      <line x1="102" y1="124" x2="102" y2="136" stroke="#b5cc7a" stroke-width="1.5"/>
       <!-- Branch down to fail -->
-      <line x1="572" y1="124" x2="572" y2="136" stroke="#ff7070" stroke-width="1.5"/>
+      <line x1="572" y1="124" x2="572" y2="136" stroke="#ff5c7a" stroke-width="1.5"/>
       <!-- Pass box -->
       <rect x="10" y="136" width="184" height="40" rx="6" fill="#0d1a08" stroke="#1e3310" stroke-width="1"/>
-      <text x="102" y="153" font-family="monospace" font-size="11" fill="#c8f060" text-anchor="middle">&#x2713; Pass</text>
+      <text x="102" y="153" font-family="monospace" font-size="11" fill="#b5cc7a" text-anchor="middle">&#x2713; Pass</text>
       <text x="102" y="169" font-family="monospace" font-size="9" fill="#88889a" text-anchor="middle">Compliant JSX generated</text>
       <!-- Fail box -->
       <rect x="478" y="136" width="188" height="40" rx="6" fill="#1a0808" stroke="#331010" stroke-width="1"/>
-      <text x="572" y="153" font-family="monospace" font-size="11" fill="#ff7070" text-anchor="middle">&#x2717; Fail</text>
+      <text x="572" y="153" font-family="monospace" font-size="11" fill="#ff5c7a" text-anchor="middle">&#x2717; Fail</text>
       <text x="572" y="169" font-family="monospace" font-size="9" fill="#88889a" text-anchor="middle">Token / ARIA violations flagged</text>
     </svg>
   </div>
@@ -337,11 +337,11 @@
         </div>
         <div class="panel-body good-response">
           <div class="panel-prompt">mneme check --mode strict</div>
-          <span style="color:#ff7070">✗ FAIL</span> decision/use-approved-components<br>
+          <span style="color:#ff5c7a">✗ FAIL</span> decision/use-approved-components<br>
           Rule: Use Modal from design-system/Modal, not custom implementations.<br><br>
-          <span style="color:#ff7070">✗ FAIL</span> decision/no-hardcoded-colors<br>
+          <span style="color:#ff5c7a">✗ FAIL</span> decision/no-hardcoded-colors<br>
           Rule: Colors must reference design tokens. #ff0000 is not an approved token.<br><br>
-          <span style="color:#ff7070">✗ FAIL</span> decision/destructive-actions-require-aria<br>
+          <span style="color:#ff5c7a">✗ FAIL</span> decision/destructive-actions-require-aria<br>
           Rule: Destructive action modals require role="alertdialog" and aria-describedby.<br><br>
           <span style="color:var(--accent)">→ Surfaced 3 violations before code generation.</span>
         </div>
@@ -411,13 +411,13 @@
 
 <span class="cc">Checking against 12 design-system decisions...</span>
 
-<span style="color:#ff7070">✗ FAIL</span> decision/use-approved-components (Modal exists in design-system/)
-<span style="color:#ff7070">✗ FAIL</span> decision/no-hardcoded-colors
-<span style="color:#ff7070">✗ FAIL</span> decision/destructive-actions-require-aria
+<span style="color:#ff5c7a">✗ FAIL</span> decision/use-approved-components (Modal exists in design-system/)
+<span style="color:#ff5c7a">✗ FAIL</span> decision/no-hardcoded-colors
+<span style="color:#ff5c7a">✗ FAIL</span> decision/destructive-actions-require-aria
 <span class="cs">✓ PASS</span> decision/spacing-must-use-scale
 <span class="cs">✓ PASS</span> decision/typography-component-required
 
-<span style="color:#ff7070">Result: FAIL (3 violations, strict mode)</span></pre>
+<span style="color:#ff5c7a">Result: FAIL (3 violations, strict mode)</span></pre>
     </div>
   </div>
 
@@ -460,8 +460,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

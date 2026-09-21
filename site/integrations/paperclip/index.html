@@ -61,14 +61,14 @@
     .breadcrumb a:hover { color: var(--text); }
     .breadcrumb [aria-current="page"] { color: var(--text); }
     .hero { max-width: 1080px; margin: 0 auto; padding: 3rem 2rem 1rem; }
-    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
+    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; margin-bottom: 1rem; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.25rem; max-width: 820px; }
     .hero-sub { font-size: 1.05rem; color: var(--muted); line-height: 1.7; max-width: 720px; margin-bottom: 1.75rem; }
     .hero-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.7rem 1.4rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.7rem 1.4rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
     .btn-secondary { display: inline-block; background: transparent; color: var(--accent); padding: 0.7rem 1.4rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; border: 1px solid var(--accent); transition: background 0.15s; }
-    .btn-secondary:hover { background: rgba(200,240,96,0.08); }
+    .btn-secondary:hover { background: rgba(181, 204, 122,0.08); }
     .section { max-width: 1080px; margin: 0 auto; padding: 3.5rem 2rem; }
     .section.narrow { max-width: 820px; }
     .section h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 400; letter-spacing: -0.015em; margin-bottom: 1.5rem; line-height: 1.2; }
@@ -78,11 +78,11 @@
     .section li { margin-bottom: 0.5rem; }
     .section li strong { color: var(--text); font-weight: 500; }
     .section code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--teal); }
-    .section a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,240,96,0.3); }
+    .section a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(181, 204, 122,0.3); }
     .section a:hover { border-bottom-color: var(--accent); }
     .callout { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.25rem 1.5rem; margin: 1.75rem 0; }
-    .callout.warn { border-left-color: #f59e0b; }
-    .callout.warn p strong { color: #f59e0b; }
+    .callout.warn { border-left-color: #f6b94b; }
+    .callout.warn p strong { color: #f6b94b; }
     .callout p { margin: 0; color: var(--muted); font-size: 0.92rem; }
     .callout p strong { color: var(--accent); }
     pre.flow { background: #0a0a0d; border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem 1.4rem; margin: 1.5rem 0; overflow-x: auto; font-family: 'DM Mono', monospace; font-size: 0.85rem; line-height: 1.8; color: var(--text); }
@@ -119,7 +119,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
 
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 
   <link rel="stylesheet" href="/assets/css/integration-system-v2.css?v=20260918">
@@ -342,8 +342,8 @@ mneme check against the workspace's
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

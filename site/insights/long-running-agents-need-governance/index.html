@@ -42,7 +42,7 @@
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
     .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
@@ -93,8 +93,8 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
 
     footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
     footer a { color: var(--muted); text-decoration: none; }
@@ -140,8 +140,8 @@
     .faq-body a { color: var(--accent); text-decoration: none; }
     .faq-body a:hover { color: var(--accent-dim); }
 
-    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
+    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(181, 204, 122,0.4); }
+    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(181, 204, 122,0.7); }
 
     .nav-hamburger {
       display: none;
@@ -225,8 +225,8 @@
     .context-cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #8be0c8; margin-bottom: 0.6rem; }
     .context-cta-copy { font-size: 0.92rem; color: #e8e8ec; line-height: 1.65; margin: 0 0 1.15rem; }
     .context-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
-    .context-cta-primary { display: inline-flex; align-items: center; background: #8be0c8; color: #0c0c0d; padding: 0.7rem 1.4rem; border: 1px solid #8be0c8; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; text-decoration: none; transition: background 0.15s, border-color 0.15s; }
-    .context-cta-primary:hover { background: #6fcbb0; }
+    .context-cta-primary { display: inline-flex; align-items: center; background: transparent; color: var(--text, #e8e8ec); padding: 0.7rem 1.4rem; border: 1px solid var(--border2, #2e2e34); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .context-cta-primary:hover { border-color: #8be0c8; color: #8be0c8; }
     .context-cta-secondary { display: inline-flex; align-items: center; color: #8be0c8; padding: 0.7rem 1.25rem; border: 1px solid rgba(139,224,200,0.45); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; line-height: 1.3; text-decoration: none; transition: border-color 0.15s, background 0.15s; }
     .context-cta-secondary:hover { border-color: #8be0c8; background: rgba(139,224,200,0.08); }
   
@@ -235,7 +235,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -500,14 +500,14 @@ mneme check --mode warn</code></pre>
             <path d="M0 0 L10 5 L0 10 z" fill="#88889a"/>
           </marker>
           <marker id="arr1Acc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="#c8f060"/>
+            <path d="M0 0 L10 5 L0 10 z" fill="#b5cc7a"/>
           </marker>
         </defs>
 
         <!-- Title row -->
         <g font-family="DM Mono, monospace" font-size="10" letter-spacing="0.08em">
           <text x="32" y="28" fill="#88889a">SESSION FLOW</text>
-          <text x="388" y="28" fill="#c8f060">+ GOVERNANCE</text>
+          <text x="388" y="28" fill="#b5cc7a">+ GOVERNANCE</text>
         </g>
 
         <!-- Left column: Harness (continuity) -->
@@ -553,37 +553,37 @@ mneme check --mode warn</code></pre>
         <!-- Right column: Governance overlays -->
         <g font-family="Inter, sans-serif" font-size="12">
           <!-- Governance label -->
-          <text x="400" y="68" fill="#c8f060" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.08em">GOVERNANCE CHECKPOINTS</text>
+          <text x="400" y="68" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.08em">GOVERNANCE CHECKPOINTS</text>
 
           <!-- Check 1: Session start -->
-          <rect x="392" y="80" width="300" height="68" rx="8" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.2"/>
-          <text x="408" y="102" fill="#c8f060" font-weight="500" font-size="12">Session-start check</text>
+          <rect x="392" y="80" width="300" height="68" rx="8" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.2"/>
+          <text x="408" y="102" fill="#b5cc7a" font-weight="500" font-size="12">Session-start check</text>
           <text x="408" y="120" fill="#88889a" font-size="11">mneme check --mode warn</text>
           <text x="408" y="136" fill="#88889a" font-size="11">load constraints before any code is written</text>
 
           <!-- Arrow connecting to block 2 -->
-          <line x1="392" y1="148" x2="328" y2="155" stroke="#c8f060" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
+          <line x1="392" y1="148" x2="328" y2="155" stroke="#b5cc7a" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
 
           <!-- Check 2: Pre-commit -->
-          <rect x="392" y="248" width="300" height="68" rx="8" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.2"/>
-          <text x="408" y="270" fill="#c8f060" font-weight="500" font-size="12">Pre-commit check</text>
+          <rect x="392" y="248" width="300" height="68" rx="8" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.2"/>
+          <text x="408" y="270" fill="#b5cc7a" font-weight="500" font-size="12">Pre-commit check</text>
           <text x="408" y="288" fill="#88889a" font-size="11">mneme check --mode strict</text>
           <text x="408" y="304" fill="#88889a" font-size="11">catch local drift before branch history</text>
 
           <!-- Arrow connecting to block 3 -->
-          <line x1="392" y1="268" x2="328" y2="250" stroke="#c8f060" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
+          <line x1="392" y1="268" x2="328" y2="250" stroke="#b5cc7a" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
 
           <!-- Check 3: Handoff -->
-          <rect x="392" y="380" width="300" height="40" rx="8" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.2"/>
-          <text x="408" y="398" fill="#c8f060" font-weight="500" font-size="12">Governance state preserved</text>
+          <rect x="392" y="380" width="300" height="40" rx="8" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.2"/>
+          <text x="408" y="398" fill="#b5cc7a" font-weight="500" font-size="12">Governance state preserved</text>
           <text x="408" y="414" fill="#88889a" font-size="11">next session inherits constraints, not just progress</text>
 
           <!-- Arrow connecting to block 5 -->
-          <line x1="392" y1="395" x2="328" y2="395" stroke="#c8f060" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
+          <line x1="392" y1="395" x2="328" y2="395" stroke="#b5cc7a" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr1Acc)"/>
         </g>
 
         <!-- Bottom caption -->
-        <text x="360" y="464" text-anchor="middle" fill="#55555f" font-family="DM Mono, monospace" font-size="10">harness (left) gives the agent its map &middot; governance (right) gives it its boundaries</text>
+        <text x="360" y="464" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="10">harness (left) gives the agent its map &middot; governance (right) gives it its boundaries</text>
       </svg>
       <figcaption id="fig1-cap">Fig 1 &middot; Long-running agent session flow extended with governance checkpoints. The harness ensures the agent knows what happened. Governance ensures it knows what is allowed.</figcaption>
     </figure>
@@ -616,7 +616,7 @@ mneme check --mode warn</code></pre>
       <svg viewBox="0 0 720 320" role="img" aria-label="Diagram showing five governance checkpoint positions in the agent workflow">
         <defs>
           <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="#c8f060"/>
+            <path d="M0 0 L10 5 L0 10 z" fill="#b5cc7a"/>
           </marker>
         </defs>
 
@@ -625,58 +625,58 @@ mneme check --mode warn</code></pre>
 
         <!-- Checkpoint nodes -->
         <!-- 1: Session start -->
-        <circle cx="100" cy="160" r="10" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="100" y="140" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">01</text>
+        <circle cx="100" cy="160" r="10" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="100" y="140" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">01</text>
         <text x="100" y="200" text-anchor="middle" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="11" font-weight="500">Session</text>
         <text x="100" y="215" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">start</text>
         <text x="100" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="9">warn mode</text>
 
         <!-- 2: Pre-tool -->
-        <circle cx="220" cy="160" r="10" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="220" y="140" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">02</text>
+        <circle cx="220" cy="160" r="10" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="220" y="140" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">02</text>
         <text x="220" y="200" text-anchor="middle" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="11" font-weight="500">Pre-tool</text>
         <text x="220" y="215" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">execution</text>
         <text x="220" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="9">block early</text>
 
         <!-- 3: Pre-commit -->
-        <circle cx="360" cy="160" r="10" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="360" y="140" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">03</text>
+        <circle cx="360" cy="160" r="10" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="360" y="140" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">03</text>
         <text x="360" y="200" text-anchor="middle" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="11" font-weight="500">Pre-commit</text>
         <text x="360" y="215" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">&nbsp;</text>
         <text x="360" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="9">strict mode</text>
 
         <!-- 4: Pre-PR -->
-        <circle cx="500" cy="160" r="10" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="500" y="140" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">04</text>
+        <circle cx="500" cy="160" r="10" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="500" y="140" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">04</text>
         <text x="500" y="200" text-anchor="middle" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="11" font-weight="500">Pre-PR</text>
         <text x="500" y="215" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">&nbsp;</text>
         <text x="500" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="9">explainable</text>
 
         <!-- 5: CI -->
-        <circle cx="630" cy="160" r="10" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="630" y="140" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">05</text>
+        <circle cx="630" cy="160" r="10" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="630" y="140" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="9" letter-spacing="0.05em">05</text>
         <text x="630" y="200" text-anchor="middle" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="11" font-weight="500">CI gate</text>
         <text x="630" y="215" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">&nbsp;</text>
         <text x="630" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="9">team-level</text>
 
         <!-- Benefit annotations (above the line) -->
-        <text x="100" y="106" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">Load constraints</text>
-        <text x="100" y="119" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">before work starts</text>
+        <text x="100" y="106" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">Load constraints</text>
+        <text x="100" y="119" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">before work starts</text>
 
-        <text x="220" y="106" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">Block obviously</text>
-        <text x="220" y="119" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">forbidden actions</text>
+        <text x="220" y="106" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">Block obviously</text>
+        <text x="220" y="119" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">forbidden actions</text>
 
-        <text x="360" y="106" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">Catch drift before</text>
-        <text x="360" y="119" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">branch history</text>
+        <text x="360" y="106" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">Catch drift before</text>
+        <text x="360" y="119" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">branch history</text>
 
-        <text x="500" y="106" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">Explainable</text>
-        <text x="500" y="119" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">warnings/failures</text>
+        <text x="500" y="106" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">Explainable</text>
+        <text x="500" y="119" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">warnings/failures</text>
 
-        <text x="630" y="106" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">Enforce team-level</text>
-        <text x="630" y="119" text-anchor="middle" fill="#55555f" font-family="Inter, sans-serif" font-size="10">architectural contracts</text>
+        <text x="630" y="106" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">Enforce team-level</text>
+        <text x="630" y="119" text-anchor="middle" fill="#88889a" font-family="Inter, sans-serif" font-size="10">architectural contracts</text>
 
         <!-- caption -->
-        <text x="360" y="300" text-anchor="middle" fill="#55555f" font-family="DM Mono, monospace" font-size="10">five enforcement points &middot; each catches a different class of drift</text>
+        <text x="360" y="300" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="10">five enforcement points &middot; each catches a different class of drift</text>
       </svg>
       <figcaption id="fig2-cap">Fig 2 &middot; Governance enforcement points in a long-running agent workflow. Each checkpoint catches drift at a different cost. Earlier checkpoints are cheaper to enforce; later checkpoints catch what slipped through.</figcaption>
     </figure>
@@ -766,8 +766,8 @@ mneme check --mode warn</code></pre>
 </main>
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

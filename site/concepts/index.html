@@ -95,7 +95,7 @@
 
     /* Hero */
     .hero { padding: 5rem 0 3.5rem; max-width: 660px; }
-    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+    .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 1.25rem; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.2rem, 5vw, 3.25rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.12; margin-bottom: 1.25rem; }
     .hero-desc { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 560px; }
 
@@ -143,14 +143,14 @@
     .concept-map-caption strong { color: var(--accent); font-weight: 500; }
     .cmap-tier { fill: #88889a; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.08em; }
     .cmap-tier-meta { fill: #88889a; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.04em; }
-    .cmap-title { fill: #c8f060; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
+    .cmap-title { fill: #b5cc7a; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.06em; }
     .cmap-card { fill: #141416; stroke: #2e2e34; transition: fill 0.15s, stroke 0.15s; }
-    .cmap-card-outcome { fill: rgba(200,240,96,0.05); stroke: #c8f060; stroke-width: 1.5; transition: fill 0.15s; }
+    .cmap-card-outcome { fill: rgba(181, 204, 122,0.05); stroke: #b5cc7a; stroke-width: 1.5; transition: fill 0.15s; }
     .cmap-card-primitive { fill: rgba(139,224,200,0.05); stroke: #8be0c8; stroke-width: 1.2; transition: fill 0.15s; }
     .cmap-card-fail { fill: #141416; stroke: #e87c7c; stroke-width: 1.2; stroke-dasharray: 4 3; opacity: 0.85; transition: opacity 0.15s; }
     .cmap-label { fill: #e8e8ec; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: -0.005em; pointer-events: none; }
-    .cmap-link:hover .cmap-card { fill: #1a1a1d; stroke: #c8f060; }
-    .cmap-link:hover .cmap-card-outcome { fill: rgba(200,240,96,0.12); }
+    .cmap-link:hover .cmap-card { fill: #1a1a1d; stroke: #b5cc7a; }
+    .cmap-link:hover .cmap-card-outcome { fill: rgba(181, 204, 122,0.12); }
     .cmap-link:hover .cmap-card-primitive { fill: rgba(139,224,200,0.12); }
     .cmap-link:hover .cmap-card-fail { opacity: 1; }
     .cmap-flow { stroke: #2e2e34; stroke-width: 1; fill: none; }
@@ -160,8 +160,8 @@
     .cta-block { margin-top: 4rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem 2.5rem; display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem; flex-wrap: wrap; }
     .cta-text h2 { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-text p { font-size: 0.85rem; color: var(--muted); max-width: 420px; line-height: 1.75; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; white-space: nowrap; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
   
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
   
@@ -172,7 +172,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -879,15 +879,15 @@
       <h2>See these concepts in practice</h2>
       <p>The benchmark, the demos, and the open-source codebase are all running versions of the governance infrastructure described here.</p>
     </div>
-    <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">View on GitHub →</a>
+    <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub →</a>
   </div>
 </div>
 </main>
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

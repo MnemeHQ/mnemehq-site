@@ -41,7 +41,7 @@
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
     .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
@@ -86,15 +86,15 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
 
     .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline a:hover { color: var(--text); }
     .byline .sep { color: var(--border2); margin: 0 0.5rem; }
 
-    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
 
     footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
@@ -150,7 +150,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -352,13 +352,13 @@
       <li><strong>Enforce.</strong> The decisions are presented as constraints the agent must satisfy, not suggestions it may consider. Violations are blocked or flagged with a citable verdict.</li>
     </ol>
 
-    <p>When this loop is in place, intent debt cannot accumulate silently. The gap between what the system is supposed to preserve and what agents are constrained to follow is closed at the point of generation. <a href="/demo/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(200,240,96,0.3);">The demo walks through this loop end-to-end</a> — the agent proposes a violation, the corpus blocks it, the retry comes back compliant. Decisions that are compiled, current, and scoped are enforced in every session, by every agent, without depending on review to catch violations after the fact.</p>
+    <p>When this loop is in place, intent debt cannot accumulate silently. The gap between what the system is supposed to preserve and what agents are constrained to follow is closed at the point of generation. <a href="/demo/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(181, 204, 122,0.3);">The demo walks through this loop end-to-end</a> — the agent proposes a violation, the corpus blocks it, the retry comes back compliant. Decisions that are compiled, current, and scoped are enforced in every session, by every agent, without depending on review to catch violations after the fact.</p>
 
     <p>Intent debt is not eliminated permanently. New decisions create new opportunities for the gap to reopen if they are not compiled. Governance infrastructure is a practice, not a one-time fix — but it is the only mechanism that operates in the machine enforcement channel where intent debt actually lives.</p>
 
     <h2>How to know you have intent debt</h2>
 
-    <p>Intent debt is invisible until it is measured. Most teams discover they have it the same way they discover technical debt: through symptoms that compound until they cannot be ignored. These patterns recur across <a href="/use-cases/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(200,240,96,0.3);">the use cases where teams adopt Mneme</a> — recognizable signs include:</p>
+    <p>Intent debt is invisible until it is measured. Most teams discover they have it the same way they discover technical debt: through symptoms that compound until they cannot be ignored. These patterns recur across <a href="/use-cases/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(181, 204, 122,0.3);">the use cases where teams adopt Mneme</a> — recognizable signs include:</p>
 
     <ul>
       <li><strong>Reviewers keep correcting the same pattern.</strong> The decision exists, the agents do not know it, and review becomes the enforcement layer by default — a layer that does not scale.</li>
@@ -368,7 +368,7 @@
       <li><strong>"AI velocity" feels indistinguishable from "AI churn."</strong> Throughput is high. Coherence is not. Output rate without an enforcement layer is the surface signature of intent debt.</li>
     </ul>
 
-    <p>The diagnostic is simple: pick a recent architectural decision. Ask whether any agent on the team is bound to follow it, or whether a human has to catch the violation. If the answer is "a human catches it," that decision is denominated in intent debt. <a href="/pilot/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(200,240,96,0.3);">A pilot</a> compiles your existing ADRs into the enforcement layer and measures the gap directly.</p>
+    <p>The diagnostic is simple: pick a recent architectural decision. Ask whether any agent on the team is bound to follow it, or whether a human has to catch the violation. If the answer is "a human catches it," that decision is denominated in intent debt. <a href="/pilot/" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(181, 204, 122,0.3);">A pilot</a> compiles your existing ADRs into the enforcement layer and measures the gap directly.</p>
 
     <h2 id="further-reading">Further reading</h2>
     <ul>
@@ -427,8 +427,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
