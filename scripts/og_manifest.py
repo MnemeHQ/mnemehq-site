@@ -101,6 +101,18 @@ ROW_KINDS = ("held", "neutral", "denied")
 BOX_KINDS = ("warn", "accent")
 CHAIN_KINDS = ("plain", "accent", "dim")
 
+# The proof card's row value renders at 44px Inter 600 in a column roughly
+# 790px wide on a 1200x630 card -- about 33 characters fit on one line
+# before it wraps. A wrapped row grows tall enough that three rows plus the
+# identity bar overflow the card, so this is a hard ceiling, not a style
+# preference.
+ROW_VALUE_MAX = 33
+
+# Same frame, the row label column: roughly 14 characters fit before the
+# label itself threatens the row's height budget alongside a full-width
+# value line.
+ROW_LABEL_MAX = 14
+
 
 def _validate_rows(rel: str, rows: object) -> None:
     """rows (proof): a list of [label, value, kind] triples."""
@@ -113,6 +125,14 @@ def _validate_rows(rel: str, rows: object) -> None:
         label, value, kind = row
         if not isinstance(label, str) or not isinstance(value, str):
             raise ManifestError(f"{rel or '<home>'}: rows[{i}] label and value must be strings")
+        if len(label) > ROW_LABEL_MAX:
+            raise ManifestError(
+                f"{rel or '<home>'}: rows[{i}] label is {len(label)} chars, "
+                f"over the {ROW_LABEL_MAX}-char limit")
+        if len(value) > ROW_VALUE_MAX:
+            raise ManifestError(
+                f"{rel or '<home>'}: rows[{i}] value is {len(value)} chars, "
+                f"over the {ROW_VALUE_MAX}-char limit")
         if kind not in ROW_KINDS:
             raise ManifestError(
                 f"{rel or '<home>'}: rows[{i}] kind must be one of {ROW_KINDS}, got {kind!r}")

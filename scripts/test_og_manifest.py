@@ -170,6 +170,34 @@ class TestRowsBoxesBadgeNameChain(unittest.TestCase):
         with self.assertRaises(m.ManifestError):
             m.resolve("demo/x/", {"headline": "H", "rows": [["A", "B", "bogus"]]})
 
+    def test_row_value_at_the_limit_passes(self):
+        value = "x" * m.ROW_VALUE_MAX
+        rows = [["A", value, "held"]]
+        r = m.resolve("demo/x/", {"headline": "H", "rows": rows})
+        self.assertEqual(r["rows"], rows)
+
+    def test_row_value_over_the_limit_raises(self):
+        value = "x" * (m.ROW_VALUE_MAX + 1)
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/over-limit/", {"headline": "H", "rows": [["A", value, "held"]]})
+        msg = str(ctx.exception)
+        self.assertIn("demo/over-limit/", msg)
+        self.assertIn(str(len(value)), msg)
+
+    def test_row_label_at_the_limit_passes(self):
+        label = "x" * m.ROW_LABEL_MAX
+        rows = [[label, "B", "held"]]
+        r = m.resolve("demo/x/", {"headline": "H", "rows": rows})
+        self.assertEqual(r["rows"], rows)
+
+    def test_row_label_over_the_limit_raises(self):
+        label = "x" * (m.ROW_LABEL_MAX + 1)
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/over-limit/", {"headline": "H", "rows": [[label, "B", "held"]]})
+        msg = str(ctx.exception)
+        self.assertIn("demo/over-limit/", msg)
+        self.assertIn(str(len(label)), msg)
+
     def test_proof_requires_rows_in_strict_mode(self):
         with self.assertRaises(m.ManifestError):
             m.resolve("demo/x/", {"headline": "H"}, strict=True)
