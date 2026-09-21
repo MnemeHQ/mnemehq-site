@@ -47,5 +47,39 @@ class TestFamilyForPath(unittest.TestCase):
         self.assertIsNone(m.family_for_path("for/cto/"))
 
 
+class TestMotifForSlug(unittest.TestCase):
+    def test_topic_signals_select_motif(self):
+        cases = {
+            "architectural-drift-prevention": "branch",
+            "constraint-decay-coding-agents": "branch",
+            "software-factory-governance-layer": "stack",
+            "emerging-ai-agent-infrastructure-stack": "stack",
+            "zero-trust-for-ai-agents": "boundary",
+            "migration-guardrails-for-ai-coding-agents": "boundary",
+            "coordination-governance-multi-agent-systems": "connected",
+            "governance-propagation": "propagation",
+            "architecture-cannot-be-a-prompt-context-compaction": "broken",
+            "runtime-verification-is-not-architectural-verification": "intersection",
+            "why-observability-is-not-governance": "intersection",
+        }
+        for slug, expected in cases.items():
+            self.assertEqual(m.motif_for_slug(slug), expected, slug)
+
+    def test_no_signal_defaults_to_connected(self):
+        self.assertEqual(m.motif_for_slug("what-is-the-ai-sdlc"), "connected")
+
+    def test_result_is_always_a_known_motif(self):
+        for slug in ("a", "zzz", "", "multi-agent-drift-stack"):
+            self.assertIn(m.motif_for_slug(slug), m.MOTIFS)
+
+    def test_is_deterministic(self):
+        self.assertEqual(m.motif_for_slug("architectural-drift"),
+                         m.motif_for_slug("architectural-drift"))
+
+    def test_earlier_signal_wins_when_several_match(self):
+        """drift beats stack, so the rule is order-defined not arbitrary."""
+        self.assertEqual(m.motif_for_slug("drift-in-the-platform-stack"), "branch")
+
+
 if __name__ == "__main__":
     unittest.main()

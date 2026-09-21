@@ -47,3 +47,35 @@ def family_for_path(rel: str) -> str | None:
         if rel.startswith(prefix):
             return family
     return None
+
+
+MOTIFS = ("connected", "broken", "boundary", "branch",
+          "stack", "intersection", "propagation", "isolated")
+
+# Ordered: the first matching signal wins, so a slug carrying two signals
+# resolves predictably rather than by dict iteration accident.
+_MOTIF_SIGNALS = (
+    (("drift", "divergence", "deviation", "decay"), "branch"),
+    (("compaction", "forgetting", "context-loss", "gap", "break"), "broken"),
+    (("boundary", "perimeter", "zero-trust", "guardrail", "scope"), "boundary"),
+    (("coordination", "multi-agent", "swarm", "orchestration", "shared"), "connected"),
+    (("propagation", "continuity", "memory", "provenance", "lifecycle"), "propagation"),
+    (("layer", "platform", "stack", "control-plane", "infrastructure"), "stack"),
+    (("intersection", "tradeoff", "versus", "-vs-", "convergence",
+      "is-not-"), "intersection"),
+    (("isolation", "silo", "standalone", "single-agent"), "isolated"),
+)
+
+
+def motif_for_slug(slug: str) -> str:
+    """Pick an Editorial motif from topic signals in the slug.
+
+    Deterministic and semantic: the geometry should mean something, so the
+    motif is never hash-chosen. (The hash varies geometry *within* a motif
+    -- that lives in og_geometry.py.)
+    """
+    low = slug.lower()
+    for signals, motif in _MOTIF_SIGNALS:
+        if any(s in low for s in signals):
+            return motif
+    return "connected"
