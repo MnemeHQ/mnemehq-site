@@ -101,7 +101,7 @@
       margin: 0 auto;
       padding: 1.5rem 2rem;
       background: var(--surface);
-      border-bottom: 1px solid rgba(200,240,96,0.18);
+      border-bottom: 1px solid rgba(181, 204, 122,0.18);
       font-size: 0.88rem;
       color: var(--muted);
       line-height: 1.8;
@@ -125,7 +125,7 @@
       font-family: 'DM Mono', monospace;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent);
+      color: var(--quiet, #88889a);
       margin-bottom: 1rem;
     }
     .doc-hero h1 {
@@ -211,8 +211,8 @@
     .doc-body ul li::marker { color: var(--accent); }
 
     .callout {
-      background: rgba(200,240,96,0.05);
-      border: 1px solid rgba(200,240,96,0.20);
+      background: rgba(181, 204, 122,0.05);
+      border: 1px solid rgba(181, 204, 122,0.20);
       border-left: 3px solid var(--accent);
       border-radius: 8px;
       padding: 1.2rem 1.5rem;
@@ -243,7 +243,7 @@
     .cta-group { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
     .btn-primary {
       display: inline-block;
-      background: var(--accent);
+      background: var(--action, #ea735e);
       color: #0c0c0d !important;
       padding: 0.75rem 1.75rem;
       border-radius: 8px;
@@ -254,7 +254,7 @@
       border-bottom: none;
       transition: background 0.15s;
     }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
     .btn-ghost {
       display: inline-block;
       background: transparent;
@@ -347,7 +347,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 
   <script type="application/ld+json">
@@ -610,7 +610,7 @@
   <h2>Read the full freeze artifact.</h2>
   <p>The repo-level freeze captures shipped capabilities, charter discipline, deferred work, and the bright line between "deferred" and "not Mneme."</p>
   <div class="cta-group">
-    <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/architecture/layer1-freeze-e73ff7d.md" class="btn-primary">Layer 1 freeze artifact</a>
+    <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/architecture/layer1-freeze-e73ff7d.md" class="cta-btn-outline">Layer 1 freeze artifact</a>
     <a href="/benchmark/" class="btn-ghost">Full methodology spec</a>
   </div>
 </section>
@@ -619,8 +619,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

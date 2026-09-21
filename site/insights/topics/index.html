@@ -36,11 +36,11 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
 
-    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
 
     .hero { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 4rem; text-align: center; }
-    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.75rem; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
     .hero-sub { font-size: 0.95rem; color: var(--muted); max-width: 520px; margin: 0 auto; }
 
@@ -50,7 +50,7 @@
 
     .insight-card-link { display: block; text-decoration: none; color: inherit; }
     .insight-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 0.65rem; transition: border-color 0.15s, transform 0.18s ease, background 0.15s; }
-    .insight-card-link:hover .insight-card { border-color: var(--border2); transform: translateY(-2px); background: rgba(200,240,96,0.025); }
+    .insight-card-link:hover .insight-card { border-color: var(--border2); transform: translateY(-2px); background: rgba(181, 204, 122,0.025); }
     .insight-card.coming-soon { opacity: 0.55; }
     .card-meta { display: flex; align-items: center; gap: 0.6rem; }
     .card-tag { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; }
@@ -201,7 +201,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <style>
     .topics-wrap { max-width: 1080px; margin: 0 auto; padding: 3.5rem 2rem 6rem; }
@@ -210,12 +210,12 @@
     .topics-intro p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin: 0; }
     .topics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.1rem; }
     .topic-card { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.6rem 1.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: border-color 0.15s, background 0.15s, transform 0.18s ease; }
-    .topic-card:hover { border-color: var(--border2); background: rgba(200,240,96,0.03); transform: translateY(-2px); }
+    .topic-card:hover { border-color: var(--border2); background: rgba(181, 204, 122,0.03); transform: translateY(-2px); }
     .topic-card h2 { font-family: 'Inter', sans-serif; font-size: 1.02rem; font-weight: 600; color: var(--text); margin: 0; letter-spacing: -0.01em; }
     .topic-card p { color: var(--muted); font-size: 0.86rem; line-height: 1.6; margin: 0; }
     .topic-card-more { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-top: 0.35rem; }
     .topics-all { margin-top: 2.5rem; font-size: 0.86rem; color: var(--muted); }
-    .topics-all a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(200,240,96,0.35); }
+    .topics-all a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(181, 204, 122,0.35); }
   </style>
   <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"CollectionPage","name":"Insight topics","url":"https://mnemehq.com/insights/topics/","description":"Every Mneme HQ insight, grouped by topic: architectural drift prevention, architectural governance, AI coding agents, agent infrastructure, engineering performance, architectural intent, and software migrations and modernization.","hasPart":[{"@type":"WebPage","name":"Architectural drift prevention","url":"https://mnemehq.com/insights/topics/architectural-drift-prevention/"},{"@type":"WebPage","name":"Architectural governance","url":"https://mnemehq.com/insights/topics/architectural-governance/"},{"@type":"WebPage","name":"AI coding agents","url":"https://mnemehq.com/insights/topics/ai-coding-agents/"},{"@type":"WebPage","name":"Agent infrastructure","url":"https://mnemehq.com/insights/topics/agent-infrastructure/"},{"@type":"WebPage","name":"Engineering performance","url":"https://mnemehq.com/insights/topics/engineering-performance/"},{"@type":"WebPage","name":"Architectural intent","url":"https://mnemehq.com/insights/topics/architectural-intent/"},{"@type":"WebPage","name":"Software migrations & modernization","url":"https://mnemehq.com/insights/topics/software-migrations-modernization/"}]}
@@ -291,8 +291,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

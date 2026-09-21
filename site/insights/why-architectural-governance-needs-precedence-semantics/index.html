@@ -44,7 +44,7 @@
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
     .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
@@ -90,8 +90,8 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
 
     footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
     footer a { color: var(--muted); text-decoration: none; }
@@ -135,8 +135,8 @@
     .faq-body a { color: var(--accent); text-decoration: none; }
     .faq-body a:hover { color: var(--accent-dim); }
 
-    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
+    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(181, 204, 122,0.4); }
+    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(181, 204, 122,0.7); }
 
     .nav-hamburger { display: none; background: none; border: 1px solid var(--border2); color: var(--text); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; align-items: center; justify-content: center; padding: 0; flex-shrink: 0; }
 
@@ -227,8 +227,8 @@
     .context-cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #8be0c8; margin-bottom: 0.6rem; }
     .context-cta-copy { font-size: 0.92rem; color: #e8e8ec; line-height: 1.65; margin: 0 0 1.15rem; }
     .context-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }
-    .context-cta-primary { display: inline-flex; align-items: center; background: #8be0c8; color: #0c0c0d; padding: 0.7rem 1.4rem; border: 1px solid #8be0c8; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.005em; text-decoration: none; transition: background 0.15s, border-color 0.15s; }
-    .context-cta-primary:hover { background: #6fcbb0; }
+    .context-cta-primary { display: inline-flex; align-items: center; background: transparent; color: var(--text, #e8e8ec); padding: 0.7rem 1.4rem; border: 1px solid var(--border2, #2e2e34); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+    .context-cta-primary:hover { border-color: #8be0c8; color: #8be0c8; }
     .context-cta-secondary { display: inline-flex; align-items: center; color: #8be0c8; padding: 0.7rem 1.25rem; border: 1px solid rgba(139,224,200,0.45); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; line-height: 1.3; text-decoration: none; transition: border-color 0.15s, background 0.15s; }
     .context-cta-secondary:hover { border-color: #8be0c8; background: rgba(139,224,200,0.08); }
   
@@ -237,7 +237,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -372,7 +372,7 @@
             <path d="M0 0 L10 5 L0 10 z" fill="#88889a"/>
           </marker>
           <marker id="arrAccG1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="#c8f060"/>
+            <path d="M0 0 L10 5 L0 10 z" fill="#b5cc7a"/>
           </marker>
         </defs>
         <g font-family="DM Mono, monospace" fill="#88889a" font-size="10" letter-spacing="0.08em">
@@ -398,21 +398,21 @@
           <!-- Prompt rules -->
           <rect x="324" y="42" width="220" height="40" rx="6" fill="#141416" stroke="#222226"/>
           <text x="338" y="59" fill="#e8e8ec" font-size="11.5">Prompt rules / CLAUDE.md</text>
-          <text x="338" y="74" fill="#55555f" font-family="DM Mono, monospace" font-size="10">file ordering &middot; attention</text>
+          <text x="338" y="74" fill="#88889a" font-family="DM Mono, monospace" font-size="10">file ordering &middot; attention</text>
 
           <rect x="324" y="92" width="220" height="40" rx="6" fill="#141416" stroke="#222226"/>
           <text x="338" y="109" fill="#e8e8ec" font-size="11.5">RAG over ADRs</text>
-          <text x="338" y="124" fill="#55555f" font-family="DM Mono, monospace" font-size="10">retrieval score &middot; chunking</text>
+          <text x="338" y="124" fill="#88889a" font-family="DM Mono, monospace" font-size="10">retrieval score &middot; chunking</text>
 
           <rect x="324" y="142" width="220" height="40" rx="6" fill="#141416" stroke="#222226"/>
           <text x="338" y="159" fill="#e8e8ec" font-size="11.5">PR review</text>
-          <text x="338" y="174" fill="#55555f" font-family="DM Mono, monospace" font-size="10">whichever reviewer caught it</text>
+          <text x="338" y="174" fill="#88889a" font-family="DM Mono, monospace" font-size="10">whichever reviewer caught it</text>
 
           <!-- Precedence engine -->
-          <rect x="324" y="208" width="220" height="56" rx="8" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-          <text x="338" y="228" fill="#c8f060" font-size="12" font-weight="500">Precedence engine</text>
-          <text x="338" y="246" fill="#c8f060" font-family="DM Mono, monospace" font-size="10">scope &middot; supersedes &middot; status</text>
-          <text x="338" y="260" fill="#c8f060" font-family="DM Mono, monospace" font-size="10" opacity="0.7">resolves before generation</text>
+          <rect x="324" y="208" width="220" height="56" rx="8" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+          <text x="338" y="228" fill="#b5cc7a" font-size="12" font-weight="500">Precedence engine</text>
+          <text x="338" y="246" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10">scope &middot; supersedes &middot; status</text>
+          <text x="338" y="260" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" opacity="0.7">resolves before generation</text>
 
           <!-- arrows from ADRs to each lane -->
           <line x1="246" y1="84" x2="324" y2="62" stroke="#88889a" stroke-width="1" marker-end="url(#arrG1)"/>
@@ -421,27 +421,27 @@
           <line x1="246" y1="166" x2="324" y2="62" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
           <line x1="246" y1="166" x2="324" y2="112" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
           <line x1="246" y1="166" x2="324" y2="162" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
-          <line x1="246" y1="166" x2="324" y2="232" stroke="#c8f060" stroke-width="1" stroke-opacity="0.6" marker-end="url(#arrAccG1)"/>
-          <line x1="246" y1="84" x2="324" y2="232" stroke="#c8f060" stroke-width="1" stroke-opacity="0.6" marker-end="url(#arrAccG1)"/>
+          <line x1="246" y1="166" x2="324" y2="232" stroke="#b5cc7a" stroke-width="1" stroke-opacity="0.6" marker-end="url(#arrAccG1)"/>
+          <line x1="246" y1="84" x2="324" y2="232" stroke="#b5cc7a" stroke-width="1" stroke-opacity="0.6" marker-end="url(#arrAccG1)"/>
 
           <!-- Outputs -->
           <g font-family="DM Mono, monospace" font-size="11">
             <text x="568" y="60" fill="#88889a">?</text>
-            <text x="584" y="60" fill="#55555f" font-size="10">non-deterministic</text>
+            <text x="584" y="60" fill="#88889a" font-size="10">non-deterministic</text>
             <text x="568" y="110" fill="#88889a">?</text>
-            <text x="584" y="110" fill="#55555f" font-size="10">non-deterministic</text>
+            <text x="584" y="110" fill="#88889a" font-size="10">non-deterministic</text>
             <text x="568" y="160" fill="#88889a">?</text>
-            <text x="584" y="160" fill="#55555f" font-size="10">non-deterministic</text>
-            <text x="568" y="232" fill="#c8f060" font-size="12">&#10003;</text>
-            <text x="584" y="232" fill="#c8f060" font-size="10">one answer, reproducible</text>
+            <text x="584" y="160" fill="#88889a" font-size="10">non-deterministic</text>
+            <text x="568" y="232" fill="#b5cc7a" font-size="12">&#10003;</text>
+            <text x="584" y="232" fill="#b5cc7a" font-size="10">one answer, reproducible</text>
           </g>
           <line x1="544" y1="62" x2="564" y2="62" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
           <line x1="544" y1="112" x2="564" y2="112" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
           <line x1="544" y1="162" x2="564" y2="162" stroke="#88889a" stroke-width="1" stroke-opacity="0.5"/>
-          <line x1="544" y1="232" x2="564" y2="232" stroke="#c8f060" stroke-width="1.2" marker-end="url(#arrAccG1)"/>
+          <line x1="544" y1="232" x2="564" y2="232" stroke="#b5cc7a" stroke-width="1.2" marker-end="url(#arrAccG1)"/>
 
           <!-- footer caption -->
-          <text x="360" y="350" text-anchor="middle" fill="#55555f" font-family="DM Mono, monospace" font-size="10">same two decisions &middot; four different resolutions &middot; only one of them is reproducible</text>
+          <text x="360" y="350" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="10">same two decisions &middot; four different resolutions &middot; only one of them is reproducible</text>
         </g>
       </svg>
       <figcaption id="fig1-cap">Fig 1 &middot; Without precedence semantics, the same overlapping decisions resolve differently across every layer. With them, the answer is one value, computed before the model is asked.</figcaption>
@@ -566,11 +566,11 @@
       <svg viewBox="0 0 720 320" role="img" aria-label="Pipeline showing five stages from raw ADRs to enforcement and audit, with precedence resolution as the central stage">
         <defs>
           <marker id="arrG2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0 0 L10 5 L0 10 z" fill="#c8f060"/>
+            <path d="M0 0 L10 5 L0 10 z" fill="#b5cc7a"/>
           </marker>
           <linearGradient id="laneG2" x1="0" x2="1">
             <stop offset="0%" stop-color="#222226"/>
-            <stop offset="100%" stop-color="#c8f060" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#b5cc7a" stop-opacity="0.35"/>
           </linearGradient>
         </defs>
         <!-- lane -->
@@ -578,7 +578,7 @@
 
         <g font-family="DM Mono, monospace" fill="#88889a" font-size="10" letter-spacing="0.08em">
           <text x="30" y="40">PIPELINE</text>
-          <text x="30" y="58" fill="#55555f" font-size="9.5">declared facts &rarr; one resolved constraint per scope</text>
+          <text x="30" y="58" fill="#88889a" font-size="9.5">declared facts &rarr; one resolved constraint per scope</text>
         </g>
 
         <!-- 5 stages -->
@@ -591,9 +591,9 @@
           <text x="90" y="190" fill="#88889a" text-anchor="middle" font-size="10.5">facts</text>
 
           <!-- 2 Resolve -->
-          <circle cx="234" cy="110" r="22" fill="#0c0c0d" stroke="#c8f060" stroke-width="1.5"/>
-          <text x="234" y="115" fill="#c8f060" text-anchor="middle" font-family="DM Mono, monospace" font-size="11">02</text>
-          <text x="234" y="158" fill="#c8f060" text-anchor="middle" font-weight="500">Resolve</text>
+          <circle cx="234" cy="110" r="22" fill="#0c0c0d" stroke="#b5cc7a" stroke-width="1.5"/>
+          <text x="234" y="115" fill="#b5cc7a" text-anchor="middle" font-family="DM Mono, monospace" font-size="11">02</text>
+          <text x="234" y="158" fill="#b5cc7a" text-anchor="middle" font-weight="500">Resolve</text>
           <text x="234" y="176" fill="#88889a" text-anchor="middle" font-size="10.5">precedence over</text>
           <text x="234" y="190" fill="#88889a" text-anchor="middle" font-size="10.5">the five axes</text>
 
@@ -620,7 +620,7 @@
         </g>
 
         <!-- arrows -->
-        <g stroke="#c8f060" stroke-width="1.2" fill="none">
+        <g stroke="#b5cc7a" stroke-width="1.2" fill="none">
           <line x1="113" y1="110" x2="210" y2="110" marker-end="url(#arrG2)" stroke-opacity="0.8"/>
           <line x1="257" y1="110" x2="354" y2="110" marker-end="url(#arrG2)" stroke-opacity="0.8"/>
           <line x1="401" y1="110" x2="498" y2="110" marker-end="url(#arrG2)" stroke-opacity="0.8"/>
@@ -628,12 +628,12 @@
         </g>
 
         <!-- bracket for "the new layer" -->
-        <g stroke="#c8f060" stroke-opacity="0.6" fill="none">
+        <g stroke="#b5cc7a" stroke-opacity="0.6" fill="none">
           <path d="M210 232 L210 240 L258 240 L258 232"/>
         </g>
-        <text x="234" y="256" text-anchor="middle" fill="#c8f060" font-family="DM Mono, monospace" font-size="10">the missing layer</text>
+        <text x="234" y="256" text-anchor="middle" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10">the missing layer</text>
 
-        <text x="360" y="298" text-anchor="middle" fill="#55555f" font-family="DM Mono, monospace" font-size="10">decisions are the source &middot; resolution is a computation &middot; enforcement is a hook &middot; every step is auditable</text>
+        <text x="360" y="298" text-anchor="middle" fill="#88889a" font-family="DM Mono, monospace" font-size="10">decisions are the source &middot; resolution is a computation &middot; enforcement is a hook &middot; every step is auditable</text>
       </svg>
       <figcaption id="fig2-cap">Fig 2 &middot; The governance compiler. Stage 02 is where precedence semantics lives &mdash; the layer the current category mostly does not have.</figcaption>
     </figure>
@@ -711,8 +711,8 @@
 </main>
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

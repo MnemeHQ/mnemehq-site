@@ -52,8 +52,8 @@ CSS_LINES = [
     ".context-cta-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.12em; text-transform: uppercase; color: #8be0c8; margin-bottom: 0.6rem; }",
     ".context-cta-copy { font-size: 0.92rem; color: #e8e8ec; line-height: 1.65; margin: 0 0 1.15rem; }",
     ".context-cta-actions { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; }",
-    ".context-cta-primary { display: inline-block; background: #8be0c8; color: #0c0c0d; padding: 0.55rem 1.25rem; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 0.82rem; font-weight: 600; text-decoration: none; transition: background 0.15s; }",
-    ".context-cta-primary:hover { background: #6fcbb0; }",
+    ".context-cta-primary { display: inline-flex; align-items: center; background: transparent; color: var(--text, #e8e8ec); padding: 0.7rem 1.4rem; border: 1px solid var(--border2, #2e2e34); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 500; text-decoration: none; transition: border-color 0.15s, color 0.15s; }",
+    ".context-cta-primary:hover { border-color: #8be0c8; color: #8be0c8; }",
     ".context-cta-secondary { color: #8be0c8; font-family: 'DM Mono', monospace; font-size: 0.82rem; text-decoration: none; border-bottom: 1px solid rgba(139,224,200,0.4); transition: border-color 0.15s; }",
     ".context-cta-secondary:hover { border-bottom-color: #8be0c8; }",
 ]

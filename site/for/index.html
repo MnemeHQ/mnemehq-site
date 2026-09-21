@@ -67,7 +67,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
-    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+    .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.75rem; }
     .cards-wrap { max-width: 980px; margin: 0 auto; padding: 1rem 2rem 5rem; }
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
     .role-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 1.75rem; display: flex; flex-direction: column; gap: 0.75rem; transition: border-color 0.15s; text-decoration: none; color: var(--text); }
@@ -180,7 +180,7 @@
 .for-intro strong { color: var(--text); }
 .for-body { max-width: 860px; margin: 0 auto; padding: 0 2rem 5rem; }
 .for-section { margin-bottom: 3.5rem; }
-.for-section-eyebrow { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+.for-section-eyebrow { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.5rem; }
     .for-section-eyebrow.is-quiet { color: var(--muted); }
     .notfit-note { font-size: 0.85rem; color: var(--muted); line-height: 1.65; margin: 0.75rem 0 0; max-width: 60ch; }
     .notfit-list li::before { content: "4"; color: var(--border2); }
@@ -188,7 +188,7 @@
 .for-section-lede { font-size: 0.85rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
 .team-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.25rem; }
 .team-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.5rem; }
-.team-card-eyebrow { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+.team-card-eyebrow { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.4rem; }
 .team-card-name { font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 0.4rem; }
 .team-card-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
 .scenario-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.25rem; }
@@ -198,7 +198,7 @@
 .notfit-list { list-style: none; padding: 0; margin: 1.25rem 0 0; display: flex; flex-direction: column; gap: 0.5rem; }
 .notfit-list li { font-size: 0.85rem; color: var(--muted); padding-left: 1.1rem; position: relative; line-height: 1.55; }
 .notfit-list li::before { content: '\00b7'; position: absolute; left: 0; color: var(--border2); }
-.for-cta-section { background: var(--surface); border: 1px solid rgba(200,240,96,0.2); border-radius: 12px; padding: 2.5rem 2rem; margin-bottom: 4rem; text-align: center; }
+.for-cta-section { background: var(--surface); border: 1px solid rgba(181, 204, 122,0.2); border-radius: 12px; padding: 2.5rem 2rem; margin-bottom: 4rem; text-align: center; }
 .for-cta-section h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.5rem,3vw,2rem); font-weight: 400; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
 .for-cta-section p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 520px; margin: 0 auto 1.75rem; }
   .btn-cta { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.7rem 1.75rem; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: background 0.15s; }
@@ -230,7 +230,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
 </head>
 <body>
@@ -315,7 +315,7 @@
         <title id="prob-chart-title">AI code generation throughput diverges from review capacity, 2023 to 2026</title>
         <desc id="prob-chart-desc">An illustrative chart showing AI code generation throughput rising exponentially while review capacity stays roughly flat. The widening gap is the governance opportunity.</desc>
         <!-- Y-axis label (rotated) -->
-        <text x="20" y="150" fill="#55555f" font-family="DM Mono, monospace" font-size="10" transform="rotate(-90 20 150)" text-anchor="middle">throughput &rarr;</text>
+        <text x="20" y="150" fill="#88889a" font-family="DM Mono, monospace" font-size="10" transform="rotate(-90 20 150)" text-anchor="middle">throughput &rarr;</text>
         <!-- Axes -->
         <line x1="60" y1="280" x2="580" y2="280" stroke="#2e2e34" stroke-width="1"></line>
         <line x1="60" y1="20" x2="60" y2="280" stroke="#2e2e34" stroke-width="1"></line>
@@ -324,17 +324,17 @@
         <!-- Review capacity line (flat, muted) -->
         <line x1="60" y1="260" x2="580" y2="260" stroke="#88889a" stroke-width="2"></line>
         <!-- AI generation curve (red, exponential) -->
-        <path d="M60,260 Q260,250 360,200 T580,40" fill="none" stroke="#ff7070" stroke-width="2.5" stroke-linecap="round"></path>
+        <path d="M60,260 Q260,250 360,200 T580,40" fill="none" stroke="#ff5c7a" stroke-width="2.5" stroke-linecap="round"></path>
         <!-- End-point markers -->
-        <circle cx="580" cy="40" r="4" fill="#ff7070"></circle>
+        <circle cx="580" cy="40" r="4" fill="#ff5c7a"></circle>
         <circle cx="580" cy="260" r="4" fill="#88889a"></circle>
         <!-- Labels -->
-        <text x="68" y="38" fill="#ff7070" font-family="DM Mono, monospace" font-size="11" font-weight="500">AI code generation</text>
+        <text x="68" y="38" fill="#ff5c7a" font-family="DM Mono, monospace" font-size="11" font-weight="500">AI code generation</text>
         <text x="68" y="252" fill="#88889a" font-family="DM Mono, monospace" font-size="11">Review capacity (linear in headcount)</text>
         <text x="370" y="158" fill="rgba(255,180,180,0.85)" font-family="Instrument Serif, serif" font-size="14" font-style="italic">the gap is governance</text>
         <!-- X-axis labels -->
-        <text x="60" y="302" fill="#55555f" font-family="DM Mono, monospace" font-size="10">2023</text>
-        <text x="580" y="302" fill="#55555f" font-family="DM Mono, monospace" font-size="10" text-anchor="end">2026</text>
+        <text x="60" y="302" fill="#88889a" font-family="DM Mono, monospace" font-size="10">2023</text>
+        <text x="580" y="302" fill="#88889a" font-family="DM Mono, monospace" font-size="10" text-anchor="end">2026</text>
       </svg>
     </figure>
   <p class="thesis-note">Review capacity grows with headcount. Generation does not. The gap is where architectural decisions stop being enforced.</p>
@@ -479,8 +479,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

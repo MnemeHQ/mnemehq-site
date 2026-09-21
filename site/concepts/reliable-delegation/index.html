@@ -43,7 +43,7 @@
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
     .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
@@ -95,15 +95,15 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
 
     .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline a:hover { color: var(--text); }
     .byline .sep { color: var(--border2); margin: 0 0.5rem; }
 
-    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
 
     footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
@@ -196,15 +196,15 @@
     .diagram-caption { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border); line-height: 1.7; }
     .diagram-caption strong { color: var(--accent); font-weight: 500; }
     .diag-box { fill: #141416; stroke: #2e2e34; }
-    .diag-box-active { fill: rgba(200,240,96,0.05); stroke: #c8f060; stroke-width: 1.5; }
+    .diag-box-active { fill: rgba(181, 204, 122,0.05); stroke: #b5cc7a; stroke-width: 1.5; }
     .diag-box-teal { fill: rgba(139,224,200,0.05); stroke: #8be0c8; stroke-width: 1.2; }
     .diag-text { fill: #e8e8ec; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; }
     .diag-meta { fill: #88889a; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; }
     .diag-mono { fill: #e8e8ec; font-family: 'DM Mono', monospace; font-size: 11px; }
-    .diag-accent-text { fill: #c8f060; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; }
+    .diag-accent-text { fill: #b5cc7a; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.06em; }
     .diag-teal-text { fill: #8be0c8; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.05em; }
     .diag-arrow { stroke: #2e2e34; stroke-width: 1; fill: none; }
-    .diag-arrow-active { stroke: #c8f060; stroke-width: 1.5; fill: none; }
+    .diag-arrow-active { stroke: #b5cc7a; stroke-width: 1.5; fill: none; }
 
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
 
@@ -229,15 +229,15 @@
     @media (max-width: 640px) {
       .concept-metadata-list.is-grid { grid-template-columns: 1fr; }
     }
-    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(200,240,96,0.4); }
-    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(200,240,96,0.7); }
+    .article-body a.ext { color: var(--accent); text-decoration: none; border-bottom: 1px dotted rgba(181, 204, 122,0.4); }
+    .article-body a.ext:hover { color: var(--accent-dim); border-bottom-color: rgba(181, 204, 122,0.7); }
   
     @media (prefers-reduced-motion: reduce) {
           html { scroll-behavior: auto !important; }
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -398,7 +398,7 @@
         <line x1="195" y1="198" x2="195" y2="210" class="diag-arrow-active"/>
 
         <rect x="40" y="210" width="310" height="54" rx="8" class="diag-box-active"/>
-        <text x="195" y="232" text-anchor="middle" class="diag-text" style="fill:#c8f060;">Verification Layer</text>
+        <text x="195" y="232" text-anchor="middle" class="diag-text" style="fill:#b5cc7a;">Verification Layer</text>
         <text x="195" y="248" text-anchor="middle" class="diag-meta">checks behavior against constraints</text>
         <text x="195" y="260" text-anchor="middle" class="diag-accent-text">PASS or FAIL</text>
 
@@ -416,9 +416,9 @@
         <text x="416" y="46" class="diag-meta">WITHOUT GOVERNANCE</text>
         <line x1="416" y1="54" x2="744" y2="54" stroke="#222226" stroke-width="1"/>
         <text x="416" y="76" class="diag-text" style="fill:#88889a;">delegation</text>
-        <text x="502" y="76" class="diag-text" style="fill:#55555f;">&#x2192;</text>
+        <text x="502" y="76" class="diag-text" style="fill:#88889a;">&#x2192;</text>
         <text x="518" y="76" class="diag-text" style="fill:#88889a;">drift</text>
-        <text x="552" y="76" class="diag-text" style="fill:#55555f;">&#x2192;</text>
+        <text x="552" y="76" class="diag-text" style="fill:#88889a;">&#x2192;</text>
         <text x="568" y="76" class="diag-text" style="fill:#88889a;">review overload</text>
         <text x="416" y="104" class="diag-meta">Intent stays in docs and ADRs.</text>
         <text x="416" y="120" class="diag-meta">Agents act without enforced boundaries.</text>
@@ -427,12 +427,12 @@
 
         <rect x="400" y="184" width="360" height="152" rx="8" class="diag-box-active"/>
         <text x="416" y="206" class="diag-accent-text">WITH GOVERNANCE</text>
-        <line x1="416" y1="214" x2="744" y2="214" stroke="rgba(200,240,96,0.3)" stroke-width="1"/>
+        <line x1="416" y1="214" x2="744" y2="214" stroke="rgba(181, 204, 122,0.3)" stroke-width="1"/>
         <text x="416" y="236" class="diag-text">delegation</text>
         <text x="502" y="236" class="diag-accent-text">&#x2192;</text>
-        <text x="518" y="236" class="diag-text" style="fill:#c8f060;">constrained execution</text>
+        <text x="518" y="236" class="diag-text" style="fill:#b5cc7a;">constrained execution</text>
         <text x="518" y="254" class="diag-accent-text">&#x2192;</text>
-        <text x="534" y="254" class="diag-text" style="fill:#c8f060;">verified outcome</text>
+        <text x="534" y="254" class="diag-text" style="fill:#b5cc7a;">verified outcome</text>
         <text x="416" y="282" class="diag-meta">Constraints compiled from decisions.</text>
         <text x="416" y="298" class="diag-meta">Agents execute inside boundaries.</text>
         <text x="416" y="314" class="diag-meta">Verification proves intent survived.</text>
@@ -537,7 +537,7 @@
     <div class="cta-block">
       <h3>The governance and verification layer for AI-assisted development.</h3>
       <p>Mneme compiles your architectural decisions into a deterministic constraint graph and enforces it at the boundaries where agents act. Open source, MIT licensed.</p>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">View on GitHub &rarr;</a>
+      <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub &rarr;</a>
     <p style="margin-top:2.5rem;"><a class="cta-link" href="/demo/" data-cta-intent="demo" data-cta-position="end" data-cta-component="concept_link">See this enforced in the 2-minute demo &rarr;</a></p>
 </div>
   </footer>
@@ -546,8 +546,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">

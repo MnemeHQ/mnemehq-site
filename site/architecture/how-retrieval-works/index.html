@@ -43,7 +43,7 @@
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
     .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
-    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-family: 'DM Mono', monospace; }
+    .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
@@ -98,15 +98,15 @@
     .cta-block { margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 2rem 2rem; }
     .cta-block h3 { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.6rem; }
     .cta-block p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.25rem; }
-    .btn-primary { display: inline-block; background: var(--accent); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
-    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-primary { display: inline-block; background: var(--action, #ea735e); color: #0c0c0d; padding: 0.65rem 1.5rem; border-radius: 8px; font-size: 0.85rem; font-weight: 600; font-family: 'DM Mono', monospace; text-decoration: none; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--action-dim, #c95a46); }
 
     .byline { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.04em; margin-top: 1.25rem; }
     .byline a { color: var(--muted); text-decoration: none; }
     .byline a:hover { color: var(--text); }
     .byline .sep { color: var(--border2); margin: 0 0.5rem; }
 
-    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(200,240,96,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
+    .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
 
     footer { border-top: 1px solid var(--border); padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
@@ -193,7 +193,7 @@
           *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
         }
   
-    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #c8f060); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
+    .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
   <script type="application/ld+json">
   {
@@ -328,8 +328,8 @@
         <line x1="114" y1="130" x2="134" y2="130" stroke="#2e2e34" stroke-width="1.5" marker-end="url(#arr)"/>
 
         <!-- Stage 2: DecisionRetriever -->
-        <rect x="136" y="100" width="116" height="60" rx="8" fill="#141416" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="194" y="124" font-family="Inter,sans-serif" font-size="10" fill="#c8f060" text-anchor="middle" font-weight="600">DecisionRetriever</text>
+        <rect x="136" y="100" width="116" height="60" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="194" y="124" font-family="Inter,sans-serif" font-size="10" fill="#b5cc7a" text-anchor="middle" font-weight="600">DecisionRetriever</text>
         <text x="194" y="139" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">keyword score</text>
         <text x="194" y="151" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">+ tag boost</text>
         <text x="194" y="163" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">→ top-K=3</text>
@@ -363,16 +363,16 @@
         <text x="583" y="167" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">MALFORMED</text>
 
         <!-- Query input arrow from top -->
-        <line x1="194" y1="44" x2="194" y2="98" stroke="#c8f060" stroke-width="1.5" marker-end="url(#arr-accent)" stroke-dasharray="4 2"/>
-        <text x="194" y="36" font-family="DM Mono,monospace" font-size="9" fill="#c8f060" text-anchor="middle">query (file path + task)</text>
+        <line x1="194" y1="44" x2="194" y2="98" stroke="#b5cc7a" stroke-width="1.5" marker-end="url(#arr-accent)" stroke-dasharray="4 2"/>
+        <text x="194" y="36" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">query (file path + task)</text>
 
         <!-- Output label -->
         <text x="583" y="200" font-family="DM Mono,monospace" font-size="9" fill="#8be0c8" text-anchor="middle">verdict + trace</text>
         <line x1="583" y1="162" x2="583" y2="196" stroke="#8be0c8" stroke-width="1.5" marker-end="url(#arr-teal)" stroke-dasharray="4 2"/>
 
         <!-- Layer labels -->
-        <rect x="126" y="230" width="136" height="22" rx="4" fill="rgba(200,240,96,0.07)" stroke="rgba(200,240,96,0.2)" stroke-width="1"/>
-        <text x="194" y="245" font-family="DM Mono,monospace" font-size="8.5" fill="#c8f060" text-anchor="middle" letter-spacing="0.06em">LAYER 1 — RETRIEVAL</text>
+        <rect x="126" y="230" width="136" height="22" rx="4" fill="rgba(181, 204, 122,0.07)" stroke="rgba(181, 204, 122,0.2)" stroke-width="1"/>
+        <text x="194" y="245" font-family="DM Mono,monospace" font-size="8.5" fill="#b5cc7a" text-anchor="middle" letter-spacing="0.06em">LAYER 1 — RETRIEVAL</text>
 
         <rect x="520" y="230" width="136" height="22" rx="4" fill="rgba(139,224,200,0.07)" stroke="rgba(139,224,200,0.2)" stroke-width="1"/>
         <text x="588" y="245" font-family="DM Mono,monospace" font-size="8.5" fill="#8be0c8" text-anchor="middle" letter-spacing="0.06em">LAYER 2 — VERDICT</text>
@@ -387,7 +387,7 @@
             <path d="M0,0 L8,4 L0,8 z" fill="#2e2e34"/>
           </marker>
           <marker id="arr-accent" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L8,4 L0,8 z" fill="#c8f060"/>
+            <path d="M0,0 L8,4 L0,8 z" fill="#b5cc7a"/>
           </marker>
           <marker id="arr-teal" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M0,0 L8,4 L0,8 z" fill="#8be0c8"/>
@@ -444,8 +444,8 @@
       <svg viewBox="0 0 620 260" width="100%" style="max-width:620px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scoring: query tokenization feeds into four field scorers, sum produces raw score, top-K selection outputs ranked decisions">
 
         <!-- Query box -->
-        <rect x="230" y="8" width="160" height="36" rx="8" fill="#141416" stroke="#c8f060" stroke-width="1.5"/>
-        <text x="310" y="30" font-family="DM Mono,monospace" font-size="9.5" fill="#c8f060" text-anchor="middle">query → token set</text>
+        <rect x="230" y="8" width="160" height="36" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="310" y="30" font-family="DM Mono,monospace" font-size="9.5" fill="#b5cc7a" text-anchor="middle">query → token set</text>
 
         <!-- Arrows down to fields -->
         <line x1="255" y1="44" x2="75" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
@@ -457,22 +457,22 @@
         <!-- Title -->
         <rect x="8" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
         <text x="71" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">title overlap</text>
-        <text x="71" y="126" font-family="DM Mono,monospace" font-size="9" fill="#c8f060" text-anchor="middle">Ã— 3.0</text>
+        <text x="71" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 3.0</text>
 
         <!-- Tags -->
         <rect x="148" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
         <text x="211" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">tags overlap</text>
-        <text x="211" y="126" font-family="DM Mono,monospace" font-size="9" fill="#c8f060" text-anchor="middle">Ã— 2.5 + flat boost</text>
+        <text x="211" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 2.5 + flat boost</text>
 
         <!-- Constraint -->
         <rect x="346" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
         <text x="409" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">constraint overlap</text>
-        <text x="409" y="126" font-family="DM Mono,monospace" font-size="9" fill="#c8f060" text-anchor="middle">Ã— 1.5</text>
+        <text x="409" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 1.5</text>
 
         <!-- Content -->
         <rect x="486" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
         <text x="549" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">content overlap</text>
-        <text x="549" y="126" font-family="DM Mono,monospace" font-size="9" fill="#c8f060" text-anchor="middle">Ã— 1.0</text>
+        <text x="549" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 1.0</text>
 
         <!-- Arrows to sum -->
         <line x1="71" y1="140" x2="248" y2="178" stroke="#2e2e34" stroke-width="1"/>
@@ -650,7 +650,7 @@
     <div class="cta-block">
       <h3>Inspect the retriever source</h3>
       <p>DecisionRetriever, MemoryStore, ContextBuilder, and the full evaluation harness are open source under MIT license.</p>
-      <a href="https://github.com/MnemeHQ/mneme" class="btn-primary">View on GitHub →</a>
+      <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub →</a>
     </div>
   </footer>
 </article>
@@ -658,8 +658,8 @@
 
 <footer style="border-top: 1px solid var(--border); padding: 3rem 2rem 1.5rem; text-align: left;">
   <style>
-    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--accent);border-radius:4px;color:var(--accent);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
-    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--accent); color:#0b0d0c; }
+    .footer-pilot { display:inline-flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border:1px solid var(--action, #ea735e);border-radius:4px;color:var(--action-soft, #f2a08e);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.05em;text-transform:uppercase;text-decoration:none;transition:background 0.15s,color 0.15s; }
+    .footer-pilot:hover, .footer-pilot:focus-visible { background: var(--action, #ea735e); color:#0b0d0c; }
     .footer-pilot:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   </style>
   <div style="max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 2.5rem 2rem;">
