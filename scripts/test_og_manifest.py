@@ -144,5 +144,32 @@ class TestResolve(unittest.TestCase):
             m.resolve("qa-glossary/", {"headline": "X"}, strict=True)
 
 
+class TestVariant(unittest.TestCase):
+    def test_variant_defaults_to_none(self):
+        r = m.resolve("insights/x/", {"headline": "X"})
+        self.assertIsNone(r["variant"])
+
+    def test_variant_hub_is_accepted_on_editorial(self):
+        r = m.resolve("insights/all/", {"headline": "X", "variant": "hub"})
+        self.assertEqual(r["variant"], "hub")
+
+    def test_invalid_variant_raises(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("insights/x/", {"headline": "X", "variant": "bogus"})
+
+    def test_variant_hub_on_non_editorial_family_raises(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("demo/x/", {"headline": "X", "variant": "hub"})
+
+    def test_subtitle_defaults_to_none(self):
+        r = m.resolve("insights/x/", {"headline": "X"})
+        self.assertIsNone(r["subtitle"])
+
+    def test_subtitle_is_carried_when_present(self):
+        r = m.resolve("insights/all/", {
+            "headline": "X", "variant": "hub", "subtitle": "Every essay, one place"})
+        self.assertEqual(r["subtitle"], "Every essay, one place")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -57,6 +57,10 @@ class TestTemplates(unittest.TestCase):
         self.assertIn("{{geometry}}", html)
         self.assertNotIn("{{sup}}", html)
 
+    def test_editorial_has_subtitle_slot(self):
+        html = (TPL / "editorial.html").read_text(encoding="utf-8")
+        self.assertIn("{{subtitle_html}}", html)
+
 
 if __name__ == "__main__":
     unittest.main()

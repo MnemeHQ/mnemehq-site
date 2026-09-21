@@ -32,7 +32,8 @@ class TestBuildHtml(unittest.TestCase):
         base = {"path": "insights/x/", "family": "editorial",
                 "headline": "Architectural Drift", "lines": ["Architectural Drift"],
                 "accent": "Drift", "sup": None, "rows": None,
-                "tone": "neutral", "motif": "branch", "alt": "Architectural Drift"}
+                "tone": "neutral", "motif": "branch", "alt": "Architectural Drift",
+                "variant": None, "subtitle": None}
         base.update(kw)
         return base
 
@@ -55,6 +56,35 @@ class TestBuildHtml(unittest.TestCase):
         html = r.build_html(self._rec(
             headline="A & B", lines=["A & B"], accent=None))
         self.assertIn("&amp;", html)
+
+    def test_normal_editorial_still_renders_geometry_and_em(self):
+        """Regression guard: hub handling must not affect article cards."""
+        html = r.build_html(self._rec())
+        self.assertIn("data-motif=\"branch\"", html)
+        self.assertIn("<em>Drift</em>", html)
+
+
+class TestHubVariant(unittest.TestCase):
+    def _rec(self, **kw):
+        base = {"path": "insights/all/", "family": "editorial",
+                "headline": "All Insights", "lines": ["All Insights"],
+                "accent": "Insights", "sup": None, "rows": None,
+                "tone": "neutral", "motif": "branch", "alt": "All Insights",
+                "variant": "hub", "subtitle": "Every essay, one place"}
+        base.update(kw)
+        return base
+
+    def test_hub_renders_subtitle(self):
+        html = r.build_html(self._rec())
+        self.assertIn('<div class="hub-sub">Every essay, one place</div>', html)
+
+    def test_hub_renders_no_geometry(self):
+        html = r.build_html(self._rec())
+        self.assertNotIn("data-motif", html)
+
+    def test_hub_renders_no_em_even_with_accent(self):
+        html = r.build_html(self._rec())
+        self.assertNotIn("<em>", html)
 
 
 if __name__ == "__main__":

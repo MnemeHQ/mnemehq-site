@@ -64,18 +64,27 @@ def _lines_html(lines: list[str], accent: str | None) -> str:
 
 def build_html(record: dict) -> str:
     tpl = (TPL / f"{record['family']}.html").read_text(encoding="utf-8")
+    is_hub = record.get("variant") == "hub"
     geometry = ""
-    if record["family"] == "editorial":
+    # Hub cards render no geometry: "no motif pretending it is an article."
+    if record["family"] == "editorial" and not is_hub:
         geometry = og_geometry.render(
             record["path"].rstrip("/").rsplit("/", 1)[-1],
             record["motif"], record["tone"])
     label = label_for(record)
+    # Hub cards never get an italic accent: the dominant text is the topic
+    # name, not an argument.
+    accent = None if is_hub else record["accent"]
+    subtitle_html = ""
+    if is_hub and record.get("subtitle"):
+        subtitle_html = f'<div class="hub-sub">{html_mod.escape(record["subtitle"])}</div>'
     return (tpl
             .replace("{{geometry}}", geometry)
             .replace("{{family_label}}", html_mod.escape(label))
             .replace("{{headline_px}}", str(fit(record["lines"])))
-            .replace("{{lines_html}}", _lines_html(record["lines"], record["accent"]))
-            .replace("{{sup}}", html_mod.escape(record.get("sup") or "")))
+            .replace("{{lines_html}}", _lines_html(record["lines"], accent))
+            .replace("{{sup}}", html_mod.escape(record.get("sup") or ""))
+            .replace("{{subtitle_html}}", subtitle_html))
 
 
 def assert_versions() -> None:

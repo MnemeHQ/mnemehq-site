@@ -88,6 +88,10 @@ def motif_for_slug(slug: str) -> str:
 
 TONES = ("neutral", "failure")
 
+# A hub is an Editorial listing page, not a sixth family: valid only on
+# "editorial". None is the default, ordinary article card.
+VARIANTS = (None, "hub")
+
 
 class ManifestError(Exception):
     """A manifest record is missing, malformed, or internally inconsistent."""
@@ -160,6 +164,14 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
     if motif not in MOTIFS:
         raise ManifestError(f"{rel or '<home>'}: unknown motif {motif!r}")
 
+    variant = raw.get("variant")
+    if variant not in VARIANTS:
+        raise ManifestError(f"{rel or '<home>'}: variant must be one of {VARIANTS}, got {variant!r}")
+    if variant == "hub" and family != "editorial":
+        raise ManifestError(
+            f"{rel or '<home>'}: variant: hub is only valid on the editorial family, "
+            f"got family {family!r}")
+
     return {
         "path": rel,
         "family": family,
@@ -172,4 +184,6 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
         "motif": motif,
         "alt": raw.get("alt") or headline,
         "voice_ok": raw.get("voice_ok"),
+        "variant": variant,
+        "subtitle": raw.get("subtitle"),
     }
