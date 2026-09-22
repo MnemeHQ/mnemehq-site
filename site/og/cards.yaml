@@ -19,7 +19,7 @@ architecture/:
     - [DESIGN, 'Keyword scoring, not ML.', held]
     - [ALTERNATIVE, 'Embeddings, ML, or guesses.', neutral]
     - [EXCLUDED, None in the enforcement path., denied]
-  sup: Technical deep dives into the retrieval pipeline, enforcement mechanics, and design decisions.
+  sup: Technical deep dives into retrieval, enforcement mechanics, and design decisions.
 architecture/decision-memory-vs-documentation/:
   accent: Architectural Authority
   alt: 'Demo: Decision Memory: Where Architectural Authority Lives. Relevance is calculated at read time.
@@ -29,7 +29,7 @@ architecture/decision-memory-vs-documentation/:
     - [RAG, Retrieves relevant information., neutral]
     - [DOCUMENTATION, 'Knowledge, not authority.', neutral]
     - [MEMORY, Holds precedence and scope., held]
-  sup: Relevance is calculated at read time. Authority has to be recorded at write time.
+  sup: Relevance is calculated at read time; authority, at write time.
 architecture/how-retrieval-works/:
   alt: 'Demo: How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records.'
   headline: How Retrieval Works in Mneme
@@ -44,8 +44,7 @@ audit/:
     - [REPO, Decisions already recorded., neutral]
     - [AUDIT, Classifies its protection level., neutral]
     - [GAP, Shows what's unprotected., held]
-  sup: Give Mneme a repository. It identifies architectural decisions, classifies their governability,
-    and shows you exactly which ones translate to deterministic enforcement rules.
+  sup: Give Mneme a repository. It classifies which decisions are enforceable.
 audit/methodology/:
   alt: 'Demo: Architecture Protection Audit Methodology. What the Audit reads, how decisions are classified,
     and how the protection metrics are calculated.'
@@ -54,7 +53,7 @@ audit/methodology/:
     - [READS, 'ADRs, agent rules, config proof.', neutral]
     - [CLASSIFIES, 'Protected, ready, or Guidance.', neutral]
     - [REPORTS, States what the metrics mean., held]
-  sup: What the Audit reads, how decisions are classified, and how the protection metrics are calculated.
+  sup: What the Audit reads, classifies, and how it scores protection.
 audit/vs-code-review-security-scanning-and-tests/:
   accent: Security Scanning
   alt: 'Demo: The Audit vs Code Review, Security Scanning & Tests. Different tools answer different questions.
@@ -64,8 +63,7 @@ audit/vs-code-review-security-scanning-and-tests/:
     - [REVIEW, Human judgment on a diff., neutral]
     - [SCANNERS, Known vulnerabilities in code., neutral]
     - [AUDIT, Recorded architectural intent., held]
-  sup: Different tools answer different questions. The Audit examines architectural intent already recorded
-    by the team.
+  sup: Different tools answer different questions. The Audit examines recorded intent.
 benchmark/:
   alt: 'Demo: Governance Benchmark v1.1. 36 scenarios. Structured fixtures. Deterministic retrieval.'
   headline: Governance Benchmark v1.1
@@ -82,7 +80,7 @@ compare/:
     - {label: ALTERNATIVES, value: Advisory, verdict: MODEL MAY IGNORE, kind: warn}
     - {label: MNEME HQ, value: Enforced, verdict: BLOCKS AT EDIT/WRITE, kind: accent}
   headline: Mneme HQ vs the Alternatives
-  sup: CodeRabbit, Cursor Rules, Claude Code memory, RAG. How each compares to pre-generation enforcement.
+  sup: CodeRabbit, Cursor Rules, Claude Code memory, RAG vs pre-generation enforcement.
 compare/aider/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Aider. Aider is one of the best terminal pair programmers. Mneme is the
@@ -91,7 +89,7 @@ compare/aider/:
     - {label: AIDER, value: Prose-driven, verdict: MODEL DECIDES PER TURN, kind: warn}
     - {label: MNEME HQ, value: Scope-matched, verdict: SYSTEM DECIDES PER EDIT, kind: accent}
   headline: Mneme HQ vs Aider
-  sup: Aider is one of the best terminal pair programmers. Mneme is the typed-decision layer underneath.
+  sup: Aider pair-programs in the terminal. Mneme is the layer underneath.
 compare/claude-code-memory/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Claude Code Memory. CLAUDE.md gives the model instructions it may follow.
@@ -100,8 +98,7 @@ compare/claude-code-memory/:
     - {label: CLAUDE CODE MEMORY, value: Advisory, verdict: MODEL MAY FOLLOW, kind: warn}
     - {label: MNEME HQ, value: Enforced, verdict: HOOK BLOCKS AT VIOLATION, kind: accent}
   headline: Mneme HQ vs Claude Code Memory
-  sup: CLAUDE.md gives the model instructions it may follow. Mneme HQ blocks violations before they're
-    written.
+  sup: CLAUDE.md instructs the model; Mneme blocks violations before they're written.
 compare/claude-md/:
   alt: 'Comparison: Mneme HQ vs CLAUDE.md. A CLAUDE.md tells the model your rules. Mneme enforces the
     ones that must hold.'
@@ -109,7 +106,7 @@ compare/claude-md/:
     - {label: CLAUDE.MD, value: Advisory, verdict: MAY BE IGNORED, kind: warn}
     - {label: MNEME HQ, value: Enforced, verdict: BLOCKS EDIT/WRITE, kind: accent}
   headline: Mneme HQ vs CLAUDE.md
-  sup: A CLAUDE.md tells the model your rules. Mneme enforces the ones that must hold.
+  sup: CLAUDE.md tells the model rules. Mneme enforces the essential ones.
 compare/coderabbit/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs CodeRabbit. CodeRabbit reviews code after it''s written. Mneme HQ enforces
@@ -118,7 +115,7 @@ compare/coderabbit/:
     - {label: CODERABBIT, value: Post-generation, verdict: SUGGESTS IN PR COMMENTS, kind: warn}
     - {label: MNEME HQ, value: Pre-generation, verdict: BLOCKS AT VIOLATION, kind: accent}
   headline: Mneme HQ vs CodeRabbit
-  sup: CodeRabbit reviews code after it's written. Mneme HQ enforces constraints before generation.
+  sup: CodeRabbit reviews written code. Mneme enforces constraints before generation.
 compare/continue-dev/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Continue.dev. Continue rules are configuration the model interprets. Mneme
@@ -127,7 +124,7 @@ compare/continue-dev/:
     - {label: CONTINUE.DEV, value: Order-dependent, verdict: NO PRECEDENCE MODEL, kind: warn}
     - {label: MNEME HQ, value: Deterministic, verdict: PRECEDENCE ENGINE RESOLVES, kind: accent}
   headline: Mneme HQ vs Continue.dev
-  sup: Continue rules are configuration the model interprets. Mneme is enforcement the system resolves.
+  sup: Continue rules are model-interpreted configuration. Mneme is system-resolved enforcement.
 compare/cursor-rules/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Cursor Rules. Cursor Rules are per-repo suggestion files. Mneme HQ is
@@ -136,8 +133,7 @@ compare/cursor-rules/:
     - {label: CURSOR RULES, value: Advisory, verdict: MAY BE IGNORED, kind: warn}
     - {label: MNEME, value: Enforced, verdict: CANNOT BE SKIPPED, kind: accent}
   headline: Mneme HQ vs Cursor Rules
-  sup: Cursor Rules are per-repo suggestion files. Mneme HQ is structured enforcement with a precedence
-    engine.
+  sup: Cursor Rules suggest per-repo. Mneme enforces via a precedence engine.
 compare/devin-vs-architectural-governance/:
   alt: 'Comparison: Devin vs Architectural Governance. Why autonomous coding agents still need deterministic
     enforcement.'
@@ -154,7 +150,7 @@ compare/github-copilot/:
     - {label: GITHUB COPILOT, value: Model decides, verdict: NO BUILT-IN PRECEDENCE, kind: warn}
     - {label: MNEME HQ, value: Deterministic, verdict: PRECEDENCE ENGINE RESOLVES, kind: accent}
   headline: Mneme HQ vs GitHub Copilot
-  sup: Copilot writes code. Mneme enforces what that code is allowed to do.
+  sup: Copilot writes code. Mneme enforces what that code may do.
 compare/google-antigravity-vs-mneme/:
   alt: 'Comparison: Google Antigravity vs Mneme. Agentic IDEs vs architectural governance. Different layers;
     they compose.'
@@ -171,7 +167,7 @@ compare/rag-coding-memory/:
     - {label: RAG CODING MEMORY, value: Probabilistic, verdict: TOP-K RECALL ONLY, kind: warn}
     - {label: MNEME HQ, value: Deterministic, verdict: SCOPE-MATCHED LOOKUP, kind: accent}
   headline: RAG Coding Memory vs Mneme
-  sup: RAG is useful for contextual memory. It is weak as decision memory.
+  sup: RAG helps with context. It is weak as decision memory.
 compare/rag-vs-governance/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs RAG-based Governance. RAG retrieves relevant context. Mneme enforces architectural
@@ -189,7 +185,7 @@ compare/sourcegraph-cody/:
     - {label: SOURCEGRAPH CODY, value: Context only, verdict: PASSED TO THE MODEL, kind: warn}
     - {label: MNEME HQ, value: Enforced, verdict: BLOCKS ON VIOLATION, kind: accent}
   headline: Mneme HQ vs Sourcegraph Cody
-  sup: Cody answers what the code is. Mneme answers what the edit is allowed to do.
+  sup: Cody explains existing code. Mneme decides what edits are allowed.
 compare/windsurf/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Windsurf. Cascade plans and executes autonomously. Mneme enforces per
@@ -198,7 +194,7 @@ compare/windsurf/:
     - {label: WINDSURF, value: Drift risk, verdict: OVER LONG CASCADE RUNS, kind: warn}
     - {label: MNEME HQ, value: Per-edit, verdict: INDEPENDENT OF RUN LENGTH, kind: accent}
   headline: Mneme HQ vs Windsurf
-  sup: Cascade plans and executes autonomously. Mneme enforces per edit, regardless of run length.
+  sup: Cascade executes autonomously. Mneme enforces per edit, any run length.
 concepts/:
   headline: The language of AI-native governance
 concepts/agent-verification/:
@@ -418,7 +414,7 @@ docs/decision-proposals/:
     - [AGENT, Suggests a candidate decision., neutral]
     - [PROPOSALS, Keep the text and provenance., neutral]
     - [HUMAN, Makes the authority shift clear., held]
-  sup: The released workflow for reviewing, accepting, and rejecting non-authoritative decision proposals.
+  sup: Workflow for reviewing, accepting, rejecting non-authoritative decision proposals.
 docs/governance-violations/:
   accent: Governance Violations
   alt: 'Demo: Twelve governance violations Mneme can prevent, across architecture, security, workflow,
@@ -446,7 +442,7 @@ docs/mcp/:
     - [MCP HOST, Queries the Index over stdio., neutral]
     - [REQUEST, 'Get context, submit a candidate.', neutral]
     - [AUTHORITY, Stays outside the protocol., held]
-  sup: Install, configure, retrieve, propose, and trace—with human decision authority kept outside MCP.
+  sup: Install, configure, retrieve, propose, trace; human authority stays outside.
   voice_ok: ["em dash inherited from published sup copy"]
 docs/protection-activation/:
   accent: not Protected
@@ -942,7 +938,7 @@ integrations/:
     - {text: INTEGRATIONS, kind: dim}
   headline: Mneme HQ Integrations
   name: Integrations
-  sup: Claude Code · Cursor · GitHub Actions and more — across your entire AI coding stack.
+  sup: Claude Code, Cursor, GitHub Actions, and more across your stack.
   voice_ok: ["em dash inherited from published sup copy"]
 integrations/adr-import/:
   accent: ADRs
@@ -955,8 +951,7 @@ integrations/adr-import/:
     - {text: ADR IMPORT, kind: dim}
   headline: Import existing ADRs
   name: ADR Import
-  sup: Parse, compile, and activate your ADR corpus as enforceable guardrails. One command. No manual
-    rewriting.
+  sup: Parse and activate your ADR corpus as guardrails, one command.
 integrations/antigravity/:
   alt: 'Integration: Architectural Governance for Google Antigravity. Repo-native governance alongside
     Antigravity''s editor, terminal, and browser surfaces.'
@@ -990,7 +985,7 @@ integrations/claude-code/:
     - {text: CLAUDE CODE, kind: dim}
   headline: Governing Claude Code Workflows
   name: Claude Code
-  sup: Hook-level enforcement for every Edit, Write, and MultiEdit Claude Code attempts.
+  sup: Hook-level enforcement for every Edit, Write, and MultiEdit attempt.
 integrations/codex-cli/:
   accent: Codex CLI
   alt: 'Integration: Mneme HQ + Codex CLI. PreToolUse gate for native apply_patch mutations. Stop whole-file
@@ -1002,8 +997,7 @@ integrations/codex-cli/:
     - {text: CODEX CLI, kind: dim}
   headline: Mneme HQ + Codex CLI
   name: Codex CLI
-  sup: PreToolUse gate for native apply_patch mutations. Stop whole-file audit for everything else. Validated
-    10/10 against Codex CLI 0.149.1.
+  sup: PreToolUse gate for apply_patch, whole-file audit otherwise. Validated against 0.149.1.
 integrations/copilot/:
   accent: +
   alt: 'Integration: Mneme HQ + GitHub Copilot. One architectural corpus. The constraint layer behind
@@ -1015,7 +1009,7 @@ integrations/copilot/:
     - {text: GITHUB COPILOT, kind: dim}
   headline: Mneme HQ + GitHub Copilot
   name: GitHub Copilot
-  sup: One architectural corpus. The constraint layer behind every AI coding tool in your stack.
+  sup: One architectural corpus behind every coding tool in your stack.
 integrations/cursor/:
   accent: +
   alt: 'Integration: Mneme HQ + Cursor. One structured corpus. Exported to Cursor Rules, enforced via
@@ -1027,7 +1021,7 @@ integrations/cursor/:
     - {text: CURSOR, kind: dim}
   headline: Mneme HQ + Cursor
   name: Cursor
-  sup: One structured corpus. Exported to Cursor Rules, enforced via Claude Code hooks.
+  sup: One corpus exported to Cursor Rules via Claude Code hooks.
 integrations/github-actions/:
   accent: GitHub Actions
   alt: 'Integration: Governance in GitHub Actions. Block pull requests that violate architectural decisions
@@ -1063,8 +1057,7 @@ integrations/hermes/:
     - {text: HERMES AGENT, kind: dim}
   headline: Mneme HQ + Hermes Agent
   name: Hermes Agent
-  sup: Context injection and pre-tool enforcement for supported mutations. Experimental against Hermes
-    Agent 0.19.0 — bypasses documented, nothing overclaimed.
+  sup: Experimental against Hermes Agent 0.19.0; supported mutations only, bypasses documented.
   voice_ok: ["em dash inherited from published sup copy"]
 integrations/jetbrains/:
   accent: +
@@ -1077,7 +1070,7 @@ integrations/jetbrains/:
     - {text: JETBRAINS IDES, kind: dim}
   headline: Mneme HQ + JetBrains
   name: JetBrains IDEs
-  sup: One architectural corpus. The constraint layer for AI Assistant across every JetBrains IDE.
+  sup: One architectural corpus; the constraint layer across every JetBrains IDE.
 integrations/kiro/:
   alt: 'Integration: Mneme + Kiro. Check Kiro file writes against your architectural decisions before
     they reach disk.'
@@ -1088,7 +1081,7 @@ integrations/kiro/:
     - {text: KIRO, kind: dim}
   headline: Mneme + Kiro
   name: Kiro
-  sup: Check Kiro file writes against your architectural decisions before they reach disk.
+  sup: Check Kiro file writes against decisions before they reach disk.
 integrations/langchain-langgraph/:
   accent: LangChain / LangGraph
   alt: 'Integration: Mneme HQ + LangChain / LangGraph. Context injection before model calls and deterministic
@@ -1101,9 +1094,7 @@ integrations/langchain-langgraph/:
     - {text: LANGCHAIN / LANGGRAPH, kind: dim}
   headline: Mneme HQ + LangChain / LangGraph
   name: LangChain / LangGraph
-  sup: Context injection before model calls and deterministic governance of supported write_file / edit_file
-    mutations. Validated against langchain 1.3.17 / langchain-core 1.6.0 / langgraph 1.2.11 — bypasses
-    documented, nothing overclaimed.
+  sup: Governs supported write_file/edit_file mutations. Bypasses documented against pinned versions.
   voice_ok: ["em dash inherited from published sup copy"]
 integrations/mcp/:
   alt: 'Integration: Mneme + MCP. A local interoperability boundary for decision retrieval and non-authoritative
@@ -1115,8 +1106,7 @@ integrations/mcp/:
     - {text: MODEL CONTEXT PROTOCOL, kind: dim}
   headline: Mneme + MCP
   name: Model Context Protocol
-  sup: A local interoperability boundary for decision retrieval and non-authoritative proposals—without
-    replacing deterministic enforcement.
+  sup: A boundary for decision retrieval and proposals, not deterministic enforcement.
   voice_ok: ["em dash inherited from published sup copy"]
 integrations/microsoft-agent-forge/:
   alt: 'Integration: Architectural Governance for Microsoft Agent Forge. Mneme adds deterministic governance
@@ -1128,7 +1118,7 @@ integrations/microsoft-agent-forge/:
     - {text: MICROSOFT AGENT FORGE, kind: dim}
   headline: Architectural Governance for Microsoft Agent Forge
   name: Microsoft Agent Forge
-  sup: Mneme adds deterministic governance on top of Agent Forge's execution substrate.
+  sup: Mneme adds deterministic governance atop Agent Forge's execution substrate.
 integrations/opencode/:
   alt: 'Integration: Architectural Governance for OpenCode. OpenCode runs the agent across terminal, IDE,
     and desktop. Mneme keeps architectural decisions enforced across all three.'
@@ -1139,8 +1129,7 @@ integrations/opencode/:
     - {text: OPENCODE, kind: dim}
   headline: Architectural Governance for OpenCode
   name: OpenCode
-  sup: OpenCode runs the agent across terminal, IDE, and desktop. Mneme keeps architectural decisions
-    enforced across all three.
+  sup: OpenCode runs across terminal, IDE, desktop. Mneme enforces all three.
 integrations/paperclip/:
   accent: Paperclip
   alt: 'Integration: Mneme HQ + Paperclip. Unmodified Mneme enforced deterministically under both Paperclip
@@ -1152,8 +1141,7 @@ integrations/paperclip/:
     - {text: PAPERCLIP, kind: dim}
   headline: Mneme HQ + Paperclip
   name: Paperclip
-  sup: Unmodified Mneme enforced deterministically under both Paperclip transports — classic CLI and ACP.
-    No adapter required.
+  sup: Unmodified Mneme enforced under both Paperclip transports, CLI and ACP.
   voice_ok: ["em dash inherited from published sup copy"]
 integrations/perplexity/:
   accent: Mneme Preserves What Must Remain
@@ -1180,7 +1168,7 @@ integrations/vscode/:
     - {text: VS CODE, kind: dim}
   headline: Mneme HQ + VS Code
   name: VS Code
-  sup: Claude Code runs in VS Code. Mneme governs every edit before it reaches your codebase.
+  sup: In VS Code, Mneme governs every Claude Code edit first.
 integrations/warp/:
   accent: AI Terminal
   alt: 'Integration: Warp AI Terminal Governance. Architectural invariants underneath Warp''s Agent Mode
@@ -1201,7 +1189,7 @@ open-source-ai-coding-agent-governance/:
     - {label: MNEME, value: Deterministic, verdict: SAME VERDICT EVERY TIME, kind: accent}
   family: comparison
   headline: Open-Source Governance Tools for AI Coding Agents
-  sup: Memory, retrieval, docs, and enforcement -- what each project actually does.
+  sup: Memory, retrieval, docs, and enforcement; what each project actually does.
 pilot/:
   headline: Request a Pilot
   sup: Mneme is working with engineering teams using AI coding tools at scale.
@@ -1234,7 +1222,7 @@ security/data-handling/:
     - [FILES, 'Extracted, analysed, then deleted', held]
     - [RESULT, Classifications and rules persist, neutral]
     - [DELETION, Manual only; no auto-expiry yet., neutral]
-  sup: What the Architecture Audit receives, where it processes, what it retains — and what it deletes.
+  sup: What the Architecture Audit receives, processes, retains, and deletes.
   voice_ok: ["em dash inherited from published sup copy"]
 standards/:
   accent: forming
@@ -1323,8 +1311,7 @@ use-cases/:
     - {label: WITHOUT MNEME, value: Reviewer-dependent, verdict: DRIFT REACHES REVIEW, kind: warn}
     - {label: WITH MNEME, value: Enforced pre-generation, verdict: CAUGHT BEFORE IT LANDS, kind: accent}
   headline: AI governance for real codebases
-  sup: Six patterns for enforcing architectural decisions, preserving tribal knowledge, and preventing
-    drift in AI-assisted development.
+  sup: Six patterns for architectural enforcement, tribal knowledge, and drift prevention.
 use-cases/adr-enforcement/:
   accent: ADR Enforcement
   alt: 'Comparison: ADR enforcement for AI coding agents. Which of your architectural decisions are Protected,
@@ -1341,7 +1328,7 @@ use-cases/ai-assisted-software-migrations/:
     - {label: A PROMPT, value: Advisory, verdict: DROPPED ON COMPACTION, kind: warn}
     - {label: A DECISION, value: Compiled, verdict: QUERIED EVERY SESSION, kind: accent}
   headline: Agents copy the architecture you are removing
-  sup: Legacy and target patterns coexist during a migration. Scope every decision to the paths it governs.
+  sup: Legacy and target patterns coexist; scope decisions to their paths.
 use-cases/ci-governance-for-ai-generated-code/:
   accent: AI-Generated Code
   alt: 'Comparison: CI Governance for AI-Generated Code. The deterministic gate that catches what reviewer
@@ -1350,7 +1337,7 @@ use-cases/ci-governance-for-ai-generated-code/:
     - {label: REVIEWER ATTENTION, value: Limited, verdict: MISSES WHAT IT MISSES, kind: warn}
     - {label: CI GATE, value: Deterministic, verdict: CATCHES EVERY PR DIFF, kind: accent}
   headline: CI Governance for AI-Generated Code
-  sup: The deterministic gate that catches what reviewer attention can't, on every PR diff.
+  sup: The deterministic gate catching what reviewer attention misses, every diff.
 use-cases/coding-assistant-governance/:
   accent: breaking
   alt: 'Comparison: Stop AI from breaking your architecture. Enforce ADRs, service boundaries, and banned
@@ -1359,7 +1346,7 @@ use-cases/coding-assistant-governance/:
     - {label: AFTER GENERATION, value: Code review, verdict: VIOLATIONS ALREADY WRITTEN, kind: warn}
     - {label: BEFORE GENERATION, value: Enforced, verdict: BANNED PATTERNS BLOCKED, kind: accent}
   headline: Stop AI from breaking your architecture
-  sup: Enforce ADRs, service boundaries, and banned patterns before code is written.
+  sup: Enforce ADRs, service boundaries, and banned patterns before code lands.
 use-cases/data-platform-governance/:
   accent: inside
   alt: 'Comparison: Keep agents inside your data boundaries. Warehouse layer rules, dbt conventions, and
@@ -1368,7 +1355,7 @@ use-cases/data-platform-governance/:
     - {label: UNENFORCED CONVENTIONS, value: Tribal knowledge, verdict: EASY TO DRIFT FROM, kind: warn}
     - {label: MNEME HQ, value: Enforced, verdict: ACROSS EVERY AGENT, kind: accent}
   headline: Keep agents inside your data boundaries
-  sup: Warehouse layer rules, dbt conventions, and pipeline boundaries enforced across every agent.
+  sup: Warehouse rules, dbt conventions, and pipeline boundaries enforced everywhere.
 use-cases/design-system-governance/:
   accent: respects
   alt: 'Comparison: AI that respects your design system. Prevent token drift, component misuse, and WCAG
@@ -1377,7 +1364,7 @@ use-cases/design-system-governance/:
     - {label: AFTER SHIP, value: Token drift, verdict: FOUND IN PRODUCTION, kind: warn}
     - {label: BEFORE GENERATION, value: Prevented, verdict: CAUGHT PRE-PRODUCTION, kind: accent}
   headline: AI that respects your design system
-  sup: Prevent token drift, component misuse, and WCAG violations before they reach production.
+  sup: Prevent token drift, component misuse, and WCAG violations pre-production.
 use-cases/legacy-codebase-memory/:
   accent: knows
   alt: 'Comparison: Preserve what your team knows. Capture tribal knowledge before it walks out the door.
@@ -1386,7 +1373,7 @@ use-cases/legacy-codebase-memory/:
     - {label: TRIBAL KNOWLEDGE, value: Undocumented, verdict: WALKS OUT THE DOOR, kind: warn}
     - {label: DECISION CORPUS, value: Queryable, verdict: BY EVERY AI AGENT, kind: accent}
   headline: Preserve what your team knows
-  sup: Capture tribal knowledge before it walks out the door. Make it queryable by every AI agent.
+  sup: Capture tribal knowledge before it leaves. Make it agent-queryable.
 use-cases/multi-agent-workflow-governance/:
   accent: every
   alt: 'Comparison: One memory layer for every agent. Give orchestrators, subagents, and pipelines a shared
@@ -1395,7 +1382,7 @@ use-cases/multi-agent-workflow-governance/:
     - {label: PER-AGENT CONTEXT, value: Fragmented, verdict: DRIFTS ACROSS AGENTS, kind: warn}
     - {label: SHARED CORPUS, value: One source, verdict: 'SAME RULES, EVERY AGENT', kind: accent}
   headline: One memory layer for every agent
-  sup: Give orchestrators, subagents, and pipelines a shared architectural context they can't drift from.
+  sup: One shared context orchestrators, subagents, and pipelines can't drift from.
 use-cases/security-compliance-guardrails/:
   accent: enforced
   alt: 'Comparison: Compliance enforced at generation. PII handling rules, auth patterns, and security
@@ -1404,7 +1391,7 @@ use-cases/security-compliance-guardrails/:
     - {label: POST-HOC REVIEW, value: Reactive, verdict: NON-COMPLIANT CODE LANDS, kind: warn}
     - {label: MNEME HQ, value: Applied pre-write, verdict: BEFORE CODE LANDS, kind: accent}
   headline: Compliance enforced at generation
-  sup: PII handling rules, auth patterns, and security constraints applied before non-compliant code lands.
+  sup: PII rules, auth patterns, and constraints applied before code lands.
 works-with/:
   alt: 'Integration: Governance across AI coding models and agent frameworks. Mneme operates across Claude
     Code, Cursor, Copilot, and agent workflows.'
