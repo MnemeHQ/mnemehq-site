@@ -81,7 +81,7 @@ _ROW = ('<div style="display:flex;align-items:center;gap:30px;background:{bg};bo
         'border-left:8px solid {ac};border-radius:10px;padding:26px 34px">'
         '<span style="font-family:\'DM\';font-size:36px;font-weight:500;color:{ac};'
         'letter-spacing:.06em;min-width:220px">{k}</span>'
-        '<span style="font-family:\'IN\';font-size:48px;color:{tc};font-weight:600;'
+        '<span style="font-family:\'IN\';font-size:48px;color:{tc};font-weight:500;'
         'letter-spacing:-.6px">{v}</span></div>')
 
 _ROW_STYLES = {
