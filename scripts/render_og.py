@@ -221,6 +221,7 @@ def build_html(record: dict) -> str:
            .replace("{{headline_px}}", str(fit(record["lines"])))
            .replace("{{lines_html}}", _lines_html(record["lines"], accent))
            .replace("{{sup}}", html_mod.escape(record.get("sup") or ""))
+           .replace("{{image}}", html_mod.escape(record.get("image") or ""))
            .replace("{{subtitle_html}}", subtitle_html))
     for token, value in extra.items():
         out = out.replace("{{%s}}" % token, value)

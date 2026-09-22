@@ -308,7 +308,7 @@ class TestRowsBoxesBadgeNameChain(unittest.TestCase):
 
     # -- other families are unaffected -----------------------------------
     def test_brand_and_editorial_do_not_require_structured_fields_in_strict_mode(self):
-        m.resolve("about/", {"headline": "H"}, strict=True)
+        m.resolve("about/", {"headline": "H", "image": "photo-whiteboard.webp"}, strict=True)
         m.resolve("insights/x/", {"headline": "H"}, strict=True)
 
 
@@ -417,6 +417,46 @@ class TestVariant(unittest.TestCase):
         r = m.resolve("insights/all/", {
             "headline": "X", "variant": "hub", "subtitle": "Every essay, one place"})
         self.assertEqual(r["subtitle"], "Every essay, one place")
+
+
+class TestImage(unittest.TestCase):
+    """The brand family carries a semantically assigned photograph instead
+    of `brand.html`'s old hardcoded `photo-decision-wall.webp`. A card
+    referencing a missing photo must fail loudly, not render a blank
+    panel -- and in strict mode, silently defaulting is exactly the drift
+    this manifest exists to prevent."""
+
+    def test_image_is_carried_when_present_on_brand(self):
+        r = m.resolve("about/", {"headline": "H", "family": "brand",
+                                  "image": "photo-whiteboard.webp"})
+        self.assertEqual(r["image"], "photo-whiteboard.webp")
+
+    def test_image_defaults_to_none(self):
+        r = m.resolve("about/", {"headline": "H", "family": "brand"})
+        self.assertIsNone(r["image"])
+
+    def test_image_required_on_brand_in_strict_mode(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("about/", {"headline": "H", "family": "brand"}, strict=True)
+        msg = str(ctx.exception)
+        self.assertIn("about/", msg)
+        self.assertIn("image", msg)
+
+    def test_image_rejected_on_a_non_brand_family(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("insights/x/", {"headline": "H", "family": "editorial",
+                                       "image": "photo-whiteboard.webp"})
+        msg = str(ctx.exception)
+        self.assertIn("insights/x/", msg)
+        self.assertIn("image", msg)
+
+    def test_missing_image_file_raises(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("about/", {"headline": "H", "family": "brand",
+                                  "image": "photo-does-not-exist.webp"})
+        msg = str(ctx.exception)
+        self.assertIn("about/", msg)
+        self.assertIn("photo-does-not-exist.webp", msg)
 
 
 if __name__ == "__main__":

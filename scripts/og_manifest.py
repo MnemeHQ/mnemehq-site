@@ -12,6 +12,9 @@ from pathlib import Path
 
 import yaml
 
+REPO = Path(__file__).resolve().parent.parent
+IMAGES_DIR = REPO / "site" / "assets" / "images"
+
 FAMILIES = ("editorial", "integration", "proof", "comparison", "brand")
 
 # Order matters only in that every prefix here is unambiguous.
@@ -271,6 +274,16 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
             else:
                 raise ManifestError(message)
 
+    image = raw.get("image")
+    if image is not None:
+        if family != "brand":
+            raise ManifestError(
+                f"{rel or '<home>'}: 'image' is only valid on the brand family, "
+                f"got family {family!r}")
+        if not (IMAGES_DIR / image).is_file():
+            raise ManifestError(
+                f"{rel or '<home>'}: image {image!r} not found under {IMAGES_DIR}")
+
     lines = raw.get("lines")
     if lines is None:
         lines = [headline]
@@ -336,6 +349,8 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
                 raise ManifestError(
                     f"{rel or '<home>'}: family 'integration' requires "
                     f"{', '.join(missing)} (strict mode)")
+        if family == "brand" and not image:
+            raise ManifestError(f"{rel or '<home>'}: family 'brand' requires 'image' (strict mode)")
 
     return {
         "path": rel,
@@ -344,6 +359,7 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
         "lines": lines,
         "accent": raw.get("accent"),
         "sup": raw.get("sup"),
+        "image": image,
         "rows": rows,
         "boxes": boxes,
         "badge": badge,
