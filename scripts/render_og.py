@@ -332,6 +332,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"ERROR -- {exc}", file=sys.stderr)
         return 1
 
+    # Warnings are non-fatal (e.g. a headline at 9-10 words, or a brand
+    # sup pending its owner keep-or-drop decision): surface every one so
+    # they aren't silently swallowed, but never fail the run over them.
+    for record in records:
+        for warning in record.get("warnings") or []:
+            print(f"WARN -- {warning}")
+
     if args.dry_run:
         print(f"OK -- {len(records)} record(s) resolved cleanly")
         return 0

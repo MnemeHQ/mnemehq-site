@@ -312,6 +312,86 @@ class TestRowsBoxesBadgeNameChain(unittest.TestCase):
         m.resolve("insights/x/", {"headline": "H"}, strict=True)
 
 
+class TestCopyBudgets(unittest.TestCase):
+    """Owner-approved copy budgets: 'Never shrink type to fit excess copy.
+    If it exceeds the limit, rewrite.'"""
+
+    # -- headline ---------------------------------------------------------
+    def test_headline_at_ten_words_passes(self):
+        """Ten words is within the hard limit (it just isn't ideal, so it
+        still warns -- see test_headline_at_nine_words_warns_but_does_not_raise
+        for the warning-vs-failure boundary)."""
+        headline = " ".join(["word"] * 10)
+        r = m.resolve("insights/x/", {"headline": headline})
+        self.assertEqual(r["headline"], headline)
+
+    def test_headline_over_ten_words_raises(self):
+        headline = " ".join(["word"] * 11)
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("insights/over/", {"headline": headline})
+        msg = str(ctx.exception)
+        self.assertIn("insights/over/", msg)
+        self.assertIn("11", msg)
+
+    def test_headline_at_nine_words_warns_but_does_not_raise(self):
+        headline = " ".join(["word"] * 9)
+        r = m.resolve("insights/warn/", {"headline": headline})
+        self.assertEqual(r["headline"], headline)
+        self.assertEqual(len(r["warnings"]), 1)
+        self.assertIn("insights/warn/", r["warnings"][0])
+        self.assertIn("9 words", r["warnings"][0])
+
+    def test_headline_at_eight_words_does_not_warn(self):
+        headline = " ".join(["word"] * 8)
+        r = m.resolve("insights/x/", {"headline": headline})
+        self.assertEqual(r["warnings"], [])
+
+    # -- sup ----------------------------------------------------------------
+    def test_sup_over_ten_words_raises(self):
+        sup = " ".join(["word"] * 11)
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/x/", {"headline": "H", "sup": sup})
+        msg = str(ctx.exception)
+        self.assertIn("demo/x/", msg)
+        self.assertIn("11", msg)
+
+    def test_sup_at_ten_words_passes(self):
+        sup = " ".join(["word"] * 10)
+        r = m.resolve("demo/x/", {"headline": "H", "sup": sup})
+        self.assertEqual(r["sup"], sup)
+        self.assertEqual(r["warnings"], [])
+
+    def test_editorial_record_with_sup_raises(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("insights/x/", {"headline": "H", "sup": "Any secondary line at all."})
+        self.assertIn("editorial", str(ctx.exception))
+
+    def test_brand_sup_over_ten_words_warns_instead_of_raising(self):
+        sup = " ".join(["word"] * 11)
+        r = m.resolve("about/", {"headline": "H", "family": "brand", "sup": sup})
+        self.assertEqual(r["sup"], sup)
+        self.assertEqual(len(r["warnings"]), 1)
+        self.assertIn("about/", r["warnings"][0])
+        self.assertIn("11", r["warnings"][0])
+
+    # -- row value word budget ----------------------------------------------
+    def test_row_value_over_six_words_raises(self):
+        # Single-letter words: 7 words, 13 chars -- stays under the
+        # existing 33-char row-value limit so this exercises the word
+        # budget specifically, not the char one.
+        value = " ".join(list("abcdefg"))
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/x/", {"headline": "H", "rows": [["A", value, "held"]]})
+        msg = str(ctx.exception)
+        self.assertIn("demo/x/", msg)
+        self.assertIn("7", msg)
+
+    def test_row_value_at_six_words_passes(self):
+        value = " ".join(list("abcdef"))
+        r = m.resolve("demo/x/", {"headline": "H", "rows": [["A", value, "held"]]})
+        self.assertEqual(r["rows"][0][1], value)
+
+
 class TestVariant(unittest.TestCase):
     def test_variant_defaults_to_none(self):
         r = m.resolve("insights/x/", {"headline": "X"})

@@ -113,6 +113,27 @@ ROW_VALUE_MAX = 33
 # value line.
 ROW_LABEL_MAX = 14
 
+# Proof row values already cap at 6 words in practice -- enforce it so a
+# future record can't quietly grow past what the row was designed to hold.
+ROW_VALUE_MAX_WORDS = 6
+
+# Copy budgets. The owner's rule: "Never shrink type to fit excess copy.
+# If it exceeds the limit, rewrite." These exist so the renderer never has
+# to rescue over-long copy with a smaller font.
+#
+# Headline: 10 words is a hard ceiling. 9-10 words is a warning, not a
+# failure -- the documented ideal is 4-7 words, but a slightly long
+# headline still fits the card; it just isn't ideal.
+HEADLINE_MAX_WORDS = 10
+HEADLINE_WARN_WORDS = 8
+
+# Secondary (sup) line: same rationale, same hard ceiling.
+SUP_MAX_WORDS = 10
+
+
+def _word_count(text: str) -> int:
+    return len(text.split())
+
 
 def _validate_rows(rel: str, rows: object) -> None:
     """rows (proof): a list of [label, value, kind] triples."""
@@ -133,6 +154,10 @@ def _validate_rows(rel: str, rows: object) -> None:
             raise ManifestError(
                 f"{rel or '<home>'}: rows[{i}] value is {len(value)} chars, "
                 f"over the {ROW_VALUE_MAX}-char limit")
+        if _word_count(value) > ROW_VALUE_MAX_WORDS:
+            raise ManifestError(
+                f"{rel or '<home>'}: rows[{i}] value is {_word_count(value)} words, "
+                f"over the {ROW_VALUE_MAX_WORDS}-word limit")
         if kind not in ROW_KINDS:
             raise ManifestError(
                 f"{rel or '<home>'}: rows[{i}] kind must be one of {ROW_KINDS}, got {kind!r}")
@@ -214,7 +239,37 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
     if family not in FAMILIES:
         raise ManifestError(f"{rel or '<home>'}: unknown family {family!r}")
 
+    warnings: list[str] = []
+
     headline = raw.get("headline") or _headline_from_path(rel)
+
+    headline_words = _word_count(headline)
+    if headline_words > HEADLINE_MAX_WORDS:
+        raise ManifestError(
+            f"{rel or '<home>'}: headline is {headline_words} words, "
+            f"over the {HEADLINE_MAX_WORDS}-word limit")
+    if headline_words > HEADLINE_WARN_WORDS:
+        warnings.append(
+            f"{rel or '<home>'}: headline is {headline_words} words (ideal 4-7)")
+
+    sup = raw.get("sup")
+    if sup is not None:
+        if family == "editorial":
+            raise ManifestError(
+                f"{rel or '<home>'}: family 'editorial' does not allow a 'sup'")
+        sup_words = _word_count(sup)
+        if sup_words > SUP_MAX_WORDS:
+            message = (f"{rel or '<home>'}: sup is {sup_words} words, "
+                       f"over the {SUP_MAX_WORDS}-word limit")
+            if family == "brand":
+                # Brand secondaries are pending the owner's own keep-or-drop
+                # editorial decision (tracked separately). Until that lands,
+                # an over-budget brand sup warns instead of failing strict
+                # mode. TEMPORARY: remove this exemption once the brand
+                # sups are resolved.
+                warnings.append(message)
+            else:
+                raise ManifestError(message)
 
     lines = raw.get("lines")
     if lines is None:
@@ -300,4 +355,5 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
         "voice_ok": raw.get("voice_ok"),
         "variant": variant,
         "subtitle": raw.get("subtitle"),
+        "warnings": warnings,
     }
