@@ -6,6 +6,17 @@ import unittest
 
 import render_og as r
 
+try:
+    import og_manifest as _m
+    import importlib.metadata as _md
+
+    _md.version("playwright")  # raises PackageNotFoundError if absent
+    import PIL  # noqa: F401
+
+    _CAN_RENDER = True
+except Exception:  # pragma: no cover -- exercised by CI's pyyaml-only job
+    _CAN_RENDER = False
+
 
 class TestFit(unittest.TestCase):
     def test_bands_match_the_spec(self):
@@ -207,6 +218,48 @@ class TestStructuredBuilders(unittest.TestCase):
         self.assertIn("A &amp; B", html)
         self.assertIn("B &amp; B", html)
         self.assertIn("N &amp; N", html)
+
+
+@unittest.skipUnless(
+    _CAN_RENDER,
+    "needs Playwright + pinned Chromium + Pillow -- not installed in the "
+    "pyyaml-only og-cards-check.yml job; run scripts/check_og_render_unique.py "
+    "by hand (or in a job with Chromium) for this proof instead")
+class TestRenderIsolation(unittest.TestCase):
+    """Gate B defect: `_render` used to write every card to ONE fixed temp
+    file and load it from ONE fixed URL. A plain http.server sends
+    Last-Modified and honours If-Modified-Since, so two writes landing in
+    the same filesystem-timestamp tick got answered 304 and Chromium
+    re-screenshotted the PREVIOUS record -- 126 duplicate-hash groups
+    across 252 of 322 files on a full run, invisible to every earlier
+    test because they all rendered one card per process via --only.
+
+    The only way to catch that signature is to render more than one
+    record in a single process and diff the bytes -- a single-card test
+    cannot see it, no matter how it's written.
+    """
+
+    def test_two_records_rendered_back_to_back_are_not_byte_identical(self):
+        import asyncio
+        import hashlib
+        import tempfile
+        from pathlib import Path
+
+        raw = _m.load(r.MANIFEST)
+        paths = ["compare/aider/", "compare/rag-vs-governance/"]
+        records = [_m.resolve(p, raw.get(p), strict=True) for p in paths]
+
+        with tempfile.TemporaryDirectory(prefix="test_render_isolation_") as tmp:
+            out_dir = Path(tmp)
+            asyncio.run(r._render(records, out_dir))
+            digests = [
+                hashlib.sha256(r._out_path(out_dir, rec).read_bytes()).hexdigest()
+                for rec in records
+            ]
+        self.assertEqual(
+            len(digests), len(set(digests)),
+            "two different records rendered in the same process produced "
+            "byte-identical PNGs -- the stale-page/304 defect is back")
 
 
 class TestLabelFor(unittest.TestCase):

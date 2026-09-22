@@ -17,6 +17,7 @@ import asyncio
 import functools
 import html as html_mod
 import sys
+import uuid
 from pathlib import Path
 
 import og_geometry
@@ -254,26 +255,82 @@ def _out_path(out_dir: Path, record: dict) -> Path:
     return (out_dir / rel / CARD_NAME) if rel else (out_dir / CARD_NAME)
 
 
+def _no_cache_handler(directory: str):
+    """SimpleHTTPRequestHandler serves Last-Modified and honours
+    If-Modified-Since, so two writes to the same path inside one
+    filesystem-timestamp tick get answered with a 304 and the browser
+    reuses its cached (previous) page -- silently screenshotting the
+    wrong card. Belt-and-suspenders alongside the unique-filename and
+    cache-busting-query fixes in `_render`: strip the conditional-request
+    headers before they can trigger a 304, and never advertise
+    Last-Modified/ETag or cacheability in the first place.
+    """
+    import http.server
+
+    class Handler(http.server.SimpleHTTPRequestHandler):
+        def send_head(self):
+            # Force every request to be treated as uncached, regardless of
+            # what the browser remembers from an earlier response.
+            for h in ("If-Modified-Since", "If-None-Match"):
+                if h in self.headers:
+                    del self.headers[h]
+            return super().send_head()
+
+        def send_header(self, keyword, value):
+            if keyword in ("Last-Modified", "ETag"):
+                return
+            super().send_header(keyword, value)
+
+        def end_headers(self):
+            self.send_header("Cache-Control", "no-store, must-revalidate")
+            super().end_headers()
+
+        def log_message(self, fmt, *args):  # quiet the access log
+            pass
+
+    return functools.partial(Handler, directory=directory)
+
+
 async def _render(records: list[dict], out_dir: Path) -> None:
     """Serve the repo over local HTTP (so _base.css and the fonts resolve),
     screenshot each record with a pinned Chromium, and verify every PNG
     written is exactly WIDTH x HEIGHT.
+
+    Each record gets its own uniquely-named temp HTML file (never a single
+    fixed path) and a cache-busting query parameter on the URL, and the
+    server itself is told never to cache or answer 304 -- three
+    independent layers against the same failure mode: a stale page being
+    re-screenshotted as if it were the current record. See
+    `_no_cache_handler` for why a fixed name/URL alone isn't safe even
+    with the server hardening.
+
+    `templates/og/` is published template source, not scratch space, so a
+    leaked `_render_tmp_*.html` sitting in it is a real hazard, not just
+    clutter. The per-record loop unlinks its own file as soon as it is
+    done with it, and the outer `finally` sweeps every path this process
+    created if a mid-run exception (a version mismatch, a bad record) cuts
+    the loop short. Neither survives a hard kill (SIGKILL / a forcibly
+    terminated process never runs Python's `finally` at all) -- the only
+    defense against that is this sweep here, at the top of every run,
+    which clears out any `_render_tmp_*.html` a previous run left behind
+    before writing a single new one.
     """
-    import http.server
     import socketserver
     import threading
 
     from PIL import Image
     from playwright.async_api import async_playwright
 
-    handler_cls = functools.partial(
-        http.server.SimpleHTTPRequestHandler, directory=str(REPO))
+    for orphan in TPL.glob("_render_tmp_*.html"):
+        orphan.unlink()
+
+    handler_cls = _no_cache_handler(str(REPO))
     httpd = socketserver.TCPServer(("127.0.0.1", 0), handler_cls)
     port = httpd.server_address[1]
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
 
-    tmp_html = TPL / "_render_tmp.html"
+    tmp_paths: list[Path] = []
     try:
         async with async_playwright() as pw:
             browser = await pw.chromium.launch()
@@ -284,9 +341,13 @@ async def _render(records: list[dict], out_dir: Path) -> None:
                 viewport={"width": WIDTH, "height": HEIGHT}, device_scale_factor=1)
             try:
                 for record in records:
+                    token = uuid.uuid4().hex
+                    tmp_html = TPL / f"_render_tmp_{token}.html"
+                    tmp_paths.append(tmp_html)
                     tmp_html.write_text(build_html(record), encoding="utf-8")
                     await page.goto(
-                        f"http://127.0.0.1:{port}/templates/og/_render_tmp.html",
+                        f"http://127.0.0.1:{port}/templates/og/{tmp_html.name}"
+                        f"?v={token}",
                         wait_until="networkidle")
                     await page.evaluate("document.fonts.ready")
 
@@ -302,12 +363,16 @@ async def _render(records: list[dict], out_dir: Path) -> None:
                         raise SystemExit(
                             f"ERROR -- {out_path} is {size}, expected "
                             f"{(WIDTH, HEIGHT)}")
+
+                    tmp_html.unlink()
+                    tmp_paths.remove(tmp_html)
             finally:
                 await page.close()
                 await browser.close()
     finally:
-        if tmp_html.exists():
-            tmp_html.unlink()
+        for tmp_html in tmp_paths:
+            if tmp_html.exists():
+                tmp_html.unlink()
         httpd.shutdown()
         httpd.server_close()
         thread.join()
