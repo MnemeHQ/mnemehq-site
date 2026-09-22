@@ -101,7 +101,7 @@ ROW_KINDS = ("held", "neutral", "denied")
 BOX_KINDS = ("warn", "accent")
 CHAIN_KINDS = ("plain", "accent", "dim")
 
-# The proof card's row value renders at 44px Inter 600 in a column roughly
+# The proof card's row value renders at 48px Inter 500 in a column roughly
 # 790px wide on a 1200x630 card -- about 33 characters fit on one line
 # before it wraps. A wrapped row grows tall enough that three rows plus the
 # identity bar overflow the card, so this is a hard ceiling, not a style
