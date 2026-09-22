@@ -366,13 +366,17 @@ class TestCopyBudgets(unittest.TestCase):
             m.resolve("insights/x/", {"headline": "H", "sup": "Any secondary line at all."})
         self.assertIn("editorial", str(ctx.exception))
 
-    def test_brand_sup_over_ten_words_warns_instead_of_raising(self):
+    def test_brand_sup_over_ten_words_raises(self):
+        """The brand warn-instead-of-fail exemption was temporary, pending
+        the owner's keep-or-drop editorial pass on brand sups. That pass
+        landed, so SUP_MAX_WORDS is now a hard failure uniformly, brand
+        included."""
         sup = " ".join(["word"] * 11)
-        r = m.resolve("about/", {"headline": "H", "family": "brand", "sup": sup})
-        self.assertEqual(r["sup"], sup)
-        self.assertEqual(len(r["warnings"]), 1)
-        self.assertIn("about/", r["warnings"][0])
-        self.assertIn("11", r["warnings"][0])
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("about/", {"headline": "H", "family": "brand", "sup": sup})
+        msg = str(ctx.exception)
+        self.assertIn("about/", msg)
+        self.assertIn("11", msg)
 
     # -- row value word budget ----------------------------------------------
     def test_row_value_over_six_words_raises(self):

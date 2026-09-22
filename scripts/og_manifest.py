@@ -262,17 +262,9 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
                 f"{rel or '<home>'}: family 'editorial' does not allow a 'sup'")
         sup_words = _word_count(sup)
         if sup_words > SUP_MAX_WORDS:
-            message = (f"{rel or '<home>'}: sup is {sup_words} words, "
-                       f"over the {SUP_MAX_WORDS}-word limit")
-            if family == "brand":
-                # Brand secondaries are pending the owner's own keep-or-drop
-                # editorial decision (tracked separately). Until that lands,
-                # an over-budget brand sup warns instead of failing strict
-                # mode. TEMPORARY: remove this exemption once the brand
-                # sups are resolved.
-                warnings.append(message)
-            else:
-                raise ManifestError(message)
+            raise ManifestError(
+                f"{rel or '<home>'}: sup is {sup_words} words, "
+                f"over the {SUP_MAX_WORDS}-word limit")
 
     image = raw.get("image")
     if image is not None:
