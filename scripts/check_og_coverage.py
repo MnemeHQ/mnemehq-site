@@ -52,6 +52,14 @@ def _og_image_path(html: str) -> str | None:
     return urlparse(m.group(1)).path.lstrip("/")
 
 
+# TEMPORARY, removed with the pages in the legacy-cleanup commit:
+# og-preview-test/ and og-preview-test-editorial/ are noindex targets that
+# exist only to measure LinkedIn card rendering. They carry an og:image by
+# design, so they would otherwise be demanded of the manifest, but they are
+# not site pages and own no card record.
+EXCLUDED_PAGES = ("og-preview-test/", "og-preview-test-editorial/")
+
+
 def pages() -> list[str]:
     """Site-relative page paths that participate in the OG card system.
 
@@ -65,6 +73,8 @@ def pages() -> list[str]:
         html = path.read_text(encoding="utf-8")
         if _og_image_path(html) is None:
             continue
+        if _rel_for(path) in EXCLUDED_PAGES:
+            continue
         out.append(_rel_for(path))
     return out
 
@@ -76,6 +86,8 @@ def advertised() -> dict[str, str]:
         html = path.read_text(encoding="utf-8")
         img = _og_image_path(html)
         if img is None:
+            continue
+        if _rel_for(path) in EXCLUDED_PAGES:
             continue
         result[_rel_for(path)] = img
     return result
