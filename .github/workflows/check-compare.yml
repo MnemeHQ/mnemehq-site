@@ -43,5 +43,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      # check_compare.py now asserts against site/og/cards.yaml via
+      # og_manifest, so this job needs pyyaml. Same pin as
+      # og-cards-check.yml, the only other workflow that reads the manifest.
+      - name: Install manifest dependency
+        run: pip install pyyaml==6.0.1
+
       - name: Run compare hub validator
         run: python scripts/check_compare.py
