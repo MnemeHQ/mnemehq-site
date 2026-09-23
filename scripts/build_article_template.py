@@ -27,7 +27,7 @@ TITLE = "What Is Harness Engineering? The Execution Layer Between Models and Pro
 m_desc = re.search(r'<meta name="description" content="([^"]+)"', t)
 DESCRIPTION = m_desc.group(1)
 SLUG_URL = "https://mnemehq.com/insights/what-is-harness-engineering/"
-OG_URL = SLUG_URL + "og.png"
+OG_URL = SLUG_URL + "og-v2.png"
 DATE_ISO = "2026-05-30"
 
 # 1. most specific URLs first

@@ -3,7 +3,7 @@
 Validates that every site/insights/<slug>/index.html is fully registered for
 publishing. Per docs/site/insight-publishing-contract.md, a new insight needs
 explicit registration in: sitemap, insights hub (card + JSON-LD hasPart),
-local og.png, correct og:image / twitter:image meta tags, at least one
+local og-v2.png, correct og:image / twitter:image meta tags, at least one
 incoming internal link from elsewhere on the site, a breadcrumb nav, a
 BreadcrumbList JSON-LD schema, and a TechArticle/Article JSON-LD schema.
 
@@ -11,7 +11,7 @@ Checks (all hard errors):
   Registration:
     ERROR  -- slug missing from site/sitemap.xml
     ERROR  -- slug has no card on site/insights/index.html
-    ERROR  -- og.png missing in the article directory
+    ERROR  -- og-v2.png missing in the article directory
     ERROR  -- og:image points to a PNG that does not exist
     ERROR  -- twitter:image points to a PNG that does not exist
     ERROR  -- no incoming internal links from elsewhere in site/
@@ -348,10 +348,10 @@ def check_slug(
     if slug not in hub_card_set:
         errors.append(f"Missing insights index card for {slug}")
 
-    # 3. og.png present
-    og_path = article_dir / "og.png"
+    # 3. og-v2.png present
+    og_path = article_dir / "og-v2.png"
     if not og_path.exists():
-        errors.append(f"Missing og.png for {rel}")
+        errors.append(f"Missing og-v2.png for {rel}")
 
     # 4. og:image / twitter:image point to existing PNGs
     try:
