@@ -1,0 +1,1440 @@
+# Card manifest for site/og. Every page's OG card copy lives here --
+# family, headline, tone, and alt text are all owner-approved editorial
+# decisions, not mechanically derived. See .superpowers/sdd/
+# 2026-09-21-og-card-system/ for the review trail (task-7-decisions.md,
+# approved-42.yaml) behind this file's current state.
+? ''
+:
+  accent: aligned
+  headline: Keep AI code aligned with your architecture
+  image: photo-decision-wall.webp
+about/:
+  headline: Architectural drift prevention for the agentic AI SDLC.
+  image: photo-whiteboard.webp
+  sup: A lightweight governance layer between architectural decisions and AI tools.
+architecture/:
+  alt: 'Demo: How Mneme works, precisely. Technical deep dives into the retrieval pipeline, enforcement
+    mechanics, and design decisions.'
+  headline: How Mneme works, precisely
+  rows:
+    - [DESIGN, 'Keyword scoring, not ML.', held]
+    - [ALTERNATIVE, 'Embeddings, ML, or guesses.', neutral]
+    - [EXCLUDED, None in the enforcement path., denied]
+  sup: Technical deep dives into retrieval, enforcement mechanics, and design decisions.
+architecture/decision-memory-vs-documentation/:
+  accent: Architectural Authority
+  alt: 'Demo: Decision Memory: Where Architectural Authority Lives. Relevance is calculated at read time.
+    Authority has to be recorded at write time.'
+  headline: 'Decision Memory: Where Architectural Authority Lives'
+  rows:
+    - [RAG, Retrieves relevant information., neutral]
+    - [DOCUMENTATION, 'Knowledge, not authority.', neutral]
+    - [MEMORY, Holds precedence and scope., held]
+  sup: Relevance is calculated at read time; authority, at write time.
+architecture/how-retrieval-works/:
+  alt: 'Demo: How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records.'
+  headline: How Retrieval Works in Mneme
+  rows:
+    - [PIPELINE, 'Five stages, fully deterministic.', held]
+    - [ALTERNATIVE, Embedding-based search., neutral]
+    - [EXCLUDED, No embedding models used., denied]
+  sup: Deterministic keyword scoring over structured decision records.
+audit/:
+  headline: Understand which architectural decisions can actually be governed
+  rows:
+    - [REPO, Decisions already recorded., neutral]
+    - [AUDIT, Classifies its protection level., neutral]
+    - [GAP, Shows what's unprotected., held]
+  sup: Give Mneme a repository. It classifies which decisions are enforceable.
+audit/methodology/:
+  alt: 'Demo: Architecture Protection Audit Methodology. What the Audit reads, how decisions are classified,
+    and how the protection metrics are calculated.'
+  headline: Architecture Protection Audit Methodology
+  rows:
+    - [READS, 'ADRs, agent rules, config proof.', neutral]
+    - [CLASSIFIES, 'Protected, ready, or Guidance.', neutral]
+    - [REPORTS, States what the metrics mean., held]
+  sup: What the Audit reads, classifies, and how it scores protection.
+audit/vs-code-review-security-scanning-and-tests/:
+  accent: Security Scanning
+  alt: 'Demo: The Audit vs Code Review, Security Scanning & Tests. Different tools answer different questions.
+    The Audit examines architectural intent already recorded by the team.'
+  headline: The Audit vs Code Review, Security Scanning & Tests
+  rows:
+    - [REVIEW, Human judgment on a diff., neutral]
+    - [SCANNERS, Known vulnerabilities in code., neutral]
+    - [AUDIT, Recorded architectural intent., held]
+  sup: Different tools answer different questions. The Audit examines recorded intent.
+benchmark/:
+  alt: 'Demo: Governance Benchmark v1.1. 36 scenarios. Structured fixtures. Deterministic retrieval.'
+  headline: Governance Benchmark v1.1
+  rows:
+    - [SUITE, '36 scenarios, fixed fixtures.', held]
+    - [SCORING, 'Deterministic retrieval, no ML.', neutral]
+    - [STATUS, 'Live now, results pending.', neutral]
+  sup: 36 scenarios. Structured fixtures. Deterministic retrieval.
+compare/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory, RAG. How
+    each compares to pre-generation enforcement.'
+  boxes:
+    - {label: ALTERNATIVES, value: Advisory, verdict: MODEL MAY IGNORE, kind: warn}
+    - {label: MNEME HQ, value: Enforced, verdict: BLOCKS AT EDIT/WRITE, kind: accent}
+  headline: Mneme HQ vs the Alternatives
+  sup: CodeRabbit, Cursor Rules, Claude Code memory, RAG vs pre-generation enforcement.
+compare/aider/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Aider. Aider is one of the best terminal pair programmers. Mneme is the
+    typed-decision layer underneath.'
+  boxes:
+    - {label: AIDER, value: Prose-driven, verdict: MODEL DECIDES PER TURN, kind: warn}
+    - {label: MNEME HQ, value: Scope-matched, verdict: SYSTEM DECIDES PER EDIT, kind: accent}
+  headline: Mneme HQ vs Aider
+  sup: Aider pair-programs in the terminal. Mneme is the layer underneath.
+compare/claude-code-memory/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Claude Code Memory. CLAUDE.md gives the model instructions it may follow.
+    Mneme HQ blocks violations before they''re written.'
+  boxes:
+    - {label: CLAUDE CODE MEMORY, value: Advisory, verdict: MODEL MAY FOLLOW, kind: warn}
+    - {label: MNEME HQ, value: Enforced, verdict: HOOK BLOCKS AT VIOLATION, kind: accent}
+  headline: Mneme HQ vs Claude Code Memory
+  sup: CLAUDE.md instructs the model; Mneme blocks violations before they're written.
+compare/claude-md/:
+  alt: 'Comparison: Mneme HQ vs CLAUDE.md. A CLAUDE.md tells the model your rules. Mneme enforces the
+    ones that must hold.'
+  boxes:
+    - {label: CLAUDE.MD, value: Advisory, verdict: MAY BE IGNORED, kind: warn}
+    - {label: MNEME HQ, value: Enforced, verdict: BLOCKS EDIT/WRITE, kind: accent}
+  headline: Mneme HQ vs CLAUDE.md
+  sup: CLAUDE.md tells the model rules. Mneme enforces the essential ones.
+compare/coderabbit/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs CodeRabbit. CodeRabbit reviews code after it''s written. Mneme HQ enforces
+    constraints before generation.'
+  boxes:
+    - {label: CODERABBIT, value: Post-generation, verdict: SUGGESTS IN PR COMMENTS, kind: warn}
+    - {label: MNEME HQ, value: Pre-generation, verdict: BLOCKS AT VIOLATION, kind: accent}
+  headline: Mneme HQ vs CodeRabbit
+  sup: CodeRabbit reviews written code. Mneme enforces constraints before generation.
+compare/continue-dev/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Continue.dev. Continue rules are configuration the model interprets. Mneme
+    is enforcement the system resolves.'
+  boxes:
+    - {label: CONTINUE.DEV, value: Order-dependent, verdict: NO PRECEDENCE MODEL, kind: warn}
+    - {label: MNEME HQ, value: Deterministic, verdict: PRECEDENCE ENGINE RESOLVES, kind: accent}
+  headline: Mneme HQ vs Continue.dev
+  sup: Continue rules are model-interpreted configuration. Mneme is system-resolved enforcement.
+compare/cursor-rules/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Cursor Rules. Cursor Rules are per-repo suggestion files. Mneme HQ is
+    structured enforcement with a precedence engine.'
+  boxes:
+    - {label: CURSOR RULES, value: Advisory, verdict: MAY BE IGNORED, kind: warn}
+    - {label: MNEME, value: Enforced, verdict: CANNOT BE SKIPPED, kind: accent}
+  headline: Mneme HQ vs Cursor Rules
+  sup: Cursor Rules suggest per-repo. Mneme enforces via a precedence engine.
+compare/devin-vs-architectural-governance/:
+  alt: 'Comparison: Devin vs Architectural Governance. Why autonomous coding agents still need deterministic
+    enforcement.'
+  boxes:
+    - {label: DEVIN, value: Contextual, verdict: VIA PROMPTS AND REASONING, kind: warn}
+    - {label: MNEME, value: Deterministic, verdict: BINARY VERDICTS, kind: accent}
+  headline: Devin vs Architectural Governance
+  sup: Why autonomous coding agents still need deterministic enforcement.
+compare/github-copilot/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs GitHub Copilot. Copilot writes code. Mneme enforces what that code is
+    allowed to do.'
+  boxes:
+    - {label: GITHUB COPILOT, value: Model decides, verdict: NO BUILT-IN PRECEDENCE, kind: warn}
+    - {label: MNEME HQ, value: Deterministic, verdict: PRECEDENCE ENGINE RESOLVES, kind: accent}
+  headline: Mneme HQ vs GitHub Copilot
+  sup: Copilot writes code. Mneme enforces what that code may do.
+compare/google-antigravity-vs-mneme/:
+  alt: 'Comparison: Google Antigravity vs Mneme. Agentic IDEs vs architectural governance. Different layers;
+    they compose.'
+  boxes:
+    - {label: GOOGLE ANTIGRAVITY, value: Human review, verdict: OUTPUT REVIEWED MANUALLY, kind: warn}
+    - {label: MNEME, value: Machine-checkable, verdict: BEFORE AND AFTER GENERATION, kind: accent}
+  headline: Google Antigravity vs Mneme
+  sup: Agentic IDEs vs architectural governance. Different layers; they compose.
+compare/rag-coding-memory/:
+  accent: vs
+  alt: 'Comparison: RAG Coding Memory vs Mneme. RAG is useful for contextual memory. It is weak as decision
+    memory.'
+  boxes:
+    - {label: RAG CODING MEMORY, value: Probabilistic, verdict: TOP-K RECALL ONLY, kind: warn}
+    - {label: MNEME HQ, value: Deterministic, verdict: SCOPE-MATCHED LOOKUP, kind: accent}
+  headline: RAG Coding Memory vs Mneme
+  sup: RAG helps with context. It is weak as decision memory.
+compare/rag-vs-governance/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs RAG-based Governance. RAG retrieves relevant context. Mneme enforces architectural
+    constraints.'
+  boxes:
+    - {label: RAG, value: Probabilistic, verdict: MODEL MAY COMPLY, kind: warn}
+    - {label: MNEME HQ, value: Deterministic, verdict: VIOLATION IS BLOCKED, kind: accent}
+  headline: Mneme HQ vs RAG-based Governance
+  sup: RAG retrieves relevant context. Mneme enforces architectural constraints.
+compare/sourcegraph-cody/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Sourcegraph Cody. Cody answers what the code is. Mneme answers what the
+    edit is allowed to do.'
+  boxes:
+    - {label: SOURCEGRAPH CODY, value: Context only, verdict: PASSED TO THE MODEL, kind: warn}
+    - {label: MNEME HQ, value: Enforced, verdict: BLOCKS ON VIOLATION, kind: accent}
+  headline: Mneme HQ vs Sourcegraph Cody
+  sup: Cody explains existing code. Mneme decides what edits are allowed.
+compare/windsurf/:
+  accent: vs
+  alt: 'Comparison: Mneme HQ vs Windsurf. Cascade plans and executes autonomously. Mneme enforces per
+    edit, regardless of run length.'
+  boxes:
+    - {label: WINDSURF, value: Drift risk, verdict: OVER LONG CASCADE RUNS, kind: warn}
+    - {label: MNEME HQ, value: Per-edit, verdict: INDEPENDENT OF RUN LENGTH, kind: accent}
+  headline: Mneme HQ vs Windsurf
+  sup: Cascade executes autonomously. Mneme enforces per edit, any run length.
+concepts/:
+  headline: The language of AI-native governance
+concepts/agent-verification/:
+  accent: verification
+  headline: Agent verification.
+concepts/agentic-development/:
+  headline: Agentic Development
+concepts/agentic-ide-governance/:
+  headline: Agentic IDE Governance
+concepts/ai-agent-drift/:
+  headline: AI Agent Drift
+  tone: failure
+concepts/ai-governance-infrastructure/:
+  headline: AI Governance Infrastructure
+concepts/ai-native-sdlc/:
+  headline: AI-Native SDLC
+concepts/ai-operating-layer/:
+  accent: layer
+  headline: AI operating layer.
+concepts/antigravity-governance/:
+  headline: Antigravity Governance
+concepts/architectural-compiler/:
+  headline: Architectural Compiler
+concepts/architectural-drift-prevention/:
+  headline: Architectural Drift Prevention
+concepts/architectural-drift/:
+  headline: Architectural Drift
+  tone: failure
+concepts/architectural-governance/:
+  headline: Architectural Governance
+concepts/architecture-as-code/:
+  headline: Architecture as Code
+concepts/artifact-provenance/:
+  headline: Artifact Provenance
+concepts/autonomous-software-engineering-governance/:
+  headline: Autonomous Software Engineering Governance
+concepts/decision-continuity/:
+  headline: Decision Continuity
+concepts/deterministic-enforcement/:
+  headline: Deterministic Enforcement
+concepts/enforcement-provenance/:
+  headline: Enforcement Provenance
+concepts/executable-architectural-intent/:
+  accent: intent
+  headline: Executable architectural intent.
+concepts/execution-surfaces/:
+  accent: surfaces
+  headline: Execution surfaces.
+concepts/governance-before-generation/:
+  headline: Governance Before Generation
+concepts/governance-infrastructure/:
+  headline: Governance Infrastructure
+concepts/governance-propagation/:
+  headline: Governance Propagation
+concepts/governance-provenance/:
+  accent: provenance
+  headline: Governance provenance.
+concepts/intent-debt/:
+  headline: Intent Debt
+concepts/model-independent-governance/:
+  accent: governance
+  headline: Model-independent governance.
+concepts/multi-agent-architectural-drift/:
+  headline: Multi-Agent Architectural Drift
+  tone: failure
+concepts/multi-agent-continuity/:
+  headline: Multi-Agent Continuity
+concepts/objective-driven-development/:
+  accent: development
+  headline: Objective-driven development.
+concepts/policy-as-code/:
+  headline: Policy as Code
+concepts/precedence-semantics/:
+  headline: Precedence Semantics
+concepts/reliable-delegation/:
+  accent: delegation
+  headline: Reliable delegation.
+concepts/runtime-governance/:
+  headline: Runtime Governance
+concepts/spec-driven-development/:
+  headline: Spec-Driven Development
+concepts/verification-contracts/:
+  headline: Verification Contracts
+contact/:
+  accent: governance
+  headline: Let's talk governance
+  image: photo-notes-glass.webp
+demo/:
+  accent: Different answer.
+  headline: Same prompt. Same model. Different answer.
+  rows:
+    - [AGENT, Proposes a change past the line., neutral]
+    - [MNEME, Checks it against past decisions., neutral]
+    - [BLOCKED, Stopped before the write lands., denied]
+demo/adr-compiler/:
+  accent: ADRs Become Constraints
+  alt: 'Demo: Your ADRs become constraints the system enforces. Parses Markdown decisions, resolves precedence,
+    emits project memory, enforces a compiled constraint.'
+  headline: Your ADRs Become Constraints the System Enforces
+  rows:
+    - [ADR-005, No MnemeHQ namespace., held]
+    - [AGENT, Uses it as the namespace., neutral]
+    - [WARN, Compiled rule fires on ADR-005., neutral]
+demo/agent-sdk-governance/:
+  accent: Blocks It Before Writing
+  alt: 'Demo: Claude proposes a violating write; Mneme blocks it before disk. Claude Agent SDK integration,
+    blocking a violation and allowing the compliant retry.'
+  headline: Claude Proposes a Violation. Mneme Blocks It Before Writing.
+  lines:
+  - Claude Proposes a Violation.
+  - Mneme Blocks It Before Writing.
+  rows:
+    - [store_001, SQLite is the storage decision., held]
+    - [CLAUDE, Writes a file importing Postgres., neutral]
+    - [BLOCKED, Denied; the SQLite retry passes., denied]
+demo/architectural-drift/:
+  accent: Architectural Drift
+  alt: 'Demo: The rulebook starts guessing; Mneme blocks the fork. An agent proposes replacing deterministic
+    retrieval with a vector database; Mneme blocks the divergence and verifies the compliant retry.'
+  headline: The Rulebook Starts Guessing. Mneme Blocks Architectural Drift.
+  lines:
+  - The Rulebook Starts Guessing.
+  - Mneme Blocks Architectural Drift.
+  rows:
+    - [RETRIEVAL, 'Keyword scoring, no ML.', held]
+    - [AGENT, Proposes an embeddings DB., neutral]
+    - [BLOCKED, Denied; keyword retry passes., denied]
+  tone: neutral
+demo/dependency-policy/:
+  accent: flagged
+  headline: Dependency policy flagged
+  rows:
+    - [DEPENDENCIES, Audited packages only., held]
+    - [AGENT, Adds a package off the allowlist., neutral]
+    - [FLAGGED, 'Sent to a human, not blocked.', neutral]
+demo/governed-python-agent/:
+  accent: Mneme Blocks It
+  alt: 'Demo: A second source of truth appears; Mneme blocks it. An agent proposes replacing the approved
+    JSON store with SQLAlchemy and Postgres; Mneme blocks it and verifies the corrected task.'
+  headline: A Second Source of Truth Appears. Mneme Blocks It.
+  lines:
+  - A Second Source of Truth Appears.
+  - Mneme Blocks It.
+  rows:
+    - [DECISION, Only JSON is approved., held]
+    - [AGENT, Proposes a database over JSON., neutral]
+    - [BLOCKED, Rejected; the JSON retry passes., denied]
+demo/legacy-vs-target-architecture/:
+  accent: Here It Is Superseded
+  alt: 'Demo: The pattern is everywhere; here it is superseded. An agent copies the legacy database pattern
+    into a migrated module; ADR-042 denies it there while staying silent in the legacy tree.'
+  headline: The Legacy Pattern Is Everywhere. Here It Is Superseded.
+  lines:
+  - The Legacy Pattern Is Everywhere.
+  - Here It Is Superseded.
+  rows:
+    - [ADR-042, RepositoryPort bars direct DB., held]
+    - [AGENT, 'Copies old code, new module.', neutral]
+    - [DENIED, Blocked new; silent in old code., denied]
+demo/multi-agent-governance/:
+  accent: Governance Must Follow
+  alt: 'Demo: Many agents need the same rules; what comes next. A forward-looking view of what Mneme must
+    add to keep decisions coherent across multiple agents; unavailable stages marked explicitly.'
+  headline: Many Agents Need the Same Rules. Governance Must Follow.
+  lines:
+  - Many Agents Need the Same Rules.
+  - Governance Must Follow.
+  rows:
+    - [DECISION, 'One retrieval boundary, tracked.', neutral]
+    - [AGENT, Another agent risks conflict., neutral]
+    - [PLANNED, 'Shared gate, trace not built yet.', neutral]
+demo/repository-pattern/:
+  accent: protected
+  headline: Repository pattern protected
+  rows:
+    - [ADR-004, Interface is the only boundary., held]
+    - [AGENT, Opens direct SQL from service., neutral]
+    - [DENIED, Strict mode blocks the change., denied]
+demo/storage-decision/:
+  accent: enforced
+  headline: Storage decision enforced
+  rows:
+    - [ADR-001, 'JSON storage only, no DB.', held]
+    - [AGENT, Extends JSON store; no DB., neutral]
+    - [PASS, Zero storage violations recorded., held]
+docs/:
+  alt: 'Demo: Documentation. CLI reference, governance violations, enforcement mechanics, benchmark methodology.'
+  headline: Documentation.
+  rows:
+    - [CHECK, One mneme check on your repo, neutral]
+    - [CONNECT, Local Decision Index over MCP, neutral]
+    - [GO DEEPER, 'Proposals, violations, coverage.', held]
+  sup: CLI reference, governance violations, enforcement mechanics, benchmark methodology.
+docs/benchmark-methodology/:
+  accent: Intentionally Constrained
+  alt: 'Demo: Why the benchmark is intentionally constrained. Deterministic scenarios; recall@1 reported,
+    not optimized; what the benchmark intentionally does not solve.'
+  headline: Why the Benchmark Is Intentionally Constrained
+  rows:
+    - [SCENARIOS, 'Fixed scenarios, not sampling.', held]
+    - [RECALL@1, 'Reported as-is, never optimized.', held]
+    - [SCOPE, States what it does not solve., neutral]
+docs/cli/:
+  accent: Command-Line Interface
+  alt: 'Demo: The mneme command-line interface. Reference for the CLI, including Decision MCP, proposal
+    review, setup, protect, audit, checks, exports, and exit codes.'
+  headline: The Mneme Command-Line Interface
+  rows:
+    - [CLI, Manage and audit the corpus., held]
+    - [MCP, Operate the local decision server, neutral]
+    - [BENCHMARK, Run the governance benchmark., neutral]
+docs/decision-proposals/:
+  alt: 'Demo: Propose with agents. Decide with humans. The released workflow for reviewing, accepting,
+    and rejecting non-authoritative decision proposals.'
+  headline: Propose with agents. Decide with humans.
+  rows:
+    - [AGENT, Suggests a candidate decision., neutral]
+    - [PROPOSALS, Keep the text and provenance., neutral]
+    - [HUMAN, Makes the authority shift clear., held]
+  sup: Workflow for reviewing, accepting, rejecting non-authoritative decision proposals.
+docs/governance-violations/:
+  accent: Governance Violations
+  alt: 'Demo: Twelve governance violations Mneme can prevent, across architecture, security, workflow,
+    dependency, and platform categories.'
+  headline: Twelve Governance Violations Mneme Can Prevent
+  rows:
+    - [DECISION, 'An org rule, not a lint.', held]
+    - [CONTEXT, Injected before agent output., neutral]
+    - [CHECKED, At the earliest boundary., held]
+docs/how-enforcement-works/:
+  accent: deterministic enforcement
+  alt: 'Demo: Human-readable decisions, deterministic enforcement. Four workflow boundaries: guidance
+    before generation, prevent before mutation, catch after mutation, verify in CI.'
+  headline: Human-readable decisions, deterministic enforcement.
+  rows:
+    - [AUTHOR, Decisions written as ADRs., neutral]
+    - [COMPILE, 'Into a structured, fixed corpus.', neutral]
+    - [ENFORCE, 'Guide, prevent, catch, verify.', held]
+docs/mcp/:
+  alt: 'Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with
+    human decision authority kept outside MCP.'
+  headline: Local MCP server. Six decision tools.
+  rows:
+    - [MCP HOST, Queries the Index over stdio., neutral]
+    - [REQUEST, 'Get context, submit a candidate.', neutral]
+    - [AUTHORITY, Stays outside the protocol., held]
+  sup: Install, configure, retrieve, propose, trace; human authority stays outside.
+  voice_ok: ["em dash inherited from published sup copy"]
+docs/protection-activation/:
+  accent: not Protected
+  alt: 'Demo: Mneme-ready is not Protected. How a ready decision becomes a verified guardrail: list, validate,
+    activate, status.'
+  headline: Mneme-ready is not Protected.
+  rows:
+    - [AUDIT, Classifies it as Mneme-ready., neutral]
+    - [ACTIVATION, Turns it into an enforced rule., neutral]
+    - [PROTECTED, Only once evidence confirms it., held]
+docs/supported-languages/:
+  accent: governance scope
+  alt: 'Demo: Supported programming languages and governance scope for Mneme HQ.'
+  headline: Supported programming languages and governance scope
+  rows:
+    - [SCOPE, 'Repository level, not the parser.', held]
+    - [DEPTH, Varies by runtime and stack., neutral]
+    - [AGNOSTIC, Language-agnostic by design., held]
+enterprise/trust/:
+  accent: Trust
+  family: brand
+  headline: Enterprise Security & Trust
+  image: photo-decisions-table.webp
+  sup: MIT-licensed engine; Enterprise adds governance, administration, evidence and support.
+for/:
+  headline: Who Mneme Is For
+  image: photo-whiteboard.webp
+  sup: For engineering teams where AI-assisted development outpaces governance.
+for/cto/:
+  accent: architectural
+  family: brand
+  headline: AI velocity without architectural drift
+  image: photo-integration-workflow.webp
+for/platform/:
+  accent: every
+  family: brand
+  headline: Governance tooling for every team
+  image: photo-integration-workflow.webp
+for/principal-engineer/:
+  accent: Enforced
+  family: brand
+  headline: Your decisions. Enforced everywhere.
+  image: photo-sketch-flow.webp
+founder/:
+  accent: into
+  headline: Building governance into the stack
+  image: photo-glass-writing.webp
+insights/:
+  accent: governance
+  headline: On AI, architecture, and governance
+insights/acceleration-whiplash-governance-gap/:
+  headline: The Acceleration Whiplash and the Governance Gap
+insights/adrs-for-software-migrations/:
+  headline: ADRs for Software Migrations
+insights/agent-economy-needs-decision-infrastructure/:
+  headline: The Agent Economy Needs a Decision Layer
+insights/agent-first-ides-need-architectural-invariants/:
+  headline: Why Agent-First IDEs Need Architectural Invariants
+insights/agent-formation-engineering-performance-metrics/:
+  accent: Bigger Agents
+  headline: Bigger Agents Won't Build the Strongest Engineering Teams
+insights/agent-governance-in-the-sdlc/:
+  headline: Agent Governance in the SDLC
+insights/agent-manager-control-plane-governance/:
+  headline: The Agent Manager Is the New Control Plane
+insights/agent-runtime-governance/:
+  headline: Agent Runtime Governance
+insights/agent-skills-vs-architectural-governance/:
+  accent: governance
+  headline: Skills vs governance.
+insights/agentic-ai-governance-closer-to-execution/:
+  headline: Governance Moves Closer to Execution
+insights/agentic-change-management-needs-a-decision-layer/:
+  headline: Two Control Planes, Not One
+insights/agentic-convergence-trap-architectural-governance/:
+  headline: The Agentic Convergence Trap
+insights/agentic-infrastructure-attack-surface/:
+  headline: The New Attack Surface Is Agentic Infrastructure
+insights/agentic-resource-discovery-agent-governance/:
+  accent: Still Needs Governance
+  headline: Agentic Resource Discovery Still Needs Governance
+insights/agentic-workforce-visibility-crisis/:
+  accent: Can't See
+  headline: You Can't Govern What You Can't See
+insights/agents-of-chaos-and-the-governance-gap/:
+  headline: Agents of Chaos and the Governance Gap
+insights/ai-accelerating-cybersecurity-migration-problem/:
+  headline: Collective Cyber Defense
+insights/ai-adoption-maturity-model-engineering-analysis/:
+  headline: The AI Adoption Maturity Model
+insights/ai-agent-governance-two-markets/:
+  headline: AI Agent Governance, Two Markets
+insights/ai-agent-orchestration-is-not-governance/:
+  accent: Software Engineering Governance
+  headline: AI Agent Orchestration Is Not Software Engineering Governance
+insights/ai-agent-swarms-deterministic-guardrails/:
+  headline: AI Agent Swarms Need Deterministic Guardrails
+insights/ai-agents-are-not-employees-governance/:
+  headline: AI Agents Are Not Employees
+insights/ai-assisted-software-migrations-architectural-drift/:
+  headline: AI-Assisted Software Migrations
+  tone: failure
+insights/ai-code-review-does-not-scale-linearly/:
+  accent: linearly
+  headline: AI code review does not scale linearly
+insights/ai-coding-agent-architecture/:
+  headline: AI Coding-Agent Architecture
+insights/ai-coding-agent-guardrails/:
+  headline: AI Coding-Agent Guardrails
+insights/ai-coding-agent-verification-tax/:
+  headline: The Verification Tax of AI Coding Agents
+insights/ai-coding-agents-financial-services-audit-trail/:
+  headline: AI Coding Agents in Financial Services
+insights/ai-coding-agents-life-sciences-governance/:
+  headline: AI Coding Agents in Life Sciences
+insights/ai-coding-governance-should-be-reviewable/:
+  headline: AI Coding Governance Should Be Reviewable
+insights/ai-coding-productivity-gains-rework/:
+  headline: AI Productivity Gains Lead to More Rework
+insights/ai-engineering-roi/:
+  headline: AI Engineering ROI
+insights/ai-governance-for-regulated-industries/:
+  headline: AI Governance for Regulated Industries
+insights/ai-infrastructure-governance-category/:
+  headline: The Next AI Infrastructure Category Is Governance
+insights/ai-is-becoming-the-operating-layer-for-software-execution/:
+  accent: operating layer
+  headline: AI is becoming the operating layer.
+insights/ai-makes-software-more-ambitious/:
+  accent: More Ambitious
+  headline: AI Will Make Software More Ambitious
+insights/ai-native-engineering-intent-debt/:
+  headline: AI-Native Engineering Has an Intent Debt Problem
+insights/ai-native-sdlc-architecture-layer/:
+  headline: The Architecture Layer the AI-Native SDLC Needs
+insights/ai-peer-review-context-loss-governance/:
+  headline: AI Peer Review and Context Loss
+insights/ai-race-wont-be-won-on-infrastructure-alone/:
+  headline: Why the AI Race Won't Be Won on Infrastructure Alone
+insights/ai-roi-problem-is-about-systems-not-models/:
+  headline: The AI ROI Problem Is About Systems, Not Models.
+insights/ai-stack-determinism-probabilistic-models/:
+  headline: Rebuilding Determinism Around Probabilistic Models
+insights/ai-throughput-is-not-engineering-throughput/:
+  headline: 240% Activity. 30% Releases.
+insights/all/:
+  headline: All Insights
+  subtitle: The complete archive
+  variant: hub
+insights/anthropic-claude-marketplace-ai-engineering-control-plane/:
+  headline: The Emerging AI Engineering Control Plane
+insights/anthropic-recursive-self-improvement-engineering-governance/:
+  headline: Recursive Self-Improvement Makes Engineering Governance Inevitable
+insights/anthropic-research-system-coordination-infrastructure/:
+  headline: The Next Layer of AI Infrastructure
+insights/antigravity-solves-coordination-not-governance/:
+  headline: Antigravity Solves Coordination, Not Governance
+insights/architectural-constraint-survival-long-running-coding-agents/:
+  headline: What Happens to an Architectural Decision After Ten Agent Turns
+insights/architectural-drift-cloud-platform-migrations/:
+  headline: Drift During Cloud and Platform Migrations
+  tone: failure
+insights/architectural-governance-across-heterogeneous-ai-coding-agents/:
+  accent: heterogeneous
+  headline: Architectural governance across heterogeneous AI coding agents
+insights/architecture-cannot-be-a-prompt-context-compaction/:
+  headline: Architecture Cannot Be a Prompt
+insights/are-your-adrs-enforceable/:
+  headline: Your ADRs Exist. Are They Enforceable?
+insights/artifacts-are-not-governance/:
+  headline: Artifacts Are Not Governance
+insights/autonomous-code-remediation-requires-architectural-governance/:
+  headline: Autonomous Code Remediation Requires Architectural Governance
+insights/bain-ai-development-lifecycle-governance/:
+  headline: Bain's AI Development Lifecycle Report
+insights/barbara-liskov-python-encapsulation-ai-governance/:
+  headline: Liskov's Python Critique Predicts the Governance Problem
+insights/bcg-ai-era-operating-models-governance/:
+  headline: BCG's AI-Era Operating Models
+insights/bcg-four-pillars-agentic-ai-need-architectural-intent/:
+  accent: Architectural Intent
+  headline: 'BCG''s Four Pillars Need a Fifth: Architectural Intent'
+insights/behind-oreilly-radar-architectural-guardrails-ai-generated-code/:
+  headline: Behind the O'Reilly Radar Article
+insights/beyond-security-by-design-governance-by-design/:
+  headline: 'Beyond Security by Design: Governance by Design'
+insights/block-builderbot-coordination-governance/:
+  accent: Coordination, Not Coding
+  headline: Block's Builderbot Shows Coordination, Not Coding
+insights/brooks-law-ai-coding-agents/:
+  headline: Brooks's Law After AI
+insights/claude-code-self-hosted-environments-architectural-governance/:
+  headline: Claude Code Self-Hosted Environments
+insights/claude-code-skills-organizational-knowledge/:
+  headline: Claude Code Skills and Organizational Knowledge
+insights/cloud-agents-need-architectural-governance/:
+  headline: Cloud Agents Need More Than Durable Execution
+insights/codebase-memory-during-migrations/:
+  headline: Codebase Memory Goes Stale
+insights/constraint-decay-coding-agents-architectural-governance/:
+  headline: Constraint Decay in Coding Agents
+  tone: failure
+insights/conways-law-ai-coding-agents/:
+  headline: Conway's Law in the Age of AI Coding Agents
+insights/coordination-governance-multi-agent-systems/:
+  headline: The Next AI Infrastructure Layer Is Coordination Governance
+insights/cursor-developer-habits-report-governance-infrastructure/:
+  headline: The Cursor Developer Habits Report
+insights/databricks-omnigent-agent-infrastructure-governance/:
+  headline: Databricks Omnigent and the Agent Infrastructure Layer
+insights/datadog-state-of-ai-engineering-governance-crisis/:
+  headline: Datadog's Report Quietly Confirms the Governance Crisis
+insights/deepseek-agent-model-harness-architectural-governance/:
+  headline: Agent = Model + Harness
+insights/deployment-quality-will-define-the-ai-era/:
+  accent: quality
+  headline: Deployment quality will define the AI era
+insights/devin-ai-software-engineer-governance/:
+  headline: Devin and the Next Layer of AI Infrastructure
+insights/dora-metrics-insufficient-for-agentic-development/:
+  headline: DORA Metrics Are Necessary But Insufficient for Agentic Development
+insights/emerging-ai-agent-infrastructure-stack/:
+  accent: infrastructure
+  headline: The emerging AI agent infrastructure stack.
+insights/enforce-engineering-standards-across-ai-assisted-teams/:
+  accent: Engineering Standards
+  headline: How to Enforce Engineering Standards Across AI-Assisted Teams
+insights/enterprise-ai-guardrails-five-layers/:
+  headline: Not All AI Guardrails Are the Same
+insights/fde-coding-agents/:
+  headline: Supervising the System That Writes
+insights/forward-deployed-architects-need-a-decision-layer/:
+  headline: The Architect's Knowledge Outlives Them
+insights/forward-deployed-engineering-ai-sdlc/:
+  headline: Forward-Deployed Engineering
+insights/forward-deployed-engineering-architecture/:
+  headline: Inherited Consequences, Not Reasoning
+insights/forward-deployed-engineers-enterprise-ai/:
+  headline: Product-Environment Fit
+insights/four-architecture-protection-states/:
+  headline: Four Architecture Protection States
+insights/future-of-software-engineering-after-vibe-coding/:
+  accent: Engineering decides what persists
+  headline: Vibe coding finds what's possible. Engineering decides what persists.
+insights/gartner-ai-governance-engineering-governance/:
+  headline: Gartner Defined AI Governance. Engineering Needs Its Own Layer.
+insights/gartner-architectural-technical-debt-ai-coding-agents/:
+  headline: Architectural Technical Debt From AI Coding Agents
+insights/generative-ai-software-engineering-stack/:
+  accent: Generative AI
+  headline: The Generative AI software engineering stack
+insights/github-agent-pull-requests-review-wrong-layer/:
+  headline: Agent Pull Requests Are Everywhere
+insights/github-ai-agent-validation-trust-layer/:
+  accent: Architecture decides the artifact
+  headline: Behavioral validation grades the agent. Architecture decides the artifact.
+insights/github-copilot-space-framework/:
+  accent: SPACE Framework
+  headline: The SPACE Framework & GitHub Copilot
+insights/github-copilot-usage-based-billing-review-economics/:
+  headline: AI Code Review Is a Budget Line Item
+insights/github-spec-kit-who-enforces-architecture/:
+  headline: Spec Kit Defines the Plan. Who Enforces the Architecture?
+insights/goal-driven-agents-architectural-governance/:
+  accent: governance
+  headline: Goal-driven agents need governance.
+insights/google-cloud-agent-registry-agent-fleet-governance/:
+  accent: which agents run
+  headline: Google Cloud Agent Registry governs which agents run
+insights/google-gemini-deep-research-agent-governance/:
+  headline: Google Gemini Deep Research Agent
+insights/google-spec-driven-development-not-enough/:
+  headline: Spec-Driven Development Is Not Enough
+insights/governance-control-plane-after-agent-frameworks/:
+  headline: The Next Layer Is a Governance Control Plane
+insights/governance-layers-for-ai-coding-assistants/:
+  headline: Governance Layers for AI Coding Assistants
+insights/governance-perimeter-is-moving-to-the-endpoint/:
+  headline: The Governance Perimeter Is Moving to the Endpoint
+insights/harness-engineering-still-needs-governance/:
+  headline: Harness Engineering Still Needs Governance
+insights/harness-engineering-verification-layer/:
+  headline: Harness Engineering Needs Verification
+insights/how-ai-coding-agents-use-adrs/:
+  headline: How AI Coding Agents Use ADRs
+insights/how-to-maintain-architectural-intent-with-ai-coding-agents/:
+  headline: How to Maintain Architectural Intent with AI Coding Agents
+insights/html-is-not-the-point-structure-is/:
+  headline: HTML Is Not the Point. Structure Is.
+insights/ibm-2026-tech-leader-study-agent-governance/:
+  headline: IBM 2026 Tech Leader Study
+insights/kodekloud-definitive-guide-ai-for-devops/:
+  headline: The Definitive Guide to AI for DevOps
+insights/latent-space-agent-communication-governance/:
+  headline: Latent-Space Agent Communication
+insights/llm-wiki-library-not-law/:
+  accent: law
+  headline: Library, not law.
+insights/long-context-windows-governance-infrastructure/:
+  headline: Long Context Does Not Eliminate Governance
+insights/long-running-agents-need-governance/:
+  headline: Long-Running Agents Need More Than Memory
+insights/loop-engineering-ai-coding-agents/:
+  headline: Loop Engineering for AI Coding Agents
+insights/loop-engineering-is-not-new/:
+  headline: Loop Engineering Is Not New
+insights/machine-readable-pull-requests-agentic-development/:
+  headline: Machine-Readable Pull Requests
+insights/mckinsey-agentic-adoption-gap-enforce-software-engineering/:
+  headline: How to Close the Agentic Adoption Gap
+insights/mckinsey-agentic-software-delivery-governance/:
+  accent: Enforcement still matters
+  headline: McKinsey rewired the operating model. Enforcement still matters.
+insights/mckinsey-ai-table-stakes-to-advantage/:
+  headline: From AI Table Stakes to AI Advantage
+insights/memory-is-not-governance/:
+  accent: Is Not Governance
+  headline: Memory Is Not Governance
+insights/microsoft-agent-forge-enterprise-ai-infrastructure/:
+  headline: Microsoft Agent Forge and the Next AI Infrastructure Layer
+insights/microsoft-agent-platform-governance-layer/:
+  headline: Microsoft's Agent Platform and the Governance Layer
+insights/microsoft-agentic-transformation-playbook-ai-agent-governance/:
+  headline: Microsoft's Agentic Transformation Playbook
+insights/microsoft-execution-containers-ai-agent-runtime-governance/:
+  headline: Microsoft Execution Containers
+insights/microsoft-project-solara-post-app-governance/:
+  headline: Microsoft Project Solara
+insights/migration-guardrails-for-ai-coding-agents/:
+  headline: Migration Guardrails for AI Coding Agents
+insights/mistral-vibe-ai-coding-enterprise-infrastructure/:
+  headline: Mistral Vibe and AI Coding Infrastructure
+insights/mneme-vs-cursor-rules/:
+  accent: Cursor Rules
+  headline: Mneme vs Cursor Rules
+insights/models-are-temporary-architectural-intent-is-not/:
+  accent: Architectural intent is not.
+  headline: Models are temporary. Architectural intent is not.
+insights/morph-reflexes-agent-observability-engineering-governance/:
+  headline: Agent Observability Is Not Engineering Governance
+insights/most-valuable-ai-dataset-decisions-already-made/:
+  headline: The Decisions Are the Dataset
+insights/nvidia-nemo-agent-toolkit-engineering-governance/:
+  headline: 'NVIDIA NeMo Agent Toolkit: Who Governs the Code?'
+insights/open-knowledge-format-vs-governance/:
+  headline: Open Knowledge Format vs Governance
+insights/openai-compatible-apis-are-commoditizing-models/:
+  accent: commoditizing
+  headline: OpenAI-compatible APIs are commoditizing models
+insights/openai-symphony-architectural-context/:
+  headline: OpenAI Symphony
+insights/openclaw-and-the-limits-of-autonomous-coding/:
+  headline: OpenClaw and the Limits of Autonomous Coding
+insights/palantir-agentic-governance-engineering-governance/:
+  headline: Palantir's Agentic Governance Reveals a Missing Layer
+insights/pr-review-is-becoming-incident-response/:
+  headline: PR Review Is Becoming Incident Response
+insights/private-ai-infrastructure-governance/:
+  headline: Private AI Needs Private Governance
+insights/productivity-paradox-perception-vs-measurement/:
+  accent: Paradox
+  headline: METR and the AI Productivity Paradox
+insights/programmable-ai-policy-executable-architectural-intent/:
+  headline: Programmable AI Policy Is Not Enough for Coding Agents
+insights/prompt-engineering-is-not-governance/:
+  accent: governance
+  headline: Prompt engineering is not governance
+insights/prompt-engineering-vs-harness-engineering/:
+  headline: Prompt Engineering vs Harness Engineering
+insights/rag-is-not-memory/:
+  accent: governance
+  headline: Why RAG fails for architectural governance
+insights/recursive-self-improvement-orchestration-problem/:
+  headline: Recursive Self-Improvement Is an Orchestration Problem
+insights/review-is-not-governance/:
+  accent: governance
+  headline: Review is not governance
+insights/rise-of-agentic-engineering-education/:
+  accent: agentic
+  headline: The rise of agentic engineering education
+insights/rule-files-vs-retrieval-memory/:
+  headline: Rule Files vs Retrieval Memory
+insights/runtime-harnesses-for-ai-agents/:
+  headline: Runtime Harnesses for AI Agents
+insights/runtime-verification-is-not-architectural-verification/:
+  headline: Runtime Verification Is Not Architectural Verification
+insights/search-as-code-agent-execution-surface/:
+  headline: Search as Code Is an Execution Surface
+insights/shared-memory-is-not-shared-intent/:
+  headline: Shared Memory Is Not Shared Intent
+insights/smart-routing-ai-coding-agents/:
+  headline: Smart Routing Optimizes Execution, Not Architecture
+insights/snowflake-ai-data-engineering-governance-infrastructure/:
+  headline: Snowflake's AI Data Engineering Report
+insights/software-factory-governance-layer/:
+  headline: The Software Factory Needs a Governance Layer
+insights/sovereign-ai-needs-sovereign-engineering/:
+  accent: Sovereign Engineering
+  headline: Sovereign AI Needs Sovereign Engineering
+insights/spec-driven-development-still-needs-governance/:
+  headline: Spec-Driven Development Still Needs Governance
+insights/stanford-ai-index-2026-engineering-governance/:
+  accent: Governance Still Matters
+  headline: 'Stanford AI Index: Coding Advances. Governance Still Matters.'
+insights/strangler-fig-migrations-architectural-drift/:
+  headline: Strangler-Fig Migrations
+  tone: failure
+insights/supabase-state-of-startups-2026-ai-written-codebases/:
+  headline: 61% of Startup Codebases Are Majority AI-Written
+insights/topics/:
+  headline: Insight Topics
+  subtitle: Browse by subject
+  variant: hub
+insights/topics/agent-infrastructure/:
+  headline: Agent Infrastructure
+  subtitle: Insights
+  variant: hub
+insights/topics/ai-coding-agents/:
+  headline: AI Coding Agents
+  subtitle: Insights
+  variant: hub
+insights/topics/architectural-drift-prevention/:
+  headline: Architectural Drift Prevention
+  subtitle: Insights
+  variant: hub
+insights/topics/architectural-governance/:
+  headline: Architectural Governance
+  subtitle: Insights
+  variant: hub
+insights/topics/architectural-intent/:
+  accent: Architectural Intent
+  headline: Maintaining Architectural Intent in Agent-First Workflows
+insights/topics/engineering-performance/:
+  headline: Engineering Performance
+  subtitle: Insights
+  variant: hub
+insights/topics/software-migrations-modernization/:
+  headline: Software Migrations and Modernization
+  subtitle: Insights
+  variant: hub
+insights/using-ibm-bob-with-architectural-guardrails/:
+  accent: Architectural Guardrails
+  headline: Using IBM Bob with Architectural Guardrails
+insights/verification-starts-before-generation/:
+  accent: Before Generation
+  headline: Verification Starts Before Generation
+insights/what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails/:
+  headline: Model Hardware Standard
+insights/what-is-harness-engineering/:
+  headline: Harness Engineering
+insights/what-is-the-ai-sdlc/:
+  headline: What Is the AI SDLC?
+insights/what-makes-prompts-a-graph-prompt-graph-engineering-governance/:
+  headline: What Makes Prompts a Graph
+insights/when-agents-launch-the-database/:
+  headline: When Agents Launch the Database
+insights/when-ai-agents-degrade-architectural-intent-should-not/:
+  accent: Architectural Intent Should Not
+  headline: When AI Agents Degrade, Architectural Intent Should Not
+insights/why-ai-coding-agents-copy-legacy-architecture/:
+  headline: Why Agents Copy Legacy Architecture
+insights/why-architectural-governance-needs-precedence-semantics/:
+  accent: Precedence Semantics
+  headline: Why AI Architectural Governance Needs Precedence Semantics
+insights/why-claude-md-stops-scaling/:
+  headline: Why CLAUDE.md Stops Scaling
+insights/why-code-review-cannot-scale-with-ai-output/:
+  accent: Struggles to Scale
+  headline: Why Code Review Struggles to Scale With AI Output
+insights/why-context-alone-doesnt-prevent-architectural-drift/:
+  accent: drift
+  headline: Context alone doesn’t prevent drift.
+insights/why-observability-is-not-governance/:
+  headline: Why Observability Is Not Governance
+insights/why-prompt-memory-fails-at-scale/:
+  accent: at scale
+  headline: Why prompt memory fails at scale
+insights/why-rag-fails-for-architectural-governance/:
+  accent: RAG Fails
+  headline: Why RAG Fails for Architectural Governance
+insights/zero-trust-for-ai-agents-architectural-governance/:
+  accent: Governance verifies the diff
+  headline: Zero trust stops at the agent. Governance verifies the diff.
+integrations/:
+  accent: Integrations
+  alt: 'Integration: Mneme HQ Integrations. Claude Code · Cursor · GitHub Actions and more — across your
+    entire AI coding stack.'
+  badge: INTEGRATIONS
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: INTEGRATIONS, kind: dim}
+  headline: Mneme HQ Integrations
+  name: Integrations
+  sup: Claude Code, Cursor, GitHub Actions, and more across your stack.
+  voice_ok: ["em dash inherited from published sup copy"]
+integrations/adr-import/:
+  accent: ADRs
+  alt: 'Integration: Import existing ADRs. Parse, compile, and activate your ADR corpus as enforceable
+    guardrails. One command. No manual rewriting.'
+  badge: CORPUS WORKFLOW
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: ADR IMPORT, kind: dim}
+  headline: Import existing ADRs
+  name: ADR Import
+  sup: Parse and activate your ADR corpus as guardrails, one command.
+integrations/antigravity/:
+  alt: 'Integration: Architectural Governance for Google Antigravity. Repo-native governance alongside
+    Antigravity''s editor, terminal, and browser surfaces.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: GOOGLE ANTIGRAVITY, kind: dim}
+  headline: Architectural Governance for Google Antigravity
+  name: Google Antigravity
+  sup: Repo-native governance alongside Antigravity's editor, terminal, and browser surfaces.
+integrations/claude-agent-sdk/:
+  alt: 'Integration: Govern Claude Agent SDK Workflows. Claude Agent SDK handles execution. Mneme handles
+    architectural constraints.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: CLAUDE AGENT SDK, kind: dim}
+  headline: Govern Claude Agent SDK Workflows
+  name: Claude Agent SDK
+  sup: Claude Agent SDK handles execution. Mneme handles architectural constraints.
+integrations/claude-code/:
+  accent: Claude Code
+  alt: 'Integration: Governing Claude Code Workflows. Hook-level enforcement for every Edit, Write, and
+    MultiEdit Claude Code attempts.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: CLAUDE CODE, kind: dim}
+  headline: Governing Claude Code Workflows
+  name: Claude Code
+  sup: Hook-level enforcement for every Edit, Write, and MultiEdit attempt.
+integrations/codex-cli/:
+  accent: Codex CLI
+  alt: 'Integration: Mneme HQ + Codex CLI. PreToolUse gate for native apply_patch mutations. Stop whole-file
+    audit for everything else. Validated 10/10 against Codex CLI 0.149.1.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: CODEX CLI, kind: dim}
+  headline: Mneme HQ + Codex CLI
+  name: Codex CLI
+  sup: PreToolUse gate for apply_patch, whole-file audit otherwise. Validated against 0.149.1.
+integrations/copilot/:
+  accent: +
+  alt: 'Integration: Mneme HQ + GitHub Copilot. One architectural corpus. The constraint layer behind
+    every AI coding tool in your stack.'
+  badge: HOST ENVIRONMENT
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: GITHUB COPILOT, kind: dim}
+  headline: Mneme HQ + GitHub Copilot
+  name: GitHub Copilot
+  sup: One architectural corpus behind every coding tool in your stack.
+integrations/cursor/:
+  accent: +
+  alt: 'Integration: Mneme HQ + Cursor. One structured corpus. Exported to Cursor Rules, enforced via
+    Claude Code hooks.'
+  badge: RULES EXPORT
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: CURSOR, kind: dim}
+  headline: Mneme HQ + Cursor
+  name: Cursor
+  sup: One corpus exported to Cursor Rules via Claude Code hooks.
+integrations/github-actions/:
+  accent: GitHub Actions
+  alt: 'Integration: Governance in GitHub Actions. Block pull requests that violate architectural decisions
+    before they merge.'
+  badge: CI GATE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: GITHUB ACTIONS, kind: dim}
+  headline: Governance in GitHub Actions
+  name: GitHub Actions
+  sup: Block pull requests that violate architectural decisions before they merge.
+integrations/gitlab/:
+  accent: GitLab CI
+  alt: 'Integration: Governance in GitLab CI. Block merge requests that violate architectural decisions
+    before they merge.'
+  badge: CI GATE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: GITLAB CI, kind: dim}
+  headline: Governance in GitLab CI
+  name: GitLab CI
+  sup: Block merge requests that violate architectural decisions before they merge.
+integrations/hermes/:
+  accent: Hermes Agent
+  alt: 'Integration: Mneme HQ + Hermes Agent. Context injection and pre-tool enforcement for supported
+    mutations. Experimental against Hermes Agent 0.19.0 — bypasses documented, nothing overclaimed.'
+  badge: EXPERIMENTAL
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: HERMES AGENT, kind: dim}
+  headline: Mneme HQ + Hermes Agent
+  name: Hermes Agent
+  sup: Experimental against Hermes Agent 0.19.0; supported mutations only, bypasses documented.
+  voice_ok: ["em dash inherited from published sup copy"]
+integrations/jetbrains/:
+  accent: +
+  alt: 'Integration: Mneme HQ + JetBrains. One architectural corpus. The constraint layer for AI Assistant
+    across every JetBrains IDE.'
+  badge: HOST ENVIRONMENT
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: JETBRAINS IDES, kind: dim}
+  headline: Mneme HQ + JetBrains
+  name: JetBrains IDEs
+  sup: One architectural corpus; the constraint layer across every JetBrains IDE.
+integrations/kiro/:
+  alt: 'Integration: Mneme + Kiro. Check Kiro file writes against your architectural decisions before
+    they reach disk.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: KIRO, kind: dim}
+  headline: Mneme + Kiro
+  name: Kiro
+  sup: Check Kiro file writes against decisions before they reach disk.
+integrations/langchain-langgraph/:
+  accent: LangChain / LangGraph
+  alt: 'Integration: Mneme HQ + LangChain / LangGraph. Context injection before model calls and deterministic
+    governance of supported write_file / edit_file mutations. Validated against langchain 1.3.17 / langchain-core
+    1.6.0 / langgraph 1.2.11 — bypasses documented, nothing overclaimed.'
+  badge: NATIVE · SHIPPED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: LANGCHAIN / LANGGRAPH, kind: dim}
+  headline: Mneme HQ + LangChain / LangGraph
+  name: LangChain / LangGraph
+  sup: Governs supported write_file/edit_file mutations. Bypasses documented against pinned versions.
+  voice_ok: ["em dash inherited from published sup copy"]
+integrations/mcp/:
+  alt: 'Integration: Mneme + MCP. A local interoperability boundary for decision retrieval and non-authoritative
+    proposals—without replacing deterministic enforcement.'
+  badge: LOCAL STDIO · SHIPPED IN 0.9.0
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: MODEL CONTEXT PROTOCOL, kind: dim}
+  headline: Mneme + MCP
+  name: Model Context Protocol
+  sup: A boundary for decision retrieval and proposals, not deterministic enforcement.
+  voice_ok: ["em dash inherited from published sup copy"]
+integrations/microsoft-agent-forge/:
+  alt: 'Integration: Architectural Governance for Microsoft Agent Forge. Mneme adds deterministic governance
+    on top of Agent Forge''s execution substrate.'
+  badge: WORKS ALONGSIDE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: MICROSOFT AGENT FORGE, kind: dim}
+  headline: Architectural Governance for Microsoft Agent Forge
+  name: Microsoft Agent Forge
+  sup: Mneme adds deterministic governance atop Agent Forge's execution substrate.
+integrations/opencode/:
+  alt: 'Integration: Architectural Governance for OpenCode. OpenCode runs the agent across terminal, IDE,
+    and desktop. Mneme keeps architectural decisions enforced across all three.'
+  badge: EXPERIMENTAL
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: OPENCODE, kind: dim}
+  headline: Architectural Governance for OpenCode
+  name: OpenCode
+  sup: OpenCode runs across terminal, IDE, desktop. Mneme enforces all three.
+integrations/paperclip/:
+  accent: Paperclip
+  alt: 'Integration: Mneme HQ + Paperclip. Unmodified Mneme enforced deterministically under both Paperclip
+    transports — classic CLI and ACP. No adapter required.'
+  badge: VALIDATED COMPATIBILITY
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: PAPERCLIP, kind: dim}
+  headline: Mneme HQ + Paperclip
+  name: Paperclip
+  sup: Unmodified Mneme enforced under both Paperclip transports, CLI and ACP.
+  voice_ok: ["em dash inherited from published sup copy"]
+integrations/perplexity/:
+  accent: Mneme Preserves What Must Remain
+  alt: 'Integration: Perplexity helps teams understand why; Mneme helps teams preserve what must remain
+    true. Research-to-enforcement workflow for architectural decision-making.'
+  badge: WORKS ALONGSIDE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: PERPLEXITY ENTERPRISE, kind: dim}
+  headline: Perplexity Explains Why. Mneme Preserves What Must Remain.
+  lines:
+  - Perplexity Explains Why.
+  - Mneme Preserves What Must Remain.
+  name: Perplexity Enterprise
+integrations/vscode/:
+  accent: +
+  alt: 'Integration: Mneme HQ + VS Code. Claude Code runs in VS Code. Mneme governs every edit before
+    it reaches your codebase.'
+  badge: HOST ENVIRONMENT
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: VS CODE, kind: dim}
+  headline: Mneme HQ + VS Code
+  name: VS Code
+  sup: In VS Code, Mneme governs every Claude Code edit first.
+integrations/warp/:
+  accent: AI Terminal
+  alt: 'Integration: Warp AI Terminal Governance. Architectural invariants underneath Warp''s Agent Mode
+    and autonomous execution loops.'
+  badge: HOST ENVIRONMENT
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: WARP, kind: dim}
+  headline: Warp AI Terminal Governance
+  name: Warp
+  sup: Architectural invariants underneath Warp's Agent Mode and autonomous execution loops.
+open-source-ai-coding-agent-governance/:
+  alt: 'Comparison: Open-Source Governance Tools for AI Coding Agents. Memory, retrieval, docs, and enforcement
+    -- what each project actually does.'
+  boxes:
+    - {label: OPEN-SOURCE TOOLS, value: Probabilistic, verdict: MAY OR MAY NOT SURFACE, kind: warn}
+    - {label: MNEME, value: Deterministic, verdict: SAME VERDICT EVERY TIME, kind: accent}
+  family: comparison
+  headline: Open-Source Governance Tools for AI Coding Agents
+  sup: Memory, retrieval, docs, and enforcement; what each project actually does.
+pilot/:
+  headline: Request a Pilot
+  image: photo-notes-glass.webp
+  sup: Working with engineering teams using AI coding tools at scale.
+platforms/:
+  headline: Governance for AI Developer Platforms
+  image: photo-decisions-table.webp
+  sup: Mneme HQ runs inside the enterprise platforms layer.
+pricing/:
+  accent: deterministic
+  headline: Transparent pricing for deterministic AI coding governance
+  image: photo-decisions-table.webp
+  sup: Open-source core; enterprise pilots and governance for scaling teams.
+privacy/:
+  headline: Privacy Policy
+  image: photo-sketch-flow.webp
+qa-glossary/:
+  accent: Q&A and Glossary
+  family: brand
+  headline: 'Mneme HQ: Q&A and Glossary'
+  image: photo-sketch-flow.webp
+roadmap/:
+  accent: coming
+  headline: What's coming to Mneme HQ
+  image: photo-sketch-flow.webp
+security/data-handling/:
+  accent: Data Handling
+  alt: 'Demo: Security & Data Handling. What the Architecture Audit receives, where it processes, what
+    it retains — and what it deletes.'
+  family: proof
+  headline: Security & Data Handling
+  rows:
+    - [FILES, 'Extracted, analysed, then deleted', held]
+    - [RESULT, Classifications and rules persist, neutral]
+    - [DELETION, Manual only; no auto-expiry yet., neutral]
+  sup: What the Architecture Audit receives, processes, retains, and deletes.
+  voice_ok: ["em dash inherited from published sup copy"]
+standards/:
+  accent: forming
+  alt: 'Demo: Where the standards for AI agent governance are forming.'
+  headline: Where the standards for AI agent governance are forming
+  rows:
+    - [NIST CAISI, Identity and auth; still forming., neutral]
+    - [AGENTS.MD, Static context; lacks precedence., neutral]
+    - [MCP, 'Interoperability, not enforcement', neutral]
+supported-languages/:
+  alt: 'Integration: Governance is language-agnostic. Mneme HQ enforces architectural decisions across
+    Python, TypeScript, and JavaScript.'
+  badge: LANGUAGES
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: SUPPORTED LANGUAGES, kind: dim}
+  headline: Governance is language-agnostic
+  name: Supported Languages
+  sup: Mneme HQ enforces architectural decisions across Python, TypeScript, and JavaScript.
+supported-languages/fastapi-governance/:
+  alt: 'Integration: FastAPI Governance. Architectural governance for AI-generated FastAPI code.'
+  badge: PYTHON ECOSYSTEM · REPO-NATIVE RULES
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: FASTAPI, kind: dim}
+  headline: FastAPI Governance
+  name: FastAPI
+  sup: Architectural governance for AI-generated FastAPI code.
+supported-languages/javascript-governance/:
+  alt: 'Integration: JavaScript Governance. Architectural governance for AI-assisted JavaScript development.'
+  badge: TIER 1 · OPERATIONALLY SUPPORTED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: JAVASCRIPT, kind: dim}
+  headline: JavaScript Governance
+  name: JavaScript
+  sup: Architectural governance for AI-assisted JavaScript development.
+supported-languages/python-governance/:
+  alt: 'Integration: Python Governance. Architectural governance for AI-assisted Python development.'
+  badge: TIER 1 · PRODUCTION-GRADE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: PYTHON, kind: dim}
+  headline: Python Governance
+  name: Python
+  sup: Architectural governance for AI-assisted Python development.
+supported-languages/spring-boot-governance/:
+  alt: 'Integration: Spring Boot Governance. Architectural governance for AI-generated Spring Boot code.'
+  badge: JVM ECOSYSTEM · REPO-NATIVE RULES
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: SPRING BOOT, kind: dim}
+  headline: Spring Boot Governance
+  name: Spring Boot
+  sup: Architectural governance for AI-generated Spring Boot code.
+supported-languages/terraform-governance/:
+  alt: 'Integration: Terraform Governance. Architectural governance for AI-generated infrastructure as
+    code.'
+  badge: INFRASTRUCTURE AS CODE · REPO-NATIVE RULES
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: TERRAFORM, kind: dim}
+  headline: Terraform Governance
+  name: Terraform
+  sup: Architectural governance for AI-generated infrastructure as code.
+supported-languages/typescript-governance/:
+  alt: 'Integration: TypeScript Governance. Architectural governance for AI-assisted TypeScript development.'
+  badge: TIER 1 · OPERATIONALLY SUPPORTED
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: TYPESCRIPT, kind: dim}
+  headline: TypeScript Governance
+  name: TypeScript
+  sup: Architectural governance for AI-assisted TypeScript development.
+use-cases/:
+  alt: 'Comparison: AI governance for real codebases. Six patterns for enforcing architectural decisions,
+    preserving tribal knowledge, and preventing drift in AI-assisted development.'
+  boxes:
+    - {label: WITHOUT MNEME, value: Reviewer-dependent, verdict: DRIFT REACHES REVIEW, kind: warn}
+    - {label: WITH MNEME, value: Enforced pre-generation, verdict: CAUGHT BEFORE IT LANDS, kind: accent}
+  headline: AI governance for real codebases
+  sup: Six patterns for architectural enforcement, tribal knowledge, and drift prevention.
+use-cases/adr-enforcement/:
+  accent: ADR Enforcement
+  alt: 'Comparison: ADR enforcement for AI coding agents. Which of your architectural decisions are Protected,
+    Mneme-ready, Requires modelling, or Guidance.'
+  boxes:
+    - {label: UNCLASSIFIED ADRS, value: Guidance only, verdict: NO ENFORCEMENT PATH, kind: warn}
+    - {label: MNEME-READY ADRS, value: Protected, verdict: DETERMINISTICALLY ENFORCED, kind: accent}
+  headline: ADR Enforcement for AI Coding Agents
+use-cases/ai-assisted-software-migrations/:
+  accent: removing
+  alt: 'Comparison: Agents copy the architecture you are removing. Legacy and target patterns coexist
+    during a migration. Scope every decision to the paths it governs.'
+  boxes:
+    - {label: A PROMPT, value: Advisory, verdict: DROPPED ON COMPACTION, kind: warn}
+    - {label: A DECISION, value: Compiled, verdict: QUERIED EVERY SESSION, kind: accent}
+  headline: Agents copy the architecture you are removing
+  sup: Legacy and target patterns coexist; scope decisions to their paths.
+use-cases/ci-governance-for-ai-generated-code/:
+  accent: AI-Generated Code
+  alt: 'Comparison: CI Governance for AI-Generated Code. The deterministic gate that catches what reviewer
+    attention can''t, on every PR diff.'
+  boxes:
+    - {label: REVIEWER ATTENTION, value: Limited, verdict: MISSES WHAT IT MISSES, kind: warn}
+    - {label: CI GATE, value: Deterministic, verdict: CATCHES EVERY PR DIFF, kind: accent}
+  headline: CI Governance for AI-Generated Code
+  sup: The deterministic gate catching what reviewer attention misses, every diff.
+use-cases/coding-assistant-governance/:
+  accent: breaking
+  alt: 'Comparison: Stop AI from breaking your architecture. Enforce ADRs, service boundaries, and banned
+    patterns before code is written.'
+  boxes:
+    - {label: AFTER GENERATION, value: Code review, verdict: VIOLATIONS ALREADY WRITTEN, kind: warn}
+    - {label: BEFORE GENERATION, value: Enforced, verdict: BANNED PATTERNS BLOCKED, kind: accent}
+  headline: Stop AI from breaking your architecture
+  sup: Enforce ADRs, service boundaries, and banned patterns before code lands.
+use-cases/data-platform-governance/:
+  accent: inside
+  alt: 'Comparison: Keep agents inside your data boundaries. Warehouse layer rules, dbt conventions, and
+    pipeline boundaries enforced across every agent.'
+  boxes:
+    - {label: UNENFORCED CONVENTIONS, value: Tribal knowledge, verdict: EASY TO DRIFT FROM, kind: warn}
+    - {label: MNEME HQ, value: Enforced, verdict: ACROSS EVERY AGENT, kind: accent}
+  headline: Keep agents inside your data boundaries
+  sup: Warehouse rules, dbt conventions, and pipeline boundaries enforced everywhere.
+use-cases/design-system-governance/:
+  accent: respects
+  alt: 'Comparison: AI that respects your design system. Prevent token drift, component misuse, and WCAG
+    violations before they reach production.'
+  boxes:
+    - {label: AFTER SHIP, value: Token drift, verdict: FOUND IN PRODUCTION, kind: warn}
+    - {label: BEFORE GENERATION, value: Prevented, verdict: CAUGHT PRE-PRODUCTION, kind: accent}
+  headline: AI that respects your design system
+  sup: Prevent token drift, component misuse, and WCAG violations pre-production.
+use-cases/legacy-codebase-memory/:
+  accent: knows
+  alt: 'Comparison: Preserve what your team knows. Capture tribal knowledge before it walks out the door.
+    Make it queryable by every AI agent.'
+  boxes:
+    - {label: TRIBAL KNOWLEDGE, value: Undocumented, verdict: WALKS OUT THE DOOR, kind: warn}
+    - {label: DECISION CORPUS, value: Queryable, verdict: BY EVERY AI AGENT, kind: accent}
+  headline: Preserve what your team knows
+  sup: Capture tribal knowledge before it leaves. Make it agent-queryable.
+use-cases/multi-agent-workflow-governance/:
+  accent: every
+  alt: 'Comparison: One memory layer for every agent. Give orchestrators, subagents, and pipelines a shared
+    architectural context they can''t drift from.'
+  boxes:
+    - {label: PER-AGENT CONTEXT, value: Fragmented, verdict: DRIFTS ACROSS AGENTS, kind: warn}
+    - {label: SHARED CORPUS, value: One source, verdict: 'SAME RULES, EVERY AGENT', kind: accent}
+  headline: One memory layer for every agent
+  sup: One shared context orchestrators, subagents, and pipelines can't drift from.
+use-cases/security-compliance-guardrails/:
+  accent: enforced
+  alt: 'Comparison: Compliance enforced at generation. PII handling rules, auth patterns, and security
+    constraints applied before non-compliant code lands.'
+  boxes:
+    - {label: POST-HOC REVIEW, value: Reactive, verdict: NON-COMPLIANT CODE LANDS, kind: warn}
+    - {label: MNEME HQ, value: Applied pre-write, verdict: BEFORE CODE LANDS, kind: accent}
+  headline: Compliance enforced at generation
+  sup: PII rules, auth patterns, and constraints applied before code lands.
+works-with/:
+  alt: 'Integration: Governance across AI coding models and agent frameworks. Mneme operates across Claude
+    Code, Cursor, Copilot, and agent workflows.'
+  badge: WORKS WITH
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: AGENT FRAMEWORKS, kind: dim}
+  headline: Governance across AI coding models and agent frameworks
+  name: Agent Frameworks
+  sup: Mneme operates across Claude Code, Cursor, Copilot, and agent workflows.
+works-with/antigravity/:
+  alt: 'Integration: Mneme Works Alongside Google Antigravity. Architectural governance alongside agent-first
+    development environments.'
+  badge: WORKS ALONGSIDE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: GOOGLE ANTIGRAVITY, kind: dim}
+  headline: Mneme Works Alongside Google Antigravity
+  name: Google Antigravity
+  sup: Architectural governance alongside agent-first development environments.
+works-with/claude-marketplace/:
+  alt: 'Integration: Mneme Works Alongside the Claude Marketplace. The architectural governance layer
+    above generation, memory, orchestration, and review.'
+  badge: WORKS ALONGSIDE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: CLAUDE MARKETPLACE, kind: dim}
+  headline: Mneme Works Alongside the Claude Marketplace
+  name: Claude Marketplace
+  sup: The architectural governance layer above generation, memory, orchestration, and review.
+works-with/devin/:
+  alt: 'Integration: Mneme Works Alongside Devin. Devin executes. Mneme preserves architectural intent
+    across that execution.'
+  badge: WORKS ALONGSIDE
+  chain:
+    - {text: DECISION, kind: plain}
+    - {text: MNEME, kind: accent}
+    - {text: DEVIN, kind: dim}
+  headline: Mneme Works Alongside Devin
+  name: Devin
+  sup: Devin executes. Mneme preserves architectural intent across that execution.

@@ -4,7 +4,14 @@
 #
 # Evidence (imports in scripts/):
 #   PIL        -> gen_architecture_visual.py, gen_benchmark_square.py,
-#                 gen_benchmark_visual.py, gen_demo_gifs.py
-#   playwright -> gen_demo_gifs.py, generate_og_images.py, screenshot_pages.py
-Pillow
-playwright
+#                 gen_benchmark_visual.py, gen_demo_gifs.py, render_og.py
+#   playwright -> gen_demo_gifs.py, generate_og_images.py, screenshot_pages.py,
+#                 render_og.py
+#   pyyaml     -> og_manifest.py
+#
+# render_og.py pins playwright and its Chromium build exactly (asserted at
+# runtime in assert_versions()/_render()) so a regenerate-and-diff gate never
+# turns into noise from an unpinned browser update.
+playwright==1.58.0
+pyyaml==6.0.1
+pillow>=11.0

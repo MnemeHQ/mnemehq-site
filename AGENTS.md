@@ -10,14 +10,32 @@ branch prefix; record agent identity in execution provenance instead.
 
 ## OG images are generated, not hand-made
 
-Every page's `og.png` is produced by the deploy/asset pipeline:
+Every page's OG card is produced from a manifest, not a hand-built template:
 
-1. Create an HTML template `site/og-<slug>.html` (1200x630, dark theme — copy an existing `og-integration-*.html` as the base).
-2. Register it in `TEMPLATE_MAP` in `scripts/generate_og_images.py`:
-   `"og-<slug>.html": "<page-dir>/og.png",`
-3. Render with Playwright (`python scripts/generate_og_images.py` renders all; a targeted one-off render of just the new template is fine).
+1. Card content lives in `site/og/cards.yaml`, one record per page path. A page's
+   family (`editorial`, `integration`, `proof`, `comparison`, `brand`) is derived
+   from its URL path, and an Editorial motif is derived from a topic rule against
+   the slug; both are overridable per record.
+2. Render with `python scripts/render_og.py --strict --out site`. Cards land at
+   `<page-dir>/og-v2.png` (`og-v2.png` at the site root for the homepage).
+3. Per `PUBLISHING.md:105`, a changed static asset ships under a **new**
+   filename, never overwritten in place — this is why the card file is
+   `og-v2.png` and not a rewritten `og.png`.
 
-Never reference an `og.png` in meta tags without the template + TEMPLATE_MAP entry existing.
+Copy budgets (enforced by the manifest resolver and the voice lint):
+
+- Headline target is 4-7 words; 8-10 words warns; over 10 is a hard failure.
+- Editorial cards carry no secondary copy at all.
+- Brand cards have secondary copy off by default.
+- Integration cards get at most one short mechanism line.
+- Proof and Comparison cards convey detail through structured `rows`/`boxes`,
+  not secondary copy.
+
+A new or changed card must pass, in order:
+`python scripts/render_og.py --strict --dry-run`,
+`python scripts/check_og_coverage.py`,
+`python scripts/lint_og_voice.py`,
+`python scripts/check_og_render_unique.py`.
 
 ## Agent execution provenance
 

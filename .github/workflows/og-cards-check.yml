@@ -1,0 +1,63 @@
+name: check og cards
+
+# Gates the data-driven OG card system: strict manifest coverage, card
+# reproducibility, and house voice. Does NOT render (Chromium in CI is a
+# separate concern); rendering determinism is pinned in render_og.py.
+#
+# Validators: scripts/check_og_coverage.py, scripts/lint_og_voice.py
+#
+# The coverage gate is enforced as of the live cutover: every page now
+# advertises its og-v2.png card, so check_og_coverage.py is a hard gate
+# like every other gate in this workflow.
+#
+# The house-voice lint has no such caveat and is a hard gate from day one.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/og/**'
+      - 'site/**/index.html'
+      - 'templates/og/**'
+      - 'scripts/**'
+  push:
+    branches: [main]
+    paths:
+      - 'site/og/**'
+      - 'templates/og/**'
+      - 'scripts/**'
+
+permissions:
+  contents: read
+
+jobs:
+  og-cards:
+    name: og card manifest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install manifest dependency
+        run: pip install pyyaml==6.0.1
+
+      - name: Unit tests
+        run: |
+          cd scripts
+          python test_og_manifest.py
+          python test_og_geometry.py
+          python test_og_templates.py
+          python test_render_og.py
+          python test_check_og_coverage.py
+          python test_lint_og_voice.py
+
+      - name: Coverage gate (enforced)
+        run: python scripts/check_og_coverage.py
+
+      - name: House-voice lint (hard gate)
+        run: python scripts/lint_og_voice.py
