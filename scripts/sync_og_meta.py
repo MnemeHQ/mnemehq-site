@@ -28,15 +28,21 @@ SITE = REPO / "site"
 MANIFEST = REPO / "site" / "og" / "cards.yaml"
 CARD_NAME = "og-v2.png"
 
-OG_IMAGE_RE = re.compile(
-    r'<meta property="og:image" content="([^"]*)"\s*/?>')
-TWITTER_IMAGE_RE = re.compile(
-    r'<meta name="twitter:image" content="([^"]*)"\s*/?>')
+NL = r'(?P<nl>\r\n|\n)?'
 
-OG_WIDTH_RE = re.compile(r'<meta property="og:image:width" content="[^"]*"\s*/?>\n?')
-OG_HEIGHT_RE = re.compile(r'<meta property="og:image:height" content="[^"]*"\s*/?>\n?')
-OG_ALT_RE = re.compile(r'<meta property="og:image:alt" content="[^"]*"\s*/?>\n?')
-TWITTER_ALT_RE = re.compile(r'<meta name="twitter:image:alt" content="[^"]*"\s*/?>\n?')
+OG_IMAGE_RE = re.compile(
+    r'<meta property="og:image" content="([^"]*)"\s*/?>' + NL)
+TWITTER_IMAGE_RE = re.compile(
+    r'<meta name="twitter:image" content="([^"]*)"\s*/?>' + NL)
+
+# Strip regexes consume their own trailing newline (CRLF or LF -- this repo's
+# HTML is not consistent, see check_line_endings.py) so re-running rewrite()
+# removes a previously-inserted tag cleanly instead of leaving it duplicated
+# or its line ending mismatched.
+OG_WIDTH_RE = re.compile(r'<meta property="og:image:width" content="[^"]*"\s*/?>(?:\r\n|\n)?')
+OG_HEIGHT_RE = re.compile(r'<meta property="og:image:height" content="[^"]*"\s*/?>(?:\r\n|\n)?')
+OG_ALT_RE = re.compile(r'<meta property="og:image:alt" content="[^"]*"\s*/?>(?:\r\n|\n)?')
+TWITTER_ALT_RE = re.compile(r'<meta name="twitter:image:alt" content="[^"]*"\s*/?>(?:\r\n|\n)?')
 
 
 def _new_image_url(rel: str) -> str:
@@ -57,19 +63,24 @@ def rewrite(html: str, rel: str, alt: str) -> str:
         html = pattern.sub("", html)
 
     def _repoint_og(match: "re.Match[str]") -> str:
-        inserted = (
-            f'<meta property="og:image" content="{url}" />\n'
-            f'<meta property="og:image:width" content="1200" />\n'
-            f'<meta property="og:image:height" content="630" />\n'
-            f'<meta property="og:image:alt" content="{escaped_alt}" />'
+        nl = match.group("nl") or "\n"
+        lines = (
+            f'<meta property="og:image" content="{url}" />',
+            f'<meta property="og:image:width" content="1200" />',
+            f'<meta property="og:image:height" content="630" />',
+            f'<meta property="og:image:alt" content="{escaped_alt}" />',
         )
-        return inserted
+        tail = nl if match.group("nl") else ""
+        return nl.join(lines) + tail
 
     def _repoint_twitter(match: "re.Match[str]") -> str:
-        return (
-            f'<meta name="twitter:image" content="{url}" />\n'
-            f'<meta name="twitter:image:alt" content="{escaped_alt}" />'
+        nl = match.group("nl") or "\n"
+        lines = (
+            f'<meta name="twitter:image" content="{url}" />',
+            f'<meta name="twitter:image:alt" content="{escaped_alt}" />',
         )
+        tail = nl if match.group("nl") else ""
+        return nl.join(lines) + tail
 
     html = OG_IMAGE_RE.sub(_repoint_og, html, count=1)
     html = TWITTER_IMAGE_RE.sub(_repoint_twitter, html, count=1)
