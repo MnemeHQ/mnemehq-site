@@ -106,6 +106,29 @@ class TestResolve(unittest.TestCase):
         with self.assertRaises(m.ManifestError):
             m.resolve("insights/x/", {"headline": "X", "tone": "broken"})
 
+    def test_tone_failure_on_editorial_passes(self):
+        r = m.resolve("insights/x/", {"headline": "X", "tone": "failure"})
+        self.assertEqual(r["tone"], "failure")
+
+    def test_tone_failure_on_proof_raises(self):
+        with self.assertRaises(m.ManifestError) as ctx:
+            m.resolve("demo/x/", {"headline": "H", "tone": "failure"})
+        msg = str(ctx.exception)
+        self.assertIn("demo/x/", msg)
+        self.assertIn("editorial", msg)
+
+    def test_tone_failure_on_comparison_raises(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("compare/x/", {"headline": "H", "tone": "failure"})
+
+    def test_tone_failure_on_integration_raises(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("integrations/x/", {"headline": "H", "tone": "failure"})
+
+    def test_tone_failure_on_brand_raises(self):
+        with self.assertRaises(m.ManifestError):
+            m.resolve("about/", {"headline": "H", "family": "brand", "tone": "failure"})
+
     def test_alt_defaults_to_headline(self):
         r = m.resolve("insights/x/", {"headline": "Hello There"})
         self.assertEqual(r["alt"], "Hello There")

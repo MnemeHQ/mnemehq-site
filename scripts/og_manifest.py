@@ -291,6 +291,12 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
     tone = raw.get("tone", "neutral")
     if tone not in TONES:
         raise ManifestError(f"{rel or '<home>'}: tone must be one of {TONES}, got {tone!r}")
+    if tone == "failure" and family != "editorial":
+        raise ManifestError(
+            f"{rel or '<home>'}: tone: failure is only valid on the editorial family "
+            f"(it gates the red 'blocked' marker in the Editorial geometry); "
+            f"got family {family!r}. Non-editorial families express failure through "
+            f"a 'denied' row, not through tone.")
 
     motif = raw.get("motif") or motif_for_slug(_slug(rel))
     if motif not in MOTIFS:
