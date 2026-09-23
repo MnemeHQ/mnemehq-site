@@ -57,7 +57,16 @@ EXCLUDED_DIR_PARTS = ("_snippets",)
 # chrome is rendered by the application at runtime, so there is no static nav
 # or footer to compare. Listed as a path so a hand-written page under the same
 # directory is still checked.
-EXCLUDED_PATHS = ("audit/workspace/index.html",)
+# TEMPORARY, remove with the pages: og-preview-test/ and
+# og-preview-test-editorial/ are noindex preview targets that exist only to
+# measure what LinkedIn does to a 1200x630 card before the og-v2.png cutover.
+# They are deliberately bare so the card metadata is the only variable, so they
+# carry no global chrome. Both are deleted once that check is recorded.
+EXCLUDED_PATHS = (
+    "audit/workspace/index.html",
+    "og-preview-test/index.html",
+    "og-preview-test-editorial/index.html",
+)
 
 EXPECTED_FOOTER_HEADINGS = ["Product", "Developers", "Learn", "Company", "Connect"]
 EXPECTED_CTA_HREF = "/pilot/"
