@@ -20,7 +20,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 1. **Sitemap entry** — a `<url><loc>https://mnemehq.com/insights/<slug>/</loc>...</url>` block in [`site/sitemap.xml`](../../site/sitemap.xml).
 2. **Index card** — an `<a href="/insights/<slug>/" class="insight-card-link">...</a>` card on at least one approved index surface: the archive [`site/insights/all/index.html`](../../site/insights/all/index.html) or a topic hub under `site/insights/topics/<hub>/index.html`. (Featuring it on the curated homepage is optional.)
-3. **Local OG image** — `og.png` co-located in the article directory: `site/insights/<slug>/og.png`.
+3. **Local OG image** — `og-v2.png` co-located in the article directory: `site/insights/<slug>/og-v2.png`.
 4. **OG meta tags resolve** — both `<meta property="og:image">` and `<meta name="twitter:image">` in the article must point to a PNG file that actually exists under `site/`.
 5. **At least one incoming internal link** — at least one other HTML file under `site/` must link to `/insights/<slug>/`. The index card from check (2) satisfies this; reciprocal links from related articles are recommended for SEO depth.
 
@@ -43,20 +43,17 @@ After writing `site/insights/<slug>/index.html`, do the following before opening
 
 ### 1. OG image
 
-Add three entries to `scripts/ensure_og_coverage.py`:
-
-- `TEMPLATES` — a `(filename, tag, heading, font_size, subtitle, url_path)` tuple. Choose a short `og-insights-<short-slug>.html` filename.
-- `NEW_MAP_ENTRIES` — maps the template filename to the output `og.png` path (e.g. `"og-insights-<short-slug>.html": "insights/<slug>/og.png"`).
-- `HTML_FIXES` is only needed if the article points at the generic site OG instead of its own. Articles whose `og:image` already points to the correct article-local PNG do not need an entry here.
-
-Then run:
+Add a record under `insights/<slug>/` in [`site/og/cards.yaml`](../../site/og/cards.yaml) (family
+derives from the path, so `insights/` resolves to `editorial` automatically). Then render:
 
 ```bash
-python scripts/ensure_og_coverage.py     # materializes the template and patches TEMPLATE_MAP
-python scripts/generate_og_images.py     # renders all og.png files via Playwright
+python scripts/render_og.py --strict --out site
 ```
 
-`generate_og_images.py` requires `playwright` and a chromium install (`pip install playwright && playwright install chromium`).
+Copy budgets the manifest resolver and voice lint enforce: headline target is 4-7 words, 8-10 words
+warns, over 10 is a hard failure. Editorial cards carry a headline and no secondary copy at all. An
+article without a manifest record fails `scripts/check_og_coverage.py` (CI), not silently falls
+back to a generic card.
 
 ### 2. Sitemap
 
@@ -136,7 +133,7 @@ Exit code is `0` if every article is fully registered, `1` if any check fails. E
 ```
   my-new-article/
     - Missing sitemap entry for site/insights/my-new-article/
-    - Missing og.png for site/insights/my-new-article/
+    - Missing og-v2.png for site/insights/my-new-article/
     - Missing breadcrumb nav block in my-new-article: expected <nav class="breadcrumb-nav"> with Home -> Insights -> article
     - BreadcrumbList JSON-LD missing from my-new-article
     - TechArticle/Article JSON-LD missing from my-new-article: add a schema.org TechArticle entry with url and headline

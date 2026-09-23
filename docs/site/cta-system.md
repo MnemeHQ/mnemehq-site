@@ -216,4 +216,5 @@ Mid-article bands placed after first proof section (not by scroll percentage).
 - Lime is reserved for evidence/status; converting it back to buttons is a regression.
 - New pages consume the base.css primitives rather than re-inlining button styles;
   genuinely new patterns go into base.css so sync keeps them canonical.
-- OG images: any new page still follows the AGENTS.md og-template pipeline — unaffected.
+- OG images: any new page needs a record in `site/og/cards.yaml`, rendered via
+  `python scripts/render_og.py --strict --out site` — unaffected by this CTA system.

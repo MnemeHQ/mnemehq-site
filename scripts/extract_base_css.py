@@ -16,8 +16,6 @@ BASE_CSS_REL = "/assets/css/base.css"
 
 # User's in-flight article registration - hands off.
 WIP = {
-    "scripts/ensure_og_coverage.py",
-    "scripts/generate_og_images.py",
     "site/insights/all/index.html",
     "site/insights/index.html",
     "site/insights/topics/ai-coding-agents/index.html",

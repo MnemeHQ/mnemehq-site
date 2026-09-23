@@ -2,28 +2,28 @@ name: check compare hub invariants
 
 # Validates that every site/compare/<slug>/index.html is fully registered:
 # hub card link, sitemap entry, hub CollectionPage.hasPart entry, hub ItemList
-# entry with matching numberOfItems, byline counter, OG template, and OG
-# generator TEMPLATE_MAP entry.
+# entry with matching numberOfItems, byline counter, and a comparison-family
+# record in the OG card manifest.
 #
 # Validator: scripts/check_compare.py
 #
 # Path filter: only runs on PRs that touch the surfaces where registration
 # can drift out of sync — comparison pages, the hub, the sitemap, the OG
-# templates, and the publishing scripts.
+# card manifest, and the publishing scripts.
 
 on:
   pull_request:
     branches: [main]
     paths:
       - 'site/compare/**'
-      - 'site/og-compare-*.html'
+      - 'site/og/cards.yaml'
       - 'site/sitemap.xml'
       - 'scripts/**'
   push:
     branches: [main]
     paths:
       - 'site/compare/**'
-      - 'site/og-compare-*.html'
+      - 'site/og/cards.yaml'
       - 'site/sitemap.xml'
       - 'scripts/**'
 
@@ -42,6 +42,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      # check_compare.py now asserts against site/og/cards.yaml via
+      # og_manifest, so this job needs pyyaml. Same pin as
+      # og-cards-check.yml, the only other workflow that reads the manifest.
+      - name: Install manifest dependency
+        run: pip install pyyaml==6.0.1
 
       - name: Run compare hub validator
         run: python scripts/check_compare.py

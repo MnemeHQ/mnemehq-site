@@ -17,20 +17,18 @@ Create `site/concepts/{slug}/index.html`.
 - Link back to the hub: breadcrumb `Concepts → {Concept Name}`.
 - Add at least one related-concept link in the body (see step 5).
 
-OG image: there is no auto-discovery. Add an entry to `TEMPLATES` in
-`scripts/ensure_og_coverage.py` (an `og-concepts-{slug}.html` filename plus its tag, heading,
-subtitle, and a `url_path` of `concepts/{slug}`), then run:
+OG image: there is no auto-discovery. Add a record under `concepts/{slug}/` in
+[`site/og/cards.yaml`](../../site/og/cards.yaml) (family derives from the path, so `concepts/`
+resolves to `editorial` automatically), then render:
 
 ```bash
-python scripts/ensure_og_coverage.py   # materializes site/og-concepts-{slug}.html and patches TEMPLATE_MAP in scripts/generate_og_images.py
-python scripts/generate_og_images.py   # renders every mapped og-<slug>.html to its og.png at 1200x630 via Playwright
+python scripts/render_og.py --strict --out site
 ```
 
-`generate_og_images.py` requires `playwright` and a chromium install
-(`pip install playwright && playwright install chromium`); it starts a local server and renders
-each template listed in `TEMPLATE_MAP`. A concept without a `TEMPLATES` / `TEMPLATE_MAP` entry gets
-no `og.png`. (Alternatively, create `site/og-concepts-{slug}.html` by hand and add its
-`TEMPLATE_MAP` entry directly in `scripts/generate_og_images.py`, then run the generator.)
+Copy budgets the manifest resolver and voice lint enforce: headline target is 4-7 words, 8-10 words
+warns, over 10 is a hard failure. Editorial cards carry a headline and no secondary copy at all —
+do not add a `sup` field to an Editorial record. A concept without a manifest record fails
+`scripts/check_og_coverage.py` (CI), not silently falls back to a generic card.
 
 ---
 

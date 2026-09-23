@@ -219,24 +219,36 @@ Google Video is an approved acquisition channel. The validator is
 
 ## OG images
 
-*Source: ADR-007. Historical rationale in the core ADR record.*
+*Source: ADR-007. Historical rationale in the core ADR record. Superseded pipeline retired in the
+og-card-system cutover; card copy and structure now live in the manifest, not per-page HTML
+templates.*
 
-**[OP]** Every page gets its own OG image at `<page-path>/og.png`, rendered at exactly **1200x630px**
-from an HTML source template `site/og-<slug>.html`. Regenerate with
-`scripts/generate_og_images.py` (requires the `playwright` package and a local HTTP server, which the
-script can start). OG source templates are committed alongside the PNGs they generate;
-`scripts/deploy_site.py` walks `site/` and uploads the PNGs automatically, so no manifest update is
-needed. For insights, add the template and mapping via `scripts/ensure_og_coverage.py` before
-running the generator (see the insight publishing contract).
+**[OP]** Card copy, family, and layout data for every page live in one manifest,
+[`site/og/cards.yaml`](site/og/cards.yaml), keyed by site-relative page path. There is no per-page
+HTML template to hand-author. Render cards with:
 
-**[OP]** Every page carries both:
-
-```html
-<meta property="og:image"  content="https://mnemehq.com/<path>/og.png" />
-<meta name="twitter:image" content="https://mnemehq.com/<path>/og.png" />
+```
+python scripts/render_og.py --strict --out site
 ```
 
-Pages without a page-specific image fall back to `https://mnemehq.com/og.png`.
+`--strict` requires every page to carry an explicit manifest record (a silently-derived generic
+card is exactly the drift this system replaces). `--dry-run` validates every record without
+touching a browser or writing files. `--only <path>` renders/validates a single page. Rendering is
+pinned to a specific Chromium build so cards are reproducible; see `scripts/render_og.py --help`.
+`scripts/check_og_coverage.py` (CI) enforces that every page has a record, every record has a page,
+and every page's advertised `og:image` is exactly what the manifest would reproduce.
+
+**[OP]** Per the asset-versioning rule above, cards render to the same file name across the whole
+site: **`og-v2.png`**. Every page carries all four OG/Twitter image tags:
+
+```html
+<meta property="og:image"        content="https://mnemehq.com/<path>/og-v2.png" />
+<meta property="og:image:width"  content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt"    content="<card alt text>" />
+<meta name="twitter:image"       content="https://mnemehq.com/<path>/og-v2.png" />
+<meta name="twitter:image:alt"   content="<card alt text>" />
+```
 
 **[ED] OG design system** (every OG image follows the site design language):
 
@@ -244,9 +256,9 @@ Pages without a page-specific image fall back to `https://mnemehq.com/og.png`.
 |---|---|
 | Dimensions | 1200 x 630 px, exact (no skew, no letterbox) |
 | Background | `#0c0c0d` |
-| Accent | `#c8f060` |
+| Accent | `#b5cc7a` (sage) |
 | Text / muted | `#e8e8ec` / `#88889a` |
-| Heading font | Instrument Serif (italic accent word in `#c8f060`) |
+| Heading font | Instrument Serif (italic accent word in `#b5cc7a`) |
 | Body font | DM Mono |
 | Logo text | **"Mneme HQ"**, never "Mneme"; top-left, always visible |
 
