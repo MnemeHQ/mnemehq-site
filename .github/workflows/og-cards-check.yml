@@ -6,13 +6,8 @@ name: check og cards
 #
 # Validators: scripts/check_og_coverage.py, scripts/lint_og_voice.py
 #
-# TEMPORARY: the coverage gate runs with continue-on-error: true. Pages
-# still advertise the legacy og.png URLs -- they are not repointed to
-# og-v2.png until a later cutover task -- so check_og_coverage.py
-# currently reports ~322 "not reproducible" findings by design. Its
-# output stays visible in the job log so drift is not silent, but it
-# does not fail the build yet. Once the cutover task repoints og:image
-# to og-v2.png, remove continue-on-error here and let it fail the build
+# The coverage gate is enforced as of the live cutover: every page now
+# advertises its og-v2.png card, so check_og_coverage.py is a hard gate
 # like every other gate in this workflow.
 #
 # The house-voice lint has no such caveat and is a hard gate from day one.
@@ -61,8 +56,7 @@ jobs:
           python test_check_og_coverage.py
           python test_lint_og_voice.py
 
-      - name: Coverage gate (temporary soft gate -- see workflow header)
-        continue-on-error: true
+      - name: Coverage gate (enforced)
         run: python scripts/check_og_coverage.py
 
       - name: House-voice lint (hard gate)
