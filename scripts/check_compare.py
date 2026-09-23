@@ -3,9 +3,8 @@
 Validates that every site/compare/<slug>/index.html is fully registered for
 publishing. A new comparison page needs explicit registration in: the hub at
 site/compare/index.html (card + summary-table row + CollectionPage.hasPart +
-ItemList.itemListElement + byline counter), site/sitemap.xml, an OG template
-at site/og-compare-<slug>.html, and a TEMPLATE_MAP entry in
-scripts/generate_og_images.py.
+ItemList.itemListElement + byline counter), site/sitemap.xml, and a
+`comparison`-family record in the OG card manifest at site/og/cards.yaml.
 
 This validator catches the drift that happens when a page is added but one
 of those satellites is missed -- the page ships looking broken on social
@@ -23,8 +22,7 @@ Checks (all hard errors):
   Sitemap:
     ERROR  -- slug missing from site/sitemap.xml
   OG plumbing:
-    ERROR  -- site/og-compare-<slug>.html template missing
-    ERROR  -- scripts/generate_og_images.py TEMPLATE_MAP entry missing
+    ERROR  -- site/og/cards.yaml has no comparison-family record at compare/<slug>/
 
 Exit codes:  0 = clean   1 = errors found
 """
@@ -36,12 +34,14 @@ import re
 import sys
 from pathlib import Path
 
+import og_manifest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = REPO_ROOT / "site"
 COMPARE_DIR = SITE_DIR / "compare"
 HUB = COMPARE_DIR / "index.html"
 SITEMAP = SITE_DIR / "sitemap.xml"
-OG_GENERATOR = REPO_ROOT / "scripts" / "generate_og_images.py"
+MANIFEST = SITE_DIR / "og" / "cards.yaml"
 
 SITE_BASE = "https://mnemehq.com"
 
@@ -123,15 +123,18 @@ def hub_byline_count(html: str) -> int | None:
     return int(m.group(1)) if m else None
 
 
-def og_template_present(slug: str) -> bool:
-    return (SITE_DIR / f"og-compare-{slug}.html").exists()
-
-
-def og_generator_has_entry(slug: str, generator_text: str) -> bool:
-    """Look for the TEMPLATE_MAP entry. A literal string grep is sufficient
-    since the map is a Python dict literal with predictable formatting."""
-    needle = f'"og-compare-{slug}.html": "compare/{slug}/og.png"'
-    return needle in generator_text
+def manifest_has_comparison_record(slug: str, manifest: dict) -> bool:
+    """The slug has a site/og/cards.yaml record at compare/<slug>/ that
+    resolves to family 'comparison'."""
+    rel = f"compare/{slug}/"
+    raw = manifest.get(rel)
+    if raw is None:
+        return False
+    try:
+        resolved = og_manifest.resolve(rel, raw, strict=True)
+    except og_manifest.ManifestError:
+        return False
+    return resolved["family"] == "comparison"
 
 
 def main() -> int:
@@ -141,8 +144,8 @@ def main() -> int:
     if not SITEMAP.exists():
         print(f"ERROR  Sitemap not found: {SITEMAP}", file=sys.stderr)
         return 1
-    if not OG_GENERATOR.exists():
-        print(f"ERROR  OG generator not found: {OG_GENERATOR}", file=sys.stderr)
+    if not MANIFEST.exists():
+        print(f"ERROR  OG card manifest not found: {MANIFEST}", file=sys.stderr)
         return 1
 
     slugs = compare_slugs()
@@ -154,7 +157,7 @@ def main() -> int:
     haspart_set = hub_haspart_slugs(blocks)
     itemlist_set, item_count = hub_itemlist_info(blocks)
     byline_count = hub_byline_count(hub_html)
-    generator_text = OG_GENERATOR.read_text(encoding="utf-8")
+    manifest = og_manifest.load(MANIFEST)
 
     errors: dict[str, list[str]] = {}
 
@@ -172,12 +175,10 @@ def main() -> int:
             add(slug, f"Missing CollectionPage.hasPart entry in hub JSON-LD")
         if slug not in itemlist_set:
             add(slug, f"Missing ItemList.itemListElement entry in hub JSON-LD")
-        if not og_template_present(slug):
-            add(slug, f"Missing OG template: create site/og-compare-{slug}.html")
-        if not og_generator_has_entry(slug, generator_text):
+        if not manifest_has_comparison_record(slug, manifest):
             add(slug, (
-                f"Missing scripts/generate_og_images.py TEMPLATE_MAP entry. "
-                f'Add: "og-compare-{slug}.html": "compare/{slug}/og.png",'
+                f"Missing site/og/cards.yaml record at compare/{slug}/ "
+                f"resolving to family: comparison"
             ))
 
     # Reverse direction: any hub link pointing at a non-existent page

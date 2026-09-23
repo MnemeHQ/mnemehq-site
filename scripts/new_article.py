@@ -7,9 +7,9 @@ from structured arguments. The emitted page is already on the shared
 base.css system; sync_shared.py remains a safety net, not a requirement.
 
 Registration is still manual per PUBLISHING.md: sitemap entry, archive /
-topic-hub card (scripts/sync_insights_catalog.py), OG image
-(scripts/ensure_og_coverage.py + scripts/generate_og_images.py), and at
-least one incoming internal link. This script prints that checklist.
+topic-hub card (scripts/sync_insights_catalog.py), an OG card record in
+site/og/cards.yaml rendered via scripts/render_og.py, and at least one
+incoming internal link. This script prints that checklist.
 
 Usage:
   python scripts/new_article.py \
@@ -138,7 +138,7 @@ def main(argv: list[str]) -> int:
     date_iso = args.date
     date_human = dt.date.fromisoformat(date_iso).strftime("%B %Y")
     slug_url = f"https://mnemehq.com/insights/{args.slug}/"
-    og_image = slug_url + "og.png"
+    og_image = slug_url + "og-v2.png"
     about_terms = [t.strip() for t in args.about_terms.split(",") if t.strip()]
 
     html_text = TEMPLATE.read_text(encoding="utf-8")
@@ -150,6 +150,7 @@ def main(argv: list[str]) -> int:
         "{{DESCRIPTION}}": esc(args.description),
         "{{SLUG_URL}}": slug_url,
         "{{OG_IMAGE_URL}}": og_image,
+        "{{OG_IMAGE_ALT}}": esc(args.title),
         "{{PUB_TIMESTAMP}}": date_iso + "T00:00:00Z",
         "{{PUB_DATE_ISO}}": date_iso,
         "{{PUB_DATE_HUMAN}}": date_human,
@@ -180,8 +181,8 @@ def main(argv: list[str]) -> int:
         f"  [ ] sitemap.xml entry for {slug_url}\n"
         "  [ ] archive/topic-hub card -> python scripts/sync_insights_catalog.py\n"
         "      then verify with: python scripts/sync_insights_catalog.py --check\n"
-        f"  [ ] OG image mapping -> python scripts/ensure_og_coverage.py\n"
-        f"      then generate -> python scripts/generate_og_images.py\n"
+        f"  [ ] add a record to site/og/cards.yaml\n"
+        f"      then render -> python scripts/render_og.py --strict --out site\n"
         f"  [ ] >=1 incoming internal link from a hub or related article\n"
         f"  [ ] visible breadcrumb Home -> Insights -> {args.title[:40]}...\n"
     )

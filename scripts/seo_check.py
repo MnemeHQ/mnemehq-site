@@ -87,12 +87,6 @@ LOW_VALUE_PAGES = {
     "404.html",
 }
 
-# OG-template files (rendered into PNGs via generate_og_images.py)
-# are not real pages; skip them entirely.
-def is_og_template(path: Path) -> bool:
-    return path.name.startswith("og-")
-
-
 # ── Severity ─────────────────────────────────────────────────────────────────
 
 PASS, WARN, FAIL = "PASS", "WARN", "FAIL"
@@ -795,8 +789,6 @@ def audit_page(html_path: Path, llms: set[str]) -> PageReport:
 def collect_pages(only: list[str] | None, include_low: bool) -> list[Path]:
     pages: list[Path] = []
     for p in sorted(SITE.rglob("*.html")):
-        if is_og_template(p):
-            continue
         rel = p.relative_to(SITE).as_posix()
         if "_snippets/" in rel:
             continue
