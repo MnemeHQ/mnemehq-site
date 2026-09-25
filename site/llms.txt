@@ -5,11 +5,11 @@
 ## What Mneme is
 
 - Category: the decision and control layer for agentic software development.
-- Value: make engineering decisions portable, enforceable, and inspectable across AI coding agents and repositories.
+- Value: make engineering decisions portable, enforceable, and inspectable across AI coding agents, repositories, and CI workflows.
 - Current product: Mneme starts with architecture. ADR-based decisions, applicability (which decisions apply to a change), deterministic rules, agent context, and guide, warn, or block verdicts traced to the source decision.
 - First use case: prevent architectural drift before AI-generated code ships.
 
-Architecture is the first decision domain. The decision model is designed to extend to broader engineering policy (security, platform, and compliance decisions), but those domains are not shipped today; see https://mnemehq.com/roadmap/.
+Architecture is the first decision domain. The decision model is designed to extend to broader engineering policy, but dedicated security, platform, and compliance decision domains are not shipped today (security-relevant patterns can already be written as repository rules); see https://mnemehq.com/roadmap/.
 
 Mneme does not replace your coding agent, CI system, policy engine, or code review. It supplies the approved decisions that supported agents and CI gates check changes against. Governance is an outcome of Mneme, not its category name.
 
@@ -25,7 +25,7 @@ Pre-generation enforcement of approved decisions is Mneme. Generation and runtim
 
 ## Enterprise framing
 
-Mneme runs inside existing engineering workflows, including Azure and GitHub-based environments. The same decision corpus reaches supported coding agents, repository hooks, and CI gates, and each verdict is traced to the decision that produced it.
+Mneme runs inside existing engineering workflows, including Azure and GitHub-based environments. The same decision corpus reaches supported coding agents through agent hooks and generated editor rules, local pre-commit checks, and CI gates, and each verdict is traced to the decision that produced it.
 
 ## Architecture
 
@@ -77,7 +77,7 @@ How Mneme HQ fits into the tools engineering teams already use. The local MCP se
 - [Governance Benchmark v1.1 Methodology](https://mnemehq.com/benchmark/): Deterministic, reproducible benchmark methodology with structured-output verification, layered metrics, and pre-registered thresholds.
 - [Use cases](https://mnemehq.com/use-cases/): Index of governance use cases for AI coding agents.
 - [ADR enforcement for AI coding agents](https://mnemehq.com/use-cases/adr-enforcement/): An ADR is not automatically a guardrail. The Architecture Protection Audit classifies each decision as Protected, Mneme-ready, Requires modelling, or Guidance.
-- [Coding assistant governance](https://mnemehq.com/use-cases/coding-assistant-governance/): Mneme as the decision and control layer above Claude Code, Cursor, Copilot — enforcing architectural decisions before code is generated.
+- [Coding assistant governance](https://mnemehq.com/use-cases/coding-assistant-governance/): Mneme as the decision and control layer above Claude Code, Cursor, and Copilot: pre-generation enforcement where the agent exposes a hook (Claude Code), with rules export and CI gates covering the rest.
 - [Legacy codebase memory](https://mnemehq.com/use-cases/legacy-codebase-memory/): Compile a legacy codebase's architectural decisions into a structured corpus AI agents can query.
 - [AI-assisted software migrations](https://mnemehq.com/use-cases/ai-assisted-software-migrations/): Keep coding agents inside the target architecture while legacy and migrated code coexist, using path-scoped decisions.
 - [Security and compliance guardrails](https://mnemehq.com/use-cases/security-compliance-guardrails/): Encode security patterns and compliance constraints as structured decisions enforced at every AI-generated diff.
