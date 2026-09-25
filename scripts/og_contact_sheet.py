@@ -115,7 +115,8 @@ PAGE_BOTTOM = "</body></html>\n"
 
 def card_block(rec: dict, staging_rel: str) -> str:
     rel = rec["path"]
-    img_path = f"{staging_rel}/{rel}{CARD_NAME}" if rel else f"{staging_rel}/{CARD_NAME}"
+    card = rec.get("card", CARD_NAME)
+    img_path = f"{staging_rel}/{rel}{card}" if rel else f"{staging_rel}/{card}"
     label = rel or "(root)"
     fam = rec["family"]
     extra_bits = [f"family={fam}", f"tone={rec['tone']}", f"motif={rec['motif']}"]

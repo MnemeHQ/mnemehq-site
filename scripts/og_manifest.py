@@ -133,6 +133,12 @@ HEADLINE_WARN_WORDS = 8
 # Secondary (sup) line: same rationale, same hard ceiling.
 SUP_MAX_WORDS = 10
 
+# Card filename. PUBLISHING.md:105: a changed static asset ships under a new
+# filename, never overwritten in place. A record whose card content changes
+# sets `card: og-v3.png` (and so on); unchanged records keep the default.
+DEFAULT_CARD = "og-v2.png"
+_CARD_RE = re.compile(r"^og-v([2-9]|[1-9][0-9]+)\.png$")
+
 
 def _word_count(text: str) -> int:
     return len(text.split())
@@ -350,8 +356,15 @@ def resolve(rel: str, raw: dict | None, strict: bool = False) -> dict:
         if family == "brand" and not image:
             raise ManifestError(f"{rel or '<home>'}: family 'brand' requires 'image' (strict mode)")
 
+    card = raw.get("card", DEFAULT_CARD)
+    if not isinstance(card, str) or not _CARD_RE.match(card):
+        raise ManifestError(
+            f"{rel or '<home>'}: card must be a bare versioned filename like "
+            f"'og-v3.png' (v2 or later), got {card!r}")
+
     return {
         "path": rel,
+        "card": card,
         "family": family,
         "headline": headline,
         "lines": lines,

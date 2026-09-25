@@ -38,5 +38,18 @@ class TestCoverage(unittest.TestCase):
         self.assertEqual(errs, [])
 
 
+class TestCardOverride(unittest.TestCase):
+    def test_override_is_the_expected_image(self):
+        errs = c.audit(pages=["insights/a/"],
+                       manifest={"insights/a/": {"headline": "X", "card": "og-v3.png"}},
+                       advertised={"insights/a/": "insights/a/og-v3.png"})
+        self.assertEqual(errs, [])
+
+    def test_stale_advertised_card_is_flagged(self):
+        errs = c.audit(pages=["insights/a/"],
+                       manifest={"insights/a/": {"headline": "X", "card": "og-v3.png"}},
+                       advertised={"insights/a/": "insights/a/og-v2.png"})
+        self.assertTrue(any("not reproducible" in e for e in errs))
+
 if __name__ == "__main__":
     unittest.main()

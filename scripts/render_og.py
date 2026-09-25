@@ -252,7 +252,8 @@ def _records(strict: bool, only: str | None) -> list[dict]:
 
 def _out_path(out_dir: Path, record: dict) -> Path:
     rel = record["path"]
-    return (out_dir / rel / CARD_NAME) if rel else (out_dir / CARD_NAME)
+    card = record.get("card", CARD_NAME)
+    return (out_dir / rel / card) if rel else (out_dir / card)
 
 
 def _no_cache_handler(directory: str):

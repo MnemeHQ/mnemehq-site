@@ -45,16 +45,16 @@ OG_ALT_RE = re.compile(r'<meta property="og:image:alt" content="[^"]*"\s*/?>(?:\
 TWITTER_ALT_RE = re.compile(r'<meta name="twitter:image:alt" content="[^"]*"\s*/?>(?:\r\n|\n)?')
 
 
-def _new_image_url(rel: str) -> str:
-    return f"https://mnemehq.com/{rel}{CARD_NAME}"
+def _new_image_url(rel: str, card: str = CARD_NAME) -> str:
+    return f"https://mnemehq.com/{rel}{card}"
 
 
-def rewrite(html: str, rel: str, alt: str) -> str:
+def rewrite(html: str, rel: str, alt: str, card: str = CARD_NAME) -> str:
     """Repoint og:image/twitter:image to og-v2.png and stamp the four
     image-metadata tags. Idempotent: running this twice on its own
     output produces identical output.
     """
-    url = _new_image_url(rel)
+    url = _new_image_url(rel, card)
     escaped_alt = html_mod.escape(alt, quote=True)
 
     # Strip any previously-inserted metadata tags so re-running this
@@ -107,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
         record = og_manifest.resolve(rel, raw.get(rel), strict=True)
         alt = record["alt"]
 
-        out = rewrite(source, rel, alt)
+        out = rewrite(source, rel, alt, record["card"])
         if out != source:
             with open(path, "w", encoding="utf-8", newline="") as f:
                 f.write(out)
