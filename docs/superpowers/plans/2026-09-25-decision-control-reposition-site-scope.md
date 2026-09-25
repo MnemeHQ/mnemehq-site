@@ -27,7 +27,15 @@ Source: BigQuery `mneme-hq-prod.searchconsole.searchdata_url_impression`, homepa
 - Exactly one non-branded category query reaches the homepage: "how do i prevent ai agents from introducing architectural drift?" (1 impression, position 8).
 - Site-wide, drift and guardrail queries land on content pages, not the homepage: `/insights/ai-coding-agent-guardrails/` (193 impressions), `/demo/architectural-drift/` (98), and `/concepts/architectural-drift-prevention/` (66).
 
-**Reading:** the homepage title carries almost no measurable non-branded drift demand, so migrating it to the category line is low risk. The 73% anonymized share is the one unknown. The recommended follow-up is to change the title to `Mneme HQ — Decision and Control Layer for Agentic Software Development`, then watch branded clicks and anonymized impressions for 28 days.
+**Reading (revised 2026-09-25):** the homepage title carries almost no measurable non-branded drift demand in GSC today. That reflects an immature index, not proof that the drift wording has no value. Semrush sees only about a dozen US organic keywords for `mnemehq.com`, effectively no estimated organic traffic, and no ranking for "architectural drift". **Decision: leave the `<title>` unchanged.** Re-compare GSC and Semrush after 6-8 weeks of indexing (target: mid-November 2026) before migrating it.
+
+Semrush US monthly volume for reference: software factory 720, AI SDLC 320, agentic software development 90, software factories 70, architectural guardrails 40, architectural drift 20, architecture drift 20. "Software factory" is used as narrative language, not as a homepage SEO target, because the term's older meanings dilute its intent. It is a candidate for a future article or concept page.
+
+**Homepage additions (approved 2026-09-25):**
+- One "software factories" why-now line opens the problem section. It is not in the hero or the category line.
+- An explicit "Architecture first: architectural drift prevention" block closes the problem section.
+
+The visible hierarchy is: category eyebrow, then "Architecture that holds.", then the software-factories context, then drift prevention as the first use case.
 
 ## Companion PR: `MnemeHQ/mneme` README
 
