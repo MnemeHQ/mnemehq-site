@@ -1,12 +1,14 @@
 # Mneme HQ: full reference
 
-> Mneme HQ is the architectural governance layer for AI-assisted development. It compiles your team's architectural intent into enforceable constraints that govern AI coding agents at the pre-generation stage, before architectural drift reaches review.
+> Mneme HQ is the open-source decision and control layer for agentic software development. It turns approved engineering decisions into agent context, deterministic enforcement, and inspectable enforcement results across AI coding agents, repositories, and CI workflows. Architecture is the first decision domain: Mneme prevents architectural drift by enforcing approved ADRs and engineering standards before incompatible changes land.
 
 ## What Mneme is
 
-Mneme HQ is the architectural governance layer for AI-assisted development. As agent platforms proliferate, governance becomes infrastructure, and Mneme is positioned as the pre-generation governance layer of that stack.
+Mneme HQ is the decision and control layer for agentic software development. Organizations already hold their engineering intent in ADRs, standards, and review policies; coding agents do not consistently carry it across sessions, tools, and repositories. Mneme determines which approved decisions apply to a change, exposes them to agents, enforces what can be enforced deterministically, and returns a verdict tied to the source decision.
 
-The enterprise framing: a governance and control plane for AI coding agents operating within Azure and GitHub-based engineering workflows. The long-term vision: Mneme integrates with your engineering stack and compiles architectural intent into enforceable AI coding constraints across generation, pull request, and CI workflows.
+In short: Mneme is a decision and control layer; it makes engineering decisions portable, enforceable, and inspectable; it starts with architecture (ADR-based decisions, applicability, deterministic rules, agent context, and enforcement results); and its first use case is preventing architectural drift before AI-generated code ships.
+
+Architecture is the first decision domain. The model is designed to extend to broader engineering policy, but security, platform, and compliance domains are not shipped today. Mneme does not replace coding agents, CI systems, policy engines, or code review; it supplies the approved decisions that supported agents and CI gates check changes against.
 
 ## What Mneme is not
 
@@ -20,7 +22,7 @@ The locked category positioning:
 
 ## The AI coding governance stack
 
-Pre-generation governance is Mneme. Mneme compiles architectural intent into enforceable constraints before the agent generates code.
+Pre-generation enforcement of approved decisions is Mneme. Mneme compiles architectural intent into enforceable constraints before the agent generates code.
 
 Generation and runtime is the agent framework and runtime harness layer. This includes Cursor, Claude Code, agent frameworks, and managed agent platforms.
 

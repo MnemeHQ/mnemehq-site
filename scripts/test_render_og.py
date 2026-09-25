@@ -274,5 +274,16 @@ class TestLabelFor(unittest.TestCase):
         self.assertEqual(r.label_for(rec), "Concept")
 
 
+class TestOutPath(unittest.TestCase):
+    def test_uses_record_card_name(self):
+        from pathlib import Path
+        out = r._out_path(Path("site"), {"path": "about/", "card": "og-v3.png"})
+        self.assertEqual(out, Path("site") / "about/" / "og-v3.png")
+
+    def test_homepage_card_lands_at_root(self):
+        from pathlib import Path
+        out = r._out_path(Path("site"), {"path": "", "card": "og-v3.png"})
+        self.assertEqual(out, Path("site") / "og-v3.png")
+
 if __name__ == "__main__":
     unittest.main()

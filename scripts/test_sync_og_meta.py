@@ -41,5 +41,11 @@ class TestRewrite(unittest.TestCase):
         self.assertIn("<title>Keep me</title>", s.rewrite(src, "insights/a/", "A"))
 
 
+class TestCardOverride(unittest.TestCase):
+    def test_repoints_to_override_card(self):
+        out = s.rewrite(HEAD, "insights/a/", "Alt text", card="og-v3.png")
+        self.assertIn("https://mnemehq.com/insights/a/og-v3.png", out)
+        self.assertNotIn("og-v2.png", out)
+
 if __name__ == "__main__":
     unittest.main()

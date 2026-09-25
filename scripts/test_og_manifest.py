@@ -486,5 +486,21 @@ class TestImage(unittest.TestCase):
         self.assertIn("photo-does-not-exist.webp", msg)
 
 
+class TestCardFilename(unittest.TestCase):
+    """Per-record card filename override (PUBLISHING.md:105 cache-busting)."""
+
+    def test_defaults_to_og_v2(self):
+        rec = m.resolve("insights/a/", {"headline": "A short headline"})
+        self.assertEqual(rec["card"], "og-v2.png")
+
+    def test_accepts_a_newer_version(self):
+        rec = m.resolve("insights/a/", {"headline": "A short headline", "card": "og-v3.png"})
+        self.assertEqual(rec["card"], "og-v3.png")
+
+    def test_rejects_unversioned_or_older_names(self):
+        for bad in ("og.png", "og-v1.png", "og-v2.jpg", "../og-v3.png", "cards/og-v3.png"):
+            with self.assertRaises(m.ManifestError, msg=bad):
+                m.resolve("insights/a/", {"headline": "A short headline", "card": bad})
+
 if __name__ == "__main__":
     unittest.main()

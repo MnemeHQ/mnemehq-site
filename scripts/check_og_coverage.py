@@ -101,11 +101,15 @@ def audit(pages: list[str], manifest: dict, advertised: dict) -> list[str]:
             errors.append(f"{rel or '<home>'}: manifest record has no page (orphan)")
 
     # 3: what the page advertises must be exactly what render_og.py would
-    # produce for that record -- <path>og-v2.png.
+    # produce for that record -- <path><card>, og-v2.png unless overridden.
     for rel in pages:
         if rel not in manifest:
             continue  # already flagged above
-        expected = f"{rel}{CARD_NAME}"
+        try:
+            card = og_manifest.resolve(rel, manifest.get(rel), strict=True)["card"]
+        except og_manifest.ManifestError:
+            card = CARD_NAME  # resolution failure already reported above
+        expected = f"{rel}{card}"
         got = advertised.get(rel)
         if got is not None and got != expected:
             errors.append(

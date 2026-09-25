@@ -1,6 +1,17 @@
 # Mneme HQ
 
-> Mneme HQ is the architectural governance layer for AI-assisted development. It compiles your team's architectural intent into enforceable constraints that govern AI coding agents at the pre-generation stage, before architectural drift reaches review.
+> Mneme HQ is the open-source decision and control layer for agentic software development. It turns approved engineering decisions into agent context, deterministic enforcement, and inspectable enforcement results across AI coding agents, repositories, and CI workflows. Architecture is the first decision domain: Mneme prevents architectural drift by enforcing approved ADRs and engineering standards before incompatible changes land.
+
+## What Mneme is
+
+- Category: the decision and control layer for agentic software development.
+- Value: make engineering decisions portable, enforceable, and inspectable across AI coding agents and repositories.
+- Current product: Mneme starts with architecture. ADR-based decisions, applicability (which decisions apply to a change), deterministic rules, agent context, and guide, warn, or block verdicts traced to the source decision.
+- First use case: prevent architectural drift before AI-generated code ships.
+
+Architecture is the first decision domain. The decision model is designed to extend to broader engineering policy (security, platform, and compliance decisions), but those domains are not shipped today; see https://mnemehq.com/roadmap/.
+
+Mneme does not replace your coding agent, CI system, policy engine, or code review. It supplies the approved decisions that supported agents and CI gates check changes against. Governance is an outcome of Mneme, not its category name.
 
 ## Category positioning
 
@@ -10,11 +21,11 @@ RAG retrieves knowledge. Mneme operationalizes decisions.
 
 ## How Mneme fits the AI coding stack
 
-Pre-generation governance is Mneme. Generation and runtime are agent frameworks and runtime harnesses such as Cursor, Claude Code, and managed agent platforms. Post-generation observability is tools like SentRux. SentRux tells you when the agent violated architecture. Mneme helps prevent the violation from being proposed in the first place. The two layers are complementary.
+Pre-generation enforcement of approved decisions is Mneme. Generation and runtime are agent frameworks and runtime harnesses such as Cursor, Claude Code, and managed agent platforms. Post-generation observability is tools like SentRux. SentRux tells you when the agent violated architecture. Mneme helps prevent the violation from being proposed in the first place. The two layers are complementary.
 
 ## Enterprise framing
 
-A governance and control plane for AI coding agents operating within Azure and GitHub-based engineering workflows. Mneme integrates with your engineering stack and compiles architectural intent into enforceable AI coding constraints.
+Mneme runs inside existing engineering workflows, including Azure and GitHub-based environments. The same decision corpus reaches supported coding agents, repository hooks, and CI gates, and each verdict is traced to the decision that produced it.
 
 ## Architecture
 
@@ -66,7 +77,7 @@ How Mneme HQ fits into the tools engineering teams already use. The local MCP se
 - [Governance Benchmark v1.1 Methodology](https://mnemehq.com/benchmark/): Deterministic, reproducible benchmark methodology with structured-output verification, layered metrics, and pre-registered thresholds.
 - [Use cases](https://mnemehq.com/use-cases/): Index of governance use cases for AI coding agents.
 - [ADR enforcement for AI coding agents](https://mnemehq.com/use-cases/adr-enforcement/): An ADR is not automatically a guardrail. The Architecture Protection Audit classifies each decision as Protected, Mneme-ready, Requires modelling, or Guidance.
-- [Coding assistant governance](https://mnemehq.com/use-cases/coding-assistant-governance/): Mneme as the governance layer above Claude Code, Cursor, Copilot — enforcing architectural decisions before code is generated.
+- [Coding assistant governance](https://mnemehq.com/use-cases/coding-assistant-governance/): Mneme as the decision and control layer above Claude Code, Cursor, Copilot — enforcing architectural decisions before code is generated.
 - [Legacy codebase memory](https://mnemehq.com/use-cases/legacy-codebase-memory/): Compile a legacy codebase's architectural decisions into a structured corpus AI agents can query.
 - [AI-assisted software migrations](https://mnemehq.com/use-cases/ai-assisted-software-migrations/): Keep coding agents inside the target architecture while legacy and migrated code coexist, using path-scoped decisions.
 - [Security and compliance guardrails](https://mnemehq.com/use-cases/security-compliance-guardrails/): Encode security patterns and compliance constraints as structured decisions enforced at every AI-generated diff.
@@ -175,7 +186,7 @@ Technical reference pages on Mneme's internal design — written for engineers e
 Operational and reference pages for engineers and buyers evaluating Mneme.
 
 - [Works With](https://mnemehq.com/works-with/): Ecosystem compatibility surface. Model providers (OpenAI, Anthropic, Gemini, GLM, Qwen, DeepSeek, Mistral, Llama), coding agents (Cursor, Claude Code, Copilot, Aider, Cline, OpenHands), agent frameworks (LangGraph, AutoGen, CrewAI, Semantic Kernel, OpenAI Agents SDK), and deployment environments. Compatibility statements, not partnership claims; native integrations link through to /integrations/.
-- [Platforms](https://mnemehq.com/platforms/): How Mneme runs inside enterprise developer platforms — Microsoft Azure & GitHub Enterprise, AWS Developer Environments, Google Cloud AI Engineering, and self-hosted / air-gapped. Focuses on CI/CD execution, agent/runtime governance, and policy enforcement in existing environments. Explicitly not cloud infrastructure provisioning, IAM, or Kubernetes setup. Answers the CTO question "will this fit into our Azure/GitHub/Copilot stack?" — yes, as a governance layer above the agents the platform runs.
+- [Platforms](https://mnemehq.com/platforms/): How Mneme runs inside enterprise developer platforms — Microsoft Azure & GitHub Enterprise, AWS Developer Environments, Google Cloud AI Engineering, and self-hosted / air-gapped. Focuses on CI/CD execution, agent/runtime governance, and policy enforcement in existing environments. Explicitly not cloud infrastructure provisioning, IAM, or Kubernetes setup. Answers the CTO question "will this fit into our Azure/GitHub/Copilot stack?" — yes, as the decision and control layer above the agents the platform runs.
 - [Docs hub](https://mnemehq.com/docs/): Index of reference documentation — CLI, local MCP server, decision proposals, governance violations, protection activation, supported languages, and benchmark methodology.
 - [CLI reference](https://mnemehq.com/docs/cli/): Reference for the `mneme` command-line interface, including the 0.9.0 `decision-mcp` server and human-authority `decision` commands alongside setup, audit, protection, enforcement, and integration workflows.
 - [MCP server reference](https://mnemehq.com/docs/mcp/): Canonical operator documentation for installing the 0.9.0 MCP extra, starting the local stdio server, configuring proposal and ADR inputs, and using the frozen six-tool surface without crossing the human authority boundary.
