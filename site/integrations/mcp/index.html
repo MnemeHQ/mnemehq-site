@@ -184,13 +184,13 @@
         <span class="eyebrow-meta">mneme-hq 0.9.0 &nbsp;&middot;&nbsp; Local stdio</span>
       </div>
       <h1>Mneme MCP integration</h1>
-      <p class="article-lede">Mneme exposes its Decision Index through a small, fixed MCP surface so coding agents and architecture producers can work with the same decision layer. They can retrieve context or submit candidates without receiving the authority to turn a suggestion into an enforced rule.</p>
+      <p class="article-lede"><strong>Give compatible agents access to the same Mneme decisions and decision context.</strong> Mneme exposes its Decision Index through a small, fixed MCP surface so coding agents and architecture producers can work with the same decision layer. They can retrieve context or submit candidates without receiving the authority to turn a suggestion into an enforced rule.</p>
     </header>
 
     <div class="article-body">
       <h2>Why expose decisions over MCP?</h2>
       <p>Architectural decisions often have to reach more than one coding agent, editor, or architecture system. Bespoke adapters make that decision context dependent on each tool. MCP gives those systems one local protocol boundary for querying the Decision Index and returning candidate decisions to Mneme.</p>
-      <p>The protocol solves connection and exchange. Mneme still owns the meaning of a decision, its lifecycle, its scope, and the deterministic enforcement mechanisms built from it.</p>
+      <p>That is why MCP matters to Mneme: it shows that decisions are addressable independently of any one coding harness. The protocol solves connection and exchange. Mneme still owns the meaning of a decision, its lifecycle, its scope, and the deterministic enforcement mechanisms built from it.</p>
 
       <div class="boundary-grid">
         <div class="boundary-card"><span class="boundary-label">Retrieval</span><strong>What should the agent know?</strong><p>MCP reads proposals and configured canonical decisions, searches them, finds contextual matches, and traces known lineage.</p></div>
