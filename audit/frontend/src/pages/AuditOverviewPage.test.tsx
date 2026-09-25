@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AuditOverviewPage } from './AuditOverviewPage';
@@ -75,10 +75,10 @@ const audit = auditFixture({
   ],
 });
 
-function renderOverview() {
+function renderOverview(auditResponse = audit) {
   return render(
     <MemoryRouter
-      initialEntries={[{ pathname: '/audit/424e1795', state: { audit } }]}
+      initialEntries={[{ pathname: `/audit/${auditResponse.audit_id}`, state: { audit: auditResponse } }]}
     >
       <Routes>
         <Route path="/audit/:id" element={<AuditOverviewPage />} />
@@ -218,7 +218,8 @@ describe('AuditOverviewPage section navigation', () => {
 
     // Protection Gaps narrative
     expect(allText).toContain('2 architectural decisions could be protected more explicitly');
-    expect(allText).toContain('These decisions describe constraints that can be evaluated mechanically');
+    expect(allText).toContain('ordered by readiness for protection');
+    expect(allText).toContain('Select a gap to open and focus its complete decision');
 
     // Protection Decisions narrative
     expect(allText).toContain('This is the decision-level evidence behind the Audit result');
@@ -233,17 +234,83 @@ describe('AuditOverviewPage section navigation', () => {
   it('shows Protection Gaps with human-readable leads', () => {
     renderOverview();
 
-    // Gap cards should use human-readable leads - appears in gap section
+    // Gap cards are concise shortcuts; the full content remains in Protection Decisions.
     expect(screen.getAllByText('Use Markdown ADRs')).toHaveLength(2); // gap card + decision card
     expect(screen.getAllByText('Use GADR naming')).toHaveLength(2);
+    expect(screen.getByRole('button', { name: 'Open Use Markdown ADRs, READY TO PROTECT, in Protection Decisions' })).toHaveClass('protection-gap-item');
+    expect(screen.getByRole('button', { name: 'Open Use GADR naming, MNEME-READY, in Protection Decisions' })).toHaveClass('protection-gap-item');
 
     // Should show badges with new label - multiple instances exist
     expect(screen.getAllByText('READY TO PROTECT').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('MNEME-READY').length).toBeGreaterThanOrEqual(1);
 
-    // Next steps
-    expect(screen.getByText('Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.')).toBeInTheDocument();
-    expect(screen.getByText('Generate Mneme rule and integrate into CI/CD pipeline.')).toBeInTheDocument();
+    expect(screen.queryByText('Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.')).not.toBeInTheDocument();
+    expect(screen.queryByText('Generate Mneme rule and integrate into CI/CD pipeline.')).not.toBeInTheDocument();
+  });
+
+  it('shows only the three highest-priority gaps while keeping every decision in the canonical list', () => {
+    const gapDecisions = [
+      decisionFixture({ id: 'requires-high', title: 'Requires high confidence', protection_classification: 'Requires modelling', evidence_confidence: 'high' }),
+      decisionFixture({ id: 'ready-low', title: 'Ready low confidence', protection_classification: 'Mneme-ready', evidence_confidence: 'low' }),
+      decisionFixture({ id: 'ready-high', title: 'Ready high confidence', protection_classification: 'Mneme-ready', evidence_confidence: 'high' }),
+      decisionFixture({ id: 'requires-medium', title: 'Requires medium confidence', protection_classification: 'Requires modelling', evidence_confidence: 'medium' }),
+    ];
+    const manyGaps = auditFixture({
+      audit_id: 'many-gaps',
+      decisions: gapDecisions,
+      summary: {
+        ...audit.summary,
+        decisions_discovered: 4,
+        protection_relevant: 4,
+        protected_count: 0,
+        mneme_ready_count: 2,
+        requires_modelling_count: 2,
+        guidance_count: 0,
+      },
+    });
+
+    renderOverview(manyGaps);
+
+    const gaps = screen.getByRole('list', { name: 'Prioritized protection gaps' });
+    const gapButtons = within(gaps).getAllByRole('button');
+    expect(gapButtons).toHaveLength(3);
+    expect(gapButtons.map(button => button.getAttribute('aria-label'))).toEqual([
+      'Open Ready high confidence, MNEME-READY, in Protection Decisions',
+      'Open Ready low confidence, MNEME-READY, in Protection Decisions',
+      'Open Requires high confidence, READY TO PROTECT, in Protection Decisions',
+    ]);
+    expect(screen.getByText(/1 additional gap is included in the complete Protection Decisions list below/)).toBeInTheDocument();
+    expect(document.getElementById('protection-decision-requires-medium')).toBeInTheDocument();
+  });
+
+  it('opens, scrolls to, and focuses the corresponding canonical decision with the mouse', () => {
+    renderOverview();
+
+    fireEvent.change(screen.getByLabelText('Filter by protection classification'), { target: { value: 'Guidance' } });
+    expect(document.getElementById('protection-decision-decision-2')).not.toBeInTheDocument();
+
+    const gap = screen.getByRole('button', { name: 'Open Use GADR naming, MNEME-READY, in Protection Decisions' });
+    fireEvent.click(gap);
+
+    const decision = document.getElementById('protection-decision-decision-2');
+    const header = decision?.querySelector<HTMLButtonElement>('.decision-item-header');
+    expect(decision).toBeInTheDocument();
+    expect(header).toHaveAttribute('aria-expanded', 'true');
+    expect(header).toHaveFocus();
+    expect(window.scrollTo).toHaveBeenCalledWith(expect.objectContaining({ behavior: 'smooth' }));
+  });
+
+  it.each(['Enter', ' '])('opens and focuses a gap decision with the %s key', key => {
+    renderOverview();
+
+    const gap = screen.getByRole('button', { name: 'Open Use Markdown ADRs, READY TO PROTECT, in Protection Decisions' });
+    fireEvent.keyDown(gap, { key });
+
+    const header = document
+      .getElementById('protection-decision-decision-1')
+      ?.querySelector<HTMLButtonElement>('.decision-item-header');
+    expect(header).toHaveAttribute('aria-expanded', 'true');
+    expect(header).toHaveFocus();
   });
 
   it('shows "Ready to Protect" classification instead of "Requires Modelling"', () => {
@@ -357,7 +424,10 @@ describe('AuditOverviewPage section navigation', () => {
   it('tracks decision expansion with classifications but no decision content', () => {
     renderOverview();
 
-    fireEvent.click(screen.getByRole('button', { name: /Use Markdown ADRs/ }));
+    const header = document
+      .getElementById('protection-decision-decision-1')
+      ?.querySelector<HTMLButtonElement>('.decision-item-header');
+    fireEvent.click(header!);
 
     expect(track).toHaveBeenCalledWith('audit_decision_toggle', {
       action: 'expand',
@@ -405,6 +475,18 @@ describe('AuditOverviewPage section navigation', () => {
     expect(document.getElementById('next-step-install')).not.toBeNull();
   });
 
+  it('uses the responsive hero action and data-handling spacing hooks', () => {
+    renderOverview();
+
+    const actions = screen.getByRole('link', { name: 'View All Decisions' }).parentElement;
+    const dataHandling = screen.getByText(/How your repository data was handled/);
+
+    expect(actions).toHaveClass('audit-hero-actions');
+    expect(actions).toContainElement(screen.getByRole('button', { name: 'Export' }));
+    expect(actions).toContainElement(screen.getByRole('button', { name: 'Save Baseline' }));
+    expect(dataHandling).toHaveClass('audit-data-handling');
+  });
+
   it('omits the pilot activation band when nothing is protection-relevant', () => {
     const noProtectable = auditFixture({ audit_id: 'no-protectable' });
     render(
@@ -422,7 +504,10 @@ describe('AuditOverviewPage section navigation', () => {
   it('groups expanded evidence, recommendations, and the detail action', () => {
     renderOverview();
 
-    fireEvent.click(screen.getByRole('button', { name: /Use Markdown ADRs/ }));
+    const header = document
+      .getElementById('protection-decision-decision-1')
+      ?.querySelector<HTMLButtonElement>('.decision-item-header');
+    fireEvent.click(header!);
 
     const evidence = screen.getByText('View evidence').closest('details');
     const rawEvidence = screen.getByText('Architectural decisions should use Markdown.');

@@ -12,6 +12,21 @@ import { decisionParams, track } from '../analytics';
 type FilterType = 'all' | 'Protected' | 'Mneme-ready' | 'Requires modelling' | 'Guidance';
 type SourceTypeFilter = 'all' | 'adr' | 'agent-instructions' | 'config' | 'code';
 
+const GAP_HIGHLIGHT_LIMIT = 3;
+
+const GAP_PRIORITY: Partial<Record<ProtectionClassification, number>> = {
+  'Mneme-ready': 0,
+  'Requires modelling': 1,
+};
+
+const EVIDENCE_PRIORITY: Record<ProtectionDecision['evidence_confidence'], number> = {
+  high: 0,
+  medium: 1,
+  low: 2,
+};
+
+const getDecisionElementId = (decisionId: string) => `protection-decision-${encodeURIComponent(decisionId)}`;
+
 const DEFAULT_LIMITS: Record<ProtectionClassification, number> = {
   Protected: 10,
   'Mneme-ready': 10,
@@ -42,13 +57,14 @@ const BADGE_LABEL: Record<ProtectionClassification, string> = {
   Guidance: 'GUIDANCE ONLY',
 };
 
-function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails }: {
+function CollapsibleDecisionItemWrapper({ decision, isExpanded, onToggle, onViewDetails, elementId }: {
   decision: ProtectionDecision;
   isExpanded: boolean;
   onToggle: () => void;
   onViewDetails: () => void;
+  elementId: string;
 }) {
-  return <CollapsibleDecisionItem decision={decision} isExpanded={isExpanded} onToggle={onToggle} onViewDetails={onViewDetails} />;
+  return <CollapsibleDecisionItem id={elementId} decision={decision} isExpanded={isExpanded} onToggle={onToggle} onViewDetails={onViewDetails} />;
 }
 
 export function AuditOverviewPage() {
@@ -67,6 +83,7 @@ export function AuditOverviewPage() {
   const [sourceTypeFilter, setSourceTypeFilter] = useState<SourceTypeFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedDecisions, setExpandedDecisions] = useState<Set<string>>(new Set());
+  const [pendingDecisionFocus, setPendingDecisionFocus] = useState<string | null>(null);
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('overview');
   const [savingBaseline, setSavingBaseline] = useState(false);
@@ -249,6 +266,16 @@ export function AuditOverviewPage() {
     return groups;
   }, [filteredDecisions]);
 
+  const prioritizedGapDecisions = useMemo(() => decisions
+    .filter(decision => decision.protection_classification === 'Mneme-ready' || decision.protection_classification === 'Requires modelling')
+    .sort((left, right) => {
+      const classificationDifference = (GAP_PRIORITY[left.protection_classification] ?? 99)
+        - (GAP_PRIORITY[right.protection_classification] ?? 99);
+      if (classificationDifference !== 0) return classificationDifference;
+      return EVIDENCE_PRIORITY[left.evidence_confidence] - EVIDENCE_PRIORITY[right.evidence_confidence];
+    })
+    .slice(0, GAP_HIGHLIGHT_LIMIT), [decisions]);
+
   const toggleDecision = (decision: ProtectionDecision) => {
     const expanding = !expandedDecisions.has(decision.id);
     track('audit_decision_toggle', { action: expanding ? 'expand' : 'collapse', ...decisionParams(decision) });
@@ -279,6 +306,35 @@ export function AuditOverviewPage() {
       behavior: 'smooth',
     });
   };
+
+  const openProtectionDecision = (decision: ProtectionDecision) => {
+    setClassificationFilter('all');
+    setSourceTypeFilter('all');
+    setSearchQuery('');
+    setDisplayLimits(current => ({ ...current, [decision.protection_classification]: Infinity }));
+    setExpandedDecisions(current => {
+      const next = new Set(current);
+      next.add(decision.id);
+      return next;
+    });
+    setPendingDecisionFocus(decision.id);
+  };
+
+  useEffect(() => {
+    if (!pendingDecisionFocus) return;
+
+    const decisionElement = document.getElementById(getDecisionElementId(pendingDecisionFocus));
+    const decisionButton = decisionElement?.querySelector<HTMLButtonElement>('.decision-item-header');
+    if (!decisionElement || !decisionButton) return;
+
+    const elementPosition = decisionElement.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({
+      top: Math.max(0, elementPosition - getStickyOffset()),
+      behavior: 'smooth',
+    });
+    decisionButton.focus({ preventScroll: true });
+    setPendingDecisionFocus(null);
+  }, [pendingDecisionFocus, getStickyOffset]);
 
   const handleExport = async (format: 'markdown' | 'json') => {
     if (!id) return;
@@ -387,6 +443,7 @@ export function AuditOverviewPage() {
 
   const protectionPct = Math.round(currentProtection * 100);
   const gapCount = mnemeReadyCount + requiresModellingCount;
+  const hiddenGapCount = Math.max(0, gapCount - prioritizedGapDecisions.length);
 
   const bridgeStatement = protectionRelevant > 0 && gapCount > 0
     ? `${gapCount} architectural decision${gapCount > 1 ? 's' : ''} could be converted from guidance into enforceable protection.`
@@ -455,7 +512,7 @@ export function AuditOverviewPage() {
 
             <p className="mt-3 audit-key-finding">{keyFinding}</p>
 
-            <div className="flex flex-wrap gap-2 mt-4 justify-center">
+            <div className="audit-hero-actions">
               <Link 
                 to={`/audit/${id}/decisions`} 
                 state={{ audit }}
@@ -485,7 +542,7 @@ export function AuditOverviewPage() {
               </button>
             </div>
 
-            <p className="text-muted mt-4" style={{ fontSize: '0.8rem', textAlign: 'center' }}>
+            <p className="audit-data-handling">
               How your repository data was handled: <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
             </p>
           </header>
@@ -595,53 +652,51 @@ export function AuditOverviewPage() {
                   <strong>{gapCount} architectural decision{gapCount > 1 ? 's' : ''} could be protected more explicitly.</strong>
                 </p>
                 <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
-                  These decisions describe constraints that can be evaluated mechanically, but the repository currently expresses them primarily through prose or convention. 
-                  Mneme has not automatically turned them into controls. They need their scope and allowed behaviour modelled before enforcement can be enabled.
-                </p>
-                <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '2rem', maxWidth: '800px' }}>
-                  Review each gap below to see what Mneme found and what would be required to protect it.
+                  Showing {prioritizedGapDecisions.length} highest-priority gap{prioritizedGapDecisions.length === 1 ? '' : 's'}, ordered by readiness for protection.
+                  {hiddenGapCount > 0 && ` ${hiddenGapCount} additional gap${hiddenGapCount === 1 ? ' is' : 's are'} included in the complete Protection Decisions list below.`}
+                  {' '}Select a gap to open and focus its complete decision.
                 </p>
                 
-                <div className="protection-gaps-list" role="list" aria-label="Protection gaps">
-                  {decisions
-                    .filter(d => d.protection_classification === 'Mneme-ready' || d.protection_classification === 'Requires modelling')
-                    .map((decision) => {
-                      const isModelling = decision.protection_classification === 'Requires modelling';
-                      const Icon = isModelling ? Brain : Zap;
-                      const iconClass = isModelling ? 'ready-to-protect' : 'mneme-ready';
-                      const badgeClass = isModelling ? 'badge-ready-to-protect' : 'badge-mneme-ready';
-                      const badgeLabel = isModelling ? 'READY TO PROTECT' : 'MNEME-READY';
-                      const humanReadableLead = decision.title
-                        .replace(/^Architectural decision: /i, '')
-                        .replace(/^(The|A|An)\s+/i, '')
-                        .trim();
-                      const reason = isModelling
-                        ? 'This intent appears mechanically enforceable, but a safe deterministic guardrail has not yet been identified.'
-                        : 'Complete specification exists; ready for rule generation and CI/CD integration.';
-                      const suggestedNextStep = isModelling
-                        ? 'Model the decision: define explicit applicability, deterministic matchers, and confidence thresholds.'
-                        : 'Generate Mneme rule and integrate into CI/CD pipeline.';
-                      
-                      return (
-                        <article key={decision.id} className="protection-gap-item" style={{ borderColor: 'var(--warning)' }}>
-                          <div className={`protection-gap-icon ${iconClass}`}>
-                            <Icon size={24} />
-                          </div>
-                          <div className="protection-gap-content">
-                            <h3 className="protection-gap-lead">{humanReadableLead}</h3>
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
-                            </div>
-                            <p className="protection-gap-reason" style={{ marginBottom: '0.75rem' }}>{reason}</p>
-                            <p className="protection-gap-next-step text-teal"><strong>Next step:</strong> {suggestedNextStep}</p>
-                          </div>
-                          <div className="protection-gap-action">
-                            <ArrowRight size={20} style={{ color: 'var(--warning)' }} />
-                          </div>
-                        </article>
-                      );
-                    })}
-                </div>
+                <ul className="protection-gaps-list" aria-label="Prioritized protection gaps">
+                  {prioritizedGapDecisions.map((decision) => {
+                    const isModelling = decision.protection_classification === 'Requires modelling';
+                    const Icon = isModelling ? Brain : Zap;
+                    const iconClass = isModelling ? 'ready-to-protect' : 'mneme-ready';
+                    const badgeClass = isModelling ? 'badge-ready-to-protect' : 'badge-mneme-ready';
+                    const badgeLabel = isModelling ? 'READY TO PROTECT' : 'MNEME-READY';
+                    const humanReadableLead = decision.title
+                      .replace(/^Architectural decision: /i, '')
+                      .replace(/^(The|A|An)\s+/i, '')
+                      .trim();
+
+                    return (
+                      <li key={decision.id}>
+                        <button
+                          type="button"
+                          className="protection-gap-item"
+                          onClick={() => openProtectionDecision(decision)}
+                          onKeyDown={(event) => {
+                            if (event.key !== 'Enter' && event.key !== ' ') return;
+                            event.preventDefault();
+                            openProtectionDecision(decision);
+                          }}
+                          aria-label={`Open ${humanReadableLead}, ${badgeLabel}, in Protection Decisions`}
+                        >
+                          <span className={`protection-gap-icon ${iconClass}`} aria-hidden="true">
+                            <Icon size={22} />
+                          </span>
+                          <span className="protection-gap-content">
+                            <span className="protection-gap-lead">{humanReadableLead}</span>
+                            <span className={`badge ${badgeClass}`}>{badgeLabel}</span>
+                          </span>
+                          <span className="protection-gap-action" aria-hidden="true">
+                            <ArrowRight size={20} />
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               </section>
             </div>
           )}
@@ -765,6 +820,7 @@ export function AuditOverviewPage() {
                         <CollapsibleDecisionItemWrapper
                           key={decision.id}
                           decision={decision}
+                          elementId={getDecisionElementId(decision.id)}
                           isExpanded={isExpanded(decision.id)}
                           onToggle={() => toggleDecision(decision)}
                           onViewDetails={() => navigate(`/audit/${id}/decisions/${decision.id}`, { state: { audit } })}
