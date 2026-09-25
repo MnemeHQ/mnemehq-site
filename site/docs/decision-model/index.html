@@ -21,12 +21,12 @@
   <meta property="og:image" content="https://mnemehq.com/docs/decision-model/og-v2.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="The decision model: what Mneme attaches to every engineering decision." />
+<meta property="og:image:alt" content="The decision model: what Mneme can attach to an engineering decision." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Decision Model &mdash; Mneme HQ" />
   <meta name="twitter:description" content="A Mneme decision carries an identity, applicability, authority, lifecycle, precedence, enforcement, and evidence. Architecture is the first decision domain." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/decision-model/og-v2.png" />
-<meta name="twitter:image:alt" content="The decision model: what Mneme attaches to every engineering decision." />
+<meta name="twitter:image:alt" content="The decision model: what Mneme can attach to an engineering decision." />
   <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
 
@@ -227,7 +227,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>A Mneme decision is more than a document.</strong> Each engineering decision carries an identity, the scope it applies to, the authority that adopted it, its lifecycle status, its precedence against other decisions, how it is enforced, and the evidence that it held. Architecture is the first decision domain.</div>
+<div class="answer-capsule"><strong>A Mneme decision is more than a document.</strong> An engineering decision in Mneme can carry an identity, the scope it applies to, the authority that adopted it, its lifecycle status, its precedence against other decisions, how it is enforced, and evidence that it held. Architecture is the first decision domain.</div>
 
 <section class="hero">
   <div class="section-eyebrow">Decision model</div>
@@ -246,12 +246,12 @@
           <thead><tr><th>Property</th><th>The question it answers</th><th>Where it is documented</th></tr></thead>
           <tbody>
             <tr><td>Identity</td><td>What was decided, and from which source?</td><td><a href="/architecture/decision-memory-vs-documentation/">Decision memory vs documentation</a> &middot; <a href="/integrations/adr-import/">ADR import</a></td></tr>
-            <tr><td>Applicability</td><td>Does this decision apply to this change?</td><td><a href="/docs/how-enforcement-works/">How enforcement works</a> (path-scoped applicability outcomes)</td></tr>
+            <tr><td>Applicability</td><td>Does this decision apply to this change?</td><td><a href="/integrations/adr-import/">ADR import</a> (path applies, skips, or is unknown) &middot; <a href="/docs/how-enforcement-works/">How enforcement works</a></td></tr>
             <tr><td>Authority</td><td>Who can adopt, reject, or change a decision?</td><td><a href="/docs/decision-proposals/">Decision proposals</a> &middot; <a href="/docs/mcp/">MCP server</a> (non-authoritative proposals)</td></tr>
-            <tr><td>Lifecycle</td><td>Is this decision still in force, and what did it replace?</td><td><a href="/concepts/governance-provenance/">Governance provenance</a> (supersession chains) &middot; <a href="/architecture/decision-memory-vs-documentation/">Decision memory</a> (status, supersedes)</td></tr>
-            <tr><td>Precedence</td><td>What wins when two decisions both apply?</td><td><a href="/concepts/precedence-semantics/">Precedence semantics</a></td></tr>
-            <tr><td>Enforcement</td><td>How is the decision checked, and where?</td><td><a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> &middot; <a href="/docs/protection-activation/">Protection activation</a></td></tr>
-            <tr><td>Evidence</td><td>What shows the decision held?</td><td><a href="/concepts/enforcement-provenance/">Enforcement provenance</a> &middot; <a href="/concepts/decision-continuity/">Decision continuity</a></td></tr>
+            <tr><td>Lifecycle</td><td>Is this decision still in force, and what did it replace?</td><td><a href="/integrations/adr-import/">ADR import</a> (status, explicit supersession) &middot; <a href="/architecture/decision-memory-vs-documentation/">Decision memory</a></td></tr>
+            <tr><td>Precedence</td><td>What wins when two decisions both apply?</td><td><a href="/integrations/adr-import/">ADR import</a> (supersession, then scope priority and date; unresolved ties block the import)</td></tr>
+            <tr><td>Enforcement</td><td>How is the decision checked, and where?</td><td><a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> &middot; <a href="/integrations/github-actions/">GitHub Actions gate</a></td></tr>
+            <tr><td>Evidence</td><td>What shows the decision held?</td><td><a href="/docs/how-enforcement-works/">How enforcement works</a> (auditable verdict trace) &middot; <a href="/docs/protection-activation/">Protection activation</a> (Protected only when enforcement evidence is observed)</td></tr>
           </tbody>
         </table>
       </div>
@@ -260,7 +260,7 @@
 
   <div class="prose-section">
     <h2>Architecture is the first domain</h2>
-    <p>Mneme starts with architecture: ADRs and engineering standards become decisions that coding agents receive and that hooks and CI gates check deterministically. The <a href="/audit/">Architecture Protection Audit</a> shows which of your architectural decisions are explicit, which can be expressed as Mneme guardrails, and which are deterministically protected today. <a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a> is the first use case.</p>
+    <p>Mneme starts with architecture: ADRs and engineering standards become decisions that coding agents receive and that hooks and CI gates check deterministically. The <a href="/audit/">Architecture Protection Audit</a> classifies each discovered architectural decision as Protected, Mneme-ready, Requires modelling, or Guidance, so you can see which are deterministically protected today. <a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a> is the first use case.</p>
     <p>The decision model is designed to extend to broader engineering policy. Other decision domains are not shipped today; see the <a href="/roadmap/">roadmap</a>.</p>
   </div>
 
