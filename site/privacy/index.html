@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and never send repository material to external AI model providers." />
+  <meta name="description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and Mneme's own processing does not send repository material to external AI model providers." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/privacy/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Privacy Policy | Mneme HQ" />
-  <meta property="og:description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and never send repository material to external AI model providers." />
+  <meta property="og:description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and Mneme's own processing does not send repository material to external AI model providers." />
   <meta property="og:url" content="https://mnemehq.com/privacy/" />
   <meta property="og:image" content="https://mnemehq.com/privacy/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Privacy Policy" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Privacy Policy | Mneme HQ" />
-  <meta name="twitter:description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and never send repository material to external AI model providers." />
+  <meta name="twitter:description" content="Privacy policy for Mneme HQ — architectural governance for AI-assisted development. We collect minimal data, never sell it, and Mneme's own processing does not send repository material to external AI model providers." />
   <meta name="twitter:image" content="https://mnemehq.com/privacy/og-v2.png" />
 <meta name="twitter:image:alt" content="Privacy Policy" />
 
@@ -303,7 +303,7 @@
   <div class="page-tag">Legal</div>
   <h1>Privacy Policy</h1>
   <p class="page-sub">Mneme HQ is an open-source developer tool. This policy covers the mnemehq.com website, direct contact, and the hosted Architecture Protection Audit. We keep data collection minimal, we never sell personal data, and repository material submitted to the Audit is handled as described in our <a href="/security/data-handling/">Security &amp; data handling</a> page.</p>
-  <p class="last-updated">Version 2 &middot; Last updated: 10 September 2026</p>
+  <p class="last-updated">Version 3 &middot; Last updated: 25 September 2026 &middot; Clarified Claude Code plugin data handling and the Anthropic service boundary.</p>
 
   <div class="prose">
 
@@ -334,11 +334,16 @@
     </ul>
     <p>The open-source CLI and enforcement engine run entirely on your machine or CI and do not send your code anywhere.</p>
 
+    <h2>Claude Code plugin</h2>
+    <p>The Mneme Claude Code plugin runs as a local integration that invokes the Mneme CLI and hook processes in your Claude Code environment. Installing or using the plugin does not create a Mneme HQ account and does not, by itself, send repository contents, prompts, proposed edits, hook payloads, enforcement results, or other usage telemetry to Mneme HQ.</p>
+    <p>Mneme's plugin and CLI currently include no Mneme-operated usage telemetry. The plugin may read repository files and architectural decision data locally when evaluating or retrieving applicable decisions, but that processing remains on the machine or CI environment where Mneme is running.</p>
+    <p>Claude Code is a separate service provided by Anthropic. Mneme does not control what data Claude Code sends to Anthropic under your Claude configuration or Anthropic account. Use of Claude Code is governed by Anthropic's own terms and privacy and data-handling policies.</p>
+
     <h2>Repository material and the hosted Audit</h2>
     <p>Repository material submitted to the hosted Audit (source files, ADRs, agent instructions, configuration) is classified and processed separately from ordinary personal data: it is not used for marketing, profiling, or advertising, and it is not shared with third parties except the infrastructure providers listed below. Original repository files are transient &mdash; extracted to a temporary working directory for analysis and deleted when the audit completes. The audit result (discovered decisions, classifications, proposed guardrails) is retained as described on the data-handling page.</p>
 
     <h2>AI and model processing</h2>
-    <p><strong>Mneme does not use customer source code to train models, and repository material submitted to the hosted Audit is never sent to any external AI model provider.</strong> The Audit analysis is deterministic (no machine learning, no inference calls). There is no training pipeline in Mneme. If this ever changes, this policy and the data-handling page will be updated first, and the change will be stated explicitly.</p>
+    <p><strong>Mneme does not use customer source code to train models. Mneme's own processing does not send repository material to external AI model providers.</strong> The hosted Audit analysis is deterministic (no machine learning, no inference calls), and the local CLI and plugin enforcement path makes no Mneme-initiated model calls. Claude Code itself is a separate Anthropic service and may process repository context according to the user's Claude configuration and Anthropic's terms. There is no training pipeline in Mneme. If Mneme's own processing changes, this policy and the data-handling page will be updated first, and the change will be stated explicitly.</p>
 
     <h2>Why we process data (purposes and legal basis)</h2>
     <ul>
