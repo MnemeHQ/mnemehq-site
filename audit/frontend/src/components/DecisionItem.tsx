@@ -86,9 +86,10 @@ interface CollapsibleDecisionItemProps {
   isExpanded: boolean;
   onToggle: () => void;
   onViewDetails: () => void;
+  id?: string;
 }
 
-export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails }: CollapsibleDecisionItemProps) {
+export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onViewDetails, id }: CollapsibleDecisionItemProps) {
   const Icon = ICONS[decision.protection_classification];
   const iconClass = ICON_CLASS[decision.protection_classification];
   const badgeClass = BADGE_CLASS[decision.protection_classification];
@@ -99,7 +100,7 @@ export function CollapsibleDecisionItem({ decision, isExpanded, onToggle, onView
   const confidenceColor = CONFIDENCE_COLORS[decision.evidence_confidence];
 
   return (
-    <article className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
+    <article id={id} className={`decision-item ${isExpanded ? 'is-expanded' : ''}`} role="listitem">
       <button type="button" className="decision-item-header" onClick={onToggle} aria-expanded={isExpanded}>
         <div className={`decision-icon ${iconClass}`}>
           <Icon size={20} />
