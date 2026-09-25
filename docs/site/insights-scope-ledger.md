@@ -24,6 +24,9 @@ not every chat in the project.
 | ***Post-Brooks Law Relevance | 2026-09-18 | `brooks-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Strategic Signal local infra | 2026-09-16 | `private-ai-infrastructure-governance` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Architecture Support Rules | 2026-09-19 | Netflix Conductor 4.0 case study added to `software-factory-governance-layer` | [#141](https://github.com/MnemeHQ/mnemehq-site/pull/141) | 2026-09-19 |
+| ***Post - Microsoft Assess Mneme Thesis | 2026-09-22 | `microsoft-ai-decision-brief-architectural-intent` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
+| ***Post-Atlassian Mneme Comparison | 2026-09-19 | `atlassian-agentic-pivot-engineering-system-of-record` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
+| ***Post-Package hallucinations explainer | 2026-09-14 | `package-hallucinations-pre-action-governance` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
 
 Notes carried over: the software-factory pillar is one article refined across two chats (the 2nd adds the Bob Bemer/1968 historical framing) — it's the pillar of a planned 5-article cluster, only the pillar is scoped/shipped so far. Conway and Brooks are cross-linked as a pair. The private AI piece's Latham facts were verified against Bloomberg Law and Legal IT Insider; the FT citation named in the original scope chat could not be located and was dropped.
 
@@ -31,21 +34,17 @@ All five ChatGPT chats were renamed with the `***` marker on 2026-09-19 after th
 
 `***Architecture Support Rules` (a mixed chat covering EDA roadmap discussion plus the Netflix Conductor scope) was renamed with the `***` marker on 2026-09-19 after PR #141 shipped its one content-publishing item, the Conductor case study. The EDA roadmap discussion in that same chat was not acted on here, since it's internal roadmap sequencing, not a content ask.
 
-## In review (drafted, not merged, not yet marked `***`)
-
-| Scope chat (ChatGPT title) | Scoped | Shipped as | PR | Merged |
-|---|---|---|---|---|
-| Post - Microsoft Assess Mneme Thesis | 2026-09-22 | `microsoft-ai-decision-brief-architectural-intent` | this PR | pending |
-| Post-Atlassian Mneme Comparison | 2026-09-19 | `atlassian-agentic-pivot-engineering-system-of-record` | this PR | pending |
-| Post-Package hallucinations explainer | 2026-09-14 | `package-hallucinations-pre-action-governance` | this PR | pending |
-
-Only the insight article from each chat is in this PR. The Microsoft chat also scoped non-insight site edits that are **not** done here and need their own PRs (different contracts): a homepage "Why now" section, an "agent governance vs architectural governance" section on `/concepts/architectural-governance/`, a control-plane stack on `/platforms/`, a new `/concepts/decision-index/` page, and an Authority → Index → Applicability → Enforcement → Evidence block on `/docs/how-enforcement-works/`. The Atlassian chat's LinkedIn comment/repost/long-form drafts are social, not site, work.
+Notes for #150: only the insight article from each chat shipped. The Microsoft chat also scoped non-insight site edits that are **not** done here and need their own PRs (different contracts): a homepage "Why now" section, an "agent governance vs architectural governance" section on `/concepts/architectural-governance/`, a control-plane stack on `/platforms/`, a new `/concepts/decision-index/` page, and an Authority → Index → Applicability → Enforcement → Evidence block on `/docs/how-enforcement-works/`. The Atlassian chat's LinkedIn comment/repost/long-form drafts are social, not site, work.
 
 Sources verified 2026-09-25 against primary documents: Microsoft AI Decision Brief PDF (pp. 22, 28, 34, 35, 38); Atlassian Agentic Pivot PDF (all 21 pages, OCR); USENIX Security 2025 (Spracklen et al.); arXiv 2605.17062 (not peer reviewed, labelled as such); Trend Micro June 2025; Orygn July 2026. The Atlassian PDF prints the system-of-record figure as 84% in one lifecycle table and 88% in the overview and conclusion; the article uses 88% and notes the discrepancy.
 
-Rename these three chats with `***` only after the PR merges and deploys.
+All three chats were renamed with the `***` marker on 2026-09-25 after #150 deployed (deploy verified at `f30fd2d`, `site-deployed` tag matched, all three URLs 200).
 
 **Other unmarked `Post-` chats found 2026-09-25, not yet assessed:** Post-AI Silo Breakdown Content (09-13), Post-Scope pre action governance (09-08), Post-Competing with CodeRabbit (09-08), Post-OKF architecture article scope (09-01), plus ~119 unmarked `Post-` chats from 2026-08-11 to 08-29 that predate this ledger.
+
+## In review (drafted, not merged, not yet marked `***`)
+
+None currently.
 
 ## Partially processed — do not mark done
 
