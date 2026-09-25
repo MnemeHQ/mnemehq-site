@@ -3,6 +3,9 @@
 **Date:** 2026-09-25
 **Source strategy:** `mneme-growth-ops/docs/plans/2026-09-25-decision-control-positioning-reposition.md` (growth-ops PR #29, merged)
 **Status:** Approved 2026-09-25. Phase 1 is implemented in `site/decision-control-reposition`.
+**Governing ADRs:** `MnemeHQ/mneme` ADR-001 (category, messaging hierarchy, Claim Levels), ADR-013 (the GitHub description and external copy variants; drift prevention is kept as the architecture-led acquisition claim), and ADR-014 (runtime-stack vocabulary). All three were amended in MnemeHQ/mneme#405 at `cec9e3bd`.
+
+**Claim levels (ADR-001):** category and vision claims may lead implementation, and capability claims may generalize reasonably. Concrete factual claims stay literal: integrations, security/compliance, deployment controls, evidence stores, and enterprise features. This relaxes the sentence-level strictness of the "claim-maturity blockers" below. Those blockers still apply to concrete factual claims.
 
 ## Approved decisions (2026-09-25)
 
