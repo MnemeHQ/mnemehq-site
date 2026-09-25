@@ -95,7 +95,7 @@
           {
             "@type": "Question",
             "name": "What is Mneme HQ?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Mneme provides architectural drift prevention for teams adopting AI coding agents across the SDLC. As the decision and control layer, it makes existing architectural decisions enforceable across agents, repositories, and CI — compiling ADRs and engineering standards into deterministic constraints applied before architectural drift reaches review." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Mneme HQ is the decision and control layer for agentic software development. Architecture is the first decision domain: Mneme makes existing architectural decisions enforceable across agents, repositories, and CI, compiling ADRs and engineering standards into deterministic constraints applied before architectural drift reaches review." }
           },
           {
             "@type": "Question",
@@ -381,7 +381,7 @@
   <section class="diagram-wrap" aria-labelledby="diagram-heading">
     <h2 id="diagram-heading" style="font-family:'Instrument Serif',serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:400;letter-spacing:-0.02em;text-align:center;margin-bottom:1rem;">Governance before generation</h2>
     <div class="diagram-frame">
-      <svg viewBox="0 0 760 240" role="img" aria-label="Governance-before-generation pipeline: AI coding agent sends a request to the Mneme governance layer, which compiles ADRs, security rules, and repository policies into deterministic constraints. Constraints are enforced before code generation. Generated code is checked for architectural drift and the result feeds back into the governance layer.">
+      <svg viewBox="0 0 760 240" role="img" aria-label="Governance-before-generation pipeline: AI coding agent sends a request to the Mneme decision and control layer, which compiles ADRs, security rules, and repository policies into deterministic constraints. Constraints are enforced before code generation. Generated code is checked for architectural drift and the result feeds back into Mneme.">
         <defs>
           <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
             <path d="M0,0 L10,5 L0,10 z" fill="#88889a"/>
@@ -398,9 +398,9 @@
         <!-- Arrow 1 -->
         <line x1="170" y1="120" x2="225" y2="120" stroke="#88889a" stroke-width="1.5" marker-end="url(#arrow)"/>
         <text x="197" y="110" text-anchor="middle" fill="#88889a" font-family="DM Mono,monospace" font-size="10">prompt</text>
-        <!-- Stage 2: Mneme Governance Layer -->
+        <!-- Stage 2: Mneme Decision and Control Layer -->
         <rect x="225" y="60" width="290" height="120" rx="10" fill="#141416" stroke="#b5cc7a" stroke-opacity="0.5"/>
-        <text x="370" y="90" text-anchor="middle" fill="#b5cc7a" font-family="Inter,sans-serif" font-size="13" font-weight="600">Mneme Governance Layer</text>
+        <text x="370" y="90" text-anchor="middle" fill="#b5cc7a" font-family="Inter,sans-serif" font-size="13" font-weight="600">Mneme Decision and Control Layer</text>
         <text x="370" y="112" text-anchor="middle" fill="#88889a" font-family="Inter,sans-serif" font-size="11">ADR enforcement · security rules</text>
         <text x="370" y="128" text-anchor="middle" fill="#88889a" font-family="Inter,sans-serif" font-size="11">framework constraints · repo policies</text>
         <text x="370" y="155" text-anchor="middle" fill="#8be0c8" font-family="DM Mono,monospace" font-size="10">→ deterministic constraints</text>
@@ -417,7 +417,7 @@
         <text x="370" y="232" text-anchor="middle" fill="#88889a" font-family="DM Mono,monospace" font-size="10">drift detected → governance updated</text>
       </svg>
     </div>
-    <p class="diagram-caption">The governance-before-generation pipeline: architectural intent compiles into deterministic constraints before any AI coding agent generates code. Drift detected post-generation feeds back into the governance layer, preventing the same violation across future sessions.</p>
+    <p class="diagram-caption">The governance-before-generation pipeline: architectural intent compiles into deterministic constraints before any AI coding agent generates code. Drift detected post-generation feeds back into Mneme, preventing the same violation across future sessions.</p>
   </section>
 
   <div class="cards-wrap">
@@ -625,7 +625,7 @@
     <h2>Common questions</h2>
     <details>
       <summary>What is Mneme HQ?</summary>
-      <div class="faq-body">Mneme HQ is the decision and control layer for agentic software development. It compiles architectural intent into enforceable constraints that govern AI coding agents at the pre-generation stage, before architectural drift reaches review.</div>
+      <div class="faq-body">Mneme HQ is the decision and control layer for agentic software development. Architecture is the first decision domain: Mneme makes existing architectural decisions enforceable across agents, repositories, and CI, compiling ADRs and engineering standards into deterministic constraints applied before architectural drift reaches review.</div>
     </details>
     <details>
       <summary>What is AI engineering governance?</summary>

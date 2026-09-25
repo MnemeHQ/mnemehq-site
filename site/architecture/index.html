@@ -243,10 +243,10 @@
   </header>
 
   <figure class="arch-figure" style="margin:0 0 2.5rem;">
-    <figcaption style="margin:0 0 0.9rem;font-size:0.82rem;color:#a8a8b8;line-height:1.6;">The big picture: engineering governance is a layer of the AI engineering stack, alongside CI/CD and testing. The runtime stack below breaks the decision and control layer down in technical detail.</figcaption>
+    <figcaption style="margin:0 0 0.9rem;font-size:0.82rem;color:#a8a8b8;line-height:1.6;">The big picture: Mneme sits as its own layer of the AI engineering stack, alongside CI/CD and testing. The runtime stack below shows where it operates: in the Governance infrastructure layer.</figcaption>
     <svg viewBox="0 0 720 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="aes-t aes-d" style="width:100%;height:auto;display:block;max-width:720px;margin:0 auto;" font-family="Inter, ui-sans-serif, system-ui, sans-serif">
       <title id="aes-t">Position in the AI engineering stack</title>
-      <desc id="aes-d">A vertical stack of layers: Applications at the top, then AI coding agents, then the Mneme HQ decision and control layer (emphasized), then architectural knowledge (ADRs, standards, project memory), then infrastructure (Git, CI/CD, tests). Engineering governance sits as its own layer alongside the others rather than replacing them.</desc>
+      <desc id="aes-d">A vertical stack of layers: Applications at the top, then AI coding agents, then the Mneme HQ decision and control layer (emphasized), then architectural knowledge (ADRs, standards, project memory), then infrastructure (Git, CI/CD, tests). Mneme sits as its own layer alongside the others rather than replacing them.</desc>
       <rect x="0" y="0" width="720" height="580" rx="14" fill="#0c0c0d" stroke="#222226"/>
       <text x="34" y="40" fill="#b5cc7a" font-family="'DM Mono', ui-monospace, monospace" font-size="11" letter-spacing="1.5">POSITION IN THE AI ENGINEERING STACK</text>
       <rect x="110" y="64" width="500" height="58" rx="9" fill="#141416" stroke="#2e2e34"/>
@@ -270,7 +270,7 @@
 
   <section class="stack-section" aria-labelledby="runtime-stack-heading">
     <div class="section-label" id="runtime-stack-heading" style="margin-top:0;">Runtime stack &middot; where Mneme sits</div>
-    <p class="stack-lede">An autonomous agent system is not one layer. <strong>Models</strong> produce candidate output. <strong>Harnesses</strong> coordinate execution, retries, and tool use. <strong>Execution systems</strong> maintain long-running loops, sessions, and memory. <strong>Governance infrastructure</strong> defines and enforces the architectural constraints the output must satisfy. <strong>Verification</strong> confirms the resulting system still passes its objective checks. Mneme is the decision and control layer &mdash; logically separate from harnesses and execution systems, but integrated directly into their execution boundaries: before tool calls, file writes, model calls, and commits.</p>
+    <p class="stack-lede">An autonomous agent system is not one layer. <strong>Models</strong> produce candidate output. <strong>Harnesses</strong> coordinate execution, retries, and tool use. <strong>Execution systems</strong> maintain long-running loops, sessions, and memory. <strong>Governance infrastructure</strong> defines and enforces the architectural constraints the output must satisfy. <strong>Verification</strong> confirms the resulting system still passes its objective checks. Mneme operates in the governance infrastructure layer as the decision and control layer &mdash; logically separate from harnesses and execution systems, but integrated directly into their execution boundaries: before tool calls, file writes, model calls, and commits.</p>
     <div class="layer-stack">
       <div class="layer-row">
         <div class="layer-num">5</div>
