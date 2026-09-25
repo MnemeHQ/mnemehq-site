@@ -58,7 +58,7 @@
           {"@type": "Question", "name": "Is Mneme an infrastructure governance tool?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme governs AI coding agents inside an engineering organization's existing developer platform. It does not provision cloud resources, manage IAM, or enforce infrastructure policy. It sits above the runtime and inside the developer workflow, regardless of which cloud the workflow lives on."}},
           {"@type": "Question", "name": "Will this fit into our Azure / GitHub Enterprise / Copilot stack?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Mneme runs as a GitHub Actions check on PR diffs and as a context provider for Copilot, Claude Code, Cursor, and other agents operating in the Azure DevOps and GitHub Enterprise workflow. The decision corpus is a tracked file in the repo, so it inherits whatever access controls the platform already enforces."}},
           {"@type": "Question", "name": "Does Mneme require a hosted control plane?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme is an MIT-licensed CLI plus a structured decision corpus. It runs on the laptop, on a CI runner, or on a self-hosted runner inside an air-gapped environment. There is no hosted service to subscribe to and no telemetry that has to leave the network."}},
-          {"@type": "Question", "name": "How does Mneme compare to platform-native AI tooling?", "acceptedAnswer": {"@type": "Answer", "text": "Platform-native AI tooling (Copilot, CodeWhisperer-adjacent runtimes, Gemini Code Assist) is the agent. Mneme is the governance layer above the agent. It is designed to operate alongside any of them, providing one decision corpus and one enforcement surface even when an organization runs multiple AI coding tools across multiple clouds."}}
+          {"@type": "Question", "name": "How does Mneme compare to platform-native AI tooling?", "acceptedAnswer": {"@type": "Answer", "text": "Platform-native AI tooling (Copilot, CodeWhisperer-adjacent runtimes, Gemini Code Assist) is the agent. Mneme is the decision and control layer above the agent. It is designed to operate alongside any of them, providing one decision corpus and one enforcement surface even when an organization runs multiple AI coding tools across multiple clouds."}}
         ]
       }
     ]
@@ -196,7 +196,7 @@
 <div class="wrap">
 
   <h2 class="group-title">Platforms Mneme runs inside</h2>
-  <p class="group-lede">Four enterprise developer platform contexts where AI coding agents actually run. Mneme is the governance layer above the runtime in each.</p>
+  <p class="group-lede">Four enterprise developer platform contexts where AI coding agents actually run. Mneme is the decision and control layer above the runtime in each.</p>
 
   <div class="platform-grid">
 
@@ -305,7 +305,7 @@
     </details>
     <details class="faq-item">
       <summary>How does Mneme compare to platform-native AI tooling?</summary>
-      <div class="faq-body">Platform-native AI tooling (Copilot, Bedrock-hosted agents, Gemini Code Assist) is the <em>agent</em>. Mneme is the <em>governance layer above the agent</em>. It is designed to operate alongside any of them, providing one decision corpus and one enforcement surface even when an organization runs multiple AI coding tools across multiple clouds. See <a href="/works-with/">Works With</a> for the full surface.</div>
+      <div class="faq-body">Platform-native AI tooling (Copilot, Bedrock-hosted agents, Gemini Code Assist) is the <em>agent</em>. Mneme is the <em>decision and control layer above the agent</em>. It is designed to operate alongside any of them, providing one decision corpus and one enforcement surface even when an organization runs multiple AI coding tools across multiple clouds. See <a href="/works-with/">Works With</a> for the full surface.</div>
     </details>
     <details class="faq-item">
       <summary>What about multi-cloud organizations?</summary>
