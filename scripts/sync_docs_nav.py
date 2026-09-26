@@ -29,6 +29,7 @@ DOCS: list[tuple[str, list[tuple[str, str]]]] = [
     ("Start here", [
         ("", "Docs overview"),
         ("how-enforcement-works", "How enforcement works"),
+        ("decision-model", "Decision model"),
     ]),
     ("Guides", [
         ("protection-activation", "Protection activation"),
