@@ -37,8 +37,16 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install dependencies
+        # check_insights reads the OG card manifest (site/og/cards.yaml) to
+        # honour per-record `card:` overrides.
+        run: pip install pyyaml==6.0.1
+
       - name: Test insights catalogue synchronizer
         run: python scripts/test_sync_insights_catalog.py
+
+      - name: Test OG card override handling
+        run: python scripts/test_check_insights_card.py
 
       - name: Check archive and homepage catalogue metadata
         run: python scripts/sync_insights_catalog.py --check

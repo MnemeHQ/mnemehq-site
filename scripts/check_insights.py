@@ -3,7 +3,7 @@
 Validates that every site/insights/<slug>/index.html is fully registered for
 publishing. Per docs/site/insight-publishing-contract.md, a new insight needs
 explicit registration in: sitemap, insights hub (card + JSON-LD hasPart),
-local og-v2.png, correct og:image / twitter:image meta tags, at least one
+local OG card (og-v2.png, or the manifest's per-record `card:` override), correct og:image / twitter:image meta tags, at least one
 incoming internal link from elsewhere on the site, a breadcrumb nav, a
 BreadcrumbList JSON-LD schema, and a TechArticle/Article JSON-LD schema.
 
@@ -11,7 +11,7 @@ Checks (all hard errors):
   Registration:
     ERROR  -- slug missing from site/sitemap.xml
     ERROR  -- slug has no card on site/insights/index.html
-    ERROR  -- og-v2.png missing in the article directory
+    ERROR  -- the expected OG card is missing in the article directory
     ERROR  -- og:image points to a PNG that does not exist
     ERROR  -- twitter:image points to a PNG that does not exist
     ERROR  -- no incoming internal links from elsewhere in site/
@@ -36,6 +36,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+import og_manifest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SITE_DIR = REPO_ROOT / "site"
@@ -328,6 +330,23 @@ def incoming_link_pages(slug: str) -> list[Path]:
     return hits
 
 
+def expected_card(slug: str, manifest: dict) -> str:
+    """OG card filename for an insight: the manifest's per-record ``card``
+    override (PUBLISHING.md:105 versioning), else the og-v2.png default."""
+    record = manifest.get(f"insights/{slug}/") or {}
+    return record.get("card", og_manifest.DEFAULT_CARD)
+
+
+_MANIFEST: dict | None = None
+
+
+def _manifest() -> dict:
+    global _MANIFEST
+    if _MANIFEST is None:
+        _MANIFEST = og_manifest.load(og_manifest.REPO / "site" / "og" / "cards.yaml")
+    return _MANIFEST
+
+
 def check_slug(
     slug: str,
     sitemap_set: set[str],
@@ -348,10 +367,11 @@ def check_slug(
     if slug not in hub_card_set:
         errors.append(f"Missing insights index card for {slug}")
 
-    # 3. og-v2.png present
-    og_path = article_dir / "og-v2.png"
+    # 3. the manifest's OG card (og-v2.png unless overridden) is present
+    card = expected_card(slug, _manifest())
+    og_path = article_dir / card
     if not og_path.exists():
-        errors.append(f"Missing og-v2.png for {rel}")
+        errors.append(f"Missing {card} for {rel}")
 
     # 4. og:image / twitter:image point to existing PNGs
     try:
