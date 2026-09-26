@@ -358,7 +358,7 @@
           <div class="citation-summary">Every step is a link &middot; every link is queryable &middot; the chain is the audit record.</div>
         </div>
       </div>
-      <figcaption class="diagram-caption"><strong>The chain is the audit record.</strong> Verdict &rarr; evaluator &rarr; precedence rule &rarr; retrieval &rarr; compiled record &rarr; authoring ADR. Each link cites the next. "Why did this fail?" resolves to a single chain, not a guess.</figcaption>
+      <figcaption class="diagram-caption"><strong>The chain is the audit record.</strong> Verdict &rarr; evaluator &rarr; precedence rule &rarr; applicability &rarr; compiled record &rarr; authoring ADR. Each link cites the next. "Why did this fail?" resolves to a single chain, not a guess.</figcaption>
     </figure>
 
     <h2>What enforcement provenance actually means</h2>
@@ -375,7 +375,7 @@
 
     <h3>3. Applicability explanation</h3>
 
-    <p>For a path-scoped rule, evaluation records whether the rule applied to the real target path, was skipped by a selector, or could not be determined. Retrieval is not a link in this chain: in Mneme, retrieval chooses which decisions are injected as guidance, while typed rules are enforced across the whole corpus regardless of retrieval score (ADR-017).</p>
+    <p>For a path-scoped rule, evaluation records whether the rule applied to the real target path, was skipped by a selector, or could not be determined. For typed and single-term rules, retrieval is not a link in this chain: they are enforced across the whole corpus regardless of retrieval score (ADR-017), and retrieval only chooses which decisions are injected as guidance. Multi-term legacy constraints remain retrieval-gated for now.</p>
 
     <h3>4. Precedence citation</h3>
 
@@ -505,7 +505,7 @@
       <div class="concept-metadata-label tint-teal">Enforcement surfaces</div>
       <ul class="concept-metadata-list">
       <li><a href="/integrations/github-actions/"><div class="rel-title">GitHub Actions</div><p class="rel-desc">CI enforcement gate: every PR is checked against the compiled constraint set.</p></a></li>
-      <li><a href="/integrations/gitlab/"><div class="rel-title">GitLab</div><p class="rel-desc">Designed to support: pipeline-stage checks on merge requests.</p></a></li>
+      <li><a href="/integrations/gitlab/"><div class="rel-title">GitLab</div><p class="rel-desc">Reference CI job runs mneme check on merge requests.</p></a></li>
       <li><a href="/integrations/claude-code/"><div class="rel-title">Claude Code</div><p class="rel-desc">PreToolUse hook enforces governance constraints before every file write.</p></a></li>
       </ul>
     </div>

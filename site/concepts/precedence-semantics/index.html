@@ -233,7 +233,7 @@
           {
             "@type": "Question",
             "name": "What happens when the precedence ladder cannot resolve a conflict?",
-            "acceptedAnswer": {"@type": "Answer", "text": "It is a compile-time error. If two accepted decisions share the same scope, priority, and date and have no supersession link, the compiler refuses to emit the corpus until the team resolves the ambiguity. The runtime never sees an unresolved conflict, so every conflict the corpus does emit has a defined, single answer."}
+            "acceptedAnswer": {"@type": "Answer", "text": "It is a compile-time error. If two accepted decisions share the same scope, priority, and date and have no supersession link, the compiler raises an error and the import stops until the team resolves the ambiguity, unless the conflict is explicitly approved. The runtime never sees a silently resolved conflict."}
           },
           {
             "@type": "Question",
@@ -313,23 +313,23 @@
     <figure class="diagram-figure" aria-labelledby="ps-diag-title">
       <svg viewBox="0 0 800 380" role="img" aria-labelledby="ps-diag-title ps-diag-desc" xmlns="http://www.w3.org/2000/svg">
         <title id="ps-diag-title">Precedence resolution for overlapping decisions</title>
-        <desc id="ps-diag-desc">Two overlapping decisions match the same file path. The current compiler resolves them in order: explicit supersession, then same-scope priority, then recency; a tie that none of these break is a compile-time error. Here the newer decision supersedes the older one and wins.</desc>
+        <desc id="ps-diag-desc">Two overlapping decisions match the same file path. The current compiler resolves them in order: explicit supersession, then same-scope priority, then recency; a tie that none of these break is a compile-time error. Here the newer decision in the same scope supersedes the older one, which leaves the active set everywhere. A scoped carve-out would use a path selector instead.</desc>
         <g>
-          <text x="40" y="28" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.06em">QUERY · which decision applies to services/billing/legacy/dao.py?</text>
+          <text x="40" y="28" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.06em">QUERY · which decision applies to services/orders/repo.py?</text>
 
           <!-- Decision A -->
           <rect x="40" y="56" width="340" height="90" rx="8" fill="#141416" stroke="#2e2e34"/>
           <text x="60" y="78" fill="#8be0c8" font-family="DM Mono, monospace" font-size="10">DECISION A · ADR-0017</text>
           <text x="60" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Use repository pattern</text>
-          <text x="60" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services/**</text>
+          <text x="60" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services</text>
           <text x="60" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-01 · priority: normal</text>
 
           <!-- Decision B -->
           <rect x="420" y="56" width="340" height="90" rx="8" fill="#141416" stroke="#2e2e34"/>
           <text x="440" y="78" fill="#8be0c8" font-family="DM Mono, monospace" font-size="10">DECISION B · ADR-0042</text>
-          <text x="440" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Legacy billing keeps DAO</text>
-          <text x="440" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services/billing/legacy/**</text>
-          <text x="440" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-04 · priority: normal · supersedes: ADR-0017 (in scope)</text>
+          <text x="440" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Repository pattern v2</text>
+          <text x="440" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services</text>
+          <text x="440" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-04 · priority: normal · supersedes: ADR-0017</text>
 
           <!-- Conflict arrow down -->
           <path d="M 400 146 L 400 175" stroke="#b5cc7a" stroke-width="1.5" fill="none"/>
@@ -345,7 +345,7 @@
 
           <text x="60" y="242" fill="#e8e8ec" font-family="DM Mono, monospace" font-size="11">1 · SUPERSESSION</text>
           <text x="280" y="242" fill="#88889a" font-family="DM Mono, monospace" font-size="11">explicit supersedes-link wins</text>
-          <text x="740" y="242" text-anchor="end" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="11">→ B supersedes A in this scope</text>
+          <text x="740" y="242" text-anchor="end" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="11">→ ADR-0017 leaves the active set</text>
 
           <text x="60" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">2 · SAME-SCOPE PRIORITY</text>
           <text x="280" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">higher priority wins</text>
@@ -376,7 +376,7 @@
     <ul>
       <li><strong>Total</strong> — every conflict resolves to a winner. There is no "tie" that defers to user judgment or model guessing.</li>
       <li><strong>Deterministic</strong> — the same set of records always produces the same winner, regardless of which order they were loaded, retrieved, or evaluated.</li>
-      <li><strong>Citable</strong> — the winner is accompanied by the precedence rule that selected it. "ADR-0042 won by supersession" is a usable audit record; "ADR-0042 was chosen" is not.</li>
+      <li><strong>Citable</strong> — in the complete model, the winner is accompanied by the precedence rule that selected it. "ADR-0042 won by supersession" is a usable audit record; "ADR-0042 was chosen" is not.</li>
     </ul>
 
     <h2>The standard precedence ladder</h2>
@@ -395,12 +395,12 @@
     </ol>
 
     <div class="callout">
-      <p><strong>A tie none of these rules can break is a compile-time error.</strong> Two accepted decisions with the same scope, priority, and date, and no supersession link: the compiler refuses to emit the corpus until the team resolves the ambiguity. The runtime never sees an unresolved conflict.</p>
+      <p><strong>A tie none of these rules can break is a compile-time error.</strong> Two accepted decisions with the same scope, priority, and date, and no supersession link: the compiler raises an error and the import stops until the team resolves the ambiguity, unless someone explicitly approves the conflict. The runtime never sees a silently resolved conflict.</p>
     </div>
 
     <h3>Specificity orders; it does not override</h3>
 
-    <p>In the current compiler, a narrower scope does not defeat a broader one. <code>services/**</code> and <code>services/billing/legacy/**</code> both stay in the active set, sorted most-specific-first so consumers see the narrower constraint first, and every active rule is evaluated at check time. A carve-out like "legacy billing keeps direct DAO access" is expressed by excluding that path from the broader rule with a path selector, not by letting a narrower decision silently win.</p>
+    <p>In the current compiler, a narrower scope does not defeat a broader one. <code>services</code> and <code>services.billing.legacy</code> both stay in the active set, sorted most-specific-first so consumers see the narrower constraint first, and every active rule is evaluated at check time. A carve-out like "legacy billing keeps direct DAO access" is expressed by excluding that path from the broader rule with a path selector, not by letting a narrower decision silently win.</p>
 
     <h3>Where the canonical model goes (D1)</h3>
 
@@ -413,7 +413,7 @@
     <p>Compile-time precedence has three properties runtime precedence cannot match:</p>
 
     <ul>
-      <li><strong>Conflicts surface during build, not during enforcement.</strong> If two decisions cannot be reconciled, the compilation step fails. Engineers see the conflict in their PR or in CI, not in production after a violation slipped through.</li>
+      <li><strong>Conflicts surface during build, not during enforcement.</strong> If two decisions cannot be reconciled, the import step stops and reports the contradiction, so the team resolves it before the corpus is used, not after a violation slipped through.</li>
       <li><strong>The resolved corpus is reviewable.</strong> Teams can inspect which decision applies to which scope before any agent queries the corpus. The resolved precedence is itself a versioned artifact.</li>
       <li><strong>Resolution is identical across all consumers.</strong> Because precedence resolves at compile time, every consumer reads an already-resolved corpus. No consumer has to re-implement the precedence rules — and therefore no consumer can drift from them.</li>
     </ul>
