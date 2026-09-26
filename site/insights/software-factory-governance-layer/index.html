@@ -352,10 +352,10 @@
     <tr><td>Orchestration</td><td>Which agent does which task, in what order, with what retries and handoffs</td></tr>
     <tr><td>Execution infrastructure</td><td>Where agents run and what they can touch</td></tr>
     <tr><td>Testing and review</td><td>Whether the change behaves correctly and reads well</td></tr>
-    <tr class="accent-row"><td>Architectural governance</td><td>Whether the change conforms to decisions the organization already made</td></tr>
+    <tr class="accent-row"><td>Decision layer (architecture first)</td><td>Whether the change conforms to decisions the organization already made</td></tr>
   </tbody>
 </table>
-<p>Orchestration controls the work. Architectural governance controls what the work is allowed to become. Orchestration being perfect does not stop an agent from violating an ADR, a point made in more detail in <a href="/insights/ai-agent-orchestration-is-not-governance/">AI agent orchestration is not governance</a>.</p>
+<p>Orchestration controls the work. The decision layer controls what the work is allowed to become. Orchestration being perfect does not stop an agent from violating an ADR, a point made in more detail in <a href="/insights/ai-agent-orchestration-is-not-governance/">AI agent orchestration is not governance</a>.</p>
 
 <h2>Why more production creates more drift</h2>
 <p>Five mechanisms compound as the factory scales:</p>
@@ -383,7 +383,7 @@
 <p>Not every architectural decision can become a mechanical rule. Some require human judgment every time. The point of the layer is to separate the two honestly, enforce what can be enforced, and route the rest to people.</p>
 
 <h2>Where Mneme fits</h2>
-<p>Mneme does not operate a software factory, and it does not replace orchestrators, execution platforms, coding agents, or review tools. Mneme is the decision and control layer for agentic software development, and architecture is its first decision domain. Inside the factory, it applies to one class of decision: architectural decisions in a repository. Mneme is open source. It turns accepted architectural decisions into scoped rules and returns deterministic PASS, WARN, or FAIL verdicts (or an explicit INCOMPLETE) against proposed changes, as described in <a href="/docs/how-enforcement-works/">how enforcement works</a>. Its local MCP server, shipped in 0.9.0, lets an agent retrieve the decisions that apply to a path and trace a decision's lineage, and lets agents propose new decisions that only a human can accept. See the <a href="/docs/mcp/">MCP reference</a>.</p>
+<p>Mneme does not operate a software factory, and it does not replace orchestrators, execution platforms, coding agents, or review tools. Mneme is the decision and control layer for agentic software development, and architecture is its first decision domain. Today, inside the factory, it applies to one class of decision: architectural decisions in a repository. Mneme is open source. It turns accepted architectural decisions into scoped rules and returns deterministic PASS, WARN, or FAIL verdicts (or an explicit INCOMPLETE) against proposed changes, as described in <a href="/docs/how-enforcement-works/">how enforcement works</a>. Its local MCP server, shipped in 0.9.0, lets an agent retrieve the decisions that apply to a path and trace a decision's lineage, and lets agents propose new decisions that only a human can accept. See the <a href="/docs/mcp/">MCP reference</a>.</p>
 <p>That is a narrower claim than "Mneme governs the factory." It is the part of factory governance that can be made deterministic today.</p>
 
 <h2>The same wall, at Netflix scale</h2>
@@ -391,7 +391,7 @@
 <p>Conductor is a workflow engine, not an architectural governance system, and this is not a claim that it solves the same problem as Mneme. The relevant part is narrower. Netflix hit a real scaling limit by treating "the state needed for the next decision" as the same thing as "the entire state," and the fix was separating the two.</p>
 <p>A software factory running many coding agents hits the same wall with architectural context, usually before it hits it anywhere else. An agent does not need every accepted decision in the organization to make its next change. It needs the decisions applicable to the file, service, or boundary it is about to touch.</p>
 <table class="gov-table">
-  <thead><tr><th>Conductor 4.0</th><th>Software factory governance</th></tr></thead>
+  <thead><tr><th>Conductor 4.0</th><th>Software factory decision layer</th></tr></thead>
   <tbody>
     <tr><td>Lightweight workflow blueprint</td><td>Decisions retrievable by scope, not the full decision corpus</td></tr>
     <tr><td>Loads only the task data needed next</td><td>Retrieves only the decisions applicable to the proposed change</td></tr>
