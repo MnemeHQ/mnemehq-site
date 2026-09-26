@@ -171,7 +171,7 @@
         "description": "Tracing every active rule back to the ADR, commit, discussion, or incident that authored it &mdash; the lineage of the rules themselves, distinct from per-verdict enforcement provenance.",
         "url": "https://mnemehq.com/concepts/governance-provenance/",
         "datePublished": "2026-05-20",
-        "dateModified": "2026-05-20",
+        "dateModified": "2026-09-26",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/governance-provenance/og-v2.png",
@@ -189,7 +189,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "How is governance provenance different from enforcement provenance?", "acceptedAnswer": {"@type": "Answer", "text": "Enforcement provenance traces a single verdict back to the decision that produced it (verdict #9341 cited rule R, which was resolved from candidates X, Y, Z). Governance provenance traces a rule back to its own origin (rule R was authored by ADR-0017, on date D, by author A, supersedes ADRs P and Q, was motivated by incident I). Enforcement provenance is per-event. Governance provenance is per-rule."}},
-          {"@type": "Question", "name": "What does governance provenance actually contain?", "acceptedAnswer": {"@type": "Answer", "text": "For every active rule: the source ADR (file, sha, author, date), the supersession chain (which rules it replaces and why), the propagation history (which surfaces and scopes it has been applied to), and the originating context (the discussion, issue, RFC, or incident that motivated the decision). Together these form a queryable lineage for every constraint in the corpus."}},
+          {"@type": "Question", "name": "What does governance provenance actually contain?", "acceptedAnswer": {"@type": "Answer", "text": "For every active rule: the source ADR (file, sha, author, date), the supersession chain (which rules it replaces and why), the propagation history (which surfaces and scopes it has been applied to), and the originating context (the discussion, issue, RFC, or incident that motivated the decision). Together these form a queryable lineage for every constraint in the corpus. In Mneme today, compiled decisions carry the source ADR path and a content hash; status and supersession are derived from the ADR corpus. Author identity, propagation history, and originating context are part of the model, not yet recorded; the canonical Decision Index (D1) makes provenance a typed property of each decision version."}},
           {"@type": "Question", "name": "Why does governance provenance matter operationally?", "acceptedAnswer": {"@type": "Answer", "text": "It is the substrate for trust, change-impact analysis, audit, and security review. An engineer can ask 'why does this rule exist?' and get a citable answer. A security review can show that every governance rule traces to an approved decision. A refactor of the ADR corpus can identify which rules are at risk of regression. None of these capabilities exist if the rules are anonymous or freeform."}},
           {"@type": "Question", "name": "How does governance provenance relate to the compiler analogy?", "acceptedAnswer": {"@type": "Answer", "text": "Compilers emit source-location diagnostics for every error: 'this variable was declared at line 42 of file X, used at line 73 of file Y, and its type is wrong here.' Governance provenance is the same property applied to rules: every active rule carries source-location metadata back to its authoring ADR, and the compiler-style trace is what makes rule changes inspectable rather than mysterious."}}
         ]
@@ -342,7 +342,7 @@
 
     <h2>What governance provenance actually contains</h2>
 
-    <p>For every active rule in the decision corpus, governance provenance maintains four classes of metadata.</p>
+    <p>A complete governance provenance model covers four classes of metadata for every active rule. Mneme records part of this today; the canonical Decision Index (D1) is where the rest becomes a typed property of each decision. The section after this list separates the two.</p>
 
     <h3>1. Authoring ADR</h3>
 
@@ -363,6 +363,12 @@
     <div class="callout">
       <p><strong>Provenance is not a metadata afterthought.</strong> It is the structural property that determines whether a rule survives organizational turnover. A rule without origin metadata becomes folklore the moment its author leaves.</p>
     </div>
+
+    <h2>What Mneme records today, and what D1 adds</h2>
+
+    <p><strong>Today.</strong> Each compiled decision record carries its source: the ADR path and a content hash of the ADR it was compiled from. Status and the <code>supersedes</code> / <code>superseded_by</code> chain are derived from ADR frontmatter at import, where only active decisions are written to the corpus, and are derived again when you run <code>mneme check</code> with an ADR directory. That check reports warn-only lifecycle diagnostics: dangling <code>supersedes</code> references, orphaned superseded decisions, active contradictions, decisions silently eliminated by precedence, and ledger status mismatches. Git SHA and author capture, propagation history, and originating context are not recorded today.</p>
+
+    <p><strong>Canonical model (D1).</strong> The canonical Decision Index (<a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-023-canonical-decision-index-and-runtime-projection-boundary.md">ADR-023</a>) makes provenance a typed property of immutable decision versions: source type, locator, revision, observation time, evidence hash, and verification status. Provenance explains where a decision came from. It does not itself make the decision authoritative.</p>
 
     <h2>The compiler-diagnostics analogy</h2>
 
@@ -452,7 +458,7 @@
 
     <h2>Where governance provenance sits in the layer model</h2>
 
-    <p>Governance provenance is a property of the governance infrastructure layer, not a separate layer of its own. It is what every step of the corpus pipeline produces as metadata when the pipeline is built right: the compiler records source links, the supersession resolver records the chain, the propagation system records each application surface, and the corpus query layer can return all of it.</p>
+    <p>Governance provenance is a property of the governance infrastructure layer, not a separate layer of its own. It is what every step of the corpus pipeline produces as metadata when the pipeline is built right: the compiler records source links, the supersession resolver records the chain, the propagation system records each application surface, and the corpus query layer can return all of it. In Mneme today, the source link ships on each record and the supersession chain is derived from the ADR corpus rather than stored on the record; propagation history is part of the model, not yet recorded.</p>
 
     <p>The relationship to adjacent concepts:</p>
 
@@ -483,7 +489,7 @@
     </details>
     <details>
       <summary>What does governance provenance actually contain?</summary>
-      <div class="faq-body">For every active rule: the source ADR (file, sha, author, date), the supersession chain (which rules it replaces and why), the propagation history (which surfaces and scopes it has been applied to), and the originating context (the discussion, issue, RFC, or incident that motivated the decision). Together these form a queryable lineage for every constraint in the corpus.</div>
+      <div class="faq-body">For every active rule: the source ADR (file, sha, author, date), the supersession chain (which rules it replaces and why), the propagation history (which surfaces and scopes it has been applied to), and the originating context (the discussion, issue, RFC, or incident that motivated the decision). Together these form a queryable lineage for every constraint in the corpus. In Mneme today, compiled decisions carry the source ADR path and a content hash; status and supersession are derived from the ADR corpus. Author identity, propagation history, and originating context are part of the model, not yet recorded; the canonical Decision Index (D1) makes provenance a typed property of each decision version.</div>
     </details>
     <details>
       <summary>Why does governance provenance matter operationally?</summary>

@@ -200,7 +200,7 @@
         "description": "Every governance verdict is traceable to a specific decision record, the precedence rule that selected it, and the source ADR — a citable chain from outcome to authoring intent.",
         "url": "https://mnemehq.com/concepts/enforcement-provenance/",
         "datePublished": "2026-05-15",
-        "dateModified": "2026-05-15",
+        "dateModified": "2026-09-26",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/enforcement-provenance/og-v2.png",
@@ -228,7 +228,7 @@
           {
             "@type": "Question",
             "name": "What does a full provenance chain contain?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The chain runs through six links: the authoring source decision (git SHA, author, date), the compiled decision record with a stable decision_id, the retrieval step that recorded the query and candidate set, the precedence resolution that named both the winner and the rule that selected it, the evaluation record of the predicate that ran, and the enforcement verdict itself. Each link cites the one before it, so the chain is the audit record. The verdict links to all five upstream artifacts with no hidden step."}
+            "acceptedAnswer": {"@type": "Answer", "text": "The chain runs through six links: the authoring source decision (git SHA, author, date), the compiled decision record with a stable decision_id, the applicability outcome for the target path, the precedence resolution that named both the winner and the rule that selected it, the evaluation record of the predicate that ran, and the enforcement verdict itself. Each link cites the one before it, so the chain is the audit record. The verdict links to all five upstream artifacts with no hidden step. In Mneme today, verdicts carry the decision, the rule that fired, the matched term, and the applicability outcome, and compiled records link to their source ADR; precedence citation, run metadata, and evidence binding to stable decision identity follow the canonical Decision Index (D1)."}
           },
           {
             "@type": "Question",
@@ -310,7 +310,7 @@
       <div class="mneme-diagram mneme-diagram--chain" role="img"
            aria-labelledby="ep-diag-title ep-diag-desc">
         <p id="ep-diag-title" class="mneme-diagram__title">Provenance chain &middot; enforcement verdict cites authoring intent</p>
-        <p id="ep-diag-desc" class="mneme-diagram__sr-desc">Six-link chain from authoring ADR through compilation, retrieval, precedence resolution, evaluation, and enforcement event. Link 1 (authoring) is the source decision; link 6 (enforcement event) is the verdict. Each link cites the previous, making the chain the audit record. A citable-chain summary block follows the six links.</p>
+        <p id="ep-diag-desc" class="mneme-diagram__sr-desc">Six-link chain from authoring ADR through compilation, applicability, precedence resolution, evaluation, and enforcement event. Link 1 (authoring) is the source decision; link 6 (enforcement event) is the verdict. Each link cites the previous, making the chain the audit record. A citable-chain summary block follows the six links.</p>
 
         <ol class="chain">
           <li class="link link--source">
@@ -327,9 +327,9 @@
           </li>
           <li class="link">
             <div class="l-num">03</div>
-            <div class="l-type">Retrieval</div>
-            <div class="l-id">scope match &middot; top-K</div>
-            <div class="l-meta">query &middot; rank &middot; candidates</div>
+            <div class="l-type">Applicability</div>
+            <div class="l-id">path selector &middot; outcome</div>
+            <div class="l-meta">applies &middot; skips &middot; unknown</div>
           </li>
           <li class="link">
             <div class="l-num">04</div>
@@ -353,12 +353,12 @@
 
         <div class="citation">
           <div class="citation-label">Citable chain</div>
-          <div class="citation-line">verdict#NNNN &larr; evaluator(decision @ corpus v.N) &larr; precedence(supersession) &larr; retrieval(query q)</div>
+          <div class="citation-line">verdict#NNNN &larr; evaluator(decision @ corpus v.N) &larr; precedence(supersession) &larr; applicability(path p)</div>
           <div class="citation-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &larr; decision &larr; compile(source @ sha) &larr; author</div>
           <div class="citation-summary">Every step is a link &middot; every link is queryable &middot; the chain is the audit record.</div>
         </div>
       </div>
-      <figcaption class="diagram-caption"><strong>The chain is the audit record.</strong> Verdict &rarr; evaluator &rarr; precedence rule &rarr; retrieval &rarr; compiled record &rarr; authoring ADR. Each link cites the next. "Why did this fail?" resolves to a single chain, not a guess.</figcaption>
+      <figcaption class="diagram-caption"><strong>The chain is the audit record.</strong> Verdict &rarr; evaluator &rarr; precedence rule &rarr; applicability &rarr; compiled record &rarr; authoring ADR. Each link cites the next. "Why did this fail?" resolves to a single chain, not a guess.</figcaption>
     </figure>
 
     <h2>What enforcement provenance actually means</h2>
@@ -371,11 +371,11 @@
 
     <h3>2. Compilation traceability</h3>
 
-    <p>The compiler records which source file produced which decision record, at which git SHA, with which author. The compiled corpus is not just data; it is data with origin. Anyone reading the corpus can answer "where did this constraint come from?" by following the link back to the source ADR.</p>
+    <p>The compiler records which source file produced which decision record. Mneme records the source path and a content hash today; source revision and author identity are part of the canonical decision model (D1). The compiled corpus is not just data; it is data with origin. Anyone reading the corpus can answer "where did this constraint come from?" by following the link back to the source ADR.</p>
 
-    <h3>3. Retrieval explanation</h3>
+    <h3>3. Applicability explanation</h3>
 
-    <p>When the governance retriever returns a set of candidate decisions for a query, it records the query, the scope match, the rank, and the candidates. The set of decisions that <em>could</em> have applied is itself a queryable record — not just the one that did apply.</p>
+    <p>For a path-scoped rule, evaluation records whether the rule applied to the real target path, was skipped by a selector, or could not be determined. For typed and single-term rules, retrieval is not a link in this chain: they are enforced across the whole corpus regardless of retrieval score (ADR-017), and retrieval only chooses which decisions are injected as guidance. Multi-term legacy constraints remain retrieval-gated for now.</p>
 
     <h3>4. Precedence citation</h3>
 
@@ -387,7 +387,13 @@
 
     <h3>6. Verdict link</h3>
 
-    <p>The enforcement output links to all five upstream artifacts. Reading the verdict tells you which evaluator, which precedence rule, which retrieval, which compiled record, and which authoring ADR. There is no hidden step.</p>
+    <p>The enforcement output links to all five upstream artifacts. Reading the verdict tells you which evaluator, which precedence rule, which applicability outcome, which compiled record, and which authoring ADR. There is no hidden step.</p>
+
+    <h2>What Mneme's verdicts carry today, and what D1 adds</h2>
+
+    <p><strong>Today.</strong> Each Mneme verdict carries the decision ID and text, the rule that fired, the matched term, the rule type, the input path and selector, and, for path-scoped rules, the applicability outcome. The compiled decision record links back to its source ADR path and content hash. Verdicts do not yet cite the precedence rule that selected a decision (precedence is resolved at compile time), carry a corpus version or run timestamp, or land in a stored, indexed verdict log.</p>
+
+    <p><strong>Canonical model (D1).</strong> <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-029-enforcement-evidence-binding-semantics.md">ADR-029</a> defines how enforcement evidence binds to decision identity, and its implementation deliberately follows D1, so that evidence binds to stable canonical decision versions rather than a temporary identifier. Provenance explains where a verdict came from; it is not, by itself, trusted enforcement evidence.</p>
 
     <h2>Why provenance has to be structural, not narrative</h2>
 
@@ -499,7 +505,7 @@
       <div class="concept-metadata-label tint-teal">Enforcement surfaces</div>
       <ul class="concept-metadata-list">
       <li><a href="/integrations/github-actions/"><div class="rel-title">GitHub Actions</div><p class="rel-desc">CI enforcement gate: every PR is checked against the compiled constraint set.</p></a></li>
-      <li><a href="/integrations/gitlab/"><div class="rel-title">GitLab</div><p class="rel-desc">Pipeline-stage governance enforcement on merge requests.</p></a></li>
+      <li><a href="/integrations/gitlab/"><div class="rel-title">GitLab</div><p class="rel-desc">Reference CI job runs mneme check on merge requests.</p></a></li>
       <li><a href="/integrations/claude-code/"><div class="rel-title">Claude Code</div><p class="rel-desc">PreToolUse hook enforces governance constraints before every file write.</p></a></li>
       </ul>
     </div>

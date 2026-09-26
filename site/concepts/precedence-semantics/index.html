@@ -200,7 +200,7 @@
         "description": "Precedence semantics define how a governance system resolves conflicts when two decisions both apply to a file. Without precedence rules, the system has no governance.",
         "url": "https://mnemehq.com/concepts/precedence-semantics/",
         "datePublished": "2026-05-15",
-        "dateModified": "2026-05-15",
+        "dateModified": "2026-09-26",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/precedence-semantics/og-v2.png",
@@ -218,12 +218,12 @@
           {
             "@type": "Question",
             "name": "What rules make up Mneme's precedence ladder?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme's precedence ladder uses four rules evaluated top to bottom. Supersession comes first: an explicit supersedes-link wins, because it represents an authored statement that one decision replaces another. Scope specificity comes next: the deeper, more literal glob wins. Recency follows: the more recently created decision breaks ties between equally specific scopes. Severity is the final tiebreaker. The first rule that produces a winner halts the descent, and later rules never re-open a resolved precedence."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Today, Mneme's compiler resolves overlapping ADRs in a fixed order: only accepted decisions compete; a decision explicitly named in another accepted decision's supersedes field is removed; within the same scope the higher priority wins (foundational over normal over exception); and on a priority tie the newer decision wins. Scope specificity orders the active set but does not defeat a broader decision. A tie none of these rules can break is a compile-time error. The canonical Decision Index (D1) moves resolution to explicit active-version selection instead of dates."}
           },
           {
             "@type": "Question",
             "name": "Why does supersession rank above scope specificity?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Supersession ranks first because it captures explicit team intent. When a newer decision declares supersedes: ADR-0017 in its metadata, the team has stated that decision A is replaced, not just refined, by decision B. Specificity only captures author-known scope narrowing, which is weaker than an authored replacement. A most-specific-wins rule alone cannot model one decision replacing another, so supersession needs its own higher rung on the ladder."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Supersession captures explicit team intent. When a newer decision declares supersedes: ADR-0017 in its metadata, the team has stated that decision A is replaced, not just refined, by decision B. In Mneme's current compiler, specificity does not pick a winner at all: broader and narrower scopes both stay active, and carve-outs are expressed with path selectors on the broader rule. Supersession, then same-scope priority, decide actual conflicts."}
           },
           {
             "@type": "Question",
@@ -233,12 +233,12 @@
           {
             "@type": "Question",
             "name": "What happens when the precedence ladder cannot resolve a conflict?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Conflicts the ladder cannot resolve are compile-time errors. If two decisions share identical scope, identical severity, identical timestamps, and have no supersession link, the compiler refuses to emit the corpus until the team resolves the ambiguity. The runtime never sees an unresolved conflict, which is what keeps the resolution function total: every conflict the corpus does emit has a defined, single answer."}
+            "acceptedAnswer": {"@type": "Answer", "text": "It is a compile-time error. If two accepted decisions share the same scope, priority, and date and have no supersession link, the compiler raises an error and the import stops until the team resolves the ambiguity, unless the conflict is explicitly approved. The runtime never sees a silently resolved conflict."}
           },
           {
             "@type": "Question",
             "name": "Why are first-match-wins and longest-rule-wins unsuitable for governance?",
-            "acceptedAnswer": {"@type": "Answer", "text": "First-match-wins makes resolution load-order-dependent, so it is non-deterministic across consumers. Longest-rule-wins conflates path depth with specificity and ignores authoring intent such as supersession. Most-specific-wins alone cannot express that one decision replaces another, and newest-wins alone lets a broad new rule silently shadow older targeted exceptions. The right model is a composition: supersession, then specificity, then recency, with severity as a final tiebreaker, because each rule alone fails in some real-world case."}
+            "acceptedAnswer": {"@type": "Answer", "text": "First-match-wins makes resolution load-order-dependent, so it is non-deterministic across consumers. Longest-rule-wins conflates path depth with specificity and ignores authoring intent such as supersession. Most-specific-wins alone cannot express that one decision replaces another, and newest-wins alone lets a broad new rule silently shadow older targeted exceptions. Mneme composes explicit rules instead: status, then supersession, then same-scope priority, then recency, with unresolvable ties treated as compile errors."}
           }
         ]
       },
@@ -277,7 +277,7 @@
 
 <main id="main-content" tabindex="-1">
 <div class="answer-capsule">
-  <strong>Precedence semantics.</strong> The rules that decide which of two overlapping decisions wins. Glob specificity beats glob generality. Explicit decisions beat inherited ones. Newer supersessions beat older originals. Compile-time conflict errors beat runtime ambiguity. Without precedence semantics, governance is a stack of suggestions — and which one applies depends on the run.
+  <strong>Precedence semantics.</strong> The rules that decide which of two overlapping decisions wins. Explicit supersession beats the decision it replaces. Within a scope, higher priority wins, then the newer decision. Ties that cannot be broken are compile-time errors, never runtime guesses. Without precedence semantics, governance is a stack of suggestions — and which one applies depends on the run.
 </div>
 
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
@@ -313,23 +313,23 @@
     <figure class="diagram-figure" aria-labelledby="ps-diag-title">
       <svg viewBox="0 0 800 380" role="img" aria-labelledby="ps-diag-title ps-diag-desc" xmlns="http://www.w3.org/2000/svg">
         <title id="ps-diag-title">Precedence resolution for overlapping decisions</title>
-        <desc id="ps-diag-desc">Two overlapping decisions match the same file path. The precedence ladder applies four rules in order — supersession, specificity, recency, severity — to select the winning record.</desc>
+        <desc id="ps-diag-desc">Two overlapping decisions match the same file path. The current compiler resolves them in order: explicit supersession, then same-scope priority, then recency; a tie that none of these break is a compile-time error. Here the newer decision in the same scope supersedes the older one, which leaves the active set everywhere. A scoped carve-out would use a path selector instead.</desc>
         <g>
-          <text x="40" y="28" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.06em">QUERY · which decision applies to services/billing/legacy/dao.py?</text>
+          <text x="40" y="28" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="10" letter-spacing="0.06em">QUERY · which decision applies to services/orders/repo.py?</text>
 
           <!-- Decision A -->
           <rect x="40" y="56" width="340" height="90" rx="8" fill="#141416" stroke="#2e2e34"/>
           <text x="60" y="78" fill="#8be0c8" font-family="DM Mono, monospace" font-size="10">DECISION A · ADR-0017</text>
           <text x="60" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Use repository pattern</text>
-          <text x="60" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services/**</text>
-          <text x="60" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-01 · severity: high</text>
+          <text x="60" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services</text>
+          <text x="60" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-01 · priority: normal</text>
 
           <!-- Decision B -->
           <rect x="420" y="56" width="340" height="90" rx="8" fill="#141416" stroke="#2e2e34"/>
           <text x="440" y="78" fill="#8be0c8" font-family="DM Mono, monospace" font-size="10">DECISION B · ADR-0042</text>
-          <text x="440" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Legacy billing keeps DAO</text>
-          <text x="440" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services/billing/legacy/**</text>
-          <text x="440" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-04 · severity: high · supersedes: ADR-0017 (in scope)</text>
+          <text x="440" y="98" fill="#e8e8ec" font-family="Inter, sans-serif" font-size="12" font-weight="500">Repository pattern v2</text>
+          <text x="440" y="118" fill="#88889a" font-family="DM Mono, monospace" font-size="10">scope: services</text>
+          <text x="440" y="134" fill="#88889a" font-family="DM Mono, monospace" font-size="10">created: 2026-04 · priority: normal · supersedes: ADR-0017</text>
 
           <!-- Conflict arrow down -->
           <path d="M 400 146 L 400 175" stroke="#b5cc7a" stroke-width="1.5" fill="none"/>
@@ -345,19 +345,19 @@
 
           <text x="60" y="242" fill="#e8e8ec" font-family="DM Mono, monospace" font-size="11">1 · SUPERSESSION</text>
           <text x="280" y="242" fill="#88889a" font-family="DM Mono, monospace" font-size="11">explicit supersedes-link wins</text>
-          <text x="740" y="242" text-anchor="end" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="11">→ B supersedes A in this scope</text>
+          <text x="740" y="242" text-anchor="end" fill="#b5cc7a" font-family="DM Mono, monospace" font-size="11">→ ADR-0017 leaves the active set</text>
 
-          <text x="60" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">2 · SCOPE SPECIFICITY</text>
-          <text x="280" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">deeper glob wins</text>
-          <text x="740" y="266" text-anchor="end" fill="#88889a" font-family="DM Mono, monospace" font-size="11">/billing/legacy/ &gt; /**</text>
+          <text x="60" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">2 · SAME-SCOPE PRIORITY</text>
+          <text x="280" y="266" fill="#88889a" font-family="DM Mono, monospace" font-size="11">higher priority wins</text>
+          <text x="740" y="266" text-anchor="end" fill="#88889a" font-family="DM Mono, monospace" font-size="11">foundational &gt; normal</text>
 
           <text x="60" y="290" fill="#88889a" font-family="DM Mono, monospace" font-size="11">3 · RECENCY</text>
-          <text x="280" y="290" fill="#88889a" font-family="DM Mono, monospace" font-size="11">newer record wins ties</text>
+          <text x="280" y="290" fill="#88889a" font-family="DM Mono, monospace" font-size="11">newer date wins a priority tie</text>
           <text x="740" y="290" text-anchor="end" fill="#88889a" font-family="DM Mono, monospace" font-size="11">2026-04 &gt; 2026-01</text>
 
-          <text x="60" y="314" fill="#88889a" font-family="DM Mono, monospace" font-size="11">4 · SEVERITY</text>
-          <text x="280" y="314" fill="#88889a" font-family="DM Mono, monospace" font-size="11">higher severity escalates</text>
-          <text x="740" y="314" text-anchor="end" fill="#88889a" font-family="DM Mono, monospace" font-size="11">tiebreak only</text>
+          <text x="60" y="314" fill="#88889a" font-family="DM Mono, monospace" font-size="11">4 · UNRESOLVED</text>
+          <text x="280" y="314" fill="#88889a" font-family="DM Mono, monospace" font-size="11">tie is a compile error</text>
+          <text x="740" y="314" text-anchor="end" fill="#88889a" font-family="DM Mono, monospace" font-size="11">never a runtime guess</text>
 
           <!-- Verdict -->
           <rect x="220" y="346" width="360" height="28" rx="6" fill="rgba(181, 204, 122,0.05)" stroke="#b5cc7a" stroke-width="1.5"/>
@@ -376,32 +376,35 @@
     <ul>
       <li><strong>Total</strong> — every conflict resolves to a winner. There is no "tie" that defers to user judgment or model guessing.</li>
       <li><strong>Deterministic</strong> — the same set of records always produces the same winner, regardless of which order they were loaded, retrieved, or evaluated.</li>
-      <li><strong>Citable</strong> — the winner is accompanied by the precedence rule that selected it. "ADR-0042 won by supersession" is a usable audit record; "ADR-0042 was chosen" is not.</li>
+      <li><strong>Citable</strong> — in the complete model, the winner is accompanied by the precedence rule that selected it. "ADR-0042 won by supersession" is a usable audit record; "ADR-0042 was chosen" is not.</li>
     </ul>
 
     <h2>The standard precedence ladder</h2>
 
-    <p>Mneme's precedence ladder uses four rules, evaluated top-to-bottom. The first rule that produces a winner halts the descent. Subsequent rules never re-open a resolved precedence.</p>
+    <p>Mneme's decision model defines precedence explicitly, and resolves it before enforcement ever runs. Two things are worth separating: what the current compiler does today, and the canonical resolution model the Decision Index is moving to.</p>
 
-    <h3>1. Supersession</h3>
+    <h3>Today: how the current compiler resolves overlap</h3>
 
-    <p>If one decision explicitly supersedes another within the overlapping scope, supersession wins. Supersession is an authored relationship: the newer decision declares <code>supersedes: ADR-0017</code> in its metadata. This is the strongest precedence rule because it represents an explicit team statement that decision A is replaced — not just refined — by decision B.</p>
+    <p>When ADRs are compiled into the decision corpus, precedence is applied in a fixed order. The first rule that produces a winner stops the descent.</p>
 
-    <h3>2. Scope specificity</h3>
-
-    <p>If no supersession applies, the more specific scope wins. <code>services/billing/legacy/**</code> beats <code>services/**</code> because the legacy scope explicitly addresses a narrower region. Specificity is computed structurally on the glob: depth, literal segments, and explicit anchors. The rule is mechanical, not semantic — there is no model judgment of "which feels more specific."</p>
-
-    <h3>3. Recency</h3>
-
-    <p>If scopes are equally specific, the more recently created decision wins. This rule encodes a soft preference for newer team thinking, but it is intentionally below specificity — a broad new decision should not silently override an older narrow exception. Recency breaks ties, not standards.</p>
-
-    <h3>4. Severity escalation</h3>
-
-    <p>If recency ties, the higher-severity decision wins as a final tiebreaker. This rule almost never fires in practice — its existence is mostly to ensure the function is total: every conflict has a defined answer, even pathological ones.</p>
+    <ol>
+      <li><strong>Status.</strong> Only accepted decisions compete. Proposed, deprecated, and superseded ADRs are excluded from the active set.</li>
+      <li><strong>Explicit supersession.</strong> A decision that another accepted decision names in <code>supersedes: ADR-0017</code> is removed. This is the strongest rule because it is an authored statement that one decision replaces another, not just refines it.</li>
+      <li><strong>Same-scope priority.</strong> When two accepted decisions share a scope, the higher priority wins: <code>foundational</code> over <code>normal</code> over <code>exception</code>.</li>
+      <li><strong>Recency.</strong> On a priority tie within the same scope, the newer decision wins.</li>
+    </ol>
 
     <div class="callout">
-      <p><strong>Conflict cases that the ladder cannot resolve are compile-time errors.</strong> Two decisions with identical scope, identical severity, identical timestamps, and no supersession link — the compiler refuses to emit the corpus until the team resolves the ambiguity. The runtime never sees an unresolved conflict.</p>
+      <p><strong>A tie none of these rules can break is a compile-time error.</strong> Two accepted decisions with the same scope, priority, and date, and no supersession link: the compiler raises an error and the import stops until the team resolves the ambiguity, unless someone explicitly approves the conflict. The runtime never sees a silently resolved conflict.</p>
     </div>
+
+    <h3>Specificity orders; it does not override</h3>
+
+    <p>In the current compiler, a narrower scope does not defeat a broader one. <code>services</code> and <code>services.billing.legacy</code> both stay in the active set, sorted most-specific-first so consumers see the narrower constraint first, and every active rule is evaluated at check time. A carve-out like "legacy billing keeps direct DAO access" is expressed by excluding that path from the broader rule with a path selector, not by letting a narrower decision silently win.</p>
+
+    <h3>Where the canonical model goes (D1)</h3>
+
+    <p>The canonical Decision Index (<a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-023-canonical-decision-index-and-runtime-projection-boundary.md">ADR-023</a>) makes resolution an explicit property of the decision itself. A decision can have multiple immutable versions, and the active version is resolved explicitly rather than inferred from dates, source order, or whichever record happened to load. Supersession becomes recorded lineage in the decision graph. D1 moves this into the authoritative Decision Index and projects the active version back into the existing runtime, so current enforcement and retrieval behaviour stays the same for today's consumers.</p>
 
     <h2>Why precedence has to be at compile time, not runtime</h2>
 
@@ -410,7 +413,7 @@
     <p>Compile-time precedence has three properties runtime precedence cannot match:</p>
 
     <ul>
-      <li><strong>Conflicts surface during build, not during enforcement.</strong> If two decisions cannot be reconciled, the compilation step fails. Engineers see the conflict in their PR or in CI, not in production after a violation slipped through.</li>
+      <li><strong>Conflicts surface during build, not during enforcement.</strong> If two decisions cannot be reconciled, the import step stops and reports the contradiction, so the team resolves it before the corpus is used, not after a violation slipped through.</li>
       <li><strong>The resolved corpus is reviewable.</strong> Teams can inspect which decision applies to which scope before any agent queries the corpus. The resolved precedence is itself a versioned artifact.</li>
       <li><strong>Resolution is identical across all consumers.</strong> Because precedence resolves at compile time, every consumer reads an already-resolved corpus. No consumer has to re-implement the precedence rules — and therefore no consumer can drift from them.</li>
     </ul>
@@ -460,7 +463,7 @@
     </table>
     </div>
 
-    <p>The right model is a composition: supersession first (because it captures explicit intent), then specificity (because it captures author-known scope narrowing), then recency (because it captures team evolution), with severity as a final tiebreaker. Each rule alone fails in some real-world case; together, they cover the cases teams actually have.</p>
+    <p>The right model is a composition of explicit rules. Mneme's current compiler applies status, then explicit supersession (authored intent), then same-scope priority, then recency, and treats any remaining tie as a compile error. Scope narrowing is expressed with path selectors rather than an implicit most-specific-wins rule. The canonical model replaces date-based tiebreaking with explicit active-version resolution.</p>
 
     <h2>What precedence semantics enable</h2>
 
@@ -468,9 +471,9 @@
 
     <ul>
       <li><strong>Deterministic enforcement</strong> — without a deterministic conflict-resolution rule, the same query can produce different verdicts. Determinism downstream depends on precedence determinism upstream.</li>
-      <li><strong>Auditability</strong> — every enforcement event cites both the winning decision and the precedence rule that selected it. "Blocked by ADR-0042, winner by supersession over ADR-0017" is a complete audit record.</li>
-      <li><strong>Safe evolution</strong> — teams can supersede, narrow, or refine decisions without fearing silent regressions. The compiler surfaces every overlap; the ladder handles every resolution.</li>
-      <li><strong>Cross-consumer agreement</strong> — Claude Code, Cursor, Copilot, and CI all reach the same verdict because they all read an already-resolved corpus. Propagation depends on precedence resolution happening upstream of distribution.</li>
+      <li><strong>Auditability</strong> — a verdict can be traced to the decision that produced it. Today Mneme's verdicts cite the decision and the rule that fired; recording which precedence rule selected that decision belongs to the canonical model's evidence chain, bound to stable decision identity after D1.</li>
+      <li><strong>Safe evolution</strong> — teams can supersede, narrow, or refine decisions without fearing silent regressions. The compiler surfaces unresolvable overlaps as errors instead of guessing.</li>
+      <li><strong>Cross-consumer agreement</strong> — every supported surface reaches the same verdict because they all read an already-resolved corpus. Propagation depends on precedence resolution happening upstream of distribution.</li>
     </ul>
 
     <h2>Related concepts</h2>
