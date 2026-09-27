@@ -46,7 +46,7 @@
         "description": "Run it yourself: a proposed change swaps deterministic retrieval for a vector database. Mneme blocks the divergence, then passes the compliant retry.",
         "url": "https://mnemehq.com/demo/architectural-drift/",
         "datePublished": "2026-05-15",
-        "dateModified": "2026-08-25",
+        "dateModified": "2026-09-27",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "image": "https://mnemehq.com/demo/architectural-drift/og-v2.png",
@@ -58,7 +58,7 @@
           {
             "@type": "Question",
             "name": "What counts as architectural drift in this example?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The project deliberately chose deterministic keyword retrieval. Adding sentence-transformers and a vector database would create a parallel retrieval architecture that contradicts that recorded decision."}
+            "acceptedAnswer": {"@type": "Answer", "text": "The project deliberately chose deterministic keyword retrieval. Adding sentence-transformers and a vector database would create a parallel retrieval architecture that contradicts that recorded decision. For the general definition and the prevention stack, see architectural drift prevention."}
           },
           {
             "@type": "Question",
@@ -186,7 +186,7 @@ mneme check --memory examples/project_memory.json \
 
       <section class="demo-faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Common questions</h2>
-        <details><summary>What counts as architectural drift here?</summary><p>The project chose predictable keyword matching. Adding embeddings and a vector database creates a second, conflicting way to find the rules.</p></details>
+        <details><summary>What counts as architectural drift here?</summary><p>The project chose predictable keyword matching. Adding embeddings and a vector database creates a second, conflicting way to find the rules. For the general definition and the prevention stack, see <a href="/concepts/architectural-drift-prevention/">architectural drift prevention</a>.</p></details>
         <details><summary>Why block the first change?</summary><p>Later work builds on whatever lands first. Blocking the initial divergence prevents new dependencies, data paths, tests, and operating assumptions from becoming the next agent's baseline.</p></details>
         <details><summary>Is the example reproducible without an LLM?</summary><p>Yes. The decision ships in <code>examples/project_memory.json</code>, and the commands above exercise both outcomes through <code>mneme check</code>.</p></details>
       </section>
