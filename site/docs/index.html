@@ -96,22 +96,14 @@
     .quickstart-box h2 { margin: 0 0 0.45rem; font-size: 1rem; font-weight: 600; }
     .quickstart-box > p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.75; }
     .quickstart-box .cta-row { margin: 1rem 0 0; }
-    .quickstart-box > pre { margin: 1.15rem 0; max-width: none; padding: 1rem 1.1rem; overflow: hidden; border: 1px solid #29292f; border-radius: 8px; background: #0a0a0d; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .quickstart-box > pre { margin: 1.15rem 0 1rem; max-width: none; padding: 1rem 1.1rem; overflow: hidden; border: 1px solid #29292f; border-radius: 8px; background: #0a0a0d; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.7; white-space: pre-wrap; overflow-wrap: anywhere; }
     .quickstart-box pre .cp { color: #b8b8c2; }
-    .quickstart-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem 1.5rem; margin-top: 1.25rem; padding-top: 1.15rem; border-top: 1px solid #222228; }
-    .qs-item { display: flex; flex-direction: column; gap: 0.35rem; }
-    .qs-item-title { font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text); }
-    .qs-item p { margin: 0; font-size: 0.82rem; color: var(--muted); line-height: 1.65; }
-    .qs-item code, .quickstart-surface-card code { font-family: 'DM Mono', monospace; font-size: 0.82em; color: var(--accent); background: rgba(255,255,255,0.04); padding: 0.1em 0.35em; border-radius: 4px; }
-    .quickstart-surfaces { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.15rem; }
-    .quickstart-surface-card { background: #0a0a0d; border: 1px solid #24242a; border-radius: 8px; padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 0.45rem; }
-    .quickstart-surface-card .sc-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-    .quickstart-surface-card .sc-name { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); }
-    .quickstart-surface-card .sc-link { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--accent); text-decoration: none; }
-    .quickstart-surface-card .sc-link:hover { text-decoration: underline; }
-    .quickstart-surface-card p { margin: 0; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
-    .quickstart-surface-card pre { margin: 0.35rem 0 0; padding: 0.65rem 0.8rem; font-size: 0.74rem; line-height: 1.5; border-radius: 6px; background: #131317; border: 1px solid #202026; white-space: pre-wrap; word-break: break-all; }
-    .quickstart-surface-card pre code { background: none; padding: 0; color: var(--text); }
+    .agent-setup-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: center; padding: 1rem 1.1rem; border: 1px solid rgba(181, 204, 122,0.28); border-radius: 8px; background: #0a0a0d; scroll-margin-top: 6rem; }
+    .agent-setup-card h3 { margin: 0 0 0.3rem; font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 600; }
+    .agent-setup-card p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.55; }
+    .agent-setup-card .agent-setup-note { margin-top: 0.25rem; color: var(--quiet); font-family: 'DM Mono', monospace; font-size: 0.66rem; }
+    .agent-setup-actions { min-width: 165px; }
+    .agent-setup-actions button { white-space: nowrap; }
 
     .how-to-read { max-width: 860px; }
     .how-to-read p { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.85; }
@@ -144,6 +136,8 @@
   .hero { padding: 3rem 1.25rem 2rem; }
   .wrap { padding: 1.5rem 1.25rem 3rem; }
   .integrations-feature { grid-template-columns: 1fr; }
+  .agent-setup-card { grid-template-columns: 1fr; }
+  .agent-setup-actions { min-width: 0; }
 }
 
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
@@ -193,48 +187,39 @@
 
 <div class="wrap">
   <section class="quickstart-box" id="quickstart" aria-labelledby="quickstart-title">
-  <div class="quickstart-head"><span class="quickstart-label">Quick start</span><span class="quickstart-version">mneme-hq 0.9.0 &middot; Python 3.11+</span></div>
+  <div class="quickstart-head"><span class="quickstart-label">Quick start</span><span class="quickstart-version">mneme-hq 0.9.2 &middot; Python 3.11+</span></div>
   <h2 id="quickstart-title">Run your first governed check.</h2>
-  <p>Install the CLI, initialize the decision corpus, then evaluate one proposed task.</p>
+  <p>Install the CLI, prepare the repository, then evaluate one proposed task.</p>
   <div class="cta-row">
-    <button type="button" class="cta-btn-primary" data-code-copy data-copy-text='pipx install "mneme-hq==0.9.0"'
-            onclick='navigator.clipboard.writeText("pipx install \"mneme-hq==0.9.0\"");this.textContent=&apos;Copied &mdash; now run: mneme init&apos;;setTimeout(()=>this.textContent=&apos;Copy install command&apos;,2000);'
+    <button type="button" class="cta-btn-primary" data-code-copy data-copy-text='pipx install "mneme-hq==0.9.2"'
+            onclick='navigator.clipboard.writeText("pipx install \"mneme-hq==0.9.2\"");this.textContent=&apos;Copied &mdash; now run: mneme setup&apos;;setTimeout(()=>this.textContent=&apos;Copy install command&apos;,2000);'
             data-cta-intent="install" data-cta-position="hero" data-cta-component="install_module">Copy install command</button>
     <a class="cta-btn-outline" href="/docs/cli/" data-cta-intent="first_check" data-cta-position="hero" data-cta-component="hero_cluster">Run your first check</a>
-    <a class="cta-link" href="https://github.com/MnemeHQ/mneme" target="_blank" rel="noopener"
-       data-cta-intent="github" data-cta-position="hero" data-cta-component="hero_cluster">View source on GitHub &rarr;</a>
   </div>
-<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq==0.9.0"
-<span class="cp">$</span> mneme init
+<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq==0.9.2"
+<span class="cp">$</span> mneme setup
 <span class="cp">$</span> mneme check --memory .mneme/project_memory.json --input prompt.txt --query "storage backend"</pre>
-  <div class="quickstart-details">
-    <div class="qs-item">
-      <div class="qs-item-title">Corpus initialization</div>
-      <p><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty, valid decision corpus. To protect existing decisions, it refuses to overwrite an existing corpus unless <code>--force</code> is supplied.</p>
+  <div class="agent-setup-card" id="agent-assisted-setup">
+    <div>
+      <h3>Using a coding agent?</h3>
+      <p>Copy a setup prompt for Claude Code, Codex, or another local agent.</p>
+      <p class="agent-setup-note">Installs and detects only. Stops before hooks, trust approval, or blocking enforcement.</p>
     </div>
-    <div class="qs-item">
-      <div class="qs-item-title">CLI exit codes</div>
-      <p>Standard Unix exit codes for CI gates and pre-commit hooks: <code>0</code> = pass, <code>1</code> = warn, and <code>2</code> = fail.</p>
-    </div>
-  </div>
-  <div class="quickstart-surfaces">
-    <div class="quickstart-surface-card">
-      <div class="sc-head">
-        <span class="sc-name">Claude Code hook</span>
-        <a href="/integrations/claude-code/" class="sc-link">Guide &rarr;</a>
-      </div>
-      <p>To enforce on Claude Code <code>Edit</code> and <code>Write</code> calls, install the runtime as above and load the plugin from a Mneme checkout (runtime and plugin are separate artifacts, pending marketplace release):</p>
-      <pre tabindex="0"><code>claude --plugin-dir ./integrations/claude-code-plugin</code></pre>
-    </div>
-    <div class="quickstart-surface-card">
-      <div class="sc-head">
-        <span class="sc-name">Cursor rules export</span>
-        <a href="/integrations/cursor/" class="sc-link">Guide &rarr;</a>
-      </div>
-      <p>To generate a Cursor rules file (<code>.cursor/rules/mneme.mdc</code>) from active decision records:</p>
-      <pre tabindex="0"><code>mneme cursor generate --memory .mneme/project_memory.json --query "storage backend"</code></pre>
+    <div class="agent-setup-actions">
+      <button type="button" class="cta-btn-outline" data-code-copy data-copy-text="agent-assisted Mneme setup prompt"
+              onclick="navigator.clipboard.writeText(document.getElementById('agent-setup-prompt').textContent.trim());this.textContent='Copied';setTimeout(()=>this.textContent='Copy setup prompt',1600);">Copy setup prompt</button>
     </div>
   </div>
+  <script type="text/plain" id="agent-setup-prompt">Set up Mneme in this repository without enabling blocking enforcement.
+
+- Install with `pipx install "mneme-hq==0.9.2"`.
+- Run `mneme setup`.
+- Identify the coding harnesses Mneme detects.
+- For the harness I am currently using, read Mneme's official integration instructions at https://mnemehq.com/integrations/ and summarize the configuration and trust steps.
+- Do not modify harness configuration or install or load hooks or plugins. Preserve all existing agent configuration.
+- Do not activate blocking protection.
+- Verify the installation and show me every file changed.
+- If hooks, plugins, or other executable integrations require approval or trust, stop before approving them and tell me exactly what I need to review.</script>
   </section>
 
   <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:3.5rem 0 1.25rem;">Reference surfaces</h2>
