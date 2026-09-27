@@ -57,18 +57,18 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "What counts as architectural drift in this example?",
+            "name": "What counts as architectural drift here?",
             "acceptedAnswer": {"@type": "Answer", "text": "The project chose predictable keyword matching. Adding embeddings and a vector database creates a second, conflicting way to find the rules. For the general definition and the prevention stack, see architectural drift prevention."}
           },
           {
             "@type": "Question",
-            "name": "Why block the first change instead of reviewing the final diff?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Later work tends to build on whatever lands first. Blocking the initial divergence prevents the new dependency, data path, tests, and operating assumptions from becoming the next agent's starting point."}
+            "name": "Why block the first change?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Later work builds on whatever lands first. Blocking the initial divergence prevents new dependencies, data paths, tests, and operating assumptions from becoming the next agent's baseline."}
           },
           {
             "@type": "Question",
-            "name": "Can I reproduce this without an LLM call?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision ships in examples/project_memory.json. The page provides two local mneme check commands: one violating input and one compliant input."}
+            "name": "Is the example reproducible without an LLM?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision ships in examples/project_memory.json, and the commands above exercise both outcomes through mneme check."}
           }
         ]
       }
