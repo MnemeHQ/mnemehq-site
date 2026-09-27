@@ -194,11 +194,24 @@
         "url": "https://mnemehq.com/insights/what-is-the-ai-sdlc/",
         "description": "The AI SDLC is the software development lifecycle with AI agents in every phase: plan, design, implement, test, review, maintain. What changes, and the control gap.",
         "datePublished": "2026-05-12",
+        "dateModified": "2026-09-27",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "mainEntityOfPage": "https://mnemehq.com/insights/what-is-the-ai-sdlc/",
         "image": "https://mnemehq.com/insights/what-is-the-ai-sdlc/og-v2.png",
         "keywords": ["AI SDLC", "software development lifecycle", "AI coding", "architectural governance", "devtools"]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {"@type": "Question", "name": "Is the AI SDLC a new methodology like Agile or DevOps?", "acceptedAnswer": {"@type": "Answer", "text": "No. Agile changed how teams organize work. DevOps changed how code moves from development to production. AI SDLC describes a shift in who — or what — participates in the existing lifecycle. The phases remain the same; the participants and the throughput change. What that participation requires operationally is the governance conversation, not a new process framework."}},
+          {"@type": "Question", "name": "Does AI benefit every SDLC phase equally?", "acceptedAnswer": {"@type": "Answer", "text": "No. The implementation phase sees the most immediate impact — agents can generate, refactor, and scaffold code at a pace that compresses timelines significantly. Planning and design benefit from AI as a thought partner, but remain human-judgment-heavy. Review and maintain phases are where the downstream risk concentrates: if implementation accelerates but review stays linear, the backlog of architectural decisions grows faster than it's resolved. That's the core structural tension in the AI SDLC."}},
+          {"@type": "Question", "name": "What goes wrong if you skip governance in the AI SDLC?", "acceptedAnswer": {"@type": "Answer", "text": "Architectural drift. AI agents generate code that's syntactically correct and locally reasonable, but that accumulates decisions inconsistent with the broader architecture — wrong storage layers, dependency violations, pattern deviations — at a rate no review process can absorb. The problem is invisible until the codebase becomes expensive to change. See Why Code Review Cannot Scale With AI Output for the throughput math, and Review Is Not Governance for why catching it at PR time is the wrong layer."}},
+          {"@type": "Question", "name": "How does Mneme fit into an existing CI/CD pipeline?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme operates at two points. At generation time, it injects relevant architectural decision records into the agent's context via tool hooks (Claude Code's PreToolUse, Cursor's rules export). At commit time, the CI gate validates the output against the same decision corpus and either warns or blocks, depending on configuration. It doesn't replace CI/CD — it adds an architectural compliance layer that runs before your existing quality gates. See the GitHub Actions integration for setup details."}},
+          {"@type": "Question", "name": "What is AI in the SDLC?", "acceptedAnswer": {"@type": "Answer", "text": "AI in the SDLC means an AI system takes an active role in one or more of the six phases: drafting specs in planning, proposing architectures in design, generating code in implementation, writing tests, summarizing diffs in review, or handling migrations in maintenance. It's a description of where AI participates, not a new phase added to the lifecycle."}},
+          {"@type": "Question", "name": "Is the AI software development lifecycle the same as AI-assisted development?", "acceptedAnswer": {"@type": "Answer", "text": "They overlap, but aren't identical. AI-assisted development usually means a developer stays in the loop for each individual change while a tool suggests or completes it. The AI software development lifecycle describes agents proposing specs, code, tests, and reviews across the whole cycle, which turns the operative question into who decides what a given proposal is allowed to do."}},
+          {"@type": "Question", "name": "What is the difference between the AI SDLC and the AI-native SDLC?", "acceptedAnswer": {"@type": "Answer", "text": "The AI SDLC describes agents participating in each phase of an otherwise familiar lifecycle: plan, design, implement, test, review, maintain. The AI-native SDLC goes further: agents run whole loops across those phases, from spec to shipped change, rather than acting phase by phase alongside a human. That shift moves control from checkpoints between phases into the loop the agent runs."}}
+        ]
       }
     ]
   }
@@ -326,6 +339,18 @@
 
       <p><a href="/concepts/architectural-drift-prevention/">Architectural drift prevention</a> is the discipline that answers this new AI SDLC failure mode. Mneme implements its scope, guidance and deterministic-enforcement layers.</p>
 
+      <h2 id="ai-in-sdlc">AI in the SDLC: what actually changes</h2>
+
+      <p>AI in the SDLC means an AI participant is active in each of the six phases, not a single tool bolted onto one step. In plan, it drafts specs and breaks down tasks. In design, it proposes architectures and evaluates patterns. In implement, it generates and refactors code. In test, it writes tests and reasons about edge cases. In review, it summarizes diffs and flags inconsistencies. In maintain, it drafts migrations and updates documentation. The lifecycle itself doesn't change: the same six phases, the same handoffs between them. What changes is the volume of proposed work and the speed at which it arrives, which is why the control question moves from whether a change was reviewed to whether changes are reviewable at this rate.</p>
+
+      <h2 id="ai-software-development-lifecycle">AI software development lifecycle vs. AI-assisted development</h2>
+
+      <p>The two terms get used interchangeably, and in casual usage that's fine. The distinction that matters operationally is about who proposes changes versus who decides what's allowed. AI-assisted development usually describes a tool helping a developer who stays in the loop for each individual change: autocomplete, a single suggested diff, a chat answer reviewed before it's applied. The AI software development lifecycle describes the same six phases once an agent is proposing specs, code, tests, and reviews across the whole cycle, not just assisting inside one editor session. Once an agent is proposing rather than merely suggesting, the question stops being whether the tool helped and becomes who decided that proposal was within scope, which is a governance question, not a tooling one.</p>
+
+      <h2 id="ai-native-sdlc">AI-native SDLC</h2>
+
+      <p>AI-native SDLC describes a further step: agents running whole loops end to end, from spec to diff to test to review, rather than acting phase by phase alongside a human. When an agent runs the full loop, waiting for a human at the boundary between phases isn't where control can live anymore, because there may be no boundary to wait at. Control has to move into the loop itself: the constraints an agent must follow have to be resolvable and enforceable at each step it takes, not only at the human checkpoints that used to separate phases. For an analysis of Anthropic&rsquo;s AI-Native SDLC playbook and the architecture layer it leaves open, see <a href="/insights/ai-native-sdlc-architecture-layer/">Anthropic&rsquo;s AI-Native SDLC Playbook: The Missing Architecture Layer</a>.</p>
+
       <h2 id="where-mneme-fits">Where Mneme fits</h2>
 
       <p>Mneme isn't redefining the SDLC. Mneme is defining the <strong>governance layer</strong> required because AI is now part of the SDLC.</p>
@@ -391,6 +416,18 @@
       <details class="faq-item">
         <summary>How does Mneme fit into an existing CI/CD pipeline?</summary>
         <div class="faq-body">Mneme operates at two points. At generation time, it injects relevant architectural decision records into the agent's context via tool hooks (Claude Code's PreToolUse, Cursor's rules export). At commit time, the CI gate validates the output against the same decision corpus and either warns or blocks, depending on configuration. It doesn't replace CI/CD &mdash; it adds an architectural compliance layer that runs before your existing quality gates. See the <a href="/integrations/github-actions/">GitHub Actions integration</a> for setup details.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What is AI in the SDLC?</summary>
+        <div class="faq-body">AI in the SDLC means an AI system takes an active role in one or more of the six phases: drafting specs in planning, proposing architectures in design, generating code in implementation, writing tests, summarizing diffs in review, or handling migrations in maintenance. It's a description of where AI participates, not a new phase added to the lifecycle.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is the AI software development lifecycle the same as AI-assisted development?</summary>
+        <div class="faq-body">They overlap, but aren't identical. AI-assisted development usually means a developer stays in the loop for each individual change while a tool suggests or completes it. The AI software development lifecycle describes agents proposing specs, code, tests, and reviews across the whole cycle, which turns the operative question into who decides what a given proposal is allowed to do.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What is the difference between the AI SDLC and the AI-native SDLC?</summary>
+        <div class="faq-body">The AI SDLC describes agents participating in each phase of an otherwise familiar lifecycle: plan, design, implement, test, review, maintain. The AI-native SDLC goes further: agents run whole loops across those phases, from spec to shipped change, rather than acting phase by phase alongside a human. That shift moves control from checkpoints between phases into the loop the agent runs.</div>
       </details>
     </div>
 
