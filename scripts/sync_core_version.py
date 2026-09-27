@@ -30,6 +30,16 @@ VERSIONED_REQUIREMENT = re.compile(
     r"(?P<package>mneme-hq(?:\[[^\]\s\"']+\])?)(?P<operator>>=|&gt;=)(?P<version>\d+\.\d+\.\d+)"
 )
 
+# Matches exact pins only when they are part of an install command. Exact
+# historical references such as PyPI release links and "shipped since 0.7.0"
+# prose remain untouched, while reproducible quickstart commands advance with
+# the current stable release.
+PINNED_INSTALL = re.compile(
+    r"(?P<prefix>\b(?:(?:python(?:3)?\s+-m\s+)?pipx?|uv\s+pip)\s+install\s+)"
+    r"(?P<quote>\\?[\"']|)(?P<package>mneme-hq(?:\[[^\]]+\])?)"
+    r"==(?P<version>\d+\.\d+\.\d+)(?P=quote)"
+)
+
 # Matches only unpinned published install commands. A source checkout (`-e .`)
 # and prose that names the distribution without an install command are ignored.
 UNPINNED_INSTALL = re.compile(
@@ -80,6 +90,15 @@ def replace_requirements(text: str, version: str) -> str:
 
     text = VERSIONED_REQUIREMENT.sub(replace_versioned, text)
 
+    def replace_pinned_install(match: re.Match[str]) -> str:
+        quote = match.group("quote")
+        return (
+            f"{match.group('prefix')}{quote}{match.group('package')}"
+            f"=={version}{quote}"
+        )
+
+    text = PINNED_INSTALL.sub(replace_pinned_install, text)
+
     def replace_unpinned(match: re.Match[str]) -> str:
         quote = match.group("quote")
         return (
@@ -96,6 +115,9 @@ def findings(version: str) -> list[str]:
         relative = path.relative_to(ROOT)
         text = read_source(path)
         for match in VERSIONED_REQUIREMENT.finditer(text):
+            if match.group("version") != version:
+                stale.append(f"{relative}: {match.group(0)}")
+        for match in PINNED_INSTALL.finditer(text):
             if match.group("version") != version:
                 stale.append(f"{relative}: {match.group(0)}")
         for match in UNPINNED_INSTALL.finditer(text):
@@ -132,6 +154,9 @@ def self_test() -> int:
         'pipx install "mneme-hq"': 'pipx install "mneme-hq>=0.6.0"',
         'pip install "mneme-hq[langchain]"': 'pip install "mneme-hq[langchain]>=0.6.0"',
         'pipx install "mneme-hq&gt;=0.5.1"': 'pipx install "mneme-hq&gt;=0.6.0"',
+        'pipx install "mneme-hq==0.5.1"': 'pipx install "mneme-hq==0.6.0"',
+        'pipx install \\"mneme-hq==0.5.1\\"': 'pipx install \\"mneme-hq==0.6.0\\"',
+        'Released as mneme-hq==0.5.1': 'Released as mneme-hq==0.5.1',
     }
     failures = [
         source
