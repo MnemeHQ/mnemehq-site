@@ -22,8 +22,8 @@ HUB_HREF = 'href="/insights/ai-agent-governance-two-markets/"'
 CANONICAL_LI = (
     '      <li><a href="/insights/ai-agent-governance-two-markets/"><div class="rel-title">'
     'AI Agent Governance: Runtime vs. Architectural Control</div><p class="rel-desc">'
-    'The pillar: runtime governance controls agent actions; architectural governance '
-    'keeps what agents build aligned.</p></a></li>\n'
+    'Runtime governance controls agent actions; architectural governance '
+    'prevents drift.</p></a></li>\n'
 )
 TARGETS = [
     "palantir-agentic-governance-engineering-governance",
