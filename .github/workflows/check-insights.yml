@@ -48,6 +48,9 @@ jobs:
       - name: Test governance pillar link sweep
         run: python scripts/test_sweep_governance_pillar_link.py
 
+      - name: Check governance pillar links are in sync
+        run: python scripts/sweep_governance_pillar_link.py --check
+
       - name: Test OG card override handling
         run: python scripts/test_check_insights_card.py
 

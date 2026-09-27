@@ -4,11 +4,14 @@
 GSC (90 days to 2026-09-27) routes agent-governance queries to company-response
 articles instead of the pillar. This inserts one canonical entry as the first
 item of each article's "related essays" list, and replaces any stale entry for
-the pillar so that anchor text stays consistent. Idempotent and LF-preserving.
+the pillar so that anchor text stays consistent. Stale entries are only
+removed inside related panels; in-body citations of the pillar are left
+alone. Idempotent and LF-preserving.
 
 Usage:
   python scripts/sweep_governance_pillar_link.py           # dry run
   python scripts/sweep_governance_pillar_link.py --write   # apply
+  python scripts/sweep_governance_pillar_link.py --check   # CI: exit 1 if any page would change
 """
 from __future__ import annotations
 
@@ -57,23 +60,36 @@ LIST_RE = re.compile(
     r'(id="related-essays-label"[^>]*>.*?</div>\s*<ul class="related-list">\n)', re.S)
 STALE_LI_RE = re.compile(
     r'[ \t]*<li><a href="/insights/ai-agent-governance-two-markets/">.*?</li>\n', re.S)
+# Pillar entries are only removed inside related panels; in-body lists that
+# cite the pillar are editorial and must survive a re-run.
+PANEL_RE = re.compile(r'<aside class="related-panel"[^>]*>.*?</aside>', re.S)
 
 
 def insert_pillar_link(html: str) -> tuple[str, str]:
-    if CANONICAL_LI in html:
-        return html, "unchanged"
-    m = LIST_RE.search(html)
-    if not m:
+    if not LIST_RE.search(html):
         return html, "no-related-list"
-    stripped, n = STALE_LI_RE.subn("", html)
+    removed = 0
+
+    def strip_panel(panel: re.Match) -> str:
+        nonlocal removed
+        cleaned, n = STALE_LI_RE.subn("", panel.group(0))
+        removed += n
+        return cleaned
+
+    stripped = PANEL_RE.sub(strip_panel, html)
     m = LIST_RE.search(stripped)
     out = stripped[: m.end()] + CANONICAL_LI + stripped[m.end():]
-    return out, "replaced" if n else "inserted"
+    if out == html:
+        return html, "unchanged"
+    return out, "replaced" if removed else "inserted"
 
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--write", action="store_true")
+    mode = ap.add_mutually_exclusive_group()
+    mode.add_argument("--write", action="store_true")
+    mode.add_argument("--check", action="store_true",
+                      help="exit 1 if any target would change (for CI)")
     args = ap.parse_args(argv)
     problems = 0
     for slug in TARGETS:
@@ -81,7 +97,7 @@ def main(argv: list[str] | None = None) -> int:
         src = path.read_bytes().decode("utf-8")
         out, status = insert_pillar_link(src)
         print(f"{status:16} {slug}")
-        if status == "no-related-list":
+        if status == "no-related-list" or (args.check and status != "unchanged"):
             problems += 1
         elif out != src and args.write:
             path.write_bytes(out.encode("utf-8"))
