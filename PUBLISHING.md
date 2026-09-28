@@ -420,6 +420,11 @@ blocks the PR. All are standard-library-only Python.
 | `scripts/check_for.py` | `check-for.yml` | `/for/` persona-cohort schema |
 | `scripts/check_supported_languages.py` | `check-supported-languages.yml` | supported-languages schema |
 | `scripts/test_deploy_verify.py` | `test-deploy-verify.yml` | deploy-verification helpers |
+| `scripts/check_agent_discovery.py` | `agent-discovery-check.yml` | AI Catalog, Agent Skill integrity, MCP tool catalog/version links, llms.txt, and current-stable agreement with PyPI/core server metadata/official MCP Registry |
+
+The agent-discovery workflow also runs daily. Its local job is repository-only; its external-trust job checks the current stable version against PyPI, the core repository's `server.json`, and the official MCP Registry so a release/discovery mismatch cannot remain silent.
+
+The separate `mcp-tool-catalog-check.yml` workflow installs the exact released `mneme-hq[mcp]` version and proves that `site/.well-known/mcp/decision-tools.json` still matches the live MCP `tools/list` contract.
 
 Two more validators run **outside** the PR-check workflows:
 
