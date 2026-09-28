@@ -64,6 +64,18 @@ How Mneme HQ fits into the tools engineering teams already use. The local MCP se
 - [Perplexity Enterprise](https://mnemehq.com/integrations/perplexity/): Research & analysis assistant. Works alongside, not a native integration. Perplexity helps teams understand why. Mneme helps teams preserve what must remain true. Workflow pattern: research in Perplexity → record decision in Mneme → enforce across every coding agent. Closes the gap between research rationale and governance constraint. No API handshake — the integration is the discipline.
 - [Claude Agent SDK integration](https://mnemehq.com/integrations/claude-agent-sdk/): Mneme as the governance/runtime policy layer for Claude Agent SDK workflows. Claude Agent SDK handles execution and orchestration; Mneme handles architectural invariants and enforcement. Covers pre-execution governance hooks (intercept before tool calls), post-execution verification, enforcement traces in long-running agent loops, and CI gate integration. This is an infrastructure-shaped relationship: SDK = execution layer, Mneme = enforcement layer.
 
+## Machine-readable agent discovery
+
+Use these endpoints to discover Mneme's agent-facing interfaces without scraping navigation or guessing an API shape.
+
+- [AI Catalog](https://mnemehq.com/.well-known/ai-catalog.json): Typed index of Mneme's agent-facing discovery resources.
+- [Agent Skills index](https://mnemehq.com/.well-known/agent-skills/index.json): Machine-readable index of published Mneme skills.
+- [Mneme Decision MCP skill](https://mnemehq.com/.well-known/agent-skills/mneme-decision-mcp/SKILL.md): Installation, stdio host configuration, six-tool inventory, and authority boundary for Mneme's local Decision MCP server.
+- [Official MCP Registry record](https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.MnemeHQ%2Fmneme): Canonical package discovery record for `io.github.MnemeHQ/mneme`.
+- [MCP server metadata source](https://github.com/MnemeHQ/mneme/blob/main/server.json): Versioned `server.json` published to the official MCP Registry.
+
+Mneme's released MCP interface is local and stdio-only. It does not expose a hosted HTTP/SSE endpoint, so the official MCP Registry package metadata is the canonical connection and installation contract; no remote MCP Server Card is advertised.
+
 ## Key pages
 
 - [Homepage](https://mnemehq.com/): Product overview and category positioning.

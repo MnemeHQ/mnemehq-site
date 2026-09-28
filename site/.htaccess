@@ -21,6 +21,15 @@ RewriteRule ^audit/workspace(?:/.*)?$ /audit/workspace/index.html [L]
 # Branded 404 page
 ErrorDocument 404 /404.html
 
+# Agent discovery content types
+# These are static discovery documents, not hosted API endpoints.
+<Files "ai-catalog.json">
+    ForceType application/ai-catalog+json
+</Files>
+<Files "SKILL.md">
+    ForceType text/markdown
+</Files>
+
 # Brotli compression (falls back to gzip if unavailable)
 <IfModule mod_brotli.c>
     AddOutputFilterByType BROTLI_COMPRESS text/html text/css text/javascript application/javascript text/xml application/xml image/svg+xml
@@ -60,6 +69,13 @@ ErrorDocument 404 /404.html
     # Vary: User-Agent, so we unset it and pin exactly what we want.
     Header unset Vary
     Header set Vary "Accept-Encoding"
+
+    # Agent discovery files are intentionally public and cache briefly so
+    # package/discovery metadata changes propagate quickly.
+    <FilesMatch "^(ai-catalog\.json|index\.json|SKILL\.md|llms\.txt)$">
+        Header set Access-Control-Allow-Origin "*"
+        Header set Cache-Control "public, max-age=3600"
+    </FilesMatch>
 
     # HTML
     <FilesMatch "\.(html|htm)$">
