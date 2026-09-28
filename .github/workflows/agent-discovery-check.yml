@@ -1,0 +1,57 @@
+name: Agent discovery contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/check_agent_discovery.py'
+      - 'scripts/core_version.json'
+      - 'site/.well-known/**'
+      - 'site/llms.txt'
+      - 'site/index.html'
+      - 'site/integrations/index.html'
+      - 'site/docs/mcp/index.html'
+      - 'site/.htaccess'
+      - '.github/workflows/agent-discovery-check.yml'
+      - '.github/workflows/mcp-tool-catalog-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/check_agent_discovery.py'
+      - 'scripts/core_version.json'
+      - 'site/.well-known/**'
+      - 'site/llms.txt'
+      - 'site/index.html'
+      - 'site/integrations/index.html'
+      - 'site/docs/mcp/index.html'
+      - 'site/.htaccess'
+      - '.github/workflows/agent-discovery-check.yml'
+      - '.github/workflows/mcp-tool-catalog-check.yml'
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  local-contract:
+    name: Verify local discovery graph
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/check_agent_discovery.py
+
+  external-trust:
+    name: Verify PyPI, core metadata, and MCP Registry
+    needs: local-contract
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/check_agent_discovery.py --online
