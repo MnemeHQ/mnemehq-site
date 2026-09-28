@@ -143,6 +143,48 @@ repository and are made only by editing the workflow and `scripts/deploy_site.py
 - **Boundary note.** `theovalmis.com` pages are a separate personal site, never part of the Mneme
   deploy, and never live under `site/`.
 
+
+---
+
+## Interaction and UX design standards
+
+These principles govern product and website interaction design. The goal is to reduce the amount of
+thinking a user must do to understand the interface, choose an action, and continue a task. They are
+**[ED]** standards: apply them during design and implementation review, and do not trade them away
+for visual novelty.
+
+1. **Easy to reach.** Put frequent destinations, primary actions, and the next likely step where the
+   user can find and reach them without unnecessary navigation. Do not bury high-frequency actions
+   behind extra menus or make users traverse unrelated sections to continue a task. On small screens,
+   keep important controls comfortably reachable and avoid forcing repeated long-distance movement.
+
+2. **Fewer choices.** Show the choices that matter for the current task and defer secondary options
+   until they become relevant. Prefer progressive disclosure over presenting the entire product at
+   once. Reducing choices must not hide required functionality; it should remove irrelevant decisions
+   from the current moment.
+
+3. **Show progress.** Multi-step flows must make state visible: what is complete, what is happening
+   now, and what remains. Long-running or asynchronous actions must communicate status rather than
+   leaving the user to infer whether anything happened.
+
+4. **Familiar patterns.** Prefer established interaction conventions for navigation, forms, buttons,
+   dialogs, search, settings, and common controls. Reuse the same pattern for the same kind of action
+   across Mneme. Novel interaction mechanics require a clear user benefit, not merely a visual one.
+
+5. **Clear hierarchy.** Each screen or section must make priority obvious through layout, spacing,
+   typography, contrast, grouping, and action emphasis. There should be an identifiable primary
+   focus and, where applicable, one clearly dominant primary action rather than several equally loud
+   calls to action.
+
+6. **Less to hold.** Minimize working-memory demands. Keep relevant context next to the decision or
+   action it affects; preserve user state and sensible defaults; expose prior selections or results
+   when they are needed; and do not require users to remember values, instructions, or earlier steps
+   just to continue the current flow.
+
+**Review test:** before shipping an interface change, ask whether a user can identify where to go,
+what to choose, how far they have progressed, what interaction pattern is expected, what matters most,
+and what context they still need without having to keep the rest of the product in their head.
+
 ---
 
 ## Insights articles
