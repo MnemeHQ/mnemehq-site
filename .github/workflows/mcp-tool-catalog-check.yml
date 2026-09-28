@@ -23,7 +23,7 @@ on:
       - '.github/workflows/mcp-tool-catalog-check.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   mcp-tool-catalog:
@@ -51,24 +51,6 @@ jobs:
           name: decision-mcp-tool-catalog
           path: ${{ runner.temp }}/decision-tools.json
           if-no-files-found: error
-
-      - name: One-time sync generated catalog onto this PR branch
-        if: github.event_name == 'pull_request' && github.actor == 'TheoV823' && github.event.pull_request.head.repo.full_name == github.repository
-        shell: bash
-        env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-        run: |
-          git fetch origin "${HEAD_REF}"
-          git checkout "${HEAD_REF}"
-          cp "${RUNNER_TEMP}/decision-tools.json" site/.well-known/mcp/decision-tools.json
-          if git diff --quiet -- site/.well-known/mcp/decision-tools.json; then
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site/.well-known/mcp/decision-tools.json
-          git commit -m "chore: refresh generated MCP tool catalog"
-          git push origin "HEAD:${HEAD_REF}"
 
       - name: Verify committed catalog matches the released runtime
         run: python scripts/export_mcp_tool_catalog.py --check
