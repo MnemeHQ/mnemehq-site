@@ -1,0 +1,56 @@
+name: MCP tool catalog check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/export_mcp_tool_catalog.py'
+      - 'scripts/core_version.json'
+      - 'site/.well-known/mcp/decision-tools.json'
+      - 'site/.well-known/ai-catalog.json'
+      - 'site/docs/mcp/index.html'
+      - 'site/llms.txt'
+      - '.github/workflows/mcp-tool-catalog-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/export_mcp_tool_catalog.py'
+      - 'scripts/core_version.json'
+      - 'site/.well-known/mcp/decision-tools.json'
+      - 'site/.well-known/ai-catalog.json'
+      - 'site/docs/mcp/index.html'
+      - 'site/llms.txt'
+      - '.github/workflows/mcp-tool-catalog-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  mcp-tool-catalog:
+    name: Verify published MCP tools/list catalog
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the exact public Mneme MCP runtime
+        shell: bash
+        run: |
+          VERSION="$(python -c 'import json; print(json.load(open("scripts/core_version.json", encoding="utf-8"))["minimum_version"])')"
+          python -m pip install "mneme-hq[mcp]==${VERSION}"
+
+      - name: Generate candidate catalog from live tools/list
+        run: python scripts/export_mcp_tool_catalog.py --output "${RUNNER_TEMP}/decision-tools.json"
+
+      - name: Upload generated catalog for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: decision-mcp-tool-catalog
+          path: ${{ runner.temp }}/decision-tools.json
+          if-no-files-found: error
+
+      - name: Verify committed catalog matches the released runtime
+        run: python scripts/export_mcp_tool_catalog.py --check
