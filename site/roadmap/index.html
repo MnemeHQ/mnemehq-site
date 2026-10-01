@@ -259,7 +259,7 @@
   <div class="section-wrap">
     <div class="section-eyebrow">Current roadmap</div>
     <h2 class="section-title">Current, next, research, and deferred.</h2>
-    <p class="status-legend">Every item on this page carries one of three statuses. <strong>Shipped</strong> means it is in the released <code>mneme-hq</code> package today. <strong>Planned</strong> means scoped work that has not shipped. <strong>Conceptual</strong> means a research direction with no scheduled work and no support claim.</p>
+    <p class="status-legend">Every item on this page carries one of three statuses. <strong>Shipped</strong> means released and usable today, either in the <code>mneme-hq</code> package or installed from the public Mneme repository. <strong>Planned</strong> means scoped work that has not shipped. <strong>Conceptual</strong> means a research direction with no scheduled work and no support claim.</p>
 
     <div class="phases">
 
@@ -273,8 +273,8 @@
         <div class="phase-body">
           <p class="phase-desc">The enforcement mechanism ships. The open question is whether it produces repeatable value on real repositories, so current work favors evidence over integration count.</p>
           <ul class="phase-capabilities">
-            <li><span><strong>Design partners and real-repository pilots.</strong> In progress. Pilots measure first-attempt architectural compliance, functional completion, unrequested scope expansion, setup friction, and continued use on real projects.</span></li>
-            <li><span><strong>Architecture Audit as the evidence surface.</strong> Shipped. The <a href="/audit/">Architecture Audit</a> shows which existing decisions are enforceable, partially enforceable, or guidance only. Current work uses that assessment as the starting point for pilots.</span></li>
+            <li><span><strong>Design partners and real-repository pilots.</strong> The evidence sought from pilots is first-attempt architectural compliance, functional completion, unrequested scope expansion, setup and maintenance friction, and continued use on real projects.</span></li>
+            <li><span><strong>Architecture Audit as the evidence surface.</strong> Shipped. The <a href="/audit/">Architecture Audit</a> classifies each architectural decision it discovers as Protected, Mneme-ready, Requires modelling, or Guidance. Current work uses that assessment as the starting point for pilots.</span></li>
             <li><span><strong>Reproducible architecture-compliance benchmark.</strong> The <a href="/benchmark/">Governance Benchmark v1.1</a> methodology and harness are public; full results publish after scenario suite validation. Planned: comparisons across coding-agent workflows with frozen fixtures, deterministic scoring, and explicit treatment and control boundaries.</span></li>
           </ul>
         </div>
@@ -290,7 +290,7 @@
         <div class="phase-body">
           <p class="phase-desc">Planned work makes the existing enforcement layer easier to apply. None of it creates a parallel policy system, and none of it has shipped.</p>
           <ul class="phase-capabilities">
-            <li><span><strong>Architecture review workflow.</strong> The Mneme Skill in the Claude Code plugin ships today. Planned: evolve it into a fuller executable architecture-review workflow over existing retrieval and deterministic checks. It remains an interface over those checks, not a second policy engine.</span></li>
+            <li><span><strong>Architecture review workflow.</strong> The Mneme Skill ships today in the Claude Code plugin, which loads from the Mneme repository. Planned: evolve it into a fuller executable architecture-review workflow over existing retrieval and deterministic checks. It remains an interface over those checks, not a second policy engine.</span></li>
             <li><span><strong>Confluence ADR ingestion.</strong> <a href="/integrations/adr-import/">ADR import</a> from repository files ships today. Planned: ingest decisions that already live in Confluence. Ingestion stays separate from enforcement semantics.</span></li>
             <li><span><strong>Migration-aware Architecture Audit.</strong> Planned: extend the Audit for long-running migrations where legacy and target architectures coexist. This is an extension of the Audit, not a separate migration product.</span></li>
             <li><span><strong>Reference review consumer validation.</strong> The local <a href="/integrations/mcp/">Decision MCP server</a> ships today. Planned: validate one external code-review system retrieving applicable decisions through it. This is a compatibility test, not an integration claim, and enforcement stays with Mneme.</span></li>
@@ -348,12 +348,12 @@
         <div class="phase-header">
           <span class="phase-label">Today</span>
           <span class="phase-status">Shipped</span>
-          <div class="phase-title">In the released package, mneme-hq 0.9.2</div>
+          <div class="phase-title">Available today, current release mneme-hq 0.9.2</div>
         </div>
         <div class="phase-body">
           <ul class="phase-capabilities">
             <li><span><strong>Deterministic enforcement.</strong> ADR-based decisions, applicability, deterministic rules, agent context, and guide, warn, or block verdicts traced to the source decision. See the <a href="/docs/decision-model/">decision model</a>.</span></li>
-            <li><span><strong>Enforcement integrations.</strong> Native adapters for Claude Code, Claude Agent SDK, Google Antigravity, Codex CLI, LangChain / LangGraph, and Kiro. Validated compatibility with Paperclip. OpenCode and Hermes Agent remain experimental.</span></li>
+            <li><span><strong>Enforcement integrations.</strong> Native adapters for Claude Code, Claude Agent SDK, Google Antigravity, Codex CLI, LangChain / LangGraph, and Kiro. Validated compatibility with Paperclip. OpenCode and Hermes Agent remain experimental. Some adapters, including the Claude Code plugin, install from the Mneme repository alongside the package.</span></li>
             <li><span><strong>Rules export and CI gates.</strong> Cursor rules export, GitHub Actions and GitLab CI gates, and ADR import.</span></li>
             <li><span><strong>Architecture Audit and protection activation.</strong> The Audit and the <code>mneme protect</code> commands, in the released package since 0.7.0. See <a href="/docs/protection-activation/">protection activation</a>.</span></li>
             <li><span><strong>Local Decision MCP server.</strong> Six retrieval and proposal tools over local stdio, since 0.9.0. Proposals are non-authoritative; no MCP tool can accept, reject, or activate a decision.</span></li>
