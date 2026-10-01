@@ -50,7 +50,18 @@
         "url": "https://mnemehq.com/founder/",
         "sameAs": [
           "https://github.com/TheoV823",
-          "https://www.linkedin.com/in/theodorosvalmis"
+          "https://www.linkedin.com/in/theodorosvalmis",
+          "https://theovalmis.com"
+        ],
+        "subjectOf": [
+          {
+            "@type": "Event",
+            "name": "Software Architecture Superstream: Building Architectures for Agents (and Humans)",
+            "url": "https://www.oreilly.com/live/software-architecture-superstream-building-architectures-for-agents-and-humans.html",
+            "organizer": { "@type": "Organization", "name": "O'Reilly Media", "url": "https://www.oreilly.com" },
+            "startDate": "2026-09-29",
+            "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode"
+          }
         ],
         "description": "Founder of Mneme HQ. Background in AI systems, digital transformation, digital analytics, and large-scale technical delivery across startups and enterprise organisations."
       },
@@ -67,7 +78,7 @@
       "description": "Theo Valmis is the founder of Mneme HQ \u2014 the decision and control layer for agentic software development. Background, principles, and what Mneme is built to solve.",
       "url": "https://mnemehq.com/founder/",
       "datePublished": "2026-04-15",
-      "dateModified": "2026-05-21",
+      "dateModified": "2026-10-01",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -462,27 +473,23 @@
   <!-- HEADER -->
   <div class="founder-tag">Founder</div>
   <h1 class="founder-name">Theo Valmis</h1>
-  <p class="founder-title">Founder of Mneme HQ &nbsp;·&nbsp; AI Systems &amp; Digital Transformation &amp; Enterprise Technical Delivery</p>
+  <p class="founder-title">Founder of Mneme HQ &nbsp;·&nbsp; AI Systems, Digital Transformation &amp; Enterprise Technical Delivery</p>
 
   <hr class="divider">
 
   <div class="prose">
 
-    <p>I built Mneme HQ after running into the same problem repeatedly while using AI coding tools on real production systems: the larger and more complex a codebase became, the less reliable AI-generated output became over time.</p>
+    <p>I started Mneme HQ because of a problem I kept hitting when I used AI coding tools on production systems. The bigger the codebase got, the less I could trust what the tools wrote.</p>
 
-    <p>Models could write code quickly. They could follow instructions in the moment. But they consistently failed at one critical thing:</p>
+    <p>The code itself was fine. A model would write a working function in seconds and follow whatever I told it in that session. In the next session it would reach for a pattern the team had rejected months earlier, or ignore a constraint I had explained the day before. I kept re-explaining the same architecture decisions to a tool that treated them as optional.</p>
 
     <div class="callout">
-      <p>Maintaining continuity of architectural decisions across sessions, contributors, and long-running projects.</p>
+      <p>The team had made its architectural decisions. Nothing required the agent to follow them.</p>
     </div>
-
-    <p>They forgot constraints. They reintroduced rejected patterns. They ignored prior architecture decisions unless those decisions were manually re-explained every time.</p>
-
-    <p>That is the gap Mneme HQ is designed to solve.</p>
 
     <h2>Why I built this</h2>
 
-    <p>My background is in digital analytics, AI systems, digital transformation, and large-scale technical delivery. Worked across startups and enterprise organisations delivering analytics, AI systems, and technical platforms where consistency, governance, and architectural discipline matter as much as speed.</p>
+    <p>My background is in digital analytics, AI systems and large-scale technical delivery. Over more than 20 years I have worked with startups and with enterprise teams at the organisations below, on platforms where a team that ships fast and breaks its own architecture pays for it later.</p>
 
     <div class="brand-strip">
       <div class="brand-strip-label">Organisations worked with</div>
@@ -505,17 +512,13 @@
       </div>
     </div>
 
-    <p>As AI-assisted development became part of my workflow, one pattern became obvious:</p>
-
-    <p><strong>LLMs accelerate implementation. But without structured memory and governance, they introduce architectural drift.</strong></p>
-
-    <p>Mneme HQ was built to provide that missing layer.</p>
+    <p>When AI coding tools became part of my own workflow, I watched them speed up implementation and erode the architecture at the same time. Nothing checked generated code against the decisions the team had already made until a reviewer caught the problem. I built Mneme HQ to run that check earlier.</p>
 
     <h2>What Mneme HQ does</h2>
 
-    <p>Mneme HQ is the open-source decision and control layer for agentic software development. It stores architectural decisions, constraints, and anti-patterns as structured YAML in version control, then injects the relevant rules at prompt time — so AI coding assistants generate code that fits your architecture.</p>
+    <p>Mneme HQ is the open-source decision and control layer for agentic software development. Architecture is the first decision domain. You record your project's architectural decisions, constraints, approved patterns and anti-patterns as structured governance records in the repository. Mneme retrieves the ones that apply to the task in front of the agent and evaluates the output against them before it reaches review.</p>
 
-    <p>It helps teams preserve and enforce:</p>
+    <p>You can use it to enforce:</p>
     <ul>
       <li>Architecture decisions</li>
       <li>Coding standards and tooling preferences</li>
@@ -523,40 +526,35 @@
       <li>Project-specific implementation rules</li>
     </ul>
 
-    <p>Across tools such as Cursor, Claude Code, GitHub Copilot, LangChain, CrewAI, and custom agent pipelines.</p>
+    <p>The same records work across Claude Code, Cursor, GitHub Copilot and Codex CLI, so a decision holds whichever agent writes the code.</p>
 
     <h2>Why this matters now</h2>
 
-    <p>The current generation of AI coding tools is powerful, but they remain fundamentally stateless.</p>
+    <p>AI coding agents write code faster than anyone can review it. An agent has no durable way to know which human decisions govern the work it is doing, so approved architecture becomes context it may or may not follow. Patterns diverge between sessions, contributors and tools, and reviewers catch the drift after the fact, if they catch it.</p>
 
-    <p>Without structured memory:</p>
-    <ul>
-      <li>Every session starts partially blind</li>
-      <li>Every contributor re-explains context manually</li>
-      <li>Every long-running project accumulates drift</li>
-    </ul>
-
-    <p>The bottleneck in AI-assisted software development is no longer generation speed. <strong>It is continuity of context and trust in output.</strong></p>
-
-    <p>Mneme HQ exists to solve that problem.</p>
+    <p>Generation speed stopped being the bottleneck a while ago. The question I care about is whether the output follows the decisions the team has already made.</p>
 
     <hr class="divider">
 
     <h2>How to engage with the project</h2>
 
-    <p>The fastest way to understand Mneme is to read the <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color:var(--accent);text-decoration:none;">architectural governance article</a>, watch the <a href="/demo/" style="color:var(--accent);text-decoration:none;">interactive demo</a>, and skim the <a href="/benchmark/" style="color:var(--accent);text-decoration:none;">benchmark methodology</a>. Together they cover the why, the how, and the rigor.</p>
+    <p>The fastest way to understand Mneme is to read the <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color:var(--accent);text-decoration:none;">architectural governance article</a>, watch the <a href="/demo/" style="color:var(--accent);text-decoration:none;">interactive demo</a>, and skim the <a href="/benchmark/" style="color:var(--accent);text-decoration:none;">benchmark methodology</a>.</p>
 
     <p>If you're an engineering leader: the <a href="/for/cto/" style="color:var(--accent);text-decoration:none;">CTO page</a> covers the strategic case, the <a href="/for/platform/" style="color:var(--accent);text-decoration:none;">platform engineering page</a> covers the rollout pattern, and the <a href="/standards/" style="color:var(--accent);text-decoration:none;">standards landscape</a> covers how Mneme aligns with NIST CAISI, MCP, and AGENTS.md. I track that work because long-term governance infrastructure cannot be vendor-coupled, and because the regulatory direction matters for any team operating in healthcare, finance, or public-sector environments.</p>
 
-    <p>If you're an individual engineer: install with <code style="font-family:'DM Mono',monospace;font-size:0.82em;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.05rem 0.4rem;">pip install mneme-hq>=0.9.2 &amp;&amp; mneme init</code>, wire the Claude Code hook from the <a href="/integrations/claude-code/" style="color:var(--accent);text-decoration:none;">integration guide</a>, and run <code style="font-family:'DM Mono',monospace;font-size:0.82em;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.05rem 0.4rem;">mneme check</code> against your repo. Everything is open source under MIT &mdash; no signup, no waitlist, no telemetry.</p>
+    <p>If you're an individual engineer: install with <code style="font-family:'DM Mono',monospace;font-size:0.82em;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.05rem 0.4rem;">pip install mneme-hq>=0.9.2 &amp;&amp; mneme init</code>, wire the Claude Code hook from the <a href="/integrations/claude-code/" style="color:var(--accent);text-decoration:none;">integration guide</a>, and run <code style="font-family:'DM Mono',monospace;font-size:0.82em;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:0.05rem 0.4rem;">mneme check</code> against your repo. Everything is open source under MIT, with no signup and no waitlist.</p>
 
-    <h2>Selected publications</h2>
+    <h2>Talks and publications</h2>
+
+    <p>I spoke at O'Reilly's <a href="https://www.oreilly.com/live/software-architecture-superstream-building-architectures-for-agents-and-humans.html" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Software Architecture Superstream: Building Architectures for Agents (and Humans)</a>, hosted by Neal Ford, on September 29, 2026. My session, <em>Architectural Guardrails for AI Agents: Turning Decisions into Enforcement</em>, covered how to move architectural decisions out of human-readable documentation and into a governance layer agents can use: the difference between retrieval and applicability, between guidance and deterministic enforcement, and how to keep architectural intent consistent across coding tools.</p>
+
+    <p>I wrote <a href="https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Architectural Guardrails for AI-Generated Code</a> for O'Reilly Radar (August 2026).</p>
 
     <p>I contributed to KodeKloud's <a href="/insights/kodekloud-definitive-guide-ai-for-devops/" style="color:var(--accent);text-decoration:none;">The Definitive Guide to AI for DevOps</a> (2026), written by Jennifer Riggins from interviews with 29 practitioners across 24 organizations, alongside engineers from AWS, Google, Oracle, Nvidia, Honeycomb and Netlify. My contribution appears in section 06, <em>Guardrails, not gates</em>, and argues that architectural intent has to become machine-readable, enforceable, and continuously available wherever development happens.</p>
 
     <h2>Connect</h2>
 
-    <p>Mneme HQ is built openly, in public, and grounded in real implementation work. If you're exploring governance, memory, or reliability for AI-assisted development workflows, I'd be glad to connect.</p>
+    <p>I build Mneme HQ in the open. If you are working on governance or decision enforcement for AI-assisted development, write to me.</p>
 
     <div class="links-grid">
       <div class="link-row">
@@ -589,8 +587,8 @@
 <div class="cta-footer">
   <h2>Ready to enforce your architecture across every AI coding session?</h2>
   <div class="cta-group">
+    <a href="/pilot/" class="cta-btn-primary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="hero_cluster">Request a pilot</a>
     <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub</a>
-    <a href="/use-cases/" class="btn-ghost">See use cases</a>
   </div>
 </div>
 
