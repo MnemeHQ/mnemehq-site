@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Mneme's retrieval is deterministic keyword scoring over structured decision records — no vector store, no ML. Scope filter → weighted scorer → top-K selection → context injection → enforcement." />
+  <meta name="description" content="Mneme ranks decisions with deterministic keyword scoring and enforces them with literal rule matching. No vector store and no model call: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, verdict." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/architecture/how-retrieval-works/" />
@@ -16,17 +16,17 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="How Retrieval Works in Mneme — Architecture Deep Dive" />
-  <meta property="og:description" content="Mneme's retrieval is deterministic keyword scoring over structured decision records — no vector store, no ML. Scope filter → weighted scorer → top-K selection → context injection → enforcement." />
+  <meta property="og:description" content="Mneme ranks decisions with deterministic keyword scoring and enforces them with literal rule matching. No vector store and no model call: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, verdict." />
   <meta property="og:url" content="https://mnemehq.com/architecture/how-retrieval-works/" />
-  <meta property="og:image" content="https://mnemehq.com/architecture/how-retrieval-works/og-v2.png" />
+  <meta property="og:image" content="https://mnemehq.com/architecture/how-retrieval-works/og-v3.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Demo: How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records." />
+<meta property="og:image:alt" content="How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="How Retrieval Works in Mneme — Architecture Deep Dive" />
-  <meta name="twitter:description" content="Mneme's retrieval is deterministic keyword scoring over structured decision records — no vector store, no ML. Scope filter → weighted scorer → top-K selection → context injection → enforcement." />
-  <meta name="twitter:image" content="https://mnemehq.com/architecture/how-retrieval-works/og-v2.png" />
-<meta name="twitter:image:alt" content="Demo: How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records." />
+  <meta name="twitter:description" content="Mneme ranks decisions with deterministic keyword scoring and enforces them with literal rule matching. No vector store and no model call: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, verdict." />
+  <meta name="twitter:image" content="https://mnemehq.com/architecture/how-retrieval-works/og-v3.png" />
+<meta name="twitter:image:alt" content="How Retrieval Works in Mneme. Deterministic keyword scoring over structured decision records." />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-05-14T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
@@ -214,13 +214,13 @@
       {
         "@type": "TechArticle",
         "headline": "How Retrieval Works in Mneme — Architecture Deep Dive",
-        "description": "Mneme's retrieval is deterministic keyword scoring over structured decision records — no vector store, no ML. Scope filter → weighted scorer → top-K selection → context injection → enforcement.",
+        "description": "Mneme ranks decisions with deterministic keyword scoring and enforces them with literal rule matching. No vector store and no model call: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, verdict.",
         "url": "https://mnemehq.com/architecture/how-retrieval-works/",
         "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-10-01",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
-        "image": "https://mnemehq.com/architecture/how-retrieval-works/og-v2.png",
+        "image": "https://mnemehq.com/architecture/how-retrieval-works/og-v3.png",
         "mainEntityOfPage": "https://mnemehq.com/architecture/how-retrieval-works/",
         "proficiencyLevel": "Expert",
         "articleSection": "Architecture"
@@ -231,27 +231,27 @@
           {
             "@type": "Question",
             "name": "How does Mneme retrieve decisions for a query?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme uses deterministic keyword scoring over structured decision records. The query is tokenized, then scored against each decision's fields (title, tags, content, constraint) using a fixed weight table. Tag matches receive an additive boost. The top-K decisions by score are selected — K defaults to 3. Same query, same memory file, same ranked result every time. There is no vector store, no embedding model, and no ML in the retrieval path."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Mneme tokenizes the query and counts token overlap with five fields of each decision: decision, scope, constraints, anti-patterns, and rationale. It multiplies each count by a fixed weight (1.0, 2.0, 1.5, 1.5, 0.5), sums them, and returns the corpus in score order. It uses no vector store, embedding model, or ML."}
           },
           {
             "@type": "Question",
-            "name": "What is the default K value in Mneme's retrieval?",
-            "acceptedAnswer": {"@type": "Answer", "text": "K equals 3. This is the DEFAULT_MAX_DECISIONS constant that governs both the runtime retrieval and the benchmark harness. Changing K requires a methodology ADR — it is not a tuning parameter."}
+            "name": "Does the top-N cutoff decide which decisions Mneme enforces?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. N defaults to 3 and bounds the retrieval-gated tier, where Mneme checks each rule a decision carries, multi-term rules included. Mneme checks typed literal rules and single-term rules against the whole memory file, whatever a decision scored."}
           },
           {
             "@type": "Question",
-            "name": "What is WEAK_RETRIEVAL in Mneme?",
-            "acceptedAnswer": {"@type": "Answer", "text": "WEAK_RETRIEVAL is a scenario verdict emitted when an expected decision ID was not found in the top-K retrieved results. It downgrades a scenario from PASS to WEAK_RETRIEVAL, signaling that the enforcement chain would have failed if that query reached the LLM without the required decision in context. It is a Layer 1 failure surfaced at Layer 2."}
+            "name": "What verdicts does mneme check return?",
+            "acceptedAnswer": {"@type": "Answer", "text": "PASS, WARN, or FAIL. In strict mode the exit codes are 0, 1, and 2. INCOMPLETE is a separate operational state: Mneme reports it and exits 2 when it cannot resolve path applicability for a scoped rule."}
           },
           {
             "@type": "Question",
             "name": "Does Mneme use embeddings or vector similarity?",
-            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme's retrieval is entirely embedding-free. It uses a deterministic weighted keyword scorer over structured fields. This is a deliberate architectural choice: governance requires deterministic results for auditability, and embedding-based retrieval is probabilistic by nature."}
+            "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme ranks decisions with a weighted keyword scorer over structured fields and enforces them with literal matching. An audit needs the same inputs to return the same result, and embedding models change when vendors update or retire them."}
           },
           {
             "@type": "Question",
-            "name": "What are the five stages of Mneme's pipeline?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The five stages are: (1) MemoryStore — loads and parses project_memory.json into typed Decision records; (2) DecisionRetriever — scores and ranks decisions against the query using deterministic keyword scoring; (3) ContextBuilder — formats the top-K decisions for injection; (4) LLMAdapter — injects context into the model prompt; (5) Evaluator — checks the model's output against the injected decisions and emits a PASS, FAIL, WEAK, WEAK_RETRIEVAL, or MALFORMED verdict."}
+            "name": "Is WEAK_RETRIEVAL a mneme check verdict?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. WEAK_RETRIEVAL is a benchmark scenario verdict. The benchmark emits it when retrieval misses a decision the scenario expected. The benchmark methodology page defines it."}
           }
         ]
       }
@@ -282,7 +282,7 @@
 
 <main id="main-content" tabindex="-1">
 <div class="answer-capsule">
-  <strong>How Mneme retrieval works.</strong> Deterministic keyword scoring over structured decision records — no embedding model, no vector store, no ML in the path. The query is tokenized, scored against every field in every Decision record using fixed weights, and the top-K results are returned in rank order. Same query, same memory file, same result. That determinism is what makes governance auditable.
+  <strong>How Mneme retrieval works.</strong> Mneme scores each decision in the memory file against the query with fixed field weights, then checks the proposed content against the rules those decisions carry. No embedding model, vector store, or model call sits on that path, so the same inputs return the same PASS, WARN, or FAIL.
 </div>
 
 <nav aria-label="Breadcrumb" class="breadcrumb-nav">
@@ -298,10 +298,10 @@
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Architecture</span>
       <span class="eyebrow-dot"></span>
-      <span class="eyebrow-meta">12 min read &nbsp;·&nbsp; May 2026</span>
+      <span class="eyebrow-meta">6 min read &nbsp;·&nbsp; Updated October 2026</span>
     </div>
     <h1>How Retrieval Works in Mneme</h1>
-    <p class="article-lede">Mneme's retrieval pipeline is five stages, fully deterministic, and entirely free of embedding models. This page walks through each stage — from the memory store through the evaluator — and explains why each design choice exists.</p>
+    <p class="article-lede">Mneme ranks decisions with a keyword scorer and enforces them with literal rule matching. Neither step calls a model. This page follows one mneme check run from the memory file to the verdict.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
       <span class="sep">&middot;</span>
@@ -311,81 +311,70 @@
 
   <div class="article-body">
 
-    <p>Architectural governance for AI coding agents has a retrieval problem at its core: when an AI agent is about to generate code, the governance system needs to surface the correct decisions from a potentially large corpus in real time, before generation completes. That retrieval must be fast, correct, and — critically — reproducible.</p>
+    <p>An AI coding agent is about to write a file. Before the write lands, Mneme checks the proposed content against the decisions your team has recorded. The reference entry point is <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code>, which takes three inputs: the memory file, the content, and a query describing the task. It answers PASS, WARN, or FAIL.</p>
 
-    <p>Mneme solves this with a deterministic keyword scorer over structured decision records. No probability, no approximation, no model inference in the retrieval path. The same query against the same memory file always returns the same ranked list.</p>
+    <p>No step on that path calls a model. The same three inputs produce the same answer on a laptop, inside an agent hook, and in CI.</p>
 
-    <h2>The five-stage pipeline</h2>
+    <h2>The enforcement path</h2>
 
-    <p>Every governance check in Mneme runs through five sequential stages. Understanding these stages is the prerequisite for understanding both the retrieval mechanics and the evaluation layer that uses the retrieved results.</p>
+    <p>A check runs four steps and returns a verdict.</p>
 
-    <figure class="diagram-wrap" aria-label="Mneme five-stage pipeline diagram">
-      <svg viewBox="0 0 660 340" width="100%" style="max-width:640px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Pipeline: MemoryStore → DecisionRetriever → ContextBuilder → LLMAdapter → Evaluator">
-        <!-- Background boxes for stages -->
-        <!-- Stage 1: MemoryStore -->
+    <figure class="diagram-wrap" aria-label="Mneme enforcement path diagram">
+      <svg viewBox="0 0 660 230" width="100%" style="max-width:640px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Enforcement path: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, then a PASS, WARN, or FAIL verdict">
+        <!-- Step 1: MemoryStore -->
         <rect x="8" y="100" width="106" height="60" rx="8" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
         <text x="61" y="128" font-family="Inter,sans-serif" font-size="10" fill="#e8e8ec" text-anchor="middle" font-weight="600">MemoryStore</text>
-        <text x="61" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">loads + parses</text>
-        <text x="61" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">project_memory.json</text>
+        <text x="61" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">loads typed</text>
+        <text x="61" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">Decision records</text>
 
-        <!-- Arrow 1 -->
         <line x1="114" y1="130" x2="134" y2="130" stroke="#2e2e34" stroke-width="1.5" marker-end="url(#arr)"/>
 
-        <!-- Stage 2: DecisionRetriever -->
+        <!-- Step 2: DecisionRetriever -->
         <rect x="136" y="100" width="116" height="60" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
-        <text x="194" y="124" font-family="Inter,sans-serif" font-size="10" fill="#b5cc7a" text-anchor="middle" font-weight="600">DecisionRetriever</text>
-        <text x="194" y="139" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">keyword score</text>
-        <text x="194" y="151" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">+ tag boost</text>
-        <text x="194" y="163" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">→ top-K=3</text>
+        <text x="194" y="128" font-family="Inter,sans-serif" font-size="10" fill="#b5cc7a" text-anchor="middle" font-weight="600">DecisionRetriever</text>
+        <text x="194" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">weighted keyword</text>
+        <text x="194" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">score, ranked</text>
 
-        <!-- Arrow 2 -->
         <line x1="252" y1="130" x2="272" y2="130" stroke="#2e2e34" stroke-width="1.5" marker-end="url(#arr)"/>
 
-        <!-- Stage 3: ContextBuilder -->
+        <!-- Step 3: Enforcement scope -->
         <rect x="274" y="100" width="106" height="60" rx="8" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="327" y="128" font-family="Inter,sans-serif" font-size="10" fill="#e8e8ec" text-anchor="middle" font-weight="600">ContextBuilder</text>
-        <text x="327" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">formats decisions</text>
-        <text x="327" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">for prompt</text>
+        <text x="327" y="128" font-family="Inter,sans-serif" font-size="10" fill="#e8e8ec" text-anchor="middle" font-weight="600">Enforcement scope</text>
+        <text x="327" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">top-N tier +</text>
+        <text x="327" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">whole corpus</text>
 
-        <!-- Arrow 3 -->
         <line x1="380" y1="130" x2="400" y2="130" stroke="#2e2e34" stroke-width="1.5" marker-end="url(#arr)"/>
 
-        <!-- Stage 4: LLMAdapter -->
+        <!-- Step 4: Rule evaluation -->
         <rect x="402" y="100" width="106" height="60" rx="8" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="455" y="128" font-family="Inter,sans-serif" font-size="10" fill="#e8e8ec" text-anchor="middle" font-weight="600">LLMAdapter</text>
-        <text x="455" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">injects context</text>
-        <text x="455" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">calls model</text>
+        <text x="455" y="128" font-family="Inter,sans-serif" font-size="10" fill="#e8e8ec" text-anchor="middle" font-weight="600">Rule evaluation</text>
+        <text x="455" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">path selectors +</text>
+        <text x="455" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">literal matching</text>
 
-        <!-- Arrow 4 -->
         <line x1="508" y1="130" x2="528" y2="130" stroke="#2e2e34" stroke-width="1.5" marker-end="url(#arr)"/>
 
-        <!-- Stage 5: Evaluator -->
+        <!-- Verdict -->
         <rect x="530" y="100" width="106" height="60" rx="8" fill="#141416" stroke="#8be0c8" stroke-width="1.5"/>
-        <text x="583" y="128" font-family="Inter,sans-serif" font-size="10" fill="#8be0c8" text-anchor="middle" font-weight="600">Evaluator</text>
-        <text x="583" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">PASS / FAIL</text>
-        <text x="583" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">WEAK_RETRIEVAL</text>
-        <text x="583" y="167" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">MALFORMED</text>
+        <text x="583" y="128" font-family="Inter,sans-serif" font-size="10" fill="#8be0c8" text-anchor="middle" font-weight="600">Verdict</text>
+        <text x="583" y="143" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">PASS / WARN</text>
+        <text x="583" y="155" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">FAIL</text>
 
-        <!-- Query input arrow from top -->
+        <!-- Query input -->
         <line x1="194" y1="44" x2="194" y2="98" stroke="#b5cc7a" stroke-width="1.5" marker-end="url(#arr-accent)" stroke-dasharray="4 2"/>
-        <text x="194" y="36" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">query (file path + task)</text>
+        <text x="194" y="36" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">query</text>
+
+        <!-- Content input -->
+        <line x1="455" y1="44" x2="455" y2="98" stroke="#b5cc7a" stroke-width="1.5" marker-end="url(#arr-accent)" stroke-dasharray="4 2"/>
+        <text x="455" y="36" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">content + target path</text>
 
         <!-- Output label -->
-        <text x="583" y="200" font-family="DM Mono,monospace" font-size="9" fill="#8be0c8" text-anchor="middle">verdict + trace</text>
-        <line x1="583" y1="162" x2="583" y2="196" stroke="#8be0c8" stroke-width="1.5" marker-end="url(#arr-teal)" stroke-dasharray="4 2"/>
+        <text x="583" y="200" font-family="DM Mono,monospace" font-size="9" fill="#8be0c8" text-anchor="middle">verdict + violations</text>
+        <line x1="583" y1="162" x2="583" y2="190" stroke="#8be0c8" stroke-width="1.5" marker-end="url(#arr-teal)" stroke-dasharray="4 2"/>
 
-        <!-- Layer labels -->
-        <rect x="126" y="230" width="136" height="22" rx="4" fill="rgba(181, 204, 122,0.07)" stroke="rgba(181, 204, 122,0.2)" stroke-width="1"/>
-        <text x="194" y="245" font-family="DM Mono,monospace" font-size="8.5" fill="#b5cc7a" text-anchor="middle" letter-spacing="0.06em">LAYER 1 — RETRIEVAL</text>
-
-        <rect x="520" y="230" width="136" height="22" rx="4" fill="rgba(139,224,200,0.07)" stroke="rgba(139,224,200,0.2)" stroke-width="1"/>
-        <text x="588" y="245" font-family="DM Mono,monospace" font-size="8.5" fill="#8be0c8" text-anchor="middle" letter-spacing="0.06em">LAYER 2 — VERDICT</text>
-
-        <!-- Memory file label on left -->
+        <!-- Memory file label -->
         <text x="61" y="90" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">project_memory.json</text>
         <line x1="61" y1="93" x2="61" y2="98" stroke="#88889a" stroke-width="1" marker-end="url(#arr-muted)"/>
 
-        <!-- Defs -->
         <defs>
           <marker id="arr" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
             <path d="M0,0 L8,4 L0,8 z" fill="#2e2e34"/>
@@ -401,218 +390,185 @@
           </marker>
         </defs>
       </svg>
-      <figcaption>Fig. 1 — Mneme's five-stage governance pipeline. Layer 1 (retrieval) and Layer 2 (verdict) are distinct evaluation surfaces with separate metrics.</figcaption>
+      <figcaption>Fig. 1. The mneme check enforcement path. No step calls a model.</figcaption>
     </figure>
 
-    <h2>Stage 1: MemoryStore — loading the decision corpus</h2>
+    <h2>Step 1: MemoryStore loads the decision corpus</h2>
 
-    <p>Every Mneme run begins by loading <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code> into a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">MemoryStore</code>. The store deserializes the JSON into typed records. The retrieval-eligible pool is the subset of records whose type is <strong>Decision</strong> — which includes native <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">decision</code> items and any items migrated to decision type (typically <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">rule</code> and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">anti_pattern</code> records).</p>
+    <p><code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">MemoryStore</code> reads <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code> once and builds typed records. Each entry under <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">decisions</code> becomes a Decision record with a decision statement, a rationale, scope labels, constraints, anti-patterns, and typed rules.</p>
 
-    <p>Items of type <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">preference</code>, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">fact</code>, and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">example</code> are not eligible for retrieval without an explicit migration step — this is intentional. Retrieval pool composition is a methodology decision, not a tuning parameter.</p>
+    <p>Older memory files keep working. Legacy items of type <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">rule</code> and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">anti_pattern</code> migrate into Decision records at load time. Items of type <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">preference</code>, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">fact</code>, and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">example</code> stay out of the decision corpus.</p>
 
-    <p>The store also enforces ID uniqueness at load time: if two records share an ID, the first-seen record wins and the duplicate is discarded. This determinism property is tested and enforced.</p>
-
-    <h2>Stage 2: DecisionRetriever — scoring and ranking</h2>
-
-    <p>The retriever is the core of Mneme's approach. It answers one question: <em>given this query string, which decisions are most relevant?</em> It answers that question deterministically, using a weighted keyword scorer.</p>
+    <h2>Step 2: DecisionRetriever scores the corpus</h2>
 
     <h3>Tokenization</h3>
 
-    <p>The query is first tokenized into a set of lowercase terms. The tokenizer filters out stopwords, applies a minimum length floor, strips punctuation, and optionally applies stemming. The same tokenizer is applied to each field of each candidate decision record. Tokenization is deterministic: the same input string always produces the same token set.</p>
+    <p>The retriever lowercases the query and splits it into alphanumeric tokens. It drops tokens shorter than four characters and six stopwords: add, use, not, get, set, run. It runs the same tokenizer over each scored field of each decision. It does no stemming, so "migration" and "migrations" count as different tokens.</p>
 
-    <h3>Field scoring</h3>
+    <h3>Field weights</h3>
 
-    <p>Each decision record has several scored fields. Token overlap between the query tokens and each field's token set is computed, then multiplied by that field's weight:</p>
+    <p>For each field, the retriever counts the query tokens that appear in it and multiplies the count by the field's weight:</p>
 
     <div class="code-block">
-<span class="comment"># _WEIGHTS — per-field scoring coefficients</span>
-<span class="key">title</span>:      <span class="num">3.0</span>   <span class="comment"># highest — title is the authoritative description</span>
-<span class="key">tags</span>:       <span class="num">2.5</span>   <span class="comment"># high — curated signals, explicit match intent</span>
-<span class="key">constraint</span>: <span class="num">1.5</span>   <span class="comment"># medium — the enforced rule text</span>
-<span class="key">content</span>:    <span class="num">1.0</span>   <span class="comment"># baseline — rationale / context prose</span>
+<span class="comment"># _WEIGHTS in decision_retriever.py</span>
+<span class="key">decision</span>:      <span class="num">1.0</span>   <span class="comment"># the decision statement</span>
+<span class="key">scope</span>:         <span class="num">2.0</span>   <span class="comment"># highest: the areas the decision governs</span>
+<span class="key">constraints</span>:   <span class="num">1.5</span>
+<span class="key">anti_patterns</span>: <span class="num">1.5</span>
+<span class="key">rationale</span>:     <span class="num">0.5</span>   <span class="comment"># lowest: explanatory prose</span>
 </div>
 
-    <p>A record's raw score is the sum of weighted overlap across all fields. Tag matching also receives an additive flat boost per matching tag (on top of the weight-scaled overlap), which rewards decisions that were explicitly curated for a domain.</p>
+    <p>The score is the sum across the five fields. Take the query "payments service postgres client" and a decision scoped to "payments service" with the constraint "no postgres client outside the data layer". Two tokens match the scope for 4.0, two match the constraint for 3.0, and the decision scores 7.0. The retriever returns the per-field match counts with the score, so you can read the reason a decision ranked where it did.</p>
 
-    <h3>Top-K selection</h3>
+    <h3>Ranking</h3>
 
-    <p>After all candidate decisions are scored, the results are sorted descending by score. The top <strong>K=3</strong> are returned as the retrieval output. If two records have identical scores, tie-breaking is deterministic — same order in the memory file, same tie-break result.</p>
-
-    <div class="callout">
-      <p><strong>Why K=3?</strong> Three decisions fit within a model's active attention without crowding the task prompt. Benchmarking showed that recall@3 covers all five governed scenarios at 100% with the current decision pool. K is pinned — changing it requires a methodology ADR because it affects benchmark comparability.</p>
-    </div>
-
-    <p>The retrieval output is a ranked list of decision records with their scores and field-level match evidence. This output feeds directly into the ContextBuilder.</p>
+    <p>The retriever returns the full corpus sorted from highest score to lowest. Decisions with equal scores keep their order from the memory file. A query with no usable tokens gives each decision a floor score of 1.0, and the list stays in file order.</p>
 
     <figure class="diagram-wrap" aria-label="DecisionRetriever scoring detail diagram">
-      <svg viewBox="0 0 620 260" width="100%" style="max-width:620px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scoring: query tokenization feeds into four field scorers, sum produces raw score, top-K selection outputs ranked decisions">
+      <svg viewBox="0 0 624 240" width="100%" style="max-width:620px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scoring: the query token set feeds five field scorers, the weighted overlaps sum to one score per decision, and the retriever sorts by score">
 
         <!-- Query box -->
-        <rect x="230" y="8" width="160" height="36" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
-        <text x="310" y="30" font-family="DM Mono,monospace" font-size="9.5" fill="#b5cc7a" text-anchor="middle">query → token set</text>
+        <rect x="232" y="8" width="160" height="36" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="312" y="30" font-family="DM Mono,monospace" font-size="9.5" fill="#b5cc7a" text-anchor="middle">query → token set</text>
 
-        <!-- Arrows down to fields -->
-        <line x1="255" y1="44" x2="75" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
-        <line x1="280" y1="44" x2="195" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
-        <line x1="340" y1="44" x2="425" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
-        <line x1="365" y1="44" x2="545" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
+        <!-- Lines down to fields -->
+        <line x1="262" y1="44" x2="64" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="287" y1="44" x2="188" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="312" y1="44" x2="312" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="337" y1="44" x2="436" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
+        <line x1="362" y1="44" x2="560" y2="88" stroke="#2e2e34" stroke-width="1" stroke-dasharray="3 2"/>
 
         <!-- Field scorer boxes -->
-        <!-- Title -->
-        <rect x="8" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="71" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">title overlap</text>
-        <text x="71" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 3.0</text>
+        <rect x="8" y="90" width="112" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
+        <text x="64" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">decision</text>
+        <text x="64" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">&#215; 1.0</text>
 
-        <!-- Tags -->
-        <rect x="148" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="211" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">tags overlap</text>
-        <text x="211" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 2.5 + flat boost</text>
+        <rect x="132" y="90" width="112" height="50" rx="6" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
+        <text x="188" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">scope</text>
+        <text x="188" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">&#215; 2.0</text>
 
-        <!-- Constraint -->
-        <rect x="346" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="409" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">constraint overlap</text>
-        <text x="409" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 1.5</text>
+        <rect x="256" y="90" width="112" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
+        <text x="312" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">constraints</text>
+        <text x="312" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">&#215; 1.5</text>
 
-        <!-- Content -->
-        <rect x="486" y="90" width="126" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
-        <text x="549" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">content overlap</text>
-        <text x="549" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">Ã— 1.0</text>
+        <rect x="380" y="90" width="112" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
+        <text x="436" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">anti_patterns</text>
+        <text x="436" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">&#215; 1.5</text>
 
-        <!-- Arrows to sum -->
-        <line x1="71" y1="140" x2="248" y2="178" stroke="#2e2e34" stroke-width="1"/>
-        <line x1="211" y1="140" x2="270" y2="178" stroke="#2e2e34" stroke-width="1"/>
-        <line x1="409" y1="140" x2="350" y2="178" stroke="#2e2e34" stroke-width="1"/>
-        <line x1="549" y1="140" x2="372" y2="178" stroke="#2e2e34" stroke-width="1"/>
+        <rect x="504" y="90" width="112" height="50" rx="6" fill="#141416" stroke="#2e2e34" stroke-width="1.5"/>
+        <text x="560" y="112" font-family="Inter,sans-serif" font-size="9" fill="#e8e8ec" text-anchor="middle" font-weight="600">rationale</text>
+        <text x="560" y="126" font-family="DM Mono,monospace" font-size="9" fill="#b5cc7a" text-anchor="middle">&#215; 0.5</text>
+
+        <!-- Lines to sum -->
+        <line x1="64" y1="140" x2="250" y2="178" stroke="#2e2e34" stroke-width="1"/>
+        <line x1="188" y1="140" x2="278" y2="178" stroke="#2e2e34" stroke-width="1"/>
+        <line x1="312" y1="140" x2="312" y2="178" stroke="#2e2e34" stroke-width="1"/>
+        <line x1="436" y1="140" x2="346" y2="178" stroke="#2e2e34" stroke-width="1"/>
+        <line x1="560" y1="140" x2="374" y2="178" stroke="#2e2e34" stroke-width="1"/>
 
         <!-- Sum box -->
-        <rect x="236" y="180" width="148" height="38" rx="8" fill="#141416" stroke="#8be0c8" stroke-width="1.5"/>
-        <text x="310" y="201" font-family="Inter,sans-serif" font-size="9.5" fill="#8be0c8" text-anchor="middle" font-weight="600">raw score per record</text>
-        <text x="310" y="214" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">sort ↓ → top K=3</text>
+        <rect x="222" y="180" width="180" height="42" rx="8" fill="#141416" stroke="#8be0c8" stroke-width="1.5"/>
+        <text x="312" y="198" font-family="Inter,sans-serif" font-size="9.5" fill="#8be0c8" text-anchor="middle" font-weight="600">score per decision</text>
+        <text x="312" y="213" font-family="DM Mono,monospace" font-size="8.5" fill="#88889a" text-anchor="middle">sort ↓, ties keep file order</text>
 
       </svg>
-      <figcaption>Fig. 2 — DecisionRetriever scoring: token overlap against each field, weighted, summed to a raw score, then top-K selection.</figcaption>
+      <figcaption>Fig. 2. DecisionRetriever scoring: token overlap per field, weighted, summed, then sorted.</figcaption>
     </figure>
 
-    <h2>Stage 3: ContextBuilder — formatting for injection</h2>
+    <h2>Step 3: Enforcement scope covers the whole corpus</h2>
 
-    <p>The ContextBuilder takes the ranked list from the retriever and converts it into a prompt-ready string. Each retrieved decision is serialized with its ID, title, constraint text, and tags. The formatting is consistent and schema-governed — the LLM sees the same structure for every governance check, which improves constraint adherence.</p>
+    <p>Ranking tells Mneme which decisions relate to the task. Enforcement has to answer something else: does this content break a rule? A forbidden import stays forbidden when the query shares no token with the decision that bans it. Mneme therefore evaluates the whole corpus, in two tiers:</p>
 
-    <p>The ContextBuilder does not filter or re-rank the decisions it receives. Retrieval ordering is preserved. Any post-retrieval modification would introduce non-determinism into the injection path, which is explicitly not allowed.</p>
+    <ul>
+      <li><strong>The retrieval-gated tier.</strong> The top N decisions with a positive score. Mneme checks each rule they carry. N defaults to 3, and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">--top</code> changes it.</li>
+      <li><strong>The rest of the corpus.</strong> Mneme checks unambiguous literal rules only: typed <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> rules, plus anti-patterns and "no X" constraints that reduce to one significant term.</li>
+    </ul>
 
-    <h2>Stage 4: LLMAdapter — context injection</h2>
-
-    <p>The LLMAdapter wraps the underlying model call. It takes the formatted context from the ContextBuilder, combines it with the original task prompt, and calls the configured LLM. The governance context is injected as system-level instruction — before the task description, with explicit language identifying the decisions as authoritative constraints.</p>
-
-    <p>The adapter is model-agnostic. Any model behind an OpenAI-compatible endpoint works without changes to the retrieval or evaluation stages.</p>
-
-    <h2>Stage 5: Evaluator — the verdict layer</h2>
-
-    <p>The Evaluator inspects the model's output against the injected decisions and emits a structured verdict. This is Layer 2 evaluation — separate from the retrieval metrics computed at Layer 1. The five possible verdicts are:</p>
-
-    <div class="metric-row">
-      <div class="metric-card">
-        <div class="metric-val" style="color:var(--accent)">PASS</div>
-        <div class="metric-label">Output respects all injected constraints</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val" style="color:#e87c7c">FAIL</div>
-        <div class="metric-label">Output violates one or more constraints</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val" style="color:#e8a87c">WEAK</div>
-        <div class="metric-label">Partial compliance or soft violation</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val" style="color:var(--muted)">WEAK_RETR.</div>
-        <div class="metric-label">Expected decision not in top-K — Layer 1 failure</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-val" style="color:var(--muted)">MALFORMED</div>
-        <div class="metric-label">Output could not be parsed against the schema</div>
-      </div>
+    <div class="callout">
+      <p><strong>Multi-term rules stay gated for a reason.</strong> An anti-pattern such as "open() without encoding= in Python" is prose. When Mneme treated each word of it as forbidden, a bare "open" or "without" failed harmless text. Mneme now matches a multi-term anti-pattern as a complete ordered phrase, and only for the top N decisions.</p>
     </div>
 
-    <p><strong>WEAK_RETRIEVAL</strong> is the critical verdict for understanding retrieval quality. It fires when the evaluator expected a specific decision ID to be present in the injected context, but that ID was not in the top-K retrieved results. This means the model was never given the constraint it was supposed to enforce — a retrieval failure that causes an enforcement gap.</p>
+    <h2>Step 4: Rule evaluation</h2>
 
-    <div class="callout-teal">
-      <p><strong>WEAK_RETRIEVAL is a Layer 1 failure surfaced at Layer 2.</strong> The evaluator sees that recall dropped — the expected decision ID wasn't retrieved — and downgrades the scenario from PASS. A zero WEAK_RETRIEVAL count across the benchmark suite is a merge-gate requirement.</p>
-    </div>
-
-    <h2>Layer 1 and Layer 2 metrics</h2>
-
-    <p>The pipeline produces two distinct sets of metrics, each with different authority:</p>
+    <p>Mneme evaluates three kinds of rule against the proposed content:</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="comparison-table">
       <thead>
         <tr>
-          <th>Metric</th>
-          <th>Layer</th>
-          <th>Role</th>
+          <th>Rule</th>
+          <th>Matches when</th>
+          <th>Severity</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>recall@K per scenario</td>
-          <td>Layer 1</td>
-          <td>Regression guard — drop below 1.0 blocks merge</td>
+          <td>Typed FORBID_LITERAL</td>
+          <td>The literal appears in the content and the rule's path selectors apply to the target</td>
+          <td>FAIL</td>
         </tr>
         <tr>
-          <td>recall@1 per scenario</td>
-          <td>Layer 1</td>
-          <td>Sharpest tuning signal — rank-1 precision</td>
+          <td>Anti-pattern</td>
+          <td>A single term appears as a whole word, or the full ordered phrase appears</td>
+          <td>FAIL</td>
         </tr>
         <tr>
-          <td>precision@K (suite mean)</td>
-          <td>Layer 1</td>
-          <td>Advisory — fixture-shape constrained at K=3</td>
-        </tr>
-        <tr>
-          <td>irrelevant_injection_rate</td>
-          <td>Layer 1</td>
-          <td>Advisory — mechanically 1.0 given current fixture shape</td>
-        </tr>
-        <tr>
-          <td>pass_rate</td>
-          <td>Layer 2</td>
-          <td>Authoritative merge gate — must remain 1.00</td>
-        </tr>
-        <tr>
-          <td>WEAK_RETRIEVAL count</td>
-          <td>Layer 2</td>
-          <td>Authoritative — must remain 0</td>
+          <td>"no X" constraint</td>
+          <td>A term of X appears as a whole word</td>
+          <td>WARN</td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <p>Recall@K is the primary regression guard because it directly measures whether the expected decision survived the K=3 cutoff. At the current benchmark suite shape (one expected ID per governed scenario), recall@K can only be 0.0 or 1.0 — it has no headroom upward and can only regress. That makes it an ideal invariant.</p>
+    <p>A typed rule can carry <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">include_paths</code> and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>. Mneme compares them with the target path, taken from <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">--target-path</code> or from the input file, and records one outcome per rule: APPLIED, EXCLUDED, or UNKNOWN. A typed rule also skips its own ADR and the memory file, because both have to contain the literal they define.</p>
 
-    <h2>Why no embeddings?</h2>
+    <h2>The verdict</h2>
 
-    <p>The decision to use deterministic keyword scoring instead of embedding-based retrieval is architectural, not just pragmatic. Governance enforcement requires three properties that embedding models cannot provide:</p>
-
-    <ol>
-      <li><strong>Reproducibility.</strong> Governance audits require that the same query against the same corpus returns the same decisions. Embedding models are updated, fine-tuned, and replaced — any change silently changes retrieval behavior.</li>
-      <li><strong>Explainability.</strong> When a decision is retrieved, an engineer must be able to understand why. Keyword overlap is transparent: the title matched two of the query tokens at weight 3.0, and the tags matched one at weight 2.5. Cosine similarity in a 1536-dimensional space is not.</li>
-      <li><strong>No runtime dependencies.</strong> A governance system that requires an embedding API call in the critical path adds latency, failure modes, and cost to every AI-assisted edit. Mneme's retrieval is pure Python, runs locally, and has no network dependencies.</li>
-    </ol>
-
-    <div class="callout">
-      <p><strong>RAG retrieves knowledge. Mneme operationalizes decisions.</strong> Embedding-based retrieval is optimized for semantic relevance — finding passages that are topically close to a query. Governance retrieval needs to find the <em>authoritative</em> decision that applies to the current file and task, not the most semantically similar passage. These are different optimization targets.</p>
+    <div class="metric-row">
+      <div class="metric-card">
+        <div class="metric-val" style="color:var(--accent)">PASS</div>
+        <div class="metric-label">No rule matched</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" style="color:#e8a87c">WARN</div>
+        <div class="metric-label">Only "no X" constraints matched</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" style="color:#e87c7c">FAIL</div>
+        <div class="metric-label">A typed rule or an anti-pattern matched</div>
+      </div>
     </div>
 
-    <h2>Scope-aware retrieval</h2>
+    <p>In strict mode the exit codes are 0, 1, and 2. In warn mode Mneme prints the same verdict and exits 0. Each violation names the decision ID, the rule, and the term that triggered it.</p>
 
-    <p>Each decision record can carry a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">scope</code> field — a glob pattern that restricts which file paths the decision applies to. When a query is associated with a specific file path (e.g. a Claude Code hook fires when editing <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">services/payments/handler.py</code>), the retriever applies scope patterns as a pre-filter before scoring.</p>
+    <div class="callout-teal">
+      <p><strong>INCOMPLETE is an operational state.</strong> When a path-scoped rule comes back UNKNOWN, for example because the run has no usable target path, Mneme prints <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">Result: INCOMPLETE</code> and exits 2 in both modes. It reports this apart from PASS, WARN, and FAIL because a partial evaluation cannot vouch for the content.</p>
+    </div>
 
-    <p>This scope matching is structural, not semantic. A decision scoped to <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">services/payments/**</code> fires only for files matching that pattern, regardless of whether the query text is semantically related to payments. This is the correct behavior: a payments-specific constraint should not fire when the model is editing an analytics pipeline, even if the query text happens to overlap.</p>
+    <h2>Scope labels and path selectors</h2>
 
-    <h2>Determinism guarantee</h2>
+    <p>Two fields sound alike and do different jobs. A decision's <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">scope</code> is a list of plain-text labels such as "payments" or "general". The retriever scores it like the other fields, at the highest weight, and filters nothing with it.</p>
 
-    <p>Determinism is a non-negotiable invariant: same query, same memory file, same ranked result. It is tested at the unit level (token scorer), the integration level (full pipeline), and the suite level (benchmark scenarios). Any change to tie-breaking behavior requires a pinned test before the change ships — the test documents the new contract and prevents silent drift.</p>
+    <p>Path matching belongs to typed rules. A rule with <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">include_paths: services/payments/**</code> applies to target paths under that directory, whatever the query says. Mneme resolves it during rule evaluation.</p>
 
-    <p>This determinism is what makes Mneme's governance auditable. Every CI gate, every hook block, every FAIL verdict traces back to a specific decision record with a specific field match. The trace is reproducible.</p>
+    <h2>Three reasons for no embeddings</h2>
+
+    <ol>
+      <li><strong>Reproducibility.</strong> An audit needs the same query and the same memory file to return the same ranking a year from now. Vendors update and retire embedding models, and each change shifts retrieval with no diff for you to review.</li>
+      <li><strong>Explainability.</strong> You can read a keyword score: two query tokens matched the scope at 2.0 and one matched a constraint at 1.5, for a total of 5.5. Cosine similarity across 1,536 dimensions gives you a number and no reason.</li>
+      <li><strong>No runtime dependency.</strong> The scorer is pure Python and runs locally. A check makes no network call, so it adds no API latency or cost to an agent's edit.</li>
+    </ol>
+
+    <p>Embedding search ranks passages by topical closeness, which suits finding background reading. Enforcement needs the decision that governs this file and a literal rule that either matches the content or does not.</p>
+
+    <h2>Determinism</h2>
+
+    <p>Tokenizing, scoring, sorting, and rule matching are string operations over one JSON file. Give <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> the same memory file, query, content, and target path, and it returns the same verdict with the same violations. A FAIL in CI points to one decision record you can open and read.</p>
+
+    <h2>Benchmark verdicts are separate</h2>
+
+    <p>The benchmark wraps this path with its own scenario verdicts, including WEAK_RETRIEVAL, and its own retrieval metrics such as recall@K. They measure Mneme, and <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> does not return them. The <a href="/docs/benchmark-methodology/">benchmark methodology</a> defines each one.</p>
 
   </div>
 
@@ -620,23 +576,23 @@
     <h2>Frequently asked questions</h2>
     <details>
       <summary>How does Mneme retrieve decisions for a query?</summary>
-      <div class="faq-body">Mneme uses deterministic keyword scoring over structured decision records. The query is tokenized, then scored against each decision's fields (title, tags, content, constraint) using a fixed weight table. Tag matches receive an additive boost. The top-K decisions by score are selected — K defaults to 3. Same query, same memory file, same ranked result every time. There is no vector store, no embedding model, and no ML in the retrieval path.</div>
+      <div class="faq-body">Mneme tokenizes the query and counts token overlap with five fields of each decision: decision, scope, constraints, anti-patterns, and rationale. It multiplies each count by a fixed weight (1.0, 2.0, 1.5, 1.5, 0.5), sums them, and returns the corpus in score order. It uses no vector store, embedding model, or ML.</div>
     </details>
     <details>
-      <summary>What is the default K value and can it be changed?</summary>
-      <div class="faq-body">K equals 3. This is the DEFAULT_MAX_DECISIONS constant that governs both the runtime retrieval and the benchmark harness. Runtime and benchmark must agree on K — if they diverge, benchmark results no longer reflect runtime behavior. Changing K requires a methodology ADR because it affects benchmark comparability across versions. It is not a tuning parameter.</div>
+      <summary>Does the top-N cutoff decide which decisions Mneme enforces?</summary>
+      <div class="faq-body">No. N defaults to 3 and bounds the retrieval-gated tier, where Mneme checks each rule a decision carries, multi-term rules included. Mneme checks typed literal rules and single-term rules against the whole memory file, whatever a decision scored.</div>
     </details>
     <details>
-      <summary>What is WEAK_RETRIEVAL and when does it fire?</summary>
-      <div class="faq-body">WEAK_RETRIEVAL is a scenario verdict emitted when an expected decision ID was not found in the top-K retrieved results. It means the enforcement chain would have failed on that query — the model was never given the constraint it was supposed to enforce. WEAK_RETRIEVAL count must remain at zero across the benchmark suite; any non-zero count is a merge-blocking regression.</div>
+      <summary>What verdicts does mneme check return?</summary>
+      <div class="faq-body">PASS, WARN, or FAIL. In strict mode the exit codes are 0, 1, and 2. INCOMPLETE is a separate operational state: Mneme reports it and exits 2 when it cannot resolve path applicability for a scoped rule.</div>
     </details>
     <details>
       <summary>Does Mneme use embeddings or vector similarity?</summary>
-      <div class="faq-body">No. Mneme's retrieval is entirely embedding-free. It uses a deterministic weighted keyword scorer over structured fields. This is a deliberate architectural choice: governance requires deterministic results for auditability and reproducibility, and embedding-based retrieval is probabilistic by nature. Embedding models are also updated and replaced over time, which would silently change retrieval behavior across versions.</div>
+      <div class="faq-body">No. Mneme ranks decisions with a weighted keyword scorer over structured fields and enforces them with literal matching. An audit needs the same inputs to return the same result, and embedding models change when vendors update or retire them.</div>
     </details>
     <details>
-      <summary>What are recall@K and recall@1, and why do they differ?</summary>
-      <div class="faq-body">recall@K measures whether the expected decision ID appears anywhere in the top-K results. recall@1 measures whether it appears at rank 1 specifically. recall@K is the regression guard (cannot regress without blocking merge). recall@1 is the tuning signal — it has headroom to improve from the current baseline and is the sharpest evidence that retrieval selectivity improved. Both are computed per scenario, not just as a suite mean.</div>
+      <summary>Is WEAK_RETRIEVAL a mneme check verdict?</summary>
+      <div class="faq-body">No. WEAK_RETRIEVAL is a benchmark scenario verdict. The benchmark emits it when retrieval misses a decision the scenario expected. The benchmark methodology page defines it.</div>
     </details>
   </section>
 
@@ -653,7 +609,7 @@
 
     <div class="cta-block">
       <h3>Inspect the retriever source</h3>
-      <p>DecisionRetriever, MemoryStore, ContextBuilder, and the full evaluation harness are open source under MIT license.</p>
+      <p>DecisionRetriever, MemoryStore, and the enforcer are open source under the MIT license.</p>
       <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub →</a>
     </div>
   </footer>

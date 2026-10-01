@@ -21,12 +21,12 @@
   <meta property="og:image" content="https://mnemehq.com/architecture/og-v2.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Demo: How Mneme works, precisely. Technical deep dives into the retrieval pipeline, enforcement mechanics, and design decisions." />
+<meta property="og:image:alt" content="How Mneme works, precisely. Technical deep dives into the retrieval pipeline, enforcement mechanics, and design decisions." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Architecture — Mneme HQ" />
   <meta name="twitter:description" content="Technical deep dives into how Mneme works — the retrieval pipeline, decision memory, and the architectural choices behind deterministic governance." />
   <meta name="twitter:image" content="https://mnemehq.com/architecture/og-v2.png" />
-<meta name="twitter:image:alt" content="Demo: How Mneme works, precisely. Technical deep dives into the retrieval pipeline, enforcement mechanics, and design decisions." />
+<meta name="twitter:image:alt" content="How Mneme works, precisely. Technical deep dives into the retrieval pipeline, enforcement mechanics, and design decisions." />
 
     <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -192,7 +192,7 @@
             "@type": "TechArticle",
             "name": "How Retrieval Works",
             "url": "https://mnemehq.com/architecture/how-retrieval-works/",
-            "description": "Five-stage pipeline deep dive — MemoryStore, DecisionRetriever, ContextBuilder, LLMAdapter, Evaluator. Deterministic keyword scoring with field weights, tag boost, top-K=3, and no embeddings."
+            "description": "Enforcement-path deep dive: MemoryStore, DecisionRetriever, enforcement scope, rule evaluation, and the PASS, WARN, or FAIL verdict. Deterministic keyword scoring with fixed field weights and no embeddings."
           },
           {
             "@type": "TechArticle",
@@ -239,7 +239,7 @@
   <header class="hero">
     <div class="hero-eyebrow">Architecture</div>
     <h1>How Mneme works, precisely</h1>
-    <p class="hero-desc">Technical deep dives into the pipeline — retrieval mechanics, scoring, decision memory, and the deliberate architectural choices behind deterministic governance. No embeddings, no ML, no approximations in the enforcement path.</p>
+    <p class="hero-desc">Technical deep dives into the enforcement path: retrieval scoring, rule evaluation, decision memory, and the design choices behind them. Enforcement is deterministic, with no embeddings or model judgment in the verdict path.</p>
   </header>
 
   <figure class="arch-figure" style="margin:0 0 2.5rem;">
@@ -253,7 +253,7 @@
       <text x="360" y="98" fill="#e8e8ec" font-size="14.5" text-anchor="middle">Applications</text>
       <rect x="110" y="132" width="500" height="64" rx="9" fill="#10141b" stroke="#6ea8d8" stroke-width="1.3"/>
       <text x="360" y="160" fill="#e8e8ec" font-size="14.5" text-anchor="middle">AI coding agents</text>
-      <text x="360" y="180" fill="#9cc4ea" font-family="'DM Mono', ui-monospace, monospace" font-size="10.5" text-anchor="middle">Claude Code &#183; Cursor &#183; Codex &#183; OpenHands</text>
+      <text x="360" y="180" fill="#9cc4ea" font-family="'DM Mono', ui-monospace, monospace" font-size="10.5" text-anchor="middle">Claude Code &#183; Codex CLI &#183; Kiro &#183; Claude Agent SDK</text>
       <rect x="92" y="206" width="536" height="84" rx="11" fill="#16170c" stroke="#b5cc7a" stroke-width="1.9"/>
       <text x="360" y="240" fill="#b5cc7a" font-size="17" font-weight="700" text-anchor="middle">Mneme HQ</text>
       <text x="360" y="263" fill="#dfe3cf" font-size="12.5" text-anchor="middle">Decision and Control Layer</text>
@@ -270,7 +270,7 @@
 
   <section class="stack-section" aria-labelledby="runtime-stack-heading">
     <div class="section-label" id="runtime-stack-heading" style="margin-top:0;">Runtime stack &middot; where Mneme sits</div>
-    <p class="stack-lede">An autonomous agent system is not one layer. <strong>Models</strong> produce candidate output. <strong>Harnesses</strong> coordinate execution, retries, and tool use. <strong>Execution systems</strong> maintain long-running loops, sessions, and memory. <strong>Governance infrastructure</strong> defines and enforces the architectural constraints the output must satisfy. <strong>Verification</strong> confirms the resulting system still passes its objective checks. Mneme operates in the governance infrastructure layer as the decision and control layer &mdash; logically separate from harnesses and execution systems, but integrated directly into their execution boundaries: before tool calls, file writes, model calls, and commits.</p>
+    <p class="stack-lede">An autonomous agent system is not one layer. <strong>Models</strong> produce candidate output. <strong>Harnesses</strong> coordinate execution, retries, and tool use. <strong>Execution systems</strong> maintain long-running loops, sessions, and memory. <strong>Governance infrastructure</strong> defines and enforces the architectural constraints the output must satisfy. <strong>Verification</strong> confirms the resulting system still passes its objective checks. Mneme operates in the governance infrastructure layer as the decision and control layer. It stays logically separate from harnesses and execution systems and connects to them at supported mutation, model-middleware, and CI boundaries.</p>
     <div class="layer-stack">
       <div class="layer-row">
         <div class="layer-num">5</div>
@@ -283,7 +283,7 @@
         <div class="layer-num">4</div>
         <div class="layer-content">
           <strong>Governance infrastructure</strong>
-          <span>Decision graph, precedence, pre-generation enforcement, propagation across surfaces &mdash; Mneme's layer</span>
+          <span>Decision graph, applicability, precedence, pre-generation enforcement, propagation across surfaces &mdash; Mneme's layer</span>
         </div>
       </div>
       <div class="layer-row">
@@ -336,7 +336,7 @@
         </ul>
       </div>
     </div>
-    <p class="stack-xrefs">The two planes compose over MCP rather than merge: a change-management system could ask Mneme's Decision Index which decisions govern a proposed change, while keeping full ownership of review, risk scoring, and merge readiness. MCP is the interoperability boundary that would make that composition possible; the 0.9.0 server is a local stdio process. See <a href="/integrations/mcp/">the MCP integration overview</a> for how that boundary is defined.</p>
+    <p class="stack-xrefs">The two planes compose over MCP rather than merge: a change-management system could ask Mneme's Decision Index which decisions govern a proposed change, while keeping full ownership of review, risk scoring, and merge readiness. MCP is the interoperability boundary that would make that composition possible; the local Decision MCP server, introduced in 0.9.0, runs as a stdio process. See <a href="/integrations/mcp/">the MCP integration overview</a> for how that boundary is defined.</p>
   </section>
 
 <figure class="doc-figure">
@@ -347,7 +347,7 @@
   <hr style="border:none;border-top:1px solid var(--border);margin-top:3rem;">
 
   <div class="pipeline-strip">
-    <div class="pipeline-strip-label">Inside Layer 4 &middot; five-stage pipeline</div>
+    <div class="pipeline-strip-label">Inside Layer 4 &middot; enforcement path</div>
     <div class="pipeline-stages">
       <div class="pipeline-stage">
         <div class="stage-box">MemoryStore</div>
@@ -358,39 +358,39 @@
         <span class="stage-arrow">→</span>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-box">ContextBuilder</div>
+        <div class="stage-box">Enforcement scope</div>
         <span class="stage-arrow">→</span>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-box">LLMAdapter</div>
+        <div class="stage-box">Rule evaluation</div>
         <span class="stage-arrow">→</span>
       </div>
       <div class="pipeline-stage">
-        <div class="stage-box highlight">Evaluator</div>
+        <div class="stage-box highlight">PASS / WARN / FAIL</div>
       </div>
     </div>
-    <p class="pipeline-note">Loads <strong>project_memory.json</strong> → scores decisions by field weights → injects top-K=3 into prompt → checks model output → emits <strong>PASS / FAIL / WEAK_RETRIEVAL</strong>. Same query, same corpus, same result every time.</p>
+    <p class="pipeline-note"><strong>mneme check</strong> loads <strong>project_memory.json</strong>, scores each decision against the query with fixed field weights, resolves which rules apply to the target path, and evaluates the proposed content. It returns <strong>PASS</strong>, <strong>WARN</strong>, or <strong>FAIL</strong> and makes no model call. Typed literal rules and single-term rules run against the whole decision corpus. The top three ranked decisions also have their multi-term rules checked. If Mneme cannot resolve path applicability for a scoped rule, the run reports <strong>INCOMPLETE</strong>, an operational state that sits outside the three policy verdicts. Same query, same content, same memory file, same result.</p>
   </div>
 
   <div class="section-label">Deep dives</div>
 
   <div class="arch-grid">
     <a href="/architecture/how-retrieval-works/" class="arch-card">
-      <div class="card-eyebrow">Architecture · 12 min</div>
+      <div class="card-eyebrow">Architecture · 6 min</div>
       <div class="card-title">How Retrieval Works</div>
-      <p class="card-desc">The full DecisionRetriever walkthrough — tokenization, field weights (titleÃ—3.0, tagsÃ—2.5, constraintÃ—1.5, contentÃ—1.0), tag boosting, top-K=3 selection, tie-break determinism, and why there are no embeddings. Includes Layer 1 vs. Layer 2 metric distinctions and WEAK_RETRIEVAL semantics.</p>
+      <p class="card-desc">The DecisionRetriever walkthrough: tokenization, field weights (decision &times;1.0, scope &times;2.0, constraints &times;1.5, anti-patterns &times;1.5, rationale &times;0.5), ranking and tie order, the two enforcement tiers, and the three reasons Mneme uses no embeddings.</p>
       <div class="card-tags">
         <span class="card-tag">retrieval</span>
         <span class="card-tag">scoring</span>
-        <span class="card-tag">K=3</span>
-        <span class="card-tag">WEAK_RETRIEVAL</span>
+        <span class="card-tag">enforcement scope</span>
+        <span class="card-tag">PASS / WARN / FAIL</span>
         <span class="card-tag">no embeddings</span>
       </div>
       <span class="card-arrow">→</span>
     </a>
 
     <a href="/architecture/decision-memory-vs-documentation/" class="arch-card">
-      <div class="card-eyebrow">Architecture · 10 min</div>
+      <div class="card-eyebrow">Architecture · 12 min</div>
       <div class="card-title">Decision Memory vs. Documentation</div>
       <p class="card-desc">The three-tier model — documentation (prose, wikis, ADR bodies), prompt memory (CLAUDE.md, rules files, RAG injection), and decision memory (typed schema with scope, status, precedence, constraint fields). Why documentation retrieval ends in suggestion. Why decision memory enables enforcement.</p>
       <div class="card-tags">
@@ -408,7 +408,7 @@
     <div class="concepts-link-text">
       <div class="concepts-link-eyebrow">Related</div>
       <div class="concepts-link-title">Concepts — the terminology behind these architectural choices</div>
-      <p class="concepts-link-desc">Architectural Governance, Deterministic Enforcement, Architectural Compiler, Decision Continuity, and seven more. Systems-level explanations of why each concept exists in AI-native software delivery.</p>
+      <p class="concepts-link-desc">Architectural Governance, Deterministic Enforcement, Architectural Compiler, Decision Continuity, and more across the concepts index. Systems-level explanations of why each concept exists in AI-native software delivery.</p>
     </div>
     <span class="concepts-link-arrow">→</span>
   </a>
