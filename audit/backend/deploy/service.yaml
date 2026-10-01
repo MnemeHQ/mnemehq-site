@@ -1,0 +1,85 @@
+# Cloud Run Service Configuration for Mneme Audit M1
+# Deploy with: gcloud run services replace deploy/service.yaml --region=us-central1
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: mneme-audit-api
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/ingress-status: all
+    run.googleapis.com/launch-stage: BETA
+spec:
+  template:
+    metadata:
+      annotations:
+        # Cloud SQL Auth Proxy sidecar
+        run.googleapis.com/cloudsql-instances: ${PROJECT_ID}:${REGION}:${INSTANCE_NAME}
+        # Resource limits
+        run.googleapis.com/cpu: "1"
+        run.googleapis.com/memory: "512Mi"
+        run.googleapis.com/startup-cpu-boost: "true"
+        # Concurrency
+        run.googleapis.com/max-concurrency: "80"
+        run.googleapis.com/min-scale: "0"
+        run.googleapis.com/max-scale: "10"
+        # Startup probe
+        run.googleapis.com/startup-probe-type: "http"
+        run.googleapis.com/startup-probe-period-seconds: "10"
+        run.googleapis.com/startup-probe-timeout-seconds: "30"
+        run.googleapis.com/startup-probe-failure-threshold: "30"
+        # VPC connector for private Cloud SQL access
+        run.googleapis.com/vpc-access-connector: ${VPC_CONNECTOR}
+        run.googleapis.com/vpc-access-egress: "private-ranges-only"
+    spec:
+      serviceAccountName: ${SERVICE_ACCOUNT}
+      timeoutSeconds: 300
+      containers:
+        # Main application container
+        - name: mneme-audit-api
+          image: ${IMAGE_URL}
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql+asyncpg://${DB_USER}:${DB_PASSWORD}@/mneme_audit?host=/cloudsql/${PROJECT_ID}:${REGION}:${INSTANCE_NAME}"
+            - name: APP_VERSION
+              value: "${APP_VERSION}"
+            - name: AUDIT_SCHEMA_VERSION
+              value: "1"
+            - name: ALLOWED_ORIGINS
+              value: "https://mnemehq.com,https://www.mnemehq.com"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "512Mi"
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
