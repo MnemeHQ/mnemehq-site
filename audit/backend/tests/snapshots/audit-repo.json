@@ -1,0 +1,152 @@
+{
+  "summary": {
+    "decisions_discovered": 11,
+    "protection_relevant": 9,
+    "protected_count": 1,
+    "mneme_ready_count": 0,
+    "requires_modelling_count": 8,
+    "guidance_count": 2,
+    "current_protection": 0.1111,
+    "identified_mneme_potential": 0.1111,
+    "sources": [
+      "CLAUDE.md",
+      "docs/adr/ADR-001-database.md",
+      "docs/adr/ADR-002-package-manager.md",
+      "docs/adr/ADR-003-service-boundaries.md",
+      "pyproject.toml"
+    ],
+    "by_category": {
+      "agent_instruction": 1,
+      "architecture_decision": 9,
+      "config_evidence": 1
+    }
+  },
+  "decisions": [
+    {
+      "source_file": "CLAUDE.md",
+      "source_lines": "1-50",
+      "title": "- Follow ADR-001: Use PostgreSQL, never SQLite in production\n- Follow ADR-002: Use uv for package ma",
+      "requirement": "- Follow ADR-001: Use PostgreSQL, never SQLite in production\n- Follow ADR-002: Use uv for package management\n- Use type hints everywhere\n- Never commit secrets or API keys\n- Use environment variables for configuration\n\nRationale: Agent instructions from CLAUDE.md",
+      "category": "agent_instruction",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-001-database.md",
+      "source_lines": "19-19",
+      "title": "FORBID_LITERAL: sqlite",
+      "requirement": "FORBID_LITERAL: sqlite\n\nRationale: Discovered from docs/adr/ADR-001-database.md:19-19 under heading 'Constraints'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-001-database.md",
+      "source_lines": "20-20",
+      "title": "FORBID_LITERAL: mysql",
+      "requirement": "FORBID_LITERAL: mysql\n\nRationale: Discovered from docs/adr/ADR-001-database.md:20-20 under heading 'Constraints'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-001-database.md",
+      "source_lines": "ADR import",
+      "title": "Database Choice",
+      "requirement": "Database Choice\n\nRationale: # ADR-001: Database Choice\n\n## Context\nThe application needs a primary relational database for persistent data storage.\n\n## Decision\nUse PostgreSQL for all persistent application data.\n\n## Constraints\n- FORBID_LITERAL: sqlite\n- FORBID_LITERAL: mysql\n\n## Rationale\nPostgreSQL provides the best balance of features, performance, and operational maturity for our workload. SQLite is not suitable for production concurrent workloads. MySQL lacks some advanced features we need (partial indexes, JSONB operations).",
+      "category": "architecture_decision",
+      "protection_classification": "Protected",
+      "evidence_confidence": "high",
+      "applies_to": [],
+      "proposed_rule": {
+        "type": "FORBID_LITERAL",
+        "pattern": "sqlite",
+        "include_paths": null,
+        "exclude_paths": []
+      }
+    },
+    {
+      "source_file": "docs/adr/ADR-002-package-manager.md",
+      "source_lines": "19-19",
+      "title": "FORBID_DEPENDENCY: pip",
+      "requirement": "FORBID_DEPENDENCY: pip\n\nRationale: Discovered from docs/adr/ADR-002-package-manager.md:19-19 under heading 'Constraints'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-002-package-manager.md",
+      "source_lines": "20-20",
+      "title": "FORBID_DEPENDENCY: poetry",
+      "requirement": "FORBID_DEPENDENCY: poetry\n\nRationale: Discovered from docs/adr/ADR-002-package-manager.md:20-20 under heading 'Constraints'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-002-package-manager.md",
+      "source_lines": "ADR import",
+      "title": "Package Manager",
+      "requirement": "Package Manager\n\nRationale: # ADR-002: Package Manager\n\n## Context\nPython dependency management needs to be consistent across all environments.\n\n## Decision\nStandardize on a single package manager for all Python dependencies.\n\n## Constraints\n- FORBID_DEPENDENCY: pip\n- FORBID_DEPENDENCY: poetry\n\n## Rationale\nuv provides faster installs, better caching, and deterministic resolution. The team has standardized on uv. Pip is acceptable for local development but not in CI. Poetry adds unnecessary complexity.",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-003-service-boundaries.md",
+      "source_lines": "16-16",
+      "title": "Services must not import each other's internal modules. Cross-service communication must go through ",
+      "requirement": "Services must not import each other's internal modules. Cross-service communication must go through defined APIs.\n\nRationale: Discovered from docs/adr/ADR-003-service-boundaries.md:16-16 under heading 'Decision'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-003-service-boundaries.md",
+      "source_lines": "19-19",
+      "title": "Tight coupling between services makes independent deployment impossible and creates cascade failures",
+      "requirement": "Tight coupling between services makes independent deployment impossible and creates cascade failures. Each service owns its data and exposes a well-defined contract. Internal implementation details must remain private.\n\nRationale: Discovered from docs/adr/ADR-003-service-boundaries.md:19-19 under heading 'Rationale'",
+      "category": "architecture_decision",
+      "protection_classification": "Requires modelling",
+      "evidence_confidence": "medium",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "docs/adr/ADR-003-service-boundaries.md",
+      "source_lines": "ADR import",
+      "title": "Service Boundaries",
+      "requirement": "Service Boundaries\n\nRationale: # ADR-003: Service Boundaries\n\n## Context\nWe need clear boundaries between services to maintain modularity and prevent tight coupling.\n\n## Decision\nServices must not import each other's internal modules. Cross-service communication must go through defined APIs.\n\n## Rationale\nTight coupling between services makes independent deployment impossible and creates cascade failures. Each service owns its data and exposes a well-defined contract. Internal implementation details must remain private.",
+      "category": "architecture_decision",
+      "protection_classification": "Guidance",
+      "evidence_confidence": "low",
+      "applies_to": [],
+      "proposed_rule": null
+    },
+    {
+      "source_file": "pyproject.toml",
+      "source_lines": "1-100",
+      "title": "Project Config: pyproject.toml",
+      "requirement": "Project Config: pyproject.toml\n\nRationale: Project config: pyproject.toml",
+      "category": "config_evidence",
+      "protection_classification": "Guidance",
+      "evidence_confidence": "low",
+      "applies_to": [],
+      "proposed_rule": null
+    }
+  ]
+}
