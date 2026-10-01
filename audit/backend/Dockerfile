@@ -15,10 +15,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
-COPY audit/backend/requirements.txt .
+# Install Python dependencies. requirements.txt is the dynamic compatibility
+# floor; requirements.lock is the reviewed production resolution, applied as
+# pip constraints so every image installs the same Python dependency graph.
+# (Base image, apt packages and pip itself still float.)
+COPY audit/backend/requirements.txt audit/backend/requirements.lock ./
 RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt -c requirements.lock
 
 # Production stage
 FROM python:3.12-slim AS production
@@ -42,6 +45,13 @@ WORKDIR /app
 COPY --chown=mneme:mneme audit/backend/app/ ./app/
 COPY --chown=mneme:mneme audit/backend/alembic/ ./alembic/
 COPY --chown=mneme:mneme audit/backend/alembic.ini ./alembic.ini
+
+# Provenance: the image carries the exact resolution it was built from and the
+# source revision (docker build --build-arg GIT_SHA=$(git rev-parse HEAD) ...).
+COPY --chown=mneme:mneme audit/backend/requirements.lock ./requirements.lock
+ARG GIT_SHA=unknown
+LABEL org.opencontainers.image.revision="${GIT_SHA}" \
+      org.opencontainers.image.source="https://github.com/MnemeHQ/mnemehq-site"
 
 # Create temp directory for uploads/clones with proper permissions
 RUN mkdir -p /tmp/mneme-audit && chown mneme:mneme /tmp/mneme-audit

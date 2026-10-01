@@ -16,6 +16,55 @@ score deltas, summary counts and per-decision states. Consumers must not score,
 classify or infer transitions from decision rows. Classification/scoring formulas
 in the frozen P1.2 classifier are not changed by this contract repair.
 
+## Dependency model: floor and production resolution
+
+- `requirements.txt` is the dynamic compatibility floor (`name>=X.Y.Z`). It is
+  never an exact pin; `scripts/check_mneme_version_parity.py` enforces that for
+  the Mneme engine.
+- `requirements.lock` is the production resolution: every resolved distribution
+  as an exact `name==version` pip constraint. It is generated, never hand-edited,
+  and used only by the image build
+  (`pip install -r requirements.txt -c requirements.lock`).
+- The resolution may deliberately lag the newest published engine. It is not
+  tied to `scripts/core_version.json`, which is the website's install-reference
+  contract, not the Audit backend's.
+
+Scope: this makes the image's **Python dependency graph** reproducible. The
+container build as a whole is not: the `python:3.12-slim` base image, the apt
+packages and `pip install --upgrade pip` still float.
+
+CI (`audit-release-check.yml`) runs two jobs. The unconstrained job installs the
+floor and tests the newest resolution, so new releases are exercised early. The
+locked job installs the production resolution, proves the environment matches it
+exactly (`scripts/check_audit_lock.py --installed`), and runs the same contracts.
+
+### Upgrading the Mneme engine (or any dependency) in production
+
+An upgrade is an explicit, reviewed change to `requirements.lock`:
+
+1. Regenerate on Linux / CPython 3.12, from the repository root:
+
+   ```
+   docker run --rm -v "$PWD:/src" -w /src python:3.12-slim sh -c \
+     "apt-get update -qq && apt-get install -y -qq git gcc >/dev/null && \
+      python scripts/lock_audit_requirements.py"
+   ```
+
+2. In that same locked environment, run the backend tests. If
+   `tests/test_production_semantics_snapshot.py` fails, the engine changed what
+   the Audit concludes about a fixture repository. Regenerate the snapshots with
+   `UPDATE_AUDIT_SNAPSHOTS=1` and review the snapshot diff: every changed
+   classification, confidence, guardrail or score is a production semantics
+   change and must be intended.
+3. Open a PR with the lock diff and any snapshot diff together. Both CI jobs
+   must pass.
+4. Deployment remains a separate, explicitly approved step. After it, one real
+   audit must report `mneme_version` equal to the `mneme-hq` pin in the lock.
+
+In the unconstrained job the snapshot test reports drift against a newer engine
+as a skip (visible with `-rs`), not a failure: it is early warning for the next
+upgrade, and does not block work while production stays on the reviewed lock.
+
 ## Package and migrations
 
 Build from repository root: `docker build -f audit/backend/Dockerfile -t mneme-m1:rc .`.
