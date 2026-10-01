@@ -45,16 +45,16 @@
         "itemListElement": [
           {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
           {"@type": "ListItem", "position": 2, "name": "Docs", "item": "https://mnemehq.com/docs/"},
-          {"@type": "ListItem", "position": 3, "name": "Governance Violations", "item": "https://mnemehq.com/docs/governance-violations/"}
+          {"@type": "ListItem", "position": 3, "name": "Governance Policies", "item": "https://mnemehq.com/docs/governance-violations/"}
         ]
       },
       {
         "@type": "TechArticle",
-        "headline": "Governance Policies &mdash; Enforced Today and Roadmap",
+        "headline": "Governance Policies — Enforced Today and Roadmap",
         "description": "A precise guide to what Mneme enforces today, what requires explicit modelling, and what needs richer rule types.",
         "url": "https://mnemehq.com/docs/governance-violations/",
         "datePublished": "2026-05-10",
-        "dateModified": "2026-09-21",
+        "dateModified": "2026-10-01",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
@@ -84,10 +84,6 @@
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
     .hero p.lede { font-size: 1.05rem; color: var(--muted); line-height: 1.75; max-width: 720px; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
 
-    .frame-note { max-width: 880px; margin: 2rem auto 0; padding: 0 2rem; }
-    .frame-note .fn-inner { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.1rem 1.4rem; font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
-    .frame-note .fn-inner strong { color: var(--accent); }
-
     .wrap { max-width: 880px; margin: 0 auto; padding: 3rem 2rem 4rem; font-size: 0.92rem; line-height: 1.85; }
 
     .toc { position: static; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.25rem; margin-bottom: 3rem; }
@@ -101,10 +97,13 @@
     .toc a { color: var(--text); text-decoration: none; transition: color 0.15s; }
     .toc a:hover { color: var(--accent); }
     @media (min-width: 720px) { .toc ol { grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; } }
-    .toc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem 2rem; }
+    .toc-grid { columns: 2; column-gap: 2rem; }
+    .toc-group { break-inside: avoid; margin-bottom: 1.25rem; }
+    .toc-group:last-child { margin-bottom: 0; }
     .toc-group-title { margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
     .toc-group ul { list-style: none; display: grid; gap: 0.4rem; }
-    .toc-group li { display: grid; grid-template-columns: 1.7rem 1fr; gap: 0.3rem; font-size: 0.84rem; line-height: 1.45; }
+    .toc-group li { display: grid; grid-template-columns: 1.7rem 1fr auto; align-items: baseline; gap: 0.3rem; font-size: 0.84rem; line-height: 1.45; }
+    .toc-status { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.065em; text-transform: uppercase; color: var(--status-color); white-space: nowrap; }
     .toc-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
 
     .category { margin-top: 3.5rem; }
@@ -151,7 +150,6 @@
       nav.site-nav { padding: 1rem 1.25rem; }
       .hero { padding: 3rem 1.25rem 1.5rem; }
       .wrap { padding: 2rem 1.25rem 3rem; }
-      .frame-note { padding: 0 1.25rem; }
     }
 /* === Nav upgrade (injected, overrides existing) === */
 .nav-hamburger {
@@ -248,13 +246,6 @@
     .hero { padding-top: 4.8rem; padding-bottom: 1rem; }
     .hero h1 { font-size: clamp(2.65rem, 7vw, 4.65rem); line-height: 0.98; max-width: 790px; }
     .hero p.lede { max-width: 760px; font-size: 1.08rem; }
-    .frame-note { margin-top: 1.5rem; }
-    .frame-note .fn-inner {
-      background: linear-gradient(135deg, rgba(181,204,122,0.09), rgba(20,20,22,0.96) 52%);
-      border-radius: 12px;
-      border-left-width: 1px;
-      padding: 1.35rem 1.5rem;
-    }
     .capability-map {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -362,7 +353,7 @@
     @media (max-width: 760px) {
       .capability-map { grid-template-columns: 1fr; }
       .capability-card { min-height: 0; }
-      .toc-grid { grid-template-columns: 1fr; }
+      .toc-grid { columns: 1; }
       .category { padding: 1.25rem; border-radius: 15px; }
       .violation { padding: 1.2rem 1.05rem 1.25rem; }
       .status-badge { width: 100%; margin-left: 0; border-radius: 6px; text-align: center; }
@@ -398,7 +389,7 @@
     <li><a href="/docs/">Docs</a></li>
     <!-- mneme:page-switcher:start --><li class="page-switcher-item">
     <details class="page-switcher">
-      <summary><span class="page-switcher-sr">Current page: </span>Governance violations <svg class="page-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="page-switcher-sr"> (show all pages)</span></summary>
+      <summary><span class="page-switcher-sr">Current page: </span>Governance policies <svg class="page-switcher-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="page-switcher-sr"> (show all pages)</span></summary>
       <div class="page-switcher-panel" role="navigation" aria-label="All docs">
       <div class="page-switcher-group">
         <div class="page-switcher-label">Start here</div>
@@ -421,7 +412,7 @@
           <li><a href="/docs/cli/">CLI reference</a></li>
           <li><a href="/docs/mcp/">MCP server</a></li>
           <li><a href="/docs/supported-languages/">Supported languages</a></li>
-          <li><a href="/docs/governance-violations/" aria-current="page">Governance violations</a></li>
+          <li><a href="/docs/governance-violations/" aria-current="page">Governance policies</a></li>
         </ul>
       </div>
       <div class="page-switcher-group">
@@ -455,12 +446,6 @@
   <p class="lede">Mneme's Decision Index can represent a broad set of organizational decisions. Its deterministic rule engine is intentionally narrower today. This page separates what is mechanically enforceable now from policies that require richer rule types.</p>
 </section>
 
-<div class="frame-note">
-    <div class="fn-inner">
-      <strong>One system, two scopes.</strong> The Decision Index represents, retrieves, traces, and governs authority around decisions. Mechanical enforcement applies only when a decision is expressed as a supported typed rule at a supported workflow boundary. Representation does not imply automatic detection.
-    </div>
-  </div>
-
 <div class="wrap">
 
   <section class="capability-map" aria-label="Capability status summary">
@@ -488,36 +473,36 @@
       <div class="toc-group">
         <div class="toc-group-title">Architecture governance</div>
         <ul>
-          <li><span class="toc-num">01</span><a href="#v1">Forbidden architecture patterns</a></li>
-          <li><span class="toc-num">02</span><a href="#v2">Layer boundary violations</a></li>
-          <li><span class="toc-num">03</span><a href="#v3">Unauthorized framework introduction</a></li>
+          <li class="status-explicit"><span class="toc-num">01</span><a href="#v1">Forbidden architecture patterns</a><span class="toc-status">Explicit</span></li>
+          <li class="status-roadmap"><span class="toc-num">02</span><a href="#v2">Layer boundary violations</a><span class="toc-status">Roadmap</span></li>
+          <li class="status-today"><span class="toc-num">03</span><a href="#v3">Unauthorized framework introduction</a><span class="toc-status">Enforced</span></li>
         </ul>
       </div>
       <div class="toc-group">
         <div class="toc-group-title">Workflow governance</div>
         <ul>
-          <li><span class="toc-num">04</span><a href="#v4">Monorepo scope violations</a></li>
-          <li><span class="toc-num">10</span><a href="#v10">Agent workflow violations</a></li>
-          <li><span class="toc-num">11</span><a href="#v11">Prompt-level governance</a></li>
+          <li class="status-roadmap"><span class="toc-num">04</span><a href="#v4">Monorepo scope violations</a><span class="toc-status">Roadmap</span></li>
+          <li class="status-roadmap"><span class="toc-num">05</span><a href="#v5">Agent workflow violations</a><span class="toc-status">Roadmap</span></li>
+          <li class="status-explicit"><span class="toc-num">06</span><a href="#v6">Prompt-level governance</a><span class="toc-status">Explicit</span></li>
         </ul>
       </div>
       <div class="toc-group">
         <div class="toc-group-title">Security governance</div>
-        <ul><li><span class="toc-num">05</span><a href="#v5">Security policy violations</a></li></ul>
+        <ul><li class="status-roadmap"><span class="toc-num">07</span><a href="#v7">Security policy violations</a><span class="toc-status">Roadmap</span></li></ul>
       </div>
       <div class="toc-group">
         <div class="toc-group-title">Dependency governance</div>
         <ul>
-          <li><span class="toc-num">08</span><a href="#v8">Dependency licensing</a></li>
-          <li><span class="toc-num">09</span><a href="#v9">ADR supersession violations</a></li>
+          <li class="status-roadmap"><span class="toc-num">08</span><a href="#v8">Dependency licensing</a><span class="toc-status">Roadmap</span></li>
+          <li class="status-explicit"><span class="toc-num">09</span><a href="#v9">ADR supersession violations</a><span class="toc-status">Explicit</span></li>
         </ul>
       </div>
       <div class="toc-group">
         <div class="toc-group-title">Platform governance</div>
         <ul>
-          <li><span class="toc-num">06</span><a href="#v6">Infra governance violations</a></li>
-          <li><span class="toc-num">07</span><a href="#v7">API contract violations</a></li>
-          <li><span class="toc-num">12</span><a href="#v12">Organizational consistency</a></li>
+          <li class="status-explicit"><span class="toc-num">10</span><a href="#v10">Infra governance violations</a><span class="toc-status">Explicit</span></li>
+          <li class="status-roadmap"><span class="toc-num">11</span><a href="#v11">API contract violations</a><span class="toc-status">Roadmap</span></li>
+          <li class="status-roadmap"><span class="toc-num">12</span><a href="#v12">Organizational consistency</a><span class="toc-status">Roadmap</span></li>
         </ul>
       </div>
     </div>
@@ -611,8 +596,8 @@ packages/billing/*
 import { verifyToken } from "@org/auth";</pre>
     </div>
 
-    <div class="violation status-roadmap" id="v10">
-      <div class="vh"><span class="vnum">10</span><h3>Agent workflow violations</h3><span class="status-badge">Roadmap rule type</span></div>
+    <div class="violation status-roadmap" id="v5">
+      <div class="vh"><span class="vnum">05</span><h3>Agent workflow violations</h3><span class="status-badge">Roadmap rule type</span></div>
       <p class="rule"><strong>Rule.</strong> Codegen agents cannot write directly to production migration folders.</p>
       <p class="today-note"><strong>Current boundary.</strong> Mneme does not yet enforce general agent-by-path mutation permissions. This requires identity-aware authorization semantics beyond path-scoped literal matching.</p>
       <pre tabindex="0"><span class="comment"># Agent modifies</span>
@@ -627,8 +612,8 @@ db/staging/migrations/*
 <span class="comment"># a maintainer promotes to db/prod/migrations/ after review</span></pre>
     </div>
 
-    <div class="violation status-explicit" id="v11">
-      <div class="vh"><span class="vnum">11</span><h3>Prompt-level governance</h3><span class="status-badge">Requires explicit modelling</span></div>
+    <div class="violation status-explicit" id="v6">
+      <div class="vh"><span class="vnum">06</span><h3>Prompt-level governance</h3><span class="status-badge">Requires explicit modelling</span></div>
       <p class="rule"><strong>Rule.</strong> Do not generate mock auth implementations.</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Explicit phrases such as <code>fake JWT</code> can be forbidden at a supported prompt boundary. Mneme cannot recognize every possible mock authentication implementation by meaning alone.</p>
       <pre tabindex="0"><span class="comment"># User prompt</span>
@@ -654,8 +639,8 @@ def authenticate(token: str) -> User:
     </div>
     <p class="cat-sub">Unsafe query construction, credential handling, insecure auth patterns. The decisions where a violation is not just architectural debt but a vulnerability the team has already chosen not to ship.</p>
 
-    <div class="violation status-roadmap" id="v5">
-      <div class="vh"><span class="vnum">05</span><h3>Security policy violations</h3><span class="status-badge">Roadmap rule type</span></div>
+    <div class="violation status-roadmap" id="v7">
+      <div class="vh"><span class="vnum">07</span><h3>Security policy violations</h3><span class="status-badge">Roadmap rule type</span></div>
       <p class="rule"><strong>Rule.</strong> No raw SQL string concatenation.</p>
       <p class="today-note"><strong>Current boundary.</strong> Reliable detection requires syntax or data-flow analysis to distinguish unsafe construction from legitimate SQL. Exact literal matching is not equivalent to this security rule.</p>
       <pre tabindex="0">query = f"SELECT * FROM users WHERE id = {user_id}"</pre>
@@ -722,8 +707,8 @@ publisher.publish(topic_path, payload)</pre>
     </div>
     <p class="cat-sub">Observability requirements, infra standards, deployment policies, API contracts. The decisions platform teams ship to keep services consistent across the org.</p>
 
-    <div class="violation status-explicit" id="v6">
-      <div class="vh"><span class="vnum">06</span><h3>Infra governance violations</h3><span class="status-badge">Requires explicit modelling</span></div>
+    <div class="violation status-explicit" id="v10">
+      <div class="vh"><span class="vnum">10</span><h3>Infra governance violations</h3><span class="status-badge">Requires explicit modelling</span></div>
       <p class="rule"><strong>Rule.</strong> All infrastructure changes must use Terraform modules.</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Known imperative commands such as <code>gcloud compute instances create</code> can be forbidden, optionally within relevant paths. Mneme cannot prove that every infrastructure change uses Terraform.</p>
       <pre tabindex="0">gcloud compute instances create ...</pre>
@@ -739,8 +724,8 @@ module "api_instance" {
 }</pre>
     </div>
 
-    <div class="violation status-roadmap" id="v7">
-      <div class="vh"><span class="vnum">07</span><h3>API contract violations</h3><span class="status-badge">Roadmap rule type</span></div>
+    <div class="violation status-roadmap" id="v11">
+      <div class="vh"><span class="vnum">11</span><h3>API contract violations</h3><span class="status-badge">Roadmap rule type</span></div>
       <p class="rule"><strong>Rule.</strong> Internal APIs must version under <code>/v1/</code>.</p>
       <p class="today-note"><strong>Current boundary.</strong> This is a positive requirement: proving the required prefix is present. Today's prohibition-focused rule does not provide general absence detection.</p>
       <pre tabindex="0">@app.route("/users")</pre>
@@ -775,6 +760,7 @@ def create_app():
   </section>
 
   <div class="closer">
+    <p><strong>One system, two scopes.</strong> The Decision Index represents, retrieves, traces, and governs authority around decisions. Mechanical enforcement applies only when a decision is expressed as a supported typed rule at a supported workflow boundary. Representation does not imply automatic detection.</p>
     <p><strong>The distinction is architectural, not a disclaimer.</strong> Mneme can represent more governance knowledge than its current typed-rule vocabulary can mechanically prove. That separation lets teams preserve authority and provenance now, then add richer enforcement without changing the decision source of truth.</p>
     <p><strong>Today:</strong> use exact, case-sensitive <code>FORBID_LITERAL</code> rules and optional <code>include_paths</code>/<code>exclude_paths</code> applicability for deterministic checks. Treat structural analysis, agent identity ACLs, license metadata, and required-presence rules as roadmap capabilities.</p>
   </div>
