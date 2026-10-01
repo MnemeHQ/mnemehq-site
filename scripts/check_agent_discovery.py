@@ -91,6 +91,27 @@ REQUIRED_LLMS_URLS = (
     "https://github.com/MnemeHQ/mneme/blob/main/server.json",
 )
 
+# Mneme HQ ships on PyPI only. These npm packages belong to an unrelated
+# project and have been misattributed to Mneme by external scanners; they must
+# never appear in our discovery content.
+PYPI_PROJECT_URL = "https://pypi.org/project/mneme-hq/"
+NO_NPM_STATEMENT = "Mneme HQ does not currently publish official npm packages"
+STDIO_ONLY_STATEMENT = "local and stdio-only"
+UNOWNED_NPM_PACKAGES = (
+    "@mnemehq/sdk",
+    "@mnemehq/mcp-server",
+    "@mnemehq/distiller-claude",
+)
+DISCOVERY_CONTENT = (
+    AI_CATALOG,
+    SKILLS_INDEX,
+    DECISION_SKILL,
+    TOOL_CATALOG,
+    LLMS,
+    SITE / "llms-full.txt",
+    MCP_DOCS,
+)
+
 
 class Contract:
     def __init__(self) -> None:
@@ -299,6 +320,25 @@ def check_local(c: Contract, version: str) -> None:
     llms_text = LLMS.read_text(encoding="utf-8")
     for url in REQUIRED_LLMS_URLS:
         c.require(url in llms_text, f"llms.txt missing discovery URL: {url}")
+
+    c.require(PYPI_PROJECT_URL in llms_text, "llms.txt missing official PyPI project URL")
+    c.require("pip install mneme-hq" in llms_text, "llms.txt missing official install command")
+    c.require(NO_NPM_STATEMENT in llms_text, "llms.txt missing no-official-npm-packages statement")
+    c.require(f"`{REGISTRY_NAME}`" in llms_text, "llms.txt missing official MCP Registry identity")
+    c.require(STDIO_ONLY_STATEMENT in llms_text, "llms.txt missing local stdio-only MCP statement")
+
+    integrate = by_id.get("urn:air:mnemehq.com:integrate") if isinstance(entries, list) else None
+    integrate_description = integrate.get("description", "") if isinstance(integrate, dict) else ""
+    c.require("mneme-hq on PyPI" in integrate_description, "AI Catalog integrate entry missing official PyPI identity")
+    c.require(NO_NPM_STATEMENT in integrate_description, "AI Catalog integrate entry missing no-official-npm-packages statement")
+
+    for path in DISCOVERY_CONTENT:
+        content = path.read_text(encoding="utf-8").lower()
+        for package in UNOWNED_NPM_PACKAGES:
+            c.require(
+                package not in content,
+                f"{path.relative_to(ROOT).as_posix()} names unowned npm package {package}",
+            )
 
     docs_text = MCP_DOCS.read_text(encoding="utf-8")
     c.require(
