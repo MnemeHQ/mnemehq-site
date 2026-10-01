@@ -94,6 +94,9 @@ REQUIRED_LLMS_URLS = (
 # Mneme HQ ships on PyPI only. These npm packages belong to an unrelated
 # project and have been misattributed to Mneme by external scanners; they must
 # never appear in our discovery content.
+# llms.txt is a navigation index; agent tooling recommends keeping it within
+# 30,000 characters. Annotated page lists live in llms-full.txt.
+LLMS_MAX_CHARS = 30_000
 PYPI_PROJECT_URL = "https://pypi.org/project/mneme-hq/"
 NO_NPM_STATEMENT = "Mneme HQ does not currently publish official npm packages"
 STDIO_ONLY_STATEMENT = "local and stdio-only"
@@ -321,6 +324,12 @@ def check_local(c: Contract, version: str) -> None:
     for url in REQUIRED_LLMS_URLS:
         c.require(url in llms_text, f"llms.txt missing discovery URL: {url}")
 
+    c.require(
+        len(llms_text) <= LLMS_MAX_CHARS,
+        f"llms.txt is {len(llms_text)} characters; keep the navigation index within {LLMS_MAX_CHARS} "
+        "(annotated page lists belong in llms-full.txt)",
+    )
+    c.require(f"{BASE}/llms-full.txt" in llms_text, "llms.txt must link the annotated index in llms-full.txt")
     c.require(PYPI_PROJECT_URL in llms_text, "llms.txt missing official PyPI project URL")
     c.require("pip install mneme-hq" in llms_text, "llms.txt missing official install command")
     c.require(NO_NPM_STATEMENT in llms_text, "llms.txt missing no-official-npm-packages statement")
@@ -358,6 +367,10 @@ def check_local(c: Contract, version: str) -> None:
         )
 
     htaccess_text = HTACCESS.read_text(encoding="utf-8")
+    c.require(
+        r"RewriteRule ^\.well-known/ard\.json$ /.well-known/ai-catalog.json [L]" in htaccess_text,
+        ".htaccess must serve the AI Catalog at the canonical ARD path /.well-known/ard.json",
+    )
     c.require("decision-tools\\.json" in htaccess_text, ".htaccess discovery cache/CORS matcher must include decision-tools.json")
 
 
