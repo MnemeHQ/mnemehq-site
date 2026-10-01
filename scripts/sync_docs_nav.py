@@ -39,7 +39,7 @@ DOCS: list[tuple[str, list[tuple[str, str]]]] = [
         ("cli", "CLI reference"),
         ("mcp", "MCP server"),
         ("supported-languages", "Supported languages"),
-        ("governance-violations", "Governance violations"),
+        ("governance-violations", "Governance policies"),
     ]),
     ("Methodology", [
         ("benchmark-methodology", "Benchmark methodology"),
