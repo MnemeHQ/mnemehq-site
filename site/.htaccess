@@ -18,6 +18,10 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^audit/workspace(?:/.*)?$ /audit/workspace/index.html [L]
 
+# Agent Resource Discovery: /.well-known/ard.json is the canonical ARD path.
+# Serve the existing AI Catalog there so both paths return one document.
+RewriteRule ^\.well-known/ard\.json$ /.well-known/ai-catalog.json [L]
+
 # Branded 404 page
 ErrorDocument 404 /404.html
 
