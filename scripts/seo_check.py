@@ -493,8 +493,11 @@ def rule_jsonld_author(html: str, ctx: PageContext) -> RuleResult:
     # publication date, no byline. The organization is the author.
     if ctx.rel_path.startswith("concepts/"):
         for n in ctx.jsonld:
-            author = n.get("author") if _node_type(n) in interesting else None
-            if isinstance(author, dict) and author.get("@type") != "Organization":
+            if _node_type(n) not in interesting or "author" not in n:
+                continue
+            author = n["author"]
+            authors = author if isinstance(author, list) else [author]
+            if not all(isinstance(a, dict) and a.get("@type") == "Organization" for a in authors):
                 return WARN, "concept page author must be the Organization, not a Person"
         return PASS, ""
     has_target = any(_node_type(n) in interesting for n in ctx.jsonld)
