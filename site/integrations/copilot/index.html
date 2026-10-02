@@ -214,7 +214,7 @@
         "description": "GitHub Copilot generates code in VS Code and JetBrains. Mneme HQ is the architectural constraint layer above it — a structured decision corpus for AI tools.",
         "url": "https://mnemehq.com/integrations/copilot/",
         "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-10-02",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/copilot/og-v2.png",
@@ -224,7 +224,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "Does Mneme HQ hook directly into Copilot's suggestions in VS Code or JetBrains?", "acceptedAnswer": {"@type": "Answer", "text": "No. GitHub Copilot does not expose a PreToolUse-style API for third-party governance to gate generation in-flight. Mneme positions one layer above Copilot: it holds the architectural decision corpus that defines what your AI tools should and shouldn't do, and enforces those decisions wherever hook-level coverage exists (Claude Code today) and at the CI gate."}},
-          {"@type": "Question", "name": "Then what's the practical integration between Mneme and Copilot?", "acceptedAnswer": {"@type": "Answer", "text": "Three points of contact. First, the same decision corpus that drives Claude Code hook enforcement can be exported as Cursor Rules and adapted as context Copilot can see (custom instructions, repo-level guidance files). Second, the mneme check CI gate runs against every PR diff regardless of which tool produced the code — so Copilot-authored changes that violate a recorded decision get blocked in GitHub Actions. Third, the corpus itself is the single source of truth: when a decision changes, every downstream surface updates from one file."}},
+          {"@type": "Question", "name": "Then what's the practical integration between Mneme and Copilot?", "acceptedAnswer": {"@type": "Answer", "text": "Three points of contact. First, the decision corpus is plain JSON, so you can adapt it by hand into context Copilot can see (custom instructions, repo-level guidance files); Mneme HQ does not generate those files. Second, the mneme check CI gate runs against every PR diff regardless of which tool produced the code — so Copilot-authored changes that violate a recorded decision get blocked in GitHub Actions. Third, the corpus is the single source of truth: when a decision changes, you update one file, regenerate the Cursor rules and revise the Copilot instructions from it."}},
           {"@type": "Question", "name": "Why use Mneme HQ if our team is on Copilot rather than Claude Code?", "acceptedAnswer": {"@type": "Answer", "text": "Because the corpus, not the editor, is what survives. Engineers swap tools; teams add and drop AI assistants. The architectural decisions — what database we use, which dependencies are allowed, what patterns we accept — should not be locked inside any one vendor's prompt-engineering surface. Mneme HQ gives you a versioned, structured decision corpus that any current or future tool can read, with CI enforcement as the backstop. Copilot is one consumer; tomorrow's tool will be another."}}
         ]
       }
@@ -367,7 +367,7 @@
     <h2>Three points of contact</h2>
 
     <ul>
-      <li><strong>1. Corpus as context.</strong> The same <code>project_memory.json</code> that drives Claude Code hook enforcement can be exported as Cursor Rules and adapted into Copilot's existing context surfaces (custom instructions, repo-level guidance files). One source, multiple downstream consumers.</li>
+      <li><strong>1. Corpus as context, maintained by hand.</strong> Mneme HQ has no Copilot generator. The decision corpus is plain JSON, so you can copy the decisions that matter into Copilot's custom instructions or a repo-level guidance file yourself, and revise them when a decision changes. Cursor is the one tool with a generated rules file (<code>mneme cursor generate</code>).</li>
       <li><strong>2. CI gate, tool-agnostic.</strong> <code>mneme check</code> runs against every PR diff regardless of which tool produced the code. Copilot-authored changes that violate a recorded decision get blocked in GitHub Actions like any other PR. See the <a href="/integrations/github-actions/" style="color:var(--accent);text-decoration:none;">GitHub Actions integration</a> for the reference workflow.</li>
       <li><strong>3. One corpus, vendor-independent.</strong> The decision corpus is yours. When you swap a coding tool, switch IDEs, or add a new agent to the stack, the architectural decisions don't have to be re-described from scratch. Copilot is one consumer of the corpus; tomorrow's tool will be another.</li>
     </ul>
@@ -375,23 +375,24 @@
     <h2>Status</h2>
 
     <ul>
-      <li>The decision corpus, <code>mneme check</code>, and the GitHub Actions reference workflow are available today via <code>pip install mneme-hq>=0.9.2</code></li>
-      <li>Cursor Rules export is the current adapter pattern for any tool without a hook API &mdash; Copilot included</li>
+      <li>The decision corpus, <code>mneme check</code>, and the GitHub Actions reference workflow are available today via <code>pipx install "mneme-hq&gt;=0.9.2"</code></li>
+      <li>Mneme HQ generates a rules file for Cursor only. It does not generate Copilot instruction files</li>
       <li>Direct Copilot integration (suggestion-time enforcement) requires GitHub to ship a third-party API; this is upstream of Mneme and not on our roadmap as a near-term deliverable</li>
-      <li>For teams using both Claude Code and Copilot today, the layered model below is the production pattern</li>
+      <li>Teams using both Claude Code and Copilot today are covered as shown below</li>
     </ul>
 
-    <h2>Layered governance model</h2>
+    <h2>Where each tool is covered</h2>
 
     <div class="callout">
       <p>
-        <strong>Layer 1:</strong> Generation-time enforcement via Claude Code hooks (where hooks exist)<br>
-        <strong>Layer 2:</strong> Per-tool context (Cursor Rules, Copilot custom instructions) generated from the same corpus<br>
-        <strong>Layer 3:</strong> CI gate via Mneme in GitHub Actions &mdash; the backstop that covers every tool
+        <strong>Claude Code:</strong> hooks check each proposed edit before it is written<br>
+        <strong>Cursor:</strong> a rules file generated from the corpus, read as context<br>
+        <strong>Copilot:</strong> custom instructions you maintain by hand from the corpus<br>
+        <strong>Every tool:</strong> <code>mneme check</code> in GitHub Actions, the backstop for code from any source
       </p>
     </div>
 
-    <p>Copilot lives at Layer 2 today. The corpus drives the context Copilot can see; the CI gate catches what slips through. When and if GitHub ships a third-party suggestion API, the same corpus is ready to drive Layer 1 enforcement there as well &mdash; without re-describing decisions per tool.</p>
+    <p>Copilot gets context you maintain by hand, and the CI gate catches what slips through. If GitHub ships a third-party suggestion API, the same corpus can drive enforcement there without re-describing decisions per tool.</p>
 
     <h2>FAQ</h2>
 
@@ -402,7 +403,7 @@
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">Then what's the practical integration between Mneme and Copilot?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Three points of contact. First, the same decision corpus that drives Claude Code hook enforcement can be exported as Cursor Rules and adapted as context Copilot can see (custom instructions, repo-level guidance files). Second, the <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> CI gate runs against every PR diff regardless of which tool produced the code &mdash; so Copilot-authored changes that violate a recorded decision get blocked in GitHub Actions. Third, the corpus itself is the single source of truth: when a decision changes, every downstream surface updates from one file.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Three points of contact. First, the decision corpus is plain JSON, so you can adapt it by hand into context Copilot can see (custom instructions, repo-level guidance files); Mneme HQ does not generate those files. Second, the <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> CI gate runs against every PR diff regardless of which tool produced the code &mdash; so Copilot-authored changes that violate a recorded decision get blocked in GitHub Actions. Third, the corpus is the single source of truth: when a decision changes, you update one file, regenerate the Cursor rules and revise the Copilot instructions from it.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">Why use Mneme HQ if our team is on Copilot rather than Claude Code?</summary>
