@@ -74,6 +74,12 @@ FOOTER_RE = re.compile(
 HEADING_RE = re.compile(r'margin-bottom: 0\.9rem;">([^<]+)<')
 CTA_RE = re.compile(r'<a\b[^>]*class="btn-nav-cta"[^>]*>', re.S)
 HREF_RE = re.compile(r'href="([^"]+)"')
+SOCIAL_NAV_RE = re.compile(r'<nav\b[^>]*aria-label="Social media"[^>]*>')
+STYLE_RE = re.compile(r'style="([^"]*)"')
+# Hundreds of pages still carry a page-local `nav { ... }` rule that styles every
+# <nav> as the sticky site header. The footer's social links are a <nav>, so the
+# snippet resets the leaked properties inline. These three must stay.
+REQUIRED_SOCIAL_NAV_STYLES = {"position": "static", "padding": "0", "border": "0"}
 SCRIPT_SRC_RE = re.compile(r'<script\b[^>]*\bsrc="(/[^"]+\.js)(?:\?[^\"]*)?"[^>]*>', re.I)
 MENU_TOGGLE_RE = re.compile(r"classList\.toggle\(\s*['\"]open['\"]")
 
@@ -131,6 +137,25 @@ def menu_toggle_count(text: str) -> int:
     return count
 
 
+def social_nav_errors(footer: str) -> list[str]:
+    """The footer's social <nav> must reset the header styles that leak into it."""
+    tag = SOCIAL_NAV_RE.search(footer)
+    if tag is None:
+        return ['_snippets/footer.html: no <nav aria-label="Social media"> found']
+    style = STYLE_RE.search(tag.group(0))
+    declared = {}
+    for decl in (style.group(1) if style else "").split(";"):
+        if ":" in decl:
+            prop, value = decl.split(":", 1)
+            declared[prop.strip().lower()] = value.strip().lower()
+    return [
+        f"_snippets/footer.html: social nav must declare `{prop}: {want}` inline "
+        f"(found {declared.get(prop)!r}); page-level `nav` rules otherwise restyle it"
+        for prop, want in REQUIRED_SOCIAL_NAV_STYLES.items()
+        if declared.get(prop) != want
+    ]
+
+
 def validate_canonical(errors: list[str]) -> tuple[str | None, str | None]:
     if not NAV_SNIPPET.exists() or not FOOTER_SNIPPET.exists():
         errors.append("missing canonical snippet(s) under site/_snippets/")
@@ -167,6 +192,7 @@ def validate_canonical(errors: list[str]) -> tuple[str | None, str | None]:
         for href in HREF_RE.findall(footer):
             if href.startswith("/") and not href_resolves(href):
                 errors.append(f"_snippets/footer.html: internal link does not resolve: {href}")
+        errors.extend(social_nav_errors(footer))
 
     return nav, footer
 
