@@ -261,8 +261,13 @@ def newest_archive_cards(
     source: str,
     publication_dates: dict[str, str],
     limit: int = HOMEPAGE_LATEST_LIMIT,
+    exclude: frozenset[str] = frozenset(),
 ) -> list[dict[str, str | int]]:
-    cards = archive_cards(source, publication_dates)
+    cards = [
+        card
+        for card in archive_cards(source, publication_dates)
+        if card["href"] not in exclude
+    ]
     if len(cards) < limit:
         raise ValueError(
             f"archive contains {len(cards)} insight cards; need at least {limit} "
@@ -394,7 +399,12 @@ def synchronized_homepage(
     archive_source: str,
     publication_dates: dict[str, str],
 ) -> tuple[str, list[str]]:
-    latest = newest_archive_cards(archive_source, publication_dates)
+    # A featured card is already on the page, so it does not also take a latest slot.
+    featured = frozenset(
+        entry["url"].removeprefix("https://mnemehq.com")
+        for entry in section_article_entries(section_source(source, "featured", "latest"))
+    )
+    latest = newest_archive_cards(archive_source, publication_dates, exclude=featured)
     synchronized = replace_latest_cards(source, latest)
     synchronized, _ = synchronized_homepage_schema(synchronized)
     latest_urls = [str(card["href"]) for card in latest]

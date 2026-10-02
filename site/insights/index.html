@@ -55,12 +55,14 @@
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
           {"@type": "Article", "name": "The Emerging AI Agent Infrastructure Stack", "url": "https://mnemehq.com/insights/emerging-ai-agent-infrastructure-stack/"},
+          {"@type": "Article", "name": "The Software Factory Is Finally Here. Its Decision Layer Is Missing.", "url": "https://mnemehq.com/insights/software-factory-governance-layer/"},
+          {"@type": "Article", "name": "AI Engineering ROI: How to Measure the Real Return From AI Coding", "url": "https://mnemehq.com/insights/ai-engineering-roi/"},
           {"@type": "Article", "name": "Package Hallucinations Show Why AI Coding Needs Pre-Action Governance", "url": "https://mnemehq.com/insights/package-hallucinations-pre-action-governance/"},
           {"@type": "Article", "name": "Atlassian's Agentic Pivot: 88% Need a System of Record, 19% Have One", "url": "https://mnemehq.com/insights/atlassian-agentic-pivot-engineering-system-of-record/"},
           {"@type": "Article", "name": "Microsoft's AI Decision Brief: Where Does Architectural Intent Live?", "url": "https://mnemehq.com/insights/microsoft-ai-decision-brief-architectural-intent/"},
-          {"@type": "Article", "name": "The Software Factory Is Finally Here. Its Decision Layer Is Missing.", "url": "https://mnemehq.com/insights/software-factory-governance-layer/"},
           {"@type": "Article", "name": "Conway's Law in the Age of AI Coding Agents", "url": "https://mnemehq.com/insights/conways-law-ai-coding-agents/"},
           {"@type": "Article", "name": "Brooks's Law After AI: When More Coding Agents Make Software Harder to Control", "url": "https://mnemehq.com/insights/brooks-law-ai-coding-agents/"},
+          {"@type": "Article", "name": "Your AI Is On Premises. Your Governance Probably Is Not.", "url": "https://mnemehq.com/insights/private-ai-infrastructure-governance/"},
           {"@type": "Article", "name": "Review Is Not Governance", "url": "https://mnemehq.com/insights/review-is-not-governance/"},
           {"@type": "Article", "name": "Prompt Engineering Is Not Governance", "url": "https://mnemehq.com/insights/prompt-engineering-is-not-governance/"},
           {"@type": "Article", "name": "Models Are Temporary. Architectural Intent Is Not.", "url": "https://mnemehq.com/insights/models-are-temporary-architectural-intent-is-not/"}
@@ -96,6 +98,8 @@
 
     .cards-wrap { max-width: 900px; margin: 0 auto; padding: 0 2rem 6rem; }
     .hub-intro { font-size: 0.88rem; color: var(--muted); line-height: 1.8; max-width: 660px; margin: 0 auto 3rem; }
+    .hub-intro a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+    .hub-intro a:hover { color: var(--accent); }
     .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
 
     .insight-card-link { display: block; text-decoration: none; color: inherit; }
@@ -349,7 +353,7 @@
 </div>
 
 <div class="cards-wrap">
-  <p class="hub-intro">Start with the latest analysis, jump to a topic, or browse the full archive. New essays land most weeks; the seven topic hubs collect the cornerstone and supporting pieces for each area. <a href="/insights/topics/architectural-drift-prevention/">Architectural drift prevention for the AI SDLC</a> is the primary category.</p>
+  <p class="hub-intro">Start with the latest analysis, jump to a topic, or browse the full archive. New essays land most weeks; the seven topic hubs collect the cornerstone and supporting pieces for each area. <a href="/insights/topics/architectural-drift-prevention/">Architectural drift prevention for the AI SDLC</a> is the lead topic.</p>
   <div class="hub-actions">
     <a href="/insights/all/" class="hub-archive-cta">Browse all insights <span aria-hidden="true">&rarr;</span></a>
   </div>
@@ -367,6 +371,36 @@
           </div>
           <h3>The Emerging AI Agent Infrastructure Stack</h3>
           <p>Agent systems are separating into layers: models, tools, orchestration, memory, observability, governance, provenance, verification. Each answers a different reliability question &mdash; and the defining question is no longer model capability.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/software-factory-governance-layer/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">7 min read</span>
+          </div>
+          <h3>The Software Factory Is Finally Here. Its Decision Layer Is Missing.</h3>
+          <p>Bob Bemer proposed the software factory in 1968. Coding agents finally supply the production capacity. Architectural control is the part still missing.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/ai-engineering-roi/" class="insight-card-link">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <span class="card-read-time">13 min read</span>
+          </div>
+          <h3>AI Engineering ROI: How to Measure the Real Return From AI Coding</h3>
+          <p>AI spend is up 28x. Feature delivery is flat. Where the value leaks between generation and delivered software, and how to measure it in three layers instead of one.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
@@ -431,23 +465,6 @@
         </div>
       </a>
 
-      <a href="/insights/software-factory-governance-layer/" class="insight-card-link" data-published="2026-09-19">
-        <div class="insight-card">
-          <div class="card-meta">
-            <span class="card-tag">Analysis</span>
-            <span class="card-dot"></span>
-            <time class="card-date" datetime="2026-09-19">Sep 19, 2026</time>
-            <span class="card-dot"></span>
-            <span class="card-read-time">7 min read</span>
-          </div>
-          <h3>The Software Factory Is Finally Here. Its Decision Layer Is Missing.</h3>
-          <p>Bob Bemer proposed the software factory in 1968. Coding agents finally supply the production capacity. Architectural control is the part still missing.</p>
-          <div class="card-footer">
-            <span class="read-pill">Read insight</span>
-          </div>
-        </div>
-      </a>
-
       <a href="/insights/conways-law-ai-coding-agents/" class="insight-card-link" data-published="2026-09-19">
         <div class="insight-card">
           <div class="card-meta">
@@ -476,6 +493,23 @@
           </div>
           <h3>Brooks's Law After AI: When More Coding Agents Make Software Harder to Control</h3>
           <p>Agents remove ramp-up time. They do not remove coordination cost. What Brooks's Law means when the next contributor is an AI agent.</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="/insights/private-ai-infrastructure-governance/" class="insight-card-link" data-published="2026-09-19">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">Analysis</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="2026-09-19">Sep 19, 2026</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">4 min read</span>
+          </div>
+          <h3>Your AI Is On Premises. Your Governance Probably Is Not.</h3>
+          <p>Private compute decides where AI runs. It does not decide how AI acts. Why governance has to move inside the trust boundary too.</p>
           <div class="card-footer">
             <span class="read-pill">Read insight</span>
           </div>
