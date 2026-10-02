@@ -27,9 +27,6 @@
   <meta name="twitter:description" content="Governance should outlive the model. The repo is the system of record &mdash; not the prompt, not the IDE, not the agent." />
   <meta name="twitter:image" content="https://mnemehq.com/concepts/model-independent-governance/og-v2.png" />
 <meta name="twitter:image:alt" content="Model-independent governance." />
-  <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-05-21T00:00:00Z" />
-  <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Concepts" />
 
   <!-- Consent defaults -->
@@ -193,9 +190,8 @@
         "headline": "Model-Independent Governance",
         "description": "Architectural rules that live outside any one model, prompt, IDE, or agent runtime — applied before generation and at CI regardless of which model produced the work.",
         "url": "https://mnemehq.com/concepts/model-independent-governance/",
-        "datePublished": "2026-05-21",
         "dateModified": "2026-05-21",
-        "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+        "author": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/model-independent-governance/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/concepts/model-independent-governance/",
@@ -288,11 +284,6 @@
     </div>
     <h1>Model-Independent Governance</h1>
     <p class="article-lede">Models change. Agents change. IDEs change. Provider APIs change. Architectural intent should not. Model-independent governance keeps the rules of the system outside the things that turn over &mdash; so the next model migration is a runtime change, not a governance rewrite.</p>
-    <p class="byline">
-      By <a href="/founder/">Theo Valmis</a>
-      <span class="sep">&middot;</span>
-      <time datetime="2026-05-21">Published May 2026</time>
-    </p>
   </header>
 
   <div class="article-body">
@@ -382,7 +373,7 @@
     </div>
 
     <h2>How Mneme implements it</h2>
-    <p>Mneme is a repo-native, model-independent governance layer. <a href="/concepts/executable-architectural-intent/">Architectural intent</a> is encoded in a version-controlled corpus, retrieved through a deterministic scoping layer <a href="/concepts/governance-before-generation/">before agents generate</a>, and validated at the hook and CI levels after generation. The same corpus and the same engine drive every enforcement surface &mdash; Claude Code today, a different harness tomorrow, a different model the day after.</p>
+    <p>Mneme is a repo-native, model-independent decision and control layer. <a href="/concepts/executable-architectural-intent/">Architectural intent</a> is encoded in a version-controlled corpus, retrieved through a deterministic scoping layer <a href="/concepts/governance-before-generation/">before agents generate</a>, and validated at the hook and CI levels after generation. The same corpus and the same engine drive every enforcement surface &mdash; Claude Code today, a different harness tomorrow, a different model the day after.</p>
     <p>The rules do not live in the prompt. They live in the repo. That is the property that makes them survive the next migration.</p>
 
   </div>
@@ -429,7 +420,7 @@
 
     <div class="cta-block">
       <h3>Keep governance outside the model</h3>
-      <p>Mneme is the model-independent governance layer for AI-assisted development: a repo-native control surface that returns the same verdict at every enforcement point, no matter which model or harness produced the change.</p>
+      <p>Mneme is the decision and control layer for agentic software development: a repo-native, model-independent control surface that returns the same verdict at every enforcement point, no matter which model or harness produced the change.</p>
       <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline">View on GitHub &rarr;</a>
     <p style="margin-top:2.5rem;"><a class="cta-link" href="/demo/" data-cta-intent="demo" data-cta-position="end" data-cta-component="concept_link">See this enforced in the 2-minute demo &rarr;</a></p>
 </div>

@@ -489,6 +489,10 @@ def rule_jsonld_main(html: str, ctx: PageContext) -> RuleResult:
 def rule_jsonld_author(html: str, ctx: PageContext) -> RuleResult:
     # Walk JSON-LD nodes; an Article / WebPage / TechArticle should declare author
     interesting = {"Article", "TechArticle", "BlogPosting", "WebPage"}
+    # Concept pages are unsigned reference pages: no personal author, no
+    # publication date, no byline. The organization is the author.
+    if ctx.rel_path.startswith("concepts/"):
+        return PASS, ""
     has_target = any(_node_type(n) in interesting for n in ctx.jsonld)
     if not has_target:
         # Software-application-only pages don't need author
@@ -505,7 +509,7 @@ def rule_jsonld_dates(html: str, ctx: PageContext) -> RuleResult:
     interesting = {"Article", "TechArticle", "BlogPosting", "WebPage"}
     for n in ctx.jsonld:
         if _node_type(n) in interesting:
-            if not n.get("datePublished"):
+            if not n.get("datePublished") and not ctx.rel_path.startswith("concepts/"):
                 return WARN, "Article/WebPage missing datePublished"
             if not n.get("dateModified"):
                 return WARN, "Article/WebPage missing dateModified"
@@ -536,6 +540,8 @@ def rule_byline(html: str, ctx: PageContext) -> RuleResult:
     # Demo pages present classification and breadcrumb navigation instead of
     # editorial bylines. Their author and publication dates remain in JSON-LD.
     if ctx.rel_path.startswith("demo/"):
+        return PASS, ""
+    if ctx.rel_path.startswith("concepts/"):
         return PASS, ""
     has_byline = bool(re.search(r'class\s*=\s*"[^"]*\bbyline\b[^"]*"', ctx.body))
     has_datetime = bool(re.search(r'<time\b[^>]*\bdatetime\s*=', ctx.body))
