@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Architecture as Code &mdash; Mneme HQ Concepts</title>
+  <title>Architecture as Code: Definition, Examples and Tools &mdash; Mneme HQ</title>
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts that teams can analyze and continuously verify." />
+  <meta name="description" content="Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts. A definition, a worked example, common tools and limits." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/concepts/architecture-as-code/" />
   <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
-  <meta property="og:title" content="Architecture as Code &mdash; Mneme HQ Concepts" />
+  <meta property="og:title" content="Architecture as Code: Definition, Examples and Tools" />
   <meta property="og:description" content="Express architectural intent in machine-readable artifacts that teams can analyze and continuously verify." />
   <meta property="og:url" content="https://mnemehq.com/concepts/architecture-as-code/" />
   <meta property="og:image" content="https://mnemehq.com/concepts/architecture-as-code/og-v2.png" />
@@ -23,7 +23,7 @@
 <meta property="og:image:height" content="630" />
 <meta property="og:image:alt" content="Architecture as Code" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Architecture as Code &mdash; Mneme HQ Concepts" />
+  <meta name="twitter:title" content="Architecture as Code: Definition, Examples and Tools" />
   <meta name="twitter:description" content="Machine-readable architectural intent for continuous analysis and verification." />
   <meta name="twitter:image" content="https://mnemehq.com/concepts/architecture-as-code/og-v2.png" />
 <meta name="twitter:image:alt" content="Architecture as Code" />
@@ -81,6 +81,7 @@
     .gap-side strong { display: block; color: var(--text); margin-bottom: 0.55rem; }
     .gap-side span { color: var(--muted); font-size: 0.8rem; line-height: 1.65; }
     .gap-arrow { align-self: center; color: var(--accent); font: 1.3rem 'DM Mono', monospace; }
+    .code-sample { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.1rem 1.25rem; margin: 1.75rem 0; overflow-x: auto; font: 0.8rem/1.6 'DM Mono', monospace; }
     .source-list { padding-left: 1.2rem; }
     .source-list li { font-size: 0.84rem; }
     .article-faq { margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid var(--border); }
@@ -130,9 +131,9 @@
       {
         "@type": "TechArticle",
         "headline": "Architecture as Code",
-        "description": "Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts that teams can analyze and continuously verify.",
+        "description": "Architecture as Code expresses architectural intent in machine-readable, version-controlled artifacts. A definition, a worked example, common tools and limits.",
         "url": "https://mnemehq.com/concepts/architecture-as-code/",
-        "dateModified": "2026-09-10",
+        "dateModified": "2026-10-02",
         "author": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/architecture-as-code/og-v2.png",
@@ -226,6 +227,31 @@
         <div class="chain-step"><span class="chain-num">03</span><span class="chain-title">Evaluate</span><span class="chain-desc">Analyze models or run fitness functions against implementation and operation.</span></div>
         <div class="chain-step"><span class="chain-num">04</span><span class="chain-title">Respond</span><span class="chain-desc">Use the result as feedback, a gate, or an input to a governance decision.</span></div>
       </div>
+
+      <h2>An Architecture as Code example</h2>
+      <p>Take one architectural decision: service modules must call other systems through a shared HTTP client, so that retries, timeouts, and tracing stay in one place. In a design document that decision is a sentence. As code, it is a rule a build can run. In a Java codebase, an <a href="https://www.archunit.org/" rel="noopener">ArchUnit</a> test can state it directly:</p>
+      <pre class="code-sample"><code>@ArchTest
+static final ArchRule services_use_the_shared_http_client =
+    noClasses()
+        .that().resideInAPackage("..service..")
+        .should().dependOnClassesThat()
+        .resideInAPackage("org.apache.http..");</code></pre>
+      <p>The rule lives in the repository, changes through review, and fails the build when a service class depends on the HTTP library directly. The same constraint can be written for other stacks, as a forbidden-dependency rule in dependency-cruiser for JavaScript and TypeScript or as a contract in Import Linter for Python. The syntax changes with the stack. The architecture can still be evaluated without a person re-reading the design document.</p>
+
+      <h2>Architecture as Code tools</h2>
+      <p>No single tool covers all of architecture. The tools in common use fall into four groups, according to the part of the architecture they make executable:</p>
+      <div class="comparison-wrap">
+        <table class="comparison-table">
+          <thead><tr><th>Group</th><th>Examples</th><th>What they express</th></tr></thead>
+          <tbody>
+            <tr><td>Architecture models</td><td><a href="https://structurizr.com/" rel="noopener">Structurizr DSL</a>, <a href="https://calm.finos.org/" rel="noopener">FINOS CALM</a></td><td>Systems, components, and their relationships as text that can be versioned, rendered, and validated</td></tr>
+            <tr><td>Dependency and structure rules</td><td><a href="https://www.archunit.org/" rel="noopener">ArchUnit</a> (Java), <a href="https://github.com/BenMorris/NetArchTest" rel="noopener">NetArchTest</a> (.NET), <a href="https://github.com/sverweij/dependency-cruiser" rel="noopener">dependency-cruiser</a> (JavaScript and TypeScript), <a href="https://import-linter.readthedocs.io/" rel="noopener">Import Linter</a> (Python)</td><td>Which modules, layers, or packages may depend on which</td></tr>
+            <tr><td>Fitness functions</td><td>Tests, metrics, and monitors run in CI or in production</td><td>Measurable qualities such as coupling, latency, or resiliency</td></tr>
+            <tr><td>Policy engines</td><td><a href="https://www.openpolicyagent.org/" rel="noopener">Open Policy Agent</a></td><td>Allow or deny decisions over configuration, infrastructure, and deployment state</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Most teams combine several. A model describes the intended structure, dependency rules and fitness functions test the implementation against it, and a policy engine decides what is permitted at a given gate. Most of these tools evaluate a change after it has been written. Whether the result can stop that change is a separate question, taken up below.</p>
 
       <h2>Architecture as Code vs Architecture Decision Records</h2>
       <p><a href="/use-cases/adr-enforcement/">Architecture Decision Records</a> preserve why a decision was made: the context, alternatives, trade-offs, and consequences. Architecture as Code can express what the resulting architecture contains or must satisfy. Neither replaces the other.</p>
