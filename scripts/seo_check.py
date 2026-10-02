@@ -492,6 +492,10 @@ def rule_jsonld_author(html: str, ctx: PageContext) -> RuleResult:
     # Concept pages are unsigned reference pages: no personal author, no
     # publication date, no byline. The organization is the author.
     if ctx.rel_path.startswith("concepts/"):
+        for n in ctx.jsonld:
+            author = n.get("author") if _node_type(n) in interesting else None
+            if isinstance(author, dict) and author.get("@type") != "Organization":
+                return WARN, "concept page author must be the Organization, not a Person"
         return PASS, ""
     has_target = any(_node_type(n) in interesting for n in ctx.jsonld)
     if not has_target:
