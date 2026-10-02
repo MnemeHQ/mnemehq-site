@@ -86,48 +86,9 @@
 
     .wrap { max-width: 880px; margin: 0 auto; padding: 3rem 2rem 4rem; font-size: 0.92rem; line-height: 1.85; }
 
-    .toc { position: static; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.25rem; margin-bottom: 3rem; }
-    .toc-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem; }
-    .toc ol { list-style: none; counter-reset: toc; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0.4rem; }
-    .toc ol li { counter-increment: toc; font-size: 0.86rem; padding-left: 1.9rem; position: relative; line-height: 1.5; }
-    .toc ol li::before { content: counter(toc, decimal-leading-zero); position: absolute; left: 0; top: 0.05rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
-    .toc ol li.cat { counter-increment: none; padding-left: 0; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-top: 0.65rem; }
-    .toc ol li.cat:first-child { margin-top: 0; }
-    .toc ol li.cat::before { content: ''; }
-    .toc a { color: var(--text); text-decoration: none; transition: color 0.15s; }
-    .toc a:hover { color: var(--accent); }
-    @media (min-width: 720px) { .toc ol { grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; } }
-    .toc-grid { columns: 2; column-gap: 2rem; }
-    .toc-group { break-inside: avoid; margin-bottom: 1.25rem; }
-    .toc-group:last-child { margin-bottom: 0; }
-    .toc-group-title { margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
-    .toc-group ul { list-style: none; display: grid; gap: 0.4rem; }
-    .toc-group li { display: grid; grid-template-columns: 1.7rem 1fr auto; align-items: baseline; gap: 0.3rem; font-size: 0.84rem; line-height: 1.45; }
-    .toc-status { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.065em; text-transform: uppercase; color: var(--status-color); white-space: nowrap; }
-    .toc-num { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
 
-    .category { margin-top: 3.5rem; }
-    .category:first-of-type { margin-top: 0; }
-    .category .cat-header { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
-    .category .cat-tag { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-    .category h2 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 600; letter-spacing: -0.015em; color: var(--text); }
-    .category .cat-sub { font-size: 0.92rem; color: var(--muted); margin: 0.25rem 0 1.5rem; max-width: 720px; line-height: 1.75; }
 
-    .violation { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.6rem 1.75rem; margin-bottom: 1.25rem; }
-    .violation .vh { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
-    .violation .vnum { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.06em; }
-    .violation h3 { font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); letter-spacing: -0.005em; }
-    .violation .rule { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--muted); margin: 0.5rem 0 0.9rem; line-height: 1.65; }
-    .violation .rule strong { color: var(--accent); }
-    .violation pre { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--warn); border-radius: 0 6px 6px 0; padding: 0.85rem 1rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text); overflow-x: auto; line-height: 1.6; margin: 0.5rem 0 0.9rem; }
-    .violation pre .comment { color: var(--muted); }
-    .violation .flags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
-    .violation .flag { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); background: rgba(181, 204, 122,0.08); border: 1px solid rgba(181, 204, 122,0.25); border-radius: 100px; padding: 3px 10px; letter-spacing: 0.03em; }
 
-    .closer { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 1.4rem 1.6rem; margin: 3rem 0 0; }
-    .closer p { font-size: 0.9rem; color: var(--muted); margin: 0 0 0.75rem; line-height: 1.75; }
-    .closer p:last-child { margin-bottom: 0; }
-    .closer p strong { color: var(--accent); }
 
     .cross-links { margin-top: 3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
     .cross-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.2rem 1.4rem; text-decoration: none; color: var(--text); display: flex; flex-direction: column; gap: 0.4rem; transition: border-color 0.15s; }
@@ -139,8 +100,6 @@
     .answer-capsule { max-width: 820px; margin: 0 auto; padding: 1.5rem 2rem; background: var(--surface); border-bottom: 1px solid rgba(181, 204, 122,0.18); font-size: 0.88rem; color: var(--muted); line-height: 1.8; }
     .answer-capsule strong { color: var(--accent); }
 
-    .violation pre.resolution { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 0.85rem 1rem; font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--text); overflow-x: auto; line-height: 1.6; margin: 0.5rem 0 0; }
-    .violation pre.resolution .comment { color: var(--accent-dim); }
 
     footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem 2rem; font-size: 0.78rem; color: var(--muted); }
     footer a { color: var(--muted); text-decoration: none; }
@@ -246,119 +205,101 @@
     .hero { padding-top: 4.8rem; padding-bottom: 1rem; }
     .hero h1 { font-size: clamp(2.65rem, 7vw, 4.65rem); line-height: 0.98; max-width: 790px; }
     .hero p.lede { max-width: 760px; font-size: 1.08rem; }
-    .capability-map {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0.85rem;
-      margin: 2.25rem 0 1rem;
-    }
-    .capability-card {
-      position: relative;
-      min-height: 165px;
-      padding: 1.2rem 1.2rem 1.15rem;
-      background: rgba(20,20,22,0.9);
-      border: 1px solid var(--border2);
-      border-radius: 14px;
-      overflow: hidden;
-    }
-    .capability-card::before {
-      content: '';
-      position: absolute;
-      inset: 0 0 auto;
-      height: 2px;
-      background: var(--level-color);
-    }
+    .capability-map { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; margin: 0 0 1rem; }
+    .capability-card { position: relative; display: block; min-height: 165px; padding: 1.2rem 1.2rem 1.15rem; background: rgba(20,20,22,0.9); border: 1px solid var(--border2); border-radius: 14px; overflow: hidden; color: inherit; text-decoration: none; transition: border-color 0.15s; }
+    .capability-card:hover, .capability-card:focus-visible { border-color: var(--level-color); }
+    .capability-card::before { content: ''; position: absolute; inset: 0 0 auto; height: 2px; background: var(--level-color); }
     .capability-card.today { --level-color: var(--accent); }
     .capability-card.explicit { --level-color: var(--teal); }
     .capability-card.roadmap { --level-color: var(--warn); }
-    .capability-kicker { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--level-color); }
+    .capability-kicker { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--level-color); }
     .capability-count { display: grid; place-items: center; min-width: 26px; height: 26px; border: 1px solid color-mix(in srgb, var(--level-color) 45%, transparent); border-radius: 100px; }
-    .capability-card h2 { margin: 0.8rem 0 0.45rem; font-size: 1rem; line-height: 1.3; }
-    .capability-card p { margin: 0; color: var(--muted); font-size: 0.79rem; line-height: 1.6; }
-    .capability-intro { margin: 1.25rem 0 2.5rem; color: var(--muted); font-size: 0.84rem; line-height: 1.7; }
+    .capability-card .capability-title { margin: 0.8rem 0 0.45rem; font-size: 1rem; font-weight: 600; line-height: 1.3; color: var(--text); }
+    .capability-card p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
+    .capability-intro { margin: 1.25rem 0 2.5rem; color: var(--muted); font-size: 0.86rem; line-height: 1.7; }
     .capability-intro strong { color: var(--text); }
-    .toc { background: rgba(20,20,22,0.72); }
-    .category {
-      position: relative;
-      margin-top: 2.75rem;
-      padding: 2rem;
-      background: linear-gradient(145deg, rgba(26,26,29,0.72), rgba(15,15,17,0.72));
-      border: 1px solid var(--border);
-      border-radius: 20px;
-    }
-    .category:first-of-type { margin-top: 0; }
-    .category .cat-header { margin-bottom: 0.35rem; }
-    .category .cat-sub { margin-bottom: 1.35rem; }
-    .violation {
-      position: relative;
-      scroll-margin-top: 96px;
-      background: rgba(12,12,13,0.72);
-      border-color: var(--border2);
-      border-radius: 14px;
-      padding: 1.45rem 1.5rem 1.5rem;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.16);
-      overflow: hidden;
-    }
-    .violation:last-child { margin-bottom: 0; }
-    .violation::before {
-      content: '';
-      position: absolute;
-      inset: 0 auto 0 0;
-      width: 3px;
-      background: var(--status-color);
-      opacity: 0.78;
-    }
+    .capability-intro code, .today-note code, .next-step code, .policy p code { font-family: 'DM Mono', monospace; font-size: 0.88em; color: var(--text); }
+
     .status-today { --status-color: var(--accent); }
     .status-explicit { --status-color: var(--teal); }
     .status-roadmap { --status-color: var(--warn); }
-    .violation .vh { align-items: center; margin-bottom: 0.75rem; }
-    .status-badge {
-      margin-left: auto;
-      padding: 0.28rem 0.62rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.61rem;
-      line-height: 1.25;
-      letter-spacing: 0.065em;
-      text-transform: uppercase;
-      color: var(--status-color);
-      background: color-mix(in srgb, var(--status-color) 8%, transparent);
-      border: 1px solid color-mix(in srgb, var(--status-color) 32%, transparent);
-      border-radius: 100px;
-      white-space: nowrap;
-    }
-    .today-note {
-      margin: 0.8rem 0 1rem;
-      padding: 0.75rem 0.9rem;
-      color: #c5c5ce;
-      background: color-mix(in srgb, var(--status-color) 5%, var(--surface2));
-      border: 1px solid color-mix(in srgb, var(--status-color) 18%, var(--border));
-      border-radius: 8px;
-      font-size: 0.78rem;
-      line-height: 1.65;
-    }
+
+    .toc { background: rgba(20,20,22,0.72); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem 1.25rem; }
+    .toc-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.9rem; }
+    .toc-grid { columns: 2; column-gap: 2rem; }
+    .toc-group { break-inside: avoid; margin-bottom: 1.1rem; }
+    .toc-group:last-child { margin-bottom: 0; }
+    .toc-group-title { margin-bottom: 0.2rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--status-color); }
+    .toc-group ul { list-style: none; }
+    .toc-group li { display: grid; grid-template-columns: 1.7rem 1fr auto; align-items: baseline; gap: 0.3rem; font-size: 0.86rem; line-height: 1.45; }
+    .toc-num { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+    .toc a { display: block; padding: 0.4rem 0; color: var(--text); text-decoration: none; transition: color 0.15s; }
+    .toc a:hover { color: var(--status-color); }
+    .toc-cat { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+
+    .status-section { margin-top: 3.5rem; scroll-margin-top: 96px; }
+    .sh { margin-bottom: 1.25rem; }
+    .sh-eyebrow { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--status-color); }
+    .sh h2 { margin-top: 0.3rem; font-family: 'Inter', sans-serif; font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; color: var(--text); }
+    .sh-sub { margin-top: 0.3rem; max-width: 680px; color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+    .policy { position: relative; scroll-margin-top: 96px; margin-bottom: 1rem; padding: 1.45rem 1.5rem 1.5rem; background: rgba(20,20,22,0.9); border: 1px solid var(--border2); border-radius: 14px; overflow: hidden; }
+    .policy:last-child { margin-bottom: 0; }
+    .policy::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--status-color); opacity: 0.78; }
+    .policy.compact { padding: 1.15rem 1.5rem 0.9rem; }
+    .ph { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 0.75rem; }
+    .pnum { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; }
+    .ph h3 { flex: 1 1 12rem; font-family: 'Inter', sans-serif; font-size: 1.08rem; font-weight: 600; color: var(--text); letter-spacing: -0.005em; line-height: 1.35; }
+    .status-badge { padding: 0.3rem 0.65rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; line-height: 1.25; letter-spacing: 0.06em; text-transform: uppercase; color: var(--status-color); background: color-mix(in srgb, var(--status-color) 8%, transparent); border: 1px solid color-mix(in srgb, var(--status-color) 32%, transparent); border-radius: 100px; }
+    .cat-tag { margin: 0.35rem 0 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .policy .rule, .policy .pattern { margin: 0 0 0.9rem; color: var(--text); font-size: 0.95rem; line-height: 1.65; }
+    .policy .pattern { color: #c5c5ce; }
+    .policy .pattern a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+    .policy .k { display: block; margin-bottom: 0.15rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .today-note { margin: 0 0 1rem; padding: 0.75rem 0.9rem; color: #c5c5ce; background: color-mix(in srgb, var(--status-color) 5%, var(--surface2)); border: 1px solid color-mix(in srgb, var(--status-color) 18%, var(--border)); border-radius: 8px; font-size: 0.86rem; line-height: 1.65; }
     .today-note strong { color: var(--status-color); }
-    .violation pre { background: #111113; }
-    .violation pre.resolution { background: #111113; }
-    .section-divider {
-      margin: 4rem 0 1.6rem;
-      padding: 1.5rem 1.6rem;
-      background: linear-gradient(135deg, rgba(246,185,75,0.08), rgba(20,20,22,0.84));
-      border: 1px solid rgba(246,185,75,0.24);
-      border-radius: 14px;
-    }
-    .section-divider .section-eyebrow { color: var(--warn); margin-bottom: 0.5rem; }
-    .section-divider h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 4vw, 2.45rem); font-weight: 400; line-height: 1.1; }
-    .section-divider p { margin-top: 0.65rem; max-width: 700px; color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
-    .closer { border-radius: 14px; border-left-width: 1px; background: linear-gradient(135deg, rgba(181,204,122,0.07), var(--surface)); }
+
+    .code { margin: 0 0 1rem; background: #111113; border: 1px solid var(--border2); border-radius: 8px; overflow: hidden; }
+    .code:last-child { margin-bottom: 0; }
+    .code-label { padding: 0.4rem 0.9rem; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border2); }
+    .code.bad { border-color: rgba(234,115,94,0.4); }
+    .code.bad .code-label { color: var(--action-soft, #f2a08e); background: rgba(234,115,94,0.09); border-bottom-color: rgba(234,115,94,0.28); }
+    .code.rule-def .code-label { color: var(--status-color); }
+    .code pre { margin: 0; padding: 0.85rem 1rem; font-family: 'DM Mono', monospace; font-size: 0.8rem; line-height: 1.6; color: var(--text); overflow-x: auto; }
+    .code pre .comment { color: var(--muted); }
+
+    .example > summary { display: inline-flex; align-items: center; min-height: 40px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+    .example > summary:hover { color: var(--text); }
+    .example > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .example > summary { list-style: none; gap: 0.5rem; }
+    .example > summary::-webkit-details-marker { display: none; }
+    .example > summary::before { content: '+'; display: grid; place-items: center; width: 18px; height: 18px; border: 1px solid var(--border2); border-radius: 4px; font-size: 0.8rem; line-height: 1; }
+    .example[open] > summary::before { content: '-'; }
+    .example[open] > summary { margin-bottom: 0.5rem; }
+    .example[open] { padding-bottom: 0.6rem; }
+
+    .next-step { margin-top: 3.5rem; padding: 1.6rem 1.7rem; background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; }
+    .next-step h2 { font-family: 'Inter', sans-serif; font-size: 1.3rem; font-weight: 600; letter-spacing: -0.015em; color: var(--text); margin-bottom: 0.7rem; }
+    .next-step p { margin: 0 0 0.7rem; max-width: 700px; color: var(--muted); font-size: 0.92rem; line-height: 1.7; }
+    .next-step p strong { color: var(--text); }
+    .next-links { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.1rem; }
+    .next-links a { display: inline-flex; align-items: center; min-height: 42px; padding: 0 1rem; border: 1px solid var(--border2); border-radius: 8px; color: var(--text); font-size: 0.88rem; text-decoration: none; transition: border-color 0.15s; }
+    .next-links a:hover, .next-links a:focus-visible { border-color: var(--muted); }
+    .next-links a.primary { border-color: var(--accent); color: var(--accent); }
+
     @media (max-width: 760px) {
       .capability-map { grid-template-columns: 1fr; }
       .capability-card { min-height: 0; }
       .toc-grid { columns: 1; }
-      .category { padding: 1.25rem; border-radius: 15px; }
-      .violation { padding: 1.2rem 1.05rem 1.25rem; }
-      .status-badge { width: 100%; margin-left: 0; border-radius: 6px; text-align: center; }
+      .toc-cat { display: none; }
+      .policy, .policy.compact { padding-left: 1.1rem; padding-right: 1rem; }
+      .capability-card p:not(.capability-title) { display: none; }
+      .capability-card .capability-title { margin-bottom: 0; }
+      .code pre { white-space: pre-wrap; overflow-wrap: anywhere; }
       .answer-capsule { padding: 0.75rem 1.25rem; text-align: left; }
+      .next-step { padding: 1.3rem 1.1rem; }
     }
+
 
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
   </style>
@@ -449,327 +390,288 @@
 <div class="wrap">
 
   <section class="capability-map" aria-label="Capability status summary">
-    <article class="capability-card today">
+    <a class="capability-card today" href="#enforced">
       <div class="capability-kicker"><span>Enforced today</span><span class="capability-count">1</span></div>
-      <h2>Direct literal prohibition</h2>
+      <p class="capability-title">Direct literal prohibition</p>
       <p>A known package, import, API, or token can be rejected deterministically wherever the rule applies.</p>
-    </article>
-    <article class="capability-card explicit">
+    </a>
+    <a class="capability-card explicit" href="#explicit">
       <div class="capability-kicker"><span>Explicit modelling</span><span class="capability-count">4</span></div>
-      <h2>Enforceable when named</h2>
+      <p class="capability-title">Enforceable when named</p>
       <p>A specific forbidden literal and, when needed, path scope must be authored. Mneme does not infer the broader meaning.</p>
-    </article>
-    <article class="capability-card roadmap">
+    </a>
+    <a class="capability-card roadmap" href="#roadmap">
       <div class="capability-kicker"><span>Roadmap rule type</span><span class="capability-count">7</span></div>
-      <h2>Represented, not yet proven</h2>
+      <p class="capability-title">Represented, not yet proven</p>
       <p>The decision belongs in the index today, but reliable detection needs structural, identity, metadata, or required-presence semantics.</p>
-    </article>
+    </a>
   </section>
   <p class="capability-intro"><strong>How to read the cards.</strong> Each badge describes the example's present enforcement status. “Explicit modelling” means Mneme can enforce a deliberately named literal; it does not mean Mneme understands the policy semantically.</p>
 
   <nav class="toc" aria-label="Table of contents">
-    <div class="toc-title">Twelve policies &middot; five governance categories</div>
+    <div class="toc-title">Twelve policies &middot; three enforcement states</div>
     <div class="toc-grid">
-      <div class="toc-group">
-        <div class="toc-group-title">Architecture governance</div>
+      <div class="toc-group status-today">
+        <div class="toc-group-title">Enforced today</div>
         <ul>
-          <li class="status-explicit"><span class="toc-num">01</span><a href="#v1">Forbidden architecture patterns</a><span class="toc-status">Explicit</span></li>
-          <li class="status-roadmap"><span class="toc-num">02</span><a href="#v2">Layer boundary violations</a><span class="toc-status">Roadmap</span></li>
-          <li class="status-today"><span class="toc-num">03</span><a href="#v3">Unauthorized framework introduction</a><span class="toc-status">Enforced</span></li>
+          <li><span class="toc-num">01</span><a href="#unauthorized-framework">Unauthorized framework introduction</a><span class="toc-cat">Architecture</span></li>
         </ul>
       </div>
-      <div class="toc-group">
-        <div class="toc-group-title">Workflow governance</div>
+      <div class="toc-group status-explicit">
+        <div class="toc-group-title">Explicit modelling</div>
         <ul>
-          <li class="status-roadmap"><span class="toc-num">04</span><a href="#v4">Monorepo scope violations</a><span class="toc-status">Roadmap</span></li>
-          <li class="status-roadmap"><span class="toc-num">05</span><a href="#v5">Agent workflow violations</a><span class="toc-status">Roadmap</span></li>
-          <li class="status-explicit"><span class="toc-num">06</span><a href="#v6">Prompt-level governance</a><span class="toc-status">Explicit</span></li>
+          <li><span class="toc-num">02</span><a href="#forbidden-architecture-patterns">Forbidden architecture patterns</a><span class="toc-cat">Architecture</span></li>
+          <li><span class="toc-num">03</span><a href="#prompt-level-governance">Prompt-level governance</a><span class="toc-cat">Workflow</span></li>
+          <li><span class="toc-num">04</span><a href="#adr-supersession">ADR supersession violations</a><span class="toc-cat">Dependency</span></li>
+          <li><span class="toc-num">05</span><a href="#infra-governance">Infra governance violations</a><span class="toc-cat">Platform</span></li>
         </ul>
       </div>
-      <div class="toc-group">
-        <div class="toc-group-title">Security governance</div>
-        <ul><li class="status-roadmap"><span class="toc-num">07</span><a href="#v7">Security policy violations</a><span class="toc-status">Roadmap</span></li></ul>
-      </div>
-      <div class="toc-group">
-        <div class="toc-group-title">Dependency governance</div>
+      <div class="toc-group status-roadmap">
+        <div class="toc-group-title">Roadmap rule type</div>
         <ul>
-          <li class="status-roadmap"><span class="toc-num">08</span><a href="#v8">Dependency licensing</a><span class="toc-status">Roadmap</span></li>
-          <li class="status-explicit"><span class="toc-num">09</span><a href="#v9">ADR supersession violations</a><span class="toc-status">Explicit</span></li>
-        </ul>
-      </div>
-      <div class="toc-group">
-        <div class="toc-group-title">Platform governance</div>
-        <ul>
-          <li class="status-explicit"><span class="toc-num">10</span><a href="#v10">Infra governance violations</a><span class="toc-status">Explicit</span></li>
-          <li class="status-roadmap"><span class="toc-num">11</span><a href="#v11">API contract violations</a><span class="toc-status">Roadmap</span></li>
-          <li class="status-roadmap"><span class="toc-num">12</span><a href="#v12">Organizational consistency</a><span class="toc-status">Roadmap</span></li>
+          <li><span class="toc-num">06</span><a href="#layer-boundaries">Layer boundary violations</a><span class="toc-cat">Architecture</span></li>
+          <li><span class="toc-num">07</span><a href="#monorepo-scope">Monorepo scope violations</a><span class="toc-cat">Workflow</span></li>
+          <li><span class="toc-num">08</span><a href="#agent-workflow">Agent workflow violations</a><span class="toc-cat">Workflow</span></li>
+          <li><span class="toc-num">09</span><a href="#security-policy">Security policy violations</a><span class="toc-cat">Security</span></li>
+          <li><span class="toc-num">10</span><a href="#dependency-licensing">Dependency licensing</a><span class="toc-cat">Dependency</span></li>
+          <li><span class="toc-num">11</span><a href="#api-contract">API contract violations</a><span class="toc-cat">Platform</span></li>
+          <li><span class="toc-num">12</span><a href="#organizational-consistency">Organizational consistency</a><span class="toc-cat">Platform</span></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- ARCHITECTURE GOVERNANCE -->
-  <section class="category" id="architecture">
-    <div class="cat-header">
-      <span class="cat-tag">Category 01</span>
-      <h2>Architecture governance</h2>
-    </div>
-    <p class="cat-sub">Layer boundaries, forbidden patterns, deprecated architectures. The decisions that define how the system is shaped &mdash; not what it does, but how its parts are allowed to relate.</p>
+  <section class="status-section status-today" id="enforced">
+    <header class="sh">
+      <span class="sh-eyebrow">Enforced today</span>
+      <h2>Direct literal prohibition</h2>
+      <p class="sh-sub">The literal is the whole policy. Naming the forbidden package is the rule.</p>
+    </header>
 
-    <div class="violation status-explicit" id="v1">
-      <div class="vh"><span class="vnum">01</span><h3>Forbidden architecture patterns</h3><span class="status-badge">Requires explicit modelling</span></div>
-      <p class="rule"><strong>Rule.</strong> Do not access BigQuery directly from frontend routes.</p>
+    <article class="policy status-today" id="unauthorized-framework">
+      <header class="ph"><span class="pnum">01</span><h3>Unauthorized framework introduction</h3><span class="status-badge">Enforced today</span></header>
+      <p class="cat-tag">Architecture governance</p>
+      <p class="rule"><span class="k">Rule</span> React app standardized on Zustand. No Redux.</p>
+      <p class="today-note"><strong>What Mneme can verify today.</strong> A <code>FORBID_LITERAL</code> rule can reject the exact <code>redux</code> import or package token, optionally limited to the relevant application paths.</p>
+      <div class="code rule-def"><div class="code-label">The typed rule</div><pre tabindex="0">FORBID_LITERAL "redux"</pre></div>
+      <p class="pattern">A change containing the exact, case-sensitive literal <code>redux</code> returns <strong>FAIL</strong>. <a href="/docs/protection-activation/">Protection activation</a> covers how a rule is validated and installed.</p>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">import { createStore } from "redux";</pre></div>
+      <p class="pattern"><span class="k">Compliant pattern</span> State management uses the approved library, Zustand.</p>
+      <div class="code ok"><div class="code-label">Compliant</div><pre tabindex="0"><span class="comment">// compliant - uses the standardized Zustand store</span>
+import { create } from "zustand";
+const useStore = create((set) => ({ count: 0 }));</pre></div>
+    </article>
+  </section>
+
+  <section class="status-section status-explicit" id="explicit">
+    <header class="sh">
+      <span class="sh-eyebrow">Explicit modelling</span>
+      <h2>Enforceable when named</h2>
+      <p class="sh-sub">A named literal stands in for the policy. Mneme enforces that literal, not the broader meaning.</p>
+    </header>
+
+    <article class="policy status-explicit" id="forbidden-architecture-patterns">
+      <header class="ph"><span class="pnum">02</span><h3>Forbidden architecture patterns</h3><span class="status-badge">Requires explicit modelling</span></header>
+      <p class="cat-tag">Architecture governance</p>
+      <p class="rule"><span class="k">Rule</span> Do not access BigQuery directly from frontend routes.</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Forbid an explicit literal such as <code>@google-cloud/bigquery</code> or <code>new BigQuery</code> within frontend paths. Mneme does not infer “direct database access” as a semantic concept.</p>
-      <pre tabindex="0"><span class="comment">// AI generates inside a Next.js API route</span>
-const client = new BigQuery();</pre>
-      <div class="flags">
-        <span class="flag">forbidden dependency</span>
-        <span class="flag">ADR violation</span>
-        <span class="flag">architectural boundary breach</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Compliant pattern.</strong> The frontend route calls a backend service over HTTP; only the backend holds the BigQuery client.</p>
-      <pre class="resolution" tabindex="0"><span class="comment">// compliant - the route fetches from a backend endpoint, no DB client in the frontend</span>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0"><span class="comment">// AI generates inside a Next.js API route</span>
+const client = new BigQuery();</pre></div>
+      <p class="pattern"><span class="k">Compliant pattern</span> The frontend route calls a backend service over HTTP; only the backend holds the BigQuery client.</p>
+      <div class="code ok"><div class="code-label">Compliant</div><pre tabindex="0"><span class="comment">// compliant - the route fetches from a backend endpoint, no DB client in the frontend</span>
 export async function GET() {
   const res = await fetch(`${process.env.API_URL}/reports/summary`);
   return Response.json(await res.json());
-}</pre>
-    </div>
+}</pre></div>
+    </article>
 
-    <div class="violation status-roadmap" id="v2">
-      <div class="vh"><span class="vnum">02</span><h3>Layer boundary violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> Controllers must not contain business logic.</p>
-      <p class="today-note"><strong>Current boundary.</strong> The Decision Index can preserve and retrieve this policy, but the rule engine cannot reliably determine what constitutes business logic or follow data flow between layers.</p>
-      <pre tabindex="0">@app.post("/checkout")
-def checkout():
-    <span class="comment"># pricing logic</span>
-    <span class="comment"># tax logic</span>
-    <span class="comment"># inventory logic</span></pre>
-      <div class="flags">
-        <span class="flag">logic in presentation layer</span>
-        <span class="flag">missing service abstraction</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The controller stays thin and delegates pricing, tax, and inventory to a service.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - business logic lives in the service layer</span>
-@app.post("/checkout")
-def checkout(cart: Cart):
-    return checkout_service.place_order(cart)</pre>
-    </div>
-
-    <div class="violation status-today" id="v3">
-      <div class="vh"><span class="vnum">03</span><h3>Unauthorized framework introduction</h3><span class="status-badge">Enforced today</span></div>
-      <p class="rule"><strong>Rule.</strong> React app standardized on Zustand. No Redux.</p>
-      <p class="today-note"><strong>What Mneme can verify today.</strong> A <code>FORBID_LITERAL</code> rule can reject the exact <code>redux</code> import or package token, optionally limited to the relevant application paths.</p>
-      <pre tabindex="0">import { createStore } from "redux";</pre>
-      <div class="flags">
-        <span class="flag">non-approved state management</span>
-        <span class="flag">stack divergence</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Compliant pattern.</strong> State management uses the approved library, Zustand.</p>
-      <pre class="resolution" tabindex="0"><span class="comment">// compliant - uses the standardized Zustand store</span>
-import { create } from "zustand";
-const useStore = create((set) => ({ count: 0 }));</pre>
-    </div>
-  </section>
-
-  <!-- WORKFLOW GOVERNANCE -->
-  <section class="category" id="workflow">
-    <div class="cat-header">
-      <span class="cat-tag">Category 02</span>
-      <h2>Workflow governance</h2>
-    </div>
-    <p class="cat-sub">Protected directories, ownership boundaries, migration restrictions, prompt-level policies. The decisions that govern <em>who</em> &mdash; or <em>which agent</em> &mdash; is allowed to touch <em>what</em>.</p>
-
-    <div class="violation status-roadmap" id="v4">
-      <div class="vh"><span class="vnum">04</span><h3>Monorepo scope violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> Billing agent cannot modify the auth package.</p>
-      <p class="today-note"><strong>Current boundary.</strong> Path applicability controls where a rule is evaluated. It is not an agent-identity or ownership ACL that authorizes one agent and denies another.</p>
-      <pre tabindex="0"><span class="comment"># AI agent edits</span>
-packages/auth/*</pre>
-      <div class="flags">
-        <span class="flag">scoped ownership breach</span>
-        <span class="flag">out-of-domain modification</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The billing agent edits only its own package and consumes auth through its published interface.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - edits stay inside the owned package</span>
-packages/billing/*
-<span class="comment"># auth is imported, never modified</span>
-import { verifyToken } from "@org/auth";</pre>
-    </div>
-
-    <div class="violation status-roadmap" id="v5">
-      <div class="vh"><span class="vnum">05</span><h3>Agent workflow violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> Codegen agents cannot write directly to production migration folders.</p>
-      <p class="today-note"><strong>Current boundary.</strong> Mneme does not yet enforce general agent-by-path mutation permissions. This requires identity-aware authorization semantics beyond path-scoped literal matching.</p>
-      <pre tabindex="0"><span class="comment"># Agent modifies</span>
-db/prod/migrations/*</pre>
-      <div class="flags">
-        <span class="flag">restricted execution scope</span>
-        <span class="flag">protected path mutation</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The agent writes proposed migrations to a staging directory; promotion to the production path is a human-gated step.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - agent writes to the reviewable staging path only</span>
-db/staging/migrations/*
-<span class="comment"># a maintainer promotes to db/prod/migrations/ after review</span></pre>
-    </div>
-
-    <div class="violation status-explicit" id="v6">
-      <div class="vh"><span class="vnum">06</span><h3>Prompt-level governance</h3><span class="status-badge">Requires explicit modelling</span></div>
-      <p class="rule"><strong>Rule.</strong> Do not generate mock auth implementations.</p>
+    <article class="policy status-explicit" id="prompt-level-governance">
+      <header class="ph"><span class="pnum">03</span><h3>Prompt-level governance</h3><span class="status-badge">Requires explicit modelling</span></header>
+      <p class="cat-tag">Workflow governance</p>
+      <p class="rule"><span class="k">Rule</span> Do not generate mock auth implementations.</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Explicit phrases such as <code>fake JWT</code> can be forbidden at a supported prompt boundary. Mneme cannot recognize every possible mock authentication implementation by meaning alone.</p>
-      <pre tabindex="0"><span class="comment"># User prompt</span>
-"Just create a quick fake JWT validator."</pre>
-      <div class="flags">
-        <span class="flag">policy conflict before generation</span>
-        <span class="flag">governance-before-generation</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Compliant pattern.</strong> The agent declines the mock and wires in the vetted auth library to verify real tokens.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - real verification, no fake validator</span>
+      <div class="code bad"><div class="code-label">User prompt</div><pre tabindex="0"><span class="comment"># User prompt</span>
+"Just create a quick fake JWT validator."</pre></div>
+      <p class="pattern"><span class="k">Compliant pattern</span> The agent declines the mock and wires in the vetted auth library to verify real tokens.</p>
+      <div class="code ok"><div class="code-label">Compliant</div><pre tabindex="0"><span class="comment"># compliant - real verification, no fake validator</span>
 from app.auth import verify_jwt
 
 def authenticate(token: str) -> User:
-    return verify_jwt(token)  <span class="comment"># signature + expiry checked</span></pre>
-    </div>
-  </section>
+    return verify_jwt(token)  <span class="comment"># signature + expiry checked</span></pre></div>
+    </article>
 
-  <!-- SECURITY GOVERNANCE -->
-  <section class="category" id="security">
-    <div class="cat-header">
-      <span class="cat-tag">Category 03</span>
-      <h2>Security governance</h2>
-    </div>
-    <p class="cat-sub">Unsafe query construction, credential handling, insecure auth patterns. The decisions where a violation is not just architectural debt but a vulnerability the team has already chosen not to ship.</p>
-
-    <div class="violation status-roadmap" id="v7">
-      <div class="vh"><span class="vnum">07</span><h3>Security policy violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> No raw SQL string concatenation.</p>
-      <p class="today-note"><strong>Current boundary.</strong> Reliable detection requires syntax or data-flow analysis to distinguish unsafe construction from legitimate SQL. Exact literal matching is not equivalent to this security rule.</p>
-      <pre tabindex="0">query = f"SELECT * FROM users WHERE id = {user_id}"</pre>
-      <div class="flags">
-        <span class="flag">unsafe query construction</span>
-        <span class="flag">secure coding rule breach</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The user input is bound as a parameter, never interpolated into the SQL string.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - parameterized query, no string interpolation</span>
-cursor.execute(
-    "SELECT * FROM users WHERE id = %s",
-    (user_id,),
-)</pre>
-    </div>
-  </section>
-
-  <!-- DEPENDENCY GOVERNANCE -->
-  <section class="category" id="dependency">
-    <div class="cat-header">
-      <span class="cat-tag">Category 04</span>
-      <h2>Dependency governance</h2>
-    </div>
-    <p class="cat-sub">Banned libraries, licensing constraints, version pins, and the supersession history of decisions the team has already revisited. Dependencies are decisions; Mneme treats them as such.</p>
-
-    <div class="violation status-roadmap" id="v8">
-      <div class="vh"><span class="vnum">08</span><h3>Dependency licensing</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> No GPL dependencies.</p>
-      <p class="today-note"><strong>Current boundary.</strong> Mneme does not resolve package-to-license metadata today. Teams can forbid specifically named packages, but cannot enforce the GPL license class generically.</p>
-      <pre tabindex="0"><span class="comment">// AI adds to package.json</span>
-"some-gpl-library": "^2.1.0"</pre>
-      <div class="flags">
-        <span class="flag">licensing policy violation</span>
-        <span class="flag">approved-list deviation</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The dependency is swapped for an approved permissively-licensed (MIT or Apache-2.0) equivalent.</p>
-      <pre class="resolution" tabindex="0"><span class="comment">// compliant - MIT-licensed library from the approved list</span>
-"some-mit-library": "^3.0.0"</pre>
-    </div>
-
-    <div class="violation status-explicit" id="v9">
-      <div class="vh"><span class="vnum">09</span><h3>ADR supersession violations</h3><span class="status-badge">Requires explicit modelling</span></div>
-      <p class="rule"><strong>Rule.</strong> ADR-002: all async jobs use Pub/Sub. (Supersedes an older ADR that allowed Celery.)</p>
+    <article class="policy status-explicit" id="adr-supersession">
+      <header class="ph"><span class="pnum">04</span><h3>ADR supersession violations</h3><span class="status-badge">Requires explicit modelling</span></header>
+      <p class="cat-tag">Dependency governance</p>
+      <p class="rule"><span class="k">Rule</span> ADR-002: all async jobs use Pub/Sub. (Supersedes an older ADR that allowed Celery.)</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Decision precedence and supersession select the active ADR. Preventing Celery still requires an explicit <code>FORBID_LITERAL</code> rule for its package or import.</p>
-      <pre tabindex="0">from celery import Celery</pre>
-      <div class="flags">
-        <span class="flag">superseded decision</span>
-        <span class="flag">outdated architecture pattern</span>
-        <span class="flag">precedence-aware enforcement</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Compliant pattern.</strong> Async work is dispatched through Pub/Sub, the decision that supersedes Celery.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - ADR-002: publish to Pub/Sub instead of Celery</span>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">from celery import Celery</pre></div>
+      <p class="pattern"><span class="k">Compliant pattern</span> Async work is dispatched through Pub/Sub, the decision that supersedes Celery.</p>
+      <div class="code ok"><div class="code-label">Compliant</div><pre tabindex="0"><span class="comment"># compliant - ADR-002: publish to Pub/Sub instead of Celery</span>
 from google.cloud import pubsub_v1
 
 publisher = pubsub_v1.PublisherClient()
-publisher.publish(topic_path, payload)</pre>
-    </div>
-  </section>
+publisher.publish(topic_path, payload)</pre></div>
+    </article>
 
-  <!-- PLATFORM GOVERNANCE -->
-  <section class="category" id="platform">
-    <div class="cat-header">
-      <span class="cat-tag">Category 05</span>
-      <h2>Platform governance</h2>
-    </div>
-    <p class="cat-sub">Observability requirements, infra standards, deployment policies, API contracts. The decisions platform teams ship to keep services consistent across the org.</p>
-
-    <div class="violation status-explicit" id="v10">
-      <div class="vh"><span class="vnum">10</span><h3>Infra governance violations</h3><span class="status-badge">Requires explicit modelling</span></div>
-      <p class="rule"><strong>Rule.</strong> All infrastructure changes must use Terraform modules.</p>
+    <article class="policy status-explicit" id="infra-governance">
+      <header class="ph"><span class="pnum">05</span><h3>Infra governance violations</h3><span class="status-badge">Requires explicit modelling</span></header>
+      <p class="cat-tag">Platform governance</p>
+      <p class="rule"><span class="k">Rule</span> All infrastructure changes must use Terraform modules.</p>
       <p class="today-note"><strong>What Mneme can verify today.</strong> Known imperative commands such as <code>gcloud compute instances create</code> can be forbidden, optionally within relevant paths. Mneme cannot prove that every infrastructure change uses Terraform.</p>
-      <pre tabindex="0">gcloud compute instances create ...</pre>
-      <div class="flags">
-        <span class="flag">bypassing approved infra workflow</span>
-        <span class="flag">untracked change surface</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Compliant pattern.</strong> The instance is declared in a Terraform module and applied through the reviewed pipeline, not an imperative CLI call.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - declarative Terraform, applied via CI</span>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">gcloud compute instances create ...</pre></div>
+      <p class="pattern"><span class="k">Compliant pattern</span> The instance is declared in a Terraform module and applied through the reviewed pipeline, not an imperative CLI call.</p>
+      <div class="code ok"><div class="code-label">Compliant</div><pre tabindex="0"><span class="comment"># compliant - declarative Terraform, applied via CI</span>
 module "api_instance" {
   source        = "./modules/compute"
   machine_type  = "e2-standard-2"
-}</pre>
-    </div>
+}</pre></div>
+    </article>
+  </section>
 
-    <div class="violation status-roadmap" id="v11">
-      <div class="vh"><span class="vnum">11</span><h3>API contract violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> Internal APIs must version under <code>/v1/</code>.</p>
+  <section class="status-section status-roadmap" id="roadmap">
+    <header class="sh">
+      <span class="sh-eyebrow">Roadmap rule type</span>
+      <h2>Represented, not yet proven</h2>
+      <p class="sh-sub">These decisions can be recorded and retrieved today. Mechanical detection needs a rule type that is not available yet.</p>
+    </header>
+
+    <article class="policy status-roadmap compact" id="layer-boundaries">
+      <header class="ph"><span class="pnum">06</span><h3>Layer boundary violations</h3><span class="status-badge">Needs structural analysis</span></header>
+      <p class="cat-tag">Architecture governance</p>
+      <p class="rule"><span class="k">Rule</span> Controllers must not contain business logic.</p>
+      <p class="today-note"><strong>Current boundary.</strong> The Decision Index can preserve and retrieve this policy, but the rule engine cannot reliably determine what constitutes business logic or follow data flow between layers.</p>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">@app.post("/checkout")
+def checkout():
+    <span class="comment"># pricing logic</span>
+    <span class="comment"># tax logic</span>
+    <span class="comment"># inventory logic</span></pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The controller stays thin and delegates pricing, tax, and inventory to a service.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - business logic lives in the service layer</span>
+@app.post("/checkout")
+def checkout(cart: Cart):
+    return checkout_service.place_order(cart)</pre></div>
+      </details>
+    </article>
+
+    <article class="policy status-roadmap compact" id="monorepo-scope">
+      <header class="ph"><span class="pnum">07</span><h3>Monorepo scope violations</h3><span class="status-badge">Needs agent identity</span></header>
+      <p class="cat-tag">Workflow governance</p>
+      <p class="rule"><span class="k">Rule</span> Billing agent cannot modify the auth package.</p>
+      <p class="today-note"><strong>Current boundary.</strong> Path applicability controls where a rule is evaluated. It is not an agent-identity or ownership ACL that authorizes one agent and denies another.</p>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0"><span class="comment"># AI agent edits</span>
+packages/auth/*</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The billing agent edits only its own package and consumes auth through its published interface.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - edits stay inside the owned package</span>
+packages/billing/*
+<span class="comment"># auth is imported, never modified</span>
+import { verifyToken } from "@org/auth";</pre></div>
+      </details>
+    </article>
+
+    <article class="policy status-roadmap compact" id="agent-workflow">
+      <header class="ph"><span class="pnum">08</span><h3>Agent workflow violations</h3><span class="status-badge">Needs agent identity</span></header>
+      <p class="cat-tag">Workflow governance</p>
+      <p class="rule"><span class="k">Rule</span> Codegen agents cannot write directly to production migration folders.</p>
+      <p class="today-note"><strong>Current boundary.</strong> Mneme does not yet enforce general agent-by-path mutation permissions. This requires identity-aware authorization semantics beyond path-scoped literal matching.</p>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0"><span class="comment"># Agent modifies</span>
+db/prod/migrations/*</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The agent writes proposed migrations to a staging directory; promotion to the production path is a human-gated step.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - agent writes to the reviewable staging path only</span>
+db/staging/migrations/*
+<span class="comment"># a maintainer promotes to db/prod/migrations/ after review</span></pre></div>
+      </details>
+    </article>
+
+    <article class="policy status-roadmap compact" id="security-policy">
+      <header class="ph"><span class="pnum">09</span><h3>Security policy violations</h3><span class="status-badge">Needs syntax or data-flow analysis</span></header>
+      <p class="cat-tag">Security governance</p>
+      <p class="rule"><span class="k">Rule</span> No raw SQL string concatenation.</p>
+      <p class="today-note"><strong>Current boundary.</strong> Reliable detection requires syntax or data-flow analysis to distinguish unsafe construction from legitimate SQL. Exact literal matching is not equivalent to this security rule.</p>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">query = f"SELECT * FROM users WHERE id = {user_id}"</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The user input is bound as a parameter, never interpolated into the SQL string.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - parameterized query, no string interpolation</span>
+cursor.execute(
+    "SELECT * FROM users WHERE id = %s",
+    (user_id,),
+)</pre></div>
+      </details>
+    </article>
+
+    <article class="policy status-roadmap compact" id="dependency-licensing">
+      <header class="ph"><span class="pnum">10</span><h3>Dependency licensing</h3><span class="status-badge">Needs license metadata</span></header>
+      <p class="cat-tag">Dependency governance</p>
+      <p class="rule"><span class="k">Rule</span> No GPL dependencies.</p>
+      <p class="today-note"><strong>Current boundary.</strong> Mneme does not resolve package-to-license metadata today. Teams can forbid specifically named packages, but cannot enforce the GPL license class generically.</p>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0"><span class="comment">// AI adds to package.json</span>
+"some-gpl-library": "^2.1.0"</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The dependency is swapped for an approved permissively-licensed (MIT or Apache-2.0) equivalent.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment">// compliant - MIT-licensed library from the approved list</span>
+"some-mit-library": "^3.0.0"</pre></div>
+      </details>
+    </article>
+
+    <article class="policy status-roadmap compact" id="api-contract">
+      <header class="ph"><span class="pnum">11</span><h3>API contract violations</h3><span class="status-badge">Needs required-presence rules</span></header>
+      <p class="cat-tag">Platform governance</p>
+      <p class="rule"><span class="k">Rule</span> Internal APIs must version under <code>/v1/</code>.</p>
       <p class="today-note"><strong>Current boundary.</strong> This is a positive requirement: proving the required prefix is present. Today's prohibition-focused rule does not provide general absence detection.</p>
-      <pre tabindex="0">@app.route("/users")</pre>
-      <div class="flags">
-        <span class="flag">routing convention breach</span>
-        <span class="flag">API governance mismatch</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The route is namespaced under the required <code>/v1/</code> version prefix.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - versioned under /v1/</span>
-@app.route("/v1/users")</pre>
-    </div>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0">@app.route("/users")</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The route is namespaced under the required <code>/v1/</code> version prefix.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - versioned under /v1/</span>
+@app.route("/v1/users")</pre></div>
+      </details>
+    </article>
 
-    <div class="violation status-roadmap" id="v12">
-      <div class="vh"><span class="vnum">12</span><h3>Organizational consistency violations</h3><span class="status-badge">Roadmap rule type</span></div>
-      <p class="rule"><strong>Rule.</strong> All services must emit OpenTelemetry traces.</p>
+    <article class="policy status-roadmap compact" id="organizational-consistency">
+      <header class="ph"><span class="pnum">12</span><h3>Organizational consistency violations</h3><span class="status-badge">Needs required-presence rules</span></header>
+      <p class="cat-tag">Platform governance</p>
+      <p class="rule"><span class="k">Rule</span> All services must emit OpenTelemetry traces.</p>
       <p class="today-note"><strong>Current boundary.</strong> This also requires proving that instrumentation is present. Mneme can preserve and retrieve the decision today, but cannot mechanically establish that every service emits traces.</p>
-      <pre tabindex="0"><span class="comment"># AI creates a new service with no tracing middleware</span>
+      <details class="example">
+        <summary>Example</summary>
+      <div class="code bad"><div class="code-label">Agent output</div><pre tabindex="0"><span class="comment"># AI creates a new service with no tracing middleware</span>
 def create_app():
     app = FastAPI()
-    return app</pre>
-      <div class="flags">
-        <span class="flag">observability standard breach</span>
-        <span class="flag">platform compliance failure</span>
-      </div>
-      <p class="rule" style="margin-top:1rem;"><strong>Desired pattern.</strong> The service is instrumented with OpenTelemetry before it is returned.</p>
-      <pre class="resolution" tabindex="0"><span class="comment"># compliant - emits OpenTelemetry traces</span>
+    return app</pre></div>
+      <p class="pattern"><span class="k">Desired pattern</span> The service is instrumented with OpenTelemetry before it is returned.</p>
+      <div class="code ok"><div class="code-label">Desired</div><pre tabindex="0"><span class="comment"># compliant - emits OpenTelemetry traces</span>
 def create_app():
     app = FastAPI()
     FastAPIInstrumentor.instrument_app(app)
-    return app</pre>
-    </div>
+    return app</pre></div>
+      </details>
+    </article>
   </section>
 
-  <div class="closer">
-    <p><strong>One system, two scopes.</strong> The Decision Index represents, retrieves, traces, and governs authority around decisions. Mechanical enforcement applies only when a decision is expressed as a supported typed rule at a supported workflow boundary. Representation does not imply automatic detection.</p>
-    <p><strong>The distinction is architectural, not a disclaimer.</strong> Mneme can represent more governance knowledge than its current typed-rule vocabulary can mechanically prove. That separation lets teams preserve authority and provenance now, then add richer enforcement without changing the decision source of truth.</p>
+  <section class="next-step">
+    <h2>Start with one literal rule.</h2>
     <p><strong>Today:</strong> use exact, case-sensitive <code>FORBID_LITERAL</code> rules and optional <code>include_paths</code>/<code>exclude_paths</code> applicability for deterministic checks. Treat structural analysis, agent identity ACLs, license metadata, and required-presence rules as roadmap capabilities.</p>
-  </div>
+    <p>Mneme can represent more governance knowledge than its current typed-rule vocabulary can mechanically prove. Representation does not imply automatic detection.</p>
+    <div class="next-links">
+      <a class="primary" href="/docs/protection-activation/">Activate a rule &rarr;</a>
+      <a href="/docs/how-enforcement-works/">How enforcement works &rarr;</a>
+      <a href="/roadmap/">Roadmap &rarr;</a>
+    </div>
+  </section>
 
   <div class="cross-links">
     <a class="cross-card" href="/benchmark/">
       <span class="cl-label">Benchmark</span>
-      <span class="cl-title">Scenarios mapped to these categories &rarr;</span>
-      <span class="cl-sub">The governance benchmark suite is organized around the violation hierarchy above.</span>
+      <span class="cl-title">Governance benchmark &rarr;</span>
+      <span class="cl-sub">36 scenarios across six categories, with pre-registered thresholds.</span>
     </a>
     <a class="cross-card" href="/insights/why-prompt-memory-fails-at-scale/">
       <span class="cl-label">Background</span>
