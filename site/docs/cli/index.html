@@ -472,7 +472,7 @@ Created .mneme/project_memory.json</pre>
     </div>
 
     <div class="callout">
-      <p><strong>Completeness and path diagnostics.</strong> A verdict is only trusted when the payload's <code>evaluation_complete</code> flag is true; an incomplete evaluation exits <code>2</code> and prints <code>Result: INCOMPLETE</code> rather than a verdict. Path-scoped typed rules also emit per-rule applicability lines (<code>PATH PASS/SKIP/UNKNOWN [decision_id] &hellip;</code>) showing how the target path resolved against the rule's selectors &mdash; an unresolvable path surfaces as <code>PATH_APPLICABILITY_UNKNOWN</code>, never as a silent pass. With <code>--json</code>, the same traces appear in the payload's <code>applicability</code> array.</p>
+      <p><strong>Completeness and path diagnostics.</strong> A verdict is only trusted when the payload's <code>evaluation_complete</code> flag is true; an incomplete evaluation exits <code>2</code> and prints <code>Result: INCOMPLETE</code> rather than a verdict. Path-scoped typed rules also emit per-rule applicability lines (<code>PATH APPLIED [decision_id] &hellip;</code> or <code>PATH EXCLUDED [decision_id] &hellip;</code>) showing how the target path resolved against the rule's selectors &mdash; an unresolvable path prints <code>ERROR PATH_APPLICABILITY_UNKNOWN</code> and the result is INCOMPLETE, never a silent pass. With <code>--json</code>, the same traces appear in the payload's <code>applicability</code> array.</p>
     </div>
   </section>
 

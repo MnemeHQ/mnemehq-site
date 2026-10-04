@@ -487,9 +487,10 @@ Active set (4 ADRs):
 
 Result: FAIL</code></pre>
 
-    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH PASS / SKIP / UNKNOWN</code> lines), so scoped policies stay explainable:</p>
+    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH APPLIED</code> or <code>PATH EXCLUDED</code> lines, or <code>ERROR PATH_APPLICABILITY_UNKNOWN</code> when the path cannot be resolved), so scoped policies stay explainable:</p>
 
-    <pre tabindex="0"><code>PATH SKIP   [ADR-009] docs/history/** excluded by selector
+    <pre tabindex="0"><code>PATH  EXCLUDED [ADR-009] docs/history/2025-migration.md via docs/history/** -- an exclude selector matched
+
 Result: PASS</code></pre>
 
     <p>The same input without the forbidden literal passes cleanly with <code>Result: PASS</code>.</p>

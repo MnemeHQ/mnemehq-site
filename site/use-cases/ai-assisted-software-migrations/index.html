@@ -480,12 +480,15 @@ keeps its existing calls until its components are migrated.
   --query <span class="cs">"migrated module data access"</span> --mode strict
 
 <span style="color:#ff5c7a">FAIL</span>  [ADR-042] FORBID_LITERAL <span class="cs">"db.query("</span> -- trigger: db.query(
-<span class="cc">PATH SKIP</span>   [ADR-042] legacy/** excluded by selector
+      Direct database access is superseded by RepositoryPort
+      path: modern/orders/customer_lookup.py via modern/**
+
+<span class="cc">PATH  APPLIED</span>  [ADR-042] modern/orders/customer_lookup.py via modern/** -- an include selector matched
 
 <span style="color:#ff5c7a">Result: FAIL</span></pre>
     </div>
 
-    <p class="prose">The <code>PATH SKIP</code> line is the part that matters during a migration. A path-scoped rule reports its applicability outcome against the target path, so the same decision that fails inside the migrated tree is visibly and explainably inert outside it. An agent working across a half-migrated repository gets a different answer per path instead of one blanket rule it has to reason around.</p>
+    <p class="prose">The <code>PATH</code> line is the part that matters during a migration. A path-scoped rule reports its applicability outcome against the target path. Run the same check with <code>--target-path legacy/orders/service.py</code> and ADR-042 reports <code>PATH EXCLUDED</code> via <code>legacy/**</code> with <code>Result: PASS</code>, so the same decision that fails inside the migrated tree is visibly and explainably inert outside it. An agent working across a half-migrated repository gets a different answer per path instead of one blanket rule it has to reason around.</p>
 
     <p class="prose">The enforcement path itself is shown end to end in the <a href="/demo/repository-pattern/" style="color:var(--teal);">repository pattern demo</a>, where a direct SQL call from a service layer is matched to its decision and denied by a strict check.</p>
   </div>

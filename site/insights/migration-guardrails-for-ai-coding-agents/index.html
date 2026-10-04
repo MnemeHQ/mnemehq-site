@@ -431,7 +431,13 @@ $ mneme check \
     --target-path modern/orders/customer_lookup.py \
     --query "migrated module data access" --mode strict
 FAIL  [ADR-042] FORBID_LITERAL "db.query(" -- trigger: db.query(
-PATH SKIP   [ADR-041] legacy/** excluded by selector
+      Direct database access is superseded by RepositoryPort
+      path: modern/orders/customer_lookup.py via modern/**
+
+PATH  APPLIED  [ADR-042] modern/orders/customer_lookup.py via modern/** -- an include selector matched
+PATH  APPLIED  [ADR-041] modern/orders/customer_lookup.py via modern/** -- an include selector matched
+# ...one PATH line for each other path-scoped rule
+
 Result: FAIL</code></pre>
 
     <h2>Where to start</h2>
