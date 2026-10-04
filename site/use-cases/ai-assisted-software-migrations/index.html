@@ -423,7 +423,7 @@
         <div class="step-num">3</div>
         <div class="step-body">
           <h3>Compile with <code>mneme adr import</code></h3>
-          <p>The Constraints block of each ADR compiles into typed rules the enforcement layer evaluates. Applicability is resolved against the real target path at check time, and every check reports which rules applied, which were skipped, and why.</p>
+          <p>The Constraints block of each ADR compiles into typed rules the enforcement layer evaluates. Applicability is resolved against the real target path at check time, and every check reports which rules applied, which were excluded, and why.</p>
         </div>
       </div>
       <div class="step">
@@ -484,6 +484,7 @@ keeps its existing calls until its components are migrated.
       path: modern/orders/customer_lookup.py via modern/**
 
 <span class="cc">PATH  APPLIED</span>  [ADR-042] modern/orders/customer_lookup.py via modern/** -- an include selector matched
+<span class="cc"># ...one PATH line for each other path-scoped rule</span>
 
 <span style="color:#ff5c7a">Result: FAIL</span></pre>
     </div>

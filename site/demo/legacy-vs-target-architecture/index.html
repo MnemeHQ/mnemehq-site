@@ -213,7 +213,7 @@ mneme check &#92;
   --target-path modern/orders/customer_lookup.py &#92;
   --query "migrated module data access" --mode strict
 # FAIL [ADR-042] &middot; Result: FAIL &middot; exit 2</code></pre>
-          <p>This page is a recipe, not a turnkey fixture: you provide the ADR and the proposed diff. The legacy-path skip in step 04 is the same command run against a file outside the include selector.</p>
+          <p>This page is a recipe, not a turnkey fixture: you provide the ADR and the proposed diff. The legacy-path exclusion in step 04 is the same command run with <code>--target-path legacy/orders/service.py</code>, which the <code>legacy/**</code> exclude selector matches.</p>
         </div>
       </section>
 
