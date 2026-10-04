@@ -224,7 +224,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "Should we run this on every PR or only on main?", "acceptedAnswer": {"@type": "Answer", "text": "Every PR. The point of CI enforcement is to surface violations at PR time when the cost of fixing is lowest. Running only on main means failures land after merge, which defeats the gating purpose."}},
-          {"@type": "Question", "name": "What if a PR needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme has no override record and no expiry field. To exempt part of the codebase, change the decision in the same PR: add the path to the rule's exclude_paths, or, if decisions are imported from ADRs, mark the ADR superseded or let a newer ADR take precedence through its supersedes, priority, or date frontmatter, then re-import. The exception is a diff to project memory or the ADRs that reviewers see in the PR, so weakening a constraint is a visible decision rather than a silent merge."}},
+          {"@type": "Question", "name": "What if a PR needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme has no override record and no expiry field. An exception is a change to the decision corpus, committed in the same PR. For a path-scoped FORBID_LITERAL rule, add the path to its exclude_paths (the rule must also declare include_paths). Anti-patterns and constraints cannot be path-scoped, so edit or remove them in project_memory.json. If decisions come from ADRs, update the ADR and re-import; re-importing does not remove a decision imported earlier, so when you supersede an ADR, also delete its entry from project_memory.json. The exception is a diff reviewers see in the PR, so weakening a constraint is a visible decision rather than a silent merge."}},
           {"@type": "Question", "name": "How does this compare to running CodeRabbit or a custom linter in CI?", "acceptedAnswer": {"@type": "Answer", "text": "Different layers. Linters check syntax and style; CodeRabbit reviews PRs for correctness and security; Mneme enforces architectural decisions against the project's own decision corpus. They compose: typical CI sequence is lint → mneme check → tests → CodeRabbit review."}}
         ]
       }
@@ -338,7 +338,7 @@
       <span class="eyebrow-meta">4 min read &nbsp;&middot;&nbsp; May 2026</span>
     </div>
     <h1>GitHub Actions AI Governance</h1>
-    <p class="article-lede">Pre-generation enforcement catches most violations before code is written. CI enforcement catches the rest &mdash; running Mneme's checks against every PR diff, blocking merges that violate architectural decisions.</p>
+    <p class="article-lede">Write-time hooks, such as Mneme's Claude Code hook, can block a violating edit before it lands. CI enforcement is the backstop for everything else: it runs <code>mneme check</code> on every file a PR changes and fails the job when a decision is violated.</p>
   </header>
 
   <div class="article-body">
@@ -348,7 +348,7 @@
     <ul>
       <li>Generation-time hooks cover interactive and agentic Claude Code sessions</li>
       <li>Code can also arrive from manual edits, other tools, or agents without hook coverage</li>
-      <li>CI enforcement is the backstop — every commit checked regardless of how it was produced</li>
+      <li>CI enforcement is the backstop: every file changed in a PR is checked, however it was produced</li>
       <li>Positions governance at three layers: generation time &rarr; PR review &rarr; CI gate</li>
     </ul>
 
@@ -391,6 +391,11 @@ jobs:
           worst=0
           while IFS= read -r f; do
             [ -n "$f" ] || continue
+            # Skip the policy files themselves and binary files (mneme reads input as UTF-8 text)
+            case "$f" in
+              .mneme/*|docs/adr/*) continue ;;
+              *.png|*.jpg|*.jpeg|*.gif|*.ico|*.webp|*.woff|*.woff2|*.ttf|*.pdf|*.zip|*.gz) continue ;;
+            esac
             rc=0
             mneme check \
               --memory .mneme/project_memory.json \
@@ -403,7 +408,9 @@ jobs:
           done &lt;&lt;&lt; "$files"
           exit "$worst"</code></pre>
 
-    <p>Every changed file is checked, and the step exits with the worst result across the PR. <code>--target-path</code> names the repository path each file is checked as, so rules scoped with <code>include_paths</code> and <code>exclude_paths</code> resolve against it and print a <code>PATH</code> applicability line per scoped rule.</p>
+    <p>Every changed file is checked, and the step exits with the worst result across the PR. <code>--target-path</code> names the repository path each file is checked as, so rules scoped with <code>include_paths</code> and <code>exclude_paths</code> resolve against it and print a <code>PATH</code> applicability line per scoped rule. The decision files themselves are skipped because they legitimately contain the terms they forbid, so review changes to them by hand. Each file is checked in full, so an existing violation in a file the PR touches also fails the step.</p>
+
+    <p>The job fails on WARN, FAIL, or INCOMPLETE. To block the merge, mark the <code>governance</code> job as a required status check in branch protection.</p>
 
     <h2>Status</h2>
 
@@ -429,13 +436,13 @@ jobs:
     <p>The CI step runs <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check --mode strict</code> against each changed file and the project's decision corpus. The check returns a verdict per file, one of four:</p>
 
     <ul>
-      <li><strong>PASS</strong> &mdash; the diff respects the relevant decisions. Exit code 0, CI green.</li>
+      <li><strong>PASS</strong> &mdash; no enforced rule matched the file's contents. Exit code 0, CI green.</li>
       <li><strong>WARN</strong> &mdash; a constraint in the corpus matched. In <code>strict</code> mode (the default) WARN exits 1 and fails the step; in <code>warn</code> mode PASS, WARN, and FAIL all exit 0, so findings show in the job log without blocking the PR.</li>
       <li><strong>FAIL</strong> &mdash; a typed rule or anti-pattern matched. Exit code 2 in strict mode: the step fails and the PR stays blocked until the code or the decision corpus changes.</li>
       <li><strong>INCOMPLETE</strong> &mdash; the evaluation could not complete. Exit code 2 in both modes; it is never reported as PASS.</li>
     </ul>
 
-    <p>Mneme has no override record and no expiry field. An exception is a change to the decisions themselves, committed in the same PR: add the path to a rule's <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>, or, if decisions come from ADRs, mark the ADR superseded or let a newer ADR take precedence through its <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">supersedes</code>, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">priority</code>, or <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">date</code> frontmatter and re-import (see <a href="/integrations/adr-import/" style="color:var(--accent);">ADR import</a>). Weakening a constraint is a diff reviewers can see, not a quiet bypass.</p>
+    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus, committed in the same PR. For a path-scoped FORBID_LITERAL rule, add the path to its <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code> (the rule must also declare <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">include_paths</code>). Anti-patterns and constraints cannot be path-scoped, so edit or remove them in <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. If decisions come from ADRs (see <a href="/integrations/adr-import/" style="color:var(--accent);">ADR import</a>), update the ADR and re-import; re-importing does not remove a decision imported earlier, so when you supersede an ADR, also delete its entry from <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The exception is a diff reviewers see in the PR, so weakening a constraint is a visible decision rather than a silent merge.</p>
 
     <h2>FAQ</h2>
 
@@ -446,7 +453,7 @@ jobs:
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">What if a PR needs to override a decision intentionally?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme has no override record and no expiry field. To exempt part of the codebase, change the decision in the same PR: add the path to the rule's <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>, or, if decisions are imported from ADRs, mark the ADR superseded or let a newer ADR take precedence through its <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">supersedes</code>, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">priority</code>, or <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">date</code> frontmatter, then re-import. The exception is a diff to project memory or the ADRs that reviewers see in the PR, so weakening a constraint is a visible decision rather than a silent merge.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme has no override record and no expiry field. An exception is a change to the decision corpus, committed in the same PR. For a path-scoped FORBID_LITERAL rule, add the path to its <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code> (the rule must also declare <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">include_paths</code>). Anti-patterns and constraints cannot be path-scoped, so edit or remove them in <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. If decisions come from ADRs, update the ADR and re-import; re-importing does not remove a decision imported earlier, so when you supersede an ADR, also delete its entry from <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The exception is a diff reviewers see in the PR, so weakening a constraint is a visible decision rather than a silent merge.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">How does this compare to running CodeRabbit or a custom linter in CI?</summary>
