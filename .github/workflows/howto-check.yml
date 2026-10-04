@@ -1,0 +1,46 @@
+name: How-to guides check
+
+# Replays every how-to guide fixture against the released mneme-hq version in
+# scripts/core_version.json, then checks each guide's code blocks against the
+# recorded output. A guide cannot show a command or output the release does
+# not produce.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/docs/how-to/**'
+      - 'tests/howto/**'
+      - 'scripts/*howto*'
+      - 'scripts/core_version.json'
+      - 'site/sitemap.xml'
+      - '.github/workflows/howto-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  howto:
+    name: Replay fixtures and validate guides
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install the pinned Mneme release
+        shell: bash
+        run: |
+          v=$(python -c "import json; print(json.load(open('scripts/core_version.json'))['minimum_version'])")
+          python -m pip install "mneme-hq[mcp]==$v" pyyaml pytest
+
+      - name: Test the validators
+        run: python -m pytest scripts/test_check_howto.py scripts/test_run_howto_fixtures.py -q
+
+      - name: Replay guide fixtures
+        run: python scripts/run_howto_fixtures.py
+
+      - name: Validate guide pages
+        run: python scripts/check_howto.py
