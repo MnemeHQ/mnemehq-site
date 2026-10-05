@@ -8,7 +8,7 @@
   "h1_plain": "Turn an ADR into an enforceable decision",
   "crumb": "ADR to enforceable decision",
   "lede": "Your team wrote ADR-012: request handlers go through the repository layer and never import the database client. This guide turns that sentence into a rule Mneme checks on every file under <code>app/handlers/</code>.",
-  "minutes": "10",
+  "minutes": "",
   "surface": "CLI only",
   "end_up": "an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.",
   "date": "2026-10-04"
@@ -44,8 +44,8 @@
     <p>Save this as <code>docs/adr/ADR-012-handlers-use-repositories.md</code>. Mneme reads the YAML frontmatter and the <code>## Constraints</code> section. It keeps the prose in between as the decision's rationale.</p>
     <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md"></pre>
     <ul class="plain">
-      <li><code>status: accepted</code> puts the ADR in the active set. Mneme leaves <code>proposed</code>, <code>deprecated</code> and <code>superseded</code> ADRs out.</li>
-      <li><code>scope: handlers</code> is the word Mneme matches when it looks up decisions for a task. Pick a word that appears in your file paths. <a href="/docs/how-to/give-agents-applicable-decisions/">Guide 3</a> shows why.</li>
+      <li><code>status: accepted</code> puts the ADR in the active set. The import leaves <code>proposed</code>, <code>deprecated</code> and <code>superseded</code> ADRs out. A decision that is already in the memory file stays there until you remove it.</li>
+      <li><code>scope: handlers</code> names the area the ADR governs, and lookup matches on it (<a href="/docs/how-to/give-agents-applicable-decisions/">Guide 3</a>). Give every accepted ADR its own scope. When two share one, the import keeps only one of them; see Troubleshooting.</li>
       <li><code>FORBID_LITERAL</code> is the rule. Its <code>value</code> is exact, case-sensitive text.</li>
       <li><code>include_paths</code> limits the rule to files under <code>app/handlers/</code>. Without it, the rule applies to every file.</li>
     </ul>
@@ -113,11 +113,19 @@ python -m json.tool verdict.json</pre>
     <pre class="term-block" data-fixture="out:no-target-path"></pre>
     <p>Pass the repository path the content belongs to.</p>
 
-    <h3><code>missing YAML frontmatter</code></h3>
+    <h3>An ADR is missing from the active set</h3>
+    <p>Two accepted ADRs share a scope. The import keeps the one with the higher priority, or the newer date, and drops the other without a warning. Here ADR-013 also uses <code>scope: handlers</code>, and ADR-012 disappears:</p>
+    <pre class="term-block" data-fixture="out:same-scope" data-lines="4-7"></pre>
+    <p>Give each ADR its own scope. A dotted scope such as <code>handlers.http</code> keeps them apart, and both stay active. Dotted scopes change how the MCP lookup finds an ADR; <a href="/docs/how-to/give-agents-applicable-decisions/">Guide 3</a> explains.</p>
+    <pre class="term-block" data-fixture="out:distinct-scope" data-lines="4-10"></pre>
+
+    <h3>The import stops with <code>missing YAML frontmatter</code></h3>
+    <p>The import crashes with a Python traceback and exit code 1. The last line names the file and the problem:</p>
     <pre class="term-block" data-fixture="out:nygard"></pre>
     <p>The ADR uses a Nygard-style <code>**Status:** Accepted</code> line. Mneme doesn't parse those. Add the frontmatter block from step 2 to the top of the file.</p>
 
-    <h3><code>unknown constraint directive</code></h3>
+    <h3>The import stops with <code>unknown constraint directive</code></h3>
+    <p>Same traceback, different last line:</p>
     <pre class="term-block" data-fixture="out:typo"></pre>
     <p>A directive name has a typo. Mneme stops the import instead of skipping the rule, so a misspelling can't switch enforcement off without anyone noticing.</p>
 
@@ -133,7 +141,9 @@ python -m json.tool verdict.json</pre>
       <li>The rule matches exact text. <code>import app.db.client as db</code> is different text, so this handler passes:
         <pre class="term-block" data-fixture="out:alias-import"></pre>
         Add one <code>FORBID_LITERAL</code> per import form you need to block, or run an import linter in CI alongside Mneme.</li>
-      <li>Only <code>FORBID_LITERAL</code> fails a check. <code>FORBID_DEPENDENCY</code>, <code>FORBID_PATH</code> and <code>REQUIRE_PATH</code> compile into guidance and audit visibility, and never block.</li>
+      <li>Only <code>FORBID_LITERAL</code> gives a FAIL that respects <code>include_paths</code>. <code>FORBID_DEPENDENCY</code> gives a WARN wherever the word appears, whatever the path. In strict mode a WARN exits 1, and the Claude Code hook blocks on it:
+        <pre class="term-block" data-fixture="out:dependency-warn"></pre>
+        <code>FORBID_PATH</code> and <code>REQUIRE_PATH</code> are stored for guidance and the audit, and don't change a verdict.</li>
       <li>This guide runs checks by hand. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a> runs the same check before an agent writes a file, and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Guide 4</a> runs it on every pull request.</li>
     </ul>
   </section>

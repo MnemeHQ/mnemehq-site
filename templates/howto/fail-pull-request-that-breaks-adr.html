@@ -8,7 +8,7 @@
   "h1_plain": "Fail a pull request that breaks an ADR",
   "crumb": "Fail a PR that breaks an ADR",
   "lede": "Agent hooks only cover the agents that load them. A pull request can also come from a person, a script, or an agent without the plugin. This guide adds a GitHub Actions check that runs <code>mneme check</code> on every changed file, whoever changed it.",
-  "minutes": "15",
+  "minutes": "",
   "surface": "GitHub Actions",
   "end_up": "a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.",
   "date": "2026-10-05"
@@ -16,7 +16,7 @@
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>Teams that aren't ready to put a hook in front of every agent can still hold the line at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file still matches the ADRs, then runs <code>mneme check</code> on each added, changed or renamed file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
+    <p>Teams that aren't ready to put a hook in front of every agent can still hold the line at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
@@ -33,25 +33,26 @@
     <pre class="term-block" data-fixture="file:.github/workflows/mneme-decisions.yml"></pre>
     <ul class="plain">
       <li><code>fetch-depth: 0</code> fetches the history the workflow needs to compare the pull request against <code>main</code>.</li>
-      <li>The second step re-imports the ADRs and fails if that changes the memory file. Someone edited an ADR without re-importing it, so CI would otherwise check stale rules.</li>
+      <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. The import prints a conflicts note even with <code>--update-existing</code>; the step passes when <code>git diff</code> exits 0. It catches edited ADRs only. A deprecated, superseded or deleted ADR leaves its decision in the memory file until you remove it.</li>
       <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it.</li>
-      <li>The loop keeps the worst exit code, so a passing file checked later can't hide an earlier failure.</li>
+      <li>Binary files (images, archives) are skipped, because <code>mneme check</code> reads text only. Renamed files count as added.</li>
+      <li>The loop keeps the worst exit code, so a passing file checked later can't hide an earlier failure. If <code>git diff</code> itself fails, the step exits 2 instead of passing with nothing checked.</li>
       <li>The last step uploads every JSON verdict, even when the check fails.</li>
     </ul>
   </section>
 
   <section class="prose-section" id="run">
     <h2>Run</h2>
-    <p>Open a pull request that adds a handler with the forbidden import, <code>app/handlers/invoices.py</code>, and a repository file, <code>app/repositories/invoices.py</code>, that is allowed to import the client:</p>
+    <p>Open a pull request that adds three files: a handler with the forbidden import, <code>app/handlers/invoices.py</code>; a repository file that is allowed to import the client, <code>app/repositories/invoices.py</code>; and an image, <code>app/static/logo.png</code>. The handler:</p>
     <pre class="term-block" data-fixture="file:inputs/invoices_direct.py"></pre>
-    <p>The workflow starts on its own. We tested it by running the workflow's exact <code>run:</code> scripts against a local copy of that pull request.</p>
+    <p>The workflow starts on its own. We tested it by running the workflow's exact <code>run:</code> scripts against a local copy of that pull request, not on GitHub's runners.</p>
   </section>
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
     <p>The memory check passes. The decision check prints one line per changed file and the job exits with code 2:</p>
     <pre class="term-block" data-fixture="out:check-changed-files"></pre>
-    <p>The handler fails. The repository file passes, because ADR-012 applies only under <code>app/handlers/</code>.</p>
+    <p>The handler fails. The repository file passes, because ADR-012 applies only under <code>app/handlers/</code>. The image is skipped.</p>
   </section>
 
   <section class="prose-section" id="evidence">
@@ -66,6 +67,9 @@
     <h3>The memory check fails after an ADR edit</h3>
     <p>The ADR changed but the committed memory file didn't, so <code>git diff --exit-code</code> exits 1. Re-import locally and commit the result:</p>
     <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+
+    <h3>The check step fails before checking any file</h3>
+    <p>The step exits 2 when <code>git diff</code> can't compare against <code>origin/$BASE_REF</code>, usually because the checkout is shallow. Keep <code>fetch-depth: 0</code> on the checkout step.</p>
 
     <h3>Every file passes, even one with the import</h3>
     <p>The <code>--target-path</code> flag is missing. Without it, Mneme can't tell which path-scoped rules apply. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows the output.</p>
@@ -85,7 +89,7 @@
       <li>The check reads each changed file whole. A file that already broke ADR-012 before the pull request fails as soon as someone touches it.</li>
       <li>Deleted files aren't checked, because there is nothing left to read.</li>
       <li>The rule matches exact text. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> for the import forms it misses.</li>
-      <li>GitLab CI runs the same commands; see <a href="/integrations/gitlab/">GitLab</a>. This guide's workflow syntax is GitHub-only.</li>
+      <li>The workflow syntax is GitHub-only. The same loop can run in GitLab CI with <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code> as the base, but we haven't tested that.</li>
     </ul>
   </section>
 

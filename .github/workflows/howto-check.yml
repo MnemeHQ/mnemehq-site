@@ -2,14 +2,15 @@ name: How-to guides check
 
 # Replays every how-to guide fixture against the released mneme-hq version in
 # scripts/core_version.json, then checks each guide's code blocks against the
-# recorded output. A guide cannot show a command or output the release does
-# not produce.
+# recorded output. Blocks marked data-fixture="manual" (starting Claude Code,
+# cloning the plugin) are declared but not replayed.
 on:
   pull_request:
     branches: [main]
     paths:
       - 'site/docs/how-to/**'
       - 'tests/howto/**'
+      - 'templates/howto/**'
       - 'scripts/*howto*'
       - 'scripts/core_version.json'
       - 'site/sitemap.xml'

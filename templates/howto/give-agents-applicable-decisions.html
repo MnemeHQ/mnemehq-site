@@ -2,13 +2,13 @@
 {
   "title": "Give Agents the Decisions for a Task · Mneme how-to — Mneme HQ",
   "description": "Load the ADRs that apply to the file an agent is editing, with /mneme:context in Claude Code or the Mneme MCP server for any MCP host. Tested on 0.9.2.",
-  "og_alt": "How to give Claude Code and Codex the architectural decisions that apply to a task, through retrieval and the Mneme MCP server.",
+  "og_alt": "How to give coding agents the architectural decisions that apply to a task, through Claude Code and the Mneme MCP server.",
   "eyebrow": "How-to guide",
-  "h1": "Give Claude Code and Codex the decisions that apply to a task",
-  "h1_plain": "Give Claude Code and Codex the decisions that apply to a task",
+  "h1": "Give coding agents the decisions that apply to a task",
+  "h1_plain": "Give coding agents the decisions that apply to a task",
   "crumb": "Decisions for a task",
   "lede": "Blocking a bad write is the last line. An agent that knows ADR-012 before it starts on <code>app/handlers/invoices.py</code> doesn't write the forbidden import in the first place. This guide shows the two ways an agent can look decisions up.",
-  "minutes": "15",
+  "minutes": "",
   "surface": "Claude Code, any MCP host",
   "end_up": "a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.",
   "date": "2026-10-04"
@@ -16,7 +16,7 @@
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>An agent writes better code when it knows the rules for the file it's editing. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Codex, or any other agent that speaks MCP (Model Context Protocol), reaches it through Mneme's local MCP server.</p>
+    <p>An agent writes better code when it knows the rules for the file it's editing. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server. We tested the server with a generic MCP client, not inside a specific agent.</p>
     <p>Lookup only informs the agent. Enforcement stays with the hook and CI checks from guides <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">2</a> and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">4</a>.</p>
   </section>
 
@@ -35,9 +35,9 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <h3>1. Give each decision a scope word that appears in your paths</h3>
-    <p>Lookup matches words in the query against each decision's scope, text and rationale. A match on the scope counts most. ADR-012 uses <code>scope: handlers</code> because every file it governs lives under <code>app/handlers/</code>:</p>
+    <p>Lookup matches whole words in the query against each decision's scope, constraints, text and rationale. A match on the scope counts most. There is no stemming, so <code>handler</code> doesn't match <code>handlers</code>. ADR-012 uses <code>scope: handlers</code> because every file it governs lives under <code>app/handlers/</code>:</p>
     <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md" data-lines="1-8"></pre>
-    <p>Words shorter than four letters never match, so <code>api</code> can't work as a scope. The troubleshooting section shows what happens.</p>
+    <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart in the import and in <code>mneme test_query</code>. <code>decision.applicable_to</code> won't return it for <code>app/handlers/invoices.py</code>, because the string <code>handlers.invoices</code> doesn't appear in that path. Pass the scope in <code>context</code> as well, or choose scopes that appear in the paths as written.</p>
 
     <h3>2. Register the MCP server with your agent</h3>
     <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
@@ -49,13 +49,13 @@
     }
   }
 }</pre>
-    <p><code>--adr-dir</code> loads your ADRs as the decisions the server returns. We tested the server with a generic MCP client, shown below, not inside a specific agent. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
+    <p><code>--adr-dir</code> loads your ADRs as the decisions the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
   </section>
 
   <section class="prose-section" id="run">
     <h2>Run</h2>
     <h3>Claude Code: <code>/mneme:context</code></h3>
-    <p>Type <code>/mneme:context</code> with a description of the task. The command runs this lookup, which you can also run yourself:</p>
+    <p>Type <code>/mneme:context</code> with a description of the task. The command asks Claude to run <code>mneme test_query</code> with your description. You can run the same lookup yourself, here with the query the Claude Code hook uses for an edit:</p>
     <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to app/handlers/invoices.py"</pre>
 
     <h3>Any MCP host: <code>decision.applicable_to</code></h3>
@@ -70,10 +70,13 @@ python mcp_probe.py decision.applicable_to \
     <h2>Expected result</h2>
     <p>The lookup ranks ADR-012 first, matched on its scope, and prints the context an agent receives:</p>
     <pre class="term-block" data-fixture="out:query-path"></pre>
-    <p>A plain task description works too, with a lower score, because it shares words with the rationale:</p>
+    <p>A task description finds ADR-012 only when it uses the ADR&rsquo;s own words. &ldquo;handler&rdquo; isn&rsquo;t &ldquo;handlers&rdquo;, so this query finds nothing:</p>
+    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "add a list_invoices handler"</pre>
+    <pre class="term-block" data-fixture="out:task-no-match" data-lines="1-4"></pre>
+    <p>This one uses &ldquo;request handlers&rdquo;, from the ADR&rsquo;s title, and matches:</p>
     <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json \
-  --query "add a list_invoices handler that reads the invoices table"</pre>
-    <pre class="term-block" data-fixture="out:query-task" data-lines="1-4"></pre>
+  --query "add an invoices endpoint to the request handlers"</pre>
+    <pre class="term-block" data-fixture="out:task-match" data-lines="1-4"></pre>
     <p>The MCP server lists six tools:</p>
     <pre class="term-block" data-fixture="out:mcp-list"></pre>
     <p><code>decision.applicable_to</code> returns ADR-012, because its scope <code>handlers</code> appears in the path:</p>
@@ -93,14 +96,14 @@ python mcp_probe.py decision.applicable_to \
     <pre class="term-block" data-fixture="out:generic-file-name"></pre>
     <p>Use the full path, or describe the task in words that appear in the decision.</p>
 
-    <h3>A scope like <code>api</code> never matches</h3>
-    <p>Here ADR-012 governs <code>app/api/</code> with <code>scope: api</code>. The path contains the scope, but three letters is below the four-letter minimum:</p>
+    <h3>A scope like <code>api</code> never matches in the CLI lookup</h3>
+    <p>Here ADR-012 governs <code>app/api/</code> with <code>scope: api</code>. The path contains the scope, but three letters is below the CLI lookup's four-letter minimum:</p>
     <pre class="term-block" data-fixture="out:short-scope-query"></pre>
-    <p>Pick a scope word of four letters or more that appears in the governed paths, such as <code>handlers</code> or <code>routes</code>.</p>
+    <p>The MCP tool <code>decision.applicable_to</code> works differently: it matches the scope as a substring of the path, so <code>api</code> matches <code>app/api/invoices.py</code> there, and also <code>rapid_import/</code>. Pick a scope word of four letters or more that appears in the governed paths and not by accident in others, such as <code>handlers</code>.</p>
 
     <h3>The MCP server won't start</h3>
     <pre class="term-block" data-fixture="out:mcp-bad-adr-dir" data-lines="1-1"></pre>
-    <p>The server refuses to start when <code>--adr-dir</code> is missing, empty, or holds an ADR it can't parse. Fix the path or the ADR. Leave <code>--adr-dir</code> out to run with proposals only.</p>
+    <p>The server refuses to start when the <code>--adr-dir</code> folder doesn't exist, is given as an empty string, or holds an ADR that fails parsing, validation or precedence checks. An empty folder starts with no decisions. Fix the path or the ADR, or leave <code>--adr-dir</code> out to run with proposals only.</p>
   </section>
 
   <section class="prose-section" id="limits">
@@ -108,6 +111,7 @@ python mcp_probe.py decision.applicable_to \
     <ul class="bound-list">
       <li>Lookup gives the agent context. It doesn't stop anything. Keep the hook and the CI check in place.</li>
       <li>Matching is by shared words, not meaning. A task phrased in words the decision doesn't use won't find it.</li>
+      <li>The MCP setup is the generic process definition. We haven't verified it inside Codex or another named agent.</li>
       <li>The MCP server is local and stdio-only. It has no HTTP endpoint and no authentication.</li>
       <li>Over MCP an agent can read decisions and submit proposals. It can't accept a proposal or change enforcement; <a href="/docs/decision-proposals/">people review proposals</a> with the CLI.</li>
     </ul>

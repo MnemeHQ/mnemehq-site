@@ -11,6 +11,7 @@ steps:
       git checkout -qb add-invoices &&
       cp inputs/invoices_direct.py app/handlers/invoices.py &&
       cp inputs/repository_invoices.py app/repositories/invoices.py &&
+      mkdir -p app/static && cp inputs/logo.png app/static/logo.png &&
       git add app && git commit -qm "Add invoices"
   - name: memory-in-sync
     run: python run_workflow_step.py "Check the memory file matches the ADRs"
@@ -29,3 +30,6 @@ steps:
     run: >-
       sed -i 's/from app.db.client import/from app.db import client/' docs/adr/ADR-012-handlers-use-repositories.md &&
       python run_workflow_step.py "Check the memory file matches the ADRs" > /dev/null; echo "exit=$?"
+  # Troubleshooting: the base branch can't be resolved
+  - name: missing-base
+    run: python run_workflow_step.py "Check changed files against decisions" BASE_REF=no-such-branch 2>&1 | tail -n 1; echo "exit=${PIPESTATUS[0]}"

@@ -10,9 +10,8 @@ Each guide under site/docs/how-to/<slug>/ has a fixture at tests/howto/<slug>/:
 The fixture directory is copied to a temporary directory and the steps run
 there in order, in one shared working directory, under bash. Output is
 normalized (CRLF, Windows path separators, the temp path) and compared to the
-expected file. A guide's code blocks are checked against these files by
-scripts/check_howto.py, so a guide cannot show a command or an output the
-released package does not produce.
+expected file. scripts/check_howto.py checks a guide's code blocks against
+these files; only blocks declared data-fixture="manual" escape replay.
 
 Usage:
     python scripts/run_howto_fixtures.py              # replay all, exit 1 on drift

@@ -60,3 +60,21 @@ steps:
     run: mneme adr import troubleshooting/nygard --memory .mneme/project_memory.json 2>&1 | tail -n 1
   - name: typo
     run: mneme adr import troubleshooting/typo --memory .mneme/project_memory.json 2>&1 | tail -n 1
+  - name: scope-setup
+    run: mneme init --path .mneme/scopes.json > /dev/null
+  - name: same-scope
+    run: mneme adr import troubleshooting/same-scope --memory .mneme/scopes.json
+  - name: distinct-scope
+    run: mneme adr import troubleshooting/distinct-scope --memory .mneme/scopes.json
+  - name: dependency-setup
+    run: >-
+      mneme init --path .mneme/dependency.json > /dev/null &&
+      mneme adr import troubleshooting/dependency --memory .mneme/dependency.json --apply > /dev/null
+  - name: dependency-warn
+    run: >-
+      mneme check --memory .mneme/dependency.json
+      --input inputs/net_requests.py
+      --target-path lib/net.py
+      --query "edit to lib/net.py"
+      --adr-dir troubleshooting/dependency
+    expect_exit: 1

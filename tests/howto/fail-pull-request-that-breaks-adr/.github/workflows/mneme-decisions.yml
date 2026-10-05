@@ -33,9 +33,14 @@ jobs:
           BASE_REF: ${{ github.base_ref }}
         run: |
           set -uo pipefail
+          # Added and modified files, one per line as "added<TAB>deleted<TAB>path".
+          # Binary files show "-" counts; mneme check reads text only.
+          changes=$(git diff --numstat --no-renames --diff-filter=AM "origin/$BASE_REF...HEAD") || exit 2
           worst=0
           mkdir -p mneme-results
-          while IFS= read -r f; do
+          while IFS=$'\t' read -r added _ f; do
+            [ -n "$f" ] || continue
+            if [ "$added" = "-" ]; then echo "skip    $f (binary)"; continue; fi
             out="mneme-results/$(printf '%s' "$f" | tr '/' '_').json"
             mneme check --memory .mneme/project_memory.json \
               --input "$f" --target-path "$f" \
@@ -43,7 +48,7 @@ jobs:
             code=$?
             echo "exit=$code  $f"
             if [ "$code" -gt "$worst" ]; then worst=$code; fi
-          done < <(git diff --name-only --diff-filter=ACMR "origin/$BASE_REF...HEAD")
+          done <<< "$changes"
           exit "$worst"
 
       - name: Keep the verdicts

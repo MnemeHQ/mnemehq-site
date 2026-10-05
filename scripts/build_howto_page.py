@@ -174,8 +174,13 @@ def build(slug: str) -> Path:
         f'  <p class="lede">{meta["lede"]}</p>\n'
     )
     if not is_hub:
+        # Minutes appear only once a timed reader run has measured them.
+        version = json.loads((W / "scripts" / "core_version.json").read_text())["minimum_version"]
+        strip = [f"Tested with mneme-hq {version}", meta["surface"]]
+        if meta.get("minutes"):
+            strip.insert(0, f"~{meta['minutes']} min")
         hero += (
-            f'  <p class="howto-meta">~{meta["minutes"]} min &middot; Tested with mneme-hq 0.9.2 &middot; {meta["surface"]}</p>\n'
+            f'  <p class="howto-meta">{" &middot; ".join(strip)}</p>\n'
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
         )
     hero += "</section>\n\n"
