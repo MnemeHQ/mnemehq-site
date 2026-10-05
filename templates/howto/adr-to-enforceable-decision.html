@@ -1,0 +1,160 @@
+<!--meta
+{
+  "title": "Turn an ADR into an Enforceable Decision · Mneme how-to — Mneme HQ",
+  "description": "Add a Constraints section to an ADR, import it with mneme adr import, and make mneme check fail when a request handler imports the database client.",
+  "og_alt": "How to turn an ADR into an enforceable Mneme decision: write the rule, import it, check a file, keep the evidence.",
+  "eyebrow": "How-to guide",
+  "h1": "Turn an ADR into an enforceable decision",
+  "h1_plain": "Turn an ADR into an enforceable decision",
+  "crumb": "ADR to enforceable decision",
+  "lede": "Your team wrote ADR-012: request handlers go through the repository layer and never import the database client. This guide turns that sentence into a rule Mneme checks on every file under <code>app/handlers/</code>.",
+  "minutes": "10",
+  "surface": "CLI only",
+  "end_up": "an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.",
+  "date": "2026-10-04"
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>An ADR (architecture decision record) explains a decision to the people who read it. A coding agent or a CI job never reads it. Mneme compiles the ADR into a <em>decision</em>: the ADR's text plus a typed rule naming the exact text it forbids and the paths where the ban applies. Every <code>mneme check</code> on those paths then gives the same verdict.</p>
+    <p>Mneme stores compiled decisions in one JSON file, <code>.mneme/project_memory.json</code>. This guide calls it the memory file.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>Python 3.11 or newer.</li>
+      <li>Mneme 0.9.2, installed with pipx:</li>
+    </ul>
+    <pre class="term-block">pipx install "mneme-hq==0.9.2"</pre>
+    <ul class="plain">
+      <li>A repository with a <code>docs/adr/</code> directory. The example code lives in <code>app/handlers/</code> (request handlers), <code>app/repositories/</code> (data access) and <code>app/db/client.py</code> (the database client).</li>
+      <li>No coding agent. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">The next guide</a> adds one.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Create the memory file</h3>
+    <p>Run this from the repository root. It creates an empty memory file and refuses to overwrite an existing one.</p>
+    <pre class="term-block" data-fixture="cmd">mneme init</pre>
+    <pre class="term-block" data-fixture="out:init" data-lines="1-1"></pre>
+
+    <h3>2. Write the ADR with a Constraints section</h3>
+    <p>Save this as <code>docs/adr/ADR-012-handlers-use-repositories.md</code>. Mneme reads the YAML frontmatter and the <code>## Constraints</code> section. It keeps the prose in between as the decision's rationale.</p>
+    <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md"></pre>
+    <ul class="plain">
+      <li><code>status: accepted</code> puts the ADR in the active set. Mneme leaves <code>proposed</code>, <code>deprecated</code> and <code>superseded</code> ADRs out.</li>
+      <li><code>scope: handlers</code> is the word Mneme matches when it looks up decisions for a task. Pick a word that appears in your file paths. <a href="/docs/how-to/give-agents-applicable-decisions/">Guide 3</a> shows why.</li>
+      <li><code>FORBID_LITERAL</code> is the rule. Its <code>value</code> is exact, case-sensitive text.</li>
+      <li><code>include_paths</code> limits the rule to files under <code>app/handlers/</code>. Without it, the rule applies to every file.</li>
+    </ul>
+    <p>The <a href="/integrations/adr-import/">ADR import reference</a> lists every frontmatter field and directive.</p>
+
+    <h3>3. Preview the import</h3>
+    <p>Without <code>--apply</code>, the import writes nothing. Check that ADR-012 is in the active set and the rule reads the way you meant it.</p>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:preview"></pre>
+
+    <h3>4. Apply it</h3>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply</pre>
+    <pre class="term-block" data-fixture="out:apply" data-lines="9-9"></pre>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Here is a handler that breaks ADR-012. Save it anywhere, for example <code>inputs/invoices_direct.py</code>:</p>
+    <pre class="term-block" data-fixture="file:inputs/invoices_direct.py"></pre>
+    <p>Check it the way an agent hook or a CI job would. <code>--input</code> is the file to read. <code>--target-path</code> is the path that content will have in the repository, which is what the rule's <code>include_paths</code> are matched against.</p>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input inputs/invoices_direct.py \
+  --target-path app/handlers/invoices.py \
+  --query "edit to app/handlers/invoices.py"</pre>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The check fails, names ADR-012, and exits with code 2:</p>
+    <pre class="term-block" data-fixture="out:check-handler"></pre>
+    <p>Run the same content against a repository path. ADR-012 doesn't apply there, so the check passes with exit code 0:</p>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input inputs/invoices_direct.py \
+  --target-path app/repositories/invoices.py \
+  --query "edit to app/repositories/invoices.py"</pre>
+    <pre class="term-block" data-fixture="out:check-repository"></pre>
+    <p>A handler that calls the repository instead passes too:</p>
+    <pre class="term-block" data-fixture="out:check-compliant"></pre>
+  </section>
+
+  <section class="prose-section" id="evidence">
+    <h2>Evidence</h2>
+    <p>Add <code>--json</code> to get a verdict a machine can read. Keep it as a CI artifact or attach it to the pull request.</p>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input inputs/invoices_direct.py \
+  --target-path app/handlers/invoices.py \
+  --query "edit to app/handlers/invoices.py" \
+  --json &gt; verdict.json
+python -m json.tool verdict.json</pre>
+    <pre class="term-block" data-fixture="out:show-json"></pre>
+    <ul class="plain">
+      <li><code>verdict</code> is PASS, WARN, FAIL or INCOMPLETE.</li>
+      <li><code>evaluation_complete</code> must be <code>true</code> before you trust the verdict. An incomplete evaluation exits 2 and never reports PASS.</li>
+      <li><code>applicability</code> shows which path selector matched, so you can see why a rule applied or didn't.</li>
+    </ul>
+    <p>The audit classifies every decision in the memory file. ADR-012 carries a rule that <code>mneme check</code> enforces, so the audit counts it as Protected:</p>
+    <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
+    <pre class="term-block" data-fixture="out:audit"></pre>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The check passes on a file that contains the import</h3>
+    <p>You left out <code>--target-path</code>. Mneme then matches the rule against the input file's own path, <code>inputs/invoices_direct.py</code>, which isn't under <code>app/handlers/</code>:</p>
+    <pre class="term-block" data-fixture="out:no-target-path"></pre>
+    <p>Pass the repository path the content belongs to.</p>
+
+    <h3><code>missing YAML frontmatter</code></h3>
+    <pre class="term-block" data-fixture="out:nygard"></pre>
+    <p>The ADR uses a Nygard-style <code>**Status:** Accepted</code> line. Mneme doesn't parse those. Add the frontmatter block from step 2 to the top of the file.</p>
+
+    <h3><code>unknown constraint directive</code></h3>
+    <pre class="term-block" data-fixture="out:typo"></pre>
+    <p>A directive name has a typo. Mneme stops the import instead of skipping the rule, so a misspelling can't switch enforcement off without anyone noticing.</p>
+
+    <h3><code>ADR import refused: id 'ADR-012' already exists</code></h3>
+    <pre class="term-block" data-fixture="out:reapply" data-lines="1-1"></pre>
+    <p>You applied the ADR before. After you edit it, re-run the import with <code>--update-existing</code>:</p>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+  </section>
+
+  <section class="prose-section" id="limits">
+    <h2>Limits</h2>
+    <ul class="bound-list">
+      <li>The rule matches exact text. <code>import app.db.client as db</code> is different text, so this handler passes:
+        <pre class="term-block" data-fixture="out:alias-import"></pre>
+        Add one <code>FORBID_LITERAL</code> per import form you need to block, or run an import linter in CI alongside Mneme.</li>
+      <li>Only <code>FORBID_LITERAL</code> fails a check. <code>FORBID_DEPENDENCY</code>, <code>FORBID_PATH</code> and <code>REQUIRE_PATH</code> compile into guidance and audit visibility, and never block.</li>
+      <li>This guide runs checks by hand. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a> runs the same check before an agent writes a file, and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Guide 4</a> runs it on every pull request.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next</h2>
+    <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
+        <span class="cl-sub">Block the same import before Claude Code writes it.</span>
+      </a>
+      <a class="cross-card" href="/integrations/adr-import/">
+        <span class="cl-label">Reference</span>
+        <span class="cl-title">ADR import</span>
+        <span class="cl-sub">Every frontmatter field, directive and conflict rule.</span>
+      </a>
+      <a class="cross-card" href="/insights/are-your-adrs-enforceable/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">Your ADRs exist. But are they enforceable?</span>
+        <span class="cl-sub">Why a written decision needs a check behind it.</span>
+      </a>
+    </div>
+  </section>

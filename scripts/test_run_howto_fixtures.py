@@ -69,11 +69,29 @@ def test_fixture_files_are_copied_not_mutated(tmp_path):
     assert (d / "steps.yaml").read_text(encoding="utf-8") == before
 
 
-def test_normalize_rewrites_windows_path_separators_but_keeps_continuations():
+def test_normalize_rewrites_known_windows_paths_and_keeps_continuations():
     raw = "Created .mneme\\project_memory.json\n  mneme add_decision \\\n      --id x\r\n"
-    assert normalize(raw, "/tmp/x") == (
+    paths = (".mneme", ".mneme/project_memory.json")
+    assert normalize(raw, "/tmp/x", paths) == (
         "Created .mneme/project_memory.json\n  mneme add_decision \\\n      --id x\n"
     )
+
+
+def test_normalize_leaves_json_escapes_alone():
+    raw = '{"reason": "violated\\n  path: app\\handlers"}\n'
+    assert normalize(raw, "/tmp/x", ("app", "app/handlers")) == (
+        '{"reason": "violated\\n  path: app/handlers"}\n'
+    )
+
+
+def test_step_output_paths_are_normalized_end_to_end(tmp_path):
+    d = tmp_path / "fx"
+    (d / "expected").mkdir(parents=True)
+    (d / "sub").mkdir()
+    (d / "sub" / "f.txt").write_text("x", encoding="utf-8")
+    (d / "steps.yaml").write_text("steps:\n  - name: s\n    run: echo 'sub\\f.txt'\n", encoding="utf-8")
+    (d / "expected" / "s.txt").write_text("sub/f.txt\nexit=0\n", encoding="utf-8")
+    assert all(r.ok for r in run_fixture(d))
 
 
 def test_normalize_hides_the_temporary_directory():

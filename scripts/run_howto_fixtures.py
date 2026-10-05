@@ -24,7 +24,6 @@ from __future__ import annotations
 import argparse
 import difflib
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -36,10 +35,6 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests" / "howto"
-
-# A backslash between two path characters is a Windows separator. A backslash
-# before a newline is a shell line continuation and must survive.
-_WIN_SEP = re.compile(r"(?<=[\w.])\\(?=[\w.])")
 
 # Deterministic git identity and line endings, so steps that commit behave the
 # same on a developer laptop and on the CI runner.
@@ -62,11 +57,24 @@ class StepResult(NamedTuple):
     diff: str
 
 
-def normalize(text: str, tmp: str) -> str:
+def normalize(text: str, tmp: str, paths: tuple[str, ...] = ()) -> str:
+    """Make output identical on Windows and Linux.
+
+    `paths` are the relative POSIX paths that exist in the working directory.
+    Only their Windows spellings are rewritten, so a JSON escape such as the
+    two characters backslash-n inside a hook payload is left alone.
+    """
     text = text.replace("\r\n", "\n")
     for variant in {tmp, tmp.replace("\\", "/")}:
         text = text.replace(variant, "<tmp>")
-    return _WIN_SEP.sub("/", text)
+    for rel in sorted(paths, key=len, reverse=True):
+        if "/" in rel:
+            text = text.replace(rel.replace("/", "\\"), rel)
+    return text
+
+
+def _relative_paths(work: Path) -> tuple[str, ...]:
+    return tuple(p.relative_to(work).as_posix() for p in work.rglob("*"))
 
 
 def _bash() -> str:
@@ -102,7 +110,8 @@ def run_fixture(fixture_dir: Path, update: bool = False) -> list[StepResult]:
                 encoding="utf-8",
                 errors="replace",
             )
-            got = normalize(proc.stdout, str(work.parent)) + f"exit={proc.returncode}\n"
+            got = normalize(proc.stdout, str(work.parent), _relative_paths(work))
+            got += f"exit={proc.returncode}\n"
             expected_path = fixture_dir / "expected" / f"{name}.txt"
             if update:
                 expected_path.parent.mkdir(parents=True, exist_ok=True)

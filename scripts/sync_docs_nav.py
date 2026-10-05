@@ -31,7 +31,12 @@ DOCS: list[tuple[str, list[tuple[str, str]]]] = [
         ("how-enforcement-works", "How enforcement works"),
         ("decision-model", "Decision model"),
     ]),
-    ("Guides", [
+    ("How-to guides", [
+        ("how-to", "All how-to guides"),
+        ("how-to/adr-to-enforceable-decision", "ADR to enforceable decision"),
+        ("how-to/stop-agent-crossing-architectural-boundary", "Stop an agent crossing a boundary"),
+        ("how-to/give-agents-applicable-decisions", "Decisions for a task"),
+        ("how-to/fail-pull-request-that-breaks-adr", "Fail a PR that breaks an ADR"),
         ("protection-activation", "Protection activation"),
         ("decision-proposals", "Decision proposals"),
     ]),

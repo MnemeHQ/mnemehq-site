@@ -11,9 +11,12 @@ For each site/docs/how-to/<slug>/index.html this checks:
 4. Every <pre> inside a checked section declares data-fixture, and its text
    matches the fixture at tests/howto/<slug>/:
      data-fixture="cmd"          each non-comment line is a step `run` command
-     data-fixture="file:<path>"  the block equals that fixture file
+     data-fixture="file:<path>"  the block is that fixture file, or a
+                                 contiguous excerpt of it
      data-fixture="out:<step>"   the block is a contiguous part of
                                  expected/<step>.txt
+     data-fixture="manual"       a step CI cannot replay (for example starting
+                                 Claude Code); allowed, but must be declared
 5. The guide is in site/sitemap.xml and linked from the /docs/how-to/ hub.
 
 Prose accuracy is out of scope: the adversarial review before merge covers it.
@@ -116,6 +119,10 @@ def _step_lines(fixture: Path) -> set[str]:
 
 
 def _check_block(fixture: Path, attr: str, text: str, step_lines: set[str]) -> str | None:
+    if attr == "manual":
+        # A step CI cannot replay (starting Claude Code, cloning a plugin).
+        # Declared explicitly so it can never be an unchecked block by accident.
+        return None
     if attr == "cmd":
         for line in _join_continuations(text):
             if line and not line.startswith("#") and line not in step_lines:
@@ -126,8 +133,8 @@ def _check_block(fixture: Path, attr: str, text: str, step_lines: set[str]) -> s
         path = fixture / ref
         if not path.is_file():
             return f"data-fixture file:{ref} does not exist in the fixture"
-        if _clean(text) != _clean(path.read_text(encoding="utf-8")):
-            return f"block differs from fixture file {ref}"
+        if _clean(text) not in _clean(path.read_text(encoding="utf-8")):
+            return f"block is not an excerpt of fixture file {ref}"
         return None
     if kind == "out":
         path = fixture / "expected" / f"{ref}.txt"
@@ -176,12 +183,15 @@ def check_page(page: Path, fixture: Path, version: str, site: Path = SITE) -> li
             errors.append(f"#{section} [{attr}]: {problem}")
 
     url = f"https://mnemehq.com/docs/how-to/{slug}/"
-    if url not in (site / "sitemap.xml").read_text(encoding="utf-8"):
+    if url not in _read(site / "sitemap.xml"):
         errors.append(f"{url} is not in sitemap.xml")
-    hub = site / "docs" / "how-to" / "index.html"
-    if f'href="/docs/how-to/{slug}/"' not in hub.read_text(encoding="utf-8"):
+    if f'href="/docs/how-to/{slug}/"' not in _read(site / "docs" / "how-to" / "index.html"):
         errors.append("guide is not linked from the /docs/how-to/ hub")
     return errors
+
+
+def _read(path: Path) -> str:
+    return path.read_text(encoding="utf-8") if path.is_file() else ""
 
 
 def main() -> int:

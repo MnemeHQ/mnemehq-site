@@ -127,10 +127,20 @@ def test_file_block_that_differs_from_fixture_file_is_reported(tmp_path):
     assert any("docs/ADR-1.md" in e for e in errors)
 
 
+def test_file_block_may_show_a_contiguous_excerpt(tmp_path):
+    page = _page(tmp_path, {"configure": '<pre data-fixture="file:docs/ADR-1.md">---\nid: ADR-1\n---</pre>'})
+    assert _check(tmp_path, page) == []
+
+
 def test_unchecked_code_block_in_checked_section_is_reported(tmp_path):
     page = _page(tmp_path, {"evidence": "<pre>anything goes</pre>"})
     errors = _check(tmp_path, page)
     assert any("data-fixture" in e for e in errors)
+
+
+def test_declared_manual_block_is_allowed(tmp_path):
+    page = _page(tmp_path, {"evidence": '<pre data-fixture="manual">claude --plugin-dir ./p</pre>'})
+    assert _check(tmp_path, page) == []
 
 
 def test_page_missing_from_sitemap_is_reported(tmp_path):
