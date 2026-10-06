@@ -7,17 +7,16 @@
   "h1": "Fail a pull request that breaks an ADR",
   "h1_plain": "Fail a pull request that breaks an ADR",
   "crumb": "Fail a PR that breaks an ADR",
-  "lede": "Agent hooks only cover the agents that load them. A pull request can also come from a person, a script, or an agent without the plugin. This guide adds a GitHub Actions check that runs <code>mneme check</code> on every changed file, whoever changed it.",
   "minutes": "",
   "surface": "GitHub Actions",
   "end_up": "a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.",
   "date": "2026-10-05",
-  "answer": "Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check, and branch protection turns that into a blocked merge. The workflow also re-imports your ADRs, so an edited ADR that nobody re-imported fails the check too."
+  "answer": "Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too."
 }
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>Teams that aren't ready to put a hook in front of every agent can still stop a violation at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
+    <p>Teams that aren't ready to put a hook in front of every agent can still catch a violation at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">

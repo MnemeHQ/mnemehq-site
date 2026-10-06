@@ -9,6 +9,9 @@ writes site/docs/how-to/<slug>/index.html, and fills every empty
 the guide's fixture in tests/howto/<slug>/, so recorded output is pasted, never
 retyped. ``data-lines="A-B"`` keeps only those lines (1-based, inclusive).
 
+A guide's ``answer`` field is its opening paragraph under the title: a direct
+answer to the guide's question. The hub, which has no answer, uses ``lede``.
+
 After building, run:
     python scripts/sync_docs_nav.py      # fills the breadcrumb switcher
     python scripts/check_howto.py        # verifies blocks against fixtures
@@ -186,7 +189,7 @@ def build(slug: str) -> Path:
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
         )
     hero += "</section>\n\n"
-    page = head + body_start + crumb_html + hero +'<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
+    page = head + body_start + crumb_html + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
     out = W / "site" / path_part / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8", newline="\n")

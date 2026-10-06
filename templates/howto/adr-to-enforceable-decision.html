@@ -7,12 +7,11 @@
   "h1": "Turn an ADR into an enforceable decision",
   "h1_plain": "Turn an ADR into an enforceable decision",
   "crumb": "ADR to enforceable decision",
-  "lede": "Your team wrote ADR-012: request handlers go through the repository layer and never import the database client. This guide turns that sentence into a rule Mneme checks on every file under <code>app/handlers/</code>.",
   "minutes": "",
   "surface": "CLI only",
   "end_up": "an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.",
   "date": "2026-10-04",
-  "answer": "Add a <code>## Constraints</code> section to the ADR that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client."
+  "answer": "Add a <code>## Constraints</code> section to the ADR with a <code>FORBID_LITERAL</code> rule that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client."
 }
 -->
   <section class="prose-section" id="goal">

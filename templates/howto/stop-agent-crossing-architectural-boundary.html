@@ -7,12 +7,11 @@
   "h1": "Stop an AI coding agent from crossing an architectural boundary",
   "h1_plain": "Stop an AI coding agent from crossing an architectural boundary",
   "crumb": "Stop an agent crossing a boundary",
-  "lede": "Guide 1 made ADR-012 fail <code>mneme check</code>. This guide puts the same check in front of Claude Code, so the agent is stopped before it writes a database import into <code>app/handlers/</code> and is told which decision it broke.",
   "minutes": "",
   "surface": "Claude Code",
   "end_up": "Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.",
   "date": "2026-10-04",
-  "answer": "Load the Mneme plugin in Claude Code. Before every edit, write and heredoc shell write, its hook checks the change against your recorded decisions and blocks a violation with exit code 2, so the file never changes and the agent sees the reason. Script writes get past that first check; the hook catches them when the agent ends its turn."
+  "answer": "Load the Mneme plugin in Claude Code. Before each Edit, Write or MultiEdit, and before a quoted heredoc write such as <code>cat &gt; file &lt;&lt;'EOF'</code>, its hook checks the change against your recorded decisions. In strict mode, the default, it blocks a violation with exit code 2, so the file doesn&rsquo;t change and the agent sees the reason. Other shell writes, scripts included, get past that first check; the hook catches them when the agent ends its turn and sends it back to fix them."
 }
 -->
   <section class="prose-section" id="goal">
@@ -56,12 +55,12 @@
     <pre class="term-block" data-fixture="out:hook-write-blocked"></pre>
     <p>Claude Code treats exit code 2 from this hook as a block. The file isn't written, and the agent receives that text as feedback. A write that calls the repository instead exits 0 with no output, so the agent can carry on.</p>
     <h3>Shell writes</h3>
-    <p>The hook also reads shell commands. A heredoc write such as <code>cat &gt; app/handlers/invoices.py &lt;&lt;'PY'</code> is blocked the same way:</p>
+    <p>The hook also reads shell commands. A quoted heredoc write such as <code>cat &gt; app/handlers/invoices.py &lt;&lt;'PY'</code> is blocked the same way:</p>
     <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/bash-heredoc.json</pre>
     <pre class="term-block" data-fixture="out:hook-heredoc-blocked"></pre>
-    <p>A command that writes through a script, here <code>python scripts/gen_invoices.py</code>, can't be checked before it runs, because the hook can't know what the script will write. The hook lets it through and says so:</p>
+    <p>Other shell writes can't be checked before they run: <code>echo &gt;</code>, <code>tee</code>, <code>sed -i</code>, an unquoted heredoc, or a script such as <code>python scripts/gen_invoices.py</code>. The hook can't reconstruct what they will write. The hook lets them through and says so:</p>
     <pre class="term-block" data-fixture="out:hook-script-deferred"></pre>
-    <p>The end-of-turn check catches it instead. At session start the hook records the state of the repository. When the agent finishes its turn, the hook compares the repository against that baseline and checks every changed file:</p>
+    <p>The end-of-turn check catches them instead. At session start the hook records the state of the repository. When the agent finishes its turn, the hook compares the repository against that baseline and checks every changed file:</p>
     <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/session-start.json
 python scripts/gen_invoices.py
 mneme-hook &lt; events/stop.json</pre>
@@ -101,7 +100,7 @@ mneme-hook &lt; events/stop.json</pre>
     <h2>Limits</h2>
     <ul class="bound-list">
       <li>The hook fails open. If a <code>mneme check</code> call crashes or takes longer than 10 seconds, the hook allows the change without telling the agent. The &ldquo;Failing open&rdquo; note goes to Claude Code's debug log only.</li>
-      <li>Writes made by scripts are checked only when the agent finishes its turn, after the file exists. The hook then keeps the agent working and feeds back the violation. It doesn't undo the write.</li>
+      <li>Shell writes other than a quoted heredoc are checked only when the agent finishes its turn, after the file exists. The hook then keeps the agent working and feeds back the violation. It doesn't undo the write.</li>
       <li>The rule matches exact text, so <code>import app.db.client as db</code> isn't caught by this ADR. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
       <li>Other agents get different coverage. <a href="/integrations/codex-cli/">Codex CLI</a> checks <code>apply_patch</code> add and update operations before they run, and audits each changed file as a whole when the agent stops. <a href="/integrations/kiro/">Kiro</a> checks its native write tools only, with no shell or end-of-turn checks.</li>
     </ul>

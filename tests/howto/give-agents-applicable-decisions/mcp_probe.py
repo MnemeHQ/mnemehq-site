@@ -6,6 +6,7 @@ Usage:
 """
 import asyncio
 import json
+import os
 import sys
 
 from mcp import ClientSession, StdioServerParameters
@@ -13,7 +14,7 @@ from mcp.client.stdio import stdio_client
 
 SERVER = StdioServerParameters(
     command="mneme",
-    args=["decision-mcp", "--proposals", "", "--adr-dir", "docs/adr"],
+    args=["decision-mcp", "--proposals", "", "--adr-dir", os.environ.get("ADR_DIR", "docs/adr")],
 )
 
 

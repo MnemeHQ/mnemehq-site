@@ -285,7 +285,7 @@
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Turn an ADR into an enforceable decision</h1>
-  <p class="lede">Add a <code>## Constraints</code> section to the ADR that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client.</p>
+  <p class="lede">Add a <code>## Constraints</code> section to the ADR with a <code>FORBID_LITERAL</code> rule that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client.</p>
   <p class="howto-meta">Tested with mneme-hq 0.9.2 &middot; CLI only</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.</p>
 </section>

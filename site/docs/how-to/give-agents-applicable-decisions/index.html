@@ -285,7 +285,7 @@
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Give coding agents the decisions that apply to a task</h1>
-  <p class="lede">Ask by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and any MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. Both find a decision through its scope, so the scope has to be a word your paths contain.</p>
+  <p class="lede">Ask by task or by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and an MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. That tool matches only a decision&rsquo;s scope, and the CLI lookup scores a scope match highest, so give each decision a scope word your paths contain.</p>
   <p class="howto-meta">Tested with mneme-hq 0.9.2 &middot; Claude Code, any MCP host</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.</p>
 </section>
@@ -294,7 +294,7 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>Guide 2 stops a bad write after the agent has decided to make it. Giving the agent ADR-012 before it starts on <code>app/handlers/invoices.py</code> saves that round trip. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
+    <p>Guide 2 stops a bad write after the agent has decided to make it. Giving the agent ADR-012 before it starts on <code>app/handlers/invoices.py</code> can save that round trip. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
     <p>Lookup only informs the agent. Enforcement stays with the hook and CI checks from guides <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">2</a> and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">4</a>.</p>
   </section>
 
@@ -353,6 +353,7 @@ Usage:
 """
 import asyncio
 import json
+import os
 import sys
 
 from mcp import ClientSession, StdioServerParameters
@@ -360,7 +361,7 @@ from mcp.client.stdio import stdio_client
 
 SERVER = StdioServerParameters(
     command="mneme",
-    args=["decision-mcp", "--proposals", "", "--adr-dir", "docs/adr"],
+    args=["decision-mcp", "--proposals", "", "--adr-dir", os.environ.get("ADR_DIR", "docs/adr")],
 )
 
 
@@ -475,8 +476,25 @@ Injected (top 3):
 (none)</pre>
     <p>The MCP tool <code>decision.applicable_to</code> works differently: it matches the scope as a substring of the path, so <code>api</code> matches <code>app/api/invoices.py</code> there, and also <code>rapid_import/</code>. Pick a scope word of four letters or more that appears in the governed paths and not by accident in others, such as <code>handlers</code>.</p>
 
-    <h3><code>decision.applicable_to</code> never returns a dotted-scope ADR</h3>
-    <p>The tool matches the whole scope string inside the path. <code>handlers.invoices</code> doesn't appear in <code>app/handlers/invoices.py</code>, so the tool skips that ADR, though <code>mneme test_query</code> still finds it. Pass the scope in <code>context</code> as well, or use scopes that appear in your paths as written.</p>
+    <h3><code>decision.applicable_to</code> doesn't return a dotted-scope ADR for its file</h3>
+    <p>The tool matches the whole scope string inside the path. With <code>scope: handlers.invoices</code>, the string doesn't appear in <code>app/handlers/invoices.py</code>, so the tool returns nothing for that path, though <code>mneme test_query</code> still finds the ADR:</p>
+    <pre class="term-block" data-fixture="out:dotted-scope-path">{
+  "canonical_scope_matches": [],
+  "proposal_hint_matches": []
+}</pre>
+    <p>Pass the scope in <code>context</code> as well and the ADR comes back:</p>
+    <pre class="term-block" data-fixture="cmd">ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to \
+  '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'</pre>
+    <pre class="term-block" data-fixture="out:dotted-scope-context">{
+  "canonical_scope_matches": [
+    {
+      "context_scope": [
+        "handlers.invoices"
+      ],
+      "decision_id": "ADR-012",
+      "lifecycle_status": "active",
+      "statement": "Request handlers do not import the database client",</pre>
+    <p>Or use scopes that appear in your paths as written. (<code>ADR_DIR</code> only points this guide&rsquo;s probe at a second ADR folder.)</p>
 
     <h3>The MCP server won't start</h3>
     <pre class="term-block" data-fixture="out:mcp-bad-adr-dir">ERROR: ADR directory troubleshooting/missing does not exist</pre>
