@@ -238,7 +238,7 @@ mneme decision-mcp</code></pre>
 <pre tabindex="0"><code>mneme decision-mcp \
   --proposals .mneme/decision_proposals.json \
   --adr-dir docs/adr</code></pre>
-      <div class="callout"><p><strong>Strict startup:</strong> a missing or empty <code>--adr-dir</code>, malformed ADR, invalid corpus, or unresolved precedence prevents the configured canonical server from starting. Mneme does not silently serve an ambiguous canonical view.</p></div>
+      <div class="callout"><p><strong>Strict startup:</strong> an <code>--adr-dir</code> folder that doesn&rsquo;t exist, an empty-string <code>--adr-dir</code>, a malformed ADR, an invalid corpus, or unresolved precedence prevents the configured canonical server from starting. An existing but empty folder starts the server with no canonical decisions. Mneme does not silently serve an ambiguous canonical view.</p></div>
     </section>
 
     <section class="section" id="configure">
