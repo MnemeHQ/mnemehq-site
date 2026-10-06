@@ -66,7 +66,7 @@
   <section class="prose-section" id="troubleshooting">
     <h2>Troubleshooting</h2>
     <h3>The memory check fails after an ADR edit</h3>
-    <p>The ADR changed but the committed memory file didn't, so <code>git diff --exit-code</code> exits 1. Re-import locally and commit the result:</p>
+    <p>The ADR changed but the committed memory file didn't, so <code>git diff --exit-code</code> exits 1. Re-import locally and commit the result. If it fails on every pull request, check the ADRs&rsquo; line endings: the memory file records a hash of each ADR&rsquo;s bytes, so add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>.</p>
     <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
 
     <h3>The check step fails before checking any file</h3>

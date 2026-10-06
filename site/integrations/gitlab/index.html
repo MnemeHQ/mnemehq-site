@@ -223,8 +223,8 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          {"@type": "Question", "name": "Should we run this on every merge request or only on the default branch?", "acceptedAnswer": {"@type": "Answer", "text": "Every merge request. The point of CI enforcement is to surface violations at MR time when the cost of fixing is lowest. Running only on the default branch means failures land after merge, which defeats the gating purpose. The check is fast — deterministic keyword scoring, no embedding model — so per-pipeline cost is negligible."}},
-          {"@type": "Question", "name": "What if a merge request needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Add an override record to project_memory.json as part of the same MR — with rationale, scope, and expiry. The check picks it up automatically. The override is reviewable in the MR diff like any other change, so weakening a constraint is a visible decision rather than a silent merge."}},
+          {"@type": "Question", "name": "Should we run this on every merge request or only on the default branch?", "acceptedAnswer": {"@type": "Answer", "text": "Every merge request. The point of CI enforcement is to surface violations at MR time when the cost of fixing is lowest. Running only on the default branch means failures land after merge, which defeats the gating purpose. The check is deterministic keyword matching with no embedding model or network call, so it adds little to a pipeline."}},
+          {"@type": "Question", "name": "What if a merge request needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a FORBID_LITERAL rule's exclude_paths, or supersede the ADR and re-import it. Re-importing doesn't remove a decision imported earlier, so also delete the superseded entry from project_memory.json. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge."}},
           {"@type": "Question", "name": "How does this compare to running other linters or scanners in GitLab CI?", "acceptedAnswer": {"@type": "Answer", "text": "Different layers. Linters check syntax and style; SAST scanners check for security issues; Mneme enforces architectural decisions against the project's own decision corpus. They compose: typical pipeline sequence is lint → mneme check → tests → SAST."}}
         ]
       }
@@ -359,29 +359,56 @@
     <ul>
       <li><code>mneme check</code> validates a file or diff against the decision corpus in <code>.mneme/project_memory.json</code></li>
       <li>Run against changed files in a merge request to surface any architectural violations</li>
-      <li><strong>Exit code 2</strong> = violation found &rarr; pipeline job fails &rarr; MR blocked</li>
-      <li><strong>Exit code 0</strong> = no violations &rarr; pipeline job passes</li>
+      <li>In strict mode, the default: <strong>exit code 0</strong> = PASS &rarr; the job passes</li>
+      <li><strong>Exit code 1</strong> = WARN and <strong>exit code 2</strong> = FAIL or INCOMPLETE &rarr; the job fails. To block the merge, turn on &ldquo;Pipelines must succeed&rdquo; in the project&rsquo;s merge request settings.</li>
     </ul>
 
     <h2>Example pipeline</h2>
 
-    <pre tabindex="0"><code># .gitlab-ci.yml (governance job)
-mneme-governance:
+    <pre tabindex="0"><code># .gitlab-ci.yml
+mneme-decisions:
   stage: test
-  image: python:3.11-slim
-  script:
-    - pip install mneme-hq>=0.9.2
-    - git diff --name-only $CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD | xargs -I{} mneme check {}
+  image: python:3.12          # includes git; the slim image doesn't
+  variables:
+    GIT_DEPTH: "0"            # full history, so the merge request base is available
   rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"</code></pre>
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python -m pip install "mneme-hq==0.9.2"
+    # Fail if an edited ADR wasn't re-imported into the memory file
+    - mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+    - git diff --exit-code -- .mneme/project_memory.json
+    # Check each added or modified text file against its repository path
+    - |
+      worst=0
+      mkdir -p mneme-results
+      git diff --numstat --no-renames --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD" &gt; changes.txt || exit 2
+      tab=$(printf '\t')
+      while IFS="$tab" read -r added _ f; do
+        [ -n "$f" ] || continue
+        if [ "$added" = "-" ]; then echo "skip    $f (binary)"; continue; fi
+        out="mneme-results/$(printf '%s' "$f" | tr '/' '_').json"
+        rc=0
+        mneme check --memory .mneme/project_memory.json \
+          --input "$f" --target-path "$f" \
+          --query "MR change: $f" --json &gt; "$out" || rc=$?
+        echo "exit=$rc  $f"
+        if [ "$rc" -gt "$worst" ]; then worst=$rc; fi
+      done &lt; changes.txt
+      exit "$worst"
+  artifacts:
+    when: always
+    paths:
+      - mneme-results/</code></pre>
+
+    <p>GitLab runs <code>script</code> lines with errexit on, so the loop records each exit code with <code>|| rc=$?</code> instead of stopping at the first violation, and exits with the worst one. Binary files are skipped because <code>mneme check</code> reads text only. We ran this script under <code>sh -e</code> against a local copy of a merge request, not on GitLab runners. The two import lines assume ADRs in <code>docs/adr</code>; drop them if you don&rsquo;t import ADRs. Check ADRs out with LF line endings (<code>docs/adr/*.md text eol=lf</code> in <code>.gitattributes</code>), because the memory file records a hash of each ADR&rsquo;s bytes. The <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">GitHub Actions how-to guide</a> walks through the same loop with recorded output.</p>
 
     <h2>Status</h2>
 
     <ul>
       <li>CI enforcement gate is Phase 1 current focus &mdash; see the <a href="/roadmap/" style="color:var(--accent);text-decoration:none;">roadmap</a></li>
-      <li>The <code>mneme check</code> command is available today via <code>pip install mneme-hq>=0.9.2</code></li>
-      <li>The GitLab CI job above is the reference integration pattern</li>
-      <li>As of mneme-hq v0.4.x (June 2026), the manual CI job above is the supported pattern. A managed GitLab CI template artifact is slated for Q3 2026.</li>
+      <li>The <code>mneme check</code> command is available today via <code>pip install "mneme-hq==0.9.2"</code></li>
+      <li>As of mneme-hq 0.9.2, Mneme doesn&rsquo;t publish a GitLab CI template. You copy the job above into your <code>.gitlab-ci.yml</code> and own it.</li>
     </ul>
 
     <h2>Layered governance model</h2>
@@ -396,26 +423,27 @@ mneme-governance:
 
     <h2>What the gate actually checks</h2>
 
-    <p>The CI step runs <code>mneme check --mode strict</code> against the MR diff and the project's decision corpus. The check returns a structured verdict per touched file, with three possible outcomes:</p>
+    <p>The job runs <code>mneme check</code> in strict mode, the default, on each changed file against the project&rsquo;s decision corpus. Each file gets one of four verdicts:</p>
 
     <ul>
-      <li><strong>PASS</strong> &mdash; the diff respects the relevant decisions. Exit code 0, pipeline green.</li>
-      <li><strong>WARN</strong> &mdash; the diff introduces something the corpus flags as policy-bordering (an unapproved dependency, a scope-boundary edge case). Exit code 0 in default mode, surfaces a structured note in the job log.</li>
-      <li><strong>FAIL</strong> &mdash; the diff violates a hard architectural decision. Exit code 2 in strict mode, fails the job, blocks the MR until resolved or explicitly overridden.</li>
+      <li><strong>PASS</strong>: no enforced rule matched the file. Exit code 0.</li>
+      <li><strong>WARN</strong>: a constraint matched, for example a <code>FORBID_DEPENDENCY</code> word. Exit code 1 in strict mode, which fails the job. With <code>--mode warn</code>, PASS, WARN and FAIL exit 0 and findings appear only in the job log; INCOMPLETE still exits 2.</li>
+      <li><strong>FAIL</strong>: a typed rule or anti-pattern matched. Exit code 2; the job fails until the code or the decision corpus changes.</li>
+      <li><strong>INCOMPLETE</strong>: the evaluation couldn&rsquo;t finish. Exit code 2, never reported as PASS.</li>
     </ul>
 
-    <p>Override events are themselves tracked: an override is a decision record with a rationale, scope, and expiry, committed as part of the same MR. Weakening a constraint costs the same as introducing one &mdash; a structured edit reviewers can see, not a quiet bypass.</p>
+    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus in the same merge request: add a path to a <code>FORBID_LITERAL</code> rule&rsquo;s <code>exclude_paths</code> (the structured form, alongside its <code>include_paths</code>), or supersede the ADR, re-import, and delete the superseded decision from <code>project_memory.json</code>. Reviewers see the change in the MR diff, so weakening a decision is visible rather than a quiet bypass.</p>
 
     <h2>FAQ</h2>
 
     <div class="faq-list" style="margin-top:1.5rem;">
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">Should we run this on every merge request or only on the default branch?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Every merge request. The point of CI enforcement is to surface violations at MR time when the cost of fixing is lowest. Running only on the default branch means failures land after merge, which defeats the gating purpose. The check is fast (deterministic keyword scoring, no embedding model) so per-pipeline cost is negligible.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Every merge request. The point of CI enforcement is to surface violations at MR time when the cost of fixing is lowest. Running only on the default branch means failures land after merge, which defeats the gating purpose. The check is deterministic keyword matching with no embedding model or network call, so it adds little to a pipeline.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">What if a merge request needs to override a decision intentionally?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Add an override record to <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code> as part of the same MR &mdash; with rationale, scope, and expiry. The check picks it up automatically. The override is reviewable in the MR diff like any other change, so weakening a constraint is a visible decision rather than a silent merge.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> rule&rsquo;s <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>, or supersede the ADR and re-import it. Re-importing doesn&rsquo;t remove a decision imported earlier, so also delete the superseded entry from <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">How does this compare to running other linters or scanners in GitLab CI?</summary>

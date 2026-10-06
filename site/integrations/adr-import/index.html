@@ -403,7 +403,7 @@ These must never be conflated in code-bearing surfaces.
 
     <h3>Legacy directives</h3>
 
-    <p>Three older directive kinds are still accepted for compatibility. They compile into decision constraints that feed retrieval guidance and audit visibility &mdash; but they are not typed rules and do not by themselves produce deterministic verdicts:</p>
+    <p>Three older directive kinds are still accepted for compatibility. They aren&rsquo;t typed rules and can&rsquo;t take <code>include_paths</code>: the structured form is a parse error for them. <code>FORBID_PATH</code> and <code>REQUIRE_PATH</code> never change a verdict. <code>FORBID_DEPENDENCY</code> does: it gives a WARN.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="comparison-table">
@@ -417,8 +417,8 @@ These must never be conflated in code-bearing surfaces.
       <tbody>
         <tr>
           <td>FORBID_DEPENDENCY: X</td>
-          <td>Stored as <code>"no X"</code> in decision constraints (retrieval-gated heuristic)</td>
-          <td>No &mdash; guidance only</td>
+          <td>A <code>"no X"</code> decision constraint</td>
+          <td>WARN, whatever the path. A one-word name (<code>mongodb</code>) is checked on every input. A name that splits into several words (<code>left-pad</code>) is checked only when retrieval selects the decision, and then any one of its words triggers it. In strict mode a WARN exits 1, and the Claude Code hook blocks on it</td>
         </tr>
         <tr>
           <td>FORBID_PATH: glob</td>
@@ -433,13 +433,13 @@ These must never be conflated in code-bearing surfaces.
         <tr>
           <td>FORBID_LITERAL: value</td>
           <td>A typed rule with exact semantics</td>
-          <td><strong>Yes</strong> &mdash; corpus-wide FAIL</td>
+          <td><strong>Yes</strong>: FAIL on every input its paths apply to, regardless of retrieval</td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <p>New policies should author <code>FORBID_LITERAL</code> first. Unknown directive kinds raise a parse error rather than being silently dropped &mdash; a typo should not defeat governance.</p>
+    <p>New policies should author <code>FORBID_LITERAL</code> first: it&rsquo;s the only directive that accepts <code>include_paths</code>. Unknown directive kinds raise a parse error rather than being silently dropped, so a typo can&rsquo;t switch enforcement off.</p>
 
     <h2>Step 2: preview the import</h2>
 
@@ -459,7 +459,7 @@ Active set (4 ADRs):
       rule: FORBID_LITERAL "pip install mneme"  # correct: pipx install "mneme-hq>=0.9.2"
       constraint: FORBID_PATH site/use-cases/**/Mneme HQ*</code></pre>
 
-    <p>ADRs with status <code>proposed</code>, <code>deprecated</code>, or <code>superseded</code> are excluded from the active set. Explicit supersession via the <code>supersedes</code> frontmatter field is handled silently. Active-active contradictions (two accepted ADRs sharing the same scope, priority, and date) surface as diagnostics and block the apply step until resolved.</p>
+    <p>ADRs with status <code>proposed</code>, <code>deprecated</code>, or <code>superseded</code> are excluded from the active set. Explicit supersession via the <code>supersedes</code> frontmatter field is handled silently. Active-active contradictions (two accepted ADRs sharing the same scope, priority, and date) surface as diagnostics and block the apply step until resolved. Two accepted ADRs that share a scope but differ in priority or date raise no diagnostic: the import keeps the one with higher priority, or the newer one when priorities match, and leaves the other out. ADRs with no scope share one global scope and compete the same way. Give every ADR its own scope.</p>
 
     <h2>Step 3: apply the import</h2>
 
@@ -496,7 +496,7 @@ Result: PASS</code></pre>
 
     <h2>Conflict handling</h2>
 
-    <p><strong>Same-id collision.</strong> If an incoming ADR id already exists in the target memory file's <code>decisions[]</code> array, the import refuses. Pass <code>--update-existing</code> to overwrite the existing entry in place.</p>
+    <p><strong>Same-id collision.</strong> If an incoming ADR id already exists in the target memory file's <code>decisions[]</code> array, the import refuses. Pass <code>--update-existing</code> to overwrite the existing entry in place. It updates decisions for ADRs that are still active; it doesn&rsquo;t remove a decision whose ADR was later deprecated, superseded or deleted. Remove that decision from the memory file yourself.</p>
 
     <p><strong>Active-active contradiction.</strong> If two accepted ADRs share the same scope, priority, and date, the compiler cannot pick a winner deterministically. The import surfaces this as a diagnostic and refuses <code>--apply</code> unless <code>--approve-conflicts</code> is also passed. The fix is to edit the contradicting ADRs: mark one superseded, give one a higher priority, or give one a newer date.</p>
 

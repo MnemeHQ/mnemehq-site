@@ -236,7 +236,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "How is the Mneme hook different from CLAUDE.md?", "acceptedAnswer": {"@type": "Answer", "text": "CLAUDE.md is static context: text injected at session start that the model is asked to respect. The Mneme hook runs as a PreToolUse hook — it intercepts Edit and Write calls before they touch the filesystem and can return exit code 2 to block the operation outright. CLAUDE.md is advisory; the hook is enforcement. The two are complementary: CLAUDE.md gives the model context, Mneme blocks violations regardless of whether the model attended to that context."}},
-          {"@type": "Question", "name": "Does the hook slow down Claude Code sessions?", "acceptedAnswer": {"@type": "Answer", "text": "The retriever is deterministic keyword scoring with no embedding model and no vector store, so per-call latency is in the low milliseconds for typical projects. The hook runs locally; there is no network round trip. For projects with very large decision corpora, scope filters and tag indices keep retrieval bounded."}},
+          {"@type": "Question", "name": "Does the hook slow down Claude Code sessions?", "acceptedAnswer": {"@type": "Answer", "text": "Each checked edit, and each changed file at the end of a turn, starts a local mneme check. In our test on Windows with mneme-hq 0.9.2, a hook call took about a second. There is no network round trip, embedding model or vector store; the check is deterministic keyword matching."}},
           {"@type": "Question", "name": "What happens if Mneme itself fails?", "acceptedAnswer": {"@type": "Answer", "text": "The hook is designed fail-open: if the Mneme process errors, returns invalid output, or times out, Claude Code is allowed to proceed rather than being blocked. This is a deliberate safety choice — a broken governance layer should not lock the team out of editing their codebase. Strict mode (mneme check --mode strict) in CI is where hard-blocking lives; the editor-time hook prioritizes availability."}},
           {"@type": "Question", "name": "Can I use the hook without committing project_memory.json?", "acceptedAnswer": {"@type": "Answer", "text": "Technically yes, but you lose the value. The decision corpus is the source of truth; committing it to the repo means every team member sees the same enforcement, and changes to architectural rules show up in PR review like any other change. Local-only memory recreates the per-engineer drift problem the layer exists to solve."}}
         ]
@@ -363,7 +363,7 @@
       <span class="eyebrow-meta">6 min read &nbsp;·&nbsp; May 2026</span>
     </div>
     <h1>Claude Code Governance</h1>
-    <p class="article-lede">Mneme HQ registers a PreToolUse hook with Claude Code. Every Edit, Write, and MultiEdit is intercepted before it reaches disk &mdash; violations surface the decision id as feedback and exit 2 (block). Claude Code adjusts its approach without manual intervention.</p>
+    <p class="article-lede">The Mneme plugin registers a hook with Claude Code. Every Edit, Write and MultiEdit, and a single <code>cat &gt; file &lt;&lt;'EOF'</code> command (quoted delimiter, nothing else in the command), is checked against your recorded decisions before it reaches disk. A violation exits 2, which blocks the change, and the agent receives the decision id so it can correct the change. Other shell writes are checked when the agent finishes its turn.</p>
     <p style="font-size:0.92rem;color:var(--muted);line-height:1.85;margin-top:1rem;max-width:680px;">Claude Code is a harness &mdash; it coordinates execution, tool use, and the agent loop. Mneme is the decision and control layer that runs alongside it, enforcing the architectural intent the harness has no opinion about. They are different layers of the runtime stack, and they run side by side. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/" style="color:var(--teal);">Harness Engineering Still Needs Governance</a>.</p>
   </header>
 
@@ -371,21 +371,29 @@
 
     <h2>How the hook works</h2>
 
-    <p>Every Edit, Write, or MultiEdit Claude Code attempts is intercepted by <code>mneme-hook</code> before it writes to disk. The hook reconstructs the full post-edit file content, checks it against your recorded decisions, and returns a verdict.</p>
+    <p>The plugin at <code>v0.9.2</code> runs <code>mneme-hook</code> on three Claude Code events:</p>
 
-    <p>The exit code semantics are deterministic: <strong>exit 0 allows the edit</strong>; <strong>exit 2 blocks it</strong> and surfaces the violated decision id as feedback to Claude Code. Claude Code sees the block as an error message, reads the decision id and rule, and adjusts its approach without you having to intervene.</p>
+    <ul>
+      <li><strong>PreToolUse on Edit, Write and MultiEdit.</strong> The hook works out the file content the change would produce, then checks the content the change introduces against your recorded decisions. Unrelated lines already in the file don&rsquo;t trigger a block.</li>
+      <li><strong>PreToolUse on Bash.</strong> A single command of the form <code>cat &gt; file &lt;&lt;'EOF'</code> or <code>cat &gt;&gt; file &lt;&lt;'EOF'</code>, with a quoted delimiter and nothing else in the command, is checked the same way before it runs. Other shell writes, such as <code>echo &gt;</code>, <code>tee</code>, <code>sed -i</code>, a chained <code>mkdir -p dir &amp;&amp; cat &gt; &hellip;</code>, or a script, can&rsquo;t be reconstructed in advance and pass through.</li>
+      <li><strong>SessionStart and Stop.</strong> At session start the hook records the state of the repository. Each time the agent finishes a turn, it checks every changed text file that git tracks or would track, which catches the shell writes the first check let through. This needs a git work tree.</li>
+    </ul>
 
-    <pre tabindex="0"><code>on Edit / Write / MultiEdit:
-  content = reconstruct_full_file(tool_input)
-  result  = mneme check --input &lt;materialized content&gt; \
-              --target-path &lt;edited path&gt; --query "edit to &lt;path&gt;"
-  if result.violation:
-    exit 2   # block — surfaces decision_id to Claude Code
+    <p>The exit code semantics are deterministic: <strong>exit 0 allows the edit</strong>; <strong>exit 2 blocks it</strong> and returns the violated decision id and rule to the agent as feedback, so it can correct the change without you stepping in. At the end of a turn, a violation keeps the agent working with the same feedback; it doesn&rsquo;t undo a file that was already written.</p>
+
+    <pre tabindex="0"><code>on Edit / Write / MultiEdit (and a single cat-heredoc write):
+  introduced = content the change adds to &lt;path&gt;
+  result     = mneme check --input &lt;introduced content&gt; \
+                 --target-path &lt;path&gt; --query "edit to &lt;path&gt;"
+  if mode is strict and result is FAIL or WARN:
+    exit 2   # block, decision id returned to the agent
   else:
-    exit 0   # allow</code></pre>
+    exit 0   # allow (also when no verdict could be produced)</code></pre>
+
+    <p>The <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">how-to guide</a> replays each of these events against mneme-hq 0.9.2, with the recorded output.</p>
 
     <div class="callout">
-      <p><strong>Fail-open by design.</strong> The hook never blocks on Mneme malfunction. If <code>mneme</code> is not found, the file can't be read, or <code>mneme check</code> times out (10 s limit), the hook exits 0 and allows the edit.</p>
+      <p><strong>Fail-open by design.</strong> The hook never blocks on Mneme malfunction. If <code>mneme</code> is not found, an edited file can't be read, or a <code>mneme check</code> call takes longer than 10 seconds, the hook exits 0 and allows the edit. Its notes go to Claude Code&rsquo;s debug log only, so neither you nor the agent sees them in the session. If <code>mneme-hook</code> itself isn&rsquo;t on <code>PATH</code>, Claude Code shows a hook error instead.</p>
     </div>
 
     <h2>Install</h2>
@@ -405,7 +413,7 @@
       </li>
       <li>
         <strong>Load the plugin</strong>
-        <pre tabindex="0"><code>git clone https://github.com/MnemeHQ/mneme
+        <pre tabindex="0"><code>git clone --branch v0.9.2 --depth 1 https://github.com/MnemeHQ/mneme
 claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
         <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). Reload in-session with <code>/reload-plugins</code> after changes.</p>
         <p>A legacy flat installer (<code>python scripts/install_claude_code.py</code>, with hyphenated <code>/mneme-check</code> commands) still works from a git clone, but <code>scripts/</code> is not shipped in the PyPI wheel.</p>
@@ -468,26 +476,25 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
         </tr>
         <tr>
           <td>warn</td>
-          <td>Surface warning to Claude, never block</td>
+          <td>Never block. Claude Code ignores the per-edit reason, so violations reach the agent only from the end-of-turn check</td>
           <td><code>export MNEME_HOOK_MODE=warn</code></td>
         </tr>
       </tbody>
     </table>
     </div>
 
-    <p>Switch to <code>warn</code> while you're iterating on decisions to avoid friction:</p>
-    <pre tabindex="0"><code>export MNEME_HOOK_MODE=warn</code></pre>
+    <p>Warn mode turns blocking off, but it doesn&rsquo;t show you per-edit findings. To collect findings while you tune new decisions, run <code>mneme check --mode warn</code> yourself or in CI, and keep the hook in strict mode.</p>
 
     <h2>Retrieval: what the hook checks and what it misses</h2>
 
-    <p>The hook query is <code>"edit to &lt;file_path&gt;"</code> — tokens from the target file name determine which decisions are retrieved and checked. Decisions are scored by keyword overlap between the query and their <code>scope</code>, <code>id</code>, decision text, and anti-pattern fields.</p>
+    <p>Typed <code>FORBID_LITERAL</code> rules (on the paths they apply to), single-term anti-patterns and single-term &ldquo;no X&rdquo; constraints are checked on every edit, whatever the file is called. Retrieval only decides which decisions have their <em>multi-term</em> anti-patterns and multi-term &ldquo;no X&rdquo; constraints checked. The hook query is <code>"edit to &lt;file_path&gt;"</code>, and decisions are scored by overlap between its words (four letters or more, no stemming) and their scope, decision text, constraints, anti-patterns and rationale.</p>
 
     <p><strong>What this means in practice:</strong></p>
 
     <ul>
-      <li>A decision with <code>scope: ["storage", "database"]</code> and a file named <code>storage_layer.py</code> will reliably be retrieved — "storage" appears in both the query and the scope.</li>
-      <li>The same decision may <strong>not</strong> be retrieved for an edit to <code>models.py</code> — neither token overlaps with the scope.</li>
-      <li>Generic file names like <code>utils.py</code> or <code>helpers.py</code> will rarely retrieve any decisions at all.</li>
+      <li>A decision with <code>scope: storage</code> is retrieved for an edit to <code>app/storage/layer.py</code>, because &ldquo;storage&rdquo; appears in the query.</li>
+      <li>The same decision isn&rsquo;t retrieved for an edit to <code>models.py</code>, so its multi-term rules aren&rsquo;t checked there. Its typed rules still are.</li>
+      <li>A generic file name like <code>utils.py</code> rarely matches a decision. Retrieval then depends on the words in its directory path and the word &ldquo;edit&rdquo; that every hook query contains.</li>
     </ul>
 
     <p><strong>Mitigations:</strong></p>
@@ -498,7 +505,7 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
       <li>Run <code>/mneme:review</code> after a batch of edits to catch violations the per-edit hook missed due to retrieval gaps.</li>
     </ol>
 
-    <p>The hook is a first line of defence, not a complete audit. Use the slash commands for coverage on domains where file names are not self-describing.</p>
+    <p>Prefer <code>FORBID_LITERAL</code> rules for decisions that must hold on every file. Use the slash commands for coverage of multi-term rules where file names don&rsquo;t describe the domain.</p>
 
     <h2>Fail-open guarantees</h2>
 
@@ -506,8 +513,8 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
 
     <ul>
       <li><code>mneme</code> is not found on <code>$PATH</code></li>
-      <li>The target file cannot be read (common for Write — the file doesn't exist yet)</li>
-      <li><code>mneme check</code> times out (limit: 10 s)</li>
+      <li>The file an Edit targets can&rsquo;t be read (a Write to a new file is checked in full)</li>
+      <li>A <code>mneme check</code> call times out (limit: 10 s)</li>
       <li>Any other OS-level error occurs</li>
     </ul>
 
@@ -519,19 +526,20 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
     <ul>
       <li>Confirm <code>mneme-hook</code> is on <code>$PATH</code>: <code>which mneme-hook</code> (or <code>where mneme-hook</code> on Windows).</li>
       <li>If not, the pip scripts directory may not be on <code>$PATH</code>. Add it, or install with <code>pipx</code>.</li>
-      <li>Confirm <code>.claude/settings.json</code> contains the <code>PreToolUse</code> entry (run the installer again).</li>
+      <li>Confirm Claude Code was started with <code>--plugin-dir</code> pointing at the plugin. With the legacy installer, confirm <code>.claude/settings.json</code> contains the <code>PreToolUse</code> entry.</li>
     </ul>
 
     <h3>Hook fires but nothing is blocked</h3>
     <ul>
-      <li>Confirm <code>.mneme/project_memory.json</code> exists in the project root (or a parent directory).</li>
+      <li>Confirm <code>.mneme/project_memory.json</code> exists in the session&rsquo;s working directory or a parent directory, or set <code>MNEME_MEMORY</code>. With no memory file the hook allows every change silently.</li>
       <li>Check your decision scope keywords against the file names being edited — see the retrieval section above.</li>
-      <li>Switch to warn mode temporarily and check stderr output from <code>mneme-hook</code> for clues.</li>
+      <li>Confirm neither <code>MNEME_HOOK_MODE</code> nor the plugin&rsquo;s <code>mode</code> option is set to <code>warn</code>, which never blocks.</li>
+      <li>Check Claude Code&rsquo;s debug log for notes from <code>mneme-hook</code>, such as &ldquo;Failing open&rdquo;.</li>
     </ul>
 
     <h3>Too many false positives / blocks</h3>
     <ul>
-      <li>Switch to <code>MNEME_HOOK_MODE=warn</code> while refining your decisions.</li>
+      <li>Narrow the rule with <code>include_paths</code>, or check candidate rules with <code>mneme check --mode warn</code> before you import them.</li>
       <li>Review the triggered anti-patterns with <code>/mneme:context</code> to see if they're too broad.</li>
     </ul>
 
@@ -545,7 +553,7 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
 
       <details class="faq-item">
         <summary>Does the hook slow down Claude Code sessions?</summary>
-        <div class="faq-body">The retriever is deterministic keyword scoring with no embedding model and no vector store, so per-call latency is in the low milliseconds for typical projects. The hook runs locally; there is no network round trip. For projects with very large decision corpora, scope filters and tag indices keep retrieval bounded.</div>
+        <div class="faq-body">Each checked edit, and each changed file at the end of a turn, starts a local <code>mneme check</code>. In our test on Windows with mneme-hq 0.9.2, a hook call took about a second. There is no network round trip, embedding model or vector store; the check is deterministic keyword matching.</div>
       </details>
 
       <details class="faq-item">

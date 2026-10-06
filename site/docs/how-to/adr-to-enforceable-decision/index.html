@@ -515,7 +515,7 @@ Result: PASS</pre>
 
 Result: PASS</pre>
         Add one <code>FORBID_LITERAL</code> per import form you need to block, or run an import linter in CI alongside Mneme.</li>
-      <li>Only <code>FORBID_LITERAL</code> gives a FAIL that respects <code>include_paths</code>. <code>FORBID_DEPENDENCY</code> gives a WARN wherever the word appears, whatever the path. In strict mode a WARN exits 1, and the Claude Code hook blocks on it:
+      <li>Only <code>FORBID_LITERAL</code> gives a FAIL that respects <code>include_paths</code>. A one-word <code>FORBID_DEPENDENCY</code> value, like <code>requests</code>, gives a WARN wherever the word appears, whatever the path. A name that splits into several words, like <code>left-pad</code>, is checked only when lookup selects the decision. In strict mode a WARN exits 1, and the Claude Code hook blocks on it:
         <pre class="term-block" data-fixture="out:dependency-warn">WARN  [ADR-014] constraint "no requests" -- trigger: requests
       Services use the shared HTTP client
 
