@@ -494,7 +494,7 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
     <ul>
       <li>A decision with <code>scope: storage</code> is retrieved for an edit to <code>app/storage/layer.py</code>, because &ldquo;storage&rdquo; appears in the query.</li>
       <li>The same decision isn&rsquo;t retrieved for an edit to <code>models.py</code>, so its multi-term rules aren&rsquo;t checked there. Its typed rules still are.</li>
-      <li>A generic file name like <code>utils.py</code> adds nothing useful to the query. Only words in its directory path can still retrieve a decision.</li>
+      <li>A generic file name like <code>utils.py</code> rarely matches a decision. Retrieval then depends on the words in its directory path and the word &ldquo;edit&rdquo; that every hook query contains.</li>
     </ul>
 
     <p><strong>Mitigations:</strong></p>

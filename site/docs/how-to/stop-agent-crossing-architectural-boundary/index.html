@@ -392,7 +392,7 @@ mneme-hook &lt; events/stop.json</pre>
   <section class="prose-section" id="limits">
     <h2>Limits</h2>
     <ul class="bound-list">
-      <li>The hook fails open. If a <code>mneme check</code> call crashes or takes longer than 10 seconds, the hook allows the change without telling the agent. The &ldquo;Failing open&rdquo; note goes to Claude Code's debug log only.</li>
+      <li>The hook fails open. If a <code>mneme check</code> call crashes or takes longer than 10 seconds, the hook allows the change without telling the agent. Its notes go to Claude Code's debug log only.</li>
       <li>Shell writes other than that single <code>cat</code> heredoc form are checked only when the agent finishes its turn, after the file exists. The hook then keeps the agent working and feeds back the violation. It doesn't undo the write.</li>
       <li>The rule matches exact text, so <code>import app.db.client as db</code> isn't caught by this ADR. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
       <li>Other agents get different coverage. <a href="/integrations/codex-cli/">Codex CLI</a> checks <code>apply_patch</code> add and update operations before they run, and audits each changed file as a whole when the agent stops. <a href="/integrations/kiro/">Kiro</a> checks its native write tools only, with no shell or end-of-turn checks.</li>
