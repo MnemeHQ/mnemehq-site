@@ -188,7 +188,6 @@
     .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .answer-capsule code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -283,12 +282,10 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Make one ADR enforceable in four steps.</strong> Add YAML frontmatter and a <code>## Constraints</code> section that names the exact text the decision forbids and the paths it covers. Preview the import with <code>mneme adr import</code>, then apply it. From then on, <code>mneme check</code> returns FAIL with exit code 2 for a matching file under those paths, and PASS everywhere else.</div>
-
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Turn an ADR into an enforceable decision</h1>
-  <p class="lede">Your team wrote ADR-012: request handlers go through the repository layer and never import the database client. This guide turns that sentence into a rule Mneme checks on every file under <code>app/handlers/</code>.</p>
+  <p class="lede">Add a <code>## Constraints</code> section to the ADR that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client.</p>
   <p class="howto-meta">Tested with mneme-hq 0.9.2 &middot; CLI only</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.</p>
 </section>

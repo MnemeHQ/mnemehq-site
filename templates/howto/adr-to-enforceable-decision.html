@@ -12,7 +12,7 @@
   "surface": "CLI only",
   "end_up": "an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.",
   "date": "2026-10-04",
-  "answer": "<strong>Make one ADR enforceable in four steps.</strong> Add YAML frontmatter and a <code>## Constraints</code> section that names the exact text the decision forbids and the paths it covers. Preview the import with <code>mneme adr import</code>, then apply it. From then on, <code>mneme check</code> returns FAIL with exit code 2 for a matching file under those paths, and PASS everywhere else."
+  "answer": "Add a <code>## Constraints</code> section to the ADR that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client."
 }
 -->
   <section class="prose-section" id="goal">

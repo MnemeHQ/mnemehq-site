@@ -32,7 +32,6 @@ EXTRA_CSS = """
     .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .answer-capsule code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -172,7 +171,9 @@ def build(slug: str) -> Path:
         '<section class="hero">\n'
         f'  <div class="section-eyebrow">{meta["eyebrow"]}</div>\n'
         f'  <h1>{meta["h1"]}</h1>\n'
-        f'  <p class="lede">{meta["lede"]}</p>\n'
+        # The lede is the guide's direct answer when it has one, so readers and
+        # answer engines get the answer first, right under the title.
+        f'  <p class="lede">{meta.get("answer") or meta["lede"]}</p>\n'
     )
     if not is_hub:
         # Minutes appear only once a timed reader run has measured them.
@@ -185,9 +186,7 @@ def build(slug: str) -> Path:
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
         )
     hero += "</section>\n\n"
-    # A short direct answer under the breadcrumb, for readers and answer engines.
-    answer = f'<div class="answer-capsule">{meta["answer"]}</div>\n\n' if meta.get("answer") else ""
-    page = head + body_start + crumb_html + answer + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
+    page = head + body_start + crumb_html + hero +'<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
     out = W / "site" / path_part / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8", newline="\n")

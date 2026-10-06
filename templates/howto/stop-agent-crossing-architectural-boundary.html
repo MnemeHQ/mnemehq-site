@@ -12,12 +12,12 @@
   "surface": "Claude Code",
   "end_up": "Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.",
   "date": "2026-10-04",
-  "answer": "<strong>Put a check in front of the agent&rsquo;s writes.</strong> Load the Mneme plugin in Claude Code. Its hook checks every Edit, Write, MultiEdit and heredoc shell write against your recorded decisions before the file changes. A violation is blocked with exit code 2, and the agent is told which decision it broke. Writes made by scripts are checked when the agent finishes its turn."
+  "answer": "Load the Mneme plugin in Claude Code. Before every edit, write and heredoc shell write, its hook checks the change against your recorded decisions and blocks a violation with exit code 2, so the file never changes and the agent sees the reason. Script writes get past that first check; the hook catches them when the agent ends its turn."
 }
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>A pull request check catches a forbidden import after the agent wrote it, and someone still has to send the work back. The Mneme plugin for Claude Code checks each change before it lands. It registers a <em>hook</em>: a command Claude Code runs before every file edit and shell command, at session start, and each time the agent finishes a turn. When a change breaks a recorded decision, the hook blocks it and returns the reason to the agent.</p>
+    <p>A pull request check catches a forbidden import after the agent wrote it, and someone still has to send the work back. A hook catches it while the agent is still working on the change. The plugin registers one: a command Claude Code runs before every file edit and shell command, at session start, and each time the agent finishes a turn.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">

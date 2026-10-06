@@ -188,7 +188,6 @@
     .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .answer-capsule code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -283,12 +282,10 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Look decisions up by the path being edited.</strong> In Claude Code, <code>/mneme:context</code> asks Claude to run <code>mneme test_query</code> with your task. Any MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local MCP server with the file path. Both match on the decision&rsquo;s scope, so give each ADR a scope word that appears in the paths it governs.</div>
-
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Give coding agents the decisions that apply to a task</h1>
-  <p class="lede">Blocking a bad write is the last line. An agent that knows ADR-012 before it starts on <code>app/handlers/invoices.py</code> doesn't write the forbidden import in the first place. This guide shows the two ways an agent can look decisions up.</p>
+  <p class="lede">Ask by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and any MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. Both find a decision through its scope, so the scope has to be a word your paths contain.</p>
   <p class="howto-meta">Tested with mneme-hq 0.9.2 &middot; Claude Code, any MCP host</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.</p>
 </section>
@@ -297,7 +294,7 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>An agent writes better code when it knows the rules for the file it's editing. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server. We tested the server with a generic MCP client, not inside a specific agent.</p>
+    <p>Guide 2 stops a bad write after the agent has decided to make it. Giving the agent ADR-012 before it starts on <code>app/handlers/invoices.py</code> saves that round trip. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
     <p>Lookup only informs the agent. Enforcement stays with the hook and CI checks from guides <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">2</a> and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">4</a>.</p>
   </section>
 
@@ -325,7 +322,7 @@ priority: foundational
 date: "2026-10-01"
 scope: handlers
 ---</pre>
-    <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart in the import and in <code>mneme test_query</code>. <code>decision.applicable_to</code> won't return it for <code>app/handlers/invoices.py</code>, because the string <code>handlers.invoices</code> doesn't appear in that path. Pass the scope in <code>context</code> as well, or choose scopes that appear in the paths as written.</p>
+    <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart, with one catch for MCP, covered in Troubleshooting.</p>
 
     <h3>2. Register the MCP server with your agent</h3>
     <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
@@ -477,6 +474,9 @@ All decisions (ranked by score):
 Injected (top 3):
 (none)</pre>
     <p>The MCP tool <code>decision.applicable_to</code> works differently: it matches the scope as a substring of the path, so <code>api</code> matches <code>app/api/invoices.py</code> there, and also <code>rapid_import/</code>. Pick a scope word of four letters or more that appears in the governed paths and not by accident in others, such as <code>handlers</code>.</p>
+
+    <h3><code>decision.applicable_to</code> never returns a dotted-scope ADR</h3>
+    <p>The tool matches the whole scope string inside the path. <code>handlers.invoices</code> doesn't appear in <code>app/handlers/invoices.py</code>, so the tool skips that ADR, though <code>mneme test_query</code> still finds it. Pass the scope in <code>context</code> as well, or use scopes that appear in your paths as written.</p>
 
     <h3>The MCP server won't start</h3>
     <pre class="term-block" data-fixture="out:mcp-bad-adr-dir">ERROR: ADR directory troubleshooting/missing does not exist</pre>
