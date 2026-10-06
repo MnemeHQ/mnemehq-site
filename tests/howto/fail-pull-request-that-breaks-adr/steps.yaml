@@ -1,0 +1,35 @@
+# Guide: /docs/how-to/fail-pull-request-that-breaks-adr/
+steps:
+  - name: setup-main
+    run: >-
+      mneme init > /dev/null &&
+      mneme adr import docs/adr --memory .mneme/project_memory.json --apply > /dev/null &&
+      git init -q && git add -A && git commit -qm "main" &&
+      git update-ref refs/remotes/origin/main HEAD
+  - name: setup-pull-request
+    run: >-
+      git checkout -qb add-invoices &&
+      cp inputs/invoices_direct.py app/handlers/invoices.py &&
+      mkdir -p app/repositories && cp inputs/repository_invoices.py app/repositories/invoices.py &&
+      mkdir -p app/static && cp inputs/logo.png app/static/logo.png &&
+      git add app && git commit -qm "Add invoices"
+  - name: memory-in-sync
+    run: python run_workflow_step.py "Check the memory file matches the ADRs"
+  - name: check-changed-files
+    run: python run_workflow_step.py "Check changed files against decisions" BASE_REF=main
+    expect_exit: 2
+  - name: show-verdict
+    run: python -m json.tool mneme-results/app_handlers_invoices.py.json
+  - name: warn-mode
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input app/handlers/invoices.py --target-path app/handlers/invoices.py
+      --query "PR change: app/handlers/invoices.py" --mode warn
+  # Troubleshooting: memory file out of date with the ADRs
+  - name: stale-memory
+    run: >-
+      sed -i 's/from app.db.client import/from app.db import client/' docs/adr/ADR-012-handlers-use-repositories.md &&
+      python run_workflow_step.py "Check the memory file matches the ADRs" > /dev/null; echo "exit=$?"
+  # Troubleshooting: the base branch can't be resolved
+  - name: missing-base
+    run: python run_workflow_step.py "Check changed files against decisions" BASE_REF=no-such-branch 2>&1 | tail -n 1; echo "exit=${PIPESTATUS[0]}"

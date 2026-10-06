@@ -1,0 +1,148 @@
+<!--meta
+{
+  "title": "Give Agents the Decisions for a Task · Mneme how-to — Mneme HQ",
+  "description": "Load the ADRs that apply to the file an agent is editing, with /mneme:context in Claude Code or the Mneme MCP server for any MCP host. Tested on 0.9.2.",
+  "og_alt": "How to give coding agents the architectural decisions that apply to a task, through Claude Code and the Mneme MCP server.",
+  "eyebrow": "How-to guide",
+  "h1": "Give coding agents the decisions that apply to a task",
+  "h1_plain": "Give coding agents the decisions that apply to a task",
+  "crumb": "Decisions for a task",
+  "minutes": "",
+  "surface": "Claude Code, any MCP host",
+  "end_up": "a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.",
+  "date": "2026-10-04",
+  "answer": "Ask by task or by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and an MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. That tool matches only a decision&rsquo;s scope, and the CLI lookup scores a scope match highest, so give each decision a scope word your paths contain."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>Guide 2 stops a bad write after the agent has decided to make it. Giving the agent ADR-012 before it starts on <code>app/handlers/invoices.py</code> can save that round trip. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
+    <p>Lookup only informs the agent. Enforcement stays with the hook and CI checks from guides <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">2</a> and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">4</a>.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>ADR-012 in <code>docs/adr/</code> and imported into <code>.mneme/project_memory.json</code>, as in <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
+      <li>Mneme 0.9.2 with the optional MCP runtime:</li>
+    </ul>
+    <pre class="term-block">pipx install "mneme-hq[mcp]==0.9.2"</pre>
+    <ul class="plain">
+      <li>For the Claude Code path, the plugin loaded as in <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a>.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Give each decision a scope word that appears in your paths</h3>
+    <p>Lookup matches whole words in the query against each decision's scope, constraints, text and rationale. A match on the scope counts most. There is no stemming, so <code>handler</code> doesn't match <code>handlers</code>. ADR-012 uses <code>scope: handlers</code> because every file it governs lives under <code>app/handlers/</code>:</p>
+    <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md" data-lines="1-8"></pre>
+    <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart, with one catch for MCP, covered in Troubleshooting.</p>
+
+    <h3>2. Register the MCP server with your agent</h3>
+    <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
+    <pre class="term-block" data-fixture="manual">{
+  "mcpServers": {
+    "mneme": {
+      "command": "mneme",
+      "args": ["decision-mcp", "--proposals", ".mneme/decision_proposals.json", "--adr-dir", "docs/adr"]
+    }
+  }
+}</pre>
+    <p><code>--adr-dir</code> loads your ADRs as the decisions the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <h3>Claude Code: <code>/mneme:context</code></h3>
+    <p>Type <code>/mneme:context</code> with a description of the task. The command asks Claude to run <code>mneme test_query</code> with your description. You can run the same lookup yourself, here with the query the Claude Code hook uses for an edit:</p>
+    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to app/handlers/invoices.py"</pre>
+
+    <h3>Any MCP host: <code>decision.applicable_to</code></h3>
+    <p>This small client starts the server the way an agent does and calls one tool. Save it as <code>mcp_probe.py</code> in the repository root:</p>
+    <pre class="term-block" data-fixture="file:mcp_probe.py"></pre>
+    <pre class="term-block" data-fixture="cmd">python mcp_probe.py list
+python mcp_probe.py decision.applicable_to \
+  '{"paths": ["app/handlers/invoices.py"]}'</pre>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The lookup ranks ADR-012 first, matched on its scope, and prints the context an agent receives:</p>
+    <pre class="term-block" data-fixture="out:query-path"></pre>
+    <p>A task description finds ADR-012 only when it uses the ADR&rsquo;s own words. &ldquo;handler&rdquo; isn&rsquo;t &ldquo;handlers&rdquo;, so this query finds nothing:</p>
+    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "add a list_invoices handler"</pre>
+    <pre class="term-block" data-fixture="out:task-no-match" data-lines="1-4"></pre>
+    <p>This one uses &ldquo;request handlers&rdquo;, from the ADR&rsquo;s title, and matches:</p>
+    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json \
+  --query "add an invoices endpoint to the request handlers"</pre>
+    <pre class="term-block" data-fixture="out:task-match" data-lines="1-4"></pre>
+    <p>The MCP server lists six tools:</p>
+    <pre class="term-block" data-fixture="out:mcp-list"></pre>
+    <p><code>decision.applicable_to</code> returns ADR-012, because its scope <code>handlers</code> appears in the path:</p>
+    <pre class="term-block" data-fixture="out:mcp-applicable"></pre>
+  </section>
+
+  <section class="prose-section" id="evidence">
+    <h2>Evidence</h2>
+    <p>Each result shows why it matched. <code>test_query</code> prints a score and the fields that matched (<code>decision, scope, rationale</code>). The MCP result carries the <code>context_scope</code> that overlapped the path and the decision's <code>lifecycle_status</code>.</p>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>A lookup for a generic file name returns nothing</h3>
+    <p>A bare file name like <code>utils.py</code> shares no words with any decision:</p>
+    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to utils.py"</pre>
+    <pre class="term-block" data-fixture="out:generic-file-name"></pre>
+    <p>Use the full path, or describe the task in words that appear in the decision.</p>
+
+    <h3>A scope like <code>api</code> never matches in the CLI lookup</h3>
+    <p>Here ADR-012 governs <code>app/api/</code> with <code>scope: api</code>. The path contains the scope, but three letters is below the CLI lookup's four-letter minimum:</p>
+    <pre class="term-block" data-fixture="out:short-scope-query"></pre>
+    <p>The MCP tool <code>decision.applicable_to</code> works differently: it matches the scope as a substring of the path, so <code>api</code> matches <code>app/api/invoices.py</code> there, and also <code>rapid_import/</code>. Pick a scope word of four letters or more that appears in the governed paths and not by accident in others, such as <code>handlers</code>.</p>
+
+    <h3><code>decision.applicable_to</code> doesn't return a dotted-scope ADR for its file</h3>
+    <p>The tool matches the whole scope string inside the path. With <code>scope: handlers.invoices</code>, the string doesn't appear in <code>app/handlers/invoices.py</code>, so the tool returns nothing for that path, though <code>mneme test_query</code> still finds the ADR:</p>
+    <pre class="term-block" data-fixture="out:dotted-scope-path"></pre>
+    <p>Pass the scope in <code>context</code> as well and the ADR comes back:</p>
+    <pre class="term-block" data-fixture="cmd">ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to \
+  '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'</pre>
+    <pre class="term-block" data-fixture="out:dotted-scope-context" data-lines="1-9"></pre>
+    <p>Or use scopes that appear in your paths as written. (<code>ADR_DIR</code> only points this guide&rsquo;s probe at a second ADR folder.)</p>
+
+    <h3>The MCP server won't start</h3>
+    <pre class="term-block" data-fixture="out:mcp-bad-adr-dir" data-lines="1-1"></pre>
+    <p>The server refuses to start when the <code>--adr-dir</code> folder doesn't exist, is given as an empty string, or holds an ADR that fails parsing, validation or precedence checks. An empty folder starts with no decisions. Fix the path or the ADR, or leave <code>--adr-dir</code> out to run with proposals only.</p>
+  </section>
+
+  <section class="prose-section" id="limits">
+    <h2>Limits</h2>
+    <ul class="bound-list">
+      <li>Lookup gives the agent context. It doesn't stop anything. Keep the hook and the CI check in place.</li>
+      <li>Matching is by shared words, not meaning. A task phrased in words the decision doesn't use won't find it.</li>
+      <li>The MCP setup is the generic process definition. We haven't verified it inside Codex or another named agent.</li>
+      <li>The MCP server is local and stdio-only. It has no HTTP endpoint and no authentication.</li>
+      <li>Over MCP an agent can read decisions and submit proposals. It can't accept a proposal or change enforcement; <a href="/docs/decision-proposals/">people review proposals</a> with the CLI.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next</h2>
+    <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Fail a pull request that breaks an ADR</span>
+        <span class="cl-sub">Check every change, whichever tool made it.</span>
+      </a>
+      <a class="cross-card" href="/docs/mcp/">
+        <span class="cl-label">Reference</span>
+        <span class="cl-title">MCP server</span>
+        <span class="cl-sub">The six tools, their inputs and the authority boundary.</span>
+      </a>
+      <a class="cross-card" href="/insights/rule-files-vs-retrieval-memory/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">Rule files vs retrieval memory</span>
+        <span class="cl-sub">Why agents need decisions looked up per task.</span>
+      </a>
+    </div>
+  </section>

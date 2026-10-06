@@ -259,8 +259,13 @@
         </ul>
       </div>
       <div class="page-switcher-group">
-        <div class="page-switcher-label">Guides</div>
+        <div class="page-switcher-label">How-to guides</div>
         <ul>
+          <li><a href="/docs/how-to/">All how-to guides</a></li>
+          <li><a href="/docs/how-to/adr-to-enforceable-decision/">ADR to enforceable decision</a></li>
+          <li><a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Stop an agent crossing a boundary</a></li>
+          <li><a href="/docs/how-to/give-agents-applicable-decisions/">Decisions for a task</a></li>
+          <li><a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Fail a PR that breaks an ADR</a></li>
           <li><a href="/docs/protection-activation/">Protection activation</a></li>
           <li><a href="/docs/decision-proposals/">Decision proposals</a></li>
         </ul>
@@ -666,7 +671,7 @@ Created .mneme/project_memory.json</pre>
     <p class="sub">Compile a directory of ADRs into the decision corpus.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme adr import</span><span class="ctag">Write</span></div>
-      <p class="cdesc">Parses every ADR markdown file in a directory (YAML frontmatter required), validates the corpus, resolves precedence, and writes compiled decisions into the target memory. Runs as a preview by default; nothing is written until <code>--apply</code>. Full walkthrough: <a href="/integrations/adr-import/">ADR import guide</a>.</p>
+      <p class="cdesc">Parses every ADR markdown file in a directory (YAML frontmatter required), validates the corpus, resolves precedence, and writes compiled decisions into the target memory. Runs as a preview by default; nothing is written until <code>--apply</code>. Full walkthrough: <a href="/integrations/adr-import/">ADR import guide</a>. Step by step: <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a>.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme adr import docs/adr \
     --memory .mneme/project_memory.json \
     --dry-run
@@ -756,6 +761,7 @@ Created .mneme/project_memory.json</pre>
   <section class="section" id="ci">
     <h2>CI usage</h2>
     <p class="sub">The check command is designed to live as a pre-merge governance gate. The simplest viable wiring:</p>
+    <p class="sub">For a workflow that skips binary files and keeps the JSON verdicts, follow the how-to guide <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">fail a pull request that breaks an ADR</a>.</p>
 
     <div class="ci-block">
       <h3>GitHub Actions &mdash; PR diff gate</h3>

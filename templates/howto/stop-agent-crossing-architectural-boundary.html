@@ -1,0 +1,128 @@
+<!--meta
+{
+  "title": "Stop an Agent Crossing a Boundary · Mneme how-to — Mneme HQ",
+  "description": "Load the Mneme plugin in Claude Code so a write that breaks ADR-012 is blocked before it reaches disk, and the agent is told which decision it broke.",
+  "og_alt": "How to stop an AI coding agent from crossing an architectural boundary: the Mneme hook blocks the write and names the decision.",
+  "eyebrow": "How-to guide",
+  "h1": "Stop an AI coding agent from crossing an architectural boundary",
+  "h1_plain": "Stop an AI coding agent from crossing an architectural boundary",
+  "crumb": "Stop an agent crossing a boundary",
+  "minutes": "",
+  "surface": "Claude Code",
+  "end_up": "Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.",
+  "date": "2026-10-04",
+  "answer": "Load the Mneme plugin in Claude Code. Before each Edit, Write or MultiEdit, and before a quoted heredoc write such as <code>cat &gt; file &lt;&lt;'EOF'</code>, its hook checks the change against your recorded decisions. In strict mode, the default, it blocks a violation with exit code 2, so the file doesn&rsquo;t change and the agent sees the reason. Other shell writes, scripts included, get past that first check; the hook catches them when the agent ends its turn and sends it back to fix them."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>A pull request check catches a forbidden import after the agent wrote it, and someone still has to send the work back. A hook catches it while the agent is still working on the change. The plugin registers one: a command Claude Code runs before every file edit and shell command, at session start, and each time the agent finishes a turn.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>A git repository with ADR-012 imported into <code>.mneme/project_memory.json</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> covers it.</li>
+      <li>Mneme 0.9.2 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
+    </ul>
+    <pre class="term-block">pipx install "mneme-hq==0.9.2"</pre>
+    <ul class="plain">
+      <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Get the plugin at the release tag</h3>
+    <pre class="term-block" data-fixture="manual">git clone --branch v0.9.2 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+    <h3>2. Start Claude Code with the plugin, from your repository root</h3>
+    <pre class="term-block" data-fixture="manual">claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+    <p>The plugin runs in strict mode by default: a violation blocks the change. Leave it there. Warn mode (<code>MNEME_HOOK_MODE=warn</code>) stops the hook blocking edits, and Claude Code doesn't show the reason for each edit to the agent or to you. See Troubleshooting.</p>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Ask Claude Code for a change that breaks ADR-012, for example: <em>&ldquo;Add a list_invoices handler in app/handlers/invoices.py that queries the invoices table with get_connection from app.db.client.&rdquo;</em></p>
+    <p>When the agent goes to write the file, Claude Code sends the hook an event like this one. We shortened the paths to relative ones; Claude Code sends absolute paths.</p>
+    <pre class="term-block" data-fixture="file:events/write-direct-import.json"></pre>
+    <p>You can replay the event without an agent. That's how we tested this guide:</p>
+    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-direct-import.json</pre>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The hook exits with code 2 and prints:</p>
+    <pre class="term-block" data-fixture="out:hook-write-blocked"></pre>
+    <p>Claude Code treats exit code 2 from this hook as a block. The file isn't written, and the agent receives that text as feedback. A write that calls the repository instead exits 0 with no output, so the agent can carry on.</p>
+    <h3>Shell writes</h3>
+    <p>The hook also reads shell commands. A quoted heredoc write such as <code>cat &gt; app/handlers/invoices.py &lt;&lt;'PY'</code> is blocked the same way:</p>
+    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/bash-heredoc.json</pre>
+    <pre class="term-block" data-fixture="out:hook-heredoc-blocked"></pre>
+    <p>Other shell writes can't be checked before they run: <code>echo &gt;</code>, <code>tee</code>, <code>sed -i</code>, an unquoted heredoc, or a script such as <code>python scripts/gen_invoices.py</code>. The hook can't reconstruct what they will write. The hook lets them through and says so:</p>
+    <pre class="term-block" data-fixture="out:hook-script-deferred"></pre>
+    <p>The end-of-turn check catches them instead. At session start the hook records the state of the repository. When the agent finishes its turn, the hook compares the repository against that baseline and checks every changed file:</p>
+    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/session-start.json
+python scripts/gen_invoices.py
+mneme-hook &lt; events/stop.json</pre>
+    <pre class="term-block" data-fixture="out:stop-backstop"></pre>
+  </section>
+
+  <section class="prose-section" id="evidence">
+    <h2>Evidence</h2>
+    <p>Every FAIL block names the decision (<code>ADR-012</code>), the matched text, and the path selector that made the rule apply. Behind the hook is the same <code>mneme check</code> from Guide 1. To keep a machine-readable record of a file's state, run it with <code>--json</code>:</p>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input app/handlers/invoices.py \
+  --target-path app/handlers/invoices.py \
+  --query "edit to app/handlers/invoices.py" \
+  --json</pre>
+    <pre class="term-block" data-fixture="out:json-verdict"></pre>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>Nothing is ever blocked, and the hook prints nothing</h3>
+    <p>The hook didn't find a memory file. It looks for <code>.mneme/project_memory.json</code> in the session's working directory and each parent directory, or at the path in <code>MNEME_MEMORY</code>. With no memory file it allows every change silently:</p>
+    <pre class="term-block" data-fixture="cmd">MNEME_MEMORY=missing.json mneme-hook &lt; events/write-direct-import.json</pre>
+    <pre class="term-block" data-fixture="out:no-memory-file"></pre>
+    <p>Start Claude Code from the repository root, or set <code>MNEME_MEMORY</code>.</p>
+
+    <h3><code>not inside a git work tree</code></h3>
+    <pre class="term-block" data-fixture="out:stop-no-git"></pre>
+    <p>The end-of-turn check compares against git. Run Claude Code inside a git repository. Checks before each write still work without git.</p>
+
+    <h3>Edits that break ADR-012 go through, with no message</h3>
+    <p><code>MNEME_HOOK_MODE=warn</code> is set. In warn mode the hook hands the edit back to Claude Code's normal permission flow with the violation as a reason:</p>
+    <pre class="term-block" data-fixture="out:hook-warn-mode"></pre>
+    <p>Claude Code ignores that reason, so neither the agent nor you sees it. Only the end-of-turn check reaches the agent in warn mode. Unset the variable to go back to strict mode, and use <code>mneme check</code> or the CI check to collect findings instead.</p>
+  </section>
+
+  <section class="prose-section" id="limits">
+    <h2>Limits</h2>
+    <ul class="bound-list">
+      <li>The hook fails open. If a <code>mneme check</code> call crashes or takes longer than 10 seconds, the hook allows the change without telling the agent. The &ldquo;Failing open&rdquo; note goes to Claude Code's debug log only.</li>
+      <li>Shell writes other than a quoted heredoc are checked only when the agent finishes its turn, after the file exists. The hook then keeps the agent working and feeds back the violation. It doesn't undo the write.</li>
+      <li>The rule matches exact text, so <code>import app.db.client as db</code> isn't caught by this ADR. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
+      <li>Other agents get different coverage. <a href="/integrations/codex-cli/">Codex CLI</a> checks <code>apply_patch</code> add and update operations before they run, and audits each changed file as a whole when the agent stops. <a href="/integrations/kiro/">Kiro</a> checks its native write tools only, with no shell or end-of-turn checks.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next</h2>
+    <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/give-agents-applicable-decisions/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Give coding agents the decisions that apply to a task</span>
+        <span class="cl-sub">Show the agent ADR-012 before it starts writing.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Fail a pull request that breaks an ADR</span>
+        <span class="cl-sub">Catch changes made outside Claude Code.</span>
+      </a>
+      <a class="cross-card" href="/insights/ai-coding-agent-guardrails/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">AI coding agent guardrails</span>
+        <span class="cl-sub">The five kinds of guardrail, and where an architectural one fits.</span>
+      </a>
+    </div>
+  </section>

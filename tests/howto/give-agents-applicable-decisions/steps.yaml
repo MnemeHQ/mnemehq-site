@@ -1,0 +1,39 @@
+# Guide: /docs/how-to/give-agents-applicable-decisions/
+steps:
+  - name: setup
+    run: >-
+      mneme init > /dev/null &&
+      mneme adr import docs/adr --memory .mneme/project_memory.json --apply > /dev/null
+  - name: query-path
+    run: mneme test_query --memory .mneme/project_memory.json --query "edit to app/handlers/invoices.py"
+  - name: task-no-match
+    run: mneme test_query --memory .mneme/project_memory.json --query "add a list_invoices handler"
+  - name: task-match
+    run: >-
+      mneme test_query --memory .mneme/project_memory.json
+      --query "add an invoices endpoint to the request handlers"
+  - name: mcp-list
+    run: python mcp_probe.py list
+  - name: mcp-applicable
+    run: >-
+      python mcp_probe.py decision.applicable_to
+      '{"paths": ["app/handlers/invoices.py"]}'
+  # Troubleshooting cases
+  - name: generic-file-name
+    run: mneme test_query --memory .mneme/project_memory.json --query "edit to utils.py"
+  - name: short-scope-setup
+    run: >-
+      mneme init --path .mneme/short.json > /dev/null &&
+      mneme adr import troubleshooting/short-scope --memory .mneme/short.json --apply > /dev/null
+  - name: short-scope-query
+    run: mneme test_query --memory .mneme/short.json --query "edit to app/api/invoices.py"
+  - name: mcp-bad-adr-dir
+    run: mneme decision-mcp --adr-dir troubleshooting/missing 2>&1 | tail -n 1
+  - name: dotted-scope-path
+    run: >-
+      ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to
+      '{"paths": ["app/handlers/invoices.py"]}'
+  - name: dotted-scope-context
+    run: >-
+      ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to
+      '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'

@@ -1,0 +1,23 @@
+Query: add an invoices endpoint to the request handlers
+
+All decisions (ranked by score):
+  [ADR-012] score=4.50 matched=decision, scope, rationale
+
+Injected (top 3):
+[Mneme decisions applied]
+
+DECISION [ADR-012]: Request handlers do not import the database client
+  Why:          Handlers call repositories. A direct client import skips the transaction
+and tenancy handling that lives in app/repositories.
+
+## Constraints
+- FORBID_LITERAL:
+    value: from app.db.client import
+    include_paths:
+      - "app/handlers/**"
+
+  Scope:        handlers
+  Typed rules:
+    - FORBID_LITERAL: from app.db.client import
+      Applies to: app/handlers/**
+exit=0

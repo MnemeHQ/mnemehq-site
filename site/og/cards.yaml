@@ -447,6 +447,46 @@ docs/how-enforcement-works/:
     - [AUTHOR, Decisions written as ADRs., neutral]
     - [COMPILE, 'Into a structured, fixed corpus.', neutral]
     - [ENFORCE, 'Guide, prevent, catch, verify.', held]
+docs/how-to/:
+  accent: tested against 0.9.2
+  alt: 'Mneme how-to guides: each solves one engineering job, with commands tested against mneme-hq 0.9.2.'
+  headline: Engineering jobs, tested against 0.9.2.
+  rows:
+    - [GOAL, One engineering job per guide., neutral]
+    - [RUN, Outputs recorded from 0.9.2., neutral]
+    - [EVIDENCE, Verdicts you can check., held]
+docs/how-to/adr-to-enforceable-decision/:
+  accent: fail the check
+  alt: 'How to turn an ADR into an enforceable Mneme decision: write the rule, import it, check a file, keep the evidence.'
+  headline: Make ADR-012 fail the check.
+  rows:
+    - [ADR, Add a Constraints section., neutral]
+    - [IMPORT, 'Preview first, then apply.', neutral]
+    - [CHECK, FAIL in app/handlers only., held]
+docs/how-to/fail-pull-request-that-breaks-adr/:
+  accent: breaks ADR-012
+  alt: 'How to fail a pull request that breaks an ADR: a GitHub Actions workflow runs mneme check on each changed file.'
+  headline: Fail the PR that breaks ADR-012.
+  rows:
+    - [SYNC, Memory file is up to date., neutral]
+    - [CHECK, 'Each changed file, with its path.', neutral]
+    - [VERDICT, Handler fails. Repository passes., held]
+docs/how-to/give-agents-applicable-decisions/:
+  accent: this file needs
+  alt: 'How to give coding agents the architectural decisions that apply to a task, through Claude Code and the Mneme MCP server.'
+  headline: Load the ADRs this file needs.
+  rows:
+    - [SCOPE, A word from your paths., neutral]
+    - [CLAUDE CODE, '/mneme:context looks it up.', neutral]
+    - [MCP, applicable_to returns ADR-012., held]
+docs/how-to/stop-agent-crossing-architectural-boundary/:
+  accent: before it lands
+  alt: 'How to stop an AI coding agent from crossing an architectural boundary: the Mneme hook blocks the write and names the decision.'
+  headline: Block the import before it lands.
+  rows:
+    - [AGENT, Claude Code tries the write., neutral]
+    - [HOOK, Checks it against ADR-012., neutral]
+    - [BLOCKED, Agent told which decision., denied]
 docs/mcp/:
   alt: 'Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with
     human decision authority kept outside MCP.'

@@ -1,0 +1,116 @@
+<!--meta
+{
+  "title": "Fail a Pull Request That Breaks an ADR · Mneme how-to — Mneme HQ",
+  "description": "Add a GitHub Actions workflow that runs mneme check on every changed file, fails the pull request when one breaks ADR-012, and keeps the JSON verdicts.",
+  "og_alt": "How to fail a pull request that breaks an ADR: a GitHub Actions workflow runs mneme check on each changed file.",
+  "eyebrow": "How-to guide",
+  "h1": "Fail a pull request that breaks an ADR",
+  "h1_plain": "Fail a pull request that breaks an ADR",
+  "crumb": "Fail a PR that breaks an ADR",
+  "minutes": "",
+  "surface": "GitHub Actions",
+  "end_up": "a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.",
+  "date": "2026-10-05",
+  "answer": "Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>Teams that aren't ready to put a hook in front of every agent can still catch a violation at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>A GitHub repository with ADR-012 in <code>docs/adr/</code>, and <code>.mneme/project_memory.json</code> committed. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> creates both.</li>
+      <li>Permission to add workflows under <code>.github/workflows/</code>. To block merging, mark the check as required in your branch protection rules.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <p>Save this as <code>.github/workflows/mneme-decisions.yml</code>:</p>
+    <pre class="term-block" data-fixture="file:.github/workflows/mneme-decisions.yml"></pre>
+    <ul class="plain">
+      <li><code>fetch-depth: 0</code> fetches the history the workflow needs to compare the pull request against <code>main</code>.</li>
+      <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. Ignore the conflicts note the import prints; the step passes when <code>git diff</code> exits 0.</li>
+      <li>That step catches edited ADRs only. A deprecated, superseded or deleted ADR leaves its decision in the memory file until you remove it.</li>
+      <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it.</li>
+      <li>Binary files (images, archives) are skipped, because <code>mneme check</code> reads text only. Renamed files count as added.</li>
+      <li>The loop keeps the worst exit code, so a passing file checked later can't hide an earlier failure. If <code>git diff</code> itself fails, the step exits 2 instead of passing with nothing checked.</li>
+      <li>The last step uploads every JSON verdict, even when the check fails.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Open a pull request that adds three files: a handler with the forbidden import, <code>app/handlers/invoices.py</code>; a repository file that is allowed to import the client, <code>app/repositories/invoices.py</code>; and an image, <code>app/static/logo.png</code>. The handler:</p>
+    <pre class="term-block" data-fixture="file:inputs/invoices_direct.py"></pre>
+    <p>The workflow starts on its own. We tested it by running the workflow's exact <code>run:</code> scripts against a local copy of that pull request, not on GitHub's runners.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The memory check passes. The decision check prints one line per changed file and the job exits with code 2:</p>
+    <pre class="term-block" data-fixture="out:check-changed-files"></pre>
+    <p>The handler fails. The repository file passes, because ADR-012 applies only under <code>app/handlers/</code>. The image is skipped.</p>
+  </section>
+
+  <section class="prose-section" id="evidence">
+    <h2>Evidence</h2>
+    <p>Download the <code>mneme-verdicts</code> artifact from the workflow run. It holds one JSON verdict per changed file. The one for the handler names the decision, the matched text and the path selector:</p>
+    <pre class="term-block" data-fixture="out:show-verdict"></pre>
+    <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can't complete reports INCOMPLETE and exits 2, so it fails the job instead of passing it.</p>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The memory check fails after an ADR edit</h3>
+    <p>The ADR changed but the committed memory file didn't, so <code>git diff --exit-code</code> exits 1. Re-import locally and commit the result:</p>
+    <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+
+    <h3>The check step fails before checking any file</h3>
+    <p>The step exits 2 when <code>git diff</code> can't compare against <code>origin/$BASE_REF</code>, usually because the checkout is shallow. Keep <code>fetch-depth: 0</code> on the checkout step.</p>
+
+    <h3>Every file passes, even one with the import</h3>
+    <p>The <code>--target-path</code> flag is missing. Without it, Mneme can't tell which path-scoped rules apply. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows the output.</p>
+
+    <h3>You want to see findings without failing pull requests yet</h3>
+    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0:</p>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input app/handlers/invoices.py --target-path app/handlers/invoices.py \
+  --query "PR change: app/handlers/invoices.py" --mode warn</pre>
+    <pre class="term-block" data-fixture="out:warn-mode"></pre>
+    <p>Remove the flag once the findings look right.</p>
+  </section>
+
+  <section class="prose-section" id="limits">
+    <h2>Limits</h2>
+    <ul class="bound-list">
+      <li>The check reads each changed file whole. A file that already broke ADR-012 before the pull request fails as soon as someone touches it.</li>
+      <li>Deleted files aren't checked, because there is nothing left to read.</li>
+      <li>The rule matches exact text. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> for the import forms it misses.</li>
+      <li>The workflow syntax is GitHub-only. The same loop can run in GitLab CI with <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code> as the base, but we haven't tested that.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next</h2>
+    <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
+        <span class="cl-sub">Catch the import before the agent writes it.</span>
+      </a>
+      <a class="cross-card" href="/docs/cli/">
+        <span class="cl-label">Reference</span>
+        <span class="cl-title">CLI reference</span>
+        <span class="cl-sub"><code>mneme check</code> flags, modes and exit codes.</span>
+      </a>
+      <a class="cross-card" href="/insights/enforce-engineering-standards-across-ai-assisted-teams/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">Enforce engineering standards on every PR</span>
+        <span class="cl-sub">Why AI-assisted teams need standards a check can read.</span>
+      </a>
+    </div>
+  </section>

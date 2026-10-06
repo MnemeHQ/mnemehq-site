@@ -1,0 +1,59 @@
+name: Architecture decisions
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  mneme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Mneme
+        run: python -m pip install "mneme-hq==0.9.2"
+
+      - name: Check the memory file matches the ADRs
+        run: |
+          mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+          git diff --exit-code -- .mneme/project_memory.json
+
+      - name: Check changed files against decisions
+        shell: bash
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -uo pipefail
+          # Added and modified files, one per line as "added<TAB>deleted<TAB>path".
+          # Binary files show "-" counts; mneme check reads text only.
+          changes=$(git diff --numstat --no-renames --diff-filter=AM "origin/$BASE_REF...HEAD") || exit 2
+          worst=0
+          mkdir -p mneme-results
+          while IFS=$'\t' read -r added _ f; do
+            [ -n "$f" ] || continue
+            if [ "$added" = "-" ]; then echo "skip    $f (binary)"; continue; fi
+            out="mneme-results/$(printf '%s' "$f" | tr '/' '_').json"
+            mneme check --memory .mneme/project_memory.json \
+              --input "$f" --target-path "$f" \
+              --query "PR change: $f" --json > "$out"
+            code=$?
+            echo "exit=$code  $f"
+            if [ "$code" -gt "$worst" ]; then worst=$code; fi
+          done <<< "$changes"
+          exit "$worst"
+
+      - name: Keep the verdicts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mneme-verdicts
+          path: mneme-results/

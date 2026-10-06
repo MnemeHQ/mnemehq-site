@@ -1,0 +1,43 @@
+# Guide: /docs/how-to/stop-agent-crossing-architectural-boundary/
+steps:
+  - name: setup
+    run: >-
+      mneme init > /dev/null &&
+      mneme adr import docs/adr --memory .mneme/project_memory.json --apply > /dev/null
+  - name: hook-write-blocked
+    run: mneme-hook < events/write-direct-import.json
+    expect_exit: 2
+  - name: hook-write-allowed
+    run: mneme-hook < events/write-repository-call.json
+  - name: hook-heredoc-blocked
+    run: mneme-hook < events/bash-heredoc.json
+    expect_exit: 2
+  - name: hook-script-deferred
+    run: mneme-hook < events/bash-script.json
+  - name: hook-warn-mode
+    run: MNEME_HOOK_MODE=warn mneme-hook < events/write-direct-import.json
+  # Troubleshooting: no memory file found
+  - name: no-memory-file
+    run: MNEME_MEMORY=missing.json mneme-hook < events/write-direct-import.json
+  # Troubleshooting: the backstop needs a git work tree
+  - name: session-start-no-git
+    run: mneme-hook < events/session-start.json
+  - name: stop-no-git
+    run: mneme-hook < events/stop.json
+  # The backstop inside a git repository
+  - name: git-init
+    run: git init -q && git add -A && git commit -qm baseline
+  - name: session-start
+    run: mneme-hook < events/session-start.json
+  - name: script-writes-file
+    run: python scripts/gen_invoices.py
+  - name: stop-backstop
+    run: mneme-hook < events/stop.json
+  - name: json-verdict
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input app/handlers/invoices.py
+      --target-path app/handlers/invoices.py
+      --query "edit to app/handlers/invoices.py"
+      --json
+    expect_exit: 2

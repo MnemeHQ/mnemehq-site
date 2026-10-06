@@ -1,0 +1,80 @@
+# Guide: /docs/how-to/adr-to-enforceable-decision/
+steps:
+  - name: init
+    run: mneme init
+  - name: preview
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json
+  - name: apply
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json --apply
+  - name: list
+    run: mneme list_decisions --memory .mneme/project_memory.json
+  - name: check-handler
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_direct.py
+      --target-path app/handlers/invoices.py
+      --query "edit to app/handlers/invoices.py"
+    expect_exit: 2
+  - name: check-repository
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_direct.py
+      --target-path app/repositories/invoices.py
+      --query "edit to app/repositories/invoices.py"
+  - name: check-compliant
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_repo.py
+      --target-path app/handlers/invoices.py
+      --query "edit to app/handlers/invoices.py"
+  - name: check-json
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_direct.py
+      --target-path app/handlers/invoices.py
+      --query "edit to app/handlers/invoices.py"
+      --json > verdict.json
+    expect_exit: 2
+  - name: show-json
+    run: python -m json.tool verdict.json
+  - name: audit
+    run: mneme audit --memory .mneme/project_memory.json --repo-root .
+  # Troubleshooting cases
+  - name: no-target-path
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_direct.py
+      --query "edit to app/handlers/invoices.py"
+  - name: alias-import
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/invoices_alias.py
+      --target-path app/handlers/invoices.py
+      --query "edit to app/handlers/invoices.py"
+  - name: reapply
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json --apply
+    expect_exit: 2
+  - name: reapply-update
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+  - name: nygard
+    run: mneme adr import troubleshooting/nygard --memory .mneme/project_memory.json 2>&1 | tail -n 1
+  - name: typo
+    run: mneme adr import troubleshooting/typo --memory .mneme/project_memory.json 2>&1 | tail -n 1
+  - name: scope-setup
+    run: mneme init --path .mneme/scopes.json > /dev/null
+  - name: same-scope
+    run: mneme adr import troubleshooting/same-scope --memory .mneme/scopes.json
+  - name: distinct-scope
+    run: mneme adr import troubleshooting/distinct-scope --memory .mneme/scopes.json
+  - name: dependency-setup
+    run: >-
+      mneme init --path .mneme/dependency.json > /dev/null &&
+      mneme adr import troubleshooting/dependency --memory .mneme/dependency.json --apply > /dev/null
+  - name: dependency-warn
+    run: >-
+      mneme check --memory .mneme/dependency.json
+      --input inputs/net_requests.py
+      --target-path lib/net.py
+      --query "edit to lib/net.py"
+      --adr-dir troubleshooting/dependency
+    expect_exit: 1
