@@ -11,7 +11,8 @@
   "minutes": "",
   "surface": "CLI only",
   "end_up": "an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.",
-  "date": "2026-10-04"
+  "date": "2026-10-04",
+  "answer": "<strong>Make one ADR enforceable in four steps.</strong> Add YAML frontmatter and a <code>## Constraints</code> section that names the exact text the decision forbids and the paths it covers. Preview the import with <code>mneme adr import</code>, then apply it. From then on, <code>mneme check</code> returns FAIL with exit code 2 for a matching file under those paths, and PASS everywhere else."
 }
 -->
   <section class="prose-section" id="goal">
@@ -161,10 +162,10 @@ python -m json.tool verdict.json</pre>
         <span class="cl-title">ADR import</span>
         <span class="cl-sub">Every frontmatter field, directive and conflict rule.</span>
       </a>
-      <a class="cross-card" href="/insights/are-your-adrs-enforceable/">
+      <a class="cross-card" href="/insights/how-ai-coding-agents-use-adrs/">
         <span class="cl-label">Insight</span>
-        <span class="cl-title">Your ADRs exist. But are they enforceable?</span>
-        <span class="cl-sub">Why a written decision needs a check behind it.</span>
+        <span class="cl-title">How AI coding agents use ADRs</span>
+        <span class="cl-sub">Why agents ignore ADRs they can&rsquo;t check, and what changes when they can.</span>
       </a>
     </div>
   </section>

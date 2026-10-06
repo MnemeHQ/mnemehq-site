@@ -11,7 +11,8 @@
   "minutes": "",
   "surface": "Claude Code",
   "end_up": "Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.",
-  "date": "2026-10-04"
+  "date": "2026-10-04",
+  "answer": "<strong>Put a check in front of the agent&rsquo;s writes.</strong> Load the Mneme plugin in Claude Code. Its hook checks every Edit, Write, MultiEdit and heredoc shell write against your recorded decisions before the file changes. A violation is blocked with exit code 2, and the agent is told which decision it broke. Writes made by scripts are checked when the agent finishes its turn."
 }
 -->
   <section class="prose-section" id="goal">
@@ -27,7 +28,7 @@
     </ul>
     <pre class="term-block">pipx install "mneme-hq==0.9.2"</pre>
     <ul class="plain">
-      <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository.</li>
+      <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
     </ul>
   </section>
 
@@ -119,10 +120,10 @@ mneme-hook &lt; events/stop.json</pre>
         <span class="cl-title">Fail a pull request that breaks an ADR</span>
         <span class="cl-sub">Catch changes made outside Claude Code.</span>
       </a>
-      <a class="cross-card" href="/integrations/claude-code/">
-        <span class="cl-label">Integration</span>
-        <span class="cl-title">Claude Code</span>
-        <span class="cl-sub">Plugin contents, slash commands and modes.</span>
+      <a class="cross-card" href="/insights/ai-coding-agent-guardrails/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">AI coding agent guardrails</span>
+        <span class="cl-sub">The five kinds of guardrail, and where an architectural one fits.</span>
       </a>
     </div>
   </section>

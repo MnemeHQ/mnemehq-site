@@ -11,7 +11,8 @@
   "minutes": "",
   "surface": "GitHub Actions",
   "end_up": "a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.",
-  "date": "2026-10-05"
+  "date": "2026-10-05",
+  "answer": "<strong>Run <code>mneme check</code> on each changed file in CI.</strong> A GitHub Actions workflow re-imports your ADRs to catch a stale memory file, then checks every added or modified text file against its repository path. Any FAIL exits 2 and fails the pull request check. Mark the check as required to block the merge, and keep the JSON verdicts as an artifact."
 }
 -->
   <section class="prose-section" id="goal">
@@ -106,10 +107,10 @@
         <span class="cl-title">CLI reference</span>
         <span class="cl-sub"><code>mneme check</code> flags, modes and exit codes.</span>
       </a>
-      <a class="cross-card" href="/use-cases/ci-governance-for-ai-generated-code/">
-        <span class="cl-label">Use case</span>
-        <span class="cl-title">CI governance for AI-generated code</span>
-        <span class="cl-sub">Where a merge check fits alongside review.</span>
+      <a class="cross-card" href="/insights/enforce-engineering-standards-across-ai-assisted-teams/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">Enforce engineering standards on every PR</span>
+        <span class="cl-sub">Why AI-assisted teams need standards a check can read.</span>
       </a>
     </div>
   </section>

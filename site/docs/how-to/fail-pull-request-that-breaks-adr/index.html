@@ -188,6 +188,7 @@
     .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .answer-capsule code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -281,6 +282,8 @@
     </li><!-- mneme:page-switcher:end -->
   </ol>
 </nav>
+
+<div class="answer-capsule"><strong>Run <code>mneme check</code> on each changed file in CI.</strong> A GitHub Actions workflow re-imports your ADRs to catch a stale memory file, then checks every added or modified text file against its repository path. Any FAIL exits 2 and fails the pull request check. Mark the check as required to block the merge, and keep the JSON verdicts as an artifact.</div>
 
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
@@ -487,10 +490,10 @@ Result: FAIL</pre>
         <span class="cl-title">CLI reference</span>
         <span class="cl-sub"><code>mneme check</code> flags, modes and exit codes.</span>
       </a>
-      <a class="cross-card" href="/use-cases/ci-governance-for-ai-generated-code/">
-        <span class="cl-label">Use case</span>
-        <span class="cl-title">CI governance for AI-generated code</span>
-        <span class="cl-sub">Where a merge check fits alongside review.</span>
+      <a class="cross-card" href="/insights/enforce-engineering-standards-across-ai-assisted-teams/">
+        <span class="cl-label">Insight</span>
+        <span class="cl-title">Enforce engineering standards on every PR</span>
+        <span class="cl-sub">Why AI-assisted teams need standards a check can read.</span>
       </a>
     </div>
   </section>

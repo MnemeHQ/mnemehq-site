@@ -188,6 +188,7 @@
     .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .answer-capsule code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -281,6 +282,8 @@
     </li><!-- mneme:page-switcher:end -->
   </ol>
 </nav>
+
+<div class="answer-capsule"><strong>Make one ADR enforceable in four steps.</strong> Add YAML frontmatter and a <code>## Constraints</code> section that names the exact text the decision forbids and the paths it covers. Preview the import with <code>mneme adr import</code>, then apply it. From then on, <code>mneme check</code> returns FAIL with exit code 2 for a matching file under those paths, and PASS everywhere else.</div>
 
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
@@ -538,10 +541,10 @@ Result: WARN</pre>
         <span class="cl-title">ADR import</span>
         <span class="cl-sub">Every frontmatter field, directive and conflict rule.</span>
       </a>
-      <a class="cross-card" href="/insights/are-your-adrs-enforceable/">
+      <a class="cross-card" href="/insights/how-ai-coding-agents-use-adrs/">
         <span class="cl-label">Insight</span>
-        <span class="cl-title">Your ADRs exist. But are they enforceable?</span>
-        <span class="cl-sub">Why a written decision needs a check behind it.</span>
+        <span class="cl-title">How AI coding agents use ADRs</span>
+        <span class="cl-sub">Why agents ignore ADRs they can&rsquo;t check, and what changes when they can.</span>
       </a>
     </div>
   </section>
