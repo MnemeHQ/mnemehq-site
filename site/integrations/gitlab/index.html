@@ -360,7 +360,7 @@
       <li><code>mneme check</code> validates a file or diff against the decision corpus in <code>.mneme/project_memory.json</code></li>
       <li>Run against changed files in a merge request to surface any architectural violations</li>
       <li>In strict mode, the default: <strong>exit code 0</strong> = PASS &rarr; the job passes</li>
-      <li><strong>Exit code 1</strong> = WARN and <strong>exit code 2</strong> = FAIL or INCOMPLETE &rarr; the job fails. To block the merge, require pipelines to succeed in the project&rsquo;s merge request settings.</li>
+      <li><strong>Exit code 1</strong> = WARN and <strong>exit code 2</strong> = FAIL or INCOMPLETE &rarr; the job fails. To block the merge, turn on &ldquo;Pipelines must succeed&rdquo; in the project&rsquo;s merge request settings.</li>
     </ul>
 
     <h2>Example pipeline</h2>
@@ -401,7 +401,7 @@ mneme-decisions:
     paths:
       - mneme-results/</code></pre>
 
-    <p>GitLab runs <code>script</code> lines with errexit on, so the loop records each exit code with <code>|| rc=$?</code> instead of stopping at the first violation, and exits with the worst one. Binary files are skipped because <code>mneme check</code> reads text only. We ran this script under <code>sh -e</code> against a local copy of a merge request, not on GitLab runners. The <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">GitHub Actions how-to guide</a> walks through the same loop with recorded output.</p>
+    <p>GitLab runs <code>script</code> lines with errexit on, so the loop records each exit code with <code>|| rc=$?</code> instead of stopping at the first violation, and exits with the worst one. Binary files are skipped because <code>mneme check</code> reads text only. We ran this script under <code>sh -e</code> against a local copy of a merge request, not on GitLab runners. The two import lines assume ADRs in <code>docs/adr</code>; drop them if you don&rsquo;t import ADRs. Check ADRs out with LF line endings (<code>docs/adr/*.md text eol=lf</code> in <code>.gitattributes</code>), because the memory file records a hash of each ADR&rsquo;s bytes. The <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">GitHub Actions how-to guide</a> walks through the same loop with recorded output.</p>
 
     <h2>Status</h2>
 
@@ -427,12 +427,12 @@ mneme-decisions:
 
     <ul>
       <li><strong>PASS</strong>: no enforced rule matched the file. Exit code 0.</li>
-      <li><strong>WARN</strong>: a constraint matched, for example a <code>FORBID_DEPENDENCY</code> word. Exit code 1 in strict mode, which fails the job. With <code>--mode warn</code>, every verdict exits 0 and findings appear only in the job log.</li>
+      <li><strong>WARN</strong>: a constraint matched, for example a <code>FORBID_DEPENDENCY</code> word. Exit code 1 in strict mode, which fails the job. With <code>--mode warn</code>, PASS, WARN and FAIL exit 0 and findings appear only in the job log; INCOMPLETE still exits 2.</li>
       <li><strong>FAIL</strong>: a typed rule or anti-pattern matched. Exit code 2; the job fails until the code or the decision corpus changes.</li>
       <li><strong>INCOMPLETE</strong>: the evaluation couldn&rsquo;t finish. Exit code 2, never reported as PASS.</li>
     </ul>
 
-    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus in the same merge request: add a path to a <code>FORBID_LITERAL</code> rule&rsquo;s <code>exclude_paths</code>, or supersede the ADR. Reviewers see the change in the MR diff, so weakening a decision is visible rather than a quiet bypass.</p>
+    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus in the same merge request: add a path to a <code>FORBID_LITERAL</code> rule&rsquo;s <code>exclude_paths</code> (the structured form, alongside its <code>include_paths</code>), or supersede the ADR, re-import, and delete the superseded decision from <code>project_memory.json</code>. Reviewers see the change in the MR diff, so weakening a decision is visible rather than a quiet bypass.</p>
 
     <h2>FAQ</h2>
 

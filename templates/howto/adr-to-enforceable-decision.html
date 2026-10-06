@@ -141,7 +141,7 @@ python -m json.tool verdict.json</pre>
       <li>The rule matches exact text. <code>import app.db.client as db</code> is different text, so this handler passes:
         <pre class="term-block" data-fixture="out:alias-import"></pre>
         Add one <code>FORBID_LITERAL</code> per import form you need to block, or run an import linter in CI alongside Mneme.</li>
-      <li>Only <code>FORBID_LITERAL</code> gives a FAIL that respects <code>include_paths</code>. <code>FORBID_DEPENDENCY</code> gives a WARN wherever the word appears, whatever the path. In strict mode a WARN exits 1, and the Claude Code hook blocks on it:
+      <li>Only <code>FORBID_LITERAL</code> gives a FAIL that respects <code>include_paths</code>. A one-word <code>FORBID_DEPENDENCY</code> value, like <code>requests</code>, gives a WARN wherever the word appears, whatever the path. A name that splits into several words, like <code>left-pad</code>, is checked only when lookup selects the decision. In strict mode a WARN exits 1, and the Claude Code hook blocks on it:
         <pre class="term-block" data-fixture="out:dependency-warn"></pre>
         <code>FORBID_PATH</code> and <code>REQUIRE_PATH</code> are stored for guidance and the audit, and don't change a verdict.</li>
       <li>This guide runs checks by hand. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a> runs the same check before an agent writes a file, and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Guide 4</a> runs it on every pull request.</li>
