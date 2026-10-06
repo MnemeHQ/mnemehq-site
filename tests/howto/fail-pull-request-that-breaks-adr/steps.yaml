@@ -10,7 +10,7 @@ steps:
     run: >-
       git checkout -qb add-invoices &&
       cp inputs/invoices_direct.py app/handlers/invoices.py &&
-      cp inputs/repository_invoices.py app/repositories/invoices.py &&
+      mkdir -p app/repositories && cp inputs/repository_invoices.py app/repositories/invoices.py &&
       mkdir -p app/static && cp inputs/logo.png app/static/logo.png &&
       git add app && git commit -qm "Add invoices"
   - name: memory-in-sync
