@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 """new_article.py - create an insight article from the canonical template.
 
-Emits site/insights/<slug>/index.html from site/_templates/article.html,
+Emits site/insights/<slug>/index.html from templates/article.html,
 composing the JSON-LD @graph (BreadcrumbList + TechArticle [+ FAQPage])
 from structured arguments. The emitted page is already on the shared
 base.css system; sync_shared.py remains a safety net, not a requirement.
 
-Registration is still manual per PUBLISHING.md: sitemap entry, archive /
-topic-hub card (scripts/sync_insights_catalog.py), an OG card record in
-site/og/cards.yaml rendered via scripts/render_og.py, and at least one
-incoming internal link. This script prints that checklist.
+With --register it also inserts the archive card (top of --archive-section),
+the archive CollectionPage.hasPart entry, and the sitemap entry; each step is
+skipped when the slug is already present. Run scripts/sync_insights_catalog.py
+afterwards to derive the card date, archive count, and homepage latest set.
+Still manual per PUBLISHING.md: the OG card record in site/og/cards.yaml
+rendered via scripts/render_og.py, an optional topic-hub card, and reciprocal
+internal links. This script prints that checklist.
 
 Usage:
   python scripts/new_article.py \
@@ -21,6 +24,8 @@ Usage:
     --body-file body.html \
     [--section Engineering] [--eyebrow Concept] [--read-time "9 min read"] \
     [--faq faq.json] [--about-terms "term one","term two"] \
+    [--register --card-summary "One-sentence archive card summary." \
+     --archive-section latest-analysis [--card-tag "Report Response"]] \
     [--force]
 """
 from __future__ import annotations
@@ -37,6 +42,9 @@ REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
 TEMPLATE = REPO / "templates" / "article.html"
 FOUNDER_URL = "https://mnemehq.com/founder/"
+ARCHIVE = SITE / "insights" / "all" / "index.html"
+SITEMAP = SITE / "sitemap.xml"
+HAS_PART_OPEN = '"hasPart": ['
 
 
 def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
@@ -84,6 +92,78 @@ def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
     )
 
 
+def archive_card(slug: str, title: str, tag: str, read_time: str, summary: str) -> str:
+    # Date slot is filled by sync_insights_catalog.py from article:published_time.
+    esc = lambda s: html.escape(s, quote=False)
+    return (
+        f'      <a href="/insights/{slug}/" class="insight-card-link">\n'
+        '        <div class="insight-card">\n'
+        '          <div class="card-meta">\n'
+        f'            <span class="card-tag">{esc(tag)}</span>\n'
+        '            <span class="card-dot"></span>\n'
+        f'            <span class="card-read-time">{esc(read_time)}</span>\n'
+        '          </div>\n'
+        f'          <h3>{esc(title)}</h3>\n'
+        f'          <p>{esc(summary)}</p>\n'
+        '          <div class="card-footer">\n'
+        '            <span class="read-pill">Read insight</span>\n'
+        '          </div>\n'
+        '        </div>\n'
+        '      </a>\n'
+    )
+
+
+def register(slug: str, title: str, tag: str, read_time: str, summary: str,
+             section: str, archive: Path = ARCHIVE, sitemap: Path = SITEMAP) -> list[str]:
+    """Insert archive card, hasPart entry, and sitemap entry; return actions taken."""
+    href = f"/insights/{slug}/"
+    url = "https://mnemehq.com" + href
+    done: list[str] = []
+
+    src = archive.read_text(encoding="utf-8")
+    if f'href="{href}"' in src:
+        done.append("archive card already present")
+    else:
+        section_tag = f'<div class="cards-section" id="{section}">'
+        if src.count(section_tag) != 1:
+            raise ValueError(f"archive has no single cards-section #{section}")
+        grid_tag = '<div class="cards-grid">'
+        grid = src.index(grid_tag, src.index(section_tag)) + len(grid_tag)
+        line_end = src.index("\n", grid) + 1
+        src = src[:line_end] + archive_card(slug, title, tag, read_time, summary) + src[line_end:]
+        done.append(f"archive card added to #{section}")
+
+    if f'"url": "{url}"' in src:
+        done.append("hasPart entry already present")
+    else:
+        if src.count(HAS_PART_OPEN) != 1:
+            raise ValueError("archive must contain exactly one hasPart array")
+        at = src.index(HAS_PART_OPEN) + len(HAS_PART_OPEN)
+        entry = json.dumps({"@type": "Article", "name": title, "url": url},
+                           ensure_ascii=False).replace("<", "\\u003c")
+        src = src[:at] + f"\n      {entry}," + src[at:]
+        done.append("hasPart entry added")
+    archive.write_bytes(src.encode("utf-8"))
+
+    xml = sitemap.read_text(encoding="utf-8")
+    if f"<loc>{url}</loc>" in xml:
+        done.append("sitemap entry already present")
+    else:
+        if xml.count("</urlset>") != 1:
+            raise ValueError("sitemap must contain exactly one </urlset>")
+        block = (
+            "  <url>\n"
+            f"    <loc>{url}</loc>\n"
+            "    <changefreq>monthly</changefreq>\n"
+            "    <priority>0.8</priority>\n"
+            "  </url>\n"
+        )
+        xml = xml.replace("</urlset>", block + "</urlset>")
+        sitemap.write_bytes(xml.encode("utf-8"))
+        done.append("sitemap entry added")
+    return done
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -103,8 +183,17 @@ def main(argv: list[str]) -> int:
                     help="JSON file of FAQPage mainEntity items")
     ap.add_argument("--about-terms", default="",
                     help="comma-separated TechArticle about terms")
+    ap.add_argument("--register", action="store_true",
+                    help="also insert the archive card, hasPart entry, and sitemap entry")
+    ap.add_argument("--card-summary", default=None,
+                    help="archive card summary sentence (required with --register)")
+    ap.add_argument("--archive-section", default=None,
+                    help="archive cards-section id, e.g. latest-analysis (required with --register)")
+    ap.add_argument("--card-tag", default=None, help="archive card tag (default: --eyebrow)")
     ap.add_argument("--force", action="store_true")
     args = ap.parse_args(argv)
+    if args.register and not (args.card_summary and args.archive_section):
+        ap.error("--register requires --card-summary and --archive-section")
 
     if not TEMPLATE.exists():
         print(f"FATAL: template missing: {TEMPLATE}", file=sys.stderr)
@@ -176,11 +265,25 @@ def main(argv: list[str]) -> int:
     out_file.write_bytes(html_text.encode("utf-8"))
     print(f"wrote {out_file} ({len(html_text)} bytes, ~{words} words)")
 
+    registered = False
+    if args.register:
+        try:
+            for action in register(args.slug, args.title, args.card_tag or args.eyebrow,
+                                   read_time, args.card_summary, args.archive_section):
+                print(f"register: {action}")
+            registered = True
+        except (OSError, ValueError) as e:
+            print(f"FATAL: registration failed: {e}", file=sys.stderr)
+            return 1
+    tick = "x" if registered else " "
+
     print(
         "\nRegistration checklist (PUBLISHING.md):\n"
-        f"  [ ] sitemap.xml entry for {slug_url}\n"
-        "  [ ] archive/topic-hub card -> python scripts/sync_insights_catalog.py\n"
+        f"  [{tick}] sitemap.xml entry for {slug_url}\n"
+        f"  [{tick}] archive card + hasPart entry (--register)\n"
+        "  [ ] sync dates/count/homepage -> python scripts/sync_insights_catalog.py\n"
         "      then verify with: python scripts/sync_insights_catalog.py --check\n"
+        "  [ ] optional topic-hub card under site/insights/topics/<hub>/\n"
         f"  [ ] add a record to site/og/cards.yaml\n"
         f"      then render -> python scripts/render_og.py --strict --out site\n"
         f"  [ ] >=1 incoming internal link from a hub or related article\n"
