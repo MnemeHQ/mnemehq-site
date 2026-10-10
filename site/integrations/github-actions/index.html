@@ -386,16 +386,15 @@ jobs:
       - name: Check changed files
         shell: bash
         run: |
-          # Added, copied, modified, renamed: deleted files have nothing to check
-          files="$(git diff --name-only --diff-filter=ACMR origin/main...HEAD)"
+          # Added and modified files as "added<TAB>deleted<TAB>path".
+          # Binary files show "-" counts; mneme check reads text only.
+          changes=$(git diff --numstat --no-renames --diff-filter=AM origin/main...HEAD) || exit 2
           worst=0
-          while IFS= read -r f; do
+          while IFS=$'\t' read -r added _ f; do
             [ -n "$f" ] || continue
-            # Skip the policy files themselves and binary files (mneme reads input as UTF-8 text)
-            case "$f" in
-              .mneme/*|docs/adr/*) continue ;;
-              *.png|*.jpg|*.jpeg|*.gif|*.ico|*.webp|*.woff|*.woff2|*.ttf|*.pdf|*.zip|*.gz) continue ;;
-            esac
+            if [ "$added" = "-" ]; then echo "skip    $f (binary)"; continue; fi
+            # The decision files contain the terms they forbid
+            case "$f" in .mneme/*|docs/adr/*) echo "skip    $f (decision file)"; continue ;; esac
             rc=0
             mneme check \
               --memory .mneme/project_memory.json \
@@ -403,14 +402,15 @@ jobs:
               --target-path "$f" \
               --query "PR diff: $f" \
               --mode strict || rc=$?
-            # Keep the worst exit code so a later PASS cannot mask a FAIL
+            # GitHub runs bash with -e: "|| rc=$?" records the code instead of
+            # stopping, and the worst code wins so a later PASS cannot mask a FAIL
             if [ "$rc" -gt "$worst" ]; then worst=$rc; fi
-          done &lt;&lt;&lt; "$files"
+          done &lt;&lt;&lt; "$changes"
           exit "$worst"</code></pre>
 
-    <p>Every changed file is checked, and the step exits with the worst result across the PR. <code>--target-path</code> names the repository path each file is checked as, so rules scoped with <code>include_paths</code> and <code>exclude_paths</code> resolve against it and print a <code>PATH</code> applicability line per scoped rule. The decision files themselves are skipped because they legitimately contain the terms they forbid, so review changes to them by hand. Each file is checked in full, so an existing violation in a file the PR touches also fails the step.</p>
+    <p>Every changed file is checked, and the step exits with the worst result across the PR. <code>--target-path</code> names the repository path each file is checked as, so rules scoped with <code>include_paths</code> and <code>exclude_paths</code> resolve against it and print a <code>PATH</code> applicability line per scoped rule. Binary files are skipped because <code>mneme check</code> reads text only, and the decision files themselves are skipped because they legitimately contain the terms they forbid, so review changes to them by hand. Renamed files count as added. Each file is checked in full, so an existing violation in a file the PR touches also fails the step.</p>
 
-    <p>The job fails on WARN, FAIL, or INCOMPLETE. To block the merge, mark the <code>governance</code> job as a required status check in branch protection.</p>
+    <p>The job fails on WARN, FAIL, or INCOMPLETE. To block the merge, mark the <code>governance</code> job as a required status check in branch protection. The <a href="/docs/how-to/fail-pull-request-that-breaks-adr/" style="color:var(--accent);">how-to guide</a> extends the same loop with an ADR re-import check and saved JSON verdicts.</p>
 
     <h2>Status</h2>
 
