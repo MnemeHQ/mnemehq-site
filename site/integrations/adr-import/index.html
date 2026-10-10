@@ -395,7 +395,7 @@ These must never be conflated in code-bearing surfaces.
     exclude_paths:
       - "docs/history/**"</code></pre>
 
-    <p><code>include_paths</code>/<code>exclude_paths</code> determine applicability only &mdash; they never loosen the exact-match semantics. Every check reports how each scoped rule resolved against the real target path, so you can see which rules applied, which were skipped, and why. Rules without selectors stay corpus-wide.</p>
+    <p><code>include_paths</code>/<code>exclude_paths</code> determine applicability only &mdash; they never loosen the exact-match semantics. Every check reports how each scoped rule resolved against the real target path, so you can see which rules applied, which were excluded, and why. Rules without selectors stay corpus-wide.</p>
 
     <div class="callout">
       <p><strong>YAML frontmatter is required.</strong> Nygard-style <code>**Status:** Accepted</code> headers are not parsed. Adding a 6-line frontmatter block per file is a one-time, scriptable conversion.</p>
@@ -487,9 +487,10 @@ Active set (4 ADRs):
 
 Result: FAIL</code></pre>
 
-    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH PASS / SKIP / UNKNOWN</code> lines), so scoped policies stay explainable:</p>
+    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH APPLIED</code> or <code>PATH EXCLUDED</code> lines, or <code>ERROR PATH_APPLICABILITY_UNKNOWN</code> when the path cannot be resolved), so scoped policies stay explainable:</p>
 
-    <pre tabindex="0"><code>PATH SKIP   [ADR-009] docs/history/** excluded by selector
+    <pre tabindex="0"><code>PATH  EXCLUDED [ADR-009] docs/history/2025-migration.md via docs/history/** -- an exclude selector matched
+
 Result: PASS</code></pre>
 
     <p>The same input without the forbidden literal passes cleanly with <code>Result: PASS</code>.</p>
