@@ -352,10 +352,12 @@ jobs:
             [ -n "$f" ] || continue
             if [ "$added" = "-" ]; then echo "skip    $f (binary)"; continue; fi
             out="mneme-results/$(printf '%s' "$f" | tr '/' '_').json"
+            # GitHub runs this shell with -e; "|| code=$?" records a failing
+            # check instead of ending the step at the first violation
+            code=0
             mneme check --memory .mneme/project_memory.json \
               --input "$f" --target-path "$f" \
-              --query "PR change: $f" --json &gt; "$out"
-            code=$?
+              --query "PR change: $f" --json &gt; "$out" || code=$?
             echo "exit=$code  $f"
             if [ "$code" -gt "$worst" ]; then worst=$code; fi
           done &lt;&lt;&lt; "$changes"

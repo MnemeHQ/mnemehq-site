@@ -313,8 +313,18 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install mneme-hq>=0.9.2
-      - run: mneme check --mode warn</code></pre>
+      - run: pip install "mneme-hq>=0.9.2"
+      - name: Check changed files (warn mode)
+        shell: bash
+        run: |
+          tab=$(printf '\t')
+          git diff --numstat --no-renames --diff-filter=AM origin/main...HEAD |
+            while IFS="$tab" read -r added _ f; do
+              if [ "$added" = "-" ]; then continue; fi   # binary file
+              mneme check --memory .mneme/project_memory.json \
+                --input "$f" --target-path "$f" \
+                --query "PR change: $f" --mode warn
+            done</code></pre>
 
     <p>See <a href="/integrations/github-actions/">GitHub Actions AI Governance</a> for the full integration page.</p>
 
@@ -323,11 +333,23 @@ jobs:
     <pre tabindex="0"><code># .gitlab-ci.yml
 mneme-check:
   image: python:3.11
+  variables:
+    GIT_DEPTH: "0"
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
-    - pip install mneme-hq>=0.9.2
-    - mneme check --mode warn</code></pre>
+    - pip install "mneme-hq>=0.9.2"
+    - |
+      tab=$(printf '\t')
+      git diff --numstat --no-renames --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD" |
+        while IFS="$tab" read -r added _ f; do
+          if [ "$added" = "-" ]; then continue; fi   # binary file
+          mneme check --memory .mneme/project_memory.json \
+            --input "$f" --target-path "$f" \
+            --query "MR change: $f" --mode warn
+        done</code></pre>
+
+    <p>In warn mode, PASS, WARN and FAIL all exit 0, so findings appear in the job log without blocking. An evaluation that cannot complete (INCOMPLETE) still exits 2 and fails the job.</p>
 
     <p>See <a href="/integrations/gitlab/">GitLab CI integration</a> for the full page.</p>
 
@@ -336,7 +358,7 @@ mneme-check:
     <p>The recommended rollout is staged, so the team learns where the corpus is sharp and where it is approximate before the gate starts blocking merges.</p>
 
     <ol>
-      <li><strong>Warn mode in CI.</strong> Run <code>mneme check --mode warn</code> on every PR. Violations surface as comments; merges proceed. Use this phase to harden the decision corpus against real diffs.</li>
+      <li><strong>Warn mode in CI.</strong> Run <code>mneme check --mode warn</code> on every PR. Findings appear in the job log; merges proceed. Use this phase to harden the decision corpus against real diffs.</li>
       <li><strong>Strict mode on the most stable repos first.</strong> Promote to <code>--mode strict</code> on services where the architectural corpus has settled. Other repos stay in warn.</li>
       <li><strong>Pre-generation enforcement.</strong> Once the corpus is trusted, wire the Claude Code hook so violations fail fast in the editor, not at PR time.</li>
     </ol>
