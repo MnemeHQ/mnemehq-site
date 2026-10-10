@@ -340,16 +340,17 @@ mneme-check:
   script:
     - pip install "mneme-hq>=0.9.2"
     - |
+      git diff --numstat --no-renames --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD" &gt; changes.txt || exit 2
       tab=$(printf '\t')
-      git diff --numstat --no-renames --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD" |
-        while IFS="$tab" read -r added _ f; do
-          if [ "$added" = "-" ]; then continue; fi   # binary file
-          mneme check --memory .mneme/project_memory.json \
-            --input "$f" --target-path "$f" \
-            --query "MR change: $f" --mode warn
-        done</code></pre>
+      while IFS="$tab" read -r added _ f; do
+        [ -n "$f" ] || continue
+        if [ "$added" = "-" ]; then continue; fi   # binary file
+        mneme check --memory .mneme/project_memory.json \
+          --input "$f" --target-path "$f" \
+          --query "MR change: $f" --mode warn
+      done &lt; changes.txt</code></pre>
 
-    <p>In warn mode, PASS, WARN and FAIL all exit 0, so findings appear in the job log without blocking. An evaluation that cannot complete (INCOMPLETE) still exits 2 and fails the job.</p>
+    <p>In warn mode, PASS, WARN and FAIL all exit 0, so findings appear in the job log without blocking. A file Mneme can&rsquo;t evaluate (INCOMPLETE, a path it can&rsquo;t find, or a file that isn&rsquo;t UTF-8) exits non-zero, fails the job, and stops the loop at that file.</p>
 
     <p>See <a href="/integrations/gitlab/">GitLab CI integration</a> for the full page.</p>
 

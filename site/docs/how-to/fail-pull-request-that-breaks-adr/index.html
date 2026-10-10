@@ -473,7 +473,7 @@ Result: FAIL</pre>
       <li>The check reads each changed file whole. A file that already broke ADR-012 before the pull request fails as soon as someone touches it.</li>
       <li>Deleted files aren't checked, because there is nothing left to read.</li>
       <li>The rule matches exact text. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> for the import forms it misses.</li>
-      <li>The workflow syntax is GitHub-only. The same loop can run in GitLab CI with <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code> as the base, but we haven't tested that.</li>
+      <li>The workflow syntax is GitHub-only. The same loop runs in GitLab CI with <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code> as the base; the <a href="/integrations/gitlab/">GitLab page</a> has that version.</li>
     </ul>
   </section>
 

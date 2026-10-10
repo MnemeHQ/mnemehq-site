@@ -347,12 +347,15 @@
 
     <h2>Setup</h2>
 
-    <pre tabindex="0"><code>pip install mneme-hq>=0.9.2
+    <pre tabindex="0"><code>pip install "mneme-hq>=0.9.2"
 mneme init
-# Wire Claude Code hook (if using Claude Code in Warp panes)
-mneme hooks install
-# Wire CI gate
-mneme check --mode warn   # try locally first</code></pre>
+# Claude Code in Warp panes: load the Mneme plugin from the release checkout
+git clone --branch v0.9.2 --depth 1 https://github.com/MnemeHQ/mneme
+claude --plugin-dir ./mneme/integrations/claude-code-plugin
+# Try a check locally before wiring the CI gate
+mneme check --memory .mneme/project_memory.json \
+  --input src/app.py --target-path src/app.py \
+  --query "what you are changing" --mode warn</code></pre>
 
     <p>From there, every agent Warp runs inherits the same enforcement &mdash; no per-agent configuration, no Warp-side install.</p>
 

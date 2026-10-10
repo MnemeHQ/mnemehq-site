@@ -73,7 +73,7 @@
           {
             "@type": "Question",
             "name": "Does the governance hook add meaningful latency to agent tool calls?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. The adapter runs mneme check as a local subprocess, not over a network. In our test against a 200-decision corpus, each check took about half a second, almost all of it process startup; the rule evaluation itself took a few milliseconds. Retrieval bounds which decisions are injected as guidance (top three by score); enforcement of typed literal rules is corpus-wide and independent of retrieval score."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. The adapter runs mneme check as a local subprocess, not over a network. In our test against a 200-decision corpus, each check took about 0.4 to 0.5 seconds, mostly Python startup and loading the memory file; matching the rules took a few milliseconds. Retrieval bounds which decisions are injected as guidance (top three by score); enforcement of typed literal rules is corpus-wide and independent of retrieval score."}
           },
           {
             "@type": "Question",
@@ -567,11 +567,12 @@ jobs:
       - name: Governance gate
         shell: bash
         run: |
-          # Files the agent modified or created in the working tree
-          files=$(git ls-files --modified --others --exclude-standard -- '*.py' '*.js' '*.ts')
+          # Files the agent added or changed since checkout (committed or not), plus new untracked files
+          changed=$(git -c core.quotePath=false diff --name-only --diff-filter=AM "$GITHUB_SHA" -- '*.py' '*.js' '*.ts') || exit 2
+          created=$(git -c core.quotePath=false ls-files --others --exclude-standard -- '*.py' '*.js' '*.ts') || exit 2
           worst=0
           while IFS= read -r f; do
-            [ -f "$f" ] || continue   # skips blank lines and deleted files
+            [ -n "$f" ] || continue
             rc=0
             mneme check \
               --memory .mneme/project_memory.json \
@@ -579,10 +580,11 @@ jobs:
               --target-path "$f" \
               --query "audit $f" \
               --mode strict || rc=$?
+            echo "exit=$rc  $f"
             if [ "$rc" -gt "$worst" ]; then worst=$rc; fi
-          done &lt;&lt;&lt; "$files"
+          done &lt;&lt;&lt; "$changed
+          $created"
           exit "$worst"
-        shell: bash
 </code></pre>
 
     <p>The <code>--mode strict</code> flag means any WARN in the trace causes a non-zero exit and fails the step, giving you a per-run record of which files were evaluated and what the verdicts were. Use <code>--mode warn</code> during development iterations to surface signals without blocking merges.</p>
@@ -599,7 +601,7 @@ jobs:
 
       <details class="faq-item">
         <summary>Does the governance hook add meaningful latency to agent tool calls?</summary>
-        <div class="faq-body">Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. The adapter runs <code>mneme check</code> as a local subprocess, not over a network. In our test against a 200-decision corpus, each check took about half a second, almost all of it process startup; the rule evaluation itself took a few milliseconds. Retrieval bounds which decisions are injected as guidance &mdash; the top three by score; enforcement of typed literal rules is corpus-wide and independent of retrieval score. The dominant cost in your agent loop remains model inference, not governance checks.</div>
+        <div class="faq-body">Mneme's retriever is deterministic keyword scoring with no embedding model and no vector store. The adapter runs <code>mneme check</code> as a local subprocess, not over a network. In our test against a 200-decision corpus, each check took about 0.4 to 0.5 seconds, mostly Python startup and loading the memory file; matching the rules took a few milliseconds. Retrieval bounds which decisions are injected as guidance &mdash; the top three by score; enforcement of typed literal rules is corpus-wide and independent of retrieval score. The dominant cost in your agent loop remains model inference, not governance checks.</div>
       </details>
 
       <details class="faq-item">
