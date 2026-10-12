@@ -29,6 +29,10 @@ on:
       - '.github/workflows/mcp-tool-catalog-check.yml'
   schedule:
     - cron: '30 6 * * *'
+  # Primary signal: the core release workflow announces a new PyPI release.
+  # The daily schedule above is the fallback if that dispatch never arrives.
+  repository_dispatch:
+    types: [core-released]
   workflow_dispatch:
 
 permissions:
@@ -49,9 +53,55 @@ jobs:
     name: Verify PyPI, core metadata, and MCP Registry
     needs: local-contract
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    # One alert writer at a time, so a dispatch and the cron cannot both
+    # open an issue.
+    concurrency:
+      group: core-release-alert
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python scripts/check_agent_discovery.py --online
+      - name: Online discovery check
+        id: online
+        continue-on-error: true
+        shell: bash
+        run: python scripts/check_agent_discovery.py --online 2>&1 | tee online.txt; exit ${PIPESTATUS[0]}
+      # A failed scheduled run notifies nobody, so a core release went
+      # undocumented for days. Keep exactly one open issue per mismatch:
+      # create it once, then comment on it until the site catches up.
+      - name: Raise core-release issue
+        if: >-
+          steps.online.outcome == 'failure' &&
+          (github.event_name == 'schedule' || github.event_name == 'repository_dispatch' || github.event_name == 'workflow_dispatch')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        shell: bash
+        run: |
+          label=core-release-drift
+          gh label create "$label" --color B60205 \
+            --description "Site docs lag the released mneme-hq core" 2>/dev/null || true
+          {
+            echo "The \`$GITHUB_EVENT_NAME\` run $RUN_URL found the site out of step with the released core:"
+            echo
+            echo '```'
+            grep -E '^(agent-discovery|  - )' online.txt
+            echo '```'
+            echo
+            echo "Reconcile the site: bump \`scripts/core_version.json\` with \`scripts/sync_core_version.py\`, regenerate the version-bound artifacts, and re-verify the docs against the release. The daily check stays red until that lands."
+          } > issue-body.md
+          n=$(gh issue list --label "$label" --state open --json number -q '.[0].number')
+          if [ -n "$n" ]; then
+            gh issue comment "$n" --body-file issue-body.md
+          else
+            gh issue create --label "$label" \
+              --title "Released mneme-hq core is ahead of mnemehq.com" --body-file issue-body.md
+          fi
+      - name: Fail when the online check failed
+        if: steps.online.outcome == 'failure'
+        run: exit 1
