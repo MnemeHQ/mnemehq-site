@@ -27,13 +27,21 @@ steps:
       mneme adr import troubleshooting/short-scope --memory .mneme/short.json --apply > /dev/null
   - name: short-scope-query
     run: mneme test_query --memory .mneme/short.json --query "edit to app/api/invoices.py"
+  - name: mcp-unmigrated
+    run: >-
+      mneme decision-mcp --memory troubleshooting/memory-from-0.9/project_memory.json 2>&1
+    expect_exit: 2
   - name: mcp-bad-adr-dir
     run: mneme decision-mcp --adr-dir troubleshooting/missing 2>&1 | tail -n 1
+  - name: dotted-setup
+    run: >-
+      mneme init --path .mneme/dotted.json > /dev/null &&
+      mneme adr import troubleshooting/dotted --memory .mneme/dotted.json --apply > /dev/null
   - name: dotted-scope-path
     run: >-
-      ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to
+      MEMORY=.mneme/dotted.json python mcp_probe.py decision.applicable_to
       '{"paths": ["app/handlers/invoices.py"]}'
   - name: dotted-scope-context
     run: >-
-      ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to
+      MEMORY=.mneme/dotted.json python mcp_probe.py decision.applicable_to
       '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'

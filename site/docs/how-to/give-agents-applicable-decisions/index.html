@@ -330,11 +330,11 @@ scope: handlers
   "mcpServers": {
     "mneme": {
       "command": "mneme",
-      "args": ["decision-mcp", "--proposals", ".mneme/decision_proposals.json", "--adr-dir", "docs/adr"]
+      "args": ["decision-mcp", "--proposals", ".mneme/decision_proposals.json", "--memory", ".mneme/project_memory.json"]
     }
   }
 }</pre>
-    <p><code>--adr-dir</code> loads your ADRs as the decisions the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
+    <p><code>--memory</code> points the server at the project memory your ADR import wrote. The server returns the decisions in its Decision Index, so after you edit an ADR, re-run <code>mneme adr import</code> with <code>--update-existing</code>; a running server picks the change up on its next read. Memory created by <code>mneme init</code> on 0.10.0 is ready as it is. Memory from 0.9.x needs migrating first, covered in Troubleshooting. To have the server also check your ADR folder at startup, add <code>"--adr-dir", "docs/adr"</code>; it validates the folder and doesn&rsquo;t change what the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
   </section>
 
   <section class="prose-section" id="run">
@@ -361,7 +361,8 @@ from mcp.client.stdio import stdio_client
 
 SERVER = StdioServerParameters(
     command="mneme",
-    args=["decision-mcp", "--proposals", "", "--adr-dir", os.environ.get("ADR_DIR", "docs/adr")],
+    args=["decision-mcp", "--proposals", "",
+          "--memory", os.environ.get("MEMORY", ".mneme/project_memory.json")],
 )
 
 
@@ -439,7 +440,8 @@ decision.trace</pre>
       "decision_id": "ADR-012",
       "lifecycle_status": "active",
       "statement": "Request handlers do not import the database client",
-      "version": "1"
+      "version": "1",
+      "version_id": "dver-07b2d935ba6c357186624774df0c2845"
     }
   ],
   "proposal_hint_matches": []
@@ -483,7 +485,7 @@ Injected (top 3):
   "proposal_hint_matches": []
 }</pre>
     <p>Pass the scope in <code>context</code> as well and the ADR comes back:</p>
-    <pre class="term-block" data-fixture="cmd">ADR_DIR=troubleshooting/dotted python mcp_probe.py decision.applicable_to \
+    <pre class="term-block" data-fixture="cmd">MEMORY=.mneme/dotted.json python mcp_probe.py decision.applicable_to \
   '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'</pre>
     <pre class="term-block" data-fixture="out:dotted-scope-context">{
   "canonical_scope_matches": [
@@ -494,11 +496,17 @@ Injected (top 3):
       "decision_id": "ADR-012",
       "lifecycle_status": "active",
       "statement": "Request handlers do not import the database client",</pre>
-    <p>Or use scopes that appear in your paths as written. (<code>ADR_DIR</code> only points this guide&rsquo;s probe at a second ADR folder.)</p>
+    <p>Or use scopes that appear in your paths as written. (<code>MEMORY</code> only points this guide&rsquo;s probe at a second memory file, imported from the dotted-scope ADR.)</p>
 
     <h3>The MCP server won't start</h3>
+    <p>Memory written by Mneme 0.9.x has no Decision Index yet, so the server stops and prints what to run:</p>
+    <pre class="term-block" data-fixture="out:mcp-unmigrated">ERROR: project memory troubleshooting/memory-from-0.9/project_memory.json has no authoritative decision_index section.
+  Preview the migration:  mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json
+  After reviewing it, apply: mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json --apply</pre>
+    <p>Run the first command, read the preview, then run the second. Before you apply, move every process that writes the file to 0.10.0, including CI jobs and teammates&rsquo; installs: a 0.9.2 writer on migrated memory succeeds silently, and 0.10.0 then refuses to read the file. The <a href="/docs/cli/#decision-index-migrate">migrate reference</a> covers what the migration changes.</p>
+    <p>An <code>--adr-dir</code> problem stops the server too:</p>
     <pre class="term-block" data-fixture="out:mcp-bad-adr-dir">ERROR: ADR directory troubleshooting/missing does not exist</pre>
-    <p>The server refuses to start when the <code>--adr-dir</code> folder doesn't exist, is given as an empty string, or holds an ADR that fails parsing, validation or precedence checks. An empty folder starts with no decisions. Fix the path or the ADR, or leave <code>--adr-dir</code> out to run with proposals only.</p>
+    <p>The server refuses to start when the <code>--adr-dir</code> folder doesn't exist, is given as an empty string, or holds an ADR that fails parsing, validation or precedence checks. An empty folder passes. Fix the path or the ADR, or remove <code>--adr-dir</code>: the server doesn&rsquo;t need it to return decisions.</p>
   </section>
 
   <section class="prose-section" id="limits">

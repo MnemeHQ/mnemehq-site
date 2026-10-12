@@ -502,8 +502,8 @@ Result: PASS</pre>
     <p>A directive name has a typo. Mneme stops the import instead of skipping the rule, so a misspelling can't switch enforcement off without anyone noticing.</p>
 
     <h3><code>ADR import refused: id 'ADR-012' already exists</code></h3>
-    <pre class="term-block" data-fixture="out:reapply">ERROR: ADR import refused: id 'ADR-012' already exists in target memory decisions[]. Pass --update-existing to overwrite, or rename the incoming ADR.</pre>
-    <p>You applied the ADR before. After you edit it, re-run the import with <code>--update-existing</code>:</p>
+    <pre class="term-block" data-fixture="out:reapply">ERROR: ADR import refused: id 'ADR-012' already exists in canonical decision authority. Pass --update-existing to create or reuse an immutable version occurrence, or rename the incoming ADR.</pre>
+    <p>You applied the ADR before. After you edit it, re-run the import with <code>--update-existing</code>, which records the edit as a new version of the decision and keeps the earlier one:</p>
     <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
   </section>
 
