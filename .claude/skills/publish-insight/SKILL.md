@@ -1,0 +1,109 @@
+---
+name: publish-insight
+description: End-to-end procedure for turning ChatGPT "Post-" scope chats into published mnemehq.com insight articles. Use when asked to "draft insights", gather scope briefs, build an insight from a brief, or check which scope chats are unprocessed.
+---
+
+# Publish an insight
+
+One procedure, five stages. Rules live in `PUBLISHING.md` (Insights articles, OG images,
+Conceptual authority) and `docs/site/insight-publishing-contract.md`; this skill is the order of
+operations and points back to them. If this file and those disagree, those win; fix this file.
+
+Insights only. Concept pages, landing pages, pricing, roadmap and other page edits follow
+`docs/site/concept-publication.md` or their own contracts and go in separate PRs.
+
+## Stage 1: Intake (read-only)
+
+1. Read `docs/site/insights-scope-ledger.md` and `docs/site/scope-briefs/README.md`.
+2. Open ChatGPT in the user's real Chrome (`mcp__claude-in-chrome__*`), project
+   **Mneme Growth and GTM** (`g-p-69fb157536408191b03a29c6f51f7821`). Use the project page's list,
+   not search.
+3. A `Post-` chat whose title contains `*` is published. Unmarked chats are candidates, but the
+   test of "shipped" is the repo: `git log origin/main` and `ls site/insights/`. Renaming re-sorts
+   chats, so list position means nothing.
+4. Skip `Post-tv-` chats: they belong to theovalmis.com and never enter `site/`.
+5. Read every candidate chat **in full**: expand "Show more", read every turn. The last turns often
+   reverse earlier ones; the final agreed scope is what counts.
+6. Never rename, delete or message a chat in this stage.
+7. Confirm the list of chats and titles with the user before writing anything.
+
+Tip: `get_page_text` reads a whole chat. Inline citations render only as labels ("Reuters +2");
+pull their real URLs from the `<a href>` elements in `main`, and strip `?utm_source=chatgpt.com`.
+
+## Stage 2: Brief
+
+Write one brief per chat at `docs/site/scope-briefs/<yyyy-mm-dd>-<kebab-title>.md` from
+`docs/site/scope-briefs/TEMPLATE.md`, and add it to the README index. Date = chat creation date
+(UTC). The **Build card** must be complete before Stage 3:
+
+- slug, title, report-anchored or not (ADR-015), topic hub, OG headline (4-7 words), eyebrow
+- editorial-gate verdict (below)
+- overlap check against `site/insights/` and `site/compare/`, `site/concepts/`
+- every source with a verified / unverified flag
+- every Mneme claim with its maturity class
+
+### Editorial gate
+
+Publish only if the piece does at least one of: targets a distinct query; adds new evidence to a
+Mneme thesis; creates an entry point from a named report, vendor or paper; supports a cornerstone
+through internal linking. Not because an announcement can be reframed as "this also needs
+governance". It must answer: what changed, why it matters, what breaks, what teams should do, how
+governance helps. Fail the gate → record "drop" or "re-angle" in the brief and stop.
+
+## Stage 3: Build
+
+1. **Verify every citation against the live source** before writing a sentence that depends on it.
+   Never ship a fabricated ID, report title or statistic. Record the check in the brief.
+2. Write the body following PUBLISHING.md: News → Problem → Governance; for engineering leaders;
+   concrete and declarative; never "bottleneck"; no em dashes as connective tissue; domain is
+   `mnemehq.com`; terminology lock ("decision corpus", "enforcement", "drift"...); "decision
+   layer" thesis framing only per the 2026-09-11 amendment.
+3. Report-anchored pieces: verbatim entity first in all six title fields; meta description leads
+   with source + figure verified against the body.
+4. Create the page:
+   ```bash
+   python scripts/new_article.py --slug <slug> --title "<title>" \
+     --description "<150-160 chars>" --date <YYYY-MM-DD> --lede "<standfirst>" \
+     --body-file <body.html> [--section ...] [--eyebrow ...] [--read-time ...] [--faq faq.json]
+   ```
+   It writes the page only. There is no `--register` flag; registration is the next step.
+
+## Stage 4: Register and validate
+
+Registration (all manual, per `docs/site/insight-publishing-contract.md`):
+
+1. OG record under `insights/<slug>/` in `site/og/cards.yaml` (editorial: headline only), then
+   `python scripts/render_og.py --strict --out site --only insights/<slug>/`.
+2. `<url>` block in `site/sitemap.xml`.
+3. Card in `site/insights/all/index.html` **and** its `CollectionPage.hasPart` entry; card on the
+   topic hub `site/insights/topics/<hub>/index.html`.
+4. `python scripts/sync_insights_catalog.py`
+5. Reciprocal links from 2-3 related insights.
+
+Validate, in order (all must pass):
+
+```bash
+python scripts/render_og.py --strict --dry-run
+python scripts/check_og_coverage.py
+python scripts/lint_og_voice.py
+python scripts/check_og_render_unique.py
+python scripts/sync_insights_catalog.py --check
+python scripts/check_insights.py
+python scripts/check_encoding.py site scripts
+```
+
+## Stage 5: Audit, PR, ship, close out
+
+1. **Opus audit before merge** (required). Classify every sentence about Mneme as SHIPPED /
+   VALIDATED EXPERIMENT / PLANNED / CONCEPTUAL, calibrated to ADR-001 claim levels: category and
+   vision claims may lead; concrete claims (integrations, enforcement paths, enterprise features)
+   stay literal. Fix everything flagged.
+2. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
+3. Batch all insights from one run into one PR on a `site/` branch. Fill the Execution provenance
+   block (`AGENTS.md`). Confirm titles and count with the user. Squash merge.
+4. Deployed means: a successful "Deploy site to mnemehq.com" run for the exact `main` SHA, and
+   `site-deployed` resolving to it. Merge alone is not deployment.
+5. Close out: add the chat to the ledger's Published table (PR, merge date), update the brief to
+   "built", and only then rename the chat with `***` in ChatGPT (ask first; renaming is the one
+   write to ChatGPT in this procedure). Never mark `Post-Writing ROI Content` while its backlog is
+   open.

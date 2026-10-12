@@ -119,7 +119,7 @@ Editorial pattern for every piece:
 - **Target engineering leaders** (CTO, VP Eng, Head of Platform, staff/principal), not individual developers. The buyer is organizational.
 - **Consolidate competing intent.** When several essays compete for the same query (the "memory" family, the "review" family), give them a cornerstone parent and sharpen each one's primary keyword so they stop cannibalizing each other.
 - **Answer five questions:** what changed, why it matters, what breaks, what teams should do, how governance helps. If a draft can't answer all five, it's commentary, not strategic content.
-- **House voice / brand:** concrete and declarative; never the word "bottleneck"; no em dashes as connective tissue; domain is always `mnemehq.com`. See the `publish-insight` skill for the full authoring procedure.
+- **House voice / brand:** concrete and declarative; never the word "bottleneck"; no em dashes as connective tissue; domain is always `mnemehq.com`. See the `publish-insight` skill ([`.claude/skills/publish-insight/SKILL.md`](../../.claude/skills/publish-insight/SKILL.md)) for the full procedure, from ChatGPT scope chat to deployed article.
 
 ## Running the check locally
 
