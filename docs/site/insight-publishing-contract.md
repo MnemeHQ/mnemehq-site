@@ -8,7 +8,7 @@ The Insights section has three kinds of index surface:
 
 - **`/insights/`** — a **curated editorial homepage**: one manually selected featured article, six automatically synchronized latest articles, the four topic-hub cards, a few foundational pieces, and a "View all insights" CTA. It is *not* required to card every article.
 - **`/insights/all/`** — the **canonical full archive**. Every article has a card here, and the authoritative `CollectionPage.hasPart` (the complete list) lives here.
-- **`/insights/topics/<hub>/`** — four **topic hubs** (`architectural-governance`, `ai-coding-agents`, `agent-infrastructure`, `engineering-performance`), each with an intro, a cornerstone, and a curated supporting set.
+- **`/insights/topics/<hub>/`** — seven **topic hubs** (`architectural-governance`, `architectural-drift-prevention`, `architectural-intent`, `ai-coding-agents`, `agent-infrastructure`, `engineering-performance`, `software-migrations-modernization`; the directories under `site/insights/topics/` are authoritative), each with an intro, a cornerstone, and a curated supporting set.
 
 A slug is "registered" if it is carded on **at least one approved index surface** — the archive or a topic hub. `check_insights.py` scans all surfaces and treats `all/` and `topics/` as index surfaces, never as article slugs.
 

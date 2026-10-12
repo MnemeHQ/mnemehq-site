@@ -20,7 +20,7 @@ Complete every row before building. "TBD" blocks the build.
 | Title | final title (verbatim across all six title fields) |
 | Slug | `kebab-case` |
 | Report-anchored (ADR-015) | no / yes: entity = "<verbatim name>" |
-| Topic hub | architectural-governance / ai-coding-agents / agent-infrastructure / engineering-performance |
+| Topic hub | one directory under `site/insights/topics/` (architectural-governance, architectural-drift-prevention, architectural-intent, ai-coding-agents, agent-infrastructure, engineering-performance, software-migrations-modernization) |
 | Eyebrow / section | e.g. Analysis / Engineering |
 | OG headline | 4-7 words |
 | Editorial gate | pass: which criterion (distinct query / new evidence / named-source entry point / cornerstone support) / drop / re-angle |
