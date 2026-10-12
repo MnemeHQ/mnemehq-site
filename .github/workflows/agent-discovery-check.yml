@@ -57,9 +57,11 @@ jobs:
       contents: read
       issues: write
     # One alert writer at a time, so a dispatch and the cron cannot both
-    # open an issue.
+    # open an issue. Only the issue-writing events share the group; PR and
+    # push runs get a unique group so they never queue behind (or cancel) an
+    # alert run.
     concurrency:
-      group: core-release-alert
+      group: ${{ (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && 'core-release-alert' || format('agent-discovery-{0}', github.run_id) }}
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
@@ -90,12 +92,15 @@ jobs:
             echo "The \`$GITHUB_EVENT_NAME\` run $RUN_URL found the site out of step with the released core:"
             echo
             echo '```'
-            grep -E '^(agent-discovery|  - )' online.txt
+            # A crash before the summary line still yields an issue, with the tail.
+            grep -E '^(agent-discovery|  - )' online.txt || tail -n 40 online.txt
             echo '```'
             echo
             echo "Reconcile the site: bump \`scripts/core_version.json\` with \`scripts/sync_core_version.py\`, regenerate the version-bound artifacts, and re-verify the docs against the release. The daily check stays red until that lands."
           } > issue-body.md
-          n=$(gh issue list --label "$label" --state open --json number -q '.[0].number')
+          # REST, not `gh issue list`: that goes through the search index,
+          # which lags a just-created issue and would let a second run duplicate it.
+          n=$(gh api "repos/$GITHUB_REPOSITORY/issues?labels=$label&state=open&per_page=10"             --jq '[.[] | select(.pull_request | not)][0].number // empty')
           if [ -n "$n" ]; then
             gh issue comment "$n" --body-file issue-body.md
           else
