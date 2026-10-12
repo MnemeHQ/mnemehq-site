@@ -57,13 +57,13 @@
         "description": "Mneme exposes its Decision Index over local MCP so agents can retrieve architectural context and propose decisions without gaining enforcement authority.",
         "url": "https://mnemehq.com/integrations/mcp/",
         "datePublished": "2026-09-15",
-        "dateModified": "2026-09-15",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/mcp/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/integrations/mcp/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "mneme-hq 0.9.0 with the mcp extra"
+        "dependencies": "mneme-hq 0.10.0 with the mcp extra"
       }
     ]
   }
@@ -181,7 +181,7 @@
       <div class="article-eyebrow">
         <span class="eyebrow-tag">Integration &middot; MCP</span>
         <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">mneme-hq 0.9.0 &nbsp;&middot;&nbsp; Local stdio</span>
+        <span class="eyebrow-meta">mneme-hq 0.10.0 &nbsp;&middot;&nbsp; Local stdio</span>
       </div>
       <h1>Mneme MCP integration</h1>
       <p class="article-lede"><strong>Give compatible agents access to the same Mneme decisions and decision context.</strong> Mneme exposes its Decision Index through a small, fixed MCP surface so coding agents and architecture producers can work with the same decision layer. They can retrieve context or submit candidates without receiving the authority to turn a suggestion into an enforced rule.</p>
@@ -193,17 +193,17 @@
       <p>That is why MCP matters to Mneme: it shows that decisions are addressable independently of any one coding harness. The protocol solves connection and exchange. Mneme still owns the meaning of a decision, its lifecycle, its scope, and the deterministic enforcement mechanisms built from it.</p>
 
       <div class="boundary-grid">
-        <div class="boundary-card"><span class="boundary-label">Retrieval</span><strong>What should the agent know?</strong><p>MCP reads proposals and configured canonical decisions, searches them, finds contextual matches, and traces known lineage.</p></div>
+        <div class="boundary-card"><span class="boundary-label">Retrieval</span><strong>What should the agent know?</strong><p>MCP reads proposals and the canonical decisions in the Decision Index, searches them, finds contextual matches, and traces known lineage.</p></div>
         <div class="boundary-card"><span class="boundary-label">Authority</span><strong>What has the team adopted?</strong><p>A human reviews and accepts or rejects proposals through the separate <code>mneme decision</code> CLI.</p></div>
         <div class="boundary-card"><span class="boundary-label">Enforcement</span><strong>What must a change obey?</strong><p>Typed rules, applicability, hooks, and CI gates deterministically evaluate work. MCP does not replace them.</p></div>
       </div>
 
-      <h2>What ships in 0.9.0</h2>
-      <p>The local server starts with <code>mneme decision-mcp</code> and communicates over stdio. It exposes exactly six tools:</p>
+      <h2>What ships in 0.10.0</h2>
+      <p>The local server starts with <code>mneme decision-mcp</code> and communicates over stdio. It exposes exactly six tools, unchanged since 0.9.0:</p>
       <div class="tool-strip" aria-label="MCP tool inventory">
         <code>decision.propose</code><code>decision.propose_batch</code><code>decision.get</code><code>decision.search</code><code>decision.applicable_to</code><code>decision.trace</code>
       </div>
-      <p>The first two create non-authoritative proposal records. The remaining four are read-only. Canonical reads are available when the operator explicitly supplies a schema-valid ADR corpus with <code>--adr-dir</code>. Proposal persistence defaults to <code>.mneme/decision_proposals.json</code>.</p>
+      <p>The first two create non-authoritative proposal records. The remaining four are read-only. The server reads canonical decisions from the Decision Index in project memory (<code>--memory</code>, default <code>.mneme/project_memory.json</code>), and it will not start until that file has been migrated with <code>mneme decision-index migrate</code>. Projects created with <code>mneme init</code> on 0.10.0 already are. Proposal persistence defaults to <code>.mneme/decision_proposals.json</code>.</p>
       <p>For installation, configuration, exact input fields, result shapes, and error behavior, use the <a href="/docs/mcp/">MCP server reference</a>.</p>
 
       <h2>Proposals are not canonical decisions</h2>
@@ -220,11 +220,11 @@ non-authoritative proposal store
 human review: mneme decision show / accept / reject
         |
         v
-canonical project-memory decision
+canonical decision version in the Decision Index
         |
         v
 Audit, modelling, protection, enforcement</code></pre>
-      <p>Acceptance materializes the decision into project memory. It does not automatically install a typed rule, mark the decision Protected, run the Audit, or activate enforcement. Those remain deliberate downstream steps.</p>
+      <p>Acceptance writes a canonical decision version into the Decision Index in project memory, and a running MCP server sees it on its next read. It does not automatically install a typed rule, mark the decision Protected, run the Audit, or activate enforcement. Those remain deliberate downstream steps.</p>
 
       <h2>What MCP deliberately cannot do</h2>
       <div class="limit-list">
@@ -237,18 +237,19 @@ Audit, modelling, protection, enforcement</code></pre>
           <li>Bypass human review or repair canonical lineage.</li>
         </ul>
       </div>
-      <p>Authority-shaped input fields are rejected at the schema boundary rather than silently ignored. This is why the tool list is intentionally small and frozen for the 0.9.0 release.</p>
+      <p>Authority-shaped input fields are rejected at the schema boundary rather than silently ignored. This is why the tool list is intentionally small and frozen.</p>
 
       <h2>Local interoperability, not a hosted control plane</h2>
-      <p>The 0.9.0 server is a local stdio process. There is no remote endpoint, HTTP or SSE transport, cloud service, RBAC layer, organization-wide persistence, or client-specific installer in this release. An MCP host must be able to launch the local <code>mneme decision-mcp</code> process using its own configuration format.</p>
+      <p>The server is a local stdio process. There is no remote endpoint, HTTP or SSE transport, cloud service, RBAC layer, organization-wide persistence, or client-specific installer in this release. An MCP host must be able to launch the local <code>mneme decision-mcp</code> process using its own configuration format.</p>
       <p>This page does not claim verified support for named MCP clients. The released contract is the local process and six protocol tools; compatibility with a particular host should be established against that host's current stdio configuration behavior.</p>
 
-      <h2>Known 0.9.0 boundaries</h2>
+      <h2>Upgrading from 0.9.x</h2>
       <ul>
-        <li><strong>Canonical store unification:</strong> decisions accepted into <code>.mneme/project_memory.json</code> are visible to existing runtime and Audit surfaces, but are not automatically composed into MCP's ADR-backed canonical-read path.</li>
-        <li><strong>Process refresh:</strong> an already-running MCP process does not observe an accept or reject performed by a separate CLI process until the MCP process is restarted.</li>
+        <li><strong>Migrate first:</strong> run <code>mneme decision-index migrate</code> to preview, then again with <code>--apply</code>. Until then the server exits with code 2 and prints those two commands.</li>
+        <li><strong>Upgrade every writer:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 then refuses to read. Move CI jobs, hooks, and teammates to 0.10.0 before you apply.</li>
+        <li><strong><code>--adr-dir</code> is validation only:</strong> it no longer supplies canonical reads. Import ADR changes with <code>mneme adr import</code>.</li>
       </ul>
-      <p>Both behaviors are explicit rather than hidden: missing canonical records and links are returned as typed absent/not-found data, and no live file-watching behavior is implied.</p>
+      <p>Missing canonical records and links are still returned as typed not-found data. The server doesn&rsquo;t watch files; it re-reads the Decision Index and the proposal file when a tool reads them. The <a href="/docs/mcp/#limitations">MCP reference</a> covers memory that can&rsquo;t migrate.</p>
 
       <h2>Where MCP fits</h2>
       <p>MCP is an interoperability boundary for Mneme's decision layer. It lets heterogeneous systems exchange decision context without redefining governance in each system. The deterministic enforcement layer still operates at execution boundaries such as agent hooks and CI, where actual changes can be evaluated against applicable rules.</p>
@@ -267,7 +268,7 @@ agent / review system / change-management system
         |
         v
       change</code></pre>
-      <p>A downstream system that can launch the local server does not need Mneme's internals to use this. It calls the Decision Index through MCP, retrieves the architectural decisions applicable to a proposed action, and keeps its own responsibility for code quality, risk, prioritization, and workflow. The 0.9.0 transport is local stdio, so this composes today with tools running beside the checkout, not with hosted services.</p>
+      <p>A downstream system that can launch the local server does not need Mneme's internals to use this. It calls the Decision Index through MCP, retrieves the architectural decisions applicable to a proposed action, and keeps its own responsibility for code quality, risk, prioritization, and workflow. The transport is local stdio, so this composes today with tools running beside the checkout, not with hosted services.</p>
       <p><strong>Example, not a shipped integration:</strong> CodeRabbit's Triage feature, launched September 15, 2026, assigns every pull request a deterministic priority from P0 to P3 as the "prioritization layer" of what CodeRabbit calls Agentic Change Management &mdash; its system for governing change from both humans and agents (<a href="https://www.coderabbit.ai/blog/coderabbit-triage" target="_blank" rel="noopener">CodeRabbit, September 2026</a>). A change-management system built this way could query Mneme's Decision Index over MCP to retrieve the architectural decisions governing a change, while continuing to own its own review, impact analysis, and prioritization. Mneme has no CodeRabbit integration today; this illustrates the interoperability pattern MCP was built for, not a supported connector.</p>
       <p>Review systems govern changes. Mneme governs the decisions those changes have to obey.</p>
 
@@ -280,7 +281,7 @@ agent / review system / change-management system
       <div class="cta-block integration-end-cta">
         <span class="integration-end-cta__eyebrow">Reference</span>
         <h2>Connect to the Decision Index.</h2>
-        <p>Install the 0.9.0 MCP extra, configure the local stdio process, and inspect the exact six-tool contract.</p>
+        <p>Install the 0.10.0 MCP extra, configure the local stdio process, and inspect the exact six-tool contract.</p>
         <div class="integration-end-cta__actions">
           <a href="/docs/mcp/" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the MCP reference</a>
           <a href="/docs/decision-proposals/" class="integration-end-cta__secondary" data-cta-intent="learn" data-cta-position="end" data-cta-component="end_block">Review the proposal workflow <span aria-hidden="true">&rarr;</span></a>
