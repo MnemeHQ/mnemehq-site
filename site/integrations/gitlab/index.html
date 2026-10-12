@@ -374,7 +374,7 @@ mneme-decisions:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
-    - python -m pip install "mneme-hq==0.9.2"
+    - python -m pip install "mneme-hq==0.10.0"
     # Fail if an edited ADR wasn't re-imported into the memory file
     - mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
     - git diff --exit-code -- .mneme/project_memory.json
@@ -407,8 +407,8 @@ mneme-decisions:
 
     <ul>
       <li>CI enforcement gate is Phase 1 current focus &mdash; see the <a href="/roadmap/" style="color:var(--accent);text-decoration:none;">roadmap</a></li>
-      <li>The <code>mneme check</code> command is available today via <code>pip install "mneme-hq==0.9.2"</code></li>
-      <li>As of mneme-hq 0.9.2, Mneme doesn&rsquo;t publish a GitLab CI template. You copy the job above into your <code>.gitlab-ci.yml</code> and own it.</li>
+      <li>The <code>mneme check</code> command is available today via <code>pip install "mneme-hq==0.10.0"</code></li>
+      <li>As of mneme-hq 0.10.0, Mneme doesn&rsquo;t publish a GitLab CI template. You copy the job above into your <code>.gitlab-ci.yml</code> and own it.</li>
     </ul>
 
     <h2>Layered governance model</h2>

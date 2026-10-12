@@ -29,6 +29,16 @@ from pathlib import Path
 
 W = Path(__file__).resolve().parents[1]
 SRC = W / "templates" / "howto"
+MANIFEST = W / "site" / "og" / "cards.yaml"
+
+
+def og_image_url(path_part: str) -> str:
+    """The page's OG card URL, using the card filename its manifest record names."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import og_manifest
+
+    record = og_manifest.resolve(path_part, og_manifest.load(MANIFEST).get(path_part), strict=True)
+    return f"https://mnemehq.com/{path_part}{record['card']}"
 CHROME = (W / "site/docs/decision-model/index.html").read_text(encoding="utf-8")
 
 EXTRA_CSS = """
@@ -128,7 +138,7 @@ def build(slug: str) -> Path:
         body = fill_blocks(body, W / "tests/howto" / slug)
     head_start, consent, icon, style, body_start, tail = chrome_parts()
     e = lambda s: html.escape(s, quote=True)
-    og_img = f"https://mnemehq.com/{path_part}og-v2.png"
+    og_img = og_image_url(path_part)
     head = (
         head_start
         + f"  <title>{meta['title']}</title>\n"

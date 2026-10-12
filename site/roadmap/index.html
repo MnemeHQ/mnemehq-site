@@ -348,7 +348,7 @@
         <div class="phase-header">
           <span class="phase-label">Today</span>
           <span class="phase-status">Shipped</span>
-          <div class="phase-title">Available today, current release mneme-hq 0.9.2</div>
+          <div class="phase-title">Available today, current release mneme-hq 0.10.0</div>
         </div>
         <div class="phase-body">
           <ul class="phase-capabilities">
@@ -356,7 +356,8 @@
             <li><span><strong>Enforcement integrations.</strong> Native adapters for Claude Code, Claude Agent SDK, Google Antigravity, Codex CLI, LangChain / LangGraph, and Kiro. Validated compatibility with Paperclip. OpenCode and Hermes Agent remain experimental. Some adapters, including the Claude Code plugin, install from the Mneme repository alongside the package.</span></li>
             <li><span><strong>Rules export and CI gates.</strong> Cursor rules export, GitHub Actions and GitLab CI gates, and ADR import.</span></li>
             <li><span><strong>Architecture Audit and protection activation.</strong> The Audit and the <code>mneme protect</code> commands, in the released package since 0.7.0. See <a href="/docs/protection-activation/">protection activation</a>.</span></li>
-            <li><span><strong>Local Decision MCP server.</strong> Six retrieval and proposal tools over local stdio, since 0.9.0. Proposals are non-authoritative; no MCP tool can accept, reject, or activate a decision.</span></li>
+            <li><span><strong>Persisted Decision Index.</strong> Decisions are stored in project memory as immutable versions with a lifecycle (active, superseded, deprecated, inactive); only active decisions are enforced or used by <code>check</code> and <code>test_query</code>, while MCP reads return every decision labelled with its lifecycle. An ADR edit can&rsquo;t silently drop a protected rule binding. Existing memory moves over with an explicit migration that is lossless or refuses, since 0.10.0. See <a href="/docs/cli/#decision-index-migrate">decision-index migrate</a>.</span></li>
+            <li><span><strong>Local Decision MCP server.</strong> Six retrieval and proposal tools over local stdio, since 0.9.0, reading the Decision Index since 0.10.0. Proposals are non-authoritative; no MCP tool can accept, reject, or activate a decision.</span></li>
             <li><span><strong>Human decision proposal review.</strong> Inspect, accept, and reject proposals through the separate <code>mneme decision</code> authority CLI. See <a href="/docs/decision-proposals/">decision proposals</a>.</span></li>
           </ul>
         </div>

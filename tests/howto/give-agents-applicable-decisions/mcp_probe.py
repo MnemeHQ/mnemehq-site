@@ -14,7 +14,8 @@ from mcp.client.stdio import stdio_client
 
 SERVER = StdioServerParameters(
     command="mneme",
-    args=["decision-mcp", "--proposals", "", "--adr-dir", os.environ.get("ADR_DIR", "docs/adr")],
+    args=["decision-mcp", "--proposals", "",
+          "--memory", os.environ.get("MEMORY", ".mneme/project_memory.json")],
 )
 
 

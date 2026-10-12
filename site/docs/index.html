@@ -187,16 +187,16 @@
 
 <div class="wrap">
   <section class="quickstart-box" id="quickstart" aria-labelledby="quickstart-title">
-  <div class="quickstart-head"><span class="quickstart-label">Quick start</span><span class="quickstart-version">mneme-hq 0.9.2 &middot; Python 3.11+</span></div>
+  <div class="quickstart-head"><span class="quickstart-label">Quick start</span><span class="quickstart-version">mneme-hq 0.10.0 &middot; Python 3.11+</span></div>
   <h2 id="quickstart-title">Run your first governed check.</h2>
   <p>Install the CLI, prepare the repository, then evaluate one proposed task.</p>
   <div class="cta-row">
-    <button type="button" class="cta-btn-primary" data-code-copy data-copy-text='pipx install "mneme-hq==0.9.2"'
-            onclick='navigator.clipboard.writeText("pipx install \"mneme-hq==0.9.2\"");this.textContent=&apos;Copied &mdash; now run: mneme setup&apos;;setTimeout(()=>this.textContent=&apos;Copy install command&apos;,2000);'
+    <button type="button" class="cta-btn-primary" data-code-copy data-copy-text='pipx install "mneme-hq==0.10.0"'
+            onclick='navigator.clipboard.writeText("pipx install \"mneme-hq==0.10.0\"");this.textContent=&apos;Copied &mdash; now run: mneme setup&apos;;setTimeout(()=>this.textContent=&apos;Copy install command&apos;,2000);'
             data-cta-intent="install" data-cta-position="hero" data-cta-component="install_module">Copy install command</button>
     <a class="cta-btn-outline" href="/docs/cli/" data-cta-intent="first_check" data-cta-position="hero" data-cta-component="hero_cluster">Run your first check</a>
   </div>
-<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq==0.9.2"
+<pre tabindex="0"><span class="cp">$</span> pipx install "mneme-hq==0.10.0"
 <span class="cp">$</span> mneme setup
 <span class="cp">$</span> mneme check --memory .mneme/project_memory.json --input prompt.txt --query "storage backend"</pre>
   <div class="agent-setup-card" id="agent-assisted-setup">
@@ -212,7 +212,7 @@
   </div>
   <script type="text/plain" id="agent-setup-prompt">Set up Mneme in this repository without enabling blocking enforcement.
 
-- Install with `pipx install "mneme-hq==0.9.2"`.
+- Install with `pipx install "mneme-hq==0.10.0"`.
 - Run `mneme setup`.
 - Identify the coding harnesses Mneme detects.
 - For the harness I am currently using, read Mneme's official integration instructions at https://mnemehq.com/integrations/ and summarize the configuration and trust steps.
@@ -223,7 +223,7 @@
   </section>
 
   <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:3.5rem 0 1.25rem;">How-to guides</h2>
-  <p style="font-size:0.92rem;color:var(--muted);line-height:1.75;max-width:780px;margin:0 0 2rem;">Each guide solves one engineering job, with outputs recorded from mneme-hq 0.9.2.</p>
+  <p style="font-size:0.92rem;color:var(--muted);line-height:1.75;max-width:780px;margin:0 0 2rem;">Each guide solves one engineering job, with outputs recorded from mneme-hq 0.10.0.</p>
 
   <div class="doc-grid">
     <a class="doc-card" href="/docs/how-to/adr-to-enforceable-decision/">
@@ -269,12 +269,12 @@
     </a>
     <a class="doc-card" href="/docs/cli/">
       <div class="dh"><span class="dname">CLI reference</span><span class="dtag">Reference</span></div>
-      <p>Commands, flags, and exit codes for <code>mneme</code>, including the 0.9.0 <code>decision-mcp</code> server and <code>decision</code> authority workflow alongside setup, Audit, protection, enforcement, exports, and benchmarks.</p>
+      <p>Commands, flags, and exit codes for <code>mneme</code>, including <code>decision-index migrate</code>, the <code>decision-mcp</code> server, and the <code>decision</code> authority workflow alongside setup, Audit, protection, enforcement, exports, and benchmarks.</p>
       <span class="read">CLI reference &rarr;</span>
     </a>
     <a class="doc-card" href="/docs/mcp/">
       <div class="dh"><span class="dname">MCP server</span><span class="dtag">Reference</span></div>
-      <p>Install and operate the local stdio Decision Index server in 0.9.0. Exact tools, input and result shapes, errors, storage, and the authority boundary.</p>
+      <p>Install and operate the local stdio Decision Index server, including migrating 0.9.x memory. Exact tools, input and result shapes, errors, storage, and the authority boundary.</p>
       <span class="read">MCP server reference &rarr;</span>
     </a>
     <a class="doc-card" href="/docs/decision-proposals/">

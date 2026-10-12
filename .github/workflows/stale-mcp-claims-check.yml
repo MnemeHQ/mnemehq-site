@@ -1,0 +1,38 @@
+name: Stale MCP claims check
+
+# mneme-hq 0.10.0 made the persisted Decision Index authoritative. These 0.9.x
+# claims about MCP storage would now send a reader into an exit-2 startup
+# error, so they must not come back anywhere in the published site.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'templates/**'
+      - 'scripts/check_stale_mcp_claims.py'
+      - 'scripts/test_check_stale_mcp_claims.py'
+      - '.github/workflows/stale-mcp-claims-check.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'templates/**'
+      - 'scripts/check_stale_mcp_claims.py'
+      - 'scripts/test_check_stale_mcp_claims.py'
+      - '.github/workflows/stale-mcp-claims-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  stale-mcp-claims:
+    name: Pre-0.10.0 MCP storage claims stay gone
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install pytest
+      - run: python -m pytest scripts/test_check_stale_mcp_claims.py -q
+      - run: python scripts/check_stale_mcp_claims.py

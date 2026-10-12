@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Review MCP decision proposals and exercise human authority with the mneme-hq 0.9.0 proposals, show, accept, and reject CLI commands." />
+  <meta name="description" content="Review MCP decision proposals and exercise human authority with the mneme-hq 0.10.0 proposals, show, accept, and reject CLI commands." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="author" content="Theo Valmis" />
@@ -18,7 +18,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Decision Proposal Workflow" />
-  <meta property="og:description" content="The proposal-to-human-authority workflow shipped in mneme-hq 0.9.0." />
+  <meta property="og:description" content="The proposal-to-human-authority workflow in mneme-hq 0.10.0." />
   <meta property="og:url" content="https://mnemehq.com/docs/decision-proposals/" />
   <meta property="og:image" content="https://mnemehq.com/docs/decision-proposals/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -26,7 +26,7 @@
 <meta property="og:image:alt" content="Demo: Propose with agents. Decide with humans. The released workflow for reviewing, accepting, and rejecting non-authoritative decision proposals." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Decision Proposal Workflow" />
-  <meta name="twitter:description" content="Review, accept, or reject non-authoritative decision proposals with Mneme 0.9.0." />
+  <meta name="twitter:description" content="Review, accept, or reject non-authoritative decision proposals with Mneme 0.10.0." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/decision-proposals/og-v2.png" />
 <meta name="twitter:image:alt" content="Demo: Propose with agents. Decide with humans. The released workflow for reviewing, accepting, and rejecting non-authoritative decision proposals." />
 
@@ -51,16 +51,16 @@
       {
         "@type": "TechArticle",
         "headline": "Decision Proposal Workflow",
-        "description": "Review MCP decision proposals and exercise human authority with the mneme-hq 0.9.0 CLI.",
+        "description": "Review MCP decision proposals and exercise human authority with the mneme-hq 0.10.0 CLI.",
         "url": "https://mnemehq.com/docs/decision-proposals/",
         "datePublished": "2026-09-15",
-        "dateModified": "2026-09-15",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/docs/decision-proposals/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/docs/decision-proposals/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "mneme-hq 0.9.0"
+        "dependencies": "mneme-hq 0.10.0"
       }
     ]
   }
@@ -193,9 +193,9 @@
     </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
-  <div class="answer-capsule"><strong>A proposal is a candidate, not a rule.</strong> In 0.9.0, MCP producers can submit proposals, but only a person using the <code>mneme decision</code> CLI can accept or reject them. Acceptance creates a canonical project-memory decision; it does not activate protection.</div>
+  <div class="answer-capsule"><strong>A proposal is a candidate, not a rule.</strong> MCP producers can submit proposals, but only a person using the <code>mneme decision</code> CLI can accept or reject them. Acceptance writes a canonical decision version into the Decision Index; it does not activate protection.</div>
   <header class="hero">
-    <div class="eyebrow">Workflow guide &middot; mneme-hq 0.9.0</div>
+    <div class="eyebrow">Workflow guide &middot; mneme-hq 0.10.0</div>
     <h1>Review the decision before it becomes authoritative.</h1>
     <p class="lede">Mneme separates systems that suggest architecture from the human action that adopts it. The proposal store preserves candidate text and provenance; the authority CLI makes the lifecycle transition explicit.</p>
   </header>
@@ -207,15 +207,15 @@
         <div class="flow-step"><span class="num">01</span><strong>Producer proposes</strong><span>An agent or architecture tool calls <code>decision.propose</code> or <code>decision.propose_batch</code>.</span></div>
         <div class="flow-step"><span class="num">02</span><strong>Mneme stores</strong><span>The candidate enters the MCP proposal store with status <code>proposed</code> and informational provenance.</span></div>
         <div class="flow-step"><span class="num">03</span><strong>Human decides</strong><span>A person inspects the proposal, then runs <code>mneme decision accept</code> or <code>reject</code>.</span></div>
-        <div class="flow-step"><span class="num">04</span><strong>Consumers continue</strong><span>Accepted decisions materialize into project memory for existing surfaces such as Architecture Audit.</span></div>
+        <div class="flow-step"><span class="num">04</span><strong>Consumers continue</strong><span>Accepted decisions become canonical versions in the Decision Index, visible to MCP reads and to existing surfaces such as Architecture Audit.</span></div>
       </div>
 <pre tabindex="0"><code>producer / agent
   -&gt; MCP proposal
   -&gt; .mneme/decision_proposals.json
   -&gt; human review
   -&gt; accept or reject
-  -&gt; .mneme/project_memory.json
-  -&gt; Audit and other existing consumers</code></pre>
+  -&gt; .mneme/project_memory.json (decision_index)
+  -&gt; MCP reads, Audit, and other existing consumers</code></pre>
       <p>The proposal lifecycle is <code>proposed -&gt; accepted</code> or <code>proposed -&gt; rejected</code>. Accepted and rejected are terminal states. Repeating the same successful authority action is idempotent; an illegal terminal transition fails closed.</p>
     </section>
 
@@ -247,7 +247,8 @@ mneme decision accept dprop-example \
   --proposals .mneme/decision_proposals.json \
   --memory .mneme/project_memory.json \
   --decision-id arch-storage-standard</code></pre>
-        <p>Acceptance delegates to Mneme's authority service. It records the accepted state and stable <code>accepted_decision_id</code>, atomically materializes the canonical decision in <code>project_memory.json</code>, reloads it, and verifies both runtime and canonical representations before reporting success.</p>
+        <p>Acceptance delegates to Mneme's authority service. It records the accepted state and stable <code>accepted_decision_id</code>, writes a new canonical decision version into the Decision Index in <code>project_memory.json</code> (its source evidence records <code>source_type: "proposal"</code>), reloads it, and verifies both runtime and canonical representations before reporting <code>Materialized: yes</code> and <code>Verified: yes</code>. A running MCP server sees the decision on its next read, without a restart.</p>
+        <p>Acceptance needs migrated memory. On memory without a <code>decision_index</code> section it exits with code 2 and prints the <code>mneme decision-index migrate</code> preview and apply commands; see the <a href="/docs/cli/#decision-index-migrate">migrate reference</a>. The accepted version records when it was accepted, not who accepted it: there is no approver field.</p>
       </div>
       <div class="table-scroll">
         <table class="flags">
@@ -283,7 +284,7 @@ mneme decision reject dprop-example \
           <tbody>
             <tr><td>0</td><td>Successful fresh, repeated, or recovered accept/reject; successful inspection.</td></tr>
             <tr><td>1</td><td>Core authority refusal or another fail-closed authority error.</td></tr>
-            <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, or unknown ID supplied to <code>show</code>.</td></tr>
+            <tr><td>2</td><td>CLI input/store error, including an empty proposal path, missing or corrupt store, unknown ID supplied to <code>show</code>, or project memory that has not been migrated to the Decision Index.</td></tr>
           </tbody>
         </table>
       </div>
@@ -291,10 +292,10 @@ mneme decision reject dprop-example \
     </section>
 
     <section class="section" id="limitations">
-      <h2>Known limitations in 0.9.0</h2>
-      <div class="callout warning"><p><strong>Accepted decisions and MCP canonical reads:</strong> acceptance materializes a decision into <code>.mneme/project_memory.json</code>, where existing runtime and Audit surfaces can read it. That runtime ledger is not yet automatically unified with the MCP server's canonical-read path, which is built only from an explicit <code>--adr-dir</code>.</p></div>
-      <div class="callout warning"><p><strong>Restart after external authority actions:</strong> a running MCP process does not automatically observe an accept or reject performed by a separate CLI process. Restart the MCP process to reload durable proposal state.</p></div>
-      <p>Mneme reports missing canonical links honestly. It does not fabricate a canonical MCP record, add a hidden <code>--memory</code> input, or watch the proposal file for changes in this release.</p>
+      <h2>What changed in 0.10.0</h2>
+      <p>In 0.9.x, a decision accepted here was not visible to the MCP server, and a running server needed a restart to see an accept or reject. Both are fixed in 0.10.0: the server reads canonical decisions from the Decision Index that acceptance writes to, and it re-reads the proposal file before each read.</p>
+      <div class="callout warning"><p><strong>Keep every writer on 0.10.0:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 <code>mneme check</code> then refuses to read. Upgrade CI jobs, hooks, and teammates before you migrate. If it happens anyway, restore the file from version control; <code>decision-index migrate</code> won&rsquo;t repair it.</p></div>
+      <p>Mneme still reports missing canonical links honestly. It does not fabricate a canonical MCP record or watch files for changes.</p>
       <p>The <a href="/standards/">standards landscape</a> explains why protocol interoperability and governance authority remain separate concerns.</p>
     </section>
 
@@ -308,7 +309,7 @@ mneme decision reject dprop-example \
       <a class="cross-card" href="/docs/mcp/"><span>Operator reference</span>MCP server and tool reference<p>Install, configure, and inspect the frozen six-tool surface.</p></a>
       <a class="cross-card" href="/docs/protection-activation/"><span>Next step</span>Setup and Protect<p>Validate and activate deterministic protection separately.</p></a>
       <a class="cross-card" href="/audit/methodology/"><span>Downstream consumer</span>Architecture Audit methodology<p>How accepted decisions are assessed without changing them.</p></a>
-      <a class="cross-card" href="https://github.com/MnemeHQ/mneme/releases/tag/v0.9.0"><span>Release proof</span>mneme-hq 0.9.0<p>The published decision-authority CLI contract.</p></a>
+      <a class="cross-card" href="https://github.com/MnemeHQ/mneme/releases/tag/v0.10.0"><span>Release proof</span>mneme-hq 0.10.0<p>The published decision-authority CLI contract and the Decision Index.</p></a>
     </div>
   </div>
 </main>
