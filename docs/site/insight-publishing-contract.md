@@ -48,11 +48,15 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
     | `Report Response` | Research & reports | a named industry report, survey, whitepaper or decision brief |
     | `Guide` | Guides | a task the reader wants to do |
     | `Concept` | Concepts & reference | a concept or term the article defines and explains |
-    | `Perspective` | Perspective | Mneme's own viewpoint or thesis, without a primary external source |
+    | `Perspective` | Perspective | Mneme's own argument or viewpoint; it may cite studies or reports, but none of them is the article's primary object |
     | `Comparison` | Product & comparison | a comparison between approaches or tools |
     | `Integration` | Product & comparison | using Mneme with a specific tool |
 
-    Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). Enforced by `scripts/check_insight_types.py`; `scripts/new_article.py --type <label>` writes both page fields.
+    Classify by the article's **primary object**, not by what it cites: an article that references a paper or report is not a Research or Report Response article unless that paper or report is what the article is about.
+
+    Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). `scripts/new_article.py --type <label>` writes both page fields.
+
+    `scripts/check_insight_types.py` (CI) enforces **consistency only**: one canonical label, identical in all four places. It cannot judge whether the label fits the article. That is a manual editorial review at publication and whenever an article's framing changes.
 
 ## How to register a new insight
 

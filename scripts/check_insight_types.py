@@ -7,8 +7,8 @@ agree:
 
   1. the visible eyebrow on the article       <span class="eyebrow-tag">
   2. the article's Open Graph section          <meta property="article:section">
-  3. every index card that links to it         <span class="card-tag"> on the
-     archive (/insights/all/), the homepage (/insights/) and each topic hub
+  3. every card that links to it, on any page  <a class="insight-card-link">
+                                                 ... <span class="card-tag">
   4. the archive catalogue's type filter       TYPE_LABELS in
      site/assets/js/insights-catalog-v2.js
 
@@ -21,7 +21,14 @@ reports has two labels:
   Report Response  primarily interprets or responds to a named industry
                    report, survey, whitepaper or decision brief
 
-Topic and collection are separate from content type and are not checked here.
+What this check does NOT do: it proves the label is consistent and
+canonical. It cannot tell whether the label is editorially right for the
+article. That stays a manual review (see the content-type rule in
+docs/site/insight-publishing-contract.md).
+
+Pages are read with an HTML parser, so attribute order, extra classes and
+absolute https://mnemehq.com links do not hide a card. A card linking to an
+article that carries no readable card-tag is itself an error.
 
 Usage:
   python scripts/check_insight_types.py
@@ -30,14 +37,13 @@ Exit codes:  0 = consistent   1 = errors found
 """
 from __future__ import annotations
 
-import html
 import re
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
-INSIGHTS = SITE / "insights"
 CATALOG_JS = SITE / "assets" / "js" / "insights-catalog-v2.js"
 
 # Stored label -> public content type.
@@ -53,25 +59,82 @@ CANONICAL_TYPES: dict[str, str] = {
 }
 
 INDEX_DIRS = {"all", "topics"}
-SECTION_RE = re.compile(r'<meta property="article:section" content="([^"]*)"')
-EYEBROW_RE = re.compile(r'<span class="eyebrow-tag">([^<]*)</span>')
-CARD_RE = re.compile(
-    r'<a href="/insights/([^/"]+)/" class="insight-card-link"'
-    r'(?:(?!</a>).)*?<span class="card-tag">([^<]*)</span>',
-    re.S,
-)
+ARTICLE_HREF_RE = re.compile(r"^(?:https?://(?:www\.)?mnemehq\.com)?/insights/([a-z0-9-]+)/?(?:[?#].*)?$")
 JS_BLOCK_RE = re.compile(r"var TYPE_LABELS = \{(.*?)\};", re.S)
-JS_ENTRY_RE = re.compile(r"'([^']+)'\s*:\s*'([^']+)'")
+JS_ENTRY_RE = re.compile(r"""(['"])(.+?)\1\s*:\s*(['"])(.+?)\3""")
 
 
-def _text(value: str) -> str:
-    return re.sub(r"\s+", " ", html.unescape(value)).strip()
+def _norm(value: str) -> str:
+    return re.sub(r"\s+", " ", value).strip()
 
 
-def index_surfaces(insights: Path) -> list[Path]:
-    surfaces = [insights / "all" / "index.html", insights / "index.html"]
-    surfaces += sorted((insights / "topics").glob("*/index.html"))
-    return [p for p in surfaces if p.is_file()]
+def _classes(attrs: dict[str, str | None]) -> set[str]:
+    return set((attrs.get("class") or "").split())
+
+
+class _ArticleParser(HTMLParser):
+    """Collect article:section values and eyebrow-tag texts from one page."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.sections: list[str] = []
+        self.eyebrows: list[str] = []
+        self._eyebrow: list[str] | None = None
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "meta" and a.get("property") == "article:section":
+            self.sections.append(_norm(a.get("content") or ""))
+        elif tag == "span" and "eyebrow-tag" in _classes(a):
+            self._eyebrow = []
+
+    def handle_endtag(self, tag):
+        if tag == "span" and self._eyebrow is not None:
+            self.eyebrows.append(_norm("".join(self._eyebrow)))
+            self._eyebrow = None
+
+    def handle_data(self, data):
+        if self._eyebrow is not None:
+            self._eyebrow.append(data)
+
+
+class _CardParser(HTMLParser):
+    """Collect (href, card-tag text or None) for every insight-card-link."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.cards: list[tuple[str, str | None]] = []
+        self._href: str | None = None
+        self._depth = 0
+        self._tag: list[str] | None = None
+        self._tag_text: str | None = None
+        self._in_tag = False
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if self._href is None:
+            if tag == "a" and "insight-card-link" in _classes(a):
+                self._href, self._depth, self._tag_text = a.get("href") or "", 1, None
+            return
+        if tag == "a":
+            self._depth += 1
+        elif tag == "span" and "card-tag" in _classes(a) and self._tag_text is None:
+            self._tag, self._in_tag = [], True
+
+    def handle_endtag(self, tag):
+        if self._href is None:
+            return
+        if tag == "span" and self._in_tag:
+            self._tag_text, self._in_tag = _norm("".join(self._tag or [])), False
+        elif tag == "a":
+            self._depth -= 1
+            if self._depth == 0:
+                self.cards.append((self._href, self._tag_text))
+                self._href = None
+
+    def handle_data(self, data):
+        if self._in_tag and self._tag is not None:
+            self._tag.append(data)
 
 
 def article_labels(insights: Path) -> tuple[dict[str, str], list[str]]:
@@ -82,9 +145,9 @@ def article_labels(insights: Path) -> tuple[dict[str, str], list[str]]:
         slug = page.parent.name
         if slug in INDEX_DIRS:
             continue
-        source = page.read_text(encoding="utf-8")
-        sections = [_text(v) for v in SECTION_RE.findall(source)]
-        eyebrows = [_text(v) for v in EYEBROW_RE.findall(source)]
+        parser = _ArticleParser()
+        parser.feed(page.read_text(encoding="utf-8"))
+        sections, eyebrows = parser.sections, parser.eyebrows
         if len(sections) != 1:
             errors.append(f"{slug}: expected one article:section meta, found {len(sections)}")
         if len(eyebrows) != 1:
@@ -103,27 +166,32 @@ def article_labels(insights: Path) -> tuple[dict[str, str], list[str]]:
     return labels, errors
 
 
-def card_errors(insights: Path, labels: dict[str, str]) -> list[str]:
+def card_errors(site: Path, labels: dict[str, str]) -> list[str]:
+    """Check every insight card on every HTML page under ``site``."""
     errors: list[str] = []
-    for surface in index_surfaces(insights):
-        where = surface.relative_to(insights.parent).as_posix()
-        for slug, tag in CARD_RE.findall(surface.read_text(encoding="utf-8")):
-            tag = _text(tag)
-            expected = labels.get(slug)
-            if expected is None:
-                continue  # unregistered or missing article: check_insights.py owns that
-            if tag != expected:
-                errors.append(f"{slug}: card on {where} says {tag!r}, article says {expected!r}")
+    for page in sorted(site.rglob("*.html")):
+        parser = _CardParser()
+        parser.feed(page.read_text(encoding="utf-8"))
+        where = page.relative_to(site).as_posix()
+        for href, tag in parser.cards:
+            match = ARTICLE_HREF_RE.match(href)
+            slug = match.group(1) if match else None
+            if slug not in labels:
+                continue  # hubs, the archive itself, or unregistered: check_insights.py owns those
+            if tag is None:
+                errors.append(f"{slug}: card on {where} has no readable card-tag")
+            elif tag != labels[slug]:
+                errors.append(f"{slug}: card on {where} says {tag!r}, article says {labels[slug]!r}")
     return errors
 
 
 def catalog_errors(catalog_js: Path) -> list[str]:
     if not catalog_js.is_file():
-        return [f"catalogue script missing: {catalog_js.relative_to(REPO).as_posix()}"]
+        return [f"catalogue script missing: {catalog_js.name}"]
     block = JS_BLOCK_RE.search(catalog_js.read_text(encoding="utf-8"))
     if not block:
         return [f"{catalog_js.name}: TYPE_LABELS not found"]
-    found = dict(JS_ENTRY_RE.findall(block.group(1)))
+    found = {m.group(2): m.group(4) for m in JS_ENTRY_RE.finditer(block.group(1))}
     expected = {label.lower(): public for label, public in CANONICAL_TYPES.items()}
     if found != expected:
         return [
@@ -133,9 +201,9 @@ def catalog_errors(catalog_js: Path) -> list[str]:
     return []
 
 
-def check(insights: Path = INSIGHTS, catalog_js: Path = CATALOG_JS) -> list[str]:
-    labels, errors = article_labels(insights)
-    errors += card_errors(insights, labels)
+def check(site: Path = SITE, catalog_js: Path = CATALOG_JS) -> list[str]:
+    labels, errors = article_labels(site / "insights")
+    errors += card_errors(site, labels)
     errors += catalog_errors(catalog_js)
     return errors
 
@@ -147,13 +215,16 @@ def main() -> int:
         for error in errors:
             print(f"  - {error}")
         return 1
-    labels, _ = article_labels(INSIGHTS)
+    labels, _ = article_labels(SITE / "insights")
     counts: dict[str, int] = {}
     for label in labels.values():
         public = CANONICAL_TYPES[label]
         counts[public] = counts.get(public, 0) + 1
     summary = ", ".join(f"{k} {v}" for k, v in sorted(counts.items(), key=lambda kv: -kv[1]))
-    print(f"OK  {len(labels)} insight articles carry one canonical content type ({summary}).")
+    print(
+        f"OK  {len(labels)} insight articles carry one canonical content type ({summary}). "
+        "Consistency only: whether each label fits its article is a manual editorial review."
+    )
     return 0
 
 
