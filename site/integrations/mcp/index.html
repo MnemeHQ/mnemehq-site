@@ -204,7 +204,7 @@
         <code>decision.propose</code><code>decision.propose_batch</code><code>decision.get</code><code>decision.search</code><code>decision.applicable_to</code><code>decision.trace</code>
       </div>
       <p>The first two create non-authoritative proposal records. The remaining four are read-only. The server reads canonical decisions from the Decision Index in project memory (<code>--memory</code>, default <code>.mneme/project_memory.json</code>), and it will not start until that file has been migrated with <code>mneme decision-index migrate</code>. Projects created with <code>mneme init</code> on 0.10.0 already are. Proposal persistence defaults to <code>.mneme/decision_proposals.json</code>.</p>
-      <p>For installation, configuration, exact input fields, result shapes, and error behavior, use the <a href="/docs/mcp/">MCP server reference</a>.</p>
+      <p>For installation, configuration, exact input fields, result shapes, and error behavior, use the <a href="/docs/mcp/">MCP server reference</a>. For a task-shaped walkthrough of <code>decision.applicable_to</code>, follow <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a>.</p>
 
       <h2>Proposals are not canonical decisions</h2>
       <p>An agent-generated architecture may contain useful decisions, but generation alone cannot make those decisions authoritative. MCP records each candidate as <code>proposed</code>, preserves source provenance, and returns a stable proposal ID. A person then inspects it and explicitly accepts or rejects it through the CLI.</p>
@@ -314,6 +314,7 @@ agent / review system / change-management system
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

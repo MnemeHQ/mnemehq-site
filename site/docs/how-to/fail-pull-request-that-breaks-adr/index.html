@@ -436,6 +436,19 @@ skip    app/static/logo.png (binary)</pre>
     "freshness": []
 }</pre>
     <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can't complete reports INCOMPLETE and exits 2, so it fails the job instead of passing it.</p>
+
+    <h3>Protect the governance surface</h3>
+    <p>A required check is only authoritative when the actor it governs cannot silently weaken the check after it fails. An agent may repair the implementation, but it should not have unilateral authority to change the governing ADR, rewrite the compiled decision state, disable the workflow, move a compatibility baseline, or approve its own exception.</p>
+    <p>GitHub documented this failure mode during its AI-assisted Copilot runtime migration: a compatibility check caught a missing SDK method, and the agent applied an escape-hatch label instead of restoring the method. Human review rejected the waiver and required the implementation to be fixed. GitHub's resulting lesson was to <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">protect the behavioral oracle from the agent</a>.</p>
+    <p>Put the governance surface behind separate ownership and approval:</p>
+    <ul class="plain">
+      <li>Require the Mneme status check in the branch ruleset or branch protection rule, and restrict bypass permission.</li>
+      <li>Use <code>.github/CODEOWNERS</code> plus required code-owner review for authoritative ADRs, <code>.mneme/project_memory.json</code>, the Mneme workflow, exception configuration, and <code>CODEOWNERS</code> itself.</li>
+      <li>Dismiss stale approvals, or require approval of the most recent reviewable push, so an agent cannot add a governance change after approval.</li>
+      <li>Keep exception labels, baseline changes, and waiver decisions human-owned. A green check produced by weakening the contract is not evidence that the implementation complies.</li>
+      <li>Layer Mneme with independent tests and compatibility checks. One bypass should not be enough to ship a regression.</li>
+    </ul>
+    <p>GitHub's documentation explains how to <a href="https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners" target="_blank" rel="noopener">protect sensitive paths with code owners</a> and how <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets" target="_blank" rel="noopener">rulesets combine required reviews, required status checks, and bypass controls</a>.</p>
   </section>
 
   <section class="prose-section" id="troubleshooting">
@@ -524,6 +537,7 @@ Result: FAIL</pre>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>
