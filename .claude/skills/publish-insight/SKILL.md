@@ -24,7 +24,7 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
 4. Skip `Post-tv-` chats: they belong to theovalmis.com and never enter `site/`.
 5. Read every candidate chat **in full**: expand "Show more", read every turn. The last turns often
    reverse earlier ones; the final agreed scope is what counts.
-6. Never rename, delete or message a chat in this stage.
+6. Never rename, delete or message a chat in this stage (marking happens only at close-out, Stage 5).
 7. Confirm the list of chats and titles with the user before writing anything.
 
 Tip: `get_page_text` reads a whole chat. Inline citations render only as labels ("Reuters +2");
@@ -141,12 +141,25 @@ in body prose. Apply it to new and substantially edited articles only.
    VALIDATED EXPERIMENT / PLANNED / CONCEPTUAL, calibrated to ADR-001 claim levels: category and
    vision claims may lead; concrete claims (integrations, enforcement paths, enterprise features)
    stay literal. Fix everything flagged.
-2. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
-3. Batch all insights from one run into one PR on a `site/` branch. Fill the Execution provenance
+2. **Citation verification is mandatory before publication.** Scope briefs may carry unverified
+   citations; an article may not. Every source row in the brief must read "verified" (checked
+   against the live source, with the page or section) before the PR is opened. Unverifiable
+   claims are cut, not softened.
+3. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
+4. Batch all insights from one run into one PR on a `site/` branch. Fill the Execution provenance
    block (`AGENTS.md`). Confirm titles and count with the user. Squash merge.
-4. Deployed means: a successful "Deploy site to mnemehq.com" run for the exact `main` SHA, and
+5. Deployed means: a successful "Deploy site to mnemehq.com" run for the exact `main` SHA, and
    `site-deployed` resolving to it. Merge alone is not deployment.
-5. Close out: add the chat to the ledger's Published table (PR, merge date), update the brief to
-   "built", and only then rename the chat with `***` in ChatGPT (ask first; renaming is the one
-   write to ChatGPT in this procedure). Never mark `Post-Writing ROI Content` while its backlog is
-   open.
+6. Close out, in this order, once deployment is verified:
+   1. Add the chat to the ledger's Published table (PR, merge date) and set the brief's status to
+      "built" (or "dropped" / "merged", with the reason).
+   2. **Mark the chat in ChatGPT (required):** rename it to `***<original title>` in the user's
+      real Chrome, in the Mneme Growth and GTM project. Mark every chat whose scoped items are all
+      shipped, merged into another shipped article, or explicitly dropped by the user; a chat with
+      any open item stays unmarked (e.g. `Post-Writing ROI Content` while its backlog is open).
+      The user authorised this rename as part of the workflow (2026-10-12); it is the only write
+      to ChatGPT in this procedure. Never rename a chat for any other reason, never edit or delete
+      messages, never mark a `Post-tv-` chat.
+   3. Verify each mark: re-list the project's conversations and confirm the new titles start with
+      `***`. Report the marked chats, and any that stayed unmarked with why, in the close-out
+      message.
