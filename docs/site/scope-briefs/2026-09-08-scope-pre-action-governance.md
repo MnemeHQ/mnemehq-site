@@ -25,6 +25,7 @@ Proposed values for the first buildable piece. **Blocked** until the naming ques
 | OG headline | What Is Pre-Action Governance? (4 words) |
 | Editorial gate | pass: distinct category-defining query |
 | Five questions | changed: agents act, not just generate; matters: review only sees results; breaks: consequential actions run before any control; do: put deterministic gates at the action boundary; governance: allow / warn / block before execution |
+| Cannibalisation | `find_overlap.py`: `package-hallucinations-pre-action-governance` 80.2 (news intent vs this definition intent), next 29.8. Verdict: clear if this becomes the canonical definition and the package page links to it. **Batch overlap:** competes as a category term with "decision governance" and "engineering coherence" (2026-10-07 and 10-04 chats) |
 | Overlap verdict | link to `package-hallucinations-pre-action-governance` and `review-is-not-governance`; keep apart from the O'Reilly/TechTalks angles |
 | Cross-links | the two pages above, `agentic-change-management-needs-a-decision-layer` |
 | **Blocking** | is "pre-action governance" the category or only the mechanism? The CodeRabbit chat says mechanism. A new category term also needs a PUBLISHING.md terminology amendment and possibly ADR-001/013/014 changes |

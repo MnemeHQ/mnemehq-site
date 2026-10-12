@@ -25,7 +25,7 @@ Complete every row before building. "TBD" blocks the build.
 | OG headline | 4-7 words |
 | Editorial gate | pass: which criterion (distinct query / new evidence / named-source entry point / cornerstone support) / drop / re-angle |
 | Five questions | what changed; why it matters; what breaks; what teams should do; how governance helps (one line each) |
-| Overlap verdict | none / link to `<slug>` / re-angle against `<slug>` / update `<slug>` instead |
+| Cannibalisation | `find_overlap.py` top hits with scores; verdict: clear / re-angle (state the angle) / update `<slug>` instead / merge or drop; plus any overlap with other briefs in the batch |
 | Cross-links | 2-3 existing insights to link from and to |
 
 ## Agreed scope

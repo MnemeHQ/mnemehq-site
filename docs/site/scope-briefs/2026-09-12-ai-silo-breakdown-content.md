@@ -25,6 +25,7 @@ Proposed values; confirm with the user before building.
 | OG headline | Enterprise AI Has a Decision Silo (6 words) |
 | Editorial gate | conditional pass: distinct query ("enterprise AI silos"); no new evidence, so it must earn its place by supporting the decision-layer cornerstone |
 | Five questions | changed: agents act across systems; matters: each AI sees a partial company; breaks: agents violate decisions recorded elsewhere; do: make decisions machine-readable with scope and lifecycle; governance: a shared decision layer constrains specialised agents |
+| Cannibalisation | `find_overlap.py`: no strong site hit (top 41.2 `enterprise-ai-guardrails-five-layers`, unrelated intent). **Batch overlap:** the 2026-10-04 "Post- Cohesion And Reddit Thread" chat scopes "The Return of the Silo Engineer"; merge the two into one silo piece |
 | Overlap verdict | re-angle against `most-valuable-ai-dataset-decisions-already-made` and `agent-economy-needs-decision-infrastructure`, which argue the same layer; this piece's distinct angle is "silos" |
 | Cross-links | the two pages above, `forward-deployed-architects-need-a-decision-layer`, `software-factory-governance-layer` |
 

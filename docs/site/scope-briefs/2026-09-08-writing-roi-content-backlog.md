@@ -28,6 +28,17 @@ One row per buildable article. All go on the **engineering-performance** hub (wh
 | From AI Adoption to AI Value: A Maturity Model | `ai-adoption-to-ai-value-maturity-model` | no | From AI Adoption to Value | likely drop: overlaps `ai-adoption-maturity-model-engineering-analysis` |
 | AI Can Write 3x More Code. Why Isn't 3x More Software Shipping? | n/a | n/a | n/a | drop: superseded by the 240%/30% article |
 
+**Cannibalisation (`find_overlap.py`, 2026-10-12), overriding the Gate column where they differ:**
+
+| Article | Top hit (score) | Verdict |
+|---|---|---|
+| 240% / 30% (NBER) | `productivity-paradox-perception-vs-measurement` 50.0, `ai-coding-productivity-gains-rework` 44.9 | clear: distinct named paper (METR and Faros are different sources); link both |
+| Measure AI Coding ROI Without LOC | `ai-engineering-roi` 80.7 (the pillar is already "How to Measure the Real Return") | **merge or drop**: fold the scorecard into the pillar |
+| Hidden Cost of AI-Generated Rework | `ai-coding-productivity-gains-rework` 72.1, `use-cases/ci-governance-for-ai-generated-code` 72.6 | **re-angle or drop**: only the "unattributed downstream hour" accounting angle is new |
+| Senior Engineers | `ai-coding-agent-verification-tax` 54.3 | re-angle: redistribution of work to Staff/Principal only, not review volume |
+| Drift Is an ROI Leak | `ai-roi-problem-is-about-systems-not-models` 57.9 | re-angle: drift as one named leak, link the systems essay |
+| CTO renewal | `ai-coding-governance-should-be-reviewable` 56.0, `ai-engineering-roi` 47.9 | clear if it stays a buying-decision checklist |
+
 Five questions are shared across the cluster: changed: AI spend and coding activity rose sharply; matters: delivered value did not rise in step; breaks: gains are absorbed by review, rework and reconciliation; do: measure generation, delivery and governance layers separately; governance: prevent incompatible changes before they cost review time (kept to 10-20% of each piece).
 
 ## Backlog status against the repo (checked 2026-10-12)

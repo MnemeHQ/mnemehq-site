@@ -112,6 +112,8 @@ The archive is large. Growth now comes from authority and consolidation, not raw
 
 Do **not** publish another article merely because a new company announcement can be reframed as "this also needs governance."
 
+Before scoping a new article, run `python scripts/find_overlap.py "<title>" --keywords "<kw1>,<kw2>"` to find existing pages competing for the same query, and record the verdict in the scope brief (see the `publish-insight` skill).
+
 Editorial pattern for every piece:
 
 - **News → Problem → Governance.** Never "Company X launched Y"; always "Y exposes governance challenge Z." Lead with the recognizable entity for SEO, pivot to the governance interpretation.

@@ -38,7 +38,7 @@ Write one brief per chat at `docs/site/scope-briefs/<yyyy-mm-dd>-<kebab-title>.m
 
 - slug, title, report-anchored or not (ADR-015), topic hub, OG headline (4-7 words), eyebrow
 - editorial-gate verdict (below)
-- overlap check against `site/insights/` and `site/compare/`, `site/concepts/`
+- cannibalisation check (below)
 - every source with a verified / unverified flag
 - every Mneme claim with its maturity class
 
@@ -49,6 +49,29 @@ Mneme thesis; creates an entry point from a named report, vendor or paper; suppo
 through internal linking. Not because an announcement can be reframed as "this also needs
 governance". It must answer: what changed, why it matters, what breaks, what teams should do, how
 governance helps. Fail the gate → record "drop" or "re-angle" in the brief and stop.
+
+### Cannibalisation check
+
+Run for every proposed page, with its title and target keywords:
+
+```bash
+python scripts/find_overlap.py "<proposed title>" --keywords "<kw1>,<kw2>"
+```
+
+It ranks existing pages (insights, concepts, compare, docs, use-cases) by rarity-weighted overlap
+of title, H1, description and slug. It is a screen, not a verdict: read every page scoring 40 or
+more and judge whether a searcher for the target query would be served by it. Record the top hits
+and scores in the brief, then one verdict:
+
+- **clear**: distinct query or named-source entry point; link to the top hits.
+- **re-angle**: same topic, different intent; state the narrower angle that separates them.
+- **update instead**: same entity or query as an existing page (e.g. a new version of a spec
+  already covered); extend that page, do not publish a new one.
+- **merge or drop**: same thesis as an existing page.
+
+Also compare the candidates in the batch with each other (the script only sees published pages):
+two briefs scoping the same thesis become one article. New category terms proposed in the same
+batch compete too; settle them together under the terminology lock before building any of them.
 
 ## Stage 3: Build
 

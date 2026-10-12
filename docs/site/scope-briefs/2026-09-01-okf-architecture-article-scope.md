@@ -14,7 +14,8 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 
 | Field | Value |
 |---|---|
-| Kind | insight |
+| Kind | **update `open-knowledge-format-vs-governance` instead** (cannibalisation verdict below); the rows that follow apply only if the user overrides and wants a separate article |
+| Cannibalisation | `find_overlap.py`: `open-knowledge-format-vs-governance` 129.8 (same entity, same query), next hit 30.7. Verdict: **update instead**: add a v0.2 section (trust vs authority, applicability, Attested Computation precedent) to the June page and refresh its `dateModified` |
 | Title | Open Knowledge Format v0.2: From Trusted Knowledge to Enforceable Architecture (proposed; ADR-015 puts the entity first, unlike the chat's title) |
 | Slug | `open-knowledge-format-v0-2-enforceable-architecture` |
 | Report-anchored (ADR-015) | yes: entity = "Open Knowledge Format" (confirm exact version naming in the live spec) |
@@ -23,7 +24,6 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | OG headline | OKF v0.2 Meets Architectural Authority (5 words) |
 | Editorial gate | pass: new evidence (v0.2 trust, lifecycle and Attested Computation) plus a named-source entry point |
 | Five questions | changed: OKF v0.2 adds provenance, lifecycle, freshness, attestation; matters: agents get trusted knowledge; breaks: trusted is not authoritative, and authority is not applicability; do: classify authority and scope separately from trust; governance: compile the authoritative subset into scoped rules |
-| Overlap verdict | link to and differentiate from `open-knowledge-format-vs-governance` (2026-06-17, pre-v0.2) |
 | Cross-links | `open-knowledge-format-vs-governance` (and add a reciprocal link from it) |
 
 ## Agreed scope
