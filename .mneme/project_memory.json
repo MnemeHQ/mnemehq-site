@@ -39,8 +39,10 @@
       ],
       "anti_patterns": [],
       "rules": [],
+      "test_evidence": [],
       "created_at": "2026-08-20",
       "updated_at": "2026-08-20",
+      "status": "active",
       "source": {
         "type": "adr",
         "path": "../docs/adr/ADR-001-site-repository-governance.md",
@@ -59,31 +61,15 @@
       ],
       "anti_patterns": [],
       "rules": [],
+      "test_evidence": [],
       "created_at": "2026-08-20",
       "updated_at": "2026-08-20",
+      "status": "active",
       "source": {
         "type": "adr",
         "path": "../docs/adr/ADR-002-demo-evidence-contract.md",
         "sha256": "95c5913532bb0e26cc5044ae8c57a363aa3ccc219c6a7279e527559b778ce715"
       }
-    },
-    {
-      "id": "ADR-003",
-      "decision": "Status labels are monochrome; colour is reserved for semantic verdicts",
-      "rationale": "# ADR-003: Status labels are monochrome; colour is reserved for semantic verdicts\n\n## Status\n\nAccepted \u2014 2026-08-24\n\n## Context\n\nA visual audit of mnemehq.com (August 2026) found the same defect on three\nsurfaces: status/support-level tags rendered in multiple accent colours,\nproducing visual noise and implying distinctions the underlying evidence did\nnot support.\n\n1. `/integrations/` used green (native), teal (validated), and amber\n   (experimental) badge boxes on every card.\n2. `/demo/` used a green \"runs locally\" pill and a purple \"agents scripted\"\n   pill on every card.\n3. `/works-with/` overrode its neutral card tags with green and teal\n   variants, two coloured tags per card down an entire page.\n\nThe integrations hub fix (PR #45 follow-up, commit d8b92f02) established the\nworking pattern: a single monospace status line, one muted colour, no\nbackground or coloured border, with shipped-versus-not-shipped differentiated\nby card opacity rather than hue.\n\n## Decision\n\nAcross the site, status and support-level labels are monochrome:\n\n- One style: DM Mono, uppercase, small size, `var(--muted)` colour, no\n  background, no coloured border.\n- Non-shipped entries (experimental, planned, validation in progress) are\n  differentiated by reduced card opacity, never by a second colour.\n- Semantic verdict colours (PASS/WARN/FAIL greens/ambers/reds) are permitted\n  only where the element reports an actual verdict from the enforcement\n  engine (governance traces, demo output).\n- Third-party brand marks inside logo pills are exempt.\n\n## Compliance\n\nThe pattern is established in `site/integrations/index.html`\n(`.int-status` + `.int-card.muted`) and applied to `site/demo/index.html`\n(`.flagship-tag.*`) and `site/works-with/index.html` (`.card-tag` overrides\nremoved). New pages must not reintroduce coloured status badges.\n\n### What Mneme does and does not enforce here\n\nAn earlier version of this record carried the three anti-patterns above as\nprose sentences (\"Colored badge/pill boxes...\", \"Two or more coloured tags\non one card\", \"Colour as the only signal...\"). The first preflight run\nproduced three findings, recorded here rather than quietly fixed, because\nthis repository dogfoods the same semantics documented for users:\n\n1. Anti-pattern values are tokenised and matched word-boundary, so the\n   trigger `teal` fired on any page whose stylesheet references\n   `var(--teal)` \u2014 including pages that comply with this ADR.\n2. The triggers `two`, `one`, and `only` fire on ordinary English prose.\n   Three compliant files failed; nothing non-compliant was caught that\n   review would have missed.\n3. Byte-level CSS conventions (which class may carry which colour) are not\n   text-token properties. As with ADR-002's `FORBID_LITERAL` finding, this\n   belongs with repository checks or a future directive that can match\n   exact literals with include-paths, not with prose anti-patterns.\n\nSo badge-regression detection is **not** machine-enforced today. Compliance\ndepends on review attention; the canonical pattern to copy is\n`.int-status` / `.int-card.muted` in `site/integrations/index.html`.\n",
-      "scope": [
-        "site/*"
-      ],
-      "constraints": [
-        "Status/support-level tags: DM Mono uppercase, var(--muted), no background, no coloured border",
-        "Non-shipped differentiation via card opacity only",
-        "Verdict colours only for real PASS/WARN/FAIL output",
-        "Brand marks in logo pills exempt"
-      ],
-      "anti_patterns": [],
-      "created_at": "2026-08-24",
-      "updated_at": "2026-08-24",
-      "source": "Visual audit 2026-08-24; integrations hub redesign commit d8b92f02"
     },
     {
       "id": "ADR-004",
@@ -95,13 +81,258 @@
       "constraints": [],
       "anti_patterns": [],
       "rules": [],
+      "test_evidence": [],
       "created_at": "2026-08-30",
       "updated_at": "2026-08-30",
+      "status": "active",
       "source": {
         "type": "adr",
         "path": "../docs/adr/ADR-004-first-party-evidence-contract.md",
         "sha256": "574d7d5f8edeaef1d535341837e6c2cb8557937da9a17bc8d991ef493b3c2ca6"
       }
+    },
+    {
+      "id": "rule-intent-based-branch-names",
+      "decision": "Branch names describe the work, not the execution model",
+      "rationale": "",
+      "scope": [
+        "general"
+      ],
+      "constraints": [
+        "Use distinctive, intent-based branch names under the repository taxonomy (for example site/, feat/, fix/, ci/, docs/, or refactor/). Do not include the model, assistant, coding harness, or tool identity in a branch name, including codex/, chatgpt/, claude/, copilot/, or generic agent prefixes, unless that named product is genuinely the subject of the repository change. Normalize an automatically generated branch name before preparing a pull request. Example: site/insights-governance-wave-aug-2026."
+      ],
+      "anti_patterns": [],
+      "rules": [],
+      "test_evidence": [],
+      "created_at": "",
+      "updated_at": "",
+      "status": "active"
+    },
+    {
+      "id": "ADR-009",
+      "decision": "Status labels are monochrome; colour is reserved for semantic verdicts",
+      "rationale": "# ADR-009: Status labels are monochrome; colour is reserved for semantic verdicts\n\n## Status\n\nAccepted \u2014 2026-08-24\n\n## Provenance\n\nThis is not a new decision. It is the site decision first recorded on\n2026-08-24 as project-memory entry `ADR-003` (commit `83205ad3e`; anti-patterns\ncleared in `e3a55f6d0`), moved into an ADR file on 2026-10-12 with its\ndecision, rationale, constraints and dates unchanged. Original source note:\n\"Visual audit 2026-08-24; integrations hub redesign commit d8b92f02\".\n\nTwo reasons for the move:\n\n- Mneme 0.10.0 migrates project memory into an authoritative decision index\n  only from decisions whose source is an ADR file. The memory-only entry had a\n  free-text source, so the migration refused it.\n- `docs/adr/history/ADR-003-site-publishing-guidelines.md` is a different,\n  superseded core decision that shares the id `ADR-003`. Renumbering this\n  decision to ADR-009 removes that ambiguity. The historical record is\n  unchanged. ADR-005 was not used: in this repository it already names the\n  core repo's ADR-005 (the PyPI distribution is `mneme-hq`), which the\n  install-command gate and several pages cite.\n\nRepresentational differences from the memory entry, none of which changes\nwhat is enforced:\n\n- Scope `site/*` becomes `site.status_labels`: ADR scopes must be dotted\n  identifiers. Mneme uses decision scope as retrieval text, not as path\n  applicability.\n- The four constraint strings are listed under Constraints below as prose.\n  As before, none is a machine-enforceable directive.\n- Priority `normal` is set because ADR files require one. The decision is\n  the only one in its scope, so no precedence outcome changes.\n\n## Context\n\nA visual audit of mnemehq.com (August 2026) found the same defect on three\nsurfaces: status/support-level tags rendered in multiple accent colours,\nproducing visual noise and implying distinctions the underlying evidence did\nnot support.\n\n1. `/integrations/` used green (native), teal (validated), and amber\n   (experimental) badge boxes on every card.\n2. `/demo/` used a green \"runs locally\" pill and a purple \"agents scripted\"\n   pill on every card.\n3. `/works-with/` overrode its neutral card tags with green and teal\n   variants, two coloured tags per card down an entire page.\n\nThe integrations hub fix (PR #45 follow-up, commit d8b92f02) established the\nworking pattern: a single monospace status line, one muted colour, no\nbackground or coloured border, with shipped-versus-not-shipped differentiated\nby card opacity rather than hue.\n\n## Decision\n\nAcross the site, status and support-level labels are monochrome:\n\n- One style: DM Mono, uppercase, small size, `var(--muted)` colour, no\n  background, no coloured border.\n- Non-shipped entries (experimental, planned, validation in progress) are\n  differentiated by reduced card opacity, never by a second colour.\n- Semantic verdict colours (PASS/WARN/FAIL greens/ambers/reds) are permitted\n  only where the element reports an actual verdict from the enforcement\n  engine (governance traces, demo output).\n- Third-party brand marks inside logo pills are exempt.\n\n## Constraints\n\n- Status/support-level tags: DM Mono uppercase, var(--muted), no background, no coloured border\n- Non-shipped differentiation via card opacity only\n- Verdict colours only for real PASS/WARN/FAIL output\n- Brand marks in logo pills exempt\n\n## Compliance\n\nThe pattern is established in `site/integrations/index.html`\n(`.int-status` + `.int-card.muted`) and applied to `site/demo/index.html`\n(`.flagship-tag.*`) and `site/works-with/index.html` (`.card-tag` overrides\nremoved). New pages must not reintroduce coloured status badges.\n\n### What Mneme does and does not enforce here\n\nAn earlier version of this record carried the three anti-patterns above as\nprose sentences (\"Colored badge/pill boxes...\", \"Two or more coloured tags\non one card\", \"Colour as the only signal...\"). The first preflight run\nproduced three findings, recorded here rather than quietly fixed, because\nthis repository dogfoods the same semantics documented for users:\n\n1. Anti-pattern values are tokenised and matched word-boundary, so the\n   trigger `teal` fired on any page whose stylesheet references\n   `var(--teal)` \u2014 including pages that comply with this ADR.\n2. The triggers `two`, `one`, and `only` fire on ordinary English prose.\n   Three compliant files failed; nothing non-compliant was caught that\n   review would have missed.\n3. Byte-level CSS conventions (which class may carry which colour) are not\n   text-token properties. As with ADR-002's `FORBID_LITERAL` finding, this\n   belongs with repository checks or a future directive that can match\n   exact literals with include-paths, not with prose anti-patterns.\n\nSo badge-regression detection is **not** machine-enforced today. Compliance\ndepends on review attention; the canonical pattern to copy is\n`.int-status` / `.int-card.muted` in `site/integrations/index.html`.\n",
+      "scope": [
+        "site.status_labels"
+      ],
+      "constraints": [],
+      "anti_patterns": [],
+      "rules": [],
+      "test_evidence": [],
+      "created_at": "2026-08-24",
+      "updated_at": "2026-08-24",
+      "status": "active",
+      "source": {
+        "type": "adr",
+        "path": "../docs/adr/ADR-009-monochrome-status-labels.md",
+        "sha256": "b8ed3956f50e0c9aa53be323c8c9a896a4678548f0cd9e4f806cff00b95c104c"
+      }
     }
-  ]
+  ],
+  "decision_index": {
+    "schema": "mneme.decision-index/v1",
+    "decisions": [
+      {
+        "decision_id": "ADR-001",
+        "decision_class": "architecture",
+        "lifecycle_status": "active",
+        "active_version_id": "dver-8afaf5373b8de62b3f73ad4a64dc455c",
+        "test_evidence": [],
+        "relationships": [],
+        "updated_at": "2026-08-20"
+      },
+      {
+        "decision_id": "ADR-002",
+        "decision_class": "architecture",
+        "lifecycle_status": "active",
+        "active_version_id": "dver-210d425cc60c3bb6ba697728a0858400",
+        "test_evidence": [],
+        "relationships": [],
+        "updated_at": "2026-08-20"
+      },
+      {
+        "decision_id": "ADR-004",
+        "decision_class": "architecture",
+        "lifecycle_status": "active",
+        "active_version_id": "dver-3686c8f8ef9c0a9caac8c8c4bb044f8a",
+        "test_evidence": [],
+        "relationships": [],
+        "updated_at": "2026-08-30"
+      },
+      {
+        "decision_id": "rule-intent-based-branch-names",
+        "decision_class": "architecture",
+        "lifecycle_status": "active",
+        "active_version_id": "dver-4778946b5b6a94f44a0661dba8b0b3f3",
+        "test_evidence": [],
+        "relationships": [],
+        "updated_at": ""
+      },
+      {
+        "decision_id": "ADR-009",
+        "decision_class": "architecture",
+        "lifecycle_status": "active",
+        "active_version_id": "dver-838b05d4787af817c7725236b418b86c",
+        "test_evidence": [],
+        "relationships": [],
+        "updated_at": "2026-08-24"
+      }
+    ],
+    "versions": [
+      {
+        "version_id": "dver-8afaf5373b8de62b3f73ad4a64dc455c",
+        "decision_id": "ADR-001",
+        "revision": "1",
+        "content_digest": "f01247f3d60feab7728dd119a87d8b90c4d75c39d3efb132d89b65e750d49668",
+        "statement": "The website repository dogfoods Mneme governance",
+        "rationale": "# ADR-001: The website repository dogfoods Mneme governance\n\n## Status\n\nAccepted \u2014 2026-08-20\n\n## Context\n\nThe mnemehq.com source and deployment path moved from `MnemeHQ/mneme` into\nthis repository in July 2026. The transfer was recorded by core ADR-016. Seven\nolder core ADRs (ADR-003, ADR-006, ADR-007, ADR-008, ADR-011, ADR-012, and\nADR-015) remain there as immutable, superseded historical records. Exact\ncopies also live under `docs/adr/history/` so the website repository carries\nits provenance locally without making those records active again.\n\nTheir current rules were migrated into this repository's `PUBLISHING.md`,\nwhich is the canonical and maintained publishing-governance document. Copying\nthe superseded records here as active ADRs would create a second copy of those\nrules and allow it to drift from `PUBLISHING.md`.\n\nThe website repository nevertheless needs to exercise Mneme's released\ninstallation, ADR compiler, decision memory, retrieval, and strict preflight\non its own changes. That is the most direct dogfood path for the product the\nsite documents.\n\n## Decision\n\n1. `PUBLISHING.md` remains the canonical source for detailed website\n   publishing and deployment governance.\n2. The superseded site ADRs remain in `MnemeHQ/mneme/docs/adr/` as historical\n   records and are mirrored unchanged under `docs/adr/history/`. They are not\n   deleted, modified, or reactivated.\n3. This repository owns an active ADR corpus under `docs/adr/` for current\n   repository-level governance decisions. This decision supersedes only the\n   earlier transfer plan's statement that the site would not run the compiler;\n   it does not reactivate any superseded core ADR.\n4. The Mneme ADR compiler produces the native entries in\n   `.mneme/project_memory.json`. The compiled file is committed so agent and CI\n   consumers all see the same deterministic decision.\n5. CI installs the published `mneme-hq` distribution, recompiles the corpus to\n   detect stale memory, and runs `mneme check --mode strict` against the change\n   surface on every pull request and push to `main`.\n6. Purpose-built website validators remain authoritative for structural rules\n   that Mneme's current lexical preflight cannot evaluate, including nav/footer\n   synchronization, schemas, sitemap registration, and install-command safety.\n\n## Constraints\n\n- REQUIRE_PATH: site/**\n- REQUIRE_PATH: PUBLISHING.md\n- REQUIRE_PATH: .mneme/project_memory.json\n- FORBID_PATH: scratch/**\n\n## Consequences\n\n- The website now exercises the same install, compile, memory, retrieval, and\n  enforcement path recommended to Mneme users.\n- The historical rationale is locally available without admitting the stale\n  ADR bodies into the active website corpus.\n- Future website governance decisions can be added here and compiled normally;\n  detailed publishing procedures continue to live in `PUBLISHING.md`.\n\n## Related\n\n- `PUBLISHING.md`\n- `MnemeHQ/mneme/docs/adr/ADR-016-site-governance-transfer.md`\n- `MnemeHQ/mneme/docs/adr/ADR-003`, `ADR-006`, `ADR-007`, `ADR-008`,\n  `ADR-011`, `ADR-012`, and `ADR-015` (superseded historical records)\n",
+        "context_scope": [
+          "repo.website_governance"
+        ],
+        "constraints": [
+          "REQUIRE_PATH site/**",
+          "REQUIRE_PATH PUBLISHING.md",
+          "REQUIRE_PATH .mneme/project_memory.json",
+          "FORBID_PATH scratch/**"
+        ],
+        "anti_patterns": [],
+        "source_evidence": [
+          {
+            "source_type": "adr",
+            "source_locator": "../docs/adr/ADR-001-site-repository-governance.md",
+            "source_revision": "ac42f7ccac4efd1b3e5482e27131d00fbbfe37fcaf3de40322dcb31c42025b7a",
+            "observed_at": "",
+            "verification_status": ""
+          }
+        ],
+        "occurrence_source_identity": [
+          "ADR-001",
+          "ac42f7ccac4efd1b3e5482e27131d00fbbfe37fcaf3de40322dcb31c42025b7a",
+          "adr-import"
+        ],
+        "supersedes_version_id": null,
+        "created_at": "2026-08-20"
+      },
+      {
+        "version_id": "dver-210d425cc60c3bb6ba697728a0858400",
+        "decision_id": "ADR-002",
+        "revision": "1",
+        "content_digest": "0efa23038a4c0c6035284f39f7900375382048b7676029c8df9364273e099d19",
+        "statement": "Demo claims must match their executable path",
+        "rationale": "# ADR-002: Demo claims must match their executable path\n\n## Status\n\nAccepted \u2014 2026-08-20\n\n## Context\n\nA UX audit of `/demo/` in August 2026 found four defects that share one root\ncause: the website's narrative had drifted away from the product's executable\nstate. These were not styling problems. They were evidence-chain problems.\n\n1. The homepage advertised `python demo.py --dry-run` printing\n   `BLOCKED \u00b7 decision rule-001`. That script is a context-injection\n   before/after comparison. It skips alignment evaluation entirely in\n   `--dry-run`, and the string `rule-001` does not exist anywhere in the\n   product. The surrounding card labelled the experience \"Reproducible\".\n2. The ADR-005 centerpiece asserted three different severities for one\n   scenario: prose said \"blocks\", the animation rendered `FAIL`, and the\n   page's own expected-output block said `Result: WARN`.\n3. `/demo/agent-sdk-governance/` told visitors to run\n   `cd mneme/examples/agent-sdk-governance && python run.py` and claimed\n   \"the repo ships a Python script\". That directory does not exist.\n4. `/demo/` cited \"117 passing benchmark scenarios\". 117 was a stale test\n   count from a May 2026 planning document; the benchmark suite has 7\n   scenarios, and the test suite had grown to 447.\n\nA governance product cannot afford demos whose claims drift from their\nsource. Fixing the four instances without fixing the mechanism would let an\nequivalent set accumulate again.\n\n## Decision\n\nEvery severity or capability claim on a demo surface must correspond to an\nexecutable path that produces it, or be explicitly marked illustrative.\n\n### Canonical evidence contract \u2014 ADR-005 centerpiece\n\n| Field | Value |\n| --- | --- |\n| Scenario | ADR-005 brand-vs-package namespace rule |\n| Canonical command | `python examples/demo-adr-import.py` |\n| Actual verdict | `WARN [ADR-005] constraint \"no MnemeHQ\" -- trigger: mnemehq` |\n| Actual capability | Deterministically detects the violation before the compliant retry |\n| Claims allowed | detects, flags, warns, catches |\n| Claims not allowed | blocks, prevents, stops execution |\n\nThe homepage, the `/demo/` hub, the flagship page, and the runnable command\nall derive their story from this contract. Changing the verdict requires\nchanging the contract first.\n\n### Illustrative examples\n\nA surface may show a `BLOCK` or `FAIL` verdict that no shipped command\nproduces **only** when it is scoped to the reader's own hypothetical\nrepository and names no clonable path. The homepage typed-rule example\n(`IF path = frontend/** AND dependency = @google-cloud/bigquery THEN BLOCK`)\nand its `ADR-017` verdict qualify. They describe the enforcement model, not a\nreproducible run.\n\nThis ADR does not narrow Mneme's positioning. Genuine deterministic block\npaths may be claimed wherever they are demonstrably true. What is forbidden is\nclaim-to-evidence mismatch on a surface that invites the reader to reproduce it.\n\n### Badging\n\n`Runnable` may be applied only to a command that exists in the published\nrepository and whose on-page output matches the real run. Anything else is\n`Walkthrough` or `On the roadmap`.\n\n## Constraints\n\n- REQUIRE_PATH: site/demo/**\n\n### What Mneme does and does not enforce here\n\nAn earlier draft carried `FORBID_DEPENDENCY: rule-001` and claimed the\nfabricated identifier could not re-enter the site without the preflight\nfiring. Testing that claim produced three findings, recorded here rather than\nquietly fixed, because this ADR exists to stop exactly that kind of\nunverified assertion.\n\n1. Wrong directive. `FORBID_DEPENDENCY` tokenises its value, so `rule-001`\n   reduced to the trigger `rule` and fired on any page containing the word --\n   235 files here, including this repository's own governance copy.\n2. Wrong input. The preflight ran `mneme check` against\n   `.mneme/changed-paths.txt`, a file listing changed *path names*. No content\n   directive can fire against a list of paths. A second CI step now feeds the\n   contents of changed `site/` files, so content decisions become evaluable.\n3. The right directive is not released yet. `FORBID_LITERAL` matches an exact\n   string and takes `include_paths`; verified locally, it returns\n   `FAIL [ADR-002] FORBID_LITERAL \"rule-001\"` on the literal and `PASS` on\n   \"typed rules compile into enforceable constraints\". But it landed after the\n   `v0.5.1` tag and PyPI's newest release is 0.5.1, so the published\n   distribution silently drops the rule. This repository installs\n   `mneme-hq>=0.5.0` from PyPI on purpose, to exercise the same path\n   documented for users, so pinning CI to a git ref to gain the directive\n   would defeat the point of dogfooding.\n\nSo `rule-001` is **not** machine-enforced today. Add the `FORBID_LITERAL`\ndirective to the Constraints section above once a release containing it ships,\nand re-run `mneme adr import` to compile it.\n\nWhat decision constraints cannot express at any version is a byte-level\nproperty. Newline convention and character encoding are not text tokens, so\nthey stay with repository checks:\n\n- `scripts/check_encoding.py` -- mojibake and stray BOMs.\n- `scripts/check_line_endings.py` -- a change that rewrites a file's newline\n  convention.\n\n## Consequences\n\n- Reintroducing `rule-001` still passes CI. That regression depends on review\n  attention until a `mneme-hq` release carries `FORBID_LITERAL`; the CI step\n  that feeds file contents is already in place to evaluate it when it does.\n- Demo severity language is now derivable from one table instead of being\n  restated independently on each page.\n- Shipping a real blocking path for ADR-005, or a genuine\n  `examples/agent-sdk-governance`, is a contract change followed by a copy\n  change \u2014 in that order.\n",
+        "context_scope": [
+          "site.demo_evidence"
+        ],
+        "constraints": [
+          "REQUIRE_PATH site/demo/**"
+        ],
+        "anti_patterns": [],
+        "source_evidence": [
+          {
+            "source_type": "adr",
+            "source_locator": "../docs/adr/ADR-002-demo-evidence-contract.md",
+            "source_revision": "95c5913532bb0e26cc5044ae8c57a363aa3ccc219c6a7279e527559b778ce715",
+            "observed_at": "",
+            "verification_status": ""
+          }
+        ],
+        "occurrence_source_identity": [
+          "ADR-002",
+          "95c5913532bb0e26cc5044ae8c57a363aa3ccc219c6a7279e527559b778ce715",
+          "adr-import"
+        ],
+        "supersedes_version_id": null,
+        "created_at": "2026-08-20"
+      },
+      {
+        "version_id": "dver-3686c8f8ef9c0a9caac8c8c4bb044f8a",
+        "decision_id": "ADR-004",
+        "revision": "1",
+        "content_digest": "262c4aa0039cf37f150b641c853946bb990b9429249eb85bd86f57b3c211dd9a",
+        "statement": "Public empirical claims must resolve to a verified public artifact",
+        "rationale": "# ADR-004: Public empirical claims must resolve to a verified public artifact\n\n## Status\n\nAccepted \u2014 2026-08-30\n\n## Context\n\nA citation-worthiness review of the site's insights content found that\nseveral articles synthesize third-party evidence (Gartner, research\npapers, vendor reports) well but supply little first-party evidence of\ntheir own \u2014 content that interprets sources rather than contributing an\nobservation a retrieval system could cite. Mneme already has reproducible\nfirst-party evidence in the public `MnemeHQ/mneme` repository: a frozen\nenforcement benchmark and an enforcement-quality suite, both with\ncommitted, versioned results.\n\n[ADR-002](ADR-002-demo-evidence-contract.md) already established this\ndiscipline for `site/demo/**`: a claim must correspond to an executable\npath that produces it, or be marked illustrative. Content outside\n`site/demo/**` \u2014 insights articles citing benchmark numbers \u2014 has no\nequivalent contract, and nothing stops a number from drifting out of\nsync with the artifact that produced it once either side is edited.\n\n## Decision\n\nPublic empirical claims must resolve to a verified public artifact and\ncarry an explicit claim boundary.\n\nConcretely: any first-party result cited on the site (a benchmark\nnumber, a measured rate, a pass/fail count) must link to a public,\ncommitted artifact that actually contains that result, and the\nsurrounding copy must state what the result does and does not\nestablish. A result whose source artifact is not yet public, or has not\nbeen verified against the page's claim, is not eligible to be cited.\n\nThis ADR states the rule. It does not prescribe a visual component,\npage layout, or paragraph template \u2014 those are implementation detail\nthat can change without revising this document. The initial\nimplementation (an evidence registry and a small CI checker) is recorded\nin `docs/superpowers/specs/2026-08-30-citation-worthiness-evidence-design.md`,\nnot here.\n\n## Consequences\n\n- A claim can be written before its source artifact is public, but\n  cannot ship until the artifact is merged to the source repository's\n  main branch and the claim is verified against it.\n- This is expected to recur: future benchmark results, design-partner\n  evidence, and other first-party observations should be checked\n  against this same rule before being cited on the site.\n",
+        "context_scope": [
+          "site.evidence"
+        ],
+        "constraints": [],
+        "anti_patterns": [],
+        "source_evidence": [
+          {
+            "source_type": "adr",
+            "source_locator": "../docs/adr/ADR-004-first-party-evidence-contract.md",
+            "source_revision": "574d7d5f8edeaef1d535341837e6c2cb8557937da9a17bc8d991ef493b3c2ca6",
+            "observed_at": "",
+            "verification_status": ""
+          }
+        ],
+        "occurrence_source_identity": [
+          "ADR-004",
+          "574d7d5f8edeaef1d535341837e6c2cb8557937da9a17bc8d991ef493b3c2ca6",
+          "adr-import"
+        ],
+        "supersedes_version_id": null,
+        "created_at": "2026-08-30"
+      },
+      {
+        "version_id": "dver-4778946b5b6a94f44a0661dba8b0b3f3",
+        "decision_id": "rule-intent-based-branch-names",
+        "revision": "1",
+        "content_digest": "b8430bbf8810f1a190efa79ef131f006ba56b572111682b0dcb70bbcca51f4bb",
+        "statement": "Branch names describe the work, not the execution model",
+        "rationale": "",
+        "context_scope": [
+          "general"
+        ],
+        "constraints": [
+          "Use distinctive, intent-based branch names under the repository taxonomy (for example site/, feat/, fix/, ci/, docs/, or refactor/). Do not include the model, assistant, coding harness, or tool identity in a branch name, including codex/, chatgpt/, claude/, copilot/, or generic agent prefixes, unless that named product is genuinely the subject of the repository change. Normalize an automatically generated branch name before preparing a pull request. Example: site/insights-governance-wave-aug-2026."
+        ],
+        "anti_patterns": [],
+        "source_evidence": [
+          {
+            "source_type": "runtime",
+            "source_locator": "",
+            "source_revision": "",
+            "observed_at": "",
+            "verification_status": ""
+          }
+        ],
+        "occurrence_source_identity": [
+          "legacy-items",
+          "rule-intent-based-branch-names"
+        ],
+        "supersedes_version_id": null,
+        "created_at": ""
+      },
+      {
+        "version_id": "dver-838b05d4787af817c7725236b418b86c",
+        "decision_id": "ADR-009",
+        "revision": "1",
+        "content_digest": "49dce88dea61b158e0766fbfe7e8bb9a457fa59723d4ff580d03e0b51c35e373",
+        "statement": "Status labels are monochrome; colour is reserved for semantic verdicts",
+        "rationale": "# ADR-009: Status labels are monochrome; colour is reserved for semantic verdicts\n\n## Status\n\nAccepted \u2014 2026-08-24\n\n## Provenance\n\nThis is not a new decision. It is the site decision first recorded on\n2026-08-24 as project-memory entry `ADR-003` (commit `83205ad3e`; anti-patterns\ncleared in `e3a55f6d0`), moved into an ADR file on 2026-10-12 with its\ndecision, rationale, constraints and dates unchanged. Original source note:\n\"Visual audit 2026-08-24; integrations hub redesign commit d8b92f02\".\n\nTwo reasons for the move:\n\n- Mneme 0.10.0 migrates project memory into an authoritative decision index\n  only from decisions whose source is an ADR file. The memory-only entry had a\n  free-text source, so the migration refused it.\n- `docs/adr/history/ADR-003-site-publishing-guidelines.md` is a different,\n  superseded core decision that shares the id `ADR-003`. Renumbering this\n  decision to ADR-009 removes that ambiguity. The historical record is\n  unchanged. ADR-005 was not used: in this repository it already names the\n  core repo's ADR-005 (the PyPI distribution is `mneme-hq`), which the\n  install-command gate and several pages cite.\n\nRepresentational differences from the memory entry, none of which changes\nwhat is enforced:\n\n- Scope `site/*` becomes `site.status_labels`: ADR scopes must be dotted\n  identifiers. Mneme uses decision scope as retrieval text, not as path\n  applicability.\n- The four constraint strings are listed under Constraints below as prose.\n  As before, none is a machine-enforceable directive.\n- Priority `normal` is set because ADR files require one. The decision is\n  the only one in its scope, so no precedence outcome changes.\n\n## Context\n\nA visual audit of mnemehq.com (August 2026) found the same defect on three\nsurfaces: status/support-level tags rendered in multiple accent colours,\nproducing visual noise and implying distinctions the underlying evidence did\nnot support.\n\n1. `/integrations/` used green (native), teal (validated), and amber\n   (experimental) badge boxes on every card.\n2. `/demo/` used a green \"runs locally\" pill and a purple \"agents scripted\"\n   pill on every card.\n3. `/works-with/` overrode its neutral card tags with green and teal\n   variants, two coloured tags per card down an entire page.\n\nThe integrations hub fix (PR #45 follow-up, commit d8b92f02) established the\nworking pattern: a single monospace status line, one muted colour, no\nbackground or coloured border, with shipped-versus-not-shipped differentiated\nby card opacity rather than hue.\n\n## Decision\n\nAcross the site, status and support-level labels are monochrome:\n\n- One style: DM Mono, uppercase, small size, `var(--muted)` colour, no\n  background, no coloured border.\n- Non-shipped entries (experimental, planned, validation in progress) are\n  differentiated by reduced card opacity, never by a second colour.\n- Semantic verdict colours (PASS/WARN/FAIL greens/ambers/reds) are permitted\n  only where the element reports an actual verdict from the enforcement\n  engine (governance traces, demo output).\n- Third-party brand marks inside logo pills are exempt.\n\n## Constraints\n\n- Status/support-level tags: DM Mono uppercase, var(--muted), no background, no coloured border\n- Non-shipped differentiation via card opacity only\n- Verdict colours only for real PASS/WARN/FAIL output\n- Brand marks in logo pills exempt\n\n## Compliance\n\nThe pattern is established in `site/integrations/index.html`\n(`.int-status` + `.int-card.muted`) and applied to `site/demo/index.html`\n(`.flagship-tag.*`) and `site/works-with/index.html` (`.card-tag` overrides\nremoved). New pages must not reintroduce coloured status badges.\n\n### What Mneme does and does not enforce here\n\nAn earlier version of this record carried the three anti-patterns above as\nprose sentences (\"Colored badge/pill boxes...\", \"Two or more coloured tags\non one card\", \"Colour as the only signal...\"). The first preflight run\nproduced three findings, recorded here rather than quietly fixed, because\nthis repository dogfoods the same semantics documented for users:\n\n1. Anti-pattern values are tokenised and matched word-boundary, so the\n   trigger `teal` fired on any page whose stylesheet references\n   `var(--teal)` \u2014 including pages that comply with this ADR.\n2. The triggers `two`, `one`, and `only` fire on ordinary English prose.\n   Three compliant files failed; nothing non-compliant was caught that\n   review would have missed.\n3. Byte-level CSS conventions (which class may carry which colour) are not\n   text-token properties. As with ADR-002's `FORBID_LITERAL` finding, this\n   belongs with repository checks or a future directive that can match\n   exact literals with include-paths, not with prose anti-patterns.\n\nSo badge-regression detection is **not** machine-enforced today. Compliance\ndepends on review attention; the canonical pattern to copy is\n`.int-status` / `.int-card.muted` in `site/integrations/index.html`.\n",
+        "context_scope": [
+          "site.status_labels"
+        ],
+        "constraints": [],
+        "anti_patterns": [],
+        "source_evidence": [
+          {
+            "source_type": "adr",
+            "source_locator": "../docs/adr/ADR-009-monochrome-status-labels.md",
+            "source_revision": "b8ed3956f50e0c9aa53be323c8c9a896a4678548f0cd9e4f806cff00b95c104c",
+            "observed_at": "",
+            "verification_status": ""
+          }
+        ],
+        "occurrence_source_identity": [
+          "ADR-009",
+          "b8ed3956f50e0c9aa53be323c8c9a896a4678548f0cd9e4f806cff00b95c104c",
+          "adr-import"
+        ],
+        "supersedes_version_id": null,
+        "created_at": "2026-08-24"
+      }
+    ],
+    "rules": []
+  }
 }
