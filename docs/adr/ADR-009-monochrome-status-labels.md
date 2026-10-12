@@ -1,5 +1,5 @@
 ---
-id: ADR-005
+id: ADR-009
 title: "Status labels are monochrome; colour is reserved for semantic verdicts"
 status: accepted
 priority: normal
@@ -7,7 +7,7 @@ date: 2026-08-24
 scope: site.status_labels
 ---
 
-# ADR-005: Status labels are monochrome; colour is reserved for semantic verdicts
+# ADR-009: Status labels are monochrome; colour is reserved for semantic verdicts
 
 ## Status
 
@@ -28,8 +28,10 @@ Two reasons for the move:
   free-text source, so the migration refused it.
 - `docs/adr/history/ADR-003-site-publishing-guidelines.md` is a different,
   superseded core decision that shares the id `ADR-003`. Renumbering this
-  decision to ADR-005 removes that ambiguity. The historical record is
-  unchanged.
+  decision to ADR-009 removes that ambiguity. The historical record is
+  unchanged. ADR-005 was not used: in this repository it already names the
+  core repo's ADR-005 (the PyPI distribution is `mneme-hq`), which the
+  install-command gate and several pages cite.
 
 Representational differences from the memory entry, none of which changes
 what is enforced:
