@@ -401,7 +401,7 @@ Migrated .mneme/project_memory.json: decision_index is now authoritative.</pre>
           </tbody>
         </table>
       </div>
-      <ul class="cdesc">
+      <ul class="cdesc" style="padding-left:1.2rem;">
         <li><strong>Lossless or it refuses.</strong> If any decision can&rsquo;t be represented in the index, it prints <code>ERROR: migration refused: &hellip;</code>, exits 2, and writes nothing. A decision whose <code>source</code> is not an ADR file, such as a free-text note or an EventCatalog import, is refused; move it into an ADR file and import it first.</li>
         <li><strong>Safe to re-run.</strong> On migrated memory it prints <code>Already migrated: decision_index is authoritative and valid; nothing to do.</code> and leaves the file byte-identical.</li>
         <li><strong>No lost updates.</strong> <code>--apply</code> refuses if the file changed after it was read.</li>
