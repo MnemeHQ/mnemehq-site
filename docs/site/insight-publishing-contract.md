@@ -37,6 +37,23 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 9. **CollectionPage hasPart entry** — the slug must appear in the `hasPart` array of a `CollectionPage` JSON-LD on the **archive** (`/insights/all/`) or homepage. The archive carries the authoritative full list. The visible card (check 2) and the `hasPart` entry are checked independently; both must be present.
 
+**Content type**
+
+10. **One canonical content type** — the article's eyebrow (`<span class="eyebrow-tag">`), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v2.js` all carry the same label, and it is one of:
+
+    | Label | Public type in the archive filter | Use when the article's primary object is |
+    |---|---|---|
+    | `Analysis` | Analysis | a development, launch, market shift or argument the article analyses |
+    | `Research` | Research & reports | an academic paper, empirical study, benchmark or experiment |
+    | `Report Response` | Research & reports | a named industry report, survey, whitepaper or decision brief |
+    | `Guide` | Guides | a task the reader wants to do |
+    | `Concept` | Concepts & reference | a concept or term the article defines and explains |
+    | `Perspective` | Perspective | Mneme's own viewpoint or thesis, without a primary external source |
+    | `Comparison` | Product & comparison | a comparison between approaches or tools |
+    | `Integration` | Product & comparison | using Mneme with a specific tool |
+
+    Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). Enforced by `scripts/check_insight_types.py`; `scripts/new_article.py --type <label>` writes both page fields.
+
 ## How to register a new insight
 
 After writing `site/insights/<slug>/index.html`, do the following before opening the PR:

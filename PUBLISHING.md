@@ -457,6 +457,7 @@ blocks the PR. All are standard-library-only Python.
 | `scripts/check_sticky_nav.py` | `sticky-nav-check.yml` | mobile sticky/hamburger nav |
 | `scripts/check_insights.py` | `check-insights.yml` | insight registration (sitemap, cards, OG, breadcrumb, schema, hub) |
 | `scripts/sync_insights_catalog.py --check` | `check-insights.yml` | archive-card sortable and static publication dates match canonical article metadata |
+| `scripts/check_insight_types.py` | `check-insights.yml` | one canonical content type per insight across eyebrow, `article:section`, every index card, and the archive filter (see the insight publishing contract) |
 | `scripts/check_compare.py` | `check-compare.yml` | `/compare/` hub invariants |
 | `scripts/check_concepts_schema.py` | `check-concepts-schema.yml` | `/concepts/` schema graph |
 | `scripts/check_for.py` | `check-for.yml` | `/for/` persona-cohort schema |

@@ -19,6 +19,7 @@ on:
       - 'site/insights/**'
       - 'site/insights/index.html'   # redundant under site/insights/** but listed for clarity
       - 'site/sitemap.xml'
+      - 'site/assets/js/insights-catalog-*.js'
       - 'scripts/**'
 
 permissions:
@@ -56,6 +57,14 @@ jobs:
 
       - name: Check archive and homepage catalogue metadata
         run: python scripts/sync_insights_catalog.py --check
+
+      - name: Test content-type consistency check
+        run: python scripts/test_check_insight_types.py
+
+      - name: Check one canonical content type per insight
+        # Article eyebrow, article:section, every index card and the archive
+        # filter's TYPE_LABELS must agree on one canonical type.
+        run: python scripts/check_insight_types.py
 
       - name: Run insight publishing validator
         run: python scripts/check_insights.py
