@@ -6,6 +6,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | research scope (website page after first experiment) | gathered, not built |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | gathered, not built |
@@ -40,7 +41,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 Marker rule: a title containing `*` means published. In the project there are 136 `Post-` chats, 4 carry a `*` mark (the `***` suffix ones and two `**` titles), leaving **132 unmarked**. By last-updated date:
 
-- **12 newer than 2026-08-29**: the 7 chats from 2026-10-04 to 10-09 and the 5 earlier scopes, all briefed above.
+- **13 newer than 2026-08-29**: the 8 chats from 2026-10-04 to 10-12 and the 5 earlier scopes, all briefed above.
 - **32 last updated 2026-08-11 to 08-29** (one is `Post-tv-`, which never enters `site/`). The ledger said ~119 for this window, which does not match what ChatGPT returns. 12 were *created* in that window.
 - **88 last updated before 2026-08-11** (earliest created 2026-05-06). Many probably shipped without a marker, so check `git log` first, per the workflow memory.
 

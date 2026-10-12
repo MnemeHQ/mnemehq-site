@@ -50,7 +50,6 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 4. Architecture Audit page: commercial story "find the decisions your agents can currently violate, then protect them before execution".
 5. Proof demo: show the expensive failure loop vs immediate block.
 6. A single canonical Mneme diagram: Architecture → decisions → executable constraints → Mneme pre-action control → agents/harnesses → permitted code → review/CI.
-7. GTM: add LeadDev and similar senior-engineering events to the target set; track CodeRabbit on the competitor watch list. (Social/GTM, not site.)
 
 ## Key facts, figures, sources
 
@@ -72,7 +71,7 @@ All unverified at the time of the chat; verify each against the live source befo
 
 - Do not write a CodeRabbit attack page. Frame as different boundaries, with a possible complementary integration.
 - Do **not** assert CodeRabbit "will not" move into this space. The chat explicitly reverses an earlier assumption: CodeRabbit already talks about architectural drift, policy-as-code and agent governance. Pitch differences by mechanism (typed deterministic rules at the agent/tool boundary vs PR-time AI checks), not by "they can't".
-- The chat's own rating ("Room for Mneme 9/10", "threat 8/10", "$1B+ potential") is internal strategy. Keep it out of public copy; no valuation or market-size claims.
+- The chat's internal strategic assessments (opportunity, threat level, market size) are not copy; keep them, and any valuation or market-size claim about Mneme, out of public pages.
 - Warn that the open-source/MIT distribution is an advantage but "not itself the moat".
 - Avoid positioning as "AI governance for software engineering" generally. Stay at "architectural drift prevention, powered by pre-action architectural enforcement, evolving toward an architectural control plane" (the chat's final phrasing).
 - **Conflict with the pre-action chat:** this chat's last turn says pre-action is the mechanism, not the category name. Align the two before building.

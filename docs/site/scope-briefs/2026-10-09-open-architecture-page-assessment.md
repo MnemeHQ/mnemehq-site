@@ -24,7 +24,7 @@ Status: **gathered, not built**
 ## Agreed scope (final turn)
 
 - Separate *how we know* (research) from *what we publish* (findings).
-- Rejected: the label "Observatory" (a coined term nobody searches; same trap as premature category labels), the option scores (false precision; URLs can be 301'd cheaply, the data model is what is expensive), and the timing (zero scorecards published, O1 not validated, about 10 warm conversations and no pricing talks).
+- Rejected: the label "Observatory" (a coined term nobody searches; same trap as premature category labels), the option scores (false precision; URLs can be 301'd cheaply, the data model is what is expensive), and the timing (zero scorecards published, O1 not validated, too early commercially).
 - Adopted conventions:
 
 | Decision | Convention |
@@ -39,7 +39,7 @@ Status: **gathered, not built**
 | Private audits | private by default; never auto-promoted from `/audit/` |
 | Corrections | recorded, reviewable, attributable |
 
-- Maintainer protections are a prerequisite: notify before publishing an evaluative scorecard; correction and dispute process; opt-out; distinguish missing evidence from demonstrated failure; publish methodology versions and limitations; no overall architecture score; no rankings without validation and a fair participation policy. Prefer repositories whose maintainers took part in validation; Counterfact's maintainer already gave ground-truth feedback.
+- Maintainer protections are a prerequisite: notify before publishing an evaluative scorecard; correction and dispute process; opt-out; distinguish missing evidence from demonstrated failure; publish methodology versions and limitations; no overall architecture score; no rankings without validation and a fair participation policy. Prefer repositories whose maintainers took part in validation.
 - Keep `/benchmark/` (Mneme's governance effectiveness), `/audit/` (user-driven), `/architecture/` (Mneme's own architecture) separate from public repository assessments.
 - The wedge stays enforcement at the agent boundary; O1/DG support it upstream ("how do we know which decisions exist and should apply?").
 
@@ -70,4 +70,4 @@ Everything here is non-insight: the spec now; research page and case studies lat
 ## Open questions
 
 - Where does the spec live: an ADR in `MnemeHQ/mneme` (it concerns data model and identity), or this repo?
-- Counterfact as the first case study: confirm the maintainer agrees to publication.
+- First case study: only a repository whose maintainer has agreed to publication.

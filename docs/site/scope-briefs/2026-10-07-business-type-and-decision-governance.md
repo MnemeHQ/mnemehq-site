@@ -83,7 +83,6 @@ Decision Engineering (discipline), Decision Governance (what has force), Decisio
 ## Non-insight site edits requested
 
 - Add Decision Governance as a named concept in the site taxonomy (concept contract).
-- Founder/deck point (not site): "Mneme is built using the phenomenon it exists to govern."
 
 ## Open questions
 

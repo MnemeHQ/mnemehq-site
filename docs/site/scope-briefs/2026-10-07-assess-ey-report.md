@@ -89,7 +89,7 @@ The chat linked some Mneme pages on `mail.mnemehq.com`; use `mnemehq.com` only (
 
 ## Non-insight site edits requested
 
-None for the site. The chat suggests a Metavallon investor-deck callout (45% figure): deck work, not site.
+None for the site. (Non-site follow-ups from the chat are tracked outside this public repository.)
 
 ## Open questions
 

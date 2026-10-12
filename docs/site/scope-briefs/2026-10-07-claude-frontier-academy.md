@@ -94,7 +94,7 @@ Publish quickly; news value decays. The chat orders it first, with the FDE pilla
 
 ## Non-insight site edits requested
 
-None. GTM items (not site): add "Frontier Deployed Engineers / applied AI leads at Anthropic partners" as a segment; treat Capgemini and other Academy organisations as higher-priority design-partner or channel targets; consider applying to the Claude startup programme.
+None. (Go-to-market follow-ups from the chat are tracked outside this public repository.)
 
 ## Open questions
 

@@ -18,7 +18,8 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
 2. Open ChatGPT in the user's real Chrome (`mcp__claude-in-chrome__*`), project
    **Mneme Growth and GTM** (`g-p-69fb157536408191b03a29c6f51f7821`). Use the project page's list,
    not search.
-3. A `Post-` chat whose title contains `*` is published. Unmarked chats are candidates, but the
+3. Match the `Post-` prefix case-insensitively (`post-reverse engineer decisions` counts). A
+   `Post-` chat whose title contains `*` is published. Unmarked chats are candidates, but the
    test of "shipped" is the repo: `git log origin/main` and `ls site/insights/`. Renaming re-sorts
    chats, so list position means nothing.
 4. Skip `Post-tv-` chats: they belong to theovalmis.com and never enter `site/`.
@@ -29,6 +30,12 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
 
 Tip: `get_page_text` reads a whole chat. Inline citations render only as labels ("Reuters +2");
 pull their real URLs from the `<a href>` elements in `main`, and strip `?utm_source=chatgpt.com`.
+
+**This repository is public.** Briefs and every other file here are world-readable. Never copy
+into them: investor or fundraising details, sales-pipeline or customer-conversation facts, names
+of prospects, design partners or private contacts, internal competitive threat or valuation
+assessments, or go-to-market targeting. Summarise what the site needs and note that other
+follow-ups are tracked privately.
 
 ## Stage 2: Brief
 
