@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Reference for the mneme-hq 0.9.0 CLI, including Decision MCP, proposal review and authority, setup, protect, audit, checks, exports, and exit codes." />
+  <meta name="description" content="Reference for the mneme-hq 0.10.0 CLI, including Decision Index migration, Decision MCP, proposal review and authority, setup, protect, audit, checks, exports, and exit codes." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/docs/cli/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme CLI Reference" />
-  <meta property="og:description" content="Reference for the mneme-hq 0.9.0 CLI, including Decision MCP and the proposal authority workflow." />
+  <meta property="og:description" content="Reference for the mneme-hq 0.10.0 CLI, including Decision Index migration, Decision MCP, and the proposal authority workflow." />
   <meta property="og:url" content="https://mnemehq.com/docs/cli/" />
   <meta property="og:image" content="https://mnemehq.com/docs/cli/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -54,7 +54,7 @@
         "description": "Commands, flags, and exit codes for the mneme command-line interface.",
         "url": "https://mnemehq.com/docs/cli/",
         "datePublished": "2026-05-10",
-        "dateModified": "2026-09-15",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
@@ -302,7 +302,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>The <code>mneme</code> 0.9.0 CLI</strong> adds <code>decision-mcp</code> plus the <code>decision proposals|show|accept|reject</code> group. MCP can retrieve and propose; only the separate human authority commands can accept or reject. Acceptance does not activate deterministic protection.</div>
+<div class="answer-capsule"><strong>The <code>mneme</code> 0.10.0 CLI</strong> adds <code>decision-index migrate</code>, which moves project memory onto the persisted, versioned Decision Index. <code>decision-mcp</code> and the <code>decision proposals|show|accept|reject</code> group read and write that index. MCP can retrieve and propose; only the separate human authority commands can accept or reject. Acceptance does not activate deterministic protection.</div>
 
 <section class="hero">
   <div class="section-eyebrow">CLI reference</div>
@@ -317,6 +317,7 @@
     <ol>
       <li><a href="#install">Install</a></li>
       <li><a href="#cmd-init">mneme init</a></li>
+      <li><a href="#decision-index-migrate">mneme decision-index migrate</a></li>
       <li><a href="#cmd-list">mneme list_decisions</a></li>
       <li><a href="#cmd-add">mneme add_decision</a></li>
       <li><a href="#cmd-test">mneme test_query</a></li>
@@ -353,7 +354,7 @@
     <p class="sub">Scaffold an empty project memory corpus.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme init</span><span class="ctag">Write</span></div>
-      <p class="cdesc">Creates the memory file (including its parent directory) containing a valid, empty decision corpus &mdash; deliberately zero seeded decisions, because every recorded decision is enforceable and sample content would create phantom rules. Exits non-zero without writing if the target file already exists, unless <code>--force</code> is supplied.</p>
+      <p class="cdesc">Creates the memory file (including its parent directory) containing a valid, empty decision corpus &mdash; deliberately zero seeded decisions, because every recorded decision is enforceable and sample content would create phantom rules. Exits non-zero without writing if the target file already exists, unless <code>--force</code> is supplied. On 0.10.0 the new file already holds an authoritative <code>decision_index</code> section, so it needs no migration.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme init
 Created .mneme/project_memory.json</pre>
       <div class="flags-title">Flags</div>
@@ -369,13 +370,56 @@ Created .mneme/project_memory.json</pre>
     </div>
   </section>
 
+  <!-- decision-index migrate -->
+  <section class="section" id="decision-index-migrate">
+    <h2>decision-index migrate</h2>
+    <p class="sub">Move project memory written by 0.9.x onto the persisted Decision Index. New in 0.10.0.</p>
+    <div class="cmd-card">
+      <div class="ch"><span class="cname">mneme decision-index migrate</span><span class="ctag">Write</span></div>
+      <p class="cdesc">Adds an authoritative <code>decision_index</code> section to <code>project_memory.json</code>. The index holds each decision, its immutable versions, and its rule bindings; the existing <code>decisions[]</code> array becomes a compatibility snapshot derived from it. The command changes only that one file. The MCP server and <code>mneme decision accept</code> need migrated memory, and <code>mneme check</code> works with either.</p>
+<pre tabindex="0"><span class="cp">$</span> mneme decision-index migrate --memory .mneme/project_memory.json
+Decision Index migration preview: .mneme/project_memory.json
+  Native decisions:                2
+  Active after migration:          2
+  Non-active leaving Layer 1:      1
+    ADR-000 (superseded)
+  Legacy items becoming decisions: 1
+    rule-001
+  Migrated rule bindings:          0
+  ...
+Preview only; nothing was written. Re-run with --apply to write exactly this migration.
+
+<span class="cp">$</span> mneme decision-index migrate --memory .mneme/project_memory.json --apply
+Migrated .mneme/project_memory.json: decision_index is now authoritative.</pre>
+      <div class="flags-title">Flags</div>
+      <div class="table-scroll">
+        <table class="flags">
+          <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>--memory</td><td>no</td><td>Path to <code>project_memory.json</code>. Defaults to <code>.mneme/project_memory.json</code>.</td></tr>
+            <tr><td>--apply</td><td>no</td><td>Write exactly the previewed migration. Without it the command only previews. There is no <code>--dry-run</code> flag, and no force or repair mode.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="cdesc">
+        <li><strong>Lossless or it refuses.</strong> If any decision can&rsquo;t be represented in the index, it prints <code>ERROR: migration refused: &hellip;</code>, exits 2, and writes nothing. A decision whose <code>source</code> is not an ADR file, such as a free-text note or an EventCatalog import, is refused; move it into an ADR file and import it first.</li>
+        <li><strong>Safe to re-run.</strong> On migrated memory it prints <code>Already migrated: decision_index is authoritative and valid; nothing to do.</code> and leaves the file byte-identical.</li>
+        <li><strong>No lost updates.</strong> <code>--apply</code> refuses if the file changed after it was read.</li>
+        <li><strong>Superseded decisions stop being enforced.</strong> Decisions marked superseded, deprecated, or inactive move out of <code>decisions[]</code> but stay in the index with their lifecycle. Before migration, <code>mneme check</code> still loaded such a row; after it, only active decisions are retrieved and enforced. The preview lists them under &ldquo;Non-active leaving Layer 1&rdquo;.</li>
+      </ul>
+    </div>
+    <div class="callout warning">
+      <p><strong>Upgrade every writer before you apply.</strong> Migrated memory must not be written by 0.9.2 or earlier. An older <code>add_decision</code> or <code>adr import</code>, for example in a CI image or a teammate&rsquo;s install, succeeds without an error, and the next 0.10.0 <code>mneme check</code> or <code>test_query</code> on the file then fails with <code>DecisionIndexPersistenceError</code>. Move CI jobs, hooks, and every install to 0.10.0 first.</p>
+    </div>
+  </section>
+
   <!-- list_decisions -->
   <section class="section" id="cmd-list">
     <h2>list_decisions</h2>
     <p class="sub">Print every decision in the memory file.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme list_decisions</span><span class="ctag">Read</span></div>
-      <p class="cdesc">Lists every decision in the corpus with id, summary, scope, and constraints. Read-only.</p>
+      <p class="cdesc">Lists every decision in the corpus with id, summary, scope, and constraints. On migrated memory it lists active decisions only. Read-only.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme list_decisions --memory examples/project_memory.json</pre>
       <div class="flags-title">Flags</div>
       <div class="table-scroll">
@@ -395,7 +439,7 @@ Created .mneme/project_memory.json</pre>
     <p class="sub">Append a new decision to the corpus.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme add_decision</span><span class="ctag">Write</span></div>
-      <p class="cdesc">Writes a new decision directly to the JSON file. The Pipeline runtime is never mutated &mdash; this is a file operation only. Fails with exit code 2 if the id already exists.</p>
+      <p class="cdesc">Writes a new decision directly to the JSON file. The Pipeline runtime is never mutated &mdash; this is a file operation only. Fails with exit code 2 if the id already exists. On migrated memory it creates the first version of a decision only: an identical retry writes nothing and exits 0, and the same id with different content exits 2. To change a decision, edit its ADR and run <a href="#cmd-adr-import"><code>adr import --update-existing</code></a>.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme add_decision --memory examples/project_memory.json \
     --id mneme_042 \
     --decision <span class="ck">"Use JSON storage"</span> \
@@ -477,6 +521,10 @@ Created .mneme/project_memory.json</pre>
     </div>
 
     <div class="callout">
+      <p><strong>Which decisions are checked.</strong> On memory migrated to the Decision Index, only active decisions are retrieved and enforced. Superseded, deprecated, and inactive decisions stay in the index but never produce a verdict. Memory without a <code>decision_index</code> section keeps the pre-0.10.0 loading path. The flags and exit codes are the same either way.</p>
+    </div>
+
+    <div class="callout">
       <p><strong>Completeness and path diagnostics.</strong> A verdict is only trusted when the payload's <code>evaluation_complete</code> flag is true; an incomplete evaluation exits <code>2</code> and prints <code>Result: INCOMPLETE</code> rather than a verdict. Path-scoped typed rules also emit per-rule applicability lines (<code>PATH PASS/SKIP/UNKNOWN [decision_id] &hellip;</code>) showing how the target path resolved against the rule's selectors &mdash; an unresolvable path surfaces as <code>PATH_APPLICABILITY_UNKNOWN</code>, never as a silent pass. With <code>--json</code>, the same traces appear in the payload's <code>applicability</code> array.</p>
     </div>
   </section>
@@ -509,7 +557,7 @@ Created .mneme/project_memory.json</pre>
     <p class="sub">Initialize Mneme project state in setup mode.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme setup</span><span class="ctag">Setup</span></div>
-      <p class="cdesc">Creates project state in <strong>setup mode</strong>: context and non-blocking checks only &mdash; never enforcement. Enabling protection is always a separate, explicit decision (<code>mneme protect activate</code>). Optionally records an opaque Architecture Audit setup reference, taken verbatim and resolved by Audit pairing.</p>
+      <p class="cdesc">Creates project state in <strong>setup mode</strong>: context and non-blocking checks only &mdash; never enforcement. Enabling protection is always a separate, explicit decision (<code>mneme protect activate</code>). Optionally records an opaque Architecture Audit setup reference, taken verbatim and resolved by Audit pairing. Run it inside a git repository; outside one it exits 2. Memory it creates is already migrated to the Decision Index.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme setup --memory .mneme/project_memory.json</pre>
       <div class="flags-title">Flags</div>
       <div class="table-scroll">
@@ -582,16 +630,18 @@ Created .mneme/project_memory.json</pre>
     <p class="sub">Serve the frozen six-tool Decision Index surface over local stdio.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme decision-mcp</span><span class="ctag">MCP server</span></div>
-      <p class="cdesc">Starts the local server with proposal storage enabled. Add a schema-valid ADR directory when canonical decision reads are required. The server exposes proposal and read tools only; no MCP authority operation exists.</p>
+      <p class="cdesc">Starts the local server. It reads canonical decisions from the Decision Index in <code>--memory</code> and stores proposals in <code>--proposals</code>. It exits with code 2 if the memory file is missing or not yet migrated; run <a href="#decision-index-migrate"><code>decision-index migrate</code></a> first. The server exposes proposal and read tools only; no MCP authority operation exists.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme decision-mcp
-<span class="cp">$</span> mneme decision-mcp --proposals .mneme/decision_proposals.json --adr-dir docs/adr</pre>
+<span class="cp">$</span> mneme decision-mcp --proposals .mneme/decision_proposals.json \
+    --memory .mneme/project_memory.json --adr-dir docs/adr</pre>
       <div class="flags-title">Flags</div>
       <div class="table-scroll">
         <table class="flags">
           <thead><tr><th>Flag</th><th>Required</th><th>Description</th></tr></thead>
           <tbody>
             <tr><td>--proposals</td><td>no</td><td>Proposal-store JSON path. Defaults to <code>.mneme/decision_proposals.json</code>; an explicit empty string selects an in-memory store.</td></tr>
-            <tr><td>--adr-dir</td><td>no</td><td>ADR directory compiled into the canonical read index. No default. Invalid or ambiguous input prevents startup.</td></tr>
+            <tr><td>--memory</td><td>no</td><td>Project memory holding the authoritative <code>decision_index</code> section. Defaults to <code>.mneme/project_memory.json</code>. All canonical reads come from it.</td></tr>
+            <tr><td>--adr-dir</td><td>no</td><td>ADR directory validated before startup. Validation only: the server never reads decisions from it. No default. Invalid or ambiguous input prevents startup.</td></tr>
           </tbody>
         </table>
       </div>
@@ -609,8 +659,8 @@ Created .mneme/project_memory.json</pre>
 <span class="cp">$</span> mneme decision show &lt;proposal-id&gt;
 <span class="cp">$</span> mneme decision accept &lt;proposal-id&gt; --memory .mneme/project_memory.json
 <span class="cp">$</span> mneme decision reject &lt;proposal-id&gt;</pre>
-      <p class="cdesc"><code>proposals</code> and <code>show</code> are read-only. <code>accept</code> materializes a canonical decision into project memory but does not run Audit or activate protection. <code>reject</code> makes no project-memory change. All four default to <code>.mneme/decision_proposals.json</code>; <code>accept</code> also accepts <code>--decision-id</code>.</p>
-      <p class="cdesc">Full lifecycle, provenance, flags, exit codes, and known 0.9.0 limitations: <a href="/docs/decision-proposals/">Decision proposals</a>.</p>
+      <p class="cdesc"><code>proposals</code> and <code>show</code> are read-only. <code>accept</code> writes a canonical decision version into the Decision Index, which needs migrated memory; it does not run Audit or activate protection. <code>reject</code> makes no project-memory change. All four default to <code>.mneme/decision_proposals.json</code>; <code>accept</code> also accepts <code>--decision-id</code>.</p>
+      <p class="cdesc">Full lifecycle, provenance, flags, exit codes, and what changed in 0.10.0: <a href="/docs/decision-proposals/">Decision proposals</a>.</p>
     </div>
   </section>
 
@@ -687,11 +737,15 @@ Created .mneme/project_memory.json</pre>
             <tr><td>--memory</td><td>yes</td><td>Path to the target <code>project_memory.json</code>.</td></tr>
             <tr><td>--dry-run</td><td>no</td><td>Print the preview without writing (default).</td></tr>
             <tr><td>--apply</td><td>no</td><td>Write imported decisions to <code>--memory</code>.</td></tr>
-            <tr><td>--update-existing</td><td>no</td><td>Allow same-id overwrite of existing decisions.</td></tr>
+            <tr><td>--update-existing</td><td>no</td><td>For an ADR whose id already exists, create a new immutable version, or reuse the identical one. Earlier versions are kept, never overwritten.</td></tr>
+            <tr><td>--preserve-protection RULE_ID</td><td>no, repeatable</td><td>Carry a protection rule binding into the new version when the edited ADR no longer derives it, after deterministic revalidation. Requires <code>--apply --update-existing</code>.</td></tr>
+            <tr><td>--release-protection RULE_ID</td><td>no, repeatable</td><td>Explicitly release a protection rule binding: drop it if the edited ADR no longer derives it, or downgrade it to an ordinary version binding if it does. Requires <code>--apply --update-existing</code>.</td></tr>
+            <tr><td>--expected-predecessor ADR-ID=VERSION_ID</td><td>no, repeatable</td><td>Retry an earlier <code>--update-existing</code> apply by pinning the <code>version_id</code> that was current when it ran (shown as &ldquo;current predecessor&rdquo; in the preview). Reuses that exact version if it exists, creates it if the pinned version is still current, and otherwise fails as stale. Requires <code>--apply --update-existing</code>.</td></tr>
             <tr><td>--approve-conflicts</td><td>no</td><td>Proceed with apply even if active-active contradictions exist.</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="cdesc"><strong>Protections survive edits.</strong> If an edited ADR would drop a rule binding that carries protection, <code>--update-existing</code> refuses rather than silently removing it; choose <code>--preserve-protection</code> or <code>--release-protection</code> for that rule. On migrated memory, rule ids take the form <code>&lt;decision_id&gt;:&lt;TYPE&gt;:&lt;32 hex&gt;</code>, derived from the rule&rsquo;s value and applicability rather than its position. A superseded ADR is recorded in the Decision Index with its lifecycle but is not enforced.</p>
     </div>
   </section>
 
@@ -735,8 +789,21 @@ Created .mneme/project_memory.json</pre>
         <table>
           <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
           <tbody>
-            <tr><td>0</td><td>Decision appended.</td></tr>
-            <tr><td>2</td><td>A decision with the supplied <code>--id</code> already exists.</td></tr>
+            <tr><td>0</td><td>Decision appended, or, on migrated memory, an identical decision already exists and nothing was written.</td></tr>
+            <tr><td>2</td><td>A decision with the supplied <code>--id</code> already exists (on migrated memory: with different content).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="exit-table">
+      <div class="et-title">mneme decision-index migrate</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td>Preview printed, migration applied, or memory already migrated.</td></tr>
+            <tr><td>2</td><td>Migration refused (not lossless, invalid memory, or the file changed after it was read). Nothing was written.</td></tr>
           </tbody>
         </table>
       </div>
@@ -775,7 +842,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
-      - run: pip install -e .
+      - run: python -m pip install "mneme-hq==0.10.0"
       - name: Render PR diff
         run: git diff origin/${{ github.base_ref }}...HEAD &gt; pr.diff
       - name: Governance check
