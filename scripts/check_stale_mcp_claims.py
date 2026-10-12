@@ -11,6 +11,7 @@ Usage: python scripts/check_stale_mcp_claims.py [--root PATH]
 from __future__ import annotations
 
 import argparse
+import re
 import sys
 from pathlib import Path
 
@@ -34,6 +35,14 @@ FORBIDDEN = (
 )
 
 
+# Words may be separated by any whitespace, so a phrase wrapped across lines
+# in HTML source is still caught.
+PATTERNS = [
+    (phrase, re.compile(r"\s+".join(map(re.escape, phrase.split())), re.IGNORECASE))
+    for phrase in FORBIDDEN
+]
+
+
 def find_hits(root: Path) -> list[str]:
     hits = []
     for name in SCAN_DIRS:
@@ -44,11 +53,13 @@ def find_hits(root: Path) -> list[str]:
             if path.suffix not in SUFFIXES or not path.is_file():
                 continue
             text = path.read_text(encoding="utf-8", errors="replace")
-            for n, line in enumerate(text.splitlines(), 1):
-                lowered = line.lower()
-                for phrase in FORBIDDEN:
-                    if phrase.lower() in lowered:
-                        hits.append(f"{path.relative_to(root).as_posix()}:{n}: {phrase}")
+            found = []
+            for phrase, pattern in PATTERNS:
+                for match in pattern.finditer(text):
+                    line = text.count("\n", 0, match.start()) + 1
+                    found.append((line, phrase))
+            rel = path.relative_to(root).as_posix()
+            hits.extend(f"{rel}:{line}: {phrase}" for line, phrase in sorted(found))
     return hits
 
 

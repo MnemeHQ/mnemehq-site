@@ -25,7 +25,7 @@ uvx --from "mneme-hq[mcp]==0.10.0" mneme decision-index migrate --memory .mneme/
 uvx --from "mneme-hq[mcp]==0.10.0" mneme decision-index migrate --memory .mneme/project_memory.json --apply
 ```
 
-Before applying, every process that writes the memory file (CI jobs, hooks, other installs) must run 0.10.0. A 0.9.2 or earlier writer on migrated memory succeeds silently and leaves a file 0.10.0 refuses to read.
+Before applying, every process that writes the memory file (CI jobs, hooks, other installs) must run 0.10.0. A 0.9.2 or earlier writer on migrated memory succeeds silently and leaves a file 0.10.0 refuses to read; `decision-index migrate` won't repair it, so restore the file from version control.
 
 For the current stable release, from the repository root:
 
@@ -62,7 +62,7 @@ For a host that launches local stdio servers, use the equivalent process contrac
 }
 ```
 
-`--adr-dir docs/adr` is optional: it validates that ADR corpus at startup and fails closed if it is invalid or ambiguous, but it never changes what the server reads. To bring ADR edits into the Decision Index, run `mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing`; a running server sees the change on its next read.
+`--adr-dir docs/adr` is optional: it validates that ADR corpus at startup and fails closed if it is invalid or ambiguous, but it never changes what the server reads. To bring ADR edits into the Decision Index, run `mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing`; a running server sees the change on its next read. On memory migrated from 0.9.x, an edit that changes or removes a carried-over rule is refused until you pass `--preserve-protection RULE_ID` or `--release-protection RULE_ID` for it; ask the user which.
 
 ## Tool surface
 

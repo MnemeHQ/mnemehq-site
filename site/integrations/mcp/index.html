@@ -246,7 +246,7 @@ Audit, modelling, protection, enforcement</code></pre>
       <h2>Upgrading from 0.9.x</h2>
       <ul>
         <li><strong>Migrate first:</strong> run <code>mneme decision-index migrate</code> to preview, then again with <code>--apply</code>. Until then the server exits with code 2 and prints those two commands.</li>
-        <li><strong>Upgrade every writer:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 then refuses to read. Move CI jobs, hooks, and teammates to 0.10.0 before you apply.</li>
+        <li><strong>Upgrade every writer:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 then refuses to read. Move CI jobs, hooks, and teammates to 0.10.0 before you apply. If it happens anyway, restore the file from version control; migrate won&rsquo;t repair it.</li>
         <li><strong><code>--adr-dir</code> is validation only:</strong> it no longer supplies canonical reads. Import ADR changes with <code>mneme adr import</code>.</li>
       </ul>
       <p>Missing canonical records and links are still returned as typed not-found data. The server doesn&rsquo;t watch files; it re-reads the Decision Index and the proposal file when a tool reads them. The <a href="/docs/mcp/#limitations">MCP reference</a> covers memory that can&rsquo;t migrate.</p>

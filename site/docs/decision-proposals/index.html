@@ -294,7 +294,7 @@ mneme decision reject dprop-example \
     <section class="section" id="limitations">
       <h2>What changed in 0.10.0</h2>
       <p>In 0.9.x, a decision accepted here was not visible to the MCP server, and a running server needed a restart to see an accept or reject. Both are fixed in 0.10.0: the server reads canonical decisions from the Decision Index that acceptance writes to, and it re-reads the proposal file before each read.</p>
-      <div class="callout warning"><p><strong>Keep every writer on 0.10.0:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 <code>mneme check</code> then refuses to read. Upgrade CI jobs, hooks, and teammates before you migrate.</p></div>
+      <div class="callout warning"><p><strong>Keep every writer on 0.10.0:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 <code>mneme check</code> then refuses to read. Upgrade CI jobs, hooks, and teammates before you migrate. If it happens anyway, restore the file from version control; <code>decision-index migrate</code> won&rsquo;t repair it.</p></div>
       <p>Mneme still reports missing canonical links honestly. It does not fabricate a canonical MCP record or watch files for changes.</p>
       <p>The <a href="/standards/">standards landscape</a> explains why protocol interoperability and governance authority remain separate concerns.</p>
     </section>

@@ -133,6 +133,7 @@ python -m json.tool verdict.json</pre>
     <pre class="term-block" data-fixture="out:reapply" data-lines="1-1"></pre>
     <p>You applied the ADR before. After you edit it, re-run the import with <code>--update-existing</code>, which records the edit as a new version of the decision and keeps the earlier one:</p>
     <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+    <p>On memory migrated from Mneme 0.9.x, the import also refuses to drop a rule that the migration carried over, so changing or removing one needs <code>--preserve-protection</code> or <code>--release-protection</code> for each rule it names. See <a href="/docs/cli/#cmd-adr-import">adr import</a>.</p>
   </section>
 
   <section class="prose-section" id="limits">

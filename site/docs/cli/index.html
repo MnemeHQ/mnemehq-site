@@ -376,7 +376,7 @@ Created .mneme/project_memory.json</pre>
     <p class="sub">Move project memory written by 0.9.x onto the persisted Decision Index. New in 0.10.0.</p>
     <div class="cmd-card">
       <div class="ch"><span class="cname">mneme decision-index migrate</span><span class="ctag">Write</span></div>
-      <p class="cdesc">Adds an authoritative <code>decision_index</code> section to <code>project_memory.json</code>. The index holds each decision, its immutable versions, and its rule bindings; the existing <code>decisions[]</code> array becomes a compatibility snapshot derived from it. The command changes only that one file. The MCP server and <code>mneme decision accept</code> need migrated memory, and <code>mneme check</code> works with either.</p>
+      <p class="cdesc">Adds an authoritative <code>decision_index</code> section to <code>project_memory.json</code>. The index holds each decision, its immutable versions, and its rule bindings; the existing <code>decisions[]</code> array becomes a compatibility snapshot derived from it. The command changes only that one file. The MCP server, <code>mneme decision accept</code>, and <code>mneme adr import --apply</code> need migrated memory and exit 2 without it. <code>mneme check</code>, <code>test_query</code>, <code>list_decisions</code>, and the <code>adr import</code> preview work with either.</p>
 <pre tabindex="0"><span class="cp">$</span> mneme decision-index migrate --memory .mneme/project_memory.json
 Decision Index migration preview: .mneme/project_memory.json
   Native decisions:                2
@@ -402,14 +402,14 @@ Migrated .mneme/project_memory.json: decision_index is now authoritative.</pre>
         </table>
       </div>
       <ul class="cdesc" style="padding-left:1.2rem;">
-        <li><strong>Lossless or it refuses.</strong> If any decision can&rsquo;t be represented in the index, it prints <code>ERROR: migration refused: &hellip;</code>, exits 2, and writes nothing. A decision whose <code>source</code> is not an ADR file, such as a free-text note or an EventCatalog import, is refused; move it into an ADR file and import it first.</li>
+        <li><strong>Lossless or it refuses.</strong> If any decision can&rsquo;t be represented in the index, it prints <code>ERROR: migration refused: &hellip;</code>, exits 2, and writes nothing. Decisions added with <code>add_decision</code> or imported from ADR files migrate. A decision whose <code>source</code> is a free-text note, or points at something other than an ADR file (such as an EventCatalog import, <code>source.type: "eventcatalog"</code>), can&rsquo;t be represented, so migration refuses. Because <code>adr import --apply</code> also needs migrated memory, keep such a decision this way: write it as an ADR file, remove its row from <code>decisions[]</code>, migrate, then import the ADR.</li>
         <li><strong>Safe to re-run.</strong> On migrated memory it prints <code>Already migrated: decision_index is authoritative and valid; nothing to do.</code> and leaves the file byte-identical.</li>
         <li><strong>No lost updates.</strong> <code>--apply</code> refuses if the file changed after it was read.</li>
         <li><strong>Superseded decisions stop being enforced.</strong> Decisions marked superseded, deprecated, or inactive move out of <code>decisions[]</code> but stay in the index with their lifecycle. Before migration, <code>mneme check</code> still loaded such a row; after it, only active decisions are retrieved and enforced. The preview lists them under &ldquo;Non-active leaving Layer 1&rdquo;.</li>
       </ul>
     </div>
     <div class="callout warning">
-      <p><strong>Upgrade every writer before you apply.</strong> Migrated memory must not be written by 0.9.2 or earlier. An older <code>add_decision</code> or <code>adr import</code>, for example in a CI image or a teammate&rsquo;s install, succeeds without an error, and the next 0.10.0 <code>mneme check</code> or <code>test_query</code> on the file then fails with <code>DecisionIndexPersistenceError</code>. Move CI jobs, hooks, and every install to 0.10.0 first.</p>
+      <p><strong>Upgrade every writer before you apply.</strong> Migrated memory must not be written by 0.9.2 or earlier. An older <code>add_decision</code> or <code>adr import</code>, for example in a CI image or a teammate&rsquo;s install, succeeds without an error, and the next 0.10.0 <code>mneme check</code>, <code>test_query</code>, <code>list_decisions</code>, or <code>audit</code> on the file then fails with <code>DecisionIndexPersistenceError</code>; <code>decision-mcp</code> and <code>add_decision</code> exit 2. <code>decision-index migrate</code> won&rsquo;t repair the file. To recover, restore it from version control and redo the change with 0.10.0. Move CI jobs, hooks, and every install to 0.10.0 first.</p>
     </div>
   </section>
 
@@ -738,14 +738,14 @@ Migrated .mneme/project_memory.json: decision_index is now authoritative.</pre>
             <tr><td>--dry-run</td><td>no</td><td>Print the preview without writing (default).</td></tr>
             <tr><td>--apply</td><td>no</td><td>Write imported decisions to <code>--memory</code>.</td></tr>
             <tr><td>--update-existing</td><td>no</td><td>For an ADR whose id already exists, create a new immutable version, or reuse the identical one. Earlier versions are kept, never overwritten.</td></tr>
-            <tr><td>--preserve-protection RULE_ID</td><td>no, repeatable</td><td>Carry a protection rule binding into the new version when the edited ADR no longer derives it, after deterministic revalidation. Requires <code>--apply --update-existing</code>.</td></tr>
-            <tr><td>--release-protection RULE_ID</td><td>no, repeatable</td><td>Explicitly release a protection rule binding: drop it if the edited ADR no longer derives it, or downgrade it to an ordinary version binding if it does. Requires <code>--apply --update-existing</code>.</td></tr>
+            <tr><td>--preserve-protection RULE_ID</td><td>no, repeatable</td><td>Carry a protection binding (installed by <code>mneme protect activate</code>) or a binding carried over by migration (<code>legacy_unknown</code>) into the new version when the edited ADR no longer derives it, after deterministic revalidation. Requires <code>--apply --update-existing</code>.</td></tr>
+            <tr><td>--release-protection RULE_ID</td><td>no, repeatable</td><td>Explicitly release a protection or <code>legacy_unknown</code> binding: drop it if the edited ADR no longer derives it, or downgrade it to an ordinary version binding if it does. Requires <code>--apply --update-existing</code>.</td></tr>
             <tr><td>--expected-predecessor ADR-ID=VERSION_ID</td><td>no, repeatable</td><td>Retry an earlier <code>--update-existing</code> apply by pinning the <code>version_id</code> that was current when it ran (shown as &ldquo;current predecessor&rdquo; in the preview). Reuses that exact version if it exists, creates it if the pinned version is still current, and otherwise fails as stale. Requires <code>--apply --update-existing</code>.</td></tr>
             <tr><td>--approve-conflicts</td><td>no</td><td>Proceed with apply even if active-active contradictions exist.</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="cdesc"><strong>Protections survive edits.</strong> If an edited ADR would drop a rule binding that carries protection, <code>--update-existing</code> refuses rather than silently removing it; choose <code>--preserve-protection</code> or <code>--release-protection</code> for that rule. On migrated memory, rule ids take the form <code>&lt;decision_id&gt;:&lt;TYPE&gt;:&lt;32 hex&gt;</code>, derived from the rule&rsquo;s value and applicability rather than its position. A superseded ADR is recorded in the Decision Index with its lifecycle but is not enforced.</p>
+      <p class="cdesc"><strong>Protected rules can&rsquo;t be dropped silently.</strong> If an edited ADR would drop a rule binding installed by <code>mneme protect activate</code>, or any binding carried over by <code>decision-index migrate</code> (authority <code>legacy_unknown</code>), <code>--update-existing</code> exits 2 instead of removing it; choose <code>--preserve-protection</code> or <code>--release-protection</code> for each rule it names. After migrating 0.9.x memory, that includes any rule you change or remove in an ADR. Rules first derived from an ADR on 0.10.0 follow the ADR. <code>adr import --apply</code> needs migrated memory; the preview doesn&rsquo;t. On migrated memory, rule ids take the form <code>&lt;decision_id&gt;:&lt;TYPE&gt;:&lt;32 hex&gt;</code>, derived from the rule&rsquo;s value and applicability rather than its position. A superseded ADR is recorded in the Decision Index with its lifecycle but is not enforced.</p>
     </div>
   </section>
 
@@ -803,7 +803,7 @@ Migrated .mneme/project_memory.json: decision_index is now authoritative.</pre>
           <thead><tr><th>Code</th><th>Meaning</th></tr></thead>
           <tbody>
             <tr><td>0</td><td>Preview printed, migration applied, or memory already migrated.</td></tr>
-            <tr><td>2</td><td>Migration refused (not lossless, invalid memory, or the file changed after it was read). Nothing was written.</td></tr>
+            <tr><td>2</td><td>Migration refused (not lossless, invalid memory or an invalid existing index, or the file changed after it was read), or the memory file doesn&rsquo;t exist. Nothing was written.</td></tr>
           </tbody>
         </table>
       </div>
