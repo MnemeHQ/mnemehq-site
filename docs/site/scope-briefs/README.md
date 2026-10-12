@@ -6,7 +6,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
-| [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | research scope (website page after first experiment) | gathered, not built |
+| [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | gathered, not built |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | gathered, not built |

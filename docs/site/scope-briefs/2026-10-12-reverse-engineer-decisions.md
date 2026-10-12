@@ -12,15 +12,32 @@ Status: **gathered, not built**
 
 ## Build card
 
+**Decision 2026-10-12 (TheoV823):** build this as an **insight article of content type Research** (Research & reports), about reverse-engineering decisions, grounded in the published research. The internal research programme below stays background; the article reports what the literature shows and frames the open question, and must not claim Mneme results that do not exist yet.
+
 | Field | Value |
 |---|---|
-| Kind | **research scope, not an insight.** The chat asks for an internal research programme and a bounded first experiment. Website output comes after results, as a research page under the planned `/research/open-architecture/` (see the [Open Architecture brief](2026-10-09-open-architecture-page-assessment.md)) |
-| Website working title (later) | Can AI Agents Understand an Enterprise System Before Acting on It? |
-| Research title | Reverse-Engineering Enterprise Systems for AI Agents: From Architectural and Functional Blueprints to Decision Governance |
-| Slug (later) | `research/open-architecture/enterprise-system-understanding` (proposed) |
-| Editorial gate | not yet: nothing publishable until the first experiment has results. Publishing the scope alone would be a claim without evidence |
-| Cannibalisation | `find_overlap.py`: `why-ai-coding-agents-copy-legacy-architecture` 49.6, `forward-deployed-engineers-enterprise-ai` 45.4, `demo/legacy-vs-target-architecture` 30.9. Verdict for the later research page: **re-angle**: system understanding before acting, not migration drift; link those pages |
-| Possible insight spin-off | "architecture erosion vs architectural drift", grounded in the 2022 mapping study. `find_overlap.py`: the drift concept pages score 42.5. Verdict: **update instead**: add an erosion distinction to `concepts/architectural-drift`. "Erosion" is not in the terminology lock: needs a PUBLISHING.md amendment if used as a defined term |
+| Kind | insight, content type **Research** (primarily interprets academic papers and studies) |
+| Title | Can AI Reverse-Engineer the Decisions Behind a Software System? What the Research Shows |
+| Slug | `reverse-engineering-architectural-decisions-research` |
+| Report-anchored (ADR-015) | no: several papers, no single named artifact as the spine |
+| Topic hub | architectural-intent (decisions and the reasons behind a system); alternative software-migrations-modernization |
+| Eyebrow / section | Research / Research |
+| OG headline | Recovering the Decisions Behind Code (6 words) |
+| Editorial gate | pass: adds new evidence to a Mneme thesis (recent decision-recovery research plus the erosion mapping study) |
+| Five questions | changed: teams want agents to work on systems nobody fully documented; matters: an agent that cannot tell why a boundary exists will break it; breaks: research shows architecture recovery works but rationale is what LLMs miss, and knowledge vaporization is the leading nontechnical cause of erosion; do: reconstruct structure, function and decisions with evidence, and keep inferred decisions separate from approved ones; governance: only validated decisions become enforceable constraints |
+| Cannibalisation | `find_overlap.py` (title + recovery/erosion keywords): top hits `anthropic-research-system-coordination-infrastructure` 49.9 and `google-gemini-deep-research-agent-governance` 47.6 match only on "research"/"system" (different intent); `how-ai-coding-agents-use-adrs` 33.3. Verdict: **clear**; link `how-ai-coding-agents-use-adrs`, `why-ai-coding-agents-copy-legacy-architecture`, `concepts/architectural-drift` |
+| Cross-links | the three pages above, `forward-deployed-architects-need-a-decision-layer` ("the architect becomes another silo") |
+
+**Proposed structure:**
+1. The question a prospective enterprise user asked: can an agent work safely on a system nobody fully documented?
+2. What the research says about architecture recovery (established field; tools like ARCADE, Lattix, Structure101; the 2025 repository-mining mapping study).
+3. Functional recovery: deriving business processes from legacy code and data (the Springer work).
+4. Decision recovery is the hard part: the September 2026 study finds LLMs recover what changed but miss why.
+5. Why it matters: knowledge vaporization is the most-cited nontechnical cause of erosion (11 of 73 studies); recovery vs conformance vs erosion are different questions; an approved migration is not damage.
+6. What a useful reconstruction needs: three layers (architecture, function, decisions), each fact marked observed, inferred or human-confirmed.
+7. The open question Mneme is investigating (the four research questions), stated as research in progress, with no results claimed.
+
+Later, separate: a `/research/open-architecture/` page with the first experiment's results (see the [Open Architecture brief](2026-10-09-open-architecture-page-assessment.md)). The erosion-vs-drift distinction may also update `concepts/architectural-drift`; "erosion" as a defined term needs a PUBLISHING.md amendment.
 
 ## Draft quality gate (filled at build time)
 
@@ -84,7 +101,7 @@ Status: **gathered, not built**
 
 ## Non-insight site edits requested
 
-None now. Later: a research page and case study under `/research/open-architecture/` once the first experiment has results (same sequencing as the Open Architecture brief).
+None for this article. Later: a research page and case study under `/research/open-architecture/` once the first experiment has results (same sequencing as the Open Architecture brief).
 
 ## Open questions
 
