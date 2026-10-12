@@ -260,7 +260,7 @@
       <p>Each decision has one <code>lifecycle_status</code>: <code>active</code>, <code>superseded</code>, <code>deprecated</code>, or <code>inactive</code>.</p>
       <ul>
         <li><strong>Only active decisions are retrieved and enforced.</strong> <code>mneme check</code>, <code>test_query</code>, the coding-agent hooks, <code>list_decisions</code>, conflict detection, benchmarks, and the Architecture Audit see active decisions only.</li>
-        <li><strong>Non-active decisions are kept, not deleted.</strong> They stay in the index with their versions, and MCP <code>decision.get</code> and <code>decision.trace</code> still return them, labelled with their <code>lifecycle_status</code>, so an agent can see what a decision replaced.</li>
+        <li><strong>Non-active decisions are kept, not deleted.</strong> They stay in the index with their versions, and the MCP read tools (<code>decision.get</code>, <code>decision.search</code>, <code>decision.applicable_to</code>, <code>decision.trace</code>) still return them, labelled with their <code>lifecycle_status</code>, so an agent can see what a decision replaced.</li>
         <li><strong>Migration changes what is enforced.</strong> Before migration, a row in <code>decisions[]</code> marked superseded was still loaded by <code>mneme check</code>. After migration it is not. The migration preview lists these decisions under &ldquo;Non-active leaving Layer 1&rdquo;, so you can review them first.</li>
       </ul>
     </section>
@@ -280,7 +280,7 @@ Non-active ADRs (1):
 
     <section class="section" id="protections">
       <h2>Protections across edits</h2>
-      <p>Each rule binding records how it was made. A rule derived from the ADR text follows the ADR: edit the rule out of the ADR, re-import, and the new version no longer carries it. A rule installed by <a href="/docs/protection-activation/"><code>mneme protect activate</code></a>, or carried over from 0.9.x memory where its origin is unknown, is a protection. An ADR edit can&rsquo;t silently drop it:</p>
+      <p>Each rule binding records how it was made. A rule derived from the ADR text follows the ADR: edit the rule out of the ADR, re-import, and the new version no longer carries it. A rule installed by <a href="/docs/protection-activation/"><code>mneme protect activate</code></a> is a protection binding, and every rule binding that <code>decision-index migrate</code> carries over from 0.9.x memory is marked <code>legacy_unknown</code>, because its origin can&rsquo;t be known. An ADR edit can&rsquo;t silently drop either kind, so after migrating 0.9.x memory, changing or removing any rule in an ADR needs an explicit choice:</p>
 <pre tabindex="0"><code>$ mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
 ERROR: ADR import refused while evolving 'ADR-301': decision 'ADR-301': version evolution
 would drop protection/legacy_unknown bindings ['ADR-301:FORBID_LITERAL:faca47fb&hellip;'];
@@ -294,17 +294,18 @@ pass --preserve-protection or --release-protection for each (ADR-030 &sect;9a)</
 <pre tabindex="0"><code>mneme decision-index migrate --memory .mneme/project_memory.json
 mneme decision-index migrate --memory .mneme/project_memory.json --apply</code></pre>
       <ul>
-        <li>It is lossless or it refuses, writing nothing. A decision whose <code>source</code> is not an ADR file has no representation in the index, so memory that contains one stays unmigrated; move that decision into an ADR file first.</li>
+        <li>It is lossless or it refuses, writing nothing. Decisions added with <code>add_decision</code> or imported from ADR files migrate. A decision whose <code>source</code> is a free-text note, or points at something other than an ADR file (such as an EventCatalog import), has no representation in the index, so memory that contains one stays unmigrated. To keep such a decision, write it as an ADR file, remove its row from <code>decisions[]</code>, migrate, then import the ADR.</li>
         <li>Re-running it on migrated memory changes nothing.</li>
         <li><code>--apply</code> refuses if the file changed after the preview read it.</li>
-        <li>Until you migrate, <code>mneme check</code> keeps working on the pre-0.10.0 path. The MCP server and <code>mneme decision accept</code> need the index.</li>
+        <li>Until you migrate, <code>mneme check</code>, <code>test_query</code>, and <code>list_decisions</code> keep working on the pre-0.10.0 path. The MCP server, <code>mneme decision accept</code>, and <code>mneme adr import --apply</code> need the index and exit 2 without it.</li>
       </ul>
       <p>Full output and exit codes: <a href="/docs/cli/#decision-index-migrate">decision-index migrate</a>.</p>
     </section>
 
     <section class="section" id="version-compatibility">
       <h2>Version compatibility</h2>
-      <div class="callout warning"><p><strong>Upgrade every writer before you migrate.</strong> Once memory is migrated, a 0.9.2 or earlier process that writes it, such as <code>add_decision</code> in an old CI image or a teammate&rsquo;s install, succeeds without an error. The next 0.10.0 <code>mneme check</code> or <code>test_query</code> on the file then fails with <code>DecisionIndexPersistenceError</code>, because the <code>decisions[]</code> snapshot no longer matches the index. Move CI jobs, hooks, and every install to 0.10.0 first.</p></div>
+      <div class="callout warning"><p><strong>Upgrade every writer before you migrate.</strong> Once memory is migrated, a 0.9.2 or earlier process that writes it, such as <code>add_decision</code> in an old CI image or a teammate&rsquo;s install, succeeds without an error. The next 0.10.0 <code>mneme check</code>, <code>test_query</code>, <code>list_decisions</code>, or <code>audit</code> on the file then fails with <code>DecisionIndexPersistenceError</code>, because the <code>decisions[]</code> snapshot no longer matches the index, and the MCP server refuses to start. Move CI jobs, hooks, and every install to 0.10.0 first.</p></div>
+      <p>If it happens, <code>decision-index migrate</code> won&rsquo;t repair the file. Restore it from version control and redo the change with 0.10.0.</p>
       <p>No 0.10.0 command migrates memory implicitly. Only <code>mneme decision-index migrate --apply</code> does.</p>
     </section>
 
