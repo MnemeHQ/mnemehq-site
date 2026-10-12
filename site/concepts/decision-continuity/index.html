@@ -205,7 +205,7 @@
         "headline": "Decision Continuity — Mneme HQ Concepts",
         "description": "Decision continuity is the property that architectural decisions remain enforced across agents, sessions, and time — regardless of which agent acts or what context it inherited.",
         "url": "https://mnemehq.com/concepts/decision-continuity/",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/decision-continuity/og-v2.png",
@@ -394,7 +394,7 @@
 
     <h2>How this fits the AI SDLC</h2>
 
-    <p>Decision continuity is enabled by the <strong>governance infrastructure layer</strong> — specifically by storing decisions in a version-controlled corpus that every agent queries identically. In the Mneme architecture, that corpus is <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The corpus lives outside any agent's context. It is not injected by a human. It is queried by the governance system at generation time, using deterministic retrieval.</p>
+    <p>Decision continuity is enabled by the <strong>governance infrastructure layer</strong> — specifically by storing decisions in a version-controlled corpus that every agent queries identically. In the Mneme architecture, that corpus is <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The corpus lives outside any agent's context. It is not injected by a human. It is queried by the governance system at generation time, using deterministic retrieval. Two kinds of continuity are worth separating. Continuity across agents means every agent reads the same corpus. Continuity over time means a decision keeps its history when it changes: since mneme-hq 0.10.0 the corpus holds a persisted <a href="/docs/decision-index/">Decision Index</a>, where each change to a decision is a new immutable version, and a superseded decision is kept with its lifecycle instead of being deleted. Only active decisions are enforced.</p>
 
     <p>The key architectural consequence: <strong>the decision is the continuous element, not the agent's memory of the decision.</strong> A new agent starting a fresh session doesn't need to be told about previous decisions. It queries the corpus. The corpus tells it what is in effect. The corpus is always current because it is version-controlled. The agent enforces whatever the corpus says, regardless of what any previous agent knew.</p>
 
