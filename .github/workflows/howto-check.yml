@@ -13,6 +13,7 @@ on:
       - 'templates/howto/**'
       - 'scripts/*howto*'
       - 'scripts/core_version.json'
+      - 'site/og/cards.yaml'
       - 'site/sitemap.xml'
       - '.github/workflows/howto-check.yml'
 
@@ -38,7 +39,7 @@ jobs:
           python -m pip install "mneme-hq[mcp]==$v" pyyaml pytest
 
       - name: Test the validators
-        run: python -m pytest scripts/test_check_howto.py scripts/test_run_howto_fixtures.py -q
+        run: python -m pytest scripts/test_check_howto.py scripts/test_run_howto_fixtures.py scripts/test_build_howto_page.py -q
 
       - name: Replay guide fixtures
         run: python scripts/run_howto_fixtures.py

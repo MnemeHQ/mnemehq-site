@@ -21,13 +21,13 @@ Prefer the official MCP Registry metadata as the source of package and version t
 For the current stable release:
 
 ```bash
-uvx --from "mneme-hq[mcp]==0.9.2" mneme decision-mcp
+uvx --from "mneme-hq[mcp]==0.10.0" mneme decision-mcp
 ```
 
 To expose a canonical ADR corpus and durable proposal store from the repository root:
 
 ```bash
-uvx --from "mneme-hq[mcp]==0.9.2" mneme decision-mcp \
+uvx --from "mneme-hq[mcp]==0.10.0" mneme decision-mcp \
   --adr-dir docs/adr \
   --proposals .mneme/decision_proposals.json
 ```
@@ -35,7 +35,7 @@ uvx --from "mneme-hq[mcp]==0.9.2" mneme decision-mcp \
 If `uvx` is unavailable:
 
 ```bash
-pipx install "mneme-hq[mcp]==0.9.2"
+pipx install "mneme-hq[mcp]==0.10.0"
 mneme decision-mcp --adr-dir docs/adr --proposals .mneme/decision_proposals.json
 ```
 
@@ -49,7 +49,7 @@ For a host that launches local stdio servers, use the equivalent process contrac
     "mneme": {
       "command": "uvx",
       "args": [
-        "--from", "mneme-hq[mcp]==0.9.2",
+        "--from", "mneme-hq[mcp]==0.10.0",
         "mneme", "decision-mcp",
         "--adr-dir", "docs/adr",
         "--proposals", ".mneme/decision_proposals.json"

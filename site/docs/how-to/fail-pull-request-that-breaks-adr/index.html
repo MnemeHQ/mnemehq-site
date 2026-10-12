@@ -286,7 +286,7 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Fail a pull request that breaks an ADR</h1>
   <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too.</p>
-  <p class="howto-meta">Tested with mneme-hq 0.9.2 &middot; GitHub Actions</p>
+  <p class="howto-meta">Tested with mneme-hq 0.10.0 &middot; GitHub Actions</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.</p>
 </section>
 
@@ -330,7 +330,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install Mneme
-        run: python -m pip install "mneme-hq==0.9.2"
+        run: python -m pip install "mneme-hq==0.10.0"
 
       - name: Check the memory file matches the ADRs
         run: |

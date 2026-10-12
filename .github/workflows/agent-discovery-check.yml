@@ -4,6 +4,12 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'scripts/check_stale_mcp_claims.py'
+      - 'scripts/test_check_stale_mcp_claims.py'
+      - 'templates/**'
+      - 'site/docs/**'
+      - 'site/integrations/mcp/**'
+      - 'site/llms-full.txt'
       - 'scripts/check_agent_discovery.py'
       - 'scripts/core_version.json'
       - 'site/.well-known/**'
@@ -17,6 +23,12 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/check_stale_mcp_claims.py'
+      - 'scripts/test_check_stale_mcp_claims.py'
+      - 'templates/**'
+      - 'site/docs/**'
+      - 'site/integrations/mcp/**'
+      - 'site/llms-full.txt'
       - 'scripts/check_agent_discovery.py'
       - 'scripts/core_version.json'
       - 'site/.well-known/**'
@@ -48,6 +60,11 @@ jobs:
         with:
           python-version: '3.12'
       - run: python scripts/check_agent_discovery.py
+      - name: Pre-0.10.0 MCP storage claims stay gone
+        run: |
+          python -m pip install pytest
+          python -m pytest scripts/test_check_stale_mcp_claims.py -q
+          python scripts/check_stale_mcp_claims.py
 
   external-trust:
     name: Verify PyPI, core metadata, and MCP Registry
