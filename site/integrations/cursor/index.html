@@ -225,7 +225,7 @@
         "mainEntity": [
           {"@type": "Question", "name": "Does Mneme replace Cursor Rules entirely?", "acceptedAnswer": {"@type": "Answer", "text": "No — Mneme generates the Cursor Rules file from a structured source. Cursor still reads .cursor/rules/ at session start; the difference is that the file is now a derived artifact with precedence resolution and version history rather than a manual document."}},
           {"@type": "Question", "name": "Can I edit .cursor/rules/mneme.mdc directly while Mneme is in place?", "acceptedAnswer": {"@type": "Answer", "text": "You can, but the next regenerate will overwrite it. The recommended workflow is to update project_memory.json and re-run mneme cursor generate. That way the change is tracked as a decision-record edit rather than a quiet rule-file change."}},
-          {"@type": "Question", "name": "Does this work with Cursor's MCP integration?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme 0.9.0 ships a generic local stdio MCP server for decision retrieval and non-authoritative proposals. This page does not claim verified Cursor-specific MCP configuration or compatibility; the validated Cursor path documented here remains the rules export."}}
+          {"@type": "Question", "name": "Does this work with Cursor's MCP integration?", "acceptedAnswer": {"@type": "Answer", "text": "Since 0.9.0, Mneme ships a generic local stdio MCP server for decision retrieval and non-authoritative proposals. This page does not claim verified Cursor-specific MCP configuration or compatibility; the validated Cursor path documented here remains the rules export."}}
         ]
       }
     ]
@@ -416,7 +416,7 @@ mneme cursor generate --memory .mneme/project_memory.json --query "service bound
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">Does this work with Cursor's MCP integration?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme 0.9.0 ships a generic <a href="/integrations/mcp/" style="color:var(--accent);">local stdio MCP server</a> for decision retrieval and non-authoritative proposals. This page does not claim verified Cursor-specific MCP configuration or compatibility; the validated Cursor path documented here remains the rules export.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Since 0.9.0, Mneme ships a generic <a href="/integrations/mcp/" style="color:var(--accent);">local stdio MCP server</a> for decision retrieval and non-authoritative proposals. This page does not claim verified Cursor-specific MCP configuration or compatibility; the validated Cursor path documented here remains the rules export.</div>
       </details>
     </div>
 

@@ -371,7 +371,7 @@
 
     <h2>How the hook works</h2>
 
-    <p>The plugin at <code>v0.9.2</code> runs <code>mneme-hook</code> on three Claude Code events:</p>
+    <p>The plugin at <code>v0.10.0</code> runs <code>mneme-hook</code> on three Claude Code events:</p>
 
     <ul>
       <li><strong>PreToolUse on Edit, Write and MultiEdit.</strong> The hook works out the file content the change would produce, then checks the content the change introduces against your recorded decisions. Unrelated lines already in the file don&rsquo;t trigger a block.</li>
@@ -390,7 +390,7 @@
   else:
     exit 0   # allow (also when no verdict could be produced)</code></pre>
 
-    <p>The <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">how-to guide</a> replays each of these events against mneme-hq 0.9.2, with the recorded output.</p>
+    <p>The <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">how-to guide</a> replays each of these events against mneme-hq 0.10.0, with the recorded output.</p>
 
     <div class="callout">
       <p><strong>Fail-open by design.</strong> The hook never blocks on Mneme malfunction. If <code>mneme</code> is not found, an edited file can't be read, or a <code>mneme check</code> call takes longer than 10 seconds, the hook exits 0 and allows the edit. Its notes go to Claude Code&rsquo;s debug log only, so neither you nor the agent sees them in the session. If <code>mneme-hook</code> itself isn&rsquo;t on <code>PATH</code>, Claude Code shows a hook error instead.</p>
@@ -413,7 +413,7 @@
       </li>
       <li>
         <strong>Load the plugin</strong>
-        <pre tabindex="0"><code>git clone --branch v0.9.2 --depth 1 https://github.com/MnemeHQ/mneme
+        <pre tabindex="0"><code>git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme
 claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
         <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). Reload in-session with <code>/reload-plugins</code> after changes.</p>
         <p>A legacy flat installer (<code>python scripts/install_claude_code.py</code>, with hyphenated <code>/mneme-check</code> commands) still works from a git clone, but <code>scripts/</code> is not shipped in the PyPI wheel.</p>
