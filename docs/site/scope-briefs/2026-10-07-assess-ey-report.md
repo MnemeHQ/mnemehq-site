@@ -15,7 +15,7 @@ Status: **gathered, not built**
 | Field | Value |
 |---|---|
 | Kind | insight |
-| Title | **blocked on house voice.** Chat's final: "EY Report: AI Is Moving the Software Development Bottleneck Beyond Coding" (SEO title "EY Report: The AI Software Development Bottleneck Has Moved Beyond Coding"). "Bottleneck" is banned and fails `lint_prose.py`; the `voice-ok` escape covers only a verbatim quoted title, and "bottleneck" is EY's finding, not its title. Proposed: "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding" |
+| Title | **Decided 2026-10-12: "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding"** (confirm the verbatim report name). Background: Chat's final: "EY Report: AI Is Moving the Software Development Bottleneck Beyond Coding" (SEO title "EY Report: The AI Software Development Bottleneck Has Moved Beyond Coding"). "Bottleneck" is banned and fails `lint_prose.py`; the `voice-ok` escape covers only a verbatim quoted title, and "bottleneck" is EY's finding, not its title. Proposed: "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding" |
 | Slug | `ey-beyond-the-code-ai-software-development` (chat: `ey-ai-software-development-bottleneck`) |
 | Report-anchored (ADR-015) | yes: entity = the report's verbatim title. The PDF file name suggests "Beyond the code: How AI is redefining the software industry" (2026); confirm on the cover |
 | Topic hub | engineering-performance |
@@ -93,6 +93,7 @@ None for the site. The chat suggests a Metavallon investor-deck callout (45% fig
 
 ## Open questions
 
-- Title wording without "bottleneck" (or a documented exception to house voice for this keyword).
+- Title: decided. "Bottleneck" may appear once, inside a verbatim EY quote with `<!-- voice-ok: verbatim EY quote -->`.
+- "Cheap code, scarce decisions" thesis: owned by the Cohesion brief's insight 3; this article uses the survey as evidence and links there.
 - Verbatim report title for ADR-015.
 - Publish before or after the Engineering Decision Governance concept page? (The chat routes authority into it.)

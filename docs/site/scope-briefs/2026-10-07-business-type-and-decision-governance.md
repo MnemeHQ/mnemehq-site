@@ -12,7 +12,7 @@ Status: **gathered, not built**
 
 ## Build card
 
-**Blocked** until "decision governance" (and the chat's wider vocabulary) passes the PUBLISHING.md terminology lock; may also need ADR-001/013/014 changes in `MnemeHQ/mneme`.
+**Decision 2026-10-12:** "engineering decision governance" is the one new concept term. Before the concept page ships: a PUBLISHING.md terminology amendment and an ADR-001/013/014 check in `MnemeHQ/mneme`. Only "decision governance" is adopted; the rest of the chat's vocabulary (Decision Engineering, Decision Infrastructure, Decision Enforcement, Decision Evidence) is not locked.
 
 | Piece | Kind | Slug | Hub | OG headline | Cannibalisation (`find_overlap.py`) | Verdict |
 |---|---|---|---|---|---|---|

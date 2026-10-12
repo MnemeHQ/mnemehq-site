@@ -9,24 +9,24 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | gathered, not built |
-| [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | gathered, not built; title blocked on house voice |
+| [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | gathered, not built; title decided |
 | [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | gathered, not built |
-| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | gathered, not built; blocked on terminology |
-| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | concept + 3 insights | gathered, not built; blocked on terminology |
-| [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | insight | gathered, not built; merge with Cohesion's silo piece |
-| [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight + pillar | gathered, not built; blocked on terminology |
+| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | gathered, not built; concept waits on terminology amendment |
+| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | 3 insights (no concept page) | gathered, not built |
+| [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
+| [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | gathered, not built |
 | [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | gathered, not built |
 | [OKF architecture article scope](2026-09-01-okf-architecture-article-scope.md) | 2026-09-01 | update existing insight | gathered, not built |
 | [Writing ROI Content (backlog)](2026-09-08-writing-roi-content-backlog.md) | 2026-09-08 (updated 09-10) | insight cluster | gathered, not built; chat must stay un-marked |
 
-## Decisions needed before building
+## Decisions confirmed (2026-10-12, by TheoV823)
 
-1. **Terminology lock.** Three candidate category terms compete: "pre-action governance" (09-08), "engineering decision governance" (10-07), "engineering coherence" (10-04). Settle together in PUBLISHING.md (and ADR-001/013/014 if they change category or tagline). Blocks the concept pages and the insights that lean on them.
-2. **EY title.** "Bottleneck" is banned by house voice and fails `lint_prose.py`; reword or grant a documented exception.
-3. **One home for "cheap code, scarce decisions".** EY, decision silos (09-12) and Cohesion insight 3 all argue it.
-4. **Silo merge.** 09-12 Silo brief + Cohesion's "Return of the Silo Engineer" become one article.
+1. **Terminology: "engineering decision governance" is the one new concept term.** It gets a concept page. "Pre-action" stays a mechanism word used in insights (where enforcement happens), with no pillar or concept page. "Engineering coherence" stays a problem framing used in insights, with no concept page. Before the concept page ships: a terminology amendment in PUBLISHING.md ("Conceptual authority and editorial discipline") and a check of ADR-001/013/014 in `MnemeHQ/mneme`.
+2. **EY title:** "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding" (confirm the verbatim report name on the PDF cover). "Bottleneck" appears at most once, inside a verbatim EY quote marked `<!-- voice-ok: verbatim EY quote -->`.
+3. **"Cheap code, scarce decisions" lives in Cohesion insight 3** ("When Code Becomes Cheap, Decisions Become the Scarce Asset"). EY uses its survey as evidence and links there; the silo article keeps its own angle.
+4. **Silo: one article, "The Return of the Silo Engineer"**, built from the Cohesion scope, with the 09-12 cross-system "decision silos" argument folded in as one section. The 09-12 brief is merged, not built separately.
 
-**Buildable now (no terminology dependency):** AECP multi-agent piece, Claude Frontier Academy news piece, NBER 240%/30% (ROI backlog), OKF update to the June page, EY once its title is settled.
+**Buildable now:** AECP multi-agent piece, Claude Frontier Academy news piece, NBER 240%/30% (ROI backlog), OKF update to the June page, EY, The Return of the Silo Engineer, The Coherence Problem in Agentic Software Development, When Code Becomes Cheap. **After the terminology amendment:** Engineering Decision Governance concept page, From Decision Records to Decision Governance.
 
 ## Read before building
 

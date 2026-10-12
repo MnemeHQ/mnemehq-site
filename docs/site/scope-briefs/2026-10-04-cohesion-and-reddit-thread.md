@@ -12,14 +12,14 @@ Status: **gathered, not built**
 
 ## Build card
 
-Concept and series both **blocked** on the terminology lock for "engineering coherence".
+**Decisions 2026-10-12:** no Engineering Coherence concept page; "coherence" stays a problem framing inside insights. The three insights are buildable. Insight 1 absorbs the 09-12 decision-silos brief as one section. Insight 3 owns the "cheap code, scarce decisions" thesis (EY links to it).
 
 | Piece | Kind | Slug | Hub | OG headline | Cannibalisation (`find_overlap.py`) | Verdict |
 |---|---|---|---|---|---|---|
-| Engineering Coherence | **concept page** (separate PR) | `concepts/engineering-coherence` | n/a | n/a | top 24.4 `prompt-engineering-vs-harness-engineering` | clear |
-| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (6) | top 40.7 `ai-engineering-roi` (noise on "engineer") | clear on site; **batch overlap: merge with the 2026-09-12 Silo brief** into one silo piece |
+| Engineering Coherence | ~~concept page~~ | n/a | n/a | n/a | top 24.4 | **dropped** (decision 2026-10-12) |
+| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (6) | top 40.7 `ai-engineering-roi` (noise on "engineer") | clear on site; **absorbs the 2026-09-12 decision-silos brief as one section** |
 | The Coherence Problem in Agentic Software Development | insight (foundational) | `coherence-problem-agentic-software-development` | architectural-governance | Correct Code, Incoherent System (4) | `concepts/agentic-development` 40.6, `dora-metrics-insufficient-for-agentic-development` 40.4 | clear (different intent) |
-| When Code Becomes Cheap, Decisions Become the Scarce Asset | insight (strategic) | `when-code-is-cheap-decisions-are-scarce` | architectural-intent | Cheap Code, Scarce Decisions (4) | top 19.3 | clear on site; **batch overlap** with the EY brief and the decision-silos brief, which argue the same economics. Pick one home |
+| When Code Becomes Cheap, Decisions Become the Scarce Asset | insight (strategic) | `when-code-is-cheap-decisions-are-scarce` | architectural-intent | Cheap Code, Scarce Decisions (4) | top 19.3 | clear on site; **owns this thesis** (decision 2026-10-12); EY links here |
 
 Report-anchored: no. Eyebrows: Concept / Analysis.
 

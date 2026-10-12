@@ -12,7 +12,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 
 ## Build card
 
-Proposed values for the first buildable piece. **Blocked** until the naming question below is settled.
+**Decision 2026-10-12:** "pre-action" is a mechanism word, not a category: no `/pre-action-governance/` pillar and no concept page. The definition article survives only as an insight about the mechanism, using "decision governance" (the locked concept term) for the category. Retitle before building, e.g. "Pre-Action Enforcement: Where Agent Governance Takes Effect".
 
 | Field | Value |
 |---|---|
@@ -28,7 +28,7 @@ Proposed values for the first buildable piece. **Blocked** until the naming ques
 | Cannibalisation | `find_overlap.py`: `package-hallucinations-pre-action-governance` 80.2 (news intent vs this definition intent), next 29.8. Verdict: clear if this becomes the canonical definition and the package page links to it. **Batch overlap:** competes as a category term with "decision governance" and "engineering coherence" (2026-10-07 and 10-04 chats) |
 | Overlap verdict | link to `package-hallucinations-pre-action-governance` and `review-is-not-governance`; keep apart from the O'Reilly/TechTalks angles |
 | Cross-links | the two pages above, `agentic-change-management-needs-a-decision-layer` |
-| **Blocking** | is "pre-action governance" the category or only the mechanism? The CodeRabbit chat says mechanism. A new category term also needs a PUBLISHING.md terminology amendment and possibly ADR-001/013/014 changes |
+| Naming | resolved 2026-10-12: mechanism, not category (matches the CodeRabbit chat) |
 
 ## Agreed scope
 

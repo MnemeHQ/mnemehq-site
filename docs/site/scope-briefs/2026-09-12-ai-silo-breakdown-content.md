@@ -1,6 +1,6 @@
 # Scope brief: Post-AI Silo Breakdown Content
 
-Status: **gathered, not built.** Do not treat as published; no `***` mark.
+Status: **merged** (decision 2026-10-12): folded into "The Return of the Silo Engineer" as one section; see [Cohesion brief](2026-10-04-cohesion-and-reddit-thread.md). Not built separately. Do not treat the chat as published until that article ships.
 
 | Field | Value |
 |---|---|
