@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Install and operate the Mneme 0.9.0 local stdio MCP server. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
+  <meta name="description" content="Install and operate the Mneme 0.10.0 local stdio MCP server, which reads the persisted Decision Index. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="author" content="Theo Valmis" />
@@ -19,7 +19,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme MCP Server Reference" />
-  <meta property="og:description" content="Install and operate the local stdio Decision Index MCP server shipped in mneme-hq 0.9.0." />
+  <meta property="og:description" content="Install and operate the local stdio Decision Index MCP server in mneme-hq 0.10.0." />
   <meta property="og:url" content="https://mnemehq.com/docs/mcp/" />
   <meta property="og:image" content="https://mnemehq.com/docs/mcp/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -27,7 +27,7 @@
 <meta property="og:image:alt" content="Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with human decision authority kept outside MCP." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Mneme MCP Server Reference" />
-  <meta name="twitter:description" content="The six-tool local stdio MCP surface in mneme-hq 0.9.0." />
+  <meta name="twitter:description" content="The six-tool local stdio MCP surface in mneme-hq 0.10.0." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/mcp/og-v2.png" />
 <meta name="twitter:image:alt" content="Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with human decision authority kept outside MCP." />
 
@@ -52,16 +52,16 @@
       {
         "@type": "TechArticle",
         "headline": "Mneme MCP Server Reference",
-        "description": "Install and operate the local stdio Decision Index MCP server shipped in mneme-hq 0.9.0.",
+        "description": "Install and operate the local stdio Decision Index MCP server in mneme-hq 0.10.0, which reads authoritative decisions from the persisted Decision Index.",
         "url": "https://mnemehq.com/docs/mcp/",
         "datePublished": "2026-09-15",
-        "dateModified": "2026-09-15",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/docs/mcp/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/docs/mcp/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "mneme-hq 0.9.0 with the mcp extra"
+        "dependencies": "mneme-hq 0.10.0 with the mcp extra"
       }
     ]
   }
@@ -198,11 +198,11 @@
     </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
-  <div class="answer-capsule"><strong>Released in mneme-hq 0.9.0:</strong> a local stdio MCP server with exactly six Decision Index tools. It can read decisions and record non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>
+  <div class="answer-capsule"><strong>Current release, mneme-hq 0.10.0:</strong> a local stdio MCP server with exactly six Decision Index tools, introduced in 0.9.0. It reads authoritative decisions from the persisted Decision Index in project memory and records non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>
   <header class="hero">
-    <div class="eyebrow">Operator reference &middot; mneme-hq 0.9.0</div>
+    <div class="eyebrow">Operator reference &middot; mneme-hq 0.10.0</div>
     <h1>Decision context over MCP, with authority kept outside the protocol.</h1>
-    <p class="lede">Use <code>mneme decision-mcp</code> to let an MCP host query Mneme's Decision Index or submit candidate architectural decisions. The server is local and stdio-only in 0.9.0.</p>
+    <p class="lede">Use <code>mneme decision-mcp</code> to let an MCP host query Mneme's Decision Index or submit candidate architectural decisions. The server is local and stdio-only.</p>
   </header>
 
   <div class="wrap">
@@ -216,7 +216,7 @@
         <li><a href="#errors">Errors and fail-closed behavior</a></li>
         <li><a href="#authority">Authority boundary</a></li>
         <li><a href="#downstream-consumers">Downstream governance consumers</a></li>
-        <li><a href="#limitations">Known limitations</a></li>
+        <li><a href="#limitations">Version compatibility</a></li>
       </ol>
     </nav>
 
@@ -225,49 +225,57 @@
       <p>The MCP SDK is an optional dependency. Install the released package with the extra, then start the server from the repository whose decision state you want to expose.</p>
 <pre tabindex="0"><code>pipx install "mneme-hq[mcp]==0.10.0"
 mneme decision-mcp</code></pre>
-      <p>The process communicates over standard input and standard output. Version 0.9.0 does not expose HTTP, SSE, a hosted endpoint, authentication, RBAC, or multi-tenant infrastructure.</p>
+      <div class="callout"><p><strong>Before you start:</strong> the server reads decisions from project memory and will not start unless that file has an authoritative <code>decision_index</code> section. Projects created with <code>mneme init</code> or <code>mneme setup</code> on 0.10.0 already have one. For memory written by 0.9.x, preview the migration, review what it reports, then apply it:</p></div>
+<pre tabindex="0"><code>mneme decision-index migrate --memory .mneme/project_memory.json
+mneme decision-index migrate --memory .mneme/project_memory.json --apply</code></pre>
+      <p>Upgrade every process that writes this file to 0.10.0 before you apply, including CI jobs, hooks, and teammates&rsquo; installs. Migrated memory must not be written by 0.9.2 or earlier; see <a href="#limitations">version compatibility</a> and the <a href="/docs/cli/#decision-index-migrate">migrate reference</a>.</p>
+      <p>The process communicates over standard input and standard output. It does not expose HTTP, SSE, a hosted endpoint, authentication, RBAC, or multi-tenant infrastructure.</p>
       <div class="table-scroll">
         <table class="matrix">
-          <thead><tr><th>Option</th><th>Behavior in 0.9.0</th></tr></thead>
+          <thead><tr><th>Option</th><th>Behavior in 0.10.0</th></tr></thead>
           <tbody>
             <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
-            <tr><td>--adr-dir &lt;path&gt;</td><td>Compile that ADR directory into the server's canonical read index. There is no default. The directory must pass parse, corpus validation, and precedence resolution before startup.</td></tr>
+            <tr><td>--memory &lt;path&gt;</td><td>The project memory file whose <code>decision_index</code> section the server reads. Defaults to <code>.mneme/project_memory.json</code>. Every canonical read comes from this file.</td></tr>
+            <tr><td>--adr-dir &lt;path&gt;</td><td>Optional. Validate that ADR directory before startup: it must pass parse, corpus validation, and precedence resolution. There is no default. ADRs stay validation and import sources; the server never reads decisions from them.</td></tr>
           </tbody>
         </table>
       </div>
 <pre tabindex="0"><code>mneme decision-mcp \
   --proposals .mneme/decision_proposals.json \
+  --memory .mneme/project_memory.json \
   --adr-dir docs/adr</code></pre>
-      <div class="callout"><p><strong>Strict startup:</strong> an <code>--adr-dir</code> folder that doesn&rsquo;t exist, an empty-string <code>--adr-dir</code>, a malformed ADR, an invalid corpus, or unresolved precedence prevents the configured canonical server from starting. An existing but empty folder starts the server with no canonical decisions. Mneme does not silently serve an ambiguous canonical view.</p></div>
+      <div class="callout"><p><strong>Strict startup:</strong> the server exits with code 2 if the memory file doesn&rsquo;t exist, or if it has no valid <code>decision_index</code> section. In that second case it prints the two <code>mneme decision-index migrate</code> commands to run. With <code>--adr-dir</code>, a folder that doesn&rsquo;t exist, an empty-string value, a malformed ADR, an invalid corpus, or unresolved precedence also stops startup. An existing but empty folder passes validation. Mneme does not silently serve an ambiguous canonical view.</p></div>
     </section>
 
     <section class="section" id="configure">
       <h2>Configure an MCP host</h2>
-      <p>Version 0.9.0 ships the server command, not a client-specific installer or generated config. For an MCP host that supports launching a local stdio process, use this process definition in the host's own MCP configuration format:</p>
+      <p>Mneme ships the server command, not a client-specific installer or generated config. For an MCP host that supports launching a local stdio process, use this process definition in the host's own MCP configuration format:</p>
 <pre tabindex="0"><code>{
   "mcpServers": {
     "mneme": {
       "command": "mneme",
       "args": [
         "decision-mcp",
-        "--proposals", ".mneme/decision_proposals.json"
+        "--proposals", ".mneme/decision_proposals.json",
+        "--memory", ".mneme/project_memory.json"
       ]
     }
   }
 }</code></pre>
-      <p>Add <code>"--adr-dir", "docs/adr"</code> only when that directory is a schema-valid Mneme ADR corpus. MCP host configuration formats differ; this is the process contract, not a claim of validated support for a named client.</p>
+      <p>Add <code>"--adr-dir", "docs/adr"</code> only when you want startup to validate that directory as a schema-valid Mneme ADR corpus. MCP host configuration formats differ; this is the process contract, not a claim of validated support for a named client.</p>
     </section>
 
     <section class="section" id="storage">
       <h2>Storage and canonical input</h2>
-      <p>The proposal store is always composed. By default it is the local file <code>.mneme/decision_proposals.json</code>; writes are handled by Mneme's JSON proposal store. It is separate from <code>.mneme/project_memory.json</code>, which the MCP server never uses as proposal storage.</p>
-      <p>Canonical reads are optional. Supplying <code>--adr-dir</code> builds an in-memory canonical index through Mneme's existing ADR compiler. Omitting it starts a proposal-store-only server: proposal tools work, while no ADR-backed canonical decision corpus is loaded.</p>
+      <p>Canonical decisions come from the Decision Index: the <code>decision_index</code> section of the project memory file passed with <code>--memory</code>. The server validates it once at startup, then reloads it for every canonical read, so a decision accepted with <code>mneme decision accept</code> is visible without restarting the server. Canonical records carry the identity of the decision version they come from: <code>version_id</code>, <code>decision_version_id</code>, and <code>content_digest</code>.</p>
+      <p>The proposal store is separate. By default it is the local file <code>.mneme/decision_proposals.json</code>, written by Mneme&rsquo;s JSON proposal store and re-read before each read, so a proposal that a separate CLI process accepts or rejects shows its new status without a restart. An empty-string <code>--proposals</code> selects an in-memory store that only this process can see. The server never stores proposals in project memory.</p>
+      <p><code>--adr-dir</code> never changes what the server reads. To bring ADR changes into the Decision Index, run <code>mneme adr import</code>.</p>
     </section>
 
     <section class="section" id="tools">
       <h2>The frozen six-tool surface</h2>
-      <p>The tool inventory is part of the authority boundary. Version 0.9.0 introduced exactly these six names and no aliases. The current released 0.9.2 runtime publishes parameter descriptions and JSON Schema through MCP <code>tools/list</code>.</p>
-      <div class="callout"><p><strong>Machine-readable contract:</strong> <a href="/.well-known/mcp/decision-tools.json">decision-tools.json</a> is generated from the exact released <code>mneme-hq[mcp]==0.9.2</code> runtime. It includes each tool's description, input and output schema, MCP annotations, and request examples that CI validates by actually calling the released tools. It is drift-checked against <code>tools/list</code>, not maintained as a second hand-authored API specification.</p></div>
+      <p>The tool inventory is part of the authority boundary. Version 0.9.0 introduced exactly these six names and no aliases, and 0.10.0 keeps them with unchanged input schemas. The current released 0.10.0 runtime publishes parameter descriptions and JSON Schema through MCP <code>tools/list</code>.</p>
+      <div class="callout"><p><strong>Machine-readable contract:</strong> <a href="/.well-known/mcp/decision-tools.json">decision-tools.json</a> is generated from the exact released <code>mneme-hq[mcp]==0.10.0</code> runtime. It includes each tool's description, input and output schema, MCP annotations, and request examples that CI validates by actually calling the released tools. It is drift-checked against <code>tools/list</code>, not maintained as a second hand-authored API specification.</p></div>
       <div class="tool-grid">
         <article class="tool-card">
           <div class="tool-head"><span class="tool-name">decision.propose</span><span class="tool-mode">Write &middot; proposal only</span></div>
@@ -294,9 +302,9 @@ mneme decision-mcp</code></pre>
         <article class="tool-card">
           <div class="tool-head"><span class="tool-name">decision.get</span><span class="tool-mode">Read only</span></div>
           <dl>
-            <dt>Purpose</dt><dd>Retrieve one proposal or loaded canonical decision by stable ID.</dd>
+            <dt>Purpose</dt><dd>Retrieve one proposal, or one canonical decision from the Decision Index, by stable ID.</dd>
             <dt>Inputs</dt><dd>Non-empty <code>record_id</code>.</dd>
-            <dt>Result</dt><dd>An explicit <code>record_type</code> of <code>proposal</code>, <code>canonical_decision</code>, or <code>not_found</code>. Proposal and canonical lifecycle vocabularies remain separate.</dd>
+            <dt>Result</dt><dd>An explicit <code>record_type</code> of <code>proposal</code>, <code>canonical_decision</code>, or <code>not_found</code>. Proposal and canonical lifecycle vocabularies remain separate. A canonical decision is returned whatever its lifecycle, including superseded and deprecated ones, with its <code>lifecycle_status</code>.</dd>
             <dt>Errors</dt><dd>Malformed input is a tool error. An unknown ID is successful typed data, not an error.</dd>
             <dt>Boundary</dt><dd>Never mutates proposal, canonical, rule, evidence, or enforcement state.</dd>
           </dl>
@@ -305,7 +313,7 @@ mneme decision-mcp</code></pre>
         <article class="tool-card">
           <div class="tool-head"><span class="tool-name">decision.search</span><span class="tool-mode">Read only</span></div>
           <dl>
-            <dt>Purpose</dt><dd>Run deterministic text and exact-metadata search across proposals and the loaded canonical index.</dd>
+            <dt>Purpose</dt><dd>Run deterministic text and exact-metadata search across proposals and the Decision Index.</dd>
             <dt>Inputs</dt><dd>Optional text query; proposal status; canonical lifecycle status; producer name; source reference; and origin classification.</dd>
             <dt>Result</dt><dd>Separate <code>proposals</code> and <code>canonical_decisions</code> lists. Search ranking has no enforcement meaning.</dd>
             <dt>Errors</dt><dd>Invalid lifecycle or origin vocabularies and malformed fields return a tool error.</dd>
@@ -327,7 +335,7 @@ mneme decision-mcp</code></pre>
         <article class="tool-card">
           <div class="tool-head"><span class="tool-name">decision.trace</span><span class="tool-mode">Read only &middot; fail closed</span></div>
           <dl>
-            <dt>Purpose</dt><dd>Return the lineage actually known for a proposal or loaded canonical decision.</dd>
+            <dt>Purpose</dt><dd>Return the lineage actually known for a proposal or canonical decision.</dd>
             <dt>Inputs</dt><dd>Non-empty <code>record_id</code>.</dd>
             <dt>Result</dt><dd>Explicit <code>result_type</code>: <code>proposal_trace</code>, <code>canonical_trace</code>, or <code>trace_not_found</code>. Missing links are named rather than invented.</dd>
             <dt>Errors</dt><dd>Malformed input is a tool error. Canonical rule-lineage integrity failure aborts the call with JSON-RPC internal error <code>-32603</code>; no partial trace is returned.</dd>
@@ -343,7 +351,7 @@ mneme decision-mcp</code></pre>
         <li>Unknown IDs are returned as typed <code>not_found</code> or <code>trace_not_found</code> results.</li>
         <li>Invalid inputs return MCP tool errors so the caller can correct the request.</li>
         <li>Authority-shaped input such as producer-supplied status, proposal IDs, timestamps, canonical lifecycle, typed rules, trusted evidence, or enforcement state is rejected, not ignored.</li>
-        <li>Canonical integrity failures abort the protocol call. Invalid canonical sources prevent server startup.</li>
+        <li>Canonical integrity failures abort the protocol call. A missing or unmigrated Decision Index, or an invalid <code>--adr-dir</code> corpus, prevents server startup.</li>
         <li>Tool results do not serialize stack traces.</li>
       </ul>
     </section>
@@ -352,12 +360,12 @@ mneme decision-mcp</code></pre>
       <h2>MCP is not the authority surface</h2>
       <p>MCP may submit a candidate and read the state Mneme exposes. It cannot accept, reject, activate, supersede, create an exception, install a typed rule, submit trusted evidence, or bypass review. Those operations are deliberately absent from the registered tool list.</p>
       <div class="callout"><p><strong>Human authority stays in the CLI.</strong> Review proposals with <code>mneme decision proposals</code> and <code>mneme decision show</code>, then use <code>mneme decision accept</code> or <code>mneme decision reject</code>. See the <a href="/docs/decision-proposals/">decision proposal workflow</a>.</p></div>
-      <p>Acceptance materializes a canonical decision into project memory. It still does not install deterministic protection or run the Architecture Audit. Retrieval, authority, Audit, and enforcement remain distinct.</p>
+      <p>Acceptance writes a new canonical decision version into the Decision Index in project memory. It still does not install deterministic protection or run the Architecture Audit. Retrieval, authority, Audit, and enforcement remain distinct.</p>
     </section>
 
     <section class="section" id="downstream-consumers">
       <h2>Downstream governance consumers</h2>
-      <p>A downstream system does not need to adopt Mneme's data model, storage, or workflow to use the Decision Index. A consumer that can launch the local <code>mneme decision-mcp</code> process calls <code>decision.applicable_to</code> for a proposed change, receives the governing decisions with provenance, and folds that into whatever review, risk-scoring, or triage logic it already runs. In 0.9.0 this requires local stdio access; there is no hosted endpoint a remote service could call.</p>
+      <p>A downstream system does not need to adopt Mneme's data model, storage, or workflow to use the Decision Index. A consumer that can launch the local <code>mneme decision-mcp</code> process calls <code>decision.applicable_to</code> for a proposed change, receives the governing decisions with provenance, and folds that into whatever review, risk-scoring, or triage logic it already runs. This requires local stdio access; there is no hosted endpoint a remote service could call.</p>
       <pre tabindex="0"><code>Change proposed (PR, agent patch, generated diff)
         |
         v
@@ -373,18 +381,18 @@ prioritization, or workflow routing</code></pre>
     </section>
 
     <section class="section" id="limitations">
-      <h2>Known limitations in 0.9.0</h2>
-      <div class="callout warning"><p><strong>Canonical-read unification:</strong> a decision accepted into <code>.mneme/project_memory.json</code> is available to existing runtime and Audit surfaces, but it is not automatically loaded into the MCP server's ADR-backed canonical-read index. Calling <code>decision.get</code> with that accepted decision ID may therefore return <code>not_found</code>.</p></div>
-      <div class="callout warning"><p><strong>Running-process freshness:</strong> a running MCP process loads its proposal state at construction. If a separate CLI process accepts or rejects a proposal, restart the MCP process before expecting MCP reads to reflect that transition.</p></div>
-      <p>These are bounded 0.9.0 behavior. The server does not watch files, refresh live state, or add a hidden project-memory canonical input.</p>
+      <h2>Version compatibility</h2>
+      <div class="callout warning"><p><strong>Mixed versions:</strong> once memory is migrated, every process that writes it must run 0.10.0 or later. A 0.9.2 or earlier writer, such as <code>add_decision</code> in an old CI image, succeeds without an error. The next 0.10.0 <code>mneme check</code> or <code>test_query</code> on that file then fails with <code>DecisionIndexPersistenceError</code>, because the <code>decisions[]</code> compatibility snapshot no longer matches the Decision Index.</p></div>
+      <div class="callout"><p><strong>Memory that can&rsquo;t migrate:</strong> migration is lossless or it refuses, and it writes nothing when it refuses. A decision whose <code>source</code> is not an ADR file, such as a free-text note or an EventCatalog import, has no representation in the index. Memory that contains one stays unmigrated, and the MCP server can&rsquo;t start on it until that decision is moved into an ADR file and imported.</p></div>
+      <p>The server does not watch files. It re-reads the Decision Index and the proposal file when a tool reads them.</p>
       <p>For the wider protocol boundary, see Mneme's <a href="/standards/">standards landscape</a>. MCP provides interoperability; it does not define Mneme's governance semantics.</p>
     </section>
 
     <div class="cross-links">
       <a class="cross-card" href="/integrations/mcp/"><span>Integration overview</span>MCP as the Decision Index interoperability boundary<p>Why the protocol exists and how it fits with enforcement.</p></a>
-      <a class="cross-card" href="/docs/decision-proposals/"><span>Workflow</span>Review and resolve proposals<p>The public human authority commands in 0.9.0.</p></a>
+      <a class="cross-card" href="/docs/decision-proposals/"><span>Workflow</span>Review and resolve proposals<p>The human authority commands.</p></a>
       <a class="cross-card" href="/docs/cli/"><span>Reference</span>Full CLI reference<p>All Mneme commands, flags, and exit-code contracts.</p></a>
-      <a class="cross-card" href="https://github.com/MnemeHQ/mneme/releases/tag/v0.9.0"><span>Release proof</span>mneme-hq 0.9.0<p>Release notes for the published MCP and decision workflow.</p></a>
+      <a class="cross-card" href="https://github.com/MnemeHQ/mneme/releases/tag/v0.10.0"><span>Release proof</span>mneme-hq 0.10.0<p>Release notes for the persisted Decision Index and migration.</p></a>
     </div>
   </div>
 </main>
