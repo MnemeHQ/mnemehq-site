@@ -28,6 +28,15 @@ Complete every row before building. "TBD" blocks the build.
 | Cannibalisation | `find_overlap.py` top hits with scores; verdict: clear / re-angle (state the angle) / update `<slug>` instead / merge or drop; plus any overlap with other briefs in the batch |
 | Cross-links | 2-3 existing insights to link from and to |
 
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | errors: 0; warnings fixed or justified: |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
 ## Agreed scope
 
 Thesis, audience, structure, title alternatives, as finally agreed in the chat.

@@ -83,7 +83,23 @@ batch compete too; settle them together under the terminology lock before buildi
    layer" thesis framing only per the 2026-09-11 amendment.
 3. Report-anchored pieces: verbatim entity first in all six title fields; meta description leads
    with source + figure verified against the body.
-4. Create the page:
+4. **Comprehension and slop filter (gate before the final write-up).** The draft does not become a
+   page until it passes all three:
+   1. **Slop pass:** apply the `stop-slop` skill to the draft and score it on its 50-point rubric.
+      Below 35, revise and rescore. Record the final score in the brief. (`stop-slop` is a
+      user-level skill; if it is not installed, score the same five dimensions by hand:
+      directness, rhythm, trust, authenticity, density, each out of 10.)
+   2. **Lint:** `python scripts/lint_prose.py <body.html>`. Zero errors (house voice: no
+      "bottleneck", no em dash; a quoted external title may carry a `<!-- voice-ok: reason -->`
+      comment). Fix every warning or justify it in the brief: slop phrases, sentences averaging
+      over 22 words, more than 15% over 30 words, Flesch under 30, paragraphs over 120 words,
+      acronyms not expanded on first use.
+   3. **Cold read:** a reviewer with no context (a fresh subagent given only the draft, never the
+      brief or the chat) answers: what is the thesis in one sentence; who should act and what
+      should they do; which terms were unclear. Pass only if the thesis matches the brief's, the
+      action is concrete, and every unclear term gets defined at first use. Internal names (ADR
+      numbers, O1, DG1, Decision Index, codenames) must be defined or removed.
+5. Create the page:
    ```bash
    python scripts/new_article.py --slug <slug> --title "<title>" \
      --description "<150-160 chars>" --date <YYYY-MM-DD> --lede "<standfirst>" \
@@ -113,7 +129,11 @@ python scripts/check_og_render_unique.py
 python scripts/sync_insights_catalog.py --check
 python scripts/check_insights.py
 python scripts/check_encoding.py site scripts
+python scripts/lint_prose.py site/insights/<slug>/index.html   # re-run on the built page
 ```
+
+`lint_prose.py` is not a CI gate: 133 of 181 published articles predate it and still use em dashes
+in body prose. Apply it to new and substantially edited articles only.
 
 ## Stage 5: Audit, PR, ship, close out
 
