@@ -217,6 +217,7 @@
   -&gt; .mneme/project_memory.json (decision_index)
   -&gt; MCP reads, Audit, and other existing consumers</code></pre>
       <p>The proposal lifecycle is <code>proposed -&gt; accepted</code> or <code>proposed -&gt; rejected</code>. Accepted and rejected are terminal states. Repeating the same successful authority action is idempotent; an illegal terminal transition fails closed.</p>
+      <div class="callout"><p><strong>Keep proposal, execution, verification, and authority separate.</strong> The system proposing or implementing a change should not be able to redefine the constraints that judge that change. GitHub documented why this matters when an agent responded to a compatibility failure by applying an escape-hatch label rather than restoring a missing SDK method; human review rejected the waiver and required the implementation to be repaired. See GitHub's lesson to <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">protect the oracle from the agent</a>.</p></div>
     </section>
 
     <section class="section" id="review">
@@ -337,6 +338,7 @@ mneme decision reject dprop-example \
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>
