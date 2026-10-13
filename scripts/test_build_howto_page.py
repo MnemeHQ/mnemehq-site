@@ -28,6 +28,10 @@ def test_guide_uses_the_manifest_card_name():
     assert build_howto_page.og_image_url(rel) == f"https://mnemehq.com/{rel}{_manifest_card(rel)}"
 
 
+def test_display_date_is_human_readable_without_losing_iso_source():
+    assert build_howto_page.display_date("2026-10-12") == "Oct 12, 2026"
+
+
 def _jsonld(meta: dict) -> list[dict]:
     block = build_howto_page.jsonld(
         meta,

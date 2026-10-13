@@ -88,7 +88,7 @@
       },
       "inLanguage": "en",
       "datePublished": "2026-10-04",
-      "dateModified": "2026-10-12",
+      "dateModified": "2026-10-13",
       "image": {
         "@type": "ImageObject",
         "@id": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/#primaryimage",
@@ -211,9 +211,15 @@
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
 
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -312,8 +318,16 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Turn an ADR into an enforceable decision</h1>
   <p class="lede">Add a <code>## Constraints</code> section to the ADR with a <code>FORBID_LITERAL</code> rule that names the exact text it forbids and the paths it covers, preview the import, then apply it. From then on <code>mneme check</code> fails any file under those paths that contains the text, with exit code 2, and passes the rest. The example is ADR-012: request handlers never import the database client.</p>
-  <p class="howto-meta">Tested with mneme-hq 0.10.0 &middot; CLI only</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; CLI only</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.</p>
+  <nav class="howto-toc" aria-label="On this page">
+    <span class="howto-toc-label">On this page</span>
+    <a href="#prerequisites">Prerequisites</a>
+    <a href="#configure">Configure</a>
+    <a href="#run">Run</a>
+    <a href="#expected-result">Expected result</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </nav>
 </section>
 
 <div class="wrap">

@@ -25,6 +25,7 @@ import html
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 W = Path(__file__).resolve().parents[1]
@@ -42,9 +43,15 @@ def og_image_url(path_part: str) -> str:
 CHROME = (W / "site/docs/decision-model/index.html").read_text(encoding="utf-8")
 
 EXTRA_CSS = """
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -56,6 +63,11 @@ EXTRA_CSS = """
     .bound-list .term-block { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
 """
+
+
+def display_date(iso_date: str) -> str:
+    value = date.fromisoformat(iso_date)
+    return f"{value.strftime('%b')} {value.day}, {value.year}"
 
 
 def chrome_parts():
@@ -248,12 +260,26 @@ def build(slug: str) -> Path:
     if not is_hub:
         # Minutes appear only once a timed reader run has measured them.
         version = json.loads((W / "scripts" / "core_version.json").read_text())["minimum_version"]
-        strip = [f"Tested with mneme-hq {version}", meta["surface"]]
+        modified = meta.get("modified", meta["date"])
+        strip = [
+            f'Tested with mneme-hq {version}',
+            f'Updated <time datetime="{modified}">{display_date(modified)}</time>',
+            f'By <a href="/founder/">Theo Valmis</a>',
+            meta["surface"],
+        ]
         if meta.get("minutes"):
             strip.insert(0, f"~{meta['minutes']} min")
         hero += (
-            f'  <p class="howto-meta">{" &middot; ".join(strip)}</p>\n'
+            f'  <p class="howto-meta byline">{" &middot; ".join(strip)}</p>\n'
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
+            '  <nav class="howto-toc" aria-label="On this page">\n'
+            '    <span class="howto-toc-label">On this page</span>\n'
+            '    <a href="#prerequisites">Prerequisites</a>\n'
+            '    <a href="#configure">Configure</a>\n'
+            '    <a href="#run">Run</a>\n'
+            '    <a href="#expected-result">Expected result</a>\n'
+            '    <a href="#troubleshooting">Troubleshooting</a>\n'
+            '  </nav>\n'
         )
     hero += "</section>\n\n"
     page = head + body_start + crumb_html + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
