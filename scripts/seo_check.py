@@ -28,7 +28,7 @@ Rules (each is one of: required / recommended / optional):
   Structure
     - exactly one <h1>                                      required
     - >= 2 <h2>                                             recommended
-    - body word count >= 500                                recommended
+    - body word count >= 500 (>= 300 for collection hubs)  recommended
     - body word count >= 1200 (long-form pages)             optional / aspirational
     - at least one internal link in body                    required
     - at least one cross-page link to /insights/, /standards/,
@@ -316,10 +316,15 @@ def rule_h2(html: str, ctx: PageContext) -> RuleResult:
 
 
 def rule_word_count(html: str, ctx: PageContext) -> RuleResult:
-    if ctx.word_count < 300:
-        return FAIL, f"{ctx.word_count} words (target ≥ 500)"
-    if ctx.word_count < 500:
-        return WARN, f"{ctx.word_count} words (target ≥ 500)"
+    # Collection pages are routing surfaces, not long-form articles. Requiring
+    # 500 words encourages padding exactly where users need quick scanning and
+    # clear choices; 300 words is enough to describe and differentiate a set.
+    target = 300 if "CollectionPage" in ctx.types else 500
+    fail_below = 200 if target == 300 else 300
+    if ctx.word_count < fail_below:
+        return FAIL, f"{ctx.word_count} words (target ≥ {target})"
+    if ctx.word_count < target:
+        return WARN, f"{ctx.word_count} words (target ≥ {target})"
     return PASS, ""
 
 
@@ -585,6 +590,9 @@ def rule_llms_entry(html: str, ctx: PageContext) -> RuleResult:
 _CSS_CLASS_ALLOWLIST = {
     "active", "open", "hidden", "visible", "selected", "current",
     "sr-only", "noscript", "no-js",
+    # Semantic structure hooks used by the generated breadcrumb switcher. The
+    # parent/panel selectors own their layout, so these need no direct rules.
+    "page-switcher-group", "page-switcher-item",
 }
 
 
