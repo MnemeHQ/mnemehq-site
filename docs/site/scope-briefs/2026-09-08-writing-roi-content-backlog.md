@@ -63,6 +63,15 @@ Five questions are shared across the cluster: changed: AI spend and coding activ
 
 Already shipped, so **drop from the backlog**: "The Verification Tax of AI Coding Agents" (`ai-coding-agent-verification-tax`) and DORA metrics (`dora-metrics-insufficient-for-agentic-development`). The chat listed both as supporting articles; they already exist.
 
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
 ## Agreed scope
 
 - **Editorial guardrail (verbatim intent):** keep the cluster ~60-70% neutral executive/engineering economics, ~20-30% governance-specific, only ~10-20% explicitly Mneme/audit. Write standalone economics pieces, not governance pitches. Otherwise readers and editors read the cluster as product marketing.
@@ -87,14 +96,14 @@ Already shipped, so **drop from the backlog**: "The Verification Tax of AI Codin
 
 URLs verbatim from the chat with `?utm_source=chatgpt.com` stripped. **All unverified** until re-read.
 
-| Fact | Source |
-|---|---|
-| Median quarterly AI spend ~$1,500 → ~$44,000 (~28×); feature work ~58% unchanged; 6% of executives (via Atlassian) confident of org-wide AI ROI; 90% pay for AI models, ~two-thirds pay for both autonomous agents and completion | https://leaddev.com/ai/28x-more-ai-spend-zero-new-innovation (the chat's rendered citations also show https://zephrcf.leaddev.com/ai/28x-more-ai-spend-zero-new-innovation, which looks like a CDN mirror; use the first) |
-| NBER working paper, revised Sept 2026, 500,000+ GitHub developers: cumulative coding-activity gain +30% autocomplete, +180% interactive agents, +240% autonomous agents; attenuating to +80% at project level and +30% at release level; elasticity of substitution 0.23 | https://www.nber.org/papers/w35275 |
-| Earlier FT reporting: ~+300% files created/edited, +150% work submitted for review, ~+30% releases; steam-to-electricity factory-redesign analogy | https://www.ft.com/content/734d7178-94a7-4139-918d-7df9f4df4b65 |
-| Microsoft EngThrive treats productivity as multidimensional (speed, ease, quality, developer experience) | https://commandline.microsoft.com/engineering-thrive-engthrive-productivity-measurement-framework-agentic-ai-era/ |
-| Competing pages already targeting "AI engineering ROI" / "AI coding ROI" | https://snowmanlabs.com/insights/how-to-measure-ai-engineering-roi |
-| Mneme internal links the chat used | https://mnemehq.com/insights/ai-roi-problem-is-about-systems-not-models/ ; https://mnemehq.com/concepts/architectural-drift-prevention/ ; https://mnemehq.com/audit/ |
+| Fact | Source | Verified? |
+|---|---|---|
+| Median quarterly AI spend ~$1,500 → ~$44,000 (~28×); feature work ~58% unchanged; 6% of executives (via Atlassian) confident of org-wide AI ROI; 90% pay for AI models, ~two-thirds pay for both autonomous agents and completion | https://leaddev.com/ai/28x-more-ai-spend-zero-new-innovation (the chat's rendered citations also show https://zephrcf.leaddev.com/ai/28x-more-ai-spend-zero-new-innovation, which looks like a CDN mirror; use the first) | no |
+| NBER working paper, revised Sept 2026, 500,000+ GitHub developers: cumulative coding-activity gain +30% autocomplete, +180% interactive agents, +240% autonomous agents; attenuating to +80% at project level and +30% at release level; elasticity of substitution 0.23 | https://www.nber.org/papers/w35275 | no |
+| Earlier FT reporting: ~+300% files created/edited, +150% work submitted for review, ~+30% releases; steam-to-electricity factory-redesign analogy | https://www.ft.com/content/734d7178-94a7-4139-918d-7df9f4df4b65 | no |
+| Microsoft EngThrive treats productivity as multidimensional (speed, ease, quality, developer experience) | https://commandline.microsoft.com/engineering-thrive-engthrive-productivity-measurement-framework-agentic-ai-era/ | no |
+| Competing pages already targeting "AI engineering ROI" / "AI coding ROI" | https://snowmanlabs.com/insights/how-to-measure-ai-engineering-roi | no |
+| Mneme internal links the chat used | https://mnemehq.com/insights/ai-roi-problem-is-about-systems-not-models/ ; https://mnemehq.com/concepts/architectural-drift-prevention/ ; https://mnemehq.com/audit/ | no |
 
 **Chat's own warnings to carry over:** the NBER paper is "actively being revised": cite the current version and do not build marketing around a single number; use 240% → 80% → 30% as canonical, not the FT's ~300% / ~150% / ~30%. The stats come from different studies, so never present them as one causal funnel; label as "signals from recent AI engineering research".
 

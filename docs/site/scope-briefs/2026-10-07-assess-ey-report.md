@@ -22,8 +22,8 @@ Status: **gathered, not built**
 | OG headline | EY: Coding Is No Longer the Constraint (7 words) |
 | Editorial gate | pass: named-report entry point plus new evidence (400-CTO survey) |
 | Five questions | changed: AI made code generation cheap; matters: EY's CTOs rank QA, architecture/context and security above coding as delivery constraints; breaks: controls are mostly human review, only 20% trace AI-assisted code, about one in three had an AI-related production incident; do: move validation and decision context to machine speed; governance: determine which approved decisions apply to a change and enforce the enforceable ones |
-| Cannibalisation | `find_overlap.py`: `cursor-developer-habits-report-governance-infrastructure` 51.1, `bain-ai-development-lifecycle-governance` 43.7 (different reports), `brooks-law-ai-coding-agents` 39.8. Verdict: **clear** (distinct named report). **Batch overlap:** shares the "code is cheap, decisions are scarce" thesis with the Cohesion chat's third insight and the decision-silos brief; this piece keeps the survey evidence, the others must not restate it |
-| Cross-links | `why-code-review-cannot-scale-with-ai-output`, `memory-is-not-governance`, `concepts/ai-native-sdlc`, `ai-coding-governance-should-be-reviewable`; the planned Engineering Decision Governance concept page once it exists |
+| Cannibalisation | `find_overlap.py`: `cursor-developer-habits-report-governance-infrastructure` 51.1, `bain-ai-development-lifecycle-governance` 43.7 (different reports), `brooks-law-ai-coding-agents` 39.8. Verdict: **clear** (distinct named report). **Body search:** the "code is cheap, X is scarce" line is already argued in 10+ shipped articles (e.g. `ai-makes-software-more-ambitious`, `ai-roi-problem-is-about-systems-not-models`); this piece adds EY's survey evidence and must link them rather than restate the argument |
+| Cross-links | `ai-makes-software-more-ambitious`, `ai-roi-problem-is-about-systems-not-models`, `why-code-review-cannot-scale-with-ai-output`, `memory-is-not-governance`, `concepts/ai-native-sdlc`, `ai-coding-governance-should-be-reviewable`; the planned Engineering Decision Governance concept page once it exists |
 
 ## Draft quality gate (filled at build time)
 
@@ -78,7 +78,7 @@ The chat linked some Mneme pages on `mail.mnemehq.com`; use `mnemehq.com` only (
 |---|---|
 | Mneme turns approved decisions into deterministic controls for applicable changes | SHIPPED for repository architectural decisions (verify scope wording) |
 | Decision Index | SHIPPED (OSS, mneme-hq 0.10.0: canonical Decision Index persistence; the Decision MCP reads it). Cross-system ingestion is PLANNED; ADR-031 governance semantics are accepted but unreleased |
-| Enterprise decision ingestion (Confluence, Jira, Teams, Slack) | PLANNED |
+| Enterprise decision ingestion (Confluence, Jira, Teams, Slack) | Confluence ADR ingestion: PLANNED (site roadmap). Jira, Slack, Teams and telemetry connectors: CONCEPTUAL (the core roadmap plans a source-independent ingestion contract and warns against assuming such connectors) |
 | Evidence/traceability of enforcement | check current state before claiming |
 
 ## Positioning constraints
@@ -94,6 +94,6 @@ None for the site. (Non-site follow-ups from the chat are tracked outside this p
 ## Open questions
 
 - Title: decided. "Bottleneck" may appear once, inside a verbatim EY quote with `<!-- voice-ok: verbatim EY quote -->`.
-- "Cheap code, scarce decisions" thesis: owned by the Cohesion brief's insight 3; this article uses the survey as evidence and links there.
+- "Cheap code, scarce decisions" thesis: already argued on shipped pages (the Cohesion brief's insight 3 is blocked on that overlap); this article uses the survey as evidence and links `ai-makes-software-more-ambitious`.
 - Verbatim report title for ADR-015.
 - Publish before or after the Engineering Decision Governance concept page? (The chat routes authority into it.)

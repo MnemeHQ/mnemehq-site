@@ -1,24 +1,26 @@
 # Scope brief: Post- Cohesion And Reddit Thread
 
-Status: **gathered, not built**
+Status: **gathered, not built**; insight 1 ready, insights 2 and 3 blocked on overlap (owner decision)
 
 | Field | Value |
 |---|---|
 | ChatGPT chat | `Post- Cohesion And Reddit Thread` |
 | Created / last updated (UTC) | 2026-10-04 / 2026-10-04 |
 | Shape | 7 turns: Reddit thread assessment, a draft Reddit comment, "write about silos?" plus emerging themes, "Scope coherent", "topic or concept?", "Scope the concept", "Scope the 3 insights". The first two turns do not render in the ChatGPT page; read via the API. |
-| Repo check | No page on engineering coherence or the "silo engineer". Silos appear only in passing: [heterogeneous agents, "native memory is a silo"](https://mnemehq.com/insights/architectural-governance-across-heterogeneous-ai-coding-agents/#silo), [forward-deployed architects, "the architect becomes another silo"](https://mnemehq.com/insights/forward-deployed-architects-need-a-decision-layer/), and one line in `agent-formation-engineering-performance-metrics`. |
+| Repo check | Body search (2026-10-12, after the #209 audit): **coherence is already argued** by `ai-makes-software-more-ambitious` (published 2026-07-27; 11 mentions; "keeping hundreds of agent-made changes coherent becomes the harder problem"; "Writing code becomes cheaper. Maintaining architectural coherence does not.") and `agent-governance-in-the-sdlc` (11 mentions). The "code is cheap, X is scarce" line appears in 10+ shipped articles (e.g. `ai-roi-problem-is-about-systems-not-models`, `ai-coding-agent-verification-tax`). Silos: only `agent-formation-engineering-performance-metrics` mentions them (a study finding); no "silo engineer" piece exists. |
 
 ## Build card
 
-**Decisions 2026-10-12:** no Engineering Coherence concept page; "coherence" stays a problem framing inside insights. The three insights are buildable. Insight 1 absorbs the 09-12 decision-silos brief as one section. Insight 3 owns the "cheap code, scarce decisions" thesis (EY links to it).
+**Decisions 2026-10-12:** no Engineering Coherence concept page; "coherence" stays a problem framing inside insights. Insight 1 absorbs the 09-12 decision-silos brief as one section. Insight 3 was to own the "cheap code, scarce decisions" thesis (EY linking to it).
+
+**Overlap found after those decisions (#209 audit, confirmed by body search):** insights 2 and 3 would largely duplicate shipped articles. Both are **blocked** until the owner decides, for each: drop, re-angle to a claim the shipped pages do not make, or update `ai-makes-software-more-ambitious` instead. Insight 1 is unaffected.
 
 | Piece | Kind | Slug | Hub | OG headline | Cannibalisation (`find_overlap.py`) | Verdict |
 |---|---|---|---|---|---|---|
 | Engineering Coherence | ~~concept page~~ | n/a | n/a | n/a | top 24.4 | **dropped** (decision 2026-10-12) |
-| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (6) | top 40.7 `ai-engineering-roi` (noise on "engineer") | clear on site; **absorbs the 2026-09-12 decision-silos brief as one section** |
-| The Coherence Problem in Agentic Software Development | insight (foundational) | `coherence-problem-agentic-software-development` | architectural-governance | Correct Code, Incoherent System (4) | `concepts/agentic-development` 40.6, `dora-metrics-insufficient-for-agentic-development` 40.4 | clear (different intent) |
-| When Code Becomes Cheap, Decisions Become the Scarce Asset | insight (strategic) | `when-code-is-cheap-decisions-are-scarce` | architectural-intent | Cheap Code, Scarce Decisions (4) | top 19.3 | clear on site; **owns this thesis** (decision 2026-10-12); EY links here |
+| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (5) | title screen: top 40.7 `ai-engineering-roi` (noise on "engineer"); body search: no silo-engineer piece | clear; **absorbs the 2026-09-12 decision-silos brief as one section**; link `ai-makes-software-more-ambitious` |
+| The Coherence Problem in Agentic Software Development | insight (foundational) | `coherence-problem-agentic-software-development` | architectural-governance | Correct Code, Incoherent System (4) | title screen: `concepts/agentic-development` 40.6; **body search: `ai-makes-software-more-ambitious`, `agent-governance-in-the-sdlc`** | **blocked: owner decision** (drop / re-angle / update the shipped page) |
+| When Code Becomes Cheap, Decisions Become the Scarce Asset | insight (strategic) | `when-code-is-cheap-decisions-are-scarce` | architectural-intent | Cheap Code, Scarce Decisions (4) | title screen: top 19.3; **body search: thesis in 10+ shipped articles** | **blocked: owner decision** (drop / re-angle) |
 
 Report-anchored: no. Eyebrows: Concept / Analysis.
 
@@ -87,9 +89,10 @@ Reddit is anecdotal (it shows the pain in practitioners' own words; it is not ma
 
 ## Non-insight site edits requested
 
-- Engineering Coherence concept page (concept contract).
+- None for the site (the Engineering Coherence concept page was dropped on 2026-10-12).
 - Social, not site: the drafted Reddit comment (do not post from this workflow).
 
 ## Open questions
 
-- None outstanding. Resolved 2026-10-12: "engineering coherence" is a framing used in these insights, not a concept page; the 2026-09-12 silo scope folds into insight 1 as one section; insight 3 owns the "cheap code, scarce decisions" thesis.
+- **Open (owner):** insights 2 and 3 overlap shipped articles (see the build card). Drop, re-angle, or update `ai-makes-software-more-ambitious` instead?
+- Resolved 2026-10-12: "engineering coherence" is a framing used in these insights, not a concept page; the 2026-09-12 silo scope folds into insight 1 as one section.

@@ -1,6 +1,6 @@
 # Scope brief: Post-claude frontier academy Assess program relevance
 
-Status: **gathered, not built**
+Status: **gathered, not built**; needs a build-card decision first (hub)
 
 | Field | Value |
 |---|---|
@@ -82,7 +82,6 @@ Publish quickly; news value decays. The chat orders it first, with the FDE pilla
 
 | Claim | Class |
 |---|---|
-| Vendor-independent decision layer across Claude, OpenAI, internal agents, repositories, CI/CD | CONCEPTUAL (thesis framing only) |
 | Deterministic enforcement of repository decisions | SHIPPED on supported native write paths and in CI |
 | Decision Index | SHIPPED (OSS, mneme-hq 0.10.0: canonical Decision Index persistence; the Decision MCP reads it). Cross-system ingestion is PLANNED; ADR-031 governance semantics are accepted but unreleased |
 | Vendor-independent decision layer across organisations' systems | CONCEPTUAL (thesis framing only) |

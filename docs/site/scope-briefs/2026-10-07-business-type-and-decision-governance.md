@@ -73,7 +73,7 @@ Decision Engineering (discipline), Decision Governance (what has force), Decisio
 |---|---|
 | Decision model with scope and lifecycle, deterministic enforcement | SHIPPED (verify fields: authority, precedence) |
 | Decision Index | SHIPPED (OSS, mneme-hq 0.10.0: canonical Decision Index persistence; the Decision MCP reads it). Cross-system ingestion is PLANNED; ADR-031 governance semantics are accepted but unreleased |
-| Decision discovery and cross-system ingestion (data engine, Confluence/Jira/Slack) | PLANNED / VALIDATED EXPERIMENT (discovery research); ingestion connectors do not exist |
+| Decision discovery and cross-system ingestion | Discovery: Research harness SHIPPED as research-only (`mneme research open-architecture`, O1A benchmark harness in 0.10.0); results not validated, experiment in progress. Confluence ADR ingestion: PLANNED (site roadmap). Jira, Slack, Teams and telemetry connectors: CONCEPTUAL (the core roadmap plans a source-independent ingestion contract and warns against assuming such connectors) |
 | "Mneme is building the decision and control infrastructure" | CONCEPTUAL/PLANNED voice; keep it that way |
 
 ## Positioning constraints

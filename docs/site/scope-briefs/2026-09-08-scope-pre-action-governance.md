@@ -28,6 +28,15 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Overlap verdict | link to `package-hallucinations-pre-action-governance` and `review-is-not-governance`; keep apart from the O'Reilly/TechTalks angles |
 | Cross-links | the two pages above, `agentic-change-management-needs-a-decision-layer` |
 
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
 ## Agreed scope
 
 *As scoped in the chat, kept for reference. Superseded by the 2026-10-12 decision above: no pillar, no category term; only the mechanism article in the build card goes ahead, and any later piece uses "decision governance" for the category.*
@@ -83,7 +92,6 @@ None cited. No statistics, no URLs. References are only to Mneme's own prior pub
 - Teach the category; do not open as a product pitch.
 - Do not claim post-action controls (review, CI, observability, audit) disappear. The model is Prevent → catch → verify.
 - Expansion beyond code writes (migrations, infrastructure, database/schema, API changes, agent delegation) is **future-looking**. Do not present it as shipped.
-- The chat's own claim "The sentence I would try to own..." and "one of Mneme's 3-4 primary intellectual territories" are internal strategy, not copy.
 - Resolved 2026-10-12: "pre-action" names the mechanism, not the category, as the follow-on CodeRabbit chat argued.
 
 ## Non-insight site edits requested

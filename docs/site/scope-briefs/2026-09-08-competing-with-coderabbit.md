@@ -7,7 +7,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | ChatGPT chat | `Post-Competing with CodeRabbit` |
 | Created / last updated (UTC) | 2026-09-08 / 2026-09-08 (local timestamps in chat: Mon Sep 7, 7:42 PM onward) |
 | Shape | Strategy conversation, 4 user turns. It is **not a clean article scope**. It is competitive strategy with several content and site actions at the end. |
-| Repo check | `site/compare/coderabbit/` exists (added 2026-05-07, has no agentic-change-management content). `site/insights/review-is-not-governance/` (2026-05-07) and `site/insights/agentic-change-management-needs-a-decision-layer/` (#136, 2026-09-17, mentions CodeRabbit's Series C) already cover adjacent ground. The comparison piece below is not shipped. |
+| Repo check | `site/compare/coderabbit/` exists (added 2026-05-07, has no agentic-change-management content). `site/insights/review-is-not-governance/` (2026-05-07) and `site/insights/agentic-change-management-needs-a-decision-layer/` (#136, 2026-09-17, covers CodeRabbit's Triage and its agentic change management framing) already cover adjacent ground. The comparison piece below is not shipped. |
 
 ## Build card
 
@@ -24,6 +24,15 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Five questions | changed: CodeRabbit repositioned as a change-control layer; matters: buyers will treat the two as substitutes; breaks: architectural violations caught only at PR time cost a regenerate loop; do: govern the action boundary, review the result; governance: different boundaries, complementary |
 | Overlap verdict | update `compare/coderabbit/` instead; link `agentic-change-management-needs-a-decision-layer` and `review-is-not-governance` |
 | Cross-links | the two pages above |
+
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
 
 ## Agreed scope (what the chat actually concludes)
 
@@ -54,17 +63,16 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 
 All unverified at the time of the chat; verify each against the live source before use. The chat's links (query strings stripped):
 
-| Claim in chat | Source URL |
-|---|---|
-| CodeRabbit raised $143M at a $1.5B valuation; 17,000+ customers; 2M+ code reviews/week; ~$15M ARR and 8,000 customers in 2025; 5x YoY revenue growth by Aug 2026 | https://www.reuters.com/technology/ai-code-review-platform-coderabbit-valued-15-billion-latest-funding-round-2026-08-12/ |
-| CodeRabbit positions as "Agentic Change Management" / "the control layer for software change" | https://www.coderabbit.ai/newsroom/coderabbit-series-c-agentic-change-management |
-| Same positioning, product announcement | https://www.coderabbit.ai/blog/introducing-agentic-change-management |
-| Earlier custom-policy / quality-gates positioning (2025) | https://www.coderabbit.ai/blog/coderabbit-series-b-60-million-quality-gates-for-code-reviews |
-| Custom architectural checks run against the PR read-only; blocking is a pre-merge check; checks are mostly AI/natural-language, AST rules available | https://docs.coderabbit.ai/pr-reviews/pre-merge-checks |
-| CodeRabbit May 2026 article: waiting until PR review is "the wrong intervention"; agents should understand rules before writing code | https://www.coderabbit.ai/blog/policy-as-code-the-missing-layer-in-ai-assisted-development |
-| Mneme pages the chat inspected (live-site claims: roadmap hero said "Governance Layer for AI-Assisted Development") | https://mnemehq.com/ and https://mnemehq.com/roadmap/ |
+| Claim in chat | Source URL | Verified? |
+|---|---|---|
+| CodeRabbit raised $143M at a $1.5B valuation; 17,000+ customers; 2M+ code reviews/week; ~$15M ARR and 8,000 customers in 2025; 5x YoY revenue growth by Aug 2026 | https://www.reuters.com/technology/ai-code-review-platform-coderabbit-valued-15-billion-latest-funding-round-2026-08-12/ | no |
+| CodeRabbit positions as "Agentic Change Management" / "the control layer for software change" | https://www.coderabbit.ai/newsroom/coderabbit-series-c-agentic-change-management | no |
+| Same positioning, product announcement | https://www.coderabbit.ai/blog/introducing-agentic-change-management | no |
+| Earlier custom-policy / quality-gates positioning (2025) | https://www.coderabbit.ai/blog/coderabbit-series-b-60-million-quality-gates-for-code-reviews | no |
+| Custom architectural checks run against the PR read-only; blocking is a pre-merge check; checks are mostly AI/natural-language, AST rules available | https://docs.coderabbit.ai/pr-reviews/pre-merge-checks | no |
+| CodeRabbit May 2026 article: waiting until PR review is "the wrong intervention"; agents should understand rules before writing code | https://www.coderabbit.ai/blog/policy-as-code-the-missing-layer-in-ai-assisted-development | no |
+| Mneme pages the chat inspected (live-site claims: roadmap hero said "Governance Layer for AI-Assisted Development") | https://mnemehq.com/ and https://mnemehq.com/roadmap/ | no |
 
-**Not sourced in the chat:** the LeadDev sponsorship screenshot (sponsor list: CircleCI, Cockroach Labs, incident.io, Runpod, LaunchDarkly, Octopus Deploy, Swarmia, Honeycomb) was an image; no URL. Do not cite the sponsor list.
 
 ## Mneme positioning constraints
 
@@ -79,7 +87,7 @@ All unverified at the time of the chat; verify each against the live source befo
 
 - New insight, or refresh of `/compare/coderabbit/`? The existing compare page predates CodeRabbit's August 2026 repositioning.
 - Is the roadmap page work already complete after #179?
-- Which of the seven non-article actions go to separate PRs (different contracts and validators)?
+- Which of the six non-article actions go to separate PRs (different contracts and validators)?
 
 ## Unverified / needs checking
 

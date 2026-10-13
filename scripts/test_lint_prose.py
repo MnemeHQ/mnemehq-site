@@ -72,6 +72,33 @@ class TestSiteMarkup(unittest.TestCase):
         errors, _, _ = lp.lint(lp.extract_paragraphs(md, False))
         self.assertEqual(errors, [])
 
+    def test_markdown_trailing_voice_ok_exempts_nothing(self):
+        """The #209 audit case: a comment at the end of a block hid house prose."""
+        md = "House prose says bottleneck — twice. <!-- voice-ok: x -->\n\nNext block bottleneck.\n"
+        errors, _, _ = lp.lint(lp.extract_paragraphs(md, False))
+        self.assertEqual(len([e for e in errors if "'bottleneck' (house voice)" in e]), 2)
+        self.assertTrue(any("em dash" in e for e in errors))
+
+    def test_markdown_voice_ok_alone_marks_the_next_block(self):
+        md = "<!-- voice-ok: verbatim EY quote -->\n\n\"AI pushed the bottleneck downstream.\"\n\nOur bottleneck is review.\n"
+        errors, _, _ = lp.lint(lp.extract_paragraphs(md, False))
+        self.assertEqual(len(errors), 1)
+        self.assertIn("para 2", errors[0])
+
+    def test_markdown_voice_ok_opening_a_block_marks_that_block(self):
+        md = "<!-- voice-ok: verbatim title --> \"The Bottleneck Myth\" report.\n\nPlain prose.\n"
+        errors, _, _ = lp.lint(lp.extract_paragraphs(md, False))
+        self.assertEqual(errors, [])
+
+    def test_inflected_bottleneck_is_an_error(self):
+        for word in ("bottlenecked", "bottlenecking", "bottlenecks"):
+            errors, _, _ = run(f"<p>Delivery was {word} by review.</p>")
+            self.assertTrue(errors, word)
+
+    def test_faq_summary_is_linted(self):
+        errors, _, _ = run("<details><summary>Why is review the bottleneck?</summary><p>Answer.</p></details>")
+        self.assertTrue(any("bottleneck" in e for e in errors))
+
     def test_voice_ok_covers_only_the_next_block(self):
         body = ('<!-- voice-ok: verbatim EY quote --><p>"AI pushed the bottleneck downstream."</p>'
                 "<p>Our bottleneck is review.</p>")

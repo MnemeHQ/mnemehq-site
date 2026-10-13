@@ -60,21 +60,37 @@ TAG_RE = re.compile(r"<[^>]+>")
 
 
 def stem(word: str) -> str:
-    """Light plural/gerund stemming: policies->policy, branches->branch,
-    releases->release, pipelines->pipeline, engineering->engineer."""
+    """Light, symmetric stemming for matching, not linguistics.
+
+    Strip a plural or gerund, then a final "e", so both forms of a word meet
+    on one stem: cache/caches -> cach, branch/branches -> branch,
+    price/pricing -> pric, scale/scaling -> scal, code/coding -> cod,
+    policy/policies -> policy, coherent/coherence -> coheren. Stems are never
+    shown to users; only equality matters.
+    """
     if word.endswith("ies") and len(word) > 4:
         return word[:-3] + "y"
-    if word.endswith(("sses", "xes", "zes", "ches", "shes")):
-        return word[:-2]
-    if word.endswith("ing") and len(word) - 3 >= 4:
-        return word[:-3]
-    if word.endswith("s") and not word.endswith(("ss", "us", "is")) and len(word) > 3:
-        return word[:-1]
+    if word.endswith("ing") and len(word) - 3 >= 3:
+        word = word[:-3]
+    elif word.endswith("s") and not word.endswith(("ss", "us", "is")) and len(word) > 3:
+        word = word[:-1]
+    if word.endswith("ence") and len(word) > 6:
+        word = word[:-2]
+    elif word.endswith("ent") and len(word) > 6:
+        word = word[:-1]
+    if word.endswith("e") and len(word) > 3:
+        word = word[:-1]
+    if word.endswith("es") and len(word) > 4 and word[:-2].endswith(("ch", "sh", "x", "z", "ss")):
+        word = word[:-2]
     return word
 
 
+# All-caps acronym plurals ("APIs", "KPIs") lose their "s" before lower-casing.
+ACRONYM_PLURAL_RE = re.compile(r"\b([A-Z]{2,})s\b")
+
+
 def terms(text: str) -> list[str]:
-    words = re.findall(r"[a-z0-9]+", text.lower())
+    words = re.findall(r"[a-z0-9]+", ACRONYM_PLURAL_RE.sub(r"\1", text).lower())
     return [stem(w) for w in words if w not in STOPWORDS and len(w) > 1]
 
 
@@ -115,7 +131,8 @@ def load_pages() -> list[dict]:
 
 
 def rarity(pages: list[dict]) -> dict[str, float]:
-    """Inverse document frequency over each page's title, h1, description and slug.
+    """Inverse document frequency over each page's scored fields (title, h1,
+    description, lede, image alt text, slug).
 
     Words on most pages ("ai", "governance", "coding") count for little;
     words on few pages ("frontier", "bottleneck") count for a lot.

@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess paper relevance
 
-Status: **gathered, not built**
+Status: **gathered, not built**; needs build-card decisions first (anchor the title on the AECP paper or not; hub)
 
 | Field | Value |
 |---|---|
@@ -77,7 +77,7 @@ Carry over the chat's cautions: report 28.2% as relative, not percentage points;
 | Applicability-scoped retrieval of decisions | SHIPPED for repository decisions (verify scope) |
 | Decision Index with lifecycle, supersession and provenance | SHIPPED (OSS, mneme-hq 0.10.0: canonical Decision Index persistence; the Decision MCP reads it). Cross-system ingestion is PLANNED; ADR-031 governance semantics are accepted but unreleased |
 | Runtime-artifact layer with promotion into governed decisions | CONCEPTUAL |
-| Enterprise ingestion (Confluence, Jira) | PLANNED |
+| Enterprise ingestion (Confluence, Jira) | Confluence ADR ingestion: PLANNED (site roadmap). Jira, Slack, Teams and telemetry connectors: CONCEPTUAL (the core roadmap plans a source-independent ingestion contract and warns against assuming such connectors) |
 
 ## Positioning constraints
 

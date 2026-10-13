@@ -25,6 +25,15 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Five questions | changed: OKF v0.2 adds provenance, lifecycle, freshness, attestation; matters: agents get trusted knowledge; breaks: trusted is not authoritative, and authority is not applicability; do: classify authority and scope separately from trust; governance: compile the authoritative subset into scoped rules |
 | Cross-links | `open-knowledge-format-vs-governance` (and add a reciprocal link from it) |
 
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
 ## Agreed scope
 
 - **Target title (the chat's chosen one):** From Open Knowledge to Enforceable Architecture: Where OKF Meets AI Coding Agents.
@@ -50,7 +59,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 
 ## Key facts, figures, sources
 
-All sourced to one document (query string stripped; the chat's `%2F` encoding decoded to `/`):
+**None verified yet.** All sourced to one document (query string stripped; the chat's `%2F` encoding decoded to `/`):
 
 - https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md
 
@@ -72,7 +81,7 @@ Facts the chat attributes to it (verify each in the live spec, including the ver
 
 ## Non-insight site edits requested
 
-None. (Possible follow-on: update the June OKF article to reference v0.2; the chat does not ask for it.)
+None beyond the article work itself, which is an update to the June `open-knowledge-format-vs-governance` page (see the build card).
 
 ## Open questions
 

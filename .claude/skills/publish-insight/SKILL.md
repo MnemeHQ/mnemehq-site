@@ -19,7 +19,7 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
    **Mneme Growth and GTM**. Use the project page's list,
    not search.
 3. Match the `Post-` prefix case-insensitively (`post-reverse engineer decisions` counts). A
-   `Post-` chat whose title contains `*` is published. Unmarked chats are candidates, but the
+   `Post-` chat whose title contains `*` is processed (shipped, merged into a shipped article, or dropped). Unmarked chats are candidates, but the
    test of "shipped" is the repo: `git log origin/main` and `ls site/insights/`. Renaming re-sorts
    chats, so list position means nothing.
 4. Skip `Post-tv-` chats: they belong to theovalmis.com and never enter `site/`.
@@ -109,7 +109,7 @@ batch compete too; settle them together under the terminology lock before buildi
       brief or the chat) answers: what is the thesis in one sentence; who should act and what
       should they do; which terms were unclear. Pass only if the thesis matches the brief's, the
       action is concrete, and every unclear term gets defined at first use. Internal names (ADR
-      numbers, O1, DG1, Decision Index, codenames) must be defined or removed.
+      numbers, O1, DG1, codenames) must be defined or removed. "Decision Index" is a product term with its own docs page; define it at first use.
 5. Create the page:
    ```bash
    python scripts/new_article.py --slug <slug> --title "<title>" \

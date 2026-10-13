@@ -2,7 +2,7 @@
 
 Tracks ChatGPT scope chats (project: "Mneme Growth and GTM") against what actually
 shipped, so we stop re-crawling the whole chat list on every "draft insights" run.
-See [[draft-insights-workflow]] memory for the pipeline this supports.
+The publish-insight skill (`.claude/skills/publish-insight/SKILL.md`) describes the pipeline this supports.
 
 **How to update:** follow Stage 5 of the `publish-insight` skill
 (`.claude/skills/publish-insight/SKILL.md`): once a scope chat's article is deployed, add/update

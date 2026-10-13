@@ -77,9 +77,9 @@ Later, separate: a `/research/open-architecture/` page with the first experiment
 
 | Claim | Class |
 |---|---|
-| Data engine ingesting repositories, docs, ADRs, static analysis | VALIDATED EXPERIMENT at most; confirm |
-| Jira, Confluence, Slack/Teams, cloud, telemetry ingestion | PLANNED |
-| O1 evaluating entity discovery, relationships, decision recovery | VALIDATED EXPERIMENT / in progress |
+| Decision discovery from repositories, docs, ADRs and static analysis | CONCEPTUAL in public copy (research; no shipped capability) |
+| Cross-system ingestion (Confluence, Jira, Slack/Teams, cloud, telemetry) | Confluence ADR ingestion: PLANNED (site roadmap). Jira, Slack, Teams and telemetry connectors: CONCEPTUAL (the core roadmap plans a source-independent ingestion contract and warns against assuming such connectors) |
+| Decision-discovery research (entity discovery, relationships, decision recovery) | Research harness SHIPPED as research-only (`mneme research open-architecture`, O1A benchmark harness in 0.10.0); results not validated, experiment in progress |
 | Decision Index with lifecycle and provenance | SHIPPED (OSS, mneme-hq 0.10.0: canonical Decision Index persistence; the Decision MCP reads it). Cross-system ingestion is PLANNED; ADR-031 governance semantics are accepted but unreleased |
 | Mneme Core retrieves and deterministically enforces reviewed constraints | SHIPPED |
 | Architecture, functional and decision reconstruction for enterprise systems | CONCEPTUAL (this is the research question) |

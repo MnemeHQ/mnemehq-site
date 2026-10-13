@@ -30,6 +30,15 @@ Proposed values; confirm with the user before building.
 
 "Decision layer" here is thesis vocabulary: use it only per the PUBLISHING.md 2026-09-11 amendment (never as something Mneme ships in full).
 
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
 ## Agreed scope
 
 - **Working title (preferred by the chat):** The Enterprise AI Problem Isn't Data Silos. It's Decision Silos.

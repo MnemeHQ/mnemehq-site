@@ -24,10 +24,16 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 1. **Terminology: "engineering decision governance" is the one new concept term.** It gets a concept page. "Pre-action" stays a mechanism word used in insights (where enforcement happens), with no pillar or concept page. "Engineering coherence" stays a problem framing used in insights, with no concept page. Its meaning comes from **ADR-031** ("Decision Governance Semantics", MnemeHQ/mneme, accepted 2026-10-08, not yet released). Before the concept page ships: a terminology amendment in PUBLISHING.md ("Conceptual authority and editorial discipline") that cites ADR-031, and a check of ADR-001/013/014 in `MnemeHQ/mneme`.
 2. **EY title:** "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding" (confirm the verbatim report name on the PDF cover). "Bottleneck" appears at most once, inside a verbatim EY quote marked `<!-- voice-ok: verbatim EY quote -->`.
-3. **"Cheap code, scarce decisions" lives in Cohesion insight 3** ("When Code Becomes Cheap, Decisions Become the Scarce Asset"). EY uses its survey as evidence and links there; the silo article keeps its own angle.
+3. **"Cheap code, scarce decisions" lives in Cohesion insight 3** ("When Code Becomes Cheap, Decisions Become the Scarce Asset"). EY uses its survey as evidence and links there; the silo article keeps its own angle. *Update after the #209 audit: this thesis is already argued in 10+ shipped articles (e.g. `ai-makes-software-more-ambitious`), so insight 3, and the Coherence insight with it, is blocked pending a new owner decision; see the Cohesion brief.*
 4. **Silo: one article, "The Return of the Silo Engineer"**, built from the Cohesion scope, with the 09-12 cross-system "decision silos" argument folded in as one section. The 09-12 brief is merged, not built separately.
 
-**Buildable now:** AECP multi-agent piece, Claude Frontier Academy news piece, OKF update to the June page, EY, The Return of the Silo Engineer, The Coherence Problem in Agentic Software Development, When Code Becomes Cheap. **After the terminology amendment:** Engineering Decision Governance concept page, From Decision Records to Decision Governance.
+**Ready to build** (build card complete; every citation still has to be verified during the build): OKF update to the June page; EY; The Return of the Silo Engineer; the pre-action mechanism article ("Pre-Action Enforcement: Where Agent Governance Takes Effect").
+
+**Needs a build-card decision first:** AECP multi-agent piece (anchor the title on the AECP paper or not; hub); Claude Frontier Academy news piece (hub).
+
+**Blocked on overlap (owner decision):** The Coherence Problem in Agentic Software Development; When Code Becomes Cheap, Decisions Become the Scarce Asset. Both largely duplicate shipped articles found by body search.
+
+**After the terminology amendment:** Engineering Decision Governance concept page; From Decision Records to Decision Governance.
 
 ## Read before building
 
@@ -39,7 +45,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 ## Unmarked "Post-" chats not processed
 
-Marker rule: a title containing `*` means published. Matching the `Post-` prefix case-insensitively (including `***`-prefixed titles), the project had 163 `Post-` chats on 2026-10-12; 30 carry a `*` mark, leaving **133 unmarked**. By last-updated date:
+Marker rule: a title containing `*` means processed (shipped, merged into a shipped article, or dropped). Matching the `Post-` prefix case-insensitively (including `***`-prefixed titles), the project had 163 `Post-` chats on 2026-10-12; 30 carry a `*` mark, leaving **133 unmarked**. By last-updated date:
 
 - **13 newer than 2026-08-29**: the 8 chats from 2026-10-04 to 10-12 and the 5 earlier scopes, all briefed above.
 - **32 last updated 2026-08-11 to 08-29** (one is `Post-tv-`, which never enters `site/`). The ledger said ~119 for this window, which does not match what ChatGPT returns. 12 were *created* in that window.
@@ -47,4 +53,4 @@ Marker rule: a title containing `*` means published. Matching the `Post-` prefix
 
 The ledger's "unmarked" count is unreliable; the git log is the real test of whether a chat shipped.
 
-Full title and date list of the 132 was read from the ChatGPT project API during this session but is not reproduced here to keep the briefs focused. The older-chat titles are available on request. Titles seen include (updated Aug-Sep): Post-Identify Mneme's Harness Role (08-29), Post - AI Security Institute (AISI) - Assess AI Control Risks (08-29), Post-Assess hardware standard relevance (08-27), Post-Architectural Use Cases and Risks (08-20), Post-Concept-Architectural Drift Prevention (08-17), Post-AI Agents and Architecture (08-15).
+Full title and date list of the 133 was read from the ChatGPT project API during this session but is not reproduced here to keep the briefs focused. The older-chat titles are available on request. Titles seen include (updated Aug-Sep): Post-Identify Mneme's Harness Role (08-29), Post - AI Security Institute (AISI) - Assess AI Control Risks (08-29), Post-Assess hardware standard relevance (08-27), Post-Architectural Use Cases and Risks (08-20), Post-Concept-Architectural Drift Prevention (08-17), Post-AI Agents and Architecture (08-15).

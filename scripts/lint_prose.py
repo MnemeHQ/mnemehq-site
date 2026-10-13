@@ -6,8 +6,9 @@ Stage 3 of the publish-insight skill runs this on every draft body before
 the final write-up. It checks three things:
 
   House voice (errors, exit 1): the rules PUBLISHING.md states for all
-    prose -- no "bottleneck", no em dash (U+2014). Same rules as
-    scripts/lint_og_voice.py, applied to article text.
+    prose -- no "bottleneck" (nor bottlenecks/-ed/-ing), no em dash
+    (U+2014). scripts/lint_og_voice.py applies the same two rules to OG card
+    copy, where it matches the singular "bottleneck" only.
 
   AI slop (warnings): phrases and structures that read as machine-written
     -- throat-clearing openers, emphasis crutches, filler adverbs, business
@@ -19,7 +20,8 @@ the final write-up. It checks three things:
     used without being expanded on first use.
 
 What is linted: on a built page, the <article> (including its header, so the
-H1 and lede) as paragraphs, list items, block quotes and h1-h3; site chrome
+H1 and lede) as paragraphs, list items, block quotes, h1-h4, figure captions
+and FAQ <summary> questions; site chrome
 (nav, footer, shared <aside> components), code and tables are skipped. In
 Markdown, fenced code blocks are skipped. Typographic quotes are normalised
 first, so "it’s" and "it's" match the same patterns.
@@ -27,9 +29,11 @@ first, so "it’s" and "it's" match the same patterns.
 Warnings are not failures; each one must be fixed or justified in the
 review.
 
-voice-ok: an HTML comment `<!-- voice-ok: <reason> -->` (or a Markdown block
-containing it) exempts the NEXT prose block only (one p, li, blockquote or
-h1-h3) from the house-voice errors, never from the slop or comprehension
+voice-ok: an HTML comment `<!-- voice-ok: <reason> -->` placed immediately
+before a prose element exempts that element only from the house-voice
+errors. In Markdown, a block that is only the comment exempts the next block,
+and a comment that opens a block exempts that block; a comment anywhere else
+exempts nothing. It never exempts from the slop or comprehension
 warnings. Use it only when that block quotes an external source verbatim
 (a title or a quotation), e.g. a report sentence that uses "bottleneck".
 It does not cover house prose, and it does not carry across a list.
@@ -52,8 +56,12 @@ import sys
 from pathlib import Path
 
 EM_DASH = "—"
-BOTTLENECK_RE = re.compile(r"\bbottlenecks?\b", re.I)
+BOTTLENECK_RE = re.compile(r"\bbottleneck(?:s|ed|ing)?\b", re.I)
 VOICE_OK_RE = re.compile(r"<!--\s*voice-ok:\s*[^>]*-->\s*$", re.I)
+# Markdown: a block that is only the comment marks the next block; a comment
+# that opens a block marks that block. A comment anywhere else exempts nothing.
+MD_VOICE_OK_ONLY_RE = re.compile(r"^\s*<!--\s*voice-ok:\s*[^>]*-->\s*$", re.I)
+MD_VOICE_OK_LEAD_RE = re.compile(r"^\s*<!--\s*voice-ok:\s*[^>]*-->", re.I)
 
 # --- slop patterns (after the stop-slop skill) ---------------------------
 SLOP = {
@@ -116,7 +124,7 @@ MAX_PARAGRAPH = 120         # words
 # The article <header> is linted: it holds the H1 and the lede, the most-read
 # prose on the page. Site chrome (nav, footer, shared <aside> components) is not.
 SKIP_BLOCKS = re.compile(r"<(script|style|pre|code|nav|footer|svg|table|aside)\b.*?</\1>", re.I | re.S)
-PARA_RE = re.compile(r"<(p|li|blockquote|h1|h2|h3)\b[^>]*>(.*?)</\1>", re.I | re.S)
+PARA_RE = re.compile(r"<(p|li|blockquote|h1|h2|h3|h4|figcaption|summary)\b[^>]*>(.*?)</\1>", re.I | re.S)
 TAG_RE = re.compile(r"<[^>]+>")
 FENCE_RE = re.compile(r"^```.*?^```[^\n]*$", re.M | re.S)
 # The site writes typographic quotes (&rsquo; etc.); patterns use ASCII ones.
@@ -134,9 +142,11 @@ def extract_paragraphs(source: str, is_html: bool) -> list[tuple[str, bool]]:
         blocks = [b for b in re.split(r"\n\s*\n", source) if b.strip()]
         out, ok = [], False
         for b in blocks:
-            if VOICE_OK_RE.search(b.strip()):
+            if MD_VOICE_OK_ONLY_RE.match(b):
                 ok = True
                 continue
+            if MD_VOICE_OK_LEAD_RE.match(b):
+                b, ok = MD_VOICE_OK_LEAD_RE.sub("", b, count=1), True
             out.append((_prose(re.sub(r"[#>*_`]", "", b)), ok))
             ok = False
         return out

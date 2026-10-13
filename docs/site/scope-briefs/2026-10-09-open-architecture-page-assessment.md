@@ -54,7 +54,7 @@ Status: **gathered, not built**
 
 | Claim | Class |
 |---|---|
-| Decision discovery research (O1) and evidence relationships | VALIDATED EXPERIMENT at best (research layer). Note: DG1 is decision governance semantics (ADR-031), not an evidence graph |
+| Decision discovery research (O1) and evidence relationships | Research harness SHIPPED as research-only (`mneme research open-architecture`, O1A benchmark harness in 0.10.0); results not validated, experiment in progress. Note: DG1 is decision governance semantics (ADR-031), not an evidence graph |
 | Public scorecards, leaderboard | CONCEPTUAL |
 
 ## Positioning constraints

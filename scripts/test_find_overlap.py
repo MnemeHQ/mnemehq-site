@@ -31,6 +31,13 @@ class TestTerms(unittest.TestCase):
                                  ("classes", "class"), ("fixes", "fix")]:
             self.assertEqual(f.terms(plural), f.terms(singular), plural)
 
+    def test_both_forms_meet_on_one_stem(self):
+        """Pairs the #209 audit found split apart."""
+        for a, b in [("cache", "caches"), ("size", "sizes"), ("niche", "niches"),
+                     ("price", "pricing"), ("scale", "scaling"), ("code", "coding"),
+                     ("coherent", "coherence"), ("API", "APIs"), ("KPI", "KPIs")]:
+            self.assertEqual(f.terms(a), f.terms(b), (a, b))
+
     def test_words_ending_in_s_are_not_truncated(self):
         self.assertEqual(f.terms("status analysis"), ["status", "analysis"])
 

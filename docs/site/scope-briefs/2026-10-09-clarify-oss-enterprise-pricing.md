@@ -33,7 +33,7 @@ Status: **gathered, not built**
 | Deterministic enforcement | open core | managed across teams and environments |
 | Agent integrations | open core | centralised management |
 | Decision discovery | repository/local | cross-system |
-| Confluence, Jira, Slack | not supported (no import or ingestion path exists in OSS) | connected ingestion and sync (planned) |
+| Confluence, Jira, Slack | not supported (no import or ingestion path exists in OSS) | Confluence ADR ingestion planned; Jira and Slack are enterprise direction only (conceptual) |
 | Evidence | local, inspectable | aggregated history and reporting |
 | Administration | local | RBAC, approvals, lifecycle |
 | Pricing | free, MIT | set with design partners |
@@ -68,5 +68,4 @@ All of the above. Separate PRs from any insights batch.
 
 ## Open questions
 
-- Is "Decision Index" part of OSS today?
 - Nav label: "Pricing" or "OSS & Enterprise"?
