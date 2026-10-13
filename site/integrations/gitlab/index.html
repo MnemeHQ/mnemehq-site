@@ -224,7 +224,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "Should we run this on every merge request or only on the default branch?", "acceptedAnswer": {"@type": "Answer", "text": "Every merge request. The point of CI enforcement is to surface violations at MR time when the cost of fixing is lowest. Running only on the default branch means failures land after merge, which defeats the gating purpose. The check is deterministic keyword matching with no embedding model or network call, so it adds little to a pipeline."}},
-          {"@type": "Question", "name": "What if a merge request needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a FORBID_LITERAL rule's exclude_paths, or supersede the ADR and re-import it. Re-importing doesn't remove a decision imported earlier, so also delete the superseded entry from project_memory.json. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge."}},
+          {"@type": "Question", "name": "What if a merge request needs to override a decision intentionally?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a FORBID_LITERAL rule's exclude_paths, or retire the decision with a new ADR that lists it under supersedes, then re-import. Don't edit project_memory.json by hand: from 0.10.0, a memory file whose decisions no longer match its decision index fails to load. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge."}},
           {"@type": "Question", "name": "How does this compare to running other linters or scanners in GitLab CI?", "acceptedAnswer": {"@type": "Answer", "text": "Different layers. Linters check syntax and style; SAST scanners check for security issues; Mneme enforces architectural decisions against the project's own decision corpus. They compose: typical pipeline sequence is lint → mneme check → tests → SAST."}}
         ]
       }
@@ -406,7 +406,7 @@ mneme-decisions:
     <h2>Status</h2>
 
     <ul>
-      <li>CI enforcement gate is Phase 1 current focus &mdash; see the <a href="/roadmap/" style="color:var(--accent);text-decoration:none;">roadmap</a></li>
+      <li>GitLab CI gates are part of the shipped foundation on the <a href="/roadmap/" style="color:var(--accent);text-decoration:none;">roadmap</a></li>
       <li>The <code>mneme check</code> command is available today via <code>pip install "mneme-hq==0.10.0"</code></li>
       <li>As of mneme-hq 0.10.0, Mneme doesn&rsquo;t publish a GitLab CI template. You copy the job above into your <code>.gitlab-ci.yml</code> and own it.</li>
     </ul>
@@ -432,7 +432,7 @@ mneme-decisions:
       <li><strong>INCOMPLETE</strong>: the evaluation couldn&rsquo;t finish. Exit code 2, never reported as PASS.</li>
     </ul>
 
-    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus in the same merge request: add a path to a <code>FORBID_LITERAL</code> rule&rsquo;s <code>exclude_paths</code> (the structured form, alongside its <code>include_paths</code>), or supersede the ADR, re-import, and delete the superseded decision from <code>project_memory.json</code>. Reviewers see the change in the MR diff, so weakening a decision is visible rather than a quiet bypass.</p>
+    <p>Mneme has no override record and no expiry field. An exception is a change to the decision corpus in the same merge request: add a path to a <code>FORBID_LITERAL</code> rule&rsquo;s <code>exclude_paths</code> (the structured form, alongside its <code>include_paths</code>), or retire the decision with a new ADR that lists it under <code>supersedes</code>, then re-import; the old decision is marked superseded and stops producing verdicts. Don&rsquo;t edit <code>project_memory.json</code> by hand: from 0.10.0, a memory file whose decisions no longer match its decision index fails to load. Reviewers see the change in the MR diff, so weakening a decision is visible rather than a quiet bypass.</p>
 
     <h2>FAQ</h2>
 
@@ -443,7 +443,7 @@ mneme-decisions:
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">What if a merge request needs to override a decision intentionally?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> rule&rsquo;s <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>, or supersede the ADR and re-import it. Re-importing doesn&rsquo;t remove a decision imported earlier, so also delete the superseded entry from <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code>. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme has no override record and no expiry field. Make the exception a change to the decision corpus in the same MR: add the path to a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> rule&rsquo;s <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">exclude_paths</code>, or retire the decision with a new ADR that lists it under <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">supersedes</code>, then re-import. Don&rsquo;t edit <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">project_memory.json</code> by hand: from 0.10.0, a memory file whose decisions no longer match its decision index fails to load. The exception shows in the MR diff, so weakening a decision is visible rather than a silent merge.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">How does this compare to running other linters or scanners in GitLab CI?</summary>

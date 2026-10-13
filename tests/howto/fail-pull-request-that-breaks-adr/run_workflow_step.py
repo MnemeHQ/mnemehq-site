@@ -1,4 +1,4 @@
-"""Run one `run:` step from the workflow file under bash, as the runner would.
+"""Run one `run:` step from the workflow file under bash, with the runner's flags.
 
 Lets the fixture execute the exact script the guide publishes, instead of a
 copy that could drift from it.
@@ -13,4 +13,7 @@ workflow = yaml.safe_load(open(".github/workflows/mneme-decisions.yml", encoding
 step = next(s for s in workflow["jobs"]["mneme"]["steps"] if s.get("name") == sys.argv[1])
 env = {**os.environ, **{k: v for k, v in step.get("env", {}).items() if "${{" not in str(v)}}
 env.update(dict(a.split("=", 1) for a in sys.argv[2:]))
-sys.exit(subprocess.run(["bash", "-c", step["run"]], env=env).returncode)
+# GitHub runs `shell: bash` steps as `bash --noprofile --norc -eo pipefail {0}`;
+# replay with the same flags so errexit behaviour matches the runner.
+cmd = ["bash", "--noprofile", "--norc", "-eo", "pipefail", "-c", step["run"]]
+sys.exit(subprocess.run(cmd, env=env).returncode)
