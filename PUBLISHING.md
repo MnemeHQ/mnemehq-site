@@ -471,7 +471,7 @@ blocks the PR. All are standard-library-only Python.
 | `scripts/check_supported_languages.py` | `check-supported-languages.yml` | supported-languages schema |
 | `scripts/test_deploy_verify.py` | `test-deploy-verify.yml` | deploy-verification helpers |
 | `scripts/check_agent_discovery.py` | `agent-discovery-check.yml` | AI Catalog, Agent Skill integrity, MCP tool catalog/version links, llms.txt, and current-stable agreement with PyPI/core server metadata/official MCP Registry |
-| `scripts/check_stale_mcp_claims.py` | `stale-mcp-claims-check.yml` | no pre-0.10.0 MCP storage claims ("Canonical reads are optional", proposals-only servers, the 0.9.0 limitations) anywhere in `site/` or `templates/` |
+| `scripts/check_stale_mcp_claims.py` | `stale-mcp-claims-check.yml` | no pre-0.10.0 MCP storage claims ("Canonical reads are optional", proposals-only servers, the 0.9.0 limitations) and no nonexistent `draft` decision status anywhere in `site/` or `templates/` |
 
 The agent-discovery workflow also runs daily. Its local job is repository-only; its external-trust job checks the current stable version against PyPI, the core repository's `server.json`, and the official MCP Registry so a release/discovery mismatch cannot remain silent.
 
