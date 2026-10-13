@@ -275,7 +275,7 @@
           {"@type": "Question", "name": "Does Mneme HQ replace CLAUDE.md, or do they coexist?", "acceptedAnswer": {"@type": "Answer", "text": "They coexist. CLAUDE.md is the right place for project conventions, build commands, and orientation context that the model benefits from reading at session start. Mneme HQ is the right place for architectural decisions that must not be violated regardless of what the model decides to do with the CLAUDE.md context. The two layers serve different purposes: CLAUDE.md primes the model, Mneme enforces at the tool-call boundary."}},
           {"@type": "Question", "name": "Why isn't a well-written CLAUDE.md enough?", "acceptedAnswer": {"@type": "Answer", "text": "Because CLAUDE.md is read as context, not enforced as a constraint. The model may follow it, may partially follow it, may miss a section as the context window fills, or may decide a rule does not apply to the current edit. There is no deterministic stop. For rules where 'the model usually does the right thing' is not good enough, you need a hook that blocks the Edit/Write call before the file is written."}},
           {"@type": "Question", "name": "Does Mneme HQ work for agents other than Claude Code?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision corpus is agent-agnostic. Claude Code is the first integration because of its hook surface, but the same corpus exports to Cursor rules, can be queried from any agent that supports MCP, and can be enforced in CI for agents that do not have a hook layer. CLAUDE.md is Claude-Code-specific by design."}},
-          {"@type": "Question", "name": "What does a Mneme decision look like compared to a CLAUDE.md instruction?", "acceptedAnswer": {"@type": "Answer", "text": "A CLAUDE.md instruction is a sentence of prose: 'Use the repository pattern in services/payments.' A Mneme decision is a structured record with an id, a scope, optional path globs for where its rules apply, a status (proposed, accepted, deprecated, or superseded), constraints, a supersedes chain, and a rationale. The model still sees a human-readable explanation, but the hook can match the scope deterministically and the precedence engine can resolve conflicts."}}
+          {"@type": "Question", "name": "What does a Mneme decision look like compared to a CLAUDE.md instruction?", "acceptedAnswer": {"@type": "Answer", "text": "A CLAUDE.md instruction is a sentence of prose: 'Use the repository pattern in services/payments.' A Mneme decision is a structured record with an id, a scope, optional path globs for where its rules apply, an ADR status (proposed, accepted, deprecated, or superseded), constraints, a supersedes chain, and a rationale. The model still sees a human-readable explanation, but the hook can match the paths deterministically and the precedence engine can resolve conflicts."}}
         ]
       },
       {
@@ -431,7 +431,7 @@
         <tr>
           <td>Decision versioning</td>
           <td>None</td>
-          <td>Status: proposed / accepted / deprecated / superseded, with a supersedes chain</td>
+          <td>ADR status: proposed / accepted / deprecated / superseded, with a supersedes chain</td>
         </tr>
         <tr>
           <td>Multi-agent</td>
@@ -537,7 +537,7 @@
 
       <details class="faq-item">
         <summary>What does a Mneme decision look like compared to a CLAUDE.md instruction?</summary>
-        <div class="faq-body">A CLAUDE.md instruction is a sentence of prose: "Use the repository pattern in services/payments." A Mneme decision is a structured record with an <code>id</code>, a <code>scope</code>, optional path globs for where its rules apply, a <code>status</code> (proposed, accepted, deprecated, or superseded), <code>constraints</code>, a <code>supersedes</code> chain, and a <code>rationale</code>. The model still sees a human-readable explanation, but the hook can match the scope deterministically and the precedence engine can resolve conflicts.</div>
+        <div class="faq-body">A CLAUDE.md instruction is a sentence of prose: "Use the repository pattern in services/payments." A Mneme decision is a structured record with an <code>id</code>, a <code>scope</code>, optional path globs for where its rules apply, an ADR <code>status</code> (proposed, accepted, deprecated, or superseded), <code>constraints</code>, a <code>supersedes</code> chain, and a <code>rationale</code>. The model still sees a human-readable explanation, but the hook can match the paths deterministically and the precedence engine can resolve conflicts.</div>
       </details>
     </div>
 

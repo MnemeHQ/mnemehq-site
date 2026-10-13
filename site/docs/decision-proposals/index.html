@@ -303,7 +303,7 @@ mneme decision reject dprop-example \
 
     <section class="section" id="next">
       <h2>After acceptance</h2>
-      <p>An accepted decision is ready for existing Mneme consumers, including the <a href="/docs/cli/#cmd-audit"><code>mneme audit</code></a> command. It determines whether the decision is already protected, ready for a deterministic guardrail, requires modelling, or remains guidance. The hosted <a href="/audit/">Architecture Audit</a> works differently: it reads a repository&rsquo;s ADRs and agent instruction files, not project memory, so it sees an accepted decision only once that decision is also written as an ADR. That classification is downstream of acceptance; neither the producer nor MCP assigns it.</p>
+      <p>An accepted decision is ready for existing Mneme consumers, including the <a href="/docs/cli/#cmd-audit"><code>mneme audit</code></a> command. It determines whether the decision is already protected, ready for a deterministic guardrail, requires modelling, or remains guidance. That classification is downstream of acceptance; neither the producer nor MCP assigns it. The hosted <a href="/audit/">Architecture Audit</a> works differently: it reads files in the repository (ADRs, agent instruction files, <code>docs/</code> Markdown, and configuration), not project memory, so it sees an accepted decision only once that decision is written into the repository, for example as an ADR.</p>
       <p>If the decision should block incompatible changes, use <a href="/docs/protection-activation/">Setup and Protect</a> to validate and install an appropriate typed rule. Keeping these steps separate ensures that adoption of architectural intent is not confused with activation of an enforcement mechanism.</p>
     </section>
 
