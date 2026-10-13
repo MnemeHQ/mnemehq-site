@@ -52,16 +52,77 @@ EXTRA_CSS = """
     .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
     .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
     .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
-    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
-    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
+    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.7rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: #f1f1f4; }
+    .prose-section > p, .prose-section li { color: #c8c8d0; }
+    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: #c8c8d0; font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
     .prose-section ul.plain li code, .prose-section h3 code, .ref-table td code, .end-up code { font-family: 'DM Mono', monospace; font-size: 0.84em; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; }
     .prose-section ul.plain li a, .ref-table td a, .bound-list a { color: var(--accent); text-decoration: none; }
-    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 1.1rem 0 0.4rem; }
-    .term-block { margin-top: 0; }
+    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a9b4; margin: 1.1rem 0 0.4rem; }
+    .hero p.lede { color: #cfd0d7; }
     .hero p.lede code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
-    .bound-list .term-block { margin: 0.6rem 0; }
+    .howto-code { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); margin: 1rem 0 1.25rem; overflow: hidden; border: 1px solid #303038; border-left: 3px solid var(--block-accent); border-radius: 9px; background: var(--block-tint); }
+    .howto-code--command { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); }
+    .howto-code--file, .howto-code--config { --block-accent: #aaa3ff; --block-tint: rgba(170,163,255,0.055); }
+    .howto-code--output { --block-accent: #b5cc7a; --block-tint: rgba(181,204,122,0.045); }
+    .howto-code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.35rem; padding: 0.48rem 0.75rem 0.48rem 0.9rem; border-bottom: 1px solid #303038; }
+    .howto-code-label { min-width: 0; overflow: hidden; color: var(--block-accent); font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+    .howto-code-label code { color: #c9c9d1; font-size: 0.95em; letter-spacing: 0; text-transform: none; }
+    .howto-copy { flex-shrink: 0; padding: 0.32rem 0.55rem; border: 1px solid #41414a; border-radius: 5px; background: rgba(12,12,13,0.6); color: #d2d2d9; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.64rem; }
+    .howto-copy:hover { border-color: var(--block-accent); color: #fff; }
+    .howto-copy:focus-visible { outline: 2px solid var(--block-accent); outline-offset: 2px; }
+    .howto-copy[data-copied="true"] { border-color: #b5cc7a; color: #b5cc7a; }
+    .howto-code pre.term-block { max-width: none; margin: 0; border: 0; border-radius: 0; background: rgba(9,9,11,0.48); color: #ededf1; }
+    .bound-list .howto-code { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
+    @media (max-width: 640px) {
+      .howto-code-head { align-items: flex-start; }
+      .howto-code-label { white-space: normal; }
+      .howto-copy { padding: 0.38rem 0.5rem; }
+    }
+"""
+
+COPY_SCRIPT = """
+<script>
+(function () {
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      var copied = document.execCommand('copy');
+      field.remove();
+      if (copied) resolve(); else reject(new Error('copy unavailable'));
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-howto-copy]');
+    if (!button) return;
+    var block = button.closest('.howto-code');
+    var pre = block && block.querySelector('pre');
+    if (!pre) return;
+    var original = button.getAttribute('data-label') || button.textContent;
+    copyText(pre.textContent.trim()).then(function () {
+      button.textContent = 'Copied \u2713';
+      button.setAttribute('data-copied', 'true');
+      window.setTimeout(function () {
+        button.textContent = original;
+        button.removeAttribute('data-copied');
+      }, 1800);
+    }).catch(function () {
+      button.textContent = 'Copy failed';
+      window.setTimeout(function () { button.textContent = original; }, 1800);
+    });
+  });
+})();
+</script>
 """
 
 
@@ -106,6 +167,55 @@ def fill_blocks(body: str, fixture: Path) -> str:
         return f"<pre{attrs}>{html.escape(chr(10).join(rows).rstrip(), quote=False)}</pre>"
 
     return re.sub(r"<pre([^>]*)>(.*?)</pre>", repl, body, flags=re.S)
+
+
+def decorate_blocks(body: str) -> str:
+    """Add semantic labels and copy controls to guide code blocks.
+
+    Fixture metadata is the source of truth: commands and files are inputs,
+    while recorded output is evidence and deliberately has no copy control.
+    """
+    def repl(m):
+        attrs, inner = m.group(1), m.group(2)
+        fixture_match = re.search(r'data-fixture="([^"]+)"', attrs)
+        explicit_match = re.search(r'data-block="([^"]+)"', attrs)
+        fixture = fixture_match.group(1) if fixture_match else "cmd"
+        raw_kind, _, ref = fixture.partition(":")
+        kind = explicit_match.group(1) if explicit_match else raw_kind
+
+        if kind == "out":
+            block_kind = "output"
+            label = "Recorded output"
+            copy_button = ""
+        elif kind == "file":
+            block_kind = "file"
+            label = f'File &middot; <code>{html.escape(ref)}</code>'
+            copy_button = _copy_button("file")
+        elif kind == "config":
+            block_kind = "config"
+            label = "Configuration"
+            copy_button = _copy_button("config")
+        else:
+            block_kind = "command"
+            label = "Command"
+            copy_button = _copy_button("command")
+
+        return (
+            f'<div class="howto-code howto-code--{block_kind}">\n'
+            f'  <div class="howto-code-head"><span class="howto-code-label">{label}</span>{copy_button}</div>\n'
+            f'  <pre{attrs}>{inner}</pre>\n'
+            '</div>'
+        )
+
+    return re.sub(r"<pre([^>]*)>(.*?)</pre>", repl, body, flags=re.S)
+
+
+def _copy_button(kind: str) -> str:
+    label = {"file": "Copy file", "config": "Copy config"}.get(kind, "Copy command")
+    return (
+        f'<button type="button" class="howto-copy" data-howto-copy data-code-copy '
+        f'data-copy-text="how-to {kind}" data-label="{label}" aria-live="polite">{label}</button>'
+    )
 
 
 def jsonld(meta, crumbs, image_url):
@@ -204,7 +314,7 @@ def build(slug: str) -> Path:
     path_part = "docs/how-to/" if is_hub else f"docs/how-to/{slug}/"
     meta["url"] = f"https://mnemehq.com/{path_part}"
     if not is_hub:
-        body = fill_blocks(body, W / "tests/howto" / slug)
+        body = decorate_blocks(fill_blocks(body, W / "tests/howto" / slug))
     head_start, consent, icon, style, body_start, tail = chrome_parts()
     e = lambda s: html.escape(s, quote=True)
     og_img = og_image_url(path_part)
@@ -282,7 +392,8 @@ def build(slug: str) -> Path:
             '  </nav>\n'
         )
     hero += "</section>\n\n"
-    page = head + body_start + crumb_html + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail
+    page_tail = tail if is_hub else tail.replace("</body>", COPY_SCRIPT + "\n</body>")
+    page = head + body_start + crumb_html + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + page_tail
     out = W / "site" / path_part / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(page, encoding="utf-8", newline="\n")

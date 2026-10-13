@@ -220,16 +220,34 @@
     .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
     .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
     .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
-    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
-    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
+    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.7rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: #f1f1f4; }
+    .prose-section > p, .prose-section li { color: #c8c8d0; }
+    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: #c8c8d0; font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
     .prose-section ul.plain li code, .prose-section h3 code, .ref-table td code, .end-up code { font-family: 'DM Mono', monospace; font-size: 0.84em; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; }
     .prose-section ul.plain li a, .ref-table td a, .bound-list a { color: var(--accent); text-decoration: none; }
-    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 1.1rem 0 0.4rem; }
-    .term-block { margin-top: 0; }
+    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a9b4; margin: 1.1rem 0 0.4rem; }
+    .hero p.lede { color: #cfd0d7; }
     .hero p.lede code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
-    .bound-list .term-block { margin: 0.6rem 0; }
+    .howto-code { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); margin: 1rem 0 1.25rem; overflow: hidden; border: 1px solid #303038; border-left: 3px solid var(--block-accent); border-radius: 9px; background: var(--block-tint); }
+    .howto-code--command { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); }
+    .howto-code--file, .howto-code--config { --block-accent: #aaa3ff; --block-tint: rgba(170,163,255,0.055); }
+    .howto-code--output { --block-accent: #b5cc7a; --block-tint: rgba(181,204,122,0.045); }
+    .howto-code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.35rem; padding: 0.48rem 0.75rem 0.48rem 0.9rem; border-bottom: 1px solid #303038; }
+    .howto-code-label { min-width: 0; overflow: hidden; color: var(--block-accent); font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+    .howto-code-label code { color: #c9c9d1; font-size: 0.95em; letter-spacing: 0; text-transform: none; }
+    .howto-copy { flex-shrink: 0; padding: 0.32rem 0.55rem; border: 1px solid #41414a; border-radius: 5px; background: rgba(12,12,13,0.6); color: #d2d2d9; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.64rem; }
+    .howto-copy:hover { border-color: var(--block-accent); color: #fff; }
+    .howto-copy:focus-visible { outline: 2px solid var(--block-accent); outline-offset: 2px; }
+    .howto-copy[data-copied="true"] { border-color: #b5cc7a; color: #b5cc7a; }
+    .howto-code pre.term-block { max-width: none; margin: 0; border: 0; border-radius: 0; background: rgba(9,9,11,0.48); color: #ededf1; }
+    .bound-list .howto-code { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
+    @media (max-width: 640px) {
+      .howto-code-head { align-items: flex-start; }
+      .howto-code-label { white-space: normal; }
+      .howto-copy { padding: 0.38rem 0.5rem; }
+    }
   </style>
 
 </head>
@@ -345,7 +363,10 @@
       <li>ADR-012 in <code>docs/adr/</code> and imported into <code>.mneme/project_memory.json</code>, as in <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
       <li>Mneme 0.10.0 with the optional MCP runtime:</li>
     </ul>
-    <pre class="term-block">pipx install "mneme-hq[mcp]==0.10.0"</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block">pipx install "mneme-hq[mcp]==0.10.0"</pre>
+</div>
     <ul class="plain">
       <li>For the Claude Code path, the plugin loaded as in <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a>.</li>
     </ul>
@@ -355,7 +376,9 @@
     <h2>Configure</h2>
     <h3>1. Give each decision a scope word that appears in your paths</h3>
     <p>Lookup matches whole words in the query against each decision's scope, constraints, text and rationale. A match on the scope counts most. There is no stemming, so <code>handler</code> doesn't match <code>handlers</code>. ADR-012 uses <code>scope: handlers</code> because every file it governs lives under <code>app/handlers/</code>:</p>
-    <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md">---
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>docs/adr/ADR-012-handlers-use-repositories.md</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md">---
 id: ADR-012
 title: Request handlers do not import the database client
 status: accepted
@@ -363,11 +386,14 @@ priority: foundational
 date: "2026-10-01"
 scope: handlers
 ---</pre>
+</div>
     <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart, with one catch for MCP, covered in Troubleshooting.</p>
 
     <h3>2. Register the MCP server with your agent</h3>
     <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
-    <pre class="term-block" data-fixture="manual">{
+    <div class="howto-code howto-code--config">
+  <div class="howto-code-head"><span class="howto-code-label">Configuration</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to config" data-label="Copy config" aria-live="polite">Copy config</button></div>
+  <pre class="term-block" data-fixture="manual" data-block="config">{
   "mcpServers": {
     "mneme": {
       "command": "mneme",
@@ -375,6 +401,7 @@ scope: handlers
     }
   }
 }</pre>
+</div>
     <p><code>--memory</code> points the server at the project memory your ADR import wrote. The server returns the decisions in its Decision Index, so after you edit an ADR, re-run <code>mneme adr import</code> with <code>--update-existing</code>; a running server picks the change up on its next read. Memory created by <code>mneme init</code> on 0.10.0 is ready as it is. Memory from 0.9.x needs migrating first, covered in Troubleshooting. To have the server also check your ADR folder at startup, add <code>"--adr-dir", "docs/adr"</code>; it validates the folder and doesn&rsquo;t change what the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
   </section>
 
@@ -382,11 +409,16 @@ scope: handlers
     <h2>Run</h2>
     <h3>Claude Code: <code>/mneme:context</code></h3>
     <p>Type <code>/mneme:context</code> with a description of the task. The command asks Claude to run <code>mneme test_query</code> with your description. You can run the same lookup yourself, here with the query the Claude Code hook uses for an edit:</p>
-    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to app/handlers/invoices.py"</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to app/handlers/invoices.py"</pre>
+</div>
 
     <h3>Any MCP host: <code>decision.applicable_to</code></h3>
     <p>This small client starts the server the way an agent does and calls one tool. Save it as <code>mcp_probe.py</code> in the repository root:</p>
-    <pre class="term-block" data-fixture="file:mcp_probe.py">"""Call Mneme's decision-mcp server over stdio, the way an MCP host does.
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>mcp_probe.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:mcp_probe.py">"""Call Mneme's decision-mcp server over stdio, the way an MCP host does.
 
 Usage:
     python mcp_probe.py list
@@ -421,15 +453,21 @@ async def main(tool: str, arguments: str) -&gt; None:
 
 
 asyncio.run(main(sys.argv[1], sys.argv[2] if len(sys.argv) &gt; 2 else "{}"))</pre>
-    <pre class="term-block" data-fixture="cmd">python mcp_probe.py list
+</div>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">python mcp_probe.py list
 python mcp_probe.py decision.applicable_to \
   '{"paths": ["app/handlers/invoices.py"]}'</pre>
+</div>
   </section>
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
     <p>The lookup ranks ADR-012 first, matched on its scope, and prints the context an agent receives:</p>
-    <pre class="term-block" data-fixture="out:query-path">Query: edit to app/handlers/invoices.py
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:query-path">Query: edit to app/handlers/invoices.py
 
 All decisions (ranked by score):
   [ADR-012] score=3.50 matched=decision, scope, rationale
@@ -451,28 +489,46 @@ and tenancy handling that lives in app/repositories.
   Typed rules:
     - FORBID_LITERAL: from app.db.client import
       Applies to: app/handlers/**</pre>
+</div>
     <p>A task description finds ADR-012 only when it uses the ADR&rsquo;s own words. &ldquo;handler&rdquo; isn&rsquo;t &ldquo;handlers&rdquo;, so this query finds nothing:</p>
-    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "add a list_invoices handler"</pre>
-    <pre class="term-block" data-fixture="out:task-no-match">Query: add a list_invoices handler
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "add a list_invoices handler"</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:task-no-match">Query: add a list_invoices handler
 
 All decisions (ranked by score):
   [ADR-012] score=0.00 matched=(no match)</pre>
+</div>
     <p>This one uses &ldquo;request handlers&rdquo;, from the ADR&rsquo;s title, and matches:</p>
-    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json \
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json \
   --query "add an invoices endpoint to the request handlers"</pre>
-    <pre class="term-block" data-fixture="out:task-match">Query: add an invoices endpoint to the request handlers
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:task-match">Query: add an invoices endpoint to the request handlers
 
 All decisions (ranked by score):
   [ADR-012] score=4.50 matched=decision, scope, rationale</pre>
+</div>
     <p>The MCP server lists six tools:</p>
-    <pre class="term-block" data-fixture="out:mcp-list">decision.propose
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:mcp-list">decision.propose
 decision.propose_batch
 decision.get
 decision.search
 decision.applicable_to
 decision.trace</pre>
+</div>
     <p><code>decision.applicable_to</code> returns ADR-012, because its scope <code>handlers</code> appears in the path:</p>
-    <pre class="term-block" data-fixture="out:mcp-applicable">{
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:mcp-applicable">{
   "canonical_scope_matches": [
     {
       "context_scope": [
@@ -487,6 +543,7 @@ decision.trace</pre>
   ],
   "proposal_hint_matches": []
 }</pre>
+</div>
   </section>
 
   <section class="prose-section" id="evidence">
@@ -498,37 +555,54 @@ decision.trace</pre>
     <h2>Troubleshooting</h2>
     <h3>A lookup for a generic file name returns nothing</h3>
     <p>A bare file name like <code>utils.py</code> shares no words with any decision:</p>
-    <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to utils.py"</pre>
-    <pre class="term-block" data-fixture="out:generic-file-name">Query: edit to utils.py
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme test_query --memory .mneme/project_memory.json --query "edit to utils.py"</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:generic-file-name">Query: edit to utils.py
 
 All decisions (ranked by score):
   [ADR-012] score=0.00 matched=(no match)
 
 Injected (top 3):
 (none)</pre>
+</div>
     <p>Use the full path, or describe the task in words that appear in the decision.</p>
 
     <h3>A scope like <code>api</code> never matches in the CLI lookup</h3>
     <p>Here ADR-012 governs <code>app/api/</code> with <code>scope: api</code>. The path contains the scope, but three letters is below the CLI lookup's four-letter minimum:</p>
-    <pre class="term-block" data-fixture="out:short-scope-query">Query: edit to app/api/invoices.py
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:short-scope-query">Query: edit to app/api/invoices.py
 
 All decisions (ranked by score):
   [ADR-012] score=0.00 matched=(no match)
 
 Injected (top 3):
 (none)</pre>
+</div>
     <p>The MCP tool <code>decision.applicable_to</code> works differently: it matches the scope as a substring of the path, so <code>api</code> matches <code>app/api/invoices.py</code> there, and also <code>rapid_import/</code>. Pick a scope word of four letters or more that appears in the governed paths and not by accident in others, such as <code>handlers</code>.</p>
 
     <h3><code>decision.applicable_to</code> doesn't return a dotted-scope ADR for its file</h3>
     <p>The tool matches the whole scope string inside the path. With <code>scope: handlers.invoices</code>, the string doesn't appear in <code>app/handlers/invoices.py</code>, so the tool returns nothing for that path, though <code>mneme test_query</code> still finds the ADR:</p>
-    <pre class="term-block" data-fixture="out:dotted-scope-path">{
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:dotted-scope-path">{
   "canonical_scope_matches": [],
   "proposal_hint_matches": []
 }</pre>
+</div>
     <p>Pass the scope in <code>context</code> as well and the ADR comes back:</p>
-    <pre class="term-block" data-fixture="cmd">MEMORY=.mneme/dotted.json python mcp_probe.py decision.applicable_to \
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">MEMORY=.mneme/dotted.json python mcp_probe.py decision.applicable_to \
   '{"paths": ["app/handlers/invoices.py"], "context": ["handlers.invoices"]}'</pre>
-    <pre class="term-block" data-fixture="out:dotted-scope-context">{
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:dotted-scope-context">{
   "canonical_scope_matches": [
     {
       "context_scope": [
@@ -537,16 +611,23 @@ Injected (top 3):
       "decision_id": "ADR-012",
       "lifecycle_status": "active",
       "statement": "Request handlers do not import the database client",</pre>
+</div>
     <p>Or use scopes that appear in your paths as written. (<code>MEMORY</code> only points this guide&rsquo;s probe at a second memory file, imported from the dotted-scope ADR.)</p>
 
     <h3>The MCP server won't start</h3>
     <p>Memory written by Mneme 0.9.x has no Decision Index yet, so the server stops and prints what to run:</p>
-    <pre class="term-block" data-fixture="out:mcp-unmigrated">ERROR: project memory troubleshooting/memory-from-0.9/project_memory.json has no authoritative decision_index section.
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:mcp-unmigrated">ERROR: project memory troubleshooting/memory-from-0.9/project_memory.json has no authoritative decision_index section.
   Preview the migration:  mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json
   After reviewing it, apply: mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json --apply</pre>
+</div>
     <p>Run the first command, read the preview, then run the second. Before you apply, move every process that writes the file to 0.10.0, including CI jobs and teammates&rsquo; installs: a 0.9.2 writer on migrated memory succeeds silently, and 0.10.0 then refuses to read the file. The <a href="/docs/cli/#decision-index-migrate">migrate reference</a> covers what the migration changes.</p>
     <p>An <code>--adr-dir</code> problem stops the server too:</p>
-    <pre class="term-block" data-fixture="out:mcp-bad-adr-dir">ERROR: ADR directory troubleshooting/missing does not exist</pre>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:mcp-bad-adr-dir">ERROR: ADR directory troubleshooting/missing does not exist</pre>
+</div>
     <p>The server refuses to start when the <code>--adr-dir</code> folder doesn't exist, is given as an empty string, or holds an ADR that fails parsing, validation or precedence checks. An empty folder passes. Fix the path or the ADR, or remove <code>--adr-dir</code>: the server doesn&rsquo;t need it to return decisions.</p>
   </section>
 
@@ -843,5 +924,47 @@ Injected (top 3):
   }, true);
 })();
 </script>
+
+<script>
+(function () {
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      var copied = document.execCommand('copy');
+      field.remove();
+      if (copied) resolve(); else reject(new Error('copy unavailable'));
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-howto-copy]');
+    if (!button) return;
+    var block = button.closest('.howto-code');
+    var pre = block && block.querySelector('pre');
+    if (!pre) return;
+    var original = button.getAttribute('data-label') || button.textContent;
+    copyText(pre.textContent.trim()).then(function () {
+      button.textContent = 'Copied ✓';
+      button.setAttribute('data-copied', 'true');
+      window.setTimeout(function () {
+        button.textContent = original;
+        button.removeAttribute('data-copied');
+      }, 1800);
+    }).catch(function () {
+      button.textContent = 'Copy failed';
+      window.setTimeout(function () { button.textContent = original; }, 1800);
+    });
+  });
+})();
+</script>
+
 </body>
 </html>
