@@ -196,7 +196,7 @@
         "headline": "Precedence Semantics — Mneme HQ Concepts",
         "description": "Precedence semantics define how a governance system resolves conflicts when two decisions both apply to a file. Without precedence rules, the system has no governance.",
         "url": "https://mnemehq.com/concepts/precedence-semantics/",
-        "dateModified": "2026-09-26",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/precedence-semantics/og-v2.png",
@@ -214,7 +214,7 @@
           {
             "@type": "Question",
             "name": "What rules make up Mneme's precedence ladder?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Today, Mneme's compiler resolves overlapping ADRs in a fixed order: only accepted decisions compete; a decision explicitly named in another accepted decision's supersedes field is removed; within the same scope the higher priority wins (foundational over normal over exception); and on a priority tie the newer decision wins. Scope specificity orders the active set but does not defeat a broader decision. A tie none of these rules can break is a compile-time error. The canonical Decision Index (D1) moves resolution to explicit active-version selection instead of dates."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Today, Mneme's compiler resolves overlapping ADRs in a fixed order: only accepted decisions compete; a decision explicitly named in another accepted decision's supersedes field is removed; within the same scope the higher priority wins (foundational over normal over exception); and on a priority tie the newer decision wins. Scope specificity orders the active set but does not defeat a broader decision. A tie none of these rules can break is a compile-time error. Since mneme-hq 0.10.0, the persisted Decision Index also records each decision's active version explicitly; the date tiebreak between decisions is unchanged in 0.10.0."}
           },
           {
             "@type": "Question",
@@ -372,7 +372,7 @@
 
     <h2>The standard precedence ladder</h2>
 
-    <p>Mneme's decision model defines precedence explicitly, and resolves it before enforcement ever runs. Two things are worth separating: what the current compiler does today, and the canonical resolution model the Decision Index is moving to.</p>
+    <p>Mneme's decision model defines precedence explicitly, and resolves it before enforcement ever runs. Two things are worth separating: how the compiler resolves overlapping decisions today, and what the Decision Index, persisted since mneme-hq 0.10.0, records about the result.</p>
 
     <h3>Today: how the current compiler resolves overlap</h3>
 
@@ -393,9 +393,9 @@
 
     <p>In the current compiler, a narrower scope does not defeat a broader one. <code>services</code> and <code>services.billing.legacy</code> both stay in the active set, sorted most-specific-first so consumers see the narrower constraint first, and every active rule is evaluated at check time. A carve-out like "legacy billing keeps direct DAO access" is expressed by excluding that path from the broader rule with a path selector, not by letting a narrower decision silently win.</p>
 
-    <h3>Where the canonical model goes (D1)</h3>
+    <h3>What the Decision Index records</h3>
 
-    <p>The canonical Decision Index (<a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-023-canonical-decision-index-and-runtime-projection-boundary.md">ADR-023</a>) makes resolution an explicit property of the decision itself. A decision can have multiple immutable versions, and the active version is resolved explicitly rather than inferred from dates, source order, or whichever record happened to load. Supersession becomes recorded lineage in the decision graph. D1 moves this into the authoritative Decision Index and projects the active version back into the existing runtime, so current enforcement and retrieval behaviour stays the same for today's consumers.</p>
+    <p>The <a href="/docs/decision-index/">Decision Index</a> (<a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-023-canonical-decision-index-and-runtime-projection-boundary.md">ADR-023</a>), authoritative since mneme-hq 0.10.0, makes part of this an explicit property of the decision itself. A decision has one or more immutable versions, and its active version is recorded explicitly rather than inferred from source order or whichever record happened to load. Supersession is stored as a relationship between decisions, and superseded decisions stay in the index with their lifecycle. The runtime loads only the active version of each active decision. Precedence between two different accepted decisions in the same scope is still resolved by the compiler as described above, including the date tiebreak.</p>
 
     <h2>Why precedence has to be at compile time, not runtime</h2>
 
@@ -454,7 +454,7 @@
     </table>
     </div>
 
-    <p>The right model is a composition of explicit rules. Mneme's current compiler applies status, then explicit supersession (authored intent), then same-scope priority, then recency, and treats any remaining tie as a compile error. Scope narrowing is expressed with path selectors rather than an implicit most-specific-wins rule. The canonical model replaces date-based tiebreaking with explicit active-version resolution.</p>
+    <p>The right model is a composition of explicit rules. Mneme's current compiler applies status, then explicit supersession (authored intent), then same-scope priority, then recency, and treats any remaining tie as a compile error. Scope narrowing is expressed with path selectors rather than an implicit most-specific-wins rule. The Decision Index records each decision&rsquo;s active version explicitly; the date tiebreak between decisions remains in mneme-hq 0.10.0.</p>
 
     <h2>What precedence semantics enable</h2>
 
@@ -462,7 +462,7 @@
 
     <ul>
       <li><strong>Deterministic enforcement</strong> — without a deterministic conflict-resolution rule, the same query can produce different verdicts. Determinism downstream depends on precedence determinism upstream.</li>
-      <li><strong>Auditability</strong> — a verdict can be traced to the decision that produced it. Today Mneme's verdicts cite the decision and the rule that fired; recording which precedence rule selected that decision belongs to the canonical model's evidence chain, bound to stable decision identity after D1.</li>
+      <li><strong>Auditability</strong> — a verdict can be traced to the decision that produced it. Today Mneme&#39;s verdicts cite the decision and the rule that fired. Recording which precedence rule selected that decision, bound to the stable decision identity the Decision Index provides since 0.10.0, is not part of 0.10.0&#39;s verdicts.</li>
       <li><strong>Safe evolution</strong> — teams can supersede, narrow, or refine decisions without fearing silent regressions. The compiler surfaces unresolvable overlaps as errors instead of guessing.</li>
       <li><strong>Cross-consumer agreement</strong> — every supported surface reaches the same verdict because they all read an already-resolved corpus. Propagation depends on precedence resolution happening upstream of distribution.</li>
     </ul>

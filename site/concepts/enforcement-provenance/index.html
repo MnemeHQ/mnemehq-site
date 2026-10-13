@@ -196,7 +196,7 @@
         "headline": "Enforcement Provenance — Mneme HQ Concepts",
         "description": "Every governance verdict is traceable to a specific decision record, the precedence rule that selected it, and the source ADR — a citable chain from outcome to authoring intent.",
         "url": "https://mnemehq.com/concepts/enforcement-provenance/",
-        "dateModified": "2026-09-26",
+        "dateModified": "2026-10-12",
         "author": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/concepts/enforcement-provenance/og-v2.png",
@@ -224,7 +224,7 @@
           {
             "@type": "Question",
             "name": "What does a full provenance chain contain?",
-            "acceptedAnswer": {"@type": "Answer", "text": "The chain runs through six links: the authoring source decision (git SHA, author, date), the compiled decision record with a stable decision_id, the applicability outcome for the target path, the precedence resolution that named both the winner and the rule that selected it, the evaluation record of the predicate that ran, and the enforcement verdict itself. Each link cites the one before it, so the chain is the audit record. The verdict links to all five upstream artifacts with no hidden step. In Mneme today, verdicts carry the decision, the rule that fired, the matched term, and the applicability outcome, and compiled records link to their source ADR; precedence citation, run metadata, and evidence binding to stable decision identity follow the canonical Decision Index (D1)."}
+            "acceptedAnswer": {"@type": "Answer", "text": "The chain runs through six links: the authoring source decision (git SHA, author, date), the compiled decision record with a stable decision_id, the applicability outcome for the target path, the precedence resolution that named both the winner and the rule that selected it, the evaluation record of the predicate that ran, and the enforcement verdict itself. Each link cites the one before it, so the chain is the audit record. The verdict links to all five upstream artifacts with no hidden step. In Mneme today, verdicts carry the decision, the rule that fired, the matched term, and the applicability outcome, and decision versions link to their source ADR. Since mneme-hq 0.10.0 the Decision Index gives decisions, versions, and rules stable identities; precedence citation, run metadata, and evidence binding to those identities are not part of 0.10.0's verdicts."}
           },
           {
             "@type": "Question",
@@ -362,7 +362,7 @@
 
     <h3>2. Compilation traceability</h3>
 
-    <p>The compiler records which source file produced which decision record. Mneme records the source path and a content hash today; source revision and author identity are part of the canonical decision model (D1). The compiled corpus is not just data; it is data with origin. Anyone reading the corpus can answer "where did this constraint come from?" by following the link back to the source ADR.</p>
+    <p>The compiler records which source file produced which decision record. Since mneme-hq 0.10.0, each decision version in the Decision Index stores this as typed source evidence: the source type, the locator, and the revision (for an ADR, its content hash). Author identity is not recorded. The compiled corpus is not just data; it is data with origin. Anyone reading the corpus can answer "where did this constraint come from?" by following the link back to the source ADR.</p>
 
     <h3>3. Applicability explanation</h3>
 
@@ -380,11 +380,11 @@
 
     <p>The enforcement output links to all five upstream artifacts. Reading the verdict tells you which evaluator, which precedence rule, which applicability outcome, which compiled record, and which authoring ADR. There is no hidden step.</p>
 
-    <h2>What Mneme's verdicts carry today, and what D1 adds</h2>
+    <h2>What Mneme&#39;s verdicts carry today, and what they don&#39;t</h2>
 
-    <p><strong>Today.</strong> Each Mneme verdict carries the decision ID and text, the rule that fired, the matched term, the rule type, the input path and selector, and, for path-scoped rules, the applicability outcome. The compiled decision record links back to its source ADR path and content hash. Verdicts do not yet cite the precedence rule that selected a decision (precedence is resolved at compile time), carry a corpus version or run timestamp, or land in a stored, indexed verdict log.</p>
+    <p><strong>Today.</strong> Each Mneme verdict carries the decision ID and text, the rule that fired, the matched term, the rule type, the input path and selector, and, for path-scoped rules, the applicability outcome. Each decision version links back to its source ADR path and content hash. Verdicts do not yet cite the precedence rule that selected a decision (precedence is resolved at compile time), carry a corpus version or run timestamp, or land in a stored, indexed verdict log.</p>
 
-    <p><strong>Canonical model (D1).</strong> <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-029-enforcement-evidence-binding-semantics.md">ADR-029</a> defines how enforcement evidence binds to decision identity, and its implementation deliberately follows D1, so that evidence binds to stable canonical decision versions rather than a temporary identifier. Provenance explains where a verdict came from; it is not, by itself, trusted enforcement evidence.</p>
+    <p><strong>Evidence binding.</strong> <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/adr/ADR-029-enforcement-evidence-binding-semantics.md">ADR-029</a> defines how enforcement evidence binds to decision identity. The stable decision versions it binds to exist in the Decision Index since mneme-hq 0.10.0; binding verdict evidence to them is not part of 0.10.0. Provenance explains where a verdict came from; it is not, by itself, trusted enforcement evidence.</p>
 
     <h2>Why provenance has to be structural, not narrative</h2>
 

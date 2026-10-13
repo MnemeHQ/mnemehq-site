@@ -224,7 +224,7 @@
         "description": "CLAUDE.md and project-instruction files tell the model your conventions. Mneme HQ enforces them with a precedence engine and hook-level blocking. How they overlap, and when an instructions file is not enough.",
         "url": "https://mnemehq.com/compare/claude-md/",
         "datePublished": "2026-06-03",
-        "dateModified": "2026-06-03",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/compare/claude-md/og-v2.png",
@@ -361,7 +361,7 @@
         <tr>
           <td>Versioning</td>
           <td>Git diff over prose</td>
-          <td>Typed status: draft / active / superseded + supersedes chain</td>
+          <td>Typed ADR status: proposed / accepted / deprecated / superseded + supersedes chain</td>
         </tr>
         <tr>
           <td>Tool coverage</td>
@@ -422,7 +422,7 @@
     <ol>
       <li>Keep your <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">CLAUDE.md</code>. It is still the best place for narrative context and onboarding.</li>
       <li>Run <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme init</code> to scaffold <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">.mneme/project_memory.json</code>.</li>
-      <li>Walk the file and pull out every rule that must hold. Convert each into a typed entry: id, scope (file glob), status, rationale.</li>
+      <li>Walk the file and pull out every rule that must hold. Convert each into a typed entry: id, scope labels, status, rationale, and path globs where a rule only applies to some files.</li>
       <li>Enable the Claude Code hook so Edit, Write, and MultiEdit operations check the corpus before applying.</li>
       <li>Add <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> to CI so the same decisions gate pull requests, including those opened by agents.</li>
     </ol>

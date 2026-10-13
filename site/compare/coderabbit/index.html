@@ -248,7 +248,7 @@
         "description": "CodeRabbit reviews code after it's written. Mneme HQ enforces architectural constraints before generation. A structured comparison for engineering teams choosing between the two.",
         "url": "https://mnemehq.com/compare/coderabbit/",
         "datePublished": "2026-05-07",
-        "dateModified": "2026-05-07",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/compare/coderabbit/og-v2.png",
@@ -288,7 +288,7 @@
         "name": "Run Mneme HQ alongside CodeRabbit",
         "description": "Use Mneme as the pre-generation enforcement layer and CodeRabbit as the post-generation review layer. The two operate on different stages and do not conflict.",
         "step": [
-          {"@type": "HowToStep", "name": "Install Mneme on the developer side", "text": "pip install mneme-hq>=0.10.0 && mneme init seeds project_memory.json. Add the mneme-hook entry to Claude Code or wire the Cursor rules export."},
+          {"@type": "HowToStep", "name": "Install Mneme on the developer side", "text": "pip install \"mneme-hq>=0.10.0\" && mneme init seeds project_memory.json. Add the mneme-hook entry to Claude Code or wire the Cursor rules export."},
           {"@type": "HowToStep", "name": "Add Mneme to CI", "text": "Add a mneme check --mode strict step to the CI pipeline so PRs are blocked on hard FAIL verdicts before they reach review."},
           {"@type": "HowToStep", "name": "Keep CodeRabbit as the review layer", "text": "Leave CodeRabbit's PR review running as-is. With Mneme catching architectural violations pre-generation, CodeRabbit's review surface shrinks to correctness, security, and stylistic concerns — the load decreases per PR."},
           {"@type": "HowToStep", "name": "Track override events", "text": "When a Mneme rule is overridden via an explicit decision record, that override is itself tracked. CodeRabbit reviewers can see the override rationale in the diff history when evaluating the PR."}
@@ -448,7 +448,7 @@
         <tr>
           <td>Decision versioning</td>
           <td>None</td>
-          <td>Status field: draft / active / superseded</td>
+          <td>ADR status field: proposed / accepted / deprecated / superseded</td>
         </tr>
         <tr>
           <td>Open source</td>

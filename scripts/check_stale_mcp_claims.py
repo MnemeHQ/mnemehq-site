@@ -32,6 +32,10 @@ FORBIDDEN = (
     # version_id also hashes the source occurrence and predecessor version;
     # only content_digest is derived from content alone.
     "content-derived version",
+    # "draft" has never been a decision status: ADRs are proposed, accepted,
+    # deprecated or superseded (mneme/adr_schema.py VALID_STATUSES).
+    "draft / active",
+    "draft/active",
 )
 
 

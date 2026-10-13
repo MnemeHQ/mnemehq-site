@@ -18,6 +18,11 @@ search rich results and AI answer engines rather than merely displayed
 This repository is separate from core since the website extraction and does not
 inherit the core repository's gate, so it needs its own. This is it.
 
+The gate also rejects an unquoted version range such as
+`pip install mneme-hq>=0.9.2`. The shell reads `>` as a redirect, so that
+command installs an unpinned `mneme-hq` and writes a file named `=0.9.2`.
+Found live on 2026-10-04 across the homepage, integration pages and JSON-LD.
+
 Usage:
     python scripts/check_install_command.py             # scan tracked files
     python scripts/check_install_command.py --self-test # verify the matcher
@@ -40,6 +45,15 @@ VIOLATION = re.compile(
     r"\b(?:pip|pipx|uv pip)\s+install\s+(?P<flags>(?:-[\w-]+\s+)*)mneme(?!-hq)(?![\w-])"
 )
 
+# Match an install command whose `mneme-hq` requirement carries a range operator
+# with no quote before it. Quoted forms put `"`, `'`, `\"` or `&quot;` between
+# `install` and `mneme-hq`, so they never match. Exact `==` pins are shell-safe.
+UNQUOTED_RANGE = re.compile(
+    r"\b(?:pip|pipx|uv pip)\s+install\s+(?:-[\w-]+\s+)*"
+    # A `<` that opens an HTML tag (`mneme-hq</code>`) is not a range.
+    r"mneme-hq(?:\[[^\]\s]*\])?(?:>|<(?=[=\d\s])|&gt;|&lt;)"
+)
+
 CORRECT = "mneme-hq"
 CORE_VERSION = json.loads(
     (Path(__file__).with_name("core_version.json")).read_text(encoding="utf-8")
@@ -57,6 +71,13 @@ ALLOWLIST: dict[str, str] = {
     # This gate must name the forbidden form to detect and explain it.
     # Without this entry the check fails on itself the moment it is committed.
     "scripts/check_install_command.py": "the gate's own pattern and messages",
+}
+
+UNQUOTED_ALLOWLIST: dict[str, str] = {
+    "scripts/check_install_command.py": "the gate's own pattern and messages",
+    # The synchronizer's self-test pins how it rewrites an unpinned command;
+    # it is a test fixture, not published copy.
+    "scripts/sync_core_version.py": "synchronizer self-test fixture",
 }
 
 
@@ -85,19 +106,31 @@ def is_violation(line: str) -> bool:
     return CORRECT not in line
 
 
-def scan(paths: list[str]) -> list[tuple[str, int, str]]:
-    findings: list[tuple[str, int, str]] = []
+def is_unquoted_range(line: str) -> bool:
+    return UNQUOTED_RANGE.search(line) is not None
+
+
+Finding = tuple[str, int, str]
+
+
+def scan(paths: list[str]) -> tuple[list[Finding], list[Finding]]:
+    findings: list[Finding] = []
+    unquoted: list[Finding] = []
     for path in paths:
-        if is_allowlisted(path):
+        check_name = not is_allowlisted(path)
+        check_quotes = not any(path.startswith(p) for p in UNQUOTED_ALLOWLIST)
+        if not (check_name or check_quotes):
             continue
         try:
             text = Path(path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
         for lineno, line in enumerate(text.splitlines(), 1):
-            if is_violation(line):
+            if check_name and is_violation(line):
                 findings.append((path, lineno, line.strip()))
-    return findings
+            if check_quotes and is_unquoted_range(line):
+                unquoted.append((path, lineno, line.strip()))
+    return findings, unquoted
 
 
 SELF_TEST_CASES: list[tuple[str, bool]] = [
@@ -121,17 +154,38 @@ SELF_TEST_CASES: list[tuple[str, bool]] = [
 ]
 
 
+UNQUOTED_TEST_CASES: list[tuple[str, bool]] = [
+    ("pip install mneme-hq>=0.9.2", True),
+    ("      - run: pip install mneme-hq>=0.9.2", True),
+    ("    - pip install mneme-hq>=0.9.2", True),
+    ("<code>pip install mneme-hq&gt;=0.9.2</code>", True),
+    ("pipx install mneme-hq[mcp]>=0.9.2", True),
+    ("pip install --upgrade mneme-hq<1.0", True),
+    ('pip install "mneme-hq>=0.9.2"', False),
+    ("pip install 'mneme-hq>=0.9.2'", False),
+    ('"text": "pip install \\"mneme-hq>=0.9.2\\" && mneme init"', False),
+    ("writeText('pip install &quot;mneme-hq>=0.9.2&quot;')", False),
+    (f'pipx install "mneme-hq&gt;={CORE_VERSION}"', False),
+    ("pipx install mneme-hq==0.9.2", False),
+    ("pip install mneme-hq", False),
+    ("<code>pip install mneme-hq</code>", False),
+    ("Released as mneme-hq>=0.9.2", False),
+]
+
+
 def self_test() -> int:
     failures = 0
-    for line, expected in SELF_TEST_CASES:
-        got = is_violation(line)
-        if got != expected:
-            failures += 1
-            print(f"FAIL  got={got} want={expected}  {line}")
+    suites = ((is_violation, SELF_TEST_CASES), (is_unquoted_range, UNQUOTED_TEST_CASES))
+    for check, cases in suites:
+        for line, expected in cases:
+            got = check(line)
+            if got != expected:
+                failures += 1
+                print(f"FAIL  {check.__name__} got={got} want={expected}  {line}")
     if failures:
         print(f"\nself-test: {failures} failure(s)")
         return 1
-    print(f"self-test: OK ({len(SELF_TEST_CASES)} cases)")
+    print(f"self-test: OK ({len(SELF_TEST_CASES) + len(UNQUOTED_TEST_CASES)} cases)")
     return 0
 
 
@@ -139,10 +193,24 @@ def main(argv: list[str]) -> int:
     if "--self-test" in argv:
         return self_test()
 
-    findings = scan(tracked_files())
-    if not findings:
-        print("ADR-005 install-command gate: OK (no `pip install mneme` found)")
+    findings, unquoted = scan(tracked_files())
+    if not findings and not unquoted:
+        print("ADR-005 install-command gate: OK (no `pip install mneme` or unquoted range found)")
         return 0
+
+    if unquoted:
+        print("UNQUOTED VERSION RANGE: the shell reads `>` and `<` as redirects.")
+        print()
+        print(f'    pip install "mneme-hq>={CORE_VERSION}"')
+        print()
+        print('Quote for the context: \\" inside a JSON string, &quot; inside an HTML attribute.')
+        print()
+        print(f"{len(unquoted)} occurrence(s):")
+        for path, lineno, line in unquoted:
+            print(f"  {path}:{lineno}: {line}")
+        print()
+        if not findings:
+            return 1
 
     print("ADR-005 VIOLATION: the PyPI distribution is `mneme-hq`, not `mneme`.")
     print()
