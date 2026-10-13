@@ -200,7 +200,7 @@
     </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
-  <div class="answer-capsule"><strong>The Decision Index is Mneme&rsquo;s authoritative record of decisions.</strong> Since mneme-hq 0.10.0 it lives in the <code>decision_index</code> section of <code>project_memory.json</code>: every decision, each immutable version of it, and the typed rules bound to those versions. Only active decisions are retrieved and enforced. It records what each version said and where it came from, not who approved it.</div>
+  <div class="answer-capsule"><strong>The Decision Index is Mneme&rsquo;s authoritative record of decisions.</strong> Since mneme-hq 0.10.0 it lives in the <code>decision_index</code> section of <code>project_memory.json</code>: every decision, each immutable version of it, and the typed rules bound to those versions. Only active decisions are enforced or used by <code>check</code> and <code>test_query</code>; non-active ones are kept, and MCP reads return them labelled. It records what each version said and, where known, where it came from, not who approved it.</div>
   <header class="hero">
     <div class="eyebrow">Reference &middot; mneme-hq 0.10.0</div>
     <h1>Decision Index: versions, lifecycle, and migration.</h1>
@@ -259,7 +259,7 @@
       <h2>Lifecycle</h2>
       <p>Each decision has one <code>lifecycle_status</code>: <code>active</code>, <code>superseded</code>, <code>deprecated</code>, or <code>inactive</code>.</p>
       <ul>
-        <li><strong>Only active decisions are retrieved and enforced.</strong> <code>mneme check</code>, <code>test_query</code>, the coding-agent hooks, <code>list_decisions</code>, conflict detection, benchmarks, and the Architecture Audit see active decisions only.</li>
+        <li><strong>Only active decisions are enforced or retrieved by the CLI.</strong> <code>mneme check</code>, <code>test_query</code>, the coding-agent hooks, <code>list_decisions</code>, conflict detection, benchmarks, and <code>mneme audit</code> see active decisions only.</li>
         <li><strong>Non-active decisions are kept, not deleted.</strong> They stay in the index with their versions, and the MCP read tools (<code>decision.get</code>, <code>decision.search</code>, <code>decision.applicable_to</code>, <code>decision.trace</code>) still return them, labelled with their <code>lifecycle_status</code>, so an agent can see what a decision replaced.</li>
         <li><strong>Migration changes what is enforced.</strong> Before migration, a row in <code>decisions[]</code> marked superseded was still loaded by <code>mneme check</code>. After migration it is not. The migration preview lists these decisions under &ldquo;Non-active leaving Layer 1&rdquo;, so you can review them first.</li>
       </ul>
@@ -275,16 +275,14 @@ Active set (1 ADRs):
 
 Non-active ADRs (1):
   [ADR-101] status=superseded (superseded_by ADR-102)</code></pre>
-      <p>Precedence between two accepted decisions is a separate question from supersession. In 0.10.0, when two accepted ADRs share a scope, the higher priority wins, then the newer <code>date</code>, and the other is dropped without a diagnostic. Give each ADR its own scope. See <a href="/concepts/precedence-semantics/">precedence semantics</a>.</p>
+      <p>Precedence between two accepted decisions is a separate question from supersession. In 0.10.0, when two accepted ADRs share a scope, the higher priority wins, then the newer <code>date</code>. The other is stored with <code>lifecycle_status: inactive</code> and not enforced. The import doesn&rsquo;t report it; <code>mneme check</code> with an ADR directory warns <code>SILENT_PRECEDENCE_ELIMINATION</code>. Give each ADR its own scope. See <a href="/concepts/precedence-semantics/">precedence semantics</a>.</p>
     </section>
 
     <section class="section" id="protections">
       <h2>Protections across edits</h2>
       <p>Each rule binding records how it was made. A rule derived from the ADR text follows the ADR: edit the rule out of the ADR, re-import, and the new version no longer carries it. A rule installed by <a href="/docs/protection-activation/"><code>mneme protect activate</code></a> is a protection binding, and every rule binding that <code>decision-index migrate</code> carries over from 0.9.x memory is marked <code>legacy_unknown</code>, because its origin can&rsquo;t be known. An ADR edit can&rsquo;t silently drop either kind, so after migrating 0.9.x memory, changing or removing any rule in an ADR needs an explicit choice:</p>
 <pre tabindex="0"><code>$ mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
-ERROR: ADR import refused while evolving 'ADR-301': decision 'ADR-301': version evolution
-would drop protection/legacy_unknown bindings ['ADR-301:FORBID_LITERAL:faca47fb&hellip;'];
-pass --preserve-protection or --release-protection for each (ADR-030 &sect;9a)</code></pre>
+ERROR: ADR import refused while evolving 'ADR-301': decision 'ADR-301': version evolution would drop protection/legacy_unknown bindings ['ADR-301:FORBID_LITERAL:faca47fbc3a3d2125eaa532ec1037c38']; pass --preserve-protection or --release-protection for each (ADR-030 &sect;9a)</code></pre>
       <p>Choose for each named rule: <code>--preserve-protection RULE_ID</code> carries it into the new version after revalidating it, and <code>--release-protection RULE_ID</code> lets it go. To retry an earlier <code>--update-existing</code> apply, <code>--expected-predecessor ADR-ID=VERSION_ID</code> pins the version that was current when it ran. Flags in full: <a href="/docs/cli/#cmd-adr-import">adr import</a>.</p>
     </section>
 
@@ -311,7 +309,7 @@ mneme decision-index migrate --memory .mneme/project_memory.json --apply</code><
 
     <section class="section" id="not-recorded">
       <h2>What it does not record</h2>
-      <p>The index is a version history of decisions, not an approval record. It stores what each version said, its date, which ADR file and content hash or which accepted proposal it came from, and which version it replaced. It does not store who approved a decision: <code>mneme decision accept</code> has no identity input, and neither the version nor the proposal records the person who ran it. If you need an auditable record of who approved each change, keep it where identities are verified, such as pull request reviews on the ADR files.</p>
+      <p>The index is a version history of decisions, not an approval record. It stores what each version said, its date, where it came from (for an ADR, the file and its content hash; for an accepted proposal, the proposal; versions added with <code>add_decision</code> record no source), and which version it replaced. It does not store who approved a decision: <code>mneme decision accept</code> has no identity input, and neither the version nor the proposal records the person who ran it. If you need an auditable record of who approved each change, keep it where identities are verified, such as pull request reviews on the ADR files.</p>
     </section>
 
     <div class="cross-links">
