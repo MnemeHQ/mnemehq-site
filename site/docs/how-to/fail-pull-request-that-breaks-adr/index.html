@@ -39,6 +39,7 @@
   "@graph": [
     {
       "@type": "BreadcrumbList",
+      "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -67,20 +68,45 @@
       ]
     },
     {
-      "@type": "TechArticle",
+      "@type": [
+        "Article",
+        "TechArticle"
+      ],
+      "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#article",
       "headline": "Fail a pull request that breaks an ADR",
       "description": "Add a GitHub Actions workflow that runs mneme check on every changed file, fails the pull request when one breaks ADR-012, and keeps the JSON verdicts.",
       "url": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#webpage"
+      },
+      "isPartOf": {
+        "@type": "CollectionPage",
+        "@id": "https://mnemehq.com/docs/how-to/#webpage",
+        "name": "How-to guides",
+        "url": "https://mnemehq.com/docs/how-to/"
+      },
+      "inLanguage": "en",
       "datePublished": "2026-10-05",
-      "dateModified": "2026-10-05",
+      "dateModified": "2026-10-13",
+      "image": {
+        "@type": "ImageObject",
+        "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#primaryimage",
+        "url": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/og-v2.png",
+        "contentUrl": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/og-v2.png",
+        "width": 1200,
+        "height": 630
+      },
       "proficiencyLevel": "Beginner",
       "author": {
         "@type": "Person",
+        "@id": "https://mnemehq.com/founder/#person",
         "name": "Theo Valmis",
         "url": "https://mnemehq.com/founder/"
       },
       "publisher": {
         "@type": "Organization",
+        "@id": "https://mnemehq.com/#organization",
         "name": "Mneme HQ",
         "url": "https://mnemehq.com/",
         "logo": {
@@ -185,9 +211,15 @@
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
 
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -287,8 +319,16 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Fail a pull request that breaks an ADR</h1>
   <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too.</p>
-  <p class="howto-meta">Tested with mneme-hq 0.10.0 &middot; GitHub Actions</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.</p>
+  <nav class="howto-toc" aria-label="On this page">
+    <span class="howto-toc-label">On this page</span>
+    <a href="#prerequisites">Prerequisites</a>
+    <a href="#configure">Configure</a>
+    <a href="#run">Run</a>
+    <a href="#expected-result">Expected result</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </nav>
 </section>
 
 <div class="wrap">
@@ -531,6 +571,7 @@ Result: FAIL</pre>
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -540,7 +581,6 @@ Result: FAIL</pre>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

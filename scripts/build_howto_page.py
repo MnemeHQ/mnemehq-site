@@ -25,6 +25,7 @@ import html
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 W = Path(__file__).resolve().parents[1]
@@ -42,9 +43,15 @@ def og_image_url(path_part: str) -> str:
 CHROME = (W / "site/docs/decision-model/index.html").read_text(encoding="utf-8")
 
 EXTRA_CSS = """
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
     .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
     .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
@@ -56,6 +63,11 @@ EXTRA_CSS = """
     .bound-list .term-block { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
 """
+
+
+def display_date(iso_date: str) -> str:
+    value = date.fromisoformat(iso_date)
+    return f"{value.strftime('%b')} {value.day}, {value.year}"
 
 
 def chrome_parts():
@@ -96,31 +108,88 @@ def fill_blocks(body: str, fixture: Path) -> str:
     return re.sub(r"<pre([^>]*)>(.*?)</pre>", repl, body, flags=re.S)
 
 
-def jsonld(meta, crumbs):
+def jsonld(meta, crumbs, image_url):
+    page_id = f"{meta['url']}#webpage"
+    breadcrumb_id = f"{meta['url']}#breadcrumb"
+    image = {
+        "@type": "ImageObject",
+        "@id": f"{meta['url']}#primaryimage",
+        "url": image_url,
+        "contentUrl": image_url,
+        "width": 1200,
+        "height": 630,
+    }
     items = [
         {"@type": "ListItem", "position": i + 1, "name": n, "item": u}
         for i, (n, u) in enumerate(crumbs)
     ]
-    graph = [{"@type": "BreadcrumbList", "itemListElement": items}]
+    graph = [{"@type": "BreadcrumbList", "@id": breadcrumb_id, "itemListElement": items}]
     if meta.get("collection"):
+        item_list_id = f"{meta['url']}#itemlist"
+        article_refs = [
+            {
+                "@type": ["Article", "TechArticle"],
+                "@id": f"{url}#article",
+                "headline": name,
+                "name": name,
+                "url": url,
+            }
+            for name, url in meta["collection"]
+        ]
         graph.append({
             "@type": "CollectionPage",
+            "@id": page_id,
             "name": meta["h1_plain"],
             "description": meta["description"],
             "url": meta["url"],
-            "hasPart": [{"@type": "TechArticle", "name": n, "url": u} for n, u in meta["collection"]],
+            "inLanguage": "en",
+            "datePublished": meta["date"],
+            "dateModified": meta.get("modified", meta["date"]),
+            "image": image,
+            "breadcrumb": {"@id": breadcrumb_id},
+            "isPartOf": {
+                "@type": "WebSite",
+                "@id": "https://mnemehq.com/#website",
+                "name": "Mneme HQ",
+                "url": "https://mnemehq.com/",
+            },
+            "mainEntity": {"@id": item_list_id},
+            "hasPart": article_refs,
+        })
+        graph.append({
+            "@type": "ItemList",
+            "@id": item_list_id,
+            "name": "Mneme how-to guides",
+            "numberOfItems": len(article_refs),
+            "itemListOrder": "https://schema.org/ItemListOrderAscending",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "item": {"@id": article["@id"]}}
+                for i, article in enumerate(article_refs)
+            ],
         })
     else:
         graph.append({
-            "@type": "TechArticle",
+            "@type": ["Article", "TechArticle"],
+            "@id": f"{meta['url']}#article",
             "headline": meta["h1_plain"],
             "description": meta["description"],
             "url": meta["url"],
+            "mainEntityOfPage": {"@type": "WebPage", "@id": page_id},
+            "isPartOf": {
+                "@type": "CollectionPage",
+                "@id": "https://mnemehq.com/docs/how-to/#webpage",
+                "name": "How-to guides",
+                "url": "https://mnemehq.com/docs/how-to/",
+            },
+            "inLanguage": "en",
             "datePublished": meta["date"],
             "dateModified": meta.get("modified", meta["date"]),
+            "image": image,
             "proficiencyLevel": "Beginner",
-            "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-            "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/",
+            "author": {"@type": "Person", "@id": "https://mnemehq.com/founder/#person",
+                       "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+            "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization",
+                          "name": "Mneme HQ", "url": "https://mnemehq.com/",
                           "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         })
     body = json.dumps({"@context": "https://schema.org", "@graph": graph}, indent=2, ensure_ascii=False)
@@ -173,7 +242,7 @@ def build(slug: str) -> Path:
         crumbs.append(("How-to guides", "https://mnemehq.com/docs/how-to/"))
     else:
         crumbs += [("How-to guides", "https://mnemehq.com/docs/how-to/"), (meta["crumb"], meta["url"])]
-    head += jsonld(meta, crumbs) + style
+    head += jsonld(meta, crumbs, og_img) + style
     crumb_html = (
         '<nav aria-label="Breadcrumb" class="breadcrumb-nav">\n  <ol class="breadcrumb">\n'
         '    <li><a href="/">Home</a></li>\n    <li><a href="/docs/">Docs</a></li>\n'
@@ -191,12 +260,26 @@ def build(slug: str) -> Path:
     if not is_hub:
         # Minutes appear only once a timed reader run has measured them.
         version = json.loads((W / "scripts" / "core_version.json").read_text())["minimum_version"]
-        strip = [f"Tested with mneme-hq {version}", meta["surface"]]
+        modified = meta.get("modified", meta["date"])
+        strip = [
+            f'Tested with mneme-hq {version}',
+            f'Updated <time datetime="{modified}">{display_date(modified)}</time>',
+            f'By <a href="/founder/">Theo Valmis</a>',
+            meta["surface"],
+        ]
         if meta.get("minutes"):
             strip.insert(0, f"~{meta['minutes']} min")
         hero += (
-            f'  <p class="howto-meta">{" &middot; ".join(strip)}</p>\n'
+            f'  <p class="howto-meta byline">{" &middot; ".join(strip)}</p>\n'
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
+            '  <nav class="howto-toc" aria-label="On this page">\n'
+            '    <span class="howto-toc-label">On this page</span>\n'
+            '    <a href="#prerequisites">Prerequisites</a>\n'
+            '    <a href="#configure">Configure</a>\n'
+            '    <a href="#run">Run</a>\n'
+            '    <a href="#expected-result">Expected result</a>\n'
+            '    <a href="#troubleshooting">Troubleshooting</a>\n'
+            '  </nav>\n'
         )
     hero += "</section>\n\n"
     page = head + body_start + crumb_html + hero + '<div class="wrap">\n\n' + body + "\n\n</div>\n\n" + tail

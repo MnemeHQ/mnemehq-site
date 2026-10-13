@@ -6,7 +6,9 @@
   "eyebrow": "Docs &middot; How-to guides",
   "h1": "How-to guides",
   "h1_plain": "How-to guides",
-  "lede": "Each guide solves one engineering job. Every output shown is recorded from mneme-hq 0.10.0, and CI replays those steps on every change to the guides. Steps that need your own setup, such as starting Claude Code, are marked and not replayed.",
+  "date": "2026-10-05",
+  "modified": "2026-10-13",
+  "lede": "Follow four tested guides from a written ADR to agent and pull-request enforcement. Every recorded command and output is replayed in CI; steps that need your own setup are marked.",
   "collection": [
     ["Turn an ADR into an enforceable decision", "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/"],
     ["Stop an AI coding agent from crossing an architectural boundary", "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/"],
@@ -16,49 +18,45 @@
 }
 -->
   <section class="prose-section">
-    <h2>Make decisions enforceable</h2>
+    <h2>Recommended path</h2>
+    <p>Start with an ADR, then add enforcement where your agents work and where changes merge. Each guide builds on the same ADR-012 example, so you can follow the path in order without resetting your project.</p>
     <div class="cross-links">
       <a class="cross-card" href="/docs/how-to/adr-to-enforceable-decision/">
-        <span class="cl-label">How-to &middot; CLI</span>
+        <span class="cl-label">Step 1 &middot; CLI</span>
         <span class="cl-title">Turn an ADR into an enforceable decision</span>
         <span class="cl-sub">Add a Constraints section, import the ADR, and get a FAIL when a handler imports the database client.</span>
       </a>
+      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <span class="cl-label">Step 2 &middot; Claude Code</span>
+        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
+        <span class="cl-sub">Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/give-agents-applicable-decisions/">
+        <span class="cl-label">Step 3 &middot; Claude Code, MCP</span>
+        <span class="cl-title">Give coding agents the decisions that apply to a task</span>
+        <span class="cl-sub">Look up the ADRs for the file an agent is editing, from the CLI or the MCP server.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <span class="cl-label">Step 4 &middot; GitHub Actions</span>
+        <span class="cl-title">Fail a pull request that breaks an ADR</span>
+        <span class="cl-sub">Run mneme check on every changed file and keep the JSON verdicts.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="prose-section">
+    <h2>Related guides</h2>
+    <p>Use these when you already have decisions in Mneme and need to activate a proposed guardrail or review a decision proposed by an agent.</p>
+    <div class="cross-links">
       <a class="cross-card" href="/docs/protection-activation/">
         <span class="cl-label">Guide &middot; CLI</span>
         <span class="cl-title">Activate protection for a Mneme-ready decision</span>
         <span class="cl-sub">List, validate and activate the guardrail the audit proposes for an existing decision.</span>
       </a>
-    </div>
-  </section>
-
-  <section class="prose-section">
-    <h2>Reach your coding agents</h2>
-    <div class="cross-links">
-      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
-        <span class="cl-label">How-to &middot; Claude Code</span>
-        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
-        <span class="cl-sub">Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</span>
-      </a>
-      <a class="cross-card" href="/docs/how-to/give-agents-applicable-decisions/">
-        <span class="cl-label">How-to &middot; Claude Code, MCP</span>
-        <span class="cl-title">Give coding agents the decisions that apply to a task</span>
-        <span class="cl-sub">Look up the ADRs for the file an agent is editing, from the CLI or the MCP server.</span>
-      </a>
       <a class="cross-card" href="/docs/decision-proposals/">
         <span class="cl-label">Guide &middot; CLI, MCP</span>
         <span class="cl-title">Review decisions an agent proposes</span>
         <span class="cl-sub">Agents propose over MCP; people accept or reject with the CLI.</span>
-      </a>
-    </div>
-  </section>
-
-  <section class="prose-section">
-    <h2>Gate changes at merge</h2>
-    <div class="cross-links">
-      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
-        <span class="cl-label">How-to &middot; GitHub Actions</span>
-        <span class="cl-title">Fail a pull request that breaks an ADR</span>
-        <span class="cl-sub">Run mneme check on every changed file and keep the JSON verdicts.</span>
       </a>
     </div>
   </section>
