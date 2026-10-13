@@ -226,7 +226,7 @@
         "description": "Mneme HQ's decision corpus is the constraint layer for JetBrains AI Assistant across IntelliJ, PyCharm, and WebStorm — enforced via mneme check in CI.",
         "url": "https://mnemehq.com/integrations/jetbrains/",
         "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/jetbrains/og-v2.png",
@@ -247,7 +247,7 @@
         "description": "Install Mneme HQ, attach the decision corpus as shared context in JetBrains AI Assistant, and run mneme check in CI to enforce constraints at the merge boundary.",
         "step": [
           {"@type": "HowToStep", "name": "Install", "text": "pipx install \"mneme-hq>=0.10.0\", then run mneme init to create .mneme/project_memory.json with an empty valid decision corpus."},
-          {"@type": "HowToStep", "name": "Populate the corpus", "text": "Record real architectural decisions in project_memory.json — each with scope (file globs), status, and rationale. Commit the file to the repo so every IDE on every machine reads the same corpus."},
+          {"@type": "HowToStep", "name": "Populate the corpus", "text": "Record real architectural decisions in project_memory.json — each with scope labels, status, rationale, and path globs where a rule only applies to some files. Commit the file to the repo so every IDE on every machine reads the same corpus."},
           {"@type": "HowToStep", "name": "Attach to JetBrains AI Assistant", "text": "In JetBrains AI Assistant settings, add .mneme/project_memory.json to the AI context (project context or pinned files). The model now treats recorded decisions as authoritative when generating code."},
           {"@type": "HowToStep", "name": "Enforce in CI", "text": "Add mneme check --mode strict to your GitHub Actions or other CI workflow. Any PR diff that violates a recorded decision fails the build — regardless of which IDE or model produced it."}
         ]

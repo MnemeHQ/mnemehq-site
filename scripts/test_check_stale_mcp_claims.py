@@ -37,6 +37,12 @@ def test_flags_a_claim_wrapped_across_lines(tmp_path):
     assert gate.find_hits(tmp_path) == ["site/docs/mcp/index.html:1: Canonical reads are optional"]
 
 
+def test_flags_the_nonexistent_draft_status(tmp_path):
+    page = "<td>draft / active / superseded</td>\n<p>status (draft/active/superseded)</p>\n"
+    _site(tmp_path, "compare/x/index.html", page)
+    assert len(gate.find_hits(tmp_path)) == 2
+
+
 def test_clean_tree_has_no_hits(tmp_path):
     _site(tmp_path, "docs/mcp/index.html", "<p>The server reads the Decision Index.</p>\n")
     assert gate.find_hits(tmp_path) == []
