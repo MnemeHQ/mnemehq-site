@@ -96,31 +96,88 @@ def fill_blocks(body: str, fixture: Path) -> str:
     return re.sub(r"<pre([^>]*)>(.*?)</pre>", repl, body, flags=re.S)
 
 
-def jsonld(meta, crumbs):
+def jsonld(meta, crumbs, image_url):
+    page_id = f"{meta['url']}#webpage"
+    breadcrumb_id = f"{meta['url']}#breadcrumb"
+    image = {
+        "@type": "ImageObject",
+        "@id": f"{meta['url']}#primaryimage",
+        "url": image_url,
+        "contentUrl": image_url,
+        "width": 1200,
+        "height": 630,
+    }
     items = [
         {"@type": "ListItem", "position": i + 1, "name": n, "item": u}
         for i, (n, u) in enumerate(crumbs)
     ]
-    graph = [{"@type": "BreadcrumbList", "itemListElement": items}]
+    graph = [{"@type": "BreadcrumbList", "@id": breadcrumb_id, "itemListElement": items}]
     if meta.get("collection"):
+        item_list_id = f"{meta['url']}#itemlist"
+        article_refs = [
+            {
+                "@type": ["Article", "TechArticle"],
+                "@id": f"{url}#article",
+                "headline": name,
+                "name": name,
+                "url": url,
+            }
+            for name, url in meta["collection"]
+        ]
         graph.append({
             "@type": "CollectionPage",
+            "@id": page_id,
             "name": meta["h1_plain"],
             "description": meta["description"],
             "url": meta["url"],
-            "hasPart": [{"@type": "TechArticle", "name": n, "url": u} for n, u in meta["collection"]],
+            "inLanguage": "en",
+            "datePublished": meta["date"],
+            "dateModified": meta.get("modified", meta["date"]),
+            "image": image,
+            "breadcrumb": {"@id": breadcrumb_id},
+            "isPartOf": {
+                "@type": "WebSite",
+                "@id": "https://mnemehq.com/#website",
+                "name": "Mneme HQ",
+                "url": "https://mnemehq.com/",
+            },
+            "mainEntity": {"@id": item_list_id},
+            "hasPart": article_refs,
+        })
+        graph.append({
+            "@type": "ItemList",
+            "@id": item_list_id,
+            "name": "Mneme how-to guides",
+            "numberOfItems": len(article_refs),
+            "itemListOrder": "https://schema.org/ItemListOrderAscending",
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "item": {"@id": article["@id"]}}
+                for i, article in enumerate(article_refs)
+            ],
         })
     else:
         graph.append({
-            "@type": "TechArticle",
+            "@type": ["Article", "TechArticle"],
+            "@id": f"{meta['url']}#article",
             "headline": meta["h1_plain"],
             "description": meta["description"],
             "url": meta["url"],
+            "mainEntityOfPage": {"@type": "WebPage", "@id": page_id},
+            "isPartOf": {
+                "@type": "CollectionPage",
+                "@id": "https://mnemehq.com/docs/how-to/#webpage",
+                "name": "How-to guides",
+                "url": "https://mnemehq.com/docs/how-to/",
+            },
+            "inLanguage": "en",
             "datePublished": meta["date"],
             "dateModified": meta.get("modified", meta["date"]),
+            "image": image,
             "proficiencyLevel": "Beginner",
-            "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
-            "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/",
+            "author": {"@type": "Person", "@id": "https://mnemehq.com/founder/#person",
+                       "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
+            "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization",
+                          "name": "Mneme HQ", "url": "https://mnemehq.com/",
                           "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         })
     body = json.dumps({"@context": "https://schema.org", "@graph": graph}, indent=2, ensure_ascii=False)
@@ -173,7 +230,7 @@ def build(slug: str) -> Path:
         crumbs.append(("How-to guides", "https://mnemehq.com/docs/how-to/"))
     else:
         crumbs += [("How-to guides", "https://mnemehq.com/docs/how-to/"), (meta["crumb"], meta["url"])]
-    head += jsonld(meta, crumbs) + style
+    head += jsonld(meta, crumbs, og_img) + style
     crumb_html = (
         '<nav aria-label="Breadcrumb" class="breadcrumb-nav">\n  <ol class="breadcrumb">\n'
         '    <li><a href="/">Home</a></li>\n    <li><a href="/docs/">Docs</a></li>\n'

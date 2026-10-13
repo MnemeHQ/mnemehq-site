@@ -449,20 +449,28 @@ def rule_breadcrumb_html(html: str, ctx: PageContext) -> RuleResult:
     if len(parts) <= 1:
         return PASS, ""
 
-    # Build the expected parent hrefs list based on depth:
-    #   section hub  (e.g. insights/index.html)         → ["/"]
-    #   sub-page     (e.g. insights/foo/index.html)      → ["/", "/section/"]
-    if len(parts) == 2:
-        expected = ["/"]
-    else:
-        section = parts[0]
-        expected = ["/", f"/{section}/"]
+    # Build every expected parent from the URL hierarchy:
+    #   section hub  (e.g. insights/index.html)          → ["/"]
+    #   sub-page     (e.g. insights/foo/index.html)       → ["/", "/insights/"]
+    #   nested page  (e.g. docs/how-to/foo/index.html)    → ["/", "/docs/", "/docs/how-to/"]
+    directories = parts[:-1]
+    expected = ["/"] + [f"/{'/'.join(directories[:i])}/" for i in range(1, len(directories))]
 
     m = re.search(r'<ol\s+class=["\']breadcrumb["\']>(.*?)</ol>', html, flags=re.S | re.I)
     if not m:
         return PASS, ""  # no ol.breadcrumb present; skip
 
-    block = re.sub(r'<li[^>]*\baria-current\b[^>]*>.*?</li>', '', m.group(1), flags=re.S | re.I)
+    block = re.sub(
+        r'<!--\s*mneme:page-switcher:start\s*-->.*?<!--\s*mneme:page-switcher:end\s*-->',
+        '', m.group(1), flags=re.S | re.I,
+    )
+    block = re.sub(r'<li[^>]*\baria-current\b[^>]*>.*?</li>', '', block, flags=re.S | re.I)
+    # The page switcher is interactive navigation nested in the breadcrumb list;
+    # its panel links are peers, not ancestors of the current page.
+    block = re.sub(
+        r'<li[^>]*\bclass=["\'][^"\']*\bpage-switcher-item\b[^"\']*["\'][^>]*>.*?</li>',
+        '', block, flags=re.S | re.I,
+    )
     actual = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']', block, flags=re.I)
 
     if actual != expected:
@@ -527,9 +535,15 @@ def rule_faq_consistency(html: str, ctx: PageContext) -> RuleResult:
     # Treat any <details> + <summary> pair as a visible FAQ surface,
     # to match both the .faq-item pattern and the bare <details> pattern
     # used on older insights pages.
+    # Page switchers also use details/summary, but are navigation rather than
+    # question-and-answer content. Remove them before looking for a visible FAQ.
+    faq_body = re.sub(
+        r'<details[^>]*\bclass=["\'][^"\']*\bpage-switcher\b[^"\']*["\'][^>]*>.*?</details>',
+        '', ctx.main_body, flags=re.S | re.I,
+    )
     has_visible_faq = (
-        bool(re.search(r'<details\b', ctx.main_body, flags=re.I))
-        and bool(re.search(r'<summary\b', ctx.main_body, flags=re.I))
+        bool(re.search(r'<details\b', faq_body, flags=re.I))
+        and bool(re.search(r'<summary\b', faq_body, flags=re.I))
     )
     has_faq_jsonld = "FAQPage" in ctx.types
     if has_visible_faq and not has_faq_jsonld:
