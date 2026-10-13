@@ -443,6 +443,14 @@ is), authorization (what it may reach), and observability (what it did). Rules o
   decision layer" naming Mneme's own component is fine everywhere; "a/the decision layer for the agent
   economy" naming the broader industry primitive is thesis-only.
 
+**[ED] Terminology amendment, 2026-10-12: "Decision Index".** Admitted as a product term for the
+persisted, versioned record of decisions in the `decision_index` section of `project_memory.json`,
+authoritative since mneme-hq 0.10.0 and documented at `/docs/decision-index/`. Rules of use:
+capitalise it; use it for the shipped store, not as a synonym for "decision corpus" (the set of
+decisions a team maintains) or for the industry-wide "decision layer"; do not call it a "memory
+store". A version is "immutable"; say what the index records (version history, lifecycle, source)
+and never imply it records approver identity, which it does not.
+
 ---
 
 ## Validators
