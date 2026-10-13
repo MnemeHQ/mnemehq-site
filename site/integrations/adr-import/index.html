@@ -395,7 +395,7 @@ These must never be conflated in code-bearing surfaces.
     exclude_paths:
       - "docs/history/**"</code></pre>
 
-    <p><code>include_paths</code>/<code>exclude_paths</code> determine applicability only &mdash; they never loosen the exact-match semantics. Every check reports how each scoped rule resolved against the real target path, so you can see which rules applied, which were skipped, and why. Rules without selectors stay corpus-wide.</p>
+    <p><code>include_paths</code>/<code>exclude_paths</code> determine applicability only &mdash; they never loosen the exact-match semantics. Every check reports how each scoped rule resolved against the real target path, so you can see which rules applied, which were excluded, and why. Rules without selectors stay corpus-wide.</p>
 
     <div class="callout">
       <p><strong>YAML frontmatter is required.</strong> Nygard-style <code>**Status:** Accepted</code> headers are not parsed. Adding a 6-line frontmatter block per file is a one-time, scriptable conversion.</p>
@@ -487,16 +487,17 @@ Active set (4 ADRs):
 
 Result: FAIL</code></pre>
 
-    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH PASS / SKIP / UNKNOWN</code> lines), so scoped policies stay explainable:</p>
+    <p>A path-scoped rule additionally reports its applicability outcome against the target path (<code>PATH APPLIED</code> or <code>PATH EXCLUDED</code> lines, or <code>ERROR PATH_APPLICABILITY_UNKNOWN</code> when the path cannot be resolved), so scoped policies stay explainable:</p>
 
-    <pre tabindex="0"><code>PATH SKIP   [ADR-009] docs/history/** excluded by selector
+    <pre tabindex="0"><code>PATH  EXCLUDED [ADR-009] docs/history/2025-migration.md via docs/history/** -- an exclude selector matched
+
 Result: PASS</code></pre>
 
     <p>The same input without the forbidden literal passes cleanly with <code>Result: PASS</code>.</p>
 
     <h2>Conflict handling</h2>
 
-    <p><strong>Same-id collision.</strong> If an incoming ADR id already exists in the target memory file's <code>decisions[]</code> array, the import refuses. Pass <code>--update-existing</code> to overwrite the existing entry in place. It updates decisions for ADRs that are still active; it doesn&rsquo;t remove a decision whose ADR was later deprecated, superseded or deleted. Remove that decision from the memory file yourself.</p>
+    <p><strong>Same-id collision.</strong> If an incoming ADR id already exists in the target memory file's <code>decisions[]</code> array, the import refuses. Pass <code>--update-existing</code> to overwrite the existing entry in place. It updates decisions for ADRs that are still active. Deprecating, superseding or deleting an ADR file leaves its decision active and enforced. To retire one, add a new ADR that lists it under <code>supersedes</code> and re-import: the old decision is marked superseded and stops producing verdicts. Don&rsquo;t remove it from the memory file by hand; from 0.10.0, a memory file whose decisions no longer match its decision index fails to load.</p>
 
     <p><strong>Active-active contradiction.</strong> If two accepted ADRs share the same scope, priority, and date, the compiler cannot pick a winner deterministically. The import surfaces this as a diagnostic and refuses <code>--apply</code> unless <code>--approve-conflicts</code> is also passed. The fix is to edit the contradicting ADRs: mark one superseded, give one a higher priority, or give one a newer date.</p>
 

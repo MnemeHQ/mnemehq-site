@@ -337,7 +337,7 @@ and tenancy handling that lives in app/repositories.
     include_paths:
       - "app/handlers/**"</pre>
     <ul class="plain">
-      <li><code>status: accepted</code> puts the ADR in the active set. The import leaves <code>proposed</code>, <code>deprecated</code> and <code>superseded</code> ADRs out. A decision that is already in the memory file stays there until you remove it.</li>
+      <li><code>status: accepted</code> puts the ADR in the active set. The import leaves <code>proposed</code>, <code>deprecated</code> and <code>superseded</code> ADRs out. A decision that is already in the memory file stays active even after its ADR is deprecated, superseded or deleted. To retire it, add a new ADR that lists it under <code>supersedes</code> and re-import; don&rsquo;t edit the memory file by hand, because from 0.10.0 a memory file whose decisions no longer match its decision index fails to load.</li>
       <li><code>scope: handlers</code> names the area the ADR governs, and lookup matches on it (<a href="/docs/how-to/give-agents-applicable-decisions/">Guide 3</a>). Give every accepted ADR its own scope. When two share one, the import keeps only one of them; see Troubleshooting.</li>
       <li><code>FORBID_LITERAL</code> is the rule. Its <code>value</code> is exact, case-sensitive text.</li>
       <li><code>include_paths</code> limits the rule to files under <code>app/handlers/</code>. Without it, the rule applies to every file.</li>
