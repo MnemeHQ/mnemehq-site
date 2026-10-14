@@ -43,7 +43,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
     | Label | Public type in the archive filter | Use when the article's primary object is |
     |---|---|---|
-    | `Analysis` | Analysis | a development, launch, market shift or argument the article analyses |
+    | `Analysis` | Analysis | a named external development: a launch, product, company move, incident or metric, or a named law or person the article applies |
     | `Research` | Research & reports | an academic paper, empirical study, benchmark or experiment |
     | `Report Response` | Research & reports | a named industry report, survey, whitepaper or decision brief |
     | `Guide` | Guides | a task the reader wants to do |
@@ -53,6 +53,8 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
     | `Integration` | Product & comparison | using Mneme with a specific tool |
 
     Classify by the article's **primary object**, not by what it cites: an article that references a paper or report is not a Research or Report Response article unless that paper or report is what the article is about.
+
+    **Analysis or Perspective (rule of 2026-10-14):** Analysis needs a named external anchor in the title or lede. Without one, Mneme's own argument is Perspective, however analytical its tone. The "X is not governance" series is Perspective. An article that argues a distinction ("why X fails", "X is not Y") is Perspective, not Concept; Concept is for an article whose job is to define a term. The 2026-10-14 blind audit that set this rule is recorded in `docs/site/insight-type-audit.md`.
 
     Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). `scripts/new_article.py --type <label>` writes both page fields.
 
