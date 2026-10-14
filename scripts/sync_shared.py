@@ -9,6 +9,14 @@ from pathlib import Path
 
 SITE = Path(__file__).parent.parent / "site"
 SNIPPETS = SITE / "_snippets"
+# Page templates that scaffold new site pages carry the same global chrome.
+# Keeping them in sync here means a freshly generated page (scripts/new_article.py)
+# already matches _snippets/ instead of failing check_nav_footer.py.
+TEMPLATE_PAGES = [SITE.parent / "templates" / "article.html"]
+
+
+def rel(html):
+    return html.relative_to(SITE) if SITE in html.parents else html.relative_to(SITE.parent)
 
 def load(name):
     return (SNIPPETS / name).read_text(encoding="utf-8").rstrip("\n")
@@ -63,9 +71,9 @@ updated = []
 skipped_og = []
 skipped_snippet = []
 
-for html in sorted(SITE.rglob("*.html")):
+for html in sorted(SITE.rglob("*.html")) + TEMPLATE_PAGES:
     # Vite owns this shell; its nav is rendered by React at runtime.
-    if html.relative_to(SITE).as_posix() == "audit/workspace/index.html":
+    if rel(html).as_posix() == "audit/workspace/index.html":
         continue
     # Skip OG templates
     if html.name.startswith("og-"):
@@ -73,7 +81,7 @@ for html in sorted(SITE.rglob("*.html")):
         continue
     # Skip snippet files themselves
     if SNIPPETS in html.parents:
-        skipped_snippet.append(str(html.relative_to(SITE)))
+        skipped_snippet.append(str(rel(html)))
         continue
 
     raw = html.read_bytes()
@@ -97,7 +105,7 @@ for html in sorted(SITE.rglob("*.html")):
             css_block = adapt("\n    " + HAMBURGER_CSS.replace("\n", "\n    "))
             text = text.replace("</style>", css_block + "\n  </style>", 1)
         else:
-            print(f"  WARN: no </style> in {html.relative_to(SITE)} â€” hamburger CSS not injected")
+            print(f"  WARN: no </style> in {rel(html)} â€” hamburger CSS not injected")
 
     # 2b. Inject canonical footer link styling where a page-local rule is absent.
     # Keeping this in the shared sync path prevents default browser blue/purple
@@ -107,7 +115,7 @@ for html in sorted(SITE.rglob("*.html")):
             css_block = adapt("\n    " + FOOTER_CSS.replace("\n", "\n    "))
             text = text.replace("</style>", css_block + "\n  </style>", 1)
         else:
-            print(f"  WARN: no </style> in {html.relative_to(SITE)} â€” footer CSS not injected")
+            print(f"  WARN: no </style> in {rel(html)} â€” footer CSS not injected")
 
     # 2c. Skip link: markup before the first nav, target id on main, CSS.
     # Sentinel is the raw attribute value â€” '.skip-link' with a dot only
@@ -120,7 +128,7 @@ for html in sorted(SITE.rglob("*.html")):
         if re.search(r"<main(\s|>)", text):
             text = re.sub(r'<main(?![^>]*\bid=)', '<main id="main-content" tabindex="-1"', text, count=1)
         else:
-            print(f"  WARN: no <main> in {html.relative_to(SITE)} â€” skip link target missing")
+            print(f"  WARN: no <main> in {rel(html)} â€” skip link target missing")
 
     # 2d. Skip-link CSS.
     if not has_base_css and 'class="skip-link"' in text and ".skip-link {" not in text and "</style>" in text:
@@ -147,7 +155,7 @@ for html in sorted(SITE.rglob("*.html")):
         "/assets/css/base.css" not in text
         and "</style>" in text
         and 'class="home-v2"' not in text
-        and html.relative_to(SITE).as_posix() != "index.html"
+        and rel(html).as_posix() != "index.html"
     ):
         anchor_link = '<link rel="stylesheet" href="/assets/css/fonts.css">'
         link_tag = '<link rel="stylesheet" href="/assets/css/base.css?v=20260921">'
@@ -163,14 +171,14 @@ for html in sorted(SITE.rglob("*.html")):
         if "</body>" in text:
             text = text.replace("</body>", adapt(HAMBURGER_JS_BLOCK) + adapt("\n") + "</body>", 1)
         else:
-            print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” hamburger JS not injected")
+            print(f"  WARN: no </body> in {rel(html)} â€” hamburger JS not injected")
 
     # 4. Inject active-link JS if missing
     if "nav-active" not in text:
         if "</body>" in text:
             text = text.replace("</body>", adapt(ACTIVE_JS_BLOCK) + adapt("\n") + "</body>", 1)
         else:
-            print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” active-link JS not injected")
+            print(f"  WARN: no </body> in {rel(html)} â€” active-link JS not injected")
 
     # 4b. Inject/refresh CTA analytics handler (idempotent via marker)
     CTA_JS_BLOCK = "<script><!-- cta-analytics -->\n" + CTA_ANALYTICS_JS + "\n</script>"
@@ -182,7 +190,7 @@ for html in sorted(SITE.rglob("*.html")):
     elif "</body>" in text:
         text = text.replace("</body>", adapt(CTA_JS_BLOCK) + adapt("\n") + "</body>", 1)
     else:
-        print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” cta analytics not injected")
+        print(f"  WARN: no </body> in {rel(html)} â€” cta analytics not injected")
 
     # 5. Replace footer (plain <footer> only, not <footer class=...>)
     text = FOOTER_PAT.sub(adapt(FOOTER_HTML), text)
@@ -197,7 +205,7 @@ for html in sorted(SITE.rglob("*.html")):
     elif MK_HEAD_BLOCK and "</head>" in text:
         text = text.replace("</head>", adapt(MK_HEAD_BLOCK) + adapt("\n") + "</head>", 1)
     elif MK_HEAD_BLOCK:
-        print(f"  WARN: no head anchor in {html.relative_to(SITE)} â€” consent head not injected")
+        print(f"  WARN: no head anchor in {rel(html)} â€” consent head not injected")
 
     # 7. Consent banner â€” before </body>, idempotent via markers.
     if MK_BODY_PAT.search(text):
@@ -205,11 +213,11 @@ for html in sorted(SITE.rglob("*.html")):
     elif MK_BODY_BLOCK and "</body>" in text:
         text = text.replace("</body>", adapt(MK_BODY_BLOCK) + adapt("\n") + "</body>", 1)
     elif MK_BODY_BLOCK:
-        print(f"  WARN: no </body> in {html.relative_to(SITE)} â€” consent banner not injected")
+        print(f"  WARN: no </body> in {rel(html)} â€” consent banner not injected")
 
     if text != original:
         html.write_bytes(text.encode("utf-8"))
-        updated.append(f"  {html.relative_to(SITE)}")
+        updated.append(f"  {rel(html)}")
 
 print(f"Updated {len(updated)} files:")
 for line in updated:

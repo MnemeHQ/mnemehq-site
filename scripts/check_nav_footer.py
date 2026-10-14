@@ -51,6 +51,11 @@ FOOTER_SNIPPET = SITE / "_snippets" / "footer.html"
 # --- Intentional exceptions (explicit, not silent skips) -------------------
 # og-*.html are OpenGraph image templates: standalone render surfaces with no
 # global nav/footer. _snippets/ are the canonical sources themselves.
+# Page templates outside site/ that scaffold new pages. They must carry the
+# canonical chrome too, or every page generated from them fails this check
+# (templates/article.html is used by scripts/new_article.py).
+TEMPLATE_PAGES = (REPO_ROOT / "templates" / "article.html",)
+
 EXCLUDED_FILENAME_PREFIXES = ("og-",)
 EXCLUDED_DIR_PARTS = ("_snippets",)
 # Build-output SPA shells: a bundler-generated <div id="root"> document whose
@@ -114,6 +119,8 @@ def href_resolves(href: str) -> bool:
 
 
 def is_excluded(path: Path) -> bool:
+    if SITE not in path.parents:
+        return False
     if any(part in EXCLUDED_DIR_PARTS for part in path.parts):
         return True
     if path.name.startswith(EXCLUDED_FILENAME_PREFIXES):
@@ -206,7 +213,7 @@ def main(argv: list[str]) -> int:
     nav_norm = normalize(canon_nav) if canon_nav else None
     footer_norm = normalize(canon_footer) if canon_footer else None
 
-    for path in sorted(SITE.rglob("*.html")):
+    for path in sorted(SITE.rglob("*.html")) + list(TEMPLATE_PAGES):
         if is_excluded(path):
             excluded += 1
             continue
@@ -251,7 +258,8 @@ def main(argv: list[str]) -> int:
         for e in errors:
             print(f"  {e}")
         print()
-        print("  Fix: re-sync the offending page(s) to site/_snippets/nav.html and")
+        print("  Fix: re-sync the offending page(s) with python scripts/sync_shared.py")
+        print("       (it also covers templates/article.html) to site/_snippets/nav.html and")
         print("       site/_snippets/footer.html, or, for a page that intentionally has")
         print("       no global chrome, add it to the exclusion list in this script.")
         return 1
