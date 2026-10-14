@@ -1,6 +1,6 @@
 # Scope brief: Post-Scope pre action governance
 
-Status: **built 2026-10-14** as `/insights/pre-action-enforcement-agent-governance/` (batch 1 PR; not yet merged or deployed). No `***` mark until deployed.
+Status: **published 2026-10-14 in [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216), deployed at `93d47012`** as `/insights/pre-action-enforcement-agent-governance/`.
 
 | Field | Value |
 |---|---|

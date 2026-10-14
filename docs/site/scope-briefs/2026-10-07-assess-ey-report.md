@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess EY Report
 
-Status: **built 2026-10-14** as `/insights/ey-beyond-the-code-ai-software-development/` (batch 1 PR; not yet merged or deployed)
+Status: **published 2026-10-14 in [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216), deployed at `93d47012`** as `/insights/ey-beyond-the-code-ai-software-development/`
 
 | Field | Value |
 |---|---|
