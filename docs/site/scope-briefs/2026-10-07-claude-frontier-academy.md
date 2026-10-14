@@ -1,6 +1,6 @@
 # Scope brief: Post-claude frontier academy Assess program relevance
 
-Status: **gathered, not built**; needs a build-card decision first (hub)
+Status: **gathered, not built**; build card decided 2026-10-14, ready to build
 
 | Field | Value |
 |---|---|
@@ -17,7 +17,7 @@ Status: **gathered, not built**; needs a build-card decision first (hub)
 | Title | Claude Frontier Academy: What 10,000 Frontier Deployed Engineers Mean for Enterprise AI |
 | Slug | `claude-frontier-academy-frontier-deployed-engineers` (the chat wrote `/articles/...`; insights live under `/insights/`) |
 | Report-anchored (ADR-015) | yes: entity = "Claude Frontier Academy" |
-| Topic hub | agent-infrastructure (proposed; the FDE pages sit on no hub) |
+| Topic hub | agent-infrastructure (decided 2026-10-14). The FDE cluster pages, which sit on no hub today, move onto it too (separate small site edit) |
 | Eyebrow / section | Analysis / Engineering |
 | OG headline | Claude Frontier Academy and the Decision Layer (7 words) |
 | Editorial gate | pass: named-vendor news entry point; "Claude Frontier Academy", "Frontier Deployed Engineers" and "Anthropic" in the first 150 words |
@@ -93,9 +93,11 @@ Publish quickly; news value decays. The chat orders it first, with the FDE pilla
 
 ## Non-insight site edits requested
 
-None. (Go-to-market follow-ups from the chat are tracked outside this public repository.)
+- Add the FDE cluster pages (`forward-deployed-engineers-enterprise-ai`, `forward-deployed-engineering-ai-sdlc`, `forward-deployed-engineering-architecture`, `fde-coding-agents`, `forward-deployed-architects-need-a-decision-layer`) to the agent-infrastructure topic hub (decision 2026-10-14).
+
+(Go-to-market follow-ups from the chat are tracked outside this public repository.)
 
 ## Open questions
 
-- Hub for the news piece and for the FDE cluster generally (none of the FDE pages sits on a hub).
+- Resolved 2026-10-14: the news piece and the FDE cluster go on the agent-infrastructure hub.
 - Which "After the AI engineer leaves" angle survives against `forward-deployed-architects-need-a-decision-layer`?

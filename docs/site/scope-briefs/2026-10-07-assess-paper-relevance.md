@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess paper relevance
 
-Status: **gathered, not built**; needs build-card decisions first (anchor the title on the AECP paper or not; hub)
+Status: **gathered, not built**; build card decided 2026-10-14, ready to build
 
 | Field | Value |
 |---|---|
@@ -16,8 +16,8 @@ Status: **gathered, not built**; needs build-card decisions first (anchor the ti
 | Kind | insight |
 | Title | Multi-Agent Coding Needs More Than Shared Context (chat's choice; see report-anchored row) |
 | Slug | `multi-agent-coding-shared-context` (chat: `/insights/multi-agent-coding-shared-context`) |
-| Report-anchored (ADR-015) | **decide**: the chat says do not title around AECP or AWS (evergreen keyword "multi-agent coding"). But the paper is the article's evidence spine, and anchoring would also separate it from the existing multi-agent pages (see cannibalisation). Option: "AECP Paper: Multi-Agent Coding Needs More Than Shared Context" |
-| Topic hub | agent-infrastructure (where `coordination-governance-multi-agent-systems` sits) |
+| Report-anchored (ADR-015) | **no** (decided 2026-10-14): the paper is evidence for a broader argument, not the article's subject. Keep the evergreen title; name AECP and AWS AI Labs in the meta description and the first lines of the lede |
+| Topic hub | agent-infrastructure (decided 2026-10-14; where `coordination-governance-multi-agent-systems` sits) |
 | Eyebrow / section | Analysis / Engineering |
 | OG headline | Shared Context Won't Coordinate Agents (5 words) |
 | Editorial gate | pass: named-paper entry point plus new evidence (controlled experiment on coordination protocols) |
@@ -92,5 +92,4 @@ None. (The chat suggests an entry in the internal research/competitive landscape
 
 ## Open questions
 
-- Anchor the title on AECP (ADR-015) or keep the chat's evergreen title?
-- Hub: agent-infrastructure or ai-coding-agents?
+- None outstanding (title and hub decided 2026-10-14).

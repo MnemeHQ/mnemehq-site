@@ -1,6 +1,6 @@
 # Scope brief: Post- Cohesion And Reddit Thread
 
-Status: **gathered, not built**; insight 1 ready, insights 2 and 3 blocked on overlap (owner decision)
+Status: **gathered, not built**; insight 1 ready; the concept moved to its own brief; insight 3 folds into the decision-governance concept (decision 2026-10-14)
 
 | Field | Value |
 |---|---|
@@ -13,14 +13,16 @@ Status: **gathered, not built**; insight 1 ready, insights 2 and 3 blocked on ov
 
 **Decisions 2026-10-12:** no Engineering Coherence concept page; "coherence" stays a problem framing inside insights. Insight 1 absorbs the 09-12 decision-silos brief as one section. Insight 3 was to own the "cheap code, scarce decisions" thesis (EY linking to it).
 
-**Overlap found after those decisions (#209 audit, confirmed by body search):** insights 2 and 3 would largely duplicate shipped articles. Both are **blocked** until the owner decides, for each: drop, re-angle to a claim the shipped pages do not make, or update `ai-makes-software-more-ambitious` instead. Insight 1 is unaffected.
+**Overlap found after those decisions (#209 audit, confirmed by body search):** insights 2 and 3 would largely duplicate shipped articles.
+
+**Decision 2026-10-14 (TheoV823):** coherence and decisions are the two terms to own, each through one concept page. Insight 2's definitions become the [Engineering Coherence concept brief](2026-10-14-engineering-coherence-concept.md). Insight 3's thesis becomes a section of the Engineering Decision Governance concept page. Neither is published as an article. Insight 1 is unchanged and links to the coherence concept.
 
 | Piece | Kind | Slug | Hub | OG headline | Cannibalisation (`find_overlap.py`) | Verdict |
 |---|---|---|---|---|---|---|
-| Engineering Coherence | ~~concept page~~ | n/a | n/a | n/a | top 24.4 | **dropped** (decision 2026-10-12) |
-| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (5) | title screen: top 40.7 `ai-engineering-roi` (noise on "engineer"); body search: no silo-engineer piece | clear; **absorbs the 2026-09-12 decision-silos brief as one section**; link `ai-makes-software-more-ambitious` |
-| The Coherence Problem in Agentic Software Development | insight (foundational) | `coherence-problem-agentic-software-development` | architectural-governance | Correct Code, Incoherent System (4) | title screen: `concepts/agentic-development` 40.6; **body search: `ai-makes-software-more-ambitious`, `agent-governance-in-the-sdlc`** | **blocked: owner decision** (drop / re-angle / update the shipped page) |
-| When Code Becomes Cheap, Decisions Become the Scarce Asset | insight (strategic) | `when-code-is-cheap-decisions-are-scarce` | architectural-intent | Cheap Code, Scarce Decisions (4) | title screen: top 19.3; **body search: thesis in 10+ shipped articles** | **blocked: owner decision** (drop / re-angle) |
+| Engineering Coherence | concept page | `concepts/engineering-coherence` | n/a | Correct Code, Incoherent System (4) | see its own brief | **reinstated 2026-10-14**: [own brief](2026-10-14-engineering-coherence-concept.md) |
+| The Return of the Silo Engineer | insight | `return-of-the-silo-engineer` | engineering-performance | The Return of the Silo Engineer (5) | title screen: top 40.7 `ai-engineering-roi` (noise on "engineer"); body search: no silo-engineer piece | clear; **absorbs the 2026-09-12 decision-silos brief as one section**; links the coherence concept and `ai-makes-software-more-ambitious` |
+| The Coherence Problem in Agentic Software Development | ~~insight~~ | n/a | n/a | n/a | overlaps `ai-makes-software-more-ambitious`, `agent-governance-in-the-sdlc` | **folded into the coherence concept page** (2026-10-14) |
+| When Code Becomes Cheap, Decisions Become the Scarce Asset | ~~insight~~ | n/a | n/a | n/a | thesis in 10+ shipped articles | **folded into the decision-governance concept page as one section** (2026-10-14) |
 
 Report-anchored: no. Eyebrows: Concept / Analysis.
 
@@ -89,10 +91,11 @@ Reddit is anecdotal (it shows the pain in practitioners' own words; it is not ma
 
 ## Non-insight site edits requested
 
-- None for the site (the Engineering Coherence concept page was dropped on 2026-10-12).
+- Engineering Coherence concept page: see its own brief (reinstated 2026-10-14).
+- Light refresh of `ai-makes-software-more-ambitious` and `agent-governance-in-the-sdlc` to link the coherence concept.
 - Social, not site: the drafted Reddit comment (do not post from this workflow).
 
 ## Open questions
 
-- **Open (owner):** insights 2 and 3 overlap shipped articles (see the build card). Drop, re-angle, or update `ai-makes-software-more-ambitious` instead?
+- Resolved 2026-10-14: insight 2 becomes the coherence concept page; insight 3 becomes a section of the decision-governance concept page.
 - Resolved 2026-10-12: "engineering coherence" is a framing used in these insights, not a concept page; the 2026-09-12 silo scope folds into insight 1 as one section.

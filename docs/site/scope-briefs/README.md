@@ -6,6 +6,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | scoped, not built; waits on terminology amendment |
 | [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | gathered, not built |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
@@ -13,7 +14,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | gathered, not built; title decided |
 | [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | gathered, not built |
 | [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | gathered, not built; concept waits on terminology amendment |
-| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | 3 insights (no concept page) | gathered, not built |
+| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | gathered; insight 1 ready |
 | [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
 | [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | gathered, not built |
 | [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | gathered, not built |
@@ -26,14 +27,15 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 2. **EY title:** "EY 'Beyond the Code' Report: AI Has Moved the Software Constraint Beyond Coding" (confirm the verbatim report name on the PDF cover). "Bottleneck" appears at most once, inside a verbatim EY quote marked `<!-- voice-ok: verbatim EY quote -->`.
 3. **"Cheap code, scarce decisions" lives in Cohesion insight 3** ("When Code Becomes Cheap, Decisions Become the Scarce Asset"). EY uses its survey as evidence and links there; the silo article keeps its own angle. *Update after the #209 audit: this thesis is already argued in 10+ shipped articles (e.g. `ai-makes-software-more-ambitious`), so insight 3, and the Coherence insight with it, is blocked pending a new owner decision; see the Cohesion brief.*
 4. **Silo: one article, "The Return of the Silo Engineer"**, built from the Cohesion scope, with the 09-12 cross-system "decision silos" argument folded in as one section. The 09-12 brief is merged, not built separately.
+5. **2026-10-14: own two terms, coherence and decisions, through one concept page each.** Engineering Coherence gets a concept page ([brief](2026-10-14-engineering-coherence-concept.md)), reversing decision 1's "no coherence concept page"; the Cohesion insight 2 becomes its body. Decision 3's thesis becomes a section of the Engineering Decision Governance concept page instead of an article. Articles support and link to the two concept pages rather than restating them. Both terms go through one PUBLISHING.md terminology amendment as concept terms (not category or tagline copy). Build cards: AECP keeps its evergreen title (AECP named in description and lede), hub agent-infrastructure; the Claude Frontier Academy piece and the FDE cluster go on agent-infrastructure.
 
-**Ready to build** (build card complete; every citation still has to be verified during the build): OKF update to the June page; EY; The Return of the Silo Engineer; the pre-action mechanism article ("Pre-Action Enforcement: Where Agent Governance Takes Effect").
+**Ready to build** (build card complete; every citation still has to be verified during the build): OKF update to the June page; EY; The Return of the Silo Engineer; the pre-action mechanism article ("Pre-Action Enforcement: Where Agent Governance Takes Effect"); AECP multi-agent piece; Claude Frontier Academy news piece.
 
-**Needs a build-card decision first:** AECP multi-agent piece (anchor the title on the AECP paper or not; hub); Claude Frontier Academy news piece (hub).
+**Small site edits:** add the FDE cluster pages to the agent-infrastructure hub; after the coherence concept ships, link it from `ai-makes-software-more-ambitious`, `agent-governance-in-the-sdlc` and `concepts/architectural-drift`.
 
-**Blocked on overlap (owner decision):** The Coherence Problem in Agentic Software Development; When Code Becomes Cheap, Decisions Become the Scarce Asset. Both largely duplicate shipped articles found by body search.
+**Folded into concept pages (not articles):** The Coherence Problem in Agentic Software Development (into Engineering Coherence); When Code Becomes Cheap, Decisions Become the Scarce Asset (a section of Engineering Decision Governance).
 
-**After the terminology amendment:** Engineering Decision Governance concept page; From Decision Records to Decision Governance.
+**After the terminology amendment (both terms in one amendment):** Engineering Coherence concept page; Engineering Decision Governance concept page; From Decision Records to Decision Governance.
 
 ## Read before building
 
