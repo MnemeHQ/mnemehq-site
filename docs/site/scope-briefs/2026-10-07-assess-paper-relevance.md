@@ -18,7 +18,7 @@ Status: **gathered, not built**; build card decided 2026-10-14, ready to build
 | Slug | `multi-agent-coding-shared-context` (chat: `/insights/multi-agent-coding-shared-context`) |
 | Report-anchored (ADR-015) | **no** (decided 2026-10-14): the paper is evidence for a broader argument, not the article's subject. Keep the evergreen title; name AECP and AWS AI Labs in the meta description and the first lines of the lede |
 | Topic hub | agent-infrastructure (decided 2026-10-14; where `coordination-governance-multi-agent-systems` sits) |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | Analysis (the AECP paper is evidence, not the primary object) |
 | OG headline | Shared Context Won't Coordinate Agents (5 words) |
 | Editorial gate | pass: named-paper entry point plus new evidence (controlled experiment on coordination protocols) |
 | Five questions | changed: a controlled study shows structured, scoped artifacts beat free-form agent chat; matters: multi-agent coding is moving into production; breaks: agents miss, misread or outlive each other's findings and contracts; do: turn findings and interface agreements into scoped state the harness acts on; governance: runtime agreements still are not organisational decisions, which need authority, lifecycle and precedence |

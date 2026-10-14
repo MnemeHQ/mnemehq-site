@@ -18,7 +18,7 @@ Status: **gathered, not built**; build card decided 2026-10-14, ready to build
 | Slug | `claude-frontier-academy-frontier-deployed-engineers` (the chat wrote `/articles/...`; insights live under `/insights/`) |
 | Report-anchored (ADR-015) | yes: entity = "Claude Frontier Academy" |
 | Topic hub | agent-infrastructure (decided 2026-10-14). The FDE cluster pages, which sit on no hub today, move onto it too (separate small site edit) |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | Analysis (news / launch response) |
 | OG headline | Claude Frontier Academy and the Decision Layer (7 words) |
 | Editorial gate | pass: named-vendor news entry point; "Claude Frontier Academy", "Frontier Deployed Engineers" and "Anthropic" in the first 150 words |
 | Five questions | changed: Anthropic is funding 10,000 deployed engineers to take Claude to production; matters: deployment is industrialising inside consultancies and enterprises; breaks: the judgment that governed a deployment leaves with the engineer; do: make decisions, authority and exceptions survive handover; governance: an organisational decision layer under every agent, not only Claude |

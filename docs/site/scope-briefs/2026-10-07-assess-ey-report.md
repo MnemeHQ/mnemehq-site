@@ -18,7 +18,7 @@ Status: **gathered, not built**
 | Slug | `ey-beyond-the-code-ai-software-development` (chat: `ey-ai-software-development-bottleneck`) |
 | Report-anchored (ADR-015) | yes: entity = the report's verbatim title. The PDF file name suggests "Beyond the code: How AI is redefining the software industry" (2026); confirm on the cover |
 | Topic hub | engineering-performance |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | Report Response (the EY report is the primary object) |
 | OG headline | EY: Coding Is No Longer the Constraint (7 words) |
 | Editorial gate | pass: named-report entry point plus new evidence (400-CTO survey) |
 | Five questions | changed: AI made code generation cheap; matters: EY's CTOs rank QA, architecture/context and security above coding as delivery constraints; breaks: controls are mostly human review, only 20% trace AI-assisted code, about one in three had an AI-related production incident; do: move validation and decision context to machine speed; governance: determine which approved decisions apply to a change and enforce the enforceable ones |

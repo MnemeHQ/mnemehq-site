@@ -18,7 +18,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Slug | refresh `compare/coderabbit/`; insight fallback `coderabbit-agentic-change-management-pre-action-enforcement` |
 | Report-anchored (ADR-015) | yes if an insight: entity = "CodeRabbit" (named vendor is the spine) |
 | Topic hub | architectural-governance (insight fallback only) |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | n/a for the compare-page refresh; Analysis if built as an insight |
 | OG headline | Review Is Not Pre-Action Enforcement (5 words) |
 | Editorial gate | **fails as a new insight**: `agentic-change-management-needs-a-decision-layer` (#136) already takes the CodeRabbit "agentic change management" entry point. The compare-page refresh passes as cornerstone support |
 | Five questions | changed: CodeRabbit repositioned as a change-control layer; matters: buyers will treat the two as substitutes; breaks: architectural violations caught only at PR time cost a regenerate loop; do: govern the action boundary, review the result; governance: different boundaries, complementary |

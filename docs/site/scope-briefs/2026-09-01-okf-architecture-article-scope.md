@@ -19,7 +19,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Slug | `open-knowledge-format-v0-2-enforceable-architecture` |
 | Report-anchored (ADR-015) | yes: entity = "Open Knowledge Format" (confirm exact version naming in the live spec) |
 | Topic hub | agent-infrastructure (same hub as the June OKF piece) |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | Analysis (unchanged: this is an update of the existing page) |
 | OG headline | OKF v0.2 Meets Architectural Authority (5 words) |
 | Editorial gate | pass: new evidence (v0.2 trust, lifecycle and Attested Computation) plus a named-source entry point |
 | Five questions | changed: OKF v0.2 adds provenance, lifecycle, freshness, attestation; matters: agents get trusted knowledge; breaks: trusted is not authoritative, and authority is not applicability; do: classify authority and scope separately from trust; governance: compile the authoritative subset into scoped rules |

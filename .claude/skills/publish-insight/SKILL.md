@@ -114,7 +114,7 @@ batch compete too; settle them together under the terminology lock before buildi
    ```bash
    python scripts/new_article.py --slug <slug> --title "<title>" \
      --description "<150-160 chars>" --date <YYYY-MM-DD> --lede "<standfirst>" \
-     --body-file <body.html> [--section ...] [--eyebrow ...] [--read-time ...] [--faq faq.json]
+     --body-file <body.html> --type "<canonical type>" [--read-time ...] [--faq faq.json]
    ```
    It writes the page only. There is no `--register` flag; registration is the next step.
 
@@ -138,6 +138,7 @@ python scripts/check_og_coverage.py
 python scripts/lint_og_voice.py
 python scripts/check_og_render_unique.py
 python scripts/sync_insights_catalog.py --check
+python scripts/check_insight_types.py
 python scripts/check_insights.py
 python scripts/check_encoding.py site scripts
 python scripts/lint_prose.py site/insights/<slug>/index.html   # re-run on the built page

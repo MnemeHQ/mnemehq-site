@@ -20,7 +20,7 @@ Proposed values; confirm with the user before building.
 | Slug | `enterprise-ai-problem-is-decision-silos` |
 | Report-anchored (ADR-015) | no (original POV piece) |
 | Topic hub | architectural-governance (proposed; the related decision-layer pieces are on no hub) |
-| Eyebrow / section | Analysis / Engineering |
+| Content type (`--type`) | Analysis (merged into The Return of the Silo Engineer) |
 | OG headline | Enterprise AI Has a Decision Silo (6 words) |
 | Editorial gate | conditional pass: distinct query ("enterprise AI silos"); no new evidence, so it must earn its place by supporting the decision-layer cornerstone |
 | Five questions | changed: agents act across systems; matters: each AI sees a partial company; breaks: agents violate decisions recorded elsewhere; do: make decisions machine-readable with scope and lifecycle; governance: a shared decision layer constrains specialised agents |

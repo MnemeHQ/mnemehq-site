@@ -20,7 +20,7 @@ Status: **gathered, not built**
 | Slug | `reverse-engineering-architectural-decisions-research` |
 | Report-anchored (ADR-015) | no: several papers, no single named artifact as the spine |
 | Topic hub | architectural-intent (decisions and the reasons behind a system); alternative software-migrations-modernization |
-| Eyebrow / section | Research / Research |
+| Content type (`--type`) | Research (interprets published studies) |
 | OG headline | Recovering the Decisions Behind Code (5 words) |
 | Editorial gate | pass: adds new evidence to a Mneme thesis (recent decision-recovery research plus the erosion mapping study) |
 | Five questions | changed: teams want agents to work on systems nobody fully documented; matters: an agent that cannot tell why a boundary exists will break it; breaks: research shows architecture recovery works but rationale is what LLMs miss, and knowledge vaporization is the leading nontechnical cause of erosion; do: reconstruct structure, function and decisions with evidence, and keep inferred decisions separate from approved ones; governance: only validated decisions become enforceable constraints |

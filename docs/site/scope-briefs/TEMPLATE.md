@@ -20,7 +20,7 @@ Complete every row before building. "TBD" blocks the build.
 | Slug | `kebab-case` |
 | Report-anchored (ADR-015) | no / yes: entity = "<verbatim name>" |
 | Topic hub | one directory under `site/insights/topics/` (architectural-governance, architectural-drift-prevention, architectural-intent, ai-coding-agents, agent-infrastructure, engineering-performance, software-migrations-modernization) |
-| Eyebrow / section | e.g. Analysis / Engineering |
+| Content type (`--type`) | one canonical label by the article's primary object: Analysis, Research, Report Response, Guide, Concept, Perspective, Comparison or Integration (see the insight publishing contract) |
 | OG headline | 4-7 words |
 | Editorial gate | pass: which criterion (distinct query / new evidence / named-source entry point / cornerstone support) / drop / re-angle |
 | Five questions | what changed; why it matters; what breaks; what teams should do; how governance helps (one line each) |

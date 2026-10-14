@@ -20,7 +20,7 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 | Slug | `pre-action-enforcement-agent-governance` |
 | Report-anchored (ADR-015) | no |
 | Topic hub | ai-coding-agents (where `package-hallucinations-pre-action-governance` sits) |
-| Eyebrow / section | Concept (explains the mechanism) |
+| Content type (`--type`) | Concept (explains a mechanism) |
 | OG headline | Where Agent Governance Takes Effect (5 words) |
 | Editorial gate | pass: distinct query (pre-action enforcement, the agent action boundary); introduces no new category term, uses "decision governance" for the category |
 | Five questions | changed: agents act, not just generate; matters: review only sees results; breaks: consequential actions run before any control; do: put deterministic gates at the action boundary; governance: allow / warn / block before execution |
