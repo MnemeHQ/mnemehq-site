@@ -49,8 +49,8 @@
         "@type": "BreadcrumbList",
         "itemListElement": [
           {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-          {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"},
-          {"@type": "ListItem", "position": 3, "name": "When Agents Launch the Database", "item": "https://mnemehq.com/insights/when-agents-launch-the-database/"}
+          {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"}, {"@type": "ListItem", "position": 3, "name": "Agent infrastructure", "item": "https://mnemehq.com/insights/topics/agent-infrastructure/"},
+          {"@type": "ListItem", "position": 4, "name": "When Agents Launch the Database", "item": "https://mnemehq.com/insights/when-agents-launch-the-database/"}
         ]
       },
       {
@@ -76,10 +76,12 @@
 
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .article-eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
     .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .eyebrow-topic { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; text-decoration: none; border-bottom: 1px solid var(--border2); }
+    .eyebrow-topic:hover { color: var(--text); border-bottom-color: var(--text); }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
     .article-lede { font-size: 1.1rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
 
@@ -270,6 +272,7 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
+    <li><a href="/insights/topics/agent-infrastructure/">Agent infrastructure</a></li>
     <li aria-current="page">When Agents Launch the Database</li>
   </ol>
 </nav>
@@ -278,6 +281,8 @@
   <header class="article-header">
     <div class="article-eyebrow">
       <span class="eyebrow-tag">Analysis</span>
+      <span class="eyebrow-dot"></span>
+      <a class="eyebrow-topic" href="/insights/topics/agent-infrastructure/">Agent infrastructure</a>
       <span class="eyebrow-dot"></span>
       <span class="eyebrow-meta">10 min read</span>
     </div>

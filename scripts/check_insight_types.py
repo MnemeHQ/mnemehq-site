@@ -10,7 +10,7 @@ agree:
   3. every card that links to it, on any page  <a class="insight-card-link">
                                                  ... <span class="card-tag">
   4. the archive catalogue's type filter       TYPE_LABELS in
-     site/assets/js/insights-catalog-v2.js
+     site/assets/js/insights-catalog-v3.js
 
 The label must be one of CANONICAL_TYPES. Each label belongs to exactly one
 of the six public content types shown in the archive filter. Research &
@@ -44,7 +44,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
-CATALOG_JS = SITE / "assets" / "js" / "insights-catalog-v2.js"
+CATALOG_JS = SITE / "assets" / "js" / "insights-catalog-v3.js"
 
 # Stored label -> public content type.
 CANONICAL_TYPES: dict[str, str] = {

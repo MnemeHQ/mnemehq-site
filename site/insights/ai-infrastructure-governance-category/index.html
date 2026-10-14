@@ -39,8 +39,8 @@
   {"@context": "https://schema.org", "@graph": [
     {"@type": "BreadcrumbList", "itemListElement": [
       {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://mnemehq.com/"},
-      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"},
-      {"@type": "ListItem", "position": 3, "name": "The Next AI Infrastructure Category Is Governance", "item": "https://mnemehq.com/insights/ai-infrastructure-governance-category/"}
+      {"@type": "ListItem", "position": 2, "name": "Insights", "item": "https://mnemehq.com/insights/"}, {"@type": "ListItem", "position": 3, "name": "Architectural governance", "item": "https://mnemehq.com/insights/topics/architectural-governance/"},
+      {"@type": "ListItem", "position": 4, "name": "The Next AI Infrastructure Category Is Governance", "item": "https://mnemehq.com/insights/ai-infrastructure-governance-category/"}
     ]},
     {"@type": "TechArticle", "headline": "The Next AI Infrastructure Category Is Governance", "description": "Every major infrastructure wave eventually creates a governance layer once the systems become autonomous enough. Cloud created security and compliance. CI/CD created observability. Data platforms created lineage. AI coding agents are now creating architectural governance infrastructure.", "url": "https://mnemehq.com/insights/ai-infrastructure-governance-category/", "datePublished": "2026-05-28", "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"}, "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"}, "about": [{"@type": "Thing", "name": "AI infrastructure"}, {"@type": "Thing", "name": "AI governance infrastructure"}, {"@type": "Thing", "name": "Architectural governance"}, {"@type": "Thing", "name": "AI coding governance"}, {"@type": "Thing", "name": "Governance for AI coding agents"}, {"@type": "Thing", "name": "AI software governance"}, {"@type": "Thing", "name": "Autonomous software development"}, {"@type": "Thing", "name": "AI engineering infrastructure"}]}
   ]}
@@ -51,10 +51,12 @@
     nav { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 5rem 2rem 7rem; }
     .article-header { margin-bottom: 3.5rem; }
-    .article-eyebrow { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .article-eyebrow { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem; }
     .eyebrow-tag { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--quiet, #88889a); font-family: 'DM Mono', monospace; }
     .eyebrow-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--border2); }
     .eyebrow-meta { font-size: 0.7rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .eyebrow-topic { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: 'DM Mono', monospace; text-decoration: none; border-bottom: 1px solid var(--border2); }
+    .eyebrow-topic:hover { color: var(--text); border-bottom-color: var(--text); }
     .article-header h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.5rem; }
     .article-lede { font-size: 1.1rem; color: var(--muted); line-height: 1.75; border-left: 2px solid var(--accent); padding-left: 1.25rem; }
     .article-body { font-size: 0.92rem; line-height: 1.9; color: var(--text); }
@@ -167,13 +169,16 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/insights/">Insights</a></li>
+    <li><a href="/insights/topics/architectural-governance/">Architectural governance</a></li>
     <li aria-current="page">The Next AI Infrastructure Category Is Governance</li>
   </ol>
 </nav>
 
 <article class="article-wrap">
   <header class="article-header">
-    <div class="article-eyebrow"><span class="eyebrow-tag">Perspective</span><span class="eyebrow-dot"></span><span class="eyebrow-meta">12 min read</span></div>
+    <div class="article-eyebrow"><span class="eyebrow-tag">Perspective</span><span class="eyebrow-dot"></span>
+      <a class="eyebrow-topic" href="/insights/topics/architectural-governance/">Architectural governance</a>
+      <span class="eyebrow-dot"></span><span class="eyebrow-meta">12 min read</span></div>
     <h1>The Next AI Infrastructure Category Is Governance</h1>
     <p class="article-lede">Every major infrastructure wave eventually creates a governance layer once the systems become autonomous enough. Cloud created security and compliance. CI/CD created observability. Data platforms created lineage. AI coding agents are now creating <a href="/concepts/ai-governance-infrastructure/">architectural governance infrastructure</a> &mdash; the next inevitable category in the stack.</p>
     <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-05-28">May 2026</time></p>
