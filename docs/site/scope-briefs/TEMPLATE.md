@@ -1,0 +1,57 @@
+# Scope brief: <exact ChatGPT chat title>
+
+Status: **gathered, not built** | built (PR #, merged YYYY-MM-DD) | dropped (reason)
+
+| Field | Value |
+|---|---|
+| ChatGPT chat | `<exact title>` |
+| Created / last updated (UTC) | YYYY-MM-DD / YYYY-MM-DD |
+| Shape | number of turns; whether later turns changed the scope |
+| Repo check | existing pages that cover or overlap this, with slugs and dates |
+
+## Build card
+
+Complete every row before building. "TBD" blocks the build.
+
+| Field | Value |
+|---|---|
+| Kind | insight / site edit (not an insight; separate contract) / strategy only |
+| Title | final title (verbatim across all six title fields) |
+| Slug | `kebab-case` |
+| Report-anchored (ADR-015) | no / yes: entity = "<verbatim name>" |
+| Topic hub | one directory under `site/insights/topics/` (architectural-governance, architectural-drift-prevention, architectural-intent, ai-coding-agents, agent-infrastructure, engineering-performance, software-migrations-modernization) |
+| Content type (`--type`) | one canonical label by the article's primary object: Analysis, Research, Report Response, Guide, Concept, Perspective, Comparison or Integration (see the insight publishing contract) |
+| OG headline | 4-7 words |
+| Editorial gate | pass: which criterion (distinct query / new evidence / named-source entry point / cornerstone support) / drop / re-angle |
+| Five questions | what changed; why it matters; what breaks; what teams should do; how governance helps (one line each) |
+| Cannibalisation | `find_overlap.py` top hits with scores; verdict: clear / re-angle (state the angle) / update `<slug>` instead / merge or drop; plus any overlap with other briefs in the batch |
+| Cross-links | 2-3 existing insights to link from and to |
+
+## Draft quality gate (filled at build time)
+
+| Check | Result |
+|---|---|
+| stop-slop score (/50, pass >= 35) | |
+| `lint_prose.py` | errors: 0; warnings fixed or justified: |
+| Cold read: thesis as restated | |
+| Cold read: unclear terms, and how resolved | |
+
+## Agreed scope
+
+Thesis, audience, structure, title alternatives, as finally agreed in the chat.
+
+## Key facts, figures, sources
+
+| Claim | Source URL (no `?utm_source`) | Verified? |
+|---|---|---|
+
+## Mneme claims and maturity
+
+| Claim | SHIPPED / VALIDATED EXPERIMENT / PLANNED / CONCEPTUAL |
+|---|---|
+
+## Positioning constraints
+
+## Non-insight site edits requested
+
+## Open questions

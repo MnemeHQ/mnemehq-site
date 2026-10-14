@@ -8,6 +8,14 @@ Use purpose-based prefixes: `feat/`, `fix/`, `site/`, `ci/`, `docs/`, or `refact
 Keep names short and kebab-case. Do not use an agent name such as `codex/` as the
 branch prefix; record agent identity in execution provenance instead.
 
+## Publishing insights
+
+Follow `.claude/skills/publish-insight/SKILL.md` end to end: intake from the ChatGPT
+"Post-" scope chats, a scope brief from `docs/site/scope-briefs/TEMPLATE.md`, build,
+registration, validators, the pre-merge Opus audit, and close-out in
+`docs/site/insights-scope-ledger.md`. `scripts/new_article.py` writes the page only;
+registration is manual.
+
 ## OG images are generated, not hand-made
 
 Every page's OG card is produced from a manifest, not a hand-built template:

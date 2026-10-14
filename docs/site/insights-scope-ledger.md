@@ -2,10 +2,12 @@
 
 Tracks ChatGPT scope chats (project: "Mneme Growth and GTM") against what actually
 shipped, so we stop re-crawling the whole chat list on every "draft insights" run.
-See [[draft-insights-workflow]] memory for the pipeline this supports.
+The publish-insight skill (`.claude/skills/publish-insight/SKILL.md`) describes the pipeline this supports.
 
-**How to update:** after a scope chat's article ships and the chat is renamed with
-the `***` prefix in ChatGPT, add/update its row here with the PR # and merged date.
+**How to update:** follow Stage 5 of the `publish-insight` skill
+(`.claude/skills/publish-insight/SKILL.md`): once a scope chat's article is deployed, add/update
+its row here with the PR # and merged date, then mark the chat with the `***` prefix in ChatGPT.
+Marking is a required step, not optional. Any `*` in a `Post-` title means processed.
 Only chats that produced (or were meant to produce) a published insight belong here —
 not every chat in the project.
 
