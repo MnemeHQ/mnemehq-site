@@ -11,6 +11,7 @@
   "surface": "Claude Code, any MCP host",
   "end_up": "a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.",
   "date": "2026-10-04",
+  "modified": "2026-10-13",
   "answer": "Ask by task or by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and an MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. That tool matches only a decision&rsquo;s scope, and the CLI lookup scores a scope match highest, so give each decision a scope word your paths contain."
 }
 -->
@@ -41,7 +42,7 @@
 
     <h3>2. Register the MCP server with your agent</h3>
     <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
-    <pre class="term-block" data-fixture="manual">{
+    <pre class="term-block" data-fixture="manual" data-block="config">{
   "mcpServers": {
     "mneme": {
       "command": "mneme",

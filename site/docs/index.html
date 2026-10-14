@@ -106,6 +106,15 @@
     .agent-setup-actions { min-width: 165px; }
     .agent-setup-actions button { white-space: nowrap; }
 
+    .guide-pointer { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; margin-top: 1.1rem; padding: 0.9rem 1rem; border: 1px solid rgba(234,115,94,0.28); border-radius: 8px; background: rgba(234,115,94,0.055); }
+    .guide-pointer p { margin: 0; color: #c9c9d1; font-size: 0.82rem; line-height: 1.6; }
+    .guide-pointer a { flex-shrink: 0; color: var(--action-soft, #f2a08e); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-decoration: none; }
+    .guide-pointer a:hover { color: var(--text); }
+
+    .howto-library { margin-top: 3.5rem; padding-top: 2.75rem; border-top: 1px solid var(--border); }
+    .docs-section-label { margin: 0 0 1.25rem; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .docs-section-intro { max-width: 780px; margin: 0 0 2rem; color: #c2c2cb; font-size: 0.92rem; line-height: 1.75; }
+
     .how-to-read { max-width: 860px; }
     .how-to-read p { margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.85; }
     .how-to-read a { color: var(--accent); text-decoration: none; }
@@ -139,6 +148,7 @@
   .integrations-feature { grid-template-columns: 1fr; }
   .agent-setup-card { grid-template-columns: 1fr; }
   .agent-setup-actions { min-width: 0; }
+  .guide-pointer { align-items: flex-start; flex-direction: column; }
 }
 
     @media (max-width: 768px) { nav, .mobile-menu { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; } }
@@ -223,36 +233,10 @@
 - If hooks, plugins, or other executable integrations require approval or trust, stop before approving them and tell me exactly what I need to review.</script>
   </section>
 
-  <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:3.5rem 0 1.25rem;">How-to guides</h2>
-  <p style="font-size:0.92rem;color:var(--muted);line-height:1.75;max-width:780px;margin:0 0 2rem;">Each guide solves one engineering job, with outputs recorded from mneme-hq 0.10.0.</p>
-
-  <div class="doc-grid">
-    <a class="doc-card" href="/docs/how-to/adr-to-enforceable-decision/">
-      <div class="dh"><span class="dname">Turn an ADR into an enforceable decision</span><span class="dtag">How-to</span></div>
-      <p>Add a Constraints section to an ADR, import it, and get a FAIL when a request handler imports the database client.</p>
-      <span class="read">Read the guide &rarr;</span>
-    </a>
-    <a class="doc-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
-      <div class="dh"><span class="dname">Stop an agent crossing an architectural boundary</span><span class="dtag">How-to</span></div>
-      <p>Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</p>
-      <span class="read">Read the guide &rarr;</span>
-    </a>
-    <a class="doc-card" href="/docs/how-to/give-agents-applicable-decisions/">
-      <div class="dh"><span class="dname">Give agents the decisions that apply to a task</span><span class="dtag">How-to</span></div>
-      <p>Look up the ADRs for the file an agent is editing through the CLI or the local MCP server.</p>
-      <span class="read">Read the guide &rarr;</span>
-    </a>
-    <a class="doc-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
-      <div class="dh"><span class="dname">Fail a pull request that breaks an ADR</span><span class="dtag">How-to</span></div>
-      <p>Run mneme check on every changed file in GitHub Actions and keep the JSON verdicts.</p>
-      <span class="read">Read the guide &rarr;</span>
-    </a>
-    <a class="doc-card" href="/docs/how-to/">
-      <div class="dh"><span class="dname">All how-to guides</span><span class="dtag">Index</span></div>
-      <p>Every guide, grouped by job, including loading the decisions that apply to a task.</p>
-      <span class="read">All how-to guides &rarr;</span>
-    </a>
-  </div>
+  <aside class="guide-pointer" aria-label="How-to guide shortcut">
+    <p>Prefer a complete walkthrough? The tested how-to guides are collected at the end of this page.</p>
+    <a href="#how-to-guides">Jump to how-to guides &darr;</a>
+  </aside>
 
   <h2 style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:3.5rem 0 1.25rem;">Reference surfaces</h2>
   <p style="font-size:0.92rem;color:var(--muted);line-height:1.75;max-width:780px;margin:0 0 2rem;">Mneme HQ's documentation is intentionally narrow. We document the surfaces engineers need to operate Mneme: the CLI, the local MCP server, human decision authority, the violations Mneme catches, language coverage, and benchmark methodology. Everything else lives in the source repository.</p>
@@ -332,6 +316,39 @@
       <a href="/integrations/mcp/">Model Context Protocol</a>
     </div>
   </section>
+
+  <section class="howto-library" id="how-to-guides" aria-labelledby="how-to-guides-title">
+    <h2 class="docs-section-label" id="how-to-guides-title">How-to guides</h2>
+    <p class="docs-section-intro">Choose a tested, task-shaped walkthrough when you know what you need to accomplish. Each guide records its commands and outputs against mneme-hq 0.10.0.</p>
+
+    <div class="doc-grid">
+      <a class="doc-card" href="/docs/how-to/adr-to-enforceable-decision/">
+        <div class="dh"><span class="dname">Turn an ADR into an enforceable decision</span><span class="dtag">How-to</span></div>
+        <p>Add a Constraints section to an ADR, import it, and get a FAIL when a request handler imports the database client.</p>
+        <span class="read">Read the guide &rarr;</span>
+      </a>
+      <a class="doc-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <div class="dh"><span class="dname">Stop an agent crossing an architectural boundary</span><span class="dtag">How-to</span></div>
+        <p>Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</p>
+        <span class="read">Read the guide &rarr;</span>
+      </a>
+      <a class="doc-card" href="/docs/how-to/give-agents-applicable-decisions/">
+        <div class="dh"><span class="dname">Give agents the decisions that apply to a task</span><span class="dtag">How-to</span></div>
+        <p>Look up the ADRs for the file an agent is editing through the CLI or the local MCP server.</p>
+        <span class="read">Read the guide &rarr;</span>
+      </a>
+      <a class="doc-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <div class="dh"><span class="dname">Fail a pull request that breaks an ADR</span><span class="dtag">How-to</span></div>
+        <p>Run mneme check on every changed file in GitHub Actions and keep the JSON verdicts.</p>
+        <span class="read">Read the guide &rarr;</span>
+      </a>
+      <a class="doc-card" href="/docs/how-to/">
+        <div class="dh"><span class="dname">All how-to guides</span><span class="dtag">Index</span></div>
+        <p>Every guide in one ordered path, plus related workflows for activation and decision review.</p>
+        <span class="read">All how-to guides &rarr;</span>
+      </a>
+    </div>
+  </section>
 </div>
 
 </main>
@@ -351,6 +368,7 @@
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -360,7 +378,6 @@
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

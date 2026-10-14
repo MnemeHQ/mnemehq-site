@@ -465,13 +465,14 @@ blocks the PR. All are standard-library-only Python.
 | `scripts/check_sticky_nav.py` | `sticky-nav-check.yml` | mobile sticky/hamburger nav |
 | `scripts/check_insights.py` | `check-insights.yml` | insight registration (sitemap, cards, OG, breadcrumb, schema, hub) |
 | `scripts/sync_insights_catalog.py --check` | `check-insights.yml` | archive-card sortable and static publication dates match canonical article metadata |
+| `scripts/check_insight_types.py` | `check-insights.yml` | one canonical content type per insight, identical across eyebrow, `article:section`, every insight card on any page, and the archive filter (consistency only: whether the label fits the article is a manual editorial review; see the insight publishing contract) |
 | `scripts/check_compare.py` | `check-compare.yml` | `/compare/` hub invariants |
 | `scripts/check_concepts_schema.py` | `check-concepts-schema.yml` | `/concepts/` schema graph |
 | `scripts/check_for.py` | `check-for.yml` | `/for/` persona-cohort schema |
 | `scripts/check_supported_languages.py` | `check-supported-languages.yml` | supported-languages schema |
 | `scripts/test_deploy_verify.py` | `test-deploy-verify.yml` | deploy-verification helpers |
 | `scripts/check_agent_discovery.py` | `agent-discovery-check.yml` | AI Catalog, Agent Skill integrity, MCP tool catalog/version links, llms.txt, and current-stable agreement with PyPI/core server metadata/official MCP Registry |
-| `scripts/check_stale_mcp_claims.py` | `stale-mcp-claims-check.yml` | no pre-0.10.0 MCP storage claims ("Canonical reads are optional", proposals-only servers, the 0.9.0 limitations) anywhere in `site/` or `templates/` |
+| `scripts/check_stale_mcp_claims.py` | `stale-mcp-claims-check.yml` | no pre-0.10.0 MCP storage claims ("Canonical reads are optional", proposals-only servers, the 0.9.0 limitations) and no nonexistent `draft` decision status anywhere in `site/` or `templates/` |
 
 The agent-discovery workflow also runs daily. Its local job is repository-only; its external-trust job checks the current stable version against PyPI, the core repository's `server.json`, and the official MCP Registry so a release/discovery mismatch cannot remain silent.
 

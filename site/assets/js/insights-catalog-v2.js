@@ -18,34 +18,18 @@
     'reference': 'Reference',
     'latest-analysis': 'Latest analysis'
   };
+  // Canonical content-type labels (card tag = article eyebrow =
+  // article:section) and their public type. Must match CANONICAL_TYPES in
+  // scripts/check_insight_types.py, which CI enforces.
   var TYPE_LABELS = {
     'analysis': 'Analysis',
-    'market context': 'Analysis',
-    'industry analysis': 'Analysis',
-    'engineering': 'Analysis',
-    'infrastructure': 'Analysis',
-    'architecture': 'Analysis',
-    'technical deep dive': 'Analysis',
-    'economics': 'Analysis',
-    'agentic development': 'Analysis',
-    'launch response': 'Analysis',
-    'tooling analysis': 'Analysis',
     'research': 'Research & reports',
     'report response': 'Research & reports',
-    'productivity': 'Research & reports',
     'guide': 'Guides',
-    'operations': 'Guides',
-    'reference': 'Concepts & reference',
-    'category education': 'Concepts & reference',
-    'category distinction': 'Concepts & reference',
-    'category map': 'Concepts & reference',
     'concept': 'Concepts & reference',
-    'thought leadership': 'Perspective',
-    'worldview': 'Perspective',
     'perspective': 'Perspective',
-    'integration': 'Product & comparison',
     'comparison': 'Product & comparison',
-    'comparative': 'Product & comparison'
+    'integration': 'Product & comparison'
   };
 
   function normalizeText(value) {

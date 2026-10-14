@@ -11,6 +11,7 @@
   "surface": "Claude Code",
   "end_up": "Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.",
   "date": "2026-10-04",
+  "modified": "2026-10-13",
   "answer": "Load the Mneme plugin in Claude Code. Before each Edit, Write or MultiEdit, and before a single <code>cat &gt; file &lt;&lt;'EOF'</code> command, its hook checks the change against your recorded decisions. In strict mode, the default, it blocks a violation with exit code 2, so the file doesn&rsquo;t change and the agent sees the reason. Other shell writes, scripts included, get past that first check; the hook catches them when the agent ends its turn and sends it back to fix them."
 }
 -->

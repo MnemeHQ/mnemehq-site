@@ -39,6 +39,7 @@
   "@graph": [
     {
       "@type": "BreadcrumbList",
+      "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -67,20 +68,45 @@
       ]
     },
     {
-      "@type": "TechArticle",
+      "@type": [
+        "Article",
+        "TechArticle"
+      ],
+      "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#article",
       "headline": "Stop an AI coding agent from crossing an architectural boundary",
       "description": "Load the Mneme plugin in Claude Code so a write that breaks ADR-012 is blocked before it reaches disk, and the agent is told which decision it broke.",
       "url": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#webpage"
+      },
+      "isPartOf": {
+        "@type": "CollectionPage",
+        "@id": "https://mnemehq.com/docs/how-to/#webpage",
+        "name": "How-to guides",
+        "url": "https://mnemehq.com/docs/how-to/"
+      },
+      "inLanguage": "en",
       "datePublished": "2026-10-04",
-      "dateModified": "2026-10-04",
+      "dateModified": "2026-10-13",
+      "image": {
+        "@type": "ImageObject",
+        "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#primaryimage",
+        "url": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/og-v2.png",
+        "contentUrl": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/og-v2.png",
+        "width": 1200,
+        "height": 630
+      },
       "proficiencyLevel": "Beginner",
       "author": {
         "@type": "Person",
+        "@id": "https://mnemehq.com/founder/#person",
         "name": "Theo Valmis",
         "url": "https://mnemehq.com/founder/"
       },
       "publisher": {
         "@type": "Organization",
+        "@id": "https://mnemehq.com/#organization",
         "name": "Mneme HQ",
         "url": "https://mnemehq.com/",
         "logo": {
@@ -185,19 +211,43 @@
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
 
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
-    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
+    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.7rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: #f1f1f4; }
+    .prose-section > p, .prose-section li { color: #c8c8d0; }
+    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: #c8c8d0; font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
     .prose-section ul.plain li code, .prose-section h3 code, .ref-table td code, .end-up code { font-family: 'DM Mono', monospace; font-size: 0.84em; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; }
     .prose-section ul.plain li a, .ref-table td a, .bound-list a { color: var(--accent); text-decoration: none; }
-    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 1.1rem 0 0.4rem; }
-    .term-block { margin-top: 0; }
+    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a9b4; margin: 1.1rem 0 0.4rem; }
+    .hero p.lede { color: #cfd0d7; }
     .hero p.lede code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
-    .bound-list .term-block { margin: 0.6rem 0; }
+    .howto-code { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); margin: 1rem 0 1.25rem; overflow: hidden; border: 1px solid #303038; border-left: 3px solid var(--block-accent); border-radius: 9px; background: var(--block-tint); }
+    .howto-code--command { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); }
+    .howto-code--file, .howto-code--config { --block-accent: #aaa3ff; --block-tint: rgba(170,163,255,0.055); }
+    .howto-code--output { --block-accent: #b5cc7a; --block-tint: rgba(181,204,122,0.045); }
+    .howto-code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.35rem; padding: 0.48rem 0.75rem 0.48rem 0.9rem; border-bottom: 1px solid #303038; }
+    .howto-code-label { min-width: 0; overflow: hidden; color: var(--block-accent); font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+    .howto-code-label code { color: #c9c9d1; font-size: 0.95em; letter-spacing: 0; text-transform: none; }
+    .howto-copy { flex-shrink: 0; padding: 0.32rem 0.55rem; border: 1px solid #41414a; border-radius: 5px; background: rgba(12,12,13,0.6); color: #d2d2d9; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.64rem; }
+    .howto-copy:hover { border-color: var(--block-accent); color: #fff; }
+    .howto-copy:focus-visible { outline: 2px solid var(--block-accent); outline-offset: 2px; }
+    .howto-copy[data-copied="true"] { border-color: #b5cc7a; color: #b5cc7a; }
+    .howto-code pre.term-block { max-width: none; margin: 0; border: 0; border-radius: 0; background: rgba(9,9,11,0.48); color: #ededf1; }
+    .bound-list .howto-code { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
+    @media (max-width: 640px) {
+      .howto-code-head { align-items: flex-start; }
+      .howto-code-label { white-space: normal; }
+      .howto-copy { padding: 0.38rem 0.5rem; }
+    }
   </style>
 
 </head>
@@ -287,8 +337,16 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Stop an AI coding agent from crossing an architectural boundary</h1>
   <p class="lede">Load the Mneme plugin in Claude Code. Before each Edit, Write or MultiEdit, and before a single <code>cat &gt; file &lt;&lt;'EOF'</code> command, its hook checks the change against your recorded decisions. In strict mode, the default, it blocks a violation with exit code 2, so the file doesn&rsquo;t change and the agent sees the reason. Other shell writes, scripts included, get past that first check; the hook catches them when the agent ends its turn and sends it back to fix them.</p>
-  <p class="howto-meta">Tested with mneme-hq 0.10.0 &middot; Claude Code</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Claude Code</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with ADR-012 named in the feedback the agent receives.</p>
+  <nav class="howto-toc" aria-label="On this page">
+    <span class="howto-toc-label">On this page</span>
+    <a href="#prerequisites">Prerequisites</a>
+    <a href="#configure">Configure</a>
+    <a href="#run">Run</a>
+    <a href="#expected-result">Expected result</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </nav>
 </section>
 
 <div class="wrap">
@@ -304,7 +362,10 @@
       <li>A git repository with ADR-012 imported into <code>.mneme/project_memory.json</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> covers it.</li>
       <li>Mneme 0.10.0 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
     </ul>
-    <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+</div>
     <ul class="plain">
       <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
     </ul>
@@ -313,9 +374,15 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <h3>1. Get the plugin at the release tag</h3>
-    <pre class="term-block" data-fixture="manual">git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="manual">git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+</div>
     <h3>2. Start Claude Code with the plugin, from your repository root</h3>
-    <pre class="term-block" data-fixture="manual">claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="manual">claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+</div>
     <p>The plugin runs in strict mode by default: a violation blocks the change. Leave it there. Warn mode (<code>MNEME_HOOK_MODE=warn</code>) stops the hook blocking edits, and Claude Code doesn't show the reason for each edit to the agent or to you. See Troubleshooting.</p>
   </section>
 
@@ -323,7 +390,9 @@
     <h2>Run</h2>
     <p>Ask Claude Code for a change that breaks ADR-012, for example: <em>&ldquo;Add a list_invoices handler in app/handlers/invoices.py that queries the invoices table with get_connection from app.db.client.&rdquo;</em></p>
     <p>When the agent goes to write the file, Claude Code sends the hook an event like this one. We shortened the paths to relative ones; Claude Code sends absolute paths.</p>
-    <pre class="term-block" data-fixture="file:events/write-direct-import.json">{
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>events/write-direct-import.json</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:events/write-direct-import.json">{
   "hook_event_name": "PreToolUse",
   "session_id": "guide-2",
   "cwd": ".",
@@ -333,60 +402,100 @@
     "content": "from app.db.client import get_connection\n\n\ndef list_invoices(customer_id: str):\n    conn = get_connection()\n    return conn.execute(\"SELECT * FROM invoices WHERE customer_id = ?\", (customer_id,))\n"
   }
 }</pre>
+</div>
     <p>You can replay the event without an agent. That's how we tested this guide:</p>
-    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-direct-import.json</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-direct-import.json</pre>
+</div>
   </section>
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
     <p>The hook exits with code 2 and prints:</p>
-    <pre class="term-block" data-fixture="out:hook-write-blocked">mneme: FAIL - architectural decision violated
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:hook-write-blocked">mneme: FAIL - architectural decision violated
   [ADR-012] FAIL "from app.db.client import" - trigger: from app.db.client import
       Request handlers do not import the database client
       path: app/handlers/invoices.py via app/handlers/**</pre>
+</div>
     <p>Claude Code treats exit code 2 from this hook as a block. The file isn't written, and the agent receives that text as feedback. A write that calls the repository instead exits 0 with no output, so the agent can carry on.</p>
     <h3>Shell writes</h3>
     <p>The hook also reads shell commands. A single command of the form <code>cat &gt; app/handlers/invoices.py &lt;&lt;'PY'</code>, with a quoted delimiter and nothing else in the command, is blocked the same way:</p>
-    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/bash-heredoc.json</pre>
-    <pre class="term-block" data-fixture="out:hook-heredoc-blocked">mneme: FAIL - architectural decision violated
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/bash-heredoc.json</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:hook-heredoc-blocked">mneme: FAIL - architectural decision violated
   [ADR-012] FAIL "from app.db.client import" - trigger: from app.db.client import
       Request handlers do not import the database client
       path: app/handlers/invoices.py via app/handlers/**</pre>
+</div>
     <p>Other shell writes can't be checked before they run: <code>echo &gt;</code>, <code>tee</code>, <code>sed -i</code>, an unquoted heredoc, a heredoc chained after another command, or a script such as <code>python scripts/gen_invoices.py</code>. The hook can't reconstruct what they will write. The hook lets them through and says so:</p>
-    <pre class="term-block" data-fixture="out:hook-script-deferred">mneme-hook: Bash classified POTENTIALLY_MUTATING: no deterministic pre-execution check (session-delta backstop still applies).</pre>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:hook-script-deferred">mneme-hook: Bash classified POTENTIALLY_MUTATING: no deterministic pre-execution check (session-delta backstop still applies).</pre>
+</div>
     <p>The end-of-turn check catches them instead. At session start the hook records the state of the repository. When the agent finishes its turn, the hook compares the repository against that baseline and checks every changed file:</p>
-    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/session-start.json
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/session-start.json
 python scripts/gen_invoices.py
 mneme-hook &lt; events/stop.json</pre>
-    <pre class="term-block" data-fixture="out:stop-backstop">{"decision": "block", "reason": "mneme: repository mutations made during this session violate 1 governed artifact(s):\n[app/handlers/invoices.py]\nmneme: FAIL - architectural decision violated\n  [ADR-012] FAIL \"from app.db.client import\" - trigger: from app.db.client import\n      Request handlers do not import the database client\n      path: app/handlers/invoices.py via app/handlers/**"}</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:stop-backstop">{"decision": "block", "reason": "mneme: repository mutations made during this session violate 1 governed artifact(s):\n[app/handlers/invoices.py]\nmneme: FAIL - architectural decision violated\n  [ADR-012] FAIL \"from app.db.client import\" - trigger: from app.db.client import\n      Request handlers do not import the database client\n      path: app/handlers/invoices.py via app/handlers/**"}</pre>
+</div>
   </section>
 
   <section class="prose-section" id="evidence">
     <h2>Evidence</h2>
     <p>Every FAIL block names the decision (<code>ADR-012</code>), the matched text, and the path selector that made the rule apply. Behind the hook is the same <code>mneme check</code> from Guide 1. To keep a machine-readable record of a file's state, run it with <code>--json</code>:</p>
-    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
   --input app/handlers/invoices.py \
   --target-path app/handlers/invoices.py \
   --query "edit to app/handlers/invoices.py" \
   --json</pre>
-    <pre class="term-block" data-fixture="out:json-verdict">{"schema": "mneme.check/v1", "verdict": "FAIL", "mode": "strict", "evaluation_complete": true, "applicability": [{"decision_id": "ADR-012", "rule_type": "FORBID_LITERAL", "rule_value": "from app.db.client import", "rule_index": 0, "path_scoped": true, "input_path": "app/handlers/invoices.py", "outcome": "APPLIED", "selector": "app/handlers/**", "reason": "an include selector matched"}], "violations": [{"decision_id": "ADR-012", "decision_text": "Request handlers do not import the database client", "severity": "FAIL", "rule": "from app.db.client import", "trigger": "from app.db.client import", "kind": "typed_rule", "rule_type": "FORBID_LITERAL", "input_path": "app/handlers/invoices.py", "selector": "app/handlers/**"}], "freshness": []}</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:json-verdict">{"schema": "mneme.check/v1", "verdict": "FAIL", "mode": "strict", "evaluation_complete": true, "applicability": [{"decision_id": "ADR-012", "rule_type": "FORBID_LITERAL", "rule_value": "from app.db.client import", "rule_index": 0, "path_scoped": true, "input_path": "app/handlers/invoices.py", "outcome": "APPLIED", "selector": "app/handlers/**", "reason": "an include selector matched"}], "violations": [{"decision_id": "ADR-012", "decision_text": "Request handlers do not import the database client", "severity": "FAIL", "rule": "from app.db.client import", "trigger": "from app.db.client import", "kind": "typed_rule", "rule_type": "FORBID_LITERAL", "input_path": "app/handlers/invoices.py", "selector": "app/handlers/**"}], "freshness": []}</pre>
+</div>
   </section>
 
   <section class="prose-section" id="troubleshooting">
     <h2>Troubleshooting</h2>
     <h3>Nothing is ever blocked, and the hook prints nothing</h3>
     <p>The hook didn't find a memory file. It looks for <code>.mneme/project_memory.json</code> in the session's working directory and each parent directory, or at the path in <code>MNEME_MEMORY</code>. With no memory file it allows every change silently:</p>
-    <pre class="term-block" data-fixture="cmd">MNEME_MEMORY=missing.json mneme-hook &lt; events/write-direct-import.json</pre>
-    <pre class="term-block" data-fixture="out:no-memory-file"></pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">MNEME_MEMORY=missing.json mneme-hook &lt; events/write-direct-import.json</pre>
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:no-memory-file"></pre>
+</div>
     <p>Start Claude Code from the repository root, or set <code>MNEME_MEMORY</code>.</p>
 
     <h3><code>not inside a git work tree</code></h3>
-    <pre class="term-block" data-fixture="out:stop-no-git">{"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext": "mneme: not inside a git work tree; the session-delta gate is inactive for this turn."}}</pre>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:stop-no-git">{"hookSpecificOutput": {"hookEventName": "Stop", "additionalContext": "mneme: not inside a git work tree; the session-delta gate is inactive for this turn."}}</pre>
+</div>
     <p>The end-of-turn check compares against git. Run Claude Code inside a git repository. Checks before each write still work without git.</p>
 
     <h3>Edits that break ADR-012 go through, with no message</h3>
     <p><code>MNEME_HOOK_MODE=warn</code> is set. In warn mode the hook hands the edit back to Claude Code's normal permission flow with the violation as a reason:</p>
-    <pre class="term-block" data-fixture="out:hook-warn-mode">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "defer", "permissionDecisionReason": "mneme: FAIL - architectural decision violated\n  [ADR-012] FAIL \"from app.db.client import\" - trigger: from app.db.client import\n      Request handlers do not import the database client\n      path: app/handlers/invoices.py via app/handlers/**"}}</pre>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:hook-warn-mode">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "defer", "permissionDecisionReason": "mneme: FAIL - architectural decision violated\n  [ADR-012] FAIL \"from app.db.client import\" - trigger: from app.db.client import\n      Request handlers do not import the database client\n      path: app/handlers/invoices.py via app/handlers/**"}}</pre>
+</div>
     <p>Claude Code ignores that reason, so neither the agent nor you sees it. Only the end-of-turn check reaches the agent in warn mode. Unset the variable to go back to strict mode, and use <code>mneme check</code> or the CI check to collect findings instead.</p>
   </section>
 
@@ -440,6 +549,7 @@ mneme-hook &lt; events/stop.json</pre>
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -449,7 +559,6 @@ mneme-hook &lt; events/stop.json</pre>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>
@@ -682,5 +791,47 @@ mneme-hook &lt; events/stop.json</pre>
   }, true);
 })();
 </script>
+
+<script>
+(function () {
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      var copied = document.execCommand('copy');
+      field.remove();
+      if (copied) resolve(); else reject(new Error('copy unavailable'));
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-howto-copy]');
+    if (!button) return;
+    var block = button.closest('.howto-code');
+    var pre = block && block.querySelector('pre');
+    if (!pre) return;
+    var original = button.getAttribute('data-label') || button.textContent;
+    copyText(pre.textContent.trim()).then(function () {
+      button.textContent = 'Copied ✓';
+      button.setAttribute('data-copied', 'true');
+      window.setTimeout(function () {
+        button.textContent = original;
+        button.removeAttribute('data-copied');
+      }, 1800);
+    }).catch(function () {
+      button.textContent = 'Copy failed';
+      window.setTimeout(function () { button.textContent = original; }, 1800);
+    });
+  });
+})();
+</script>
+
 </body>
 </html>

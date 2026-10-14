@@ -39,6 +39,7 @@
   "@graph": [
     {
       "@type": "BreadcrumbList",
+      "@id": "https://mnemehq.com/docs/how-to/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -62,29 +63,110 @@
     },
     {
       "@type": "CollectionPage",
+      "@id": "https://mnemehq.com/docs/how-to/#webpage",
       "name": "How-to guides",
       "description": "Task-shaped Mneme guides: turn an ADR into an enforced decision, block an agent's forbidden import, load decisions per task, and fail a pull request that breaks an ADR.",
       "url": "https://mnemehq.com/docs/how-to/",
+      "inLanguage": "en",
+      "datePublished": "2026-10-05",
+      "dateModified": "2026-10-13",
+      "image": {
+        "@type": "ImageObject",
+        "@id": "https://mnemehq.com/docs/how-to/#primaryimage",
+        "url": "https://mnemehq.com/docs/how-to/og-v3.png",
+        "contentUrl": "https://mnemehq.com/docs/how-to/og-v3.png",
+        "width": 1200,
+        "height": 630
+      },
+      "breadcrumb": {
+        "@id": "https://mnemehq.com/docs/how-to/#breadcrumb"
+      },
+      "isPartOf": {
+        "@type": "WebSite",
+        "@id": "https://mnemehq.com/#website",
+        "name": "Mneme HQ",
+        "url": "https://mnemehq.com/"
+      },
+      "mainEntity": {
+        "@id": "https://mnemehq.com/docs/how-to/#itemlist"
+      },
       "hasPart": [
         {
-          "@type": "TechArticle",
+          "@type": [
+            "Article",
+            "TechArticle"
+          ],
+          "@id": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/#article",
+          "headline": "Turn an ADR into an enforceable decision",
           "name": "Turn an ADR into an enforceable decision",
           "url": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/"
         },
         {
-          "@type": "TechArticle",
+          "@type": [
+            "Article",
+            "TechArticle"
+          ],
+          "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#article",
+          "headline": "Stop an AI coding agent from crossing an architectural boundary",
           "name": "Stop an AI coding agent from crossing an architectural boundary",
           "url": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/"
         },
         {
-          "@type": "TechArticle",
+          "@type": [
+            "Article",
+            "TechArticle"
+          ],
+          "@id": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/#article",
+          "headline": "Give coding agents the decisions that apply to a task",
           "name": "Give coding agents the decisions that apply to a task",
           "url": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/"
         },
         {
-          "@type": "TechArticle",
+          "@type": [
+            "Article",
+            "TechArticle"
+          ],
+          "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#article",
+          "headline": "Fail a pull request that breaks an ADR",
           "name": "Fail a pull request that breaks an ADR",
           "url": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/"
+        }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://mnemehq.com/docs/how-to/#itemlist",
+      "name": "Mneme how-to guides",
+      "numberOfItems": 4,
+      "itemListOrder": "https://schema.org/ItemListOrderAscending",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/#article"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#article"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@id": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/#article"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#article"
+          }
         }
       ]
     }
@@ -184,19 +266,43 @@
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
 
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
-    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
+    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.7rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: #f1f1f4; }
+    .prose-section > p, .prose-section li { color: #c8c8d0; }
+    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: #c8c8d0; font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
     .prose-section ul.plain li code, .prose-section h3 code, .ref-table td code, .end-up code { font-family: 'DM Mono', monospace; font-size: 0.84em; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; }
     .prose-section ul.plain li a, .ref-table td a, .bound-list a { color: var(--accent); text-decoration: none; }
-    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 1.1rem 0 0.4rem; }
-    .term-block { margin-top: 0; }
+    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a9b4; margin: 1.1rem 0 0.4rem; }
+    .hero p.lede { color: #cfd0d7; }
     .hero p.lede code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
-    .bound-list .term-block { margin: 0.6rem 0; }
+    .howto-code { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); margin: 1rem 0 1.25rem; overflow: hidden; border: 1px solid #303038; border-left: 3px solid var(--block-accent); border-radius: 9px; background: var(--block-tint); }
+    .howto-code--command { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); }
+    .howto-code--file, .howto-code--config { --block-accent: #aaa3ff; --block-tint: rgba(170,163,255,0.055); }
+    .howto-code--output { --block-accent: #b5cc7a; --block-tint: rgba(181,204,122,0.045); }
+    .howto-code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.35rem; padding: 0.48rem 0.75rem 0.48rem 0.9rem; border-bottom: 1px solid #303038; }
+    .howto-code-label { min-width: 0; overflow: hidden; color: var(--block-accent); font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+    .howto-code-label code { color: #c9c9d1; font-size: 0.95em; letter-spacing: 0; text-transform: none; }
+    .howto-copy { flex-shrink: 0; padding: 0.32rem 0.55rem; border: 1px solid #41414a; border-radius: 5px; background: rgba(12,12,13,0.6); color: #d2d2d9; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.64rem; }
+    .howto-copy:hover { border-color: var(--block-accent); color: #fff; }
+    .howto-copy:focus-visible { outline: 2px solid var(--block-accent); outline-offset: 2px; }
+    .howto-copy[data-copied="true"] { border-color: #b5cc7a; color: #b5cc7a; }
+    .howto-code pre.term-block { max-width: none; margin: 0; border: 0; border-radius: 0; background: rgba(9,9,11,0.48); color: #ededf1; }
+    .bound-list .howto-code { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
+    @media (max-width: 640px) {
+      .howto-code-head { align-items: flex-start; }
+      .howto-code-label { white-space: normal; }
+      .howto-copy { padding: 0.38rem 0.5rem; }
+    }
   </style>
 
 </head>
@@ -284,55 +390,52 @@
 <section class="hero">
   <div class="section-eyebrow">Docs &middot; How-to guides</div>
   <h1>How-to guides</h1>
-  <p class="lede">Each guide solves one engineering job. Every output shown is recorded from mneme-hq 0.10.0, and CI replays those steps on every change to the guides. Steps that need your own setup, such as starting Claude Code, are marked and not replayed.</p>
+  <p class="lede">Follow four tested guides from a written ADR to agent and pull-request enforcement. Every recorded command and output is replayed in CI; steps that need your own setup are marked.</p>
 </section>
 
 <div class="wrap">
 
   <section class="prose-section">
-    <h2>Make decisions enforceable</h2>
+    <h2>Recommended path</h2>
+    <p>Start with an ADR, then add enforcement where your agents work and where changes merge. Each guide builds on the same ADR-012 example, so you can follow the path in order without resetting your project.</p>
+    <p><strong>Already partway through?</strong> If your ADR is imported, jump to agent enforcement in step 2 or task-specific retrieval in step 3. If local checks already pass, go straight to the pull-request gate in step 4.</p>
     <div class="cross-links">
       <a class="cross-card" href="/docs/how-to/adr-to-enforceable-decision/">
-        <span class="cl-label">How-to &middot; CLI</span>
+        <span class="cl-label">Step 1 &middot; CLI</span>
         <span class="cl-title">Turn an ADR into an enforceable decision</span>
         <span class="cl-sub">Add a Constraints section, import the ADR, and get a FAIL when a handler imports the database client.</span>
       </a>
+      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <span class="cl-label">Step 2 &middot; Claude Code</span>
+        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
+        <span class="cl-sub">Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/give-agents-applicable-decisions/">
+        <span class="cl-label">Step 3 &middot; Claude Code, MCP</span>
+        <span class="cl-title">Give coding agents the decisions that apply to a task</span>
+        <span class="cl-sub">Look up the ADRs for the file an agent is editing, from the CLI or the MCP server.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <span class="cl-label">Step 4 &middot; GitHub Actions</span>
+        <span class="cl-title">Fail a pull request that breaks an ADR</span>
+        <span class="cl-sub">Run mneme check on every changed file and keep the JSON verdicts.</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="prose-section">
+    <h2>Related guides</h2>
+    <p>Use these when you already have decisions in Mneme and need to activate a proposed guardrail or review a decision proposed by an agent.</p>
+    <div class="cross-links">
       <a class="cross-card" href="/docs/protection-activation/">
         <span class="cl-label">Guide &middot; CLI</span>
         <span class="cl-title">Activate protection for a Mneme-ready decision</span>
         <span class="cl-sub">List, validate and activate the guardrail the audit proposes for an existing decision.</span>
       </a>
-    </div>
-  </section>
-
-  <section class="prose-section">
-    <h2>Reach your coding agents</h2>
-    <div class="cross-links">
-      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
-        <span class="cl-label">How-to &middot; Claude Code</span>
-        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
-        <span class="cl-sub">Block a forbidden import before Claude Code writes it, and tell the agent which decision it broke.</span>
-      </a>
-      <a class="cross-card" href="/docs/how-to/give-agents-applicable-decisions/">
-        <span class="cl-label">How-to &middot; Claude Code, MCP</span>
-        <span class="cl-title">Give coding agents the decisions that apply to a task</span>
-        <span class="cl-sub">Look up the ADRs for the file an agent is editing, from the CLI or the MCP server.</span>
-      </a>
       <a class="cross-card" href="/docs/decision-proposals/">
         <span class="cl-label">Guide &middot; CLI, MCP</span>
         <span class="cl-title">Review decisions an agent proposes</span>
         <span class="cl-sub">Agents propose over MCP; people accept or reject with the CLI.</span>
-      </a>
-    </div>
-  </section>
-
-  <section class="prose-section">
-    <h2>Gate changes at merge</h2>
-    <div class="cross-links">
-      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
-        <span class="cl-label">How-to &middot; GitHub Actions</span>
-        <span class="cl-title">Fail a pull request that breaks an ADR</span>
-        <span class="cl-sub">Run mneme check on every changed file and keep the JSON verdicts.</span>
       </a>
     </div>
   </section>
@@ -361,6 +464,7 @@
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -370,7 +474,6 @@
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

@@ -39,6 +39,7 @@
   "@graph": [
     {
       "@type": "BreadcrumbList",
+      "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#breadcrumb",
       "itemListElement": [
         {
           "@type": "ListItem",
@@ -67,20 +68,45 @@
       ]
     },
     {
-      "@type": "TechArticle",
+      "@type": [
+        "Article",
+        "TechArticle"
+      ],
+      "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#article",
       "headline": "Fail a pull request that breaks an ADR",
       "description": "Add a GitHub Actions workflow that runs mneme check on every changed file, fails the pull request when one breaks ADR-012, and keeps the JSON verdicts.",
       "url": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#webpage"
+      },
+      "isPartOf": {
+        "@type": "CollectionPage",
+        "@id": "https://mnemehq.com/docs/how-to/#webpage",
+        "name": "How-to guides",
+        "url": "https://mnemehq.com/docs/how-to/"
+      },
+      "inLanguage": "en",
       "datePublished": "2026-10-05",
-      "dateModified": "2026-10-05",
+      "dateModified": "2026-10-13",
+      "image": {
+        "@type": "ImageObject",
+        "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#primaryimage",
+        "url": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/og-v2.png",
+        "contentUrl": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/og-v2.png",
+        "width": 1200,
+        "height": 630
+      },
       "proficiencyLevel": "Beginner",
       "author": {
         "@type": "Person",
+        "@id": "https://mnemehq.com/founder/#person",
         "name": "Theo Valmis",
         "url": "https://mnemehq.com/founder/"
       },
       "publisher": {
         "@type": "Organization",
+        "@id": "https://mnemehq.com/#organization",
         "name": "Mneme HQ",
         "url": "https://mnemehq.com/",
         "logo": {
@@ -185,19 +211,43 @@
   
     .skip-link { position: absolute; left: -9999px; top: 0; z-index: 1000; background: var(--accent, #b5cc7a); color: #0c0c0d; padding: 0.6rem 1.1rem; border-radius: 0 0 6px 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; text-decoration: none; }
 
-    .howto-meta { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta.byline { font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 1.4rem; }
+    .howto-meta a { color: inherit; text-decoration-color: var(--border); text-underline-offset: 0.2em; }
+    .howto-meta a:hover { color: var(--text); }
     .end-up { margin-top: 0.85rem; font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 720px; }
     .end-up strong { color: var(--accent); font-weight: 500; }
-    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 0.98rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--text); }
-    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: var(--muted); font-size: 0.93rem; line-height: 1.85; }
+    .howto-toc { display: flex; flex-wrap: wrap; align-items: center; gap: 0.55rem 1rem; margin-top: 1.15rem; max-width: 760px; font-size: 0.78rem; }
+    .howto-toc-label { font-family: 'DM Mono', monospace; letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted); }
+    .howto-toc a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); padding-bottom: 0.08rem; }
+    .howto-toc a:hover { color: var(--accent); border-color: var(--accent); }
+    .prose-section h3 { font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; margin: 2rem 0 0.7rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: #f1f1f4; }
+    .prose-section > p, .prose-section li { color: #c8c8d0; }
+    .prose-section ul.plain { margin: 0.25rem 0 1rem 1.2rem; color: #c8c8d0; font-size: 0.93rem; line-height: 1.85; }
     .prose-section ul.plain li { margin-bottom: 0.35rem; }
     .prose-section ul.plain li code, .prose-section h3 code, .ref-table td code, .end-up code { font-family: 'DM Mono', monospace; font-size: 0.84em; color: var(--text); background: var(--surface2); border: 1px solid var(--border); border-radius: 4px; padding: 0.05rem 0.35rem; }
     .prose-section ul.plain li a, .ref-table td a, .bound-list a { color: var(--accent); text-decoration: none; }
-    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 1.1rem 0 0.4rem; }
-    .term-block { margin-top: 0; }
+    .term-label { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: #a9a9b4; margin: 1.1rem 0 0.4rem; }
+    .hero p.lede { color: #cfd0d7; }
     .hero p.lede code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--text); }
-    .bound-list .term-block { margin: 0.6rem 0; }
+    .howto-code { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); margin: 1rem 0 1.25rem; overflow: hidden; border: 1px solid #303038; border-left: 3px solid var(--block-accent); border-radius: 9px; background: var(--block-tint); }
+    .howto-code--command { --block-accent: #f2a08e; --block-tint: rgba(234,115,94,0.055); }
+    .howto-code--file, .howto-code--config { --block-accent: #aaa3ff; --block-tint: rgba(170,163,255,0.055); }
+    .howto-code--output { --block-accent: #b5cc7a; --block-tint: rgba(181,204,122,0.045); }
+    .howto-code-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.35rem; padding: 0.48rem 0.75rem 0.48rem 0.9rem; border-bottom: 1px solid #303038; }
+    .howto-code-label { min-width: 0; overflow: hidden; color: var(--block-accent); font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; }
+    .howto-code-label code { color: #c9c9d1; font-size: 0.95em; letter-spacing: 0; text-transform: none; }
+    .howto-copy { flex-shrink: 0; padding: 0.32rem 0.55rem; border: 1px solid #41414a; border-radius: 5px; background: rgba(12,12,13,0.6); color: #d2d2d9; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 0.64rem; }
+    .howto-copy:hover { border-color: var(--block-accent); color: #fff; }
+    .howto-copy:focus-visible { outline: 2px solid var(--block-accent); outline-offset: 2px; }
+    .howto-copy[data-copied="true"] { border-color: #b5cc7a; color: #b5cc7a; }
+    .howto-code pre.term-block { max-width: none; margin: 0; border: 0; border-radius: 0; background: rgba(9,9,11,0.48); color: #ededf1; }
+    .bound-list .howto-code { margin: 0.6rem 0; }
     .ref-table td:first-child { white-space: normal; }
+    @media (max-width: 640px) {
+      .howto-code-head { align-items: flex-start; }
+      .howto-code-label { white-space: normal; }
+      .howto-copy { padding: 0.38rem 0.5rem; }
+    }
   </style>
 
 </head>
@@ -287,8 +337,16 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Fail a pull request that breaks an ADR</h1>
   <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too.</p>
-  <p class="howto-meta">Tested with mneme-hq 0.10.0 &middot; GitHub Actions</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.</p>
+  <nav class="howto-toc" aria-label="On this page">
+    <span class="howto-toc-label">On this page</span>
+    <a href="#prerequisites">Prerequisites</a>
+    <a href="#configure">Configure</a>
+    <a href="#run">Run</a>
+    <a href="#expected-result">Expected result</a>
+    <a href="#troubleshooting">Troubleshooting</a>
+  </nav>
 </section>
 
 <div class="wrap">
@@ -309,7 +367,9 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <p>Save this as <code>.github/workflows/mneme-decisions.yml</code>:</p>
-    <pre class="term-block" data-fixture="file:.github/workflows/mneme-decisions.yml">name: Architecture decisions
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>.github/workflows/mneme-decisions.yml</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:.github/workflows/mneme-decisions.yml">name: Architecture decisions
 
 on:
   pull_request:
@@ -370,6 +430,7 @@ jobs:
         with:
           name: mneme-verdicts
           path: mneme-results/</pre>
+</div>
     <ul class="plain">
       <li><code>fetch-depth: 0</code> fetches the history the workflow needs to compare the pull request against <code>main</code>.</li>
       <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. Ignore the conflicts note the import prints; the step passes when <code>git diff</code> exits 0.</li>
@@ -384,28 +445,36 @@ jobs:
   <section class="prose-section" id="run">
     <h2>Run</h2>
     <p>Open a pull request that adds three files: a handler with the forbidden import, <code>app/handlers/invoices.py</code>; a repository file that is allowed to import the client, <code>app/repositories/invoices.py</code>; and an image, <code>app/static/logo.png</code>. The handler:</p>
-    <pre class="term-block" data-fixture="file:inputs/invoices_direct.py">from app.db.client import get_connection
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>inputs/invoices_direct.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:inputs/invoices_direct.py">from app.db.client import get_connection
 
 
 def list_invoices(customer_id: str):
     conn = get_connection()
     return conn.execute("SELECT * FROM invoices WHERE customer_id = ?", (customer_id,))</pre>
+</div>
     <p>The workflow starts on its own. We tested it by running the workflow's exact <code>run:</code> scripts against a local copy of that pull request, not on GitHub's runners.</p>
   </section>
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
     <p>The memory check passes. The decision check prints one line per changed file and the job exits with code 2:</p>
-    <pre class="term-block" data-fixture="out:check-changed-files">exit=2  app/handlers/invoices.py
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:check-changed-files">exit=2  app/handlers/invoices.py
 exit=0  app/repositories/invoices.py
 skip    app/static/logo.png (binary)</pre>
+</div>
     <p>The handler fails. The repository file passes, because ADR-012 applies only under <code>app/handlers/</code>. The image is skipped.</p>
   </section>
 
   <section class="prose-section" id="evidence">
     <h2>Evidence</h2>
     <p>Download the <code>mneme-verdicts</code> artifact from the workflow run. It holds one JSON verdict per changed file. The one for the handler names the decision, the matched text and the path selector:</p>
-    <pre class="term-block" data-fixture="out:show-verdict">{
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:show-verdict">{
     "schema": "mneme.check/v1",
     "verdict": "FAIL",
     "mode": "strict",
@@ -438,6 +507,7 @@ skip    app/static/logo.png (binary)</pre>
     ],
     "freshness": []
 }</pre>
+</div>
     <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can't complete reports INCOMPLETE and exits 2, so it fails the job instead of passing it.</p>
 
     <h3>Protect the governance surface</h3>
@@ -458,7 +528,10 @@ skip    app/static/logo.png (binary)</pre>
     <h2>Troubleshooting</h2>
     <h3>The memory check fails after an ADR edit</h3>
     <p>The ADR changed but the committed memory file didn't, so <code>git diff --exit-code</code> exits 1. Re-import locally and commit the result. If it fails on every pull request, check the ADRs&rsquo; line endings: the memory file records a hash of each ADR&rsquo;s bytes, so add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>.</p>
-    <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+</div>
 
     <h3>The check step fails before checking any file</h3>
     <p>The step exits 2 when <code>git diff</code> can't compare against <code>origin/$BASE_REF</code>, usually because the checkout is shallow. Keep <code>fetch-depth: 0</code> on the checkout step.</p>
@@ -468,16 +541,22 @@ skip    app/static/logo.png (binary)</pre>
 
     <h3>You want to see findings without failing pull requests yet</h3>
     <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0:</p>
-    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
   --input app/handlers/invoices.py --target-path app/handlers/invoices.py \
   --query "PR change: app/handlers/invoices.py" --mode warn</pre>
-    <pre class="term-block" data-fixture="out:warn-mode">FAIL  [ADR-012] FORBID_LITERAL "from app.db.client import" -- trigger: from app.db.client import
+</div>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:warn-mode">FAIL  [ADR-012] FORBID_LITERAL "from app.db.client import" -- trigger: from app.db.client import
       Request handlers do not import the database client
       path: app/handlers/invoices.py via app/handlers/**
 
 PATH  APPLIED  [ADR-012] app/handlers/invoices.py via app/handlers/** -- an include selector matched
 
 Result: FAIL</pre>
+</div>
     <p>Remove the flag once the findings look right.</p>
   </section>
 
@@ -531,6 +610,7 @@ Result: FAIL</pre>
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -540,7 +620,6 @@ Result: FAIL</pre>
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>
@@ -773,5 +852,47 @@ Result: FAIL</pre>
   }, true);
 })();
 </script>
+
+<script>
+(function () {
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function (resolve, reject) {
+      var field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.style.position = 'fixed';
+      field.style.opacity = '0';
+      document.body.appendChild(field);
+      field.select();
+      var copied = document.execCommand('copy');
+      field.remove();
+      if (copied) resolve(); else reject(new Error('copy unavailable'));
+    });
+  }
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest('[data-howto-copy]');
+    if (!button) return;
+    var block = button.closest('.howto-code');
+    var pre = block && block.querySelector('pre');
+    if (!pre) return;
+    var original = button.getAttribute('data-label') || button.textContent;
+    copyText(pre.textContent.trim()).then(function () {
+      button.textContent = 'Copied ✓';
+      button.setAttribute('data-copied', 'true');
+      window.setTimeout(function () {
+        button.textContent = original;
+        button.removeAttribute('data-copied');
+      }, 1800);
+    }).catch(function () {
+      button.textContent = 'Copy failed';
+      window.setTimeout(function () { button.textContent = original; }, 1800);
+    });
+  });
+})();
+</script>
+
 </body>
 </html>

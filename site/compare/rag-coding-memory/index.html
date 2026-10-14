@@ -186,7 +186,7 @@
         "description": "RAG can help coding agents retrieve project context, but architectural decisions need deterministic recall, scope handling, precedence, and auditability. Compare RAG coding memory with Mneme.",
         "url": "https://mnemehq.com/compare/rag-coding-memory/",
         "datePublished": "2026-05-27",
-        "dateModified": "2026-05-27",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/compare/rag-coding-memory/og-v2.png",
@@ -398,7 +398,7 @@
 
     <p>Code is structured. Files have paths. Modules have boundaries. Architectural decisions have explicit scope &mdash; this applies to <code style="font-family:'DM Mono',monospace;font-size:0.88em;color:var(--text);">services/auth/**</code>, that applies to the whole repo. Vector search flattens all of this into similarity space and asks the model to reconstruct it from context.</p>
 
-    <p>Mneme treats decisions as typed records, not text. Each decision has explicit scope (file glob, directory, repo), a precedence position (override, supersedes), and a machine-evaluable predicate. When an AI coding agent attempts an Edit or Write, Mneme looks up which decisions apply by scope match, resolves any precedence conflicts deterministically, and either lets the edit through or blocks it with the specific decision that fired.</p>
+    <p>Mneme treats decisions as typed records, not text. Each decision has explicit scope labels and, where a rule only applies to some files, path globs, a precedence position (override, supersedes), and a machine-evaluable predicate. When an AI coding agent attempts an Edit or Write, Mneme looks up which decisions apply by scope match, resolves any precedence conflicts deterministically, and either lets the edit through or blocks it with the specific decision that fired.</p>
 
     <p>The retrieval is exact. Same file, same edit, same verdict &mdash; every time, every agent, every session. There is no embedding drift because there is no embedding. There is no top-k miss because there is no ranking step. The decision either applies (by scope) or it doesn&rsquo;t.</p>
 
@@ -484,6 +484,7 @@
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -493,7 +494,6 @@
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

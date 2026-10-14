@@ -248,7 +248,7 @@
         "description": "Claude Code's CLAUDE.md provides instructions the model may follow. Mneme HQ hooks into Claude Code's Edit/Write operations and blocks violations before they happen. Instructions vs enforcement.",
         "url": "https://mnemehq.com/compare/claude-code-memory/",
         "datePublished": "2026-05-14",
-        "dateModified": "2026-05-14",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "@id": "https://mnemehq.com/#organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/compare/claude-code-memory/og-v2.png",
@@ -275,7 +275,7 @@
           {"@type": "Question", "name": "Does Mneme HQ replace CLAUDE.md, or do they coexist?", "acceptedAnswer": {"@type": "Answer", "text": "They coexist. CLAUDE.md is the right place for project conventions, build commands, and orientation context that the model benefits from reading at session start. Mneme HQ is the right place for architectural decisions that must not be violated regardless of what the model decides to do with the CLAUDE.md context. The two layers serve different purposes: CLAUDE.md primes the model, Mneme enforces at the tool-call boundary."}},
           {"@type": "Question", "name": "Why isn't a well-written CLAUDE.md enough?", "acceptedAnswer": {"@type": "Answer", "text": "Because CLAUDE.md is read as context, not enforced as a constraint. The model may follow it, may partially follow it, may miss a section as the context window fills, or may decide a rule does not apply to the current edit. There is no deterministic stop. For rules where 'the model usually does the right thing' is not good enough, you need a hook that blocks the Edit/Write call before the file is written."}},
           {"@type": "Question", "name": "Does Mneme HQ work for agents other than Claude Code?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. The decision corpus is agent-agnostic. Claude Code is the first integration because of its hook surface, but the same corpus exports to Cursor rules, can be queried from any agent that supports MCP, and can be enforced in CI for agents that do not have a hook layer. CLAUDE.md is Claude-Code-specific by design."}},
-          {"@type": "Question", "name": "What does a Mneme decision look like compared to a CLAUDE.md instruction?", "acceptedAnswer": {"@type": "Answer", "text": "A CLAUDE.md instruction is a sentence of prose: 'Use the repository pattern in services/payments.' A Mneme decision is a structured record with an id, scope glob, status (draft/active/superseded), constraints field, supersedes chain, and rationale. The model still sees a human-readable explanation, but the hook can match the scope deterministically and the precedence engine can resolve conflicts."}}
+          {"@type": "Question", "name": "What does a Mneme decision look like compared to a CLAUDE.md instruction?", "acceptedAnswer": {"@type": "Answer", "text": "A CLAUDE.md instruction is a sentence of prose: 'Use the repository pattern in services/payments.' A Mneme decision is a structured record with an id, a scope, optional path globs for where its rules apply, an ADR status (proposed, accepted, deprecated, or superseded), constraints, a supersedes chain, and a rationale. The model still sees a human-readable explanation, but the hook can match the paths deterministically and the precedence engine can resolve conflicts."}}
         ]
       },
       {
@@ -284,7 +284,7 @@
         "description": "Keep CLAUDE.md for orientation and conventions. Use Mneme HQ as the enforcement layer for architectural decisions that must not be violated.",
         "step": [
           {"@type": "HowToStep", "name": "Keep CLAUDE.md for orientation context", "text": "Leave project conventions, build commands, repo layout, and 'how to work here' notes in CLAUDE.md. This is exactly what CLAUDE.md is for."},
-          {"@type": "HowToStep", "name": "Move enforceable architectural decisions into Mneme", "text": "Anything in CLAUDE.md that starts with 'always,' 'never,' or 'must' is a candidate for a Mneme decision record. Run mneme init seeds project_memory.json and migrate those rules to typed decisions with scope globs."},
+          {"@type": "HowToStep", "name": "Move enforceable architectural decisions into Mneme", "text": "Anything in CLAUDE.md that starts with 'always,' 'never,' or 'must' is a candidate for a Mneme decision record. Run mneme init to create project_memory.json, write those rules as ADRs with typed constraints and path globs, and import them with mneme adr import."},
           {"@type": "HowToStep", "name": "Wire the Mneme hook into Claude Code", "text": "Add the mneme-hook entry to Claude Code's hooks config so Edit and Write tool calls are checked against the decision corpus before they execute."},
           {"@type": "HowToStep", "name": "Add Mneme to CI for the agents without hooks", "text": "Add a mneme check --mode strict step to CI so PRs from any agent (Claude Code, Cursor, codex, custom MCP clients) are validated against the same corpus."}
         ]
@@ -431,7 +431,7 @@
         <tr>
           <td>Decision versioning</td>
           <td>None</td>
-          <td>draft / active / superseded chain</td>
+          <td>ADR status: proposed / accepted / deprecated / superseded, with a supersedes chain</td>
         </tr>
         <tr>
           <td>Multi-agent</td>
@@ -537,7 +537,7 @@
 
       <details class="faq-item">
         <summary>What does a Mneme decision look like compared to a CLAUDE.md instruction?</summary>
-        <div class="faq-body">A CLAUDE.md instruction is a sentence of prose: "Use the repository pattern in services/payments." A Mneme decision is a structured record with an <code>id</code>, scope <code>glob</code>, <code>status</code> (draft/active/superseded), <code>constraints</code> field, <code>supersedes</code> chain, and <code>rationale</code>. The model still sees a human-readable explanation, but the hook can match the scope deterministically and the precedence engine can resolve conflicts.</div>
+        <div class="faq-body">A CLAUDE.md instruction is a sentence of prose: "Use the repository pattern in services/payments." A Mneme decision is a structured record with an <code>id</code>, a <code>scope</code>, optional path globs for where its rules apply, an ADR <code>status</code> (proposed, accepted, deprecated, or superseded), <code>constraints</code>, a <code>supersedes</code> chain, and a <code>rationale</code>. The model still sees a human-readable explanation, but the hook can match the paths deterministically and the precedence engine can resolve conflicts.</div>
       </details>
     </div>
 
@@ -585,6 +585,7 @@
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -594,7 +595,6 @@
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

@@ -28,7 +28,7 @@ Rules (each is one of: required / recommended / optional):
   Structure
     - exactly one <h1>                                      required
     - >= 2 <h2>                                             recommended
-    - body word count >= 500                                recommended
+    - body word count >= 500 (>= 300 for collection hubs)  recommended
     - body word count >= 1200 (long-form pages)             optional / aspirational
     - at least one internal link in body                    required
     - at least one cross-page link to /insights/, /standards/,
@@ -316,10 +316,15 @@ def rule_h2(html: str, ctx: PageContext) -> RuleResult:
 
 
 def rule_word_count(html: str, ctx: PageContext) -> RuleResult:
-    if ctx.word_count < 300:
-        return FAIL, f"{ctx.word_count} words (target ≥ 500)"
-    if ctx.word_count < 500:
-        return WARN, f"{ctx.word_count} words (target ≥ 500)"
+    # Collection pages are routing surfaces, not long-form articles. Requiring
+    # 500 words encourages padding exactly where users need quick scanning and
+    # clear choices; 300 words is enough to describe and differentiate a set.
+    target = 300 if "CollectionPage" in ctx.types else 500
+    fail_below = 200 if target == 300 else 300
+    if ctx.word_count < fail_below:
+        return FAIL, f"{ctx.word_count} words (target ≥ {target})"
+    if ctx.word_count < target:
+        return WARN, f"{ctx.word_count} words (target ≥ {target})"
     return PASS, ""
 
 
@@ -449,20 +454,28 @@ def rule_breadcrumb_html(html: str, ctx: PageContext) -> RuleResult:
     if len(parts) <= 1:
         return PASS, ""
 
-    # Build the expected parent hrefs list based on depth:
-    #   section hub  (e.g. insights/index.html)         → ["/"]
-    #   sub-page     (e.g. insights/foo/index.html)      → ["/", "/section/"]
-    if len(parts) == 2:
-        expected = ["/"]
-    else:
-        section = parts[0]
-        expected = ["/", f"/{section}/"]
+    # Build every expected parent from the URL hierarchy:
+    #   section hub  (e.g. insights/index.html)          → ["/"]
+    #   sub-page     (e.g. insights/foo/index.html)       → ["/", "/insights/"]
+    #   nested page  (e.g. docs/how-to/foo/index.html)    → ["/", "/docs/", "/docs/how-to/"]
+    directories = parts[:-1]
+    expected = ["/"] + [f"/{'/'.join(directories[:i])}/" for i in range(1, len(directories))]
 
     m = re.search(r'<ol\s+class=["\']breadcrumb["\']>(.*?)</ol>', html, flags=re.S | re.I)
     if not m:
         return PASS, ""  # no ol.breadcrumb present; skip
 
-    block = re.sub(r'<li[^>]*\baria-current\b[^>]*>.*?</li>', '', m.group(1), flags=re.S | re.I)
+    block = re.sub(
+        r'<!--\s*mneme:page-switcher:start\s*-->.*?<!--\s*mneme:page-switcher:end\s*-->',
+        '', m.group(1), flags=re.S | re.I,
+    )
+    block = re.sub(r'<li[^>]*\baria-current\b[^>]*>.*?</li>', '', block, flags=re.S | re.I)
+    # The page switcher is interactive navigation nested in the breadcrumb list;
+    # its panel links are peers, not ancestors of the current page.
+    block = re.sub(
+        r'<li[^>]*\bclass=["\'][^"\']*\bpage-switcher-item\b[^"\']*["\'][^>]*>.*?</li>',
+        '', block, flags=re.S | re.I,
+    )
     actual = re.findall(r'<a\b[^>]*\bhref\s*=\s*["\']([^"\']*)["\']', block, flags=re.I)
 
     if actual != expected:
@@ -527,9 +540,15 @@ def rule_faq_consistency(html: str, ctx: PageContext) -> RuleResult:
     # Treat any <details> + <summary> pair as a visible FAQ surface,
     # to match both the .faq-item pattern and the bare <details> pattern
     # used on older insights pages.
+    # Page switchers also use details/summary, but are navigation rather than
+    # question-and-answer content. Remove them before looking for a visible FAQ.
+    faq_body = re.sub(
+        r'<details[^>]*\bclass=["\'][^"\']*\bpage-switcher\b[^"\']*["\'][^>]*>.*?</details>',
+        '', ctx.main_body, flags=re.S | re.I,
+    )
     has_visible_faq = (
-        bool(re.search(r'<details\b', ctx.main_body, flags=re.I))
-        and bool(re.search(r'<summary\b', ctx.main_body, flags=re.I))
+        bool(re.search(r'<details\b', faq_body, flags=re.I))
+        and bool(re.search(r'<summary\b', faq_body, flags=re.I))
     )
     has_faq_jsonld = "FAQPage" in ctx.types
     if has_visible_faq and not has_faq_jsonld:
@@ -571,6 +590,9 @@ def rule_llms_entry(html: str, ctx: PageContext) -> RuleResult:
 _CSS_CLASS_ALLOWLIST = {
     "active", "open", "hidden", "visible", "selected", "current",
     "sr-only", "noscript", "no-js",
+    # Semantic structure hooks used by the generated breadcrumb switcher. The
+    # parent/panel selectors own their layout, so these need no direct rules.
+    "page-switcher-group", "page-switcher-item",
 }
 
 

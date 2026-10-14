@@ -54,7 +54,7 @@
         "description": "Review MCP decision proposals and exercise human authority with the mneme-hq 0.10.0 CLI.",
         "url": "https://mnemehq.com/docs/decision-proposals/",
         "datePublished": "2026-09-15",
-        "dateModified": "2026-10-12",
+        "dateModified": "2026-10-13",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/docs/decision-proposals/og-v2.png",
@@ -208,7 +208,7 @@
         <div class="flow-step"><span class="num">01</span><strong>Producer proposes</strong><span>An agent or architecture tool calls <code>decision.propose</code> or <code>decision.propose_batch</code>.</span></div>
         <div class="flow-step"><span class="num">02</span><strong>Mneme stores</strong><span>The candidate enters the MCP proposal store with status <code>proposed</code> and informational provenance.</span></div>
         <div class="flow-step"><span class="num">03</span><strong>Human decides</strong><span>A person inspects the proposal, then runs <code>mneme decision accept</code> or <code>reject</code>.</span></div>
-        <div class="flow-step"><span class="num">04</span><strong>Consumers continue</strong><span>Accepted decisions become canonical versions in the Decision Index, visible to MCP reads and to existing surfaces such as Architecture Audit.</span></div>
+        <div class="flow-step"><span class="num">04</span><strong>Consumers continue</strong><span>Accepted decisions become canonical versions in the Decision Index, visible to MCP reads, <code>mneme check</code>, and <code>mneme audit</code>.</span></div>
       </div>
 <pre tabindex="0"><code>producer / agent
   -&gt; MCP proposal
@@ -303,14 +303,14 @@ mneme decision reject dprop-example \
 
     <section class="section" id="next">
       <h2>After acceptance</h2>
-      <p>An accepted decision is ready for existing Mneme consumers, including <a href="/audit/">Architecture Audit</a>. Audit can determine whether the decision is already protected, ready for a deterministic guardrail, requires modelling, or remains guidance. That classification is downstream of acceptance; neither the producer nor MCP assigns it.</p>
+      <p>An accepted decision is ready for existing Mneme consumers, including the <a href="/docs/cli/#cmd-audit"><code>mneme audit</code></a> command. It determines whether the decision is already protected, ready for a deterministic guardrail, requires modelling, or remains guidance. That classification is downstream of acceptance; neither the producer nor MCP assigns it. The hosted <a href="/audit/">Architecture Audit</a> works differently: it reads files in the repository (ADRs, agent instruction files, <code>docs/</code> Markdown, and configuration), not project memory, so it sees an accepted decision only once that decision is written into the repository, for example as an ADR.</p>
       <p>If the decision should block incompatible changes, use <a href="/docs/protection-activation/">Setup and Protect</a> to validate and install an appropriate typed rule. Keeping these steps separate ensures that adoption of architectural intent is not confused with activation of an enforcement mechanism.</p>
     </section>
 
     <div class="cross-links">
       <a class="cross-card" href="/docs/mcp/"><span>Operator reference</span>MCP server and tool reference<p>Install, configure, and inspect the frozen six-tool surface.</p></a>
       <a class="cross-card" href="/docs/protection-activation/"><span>Next step</span>Setup and Protect<p>Validate and activate deterministic protection separately.</p></a>
-      <a class="cross-card" href="/audit/methodology/"><span>Downstream consumer</span>Architecture Audit methodology<p>How accepted decisions are assessed without changing them.</p></a>
+      <a class="cross-card" href="/docs/cli/#cmd-audit"><span>Downstream consumer</span>mneme audit<p>How the CLI classifies accepted decisions without changing them.</p></a>
       <a class="cross-card" href="https://github.com/MnemeHQ/mneme/releases/tag/v0.10.0"><span>Release proof</span>mneme-hq 0.10.0<p>The published decision-authority CLI contract and the Decision Index.</p></a>
     </div>
   </div>
@@ -330,6 +330,7 @@ mneme decision reject dprop-example \
         <li><a href="/works-with/">Works with</a></li>
         <li><a href="/platforms/">Platforms</a></li>
         <li><a href="/integrations/">Integrations</a></li>
+        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/compare/">Compare</a></li>
         <li><a href="/demo/">Demo</a></li>
         <li><a href="/benchmark/">Benchmark</a></li>
@@ -339,7 +340,6 @@ mneme decision reject dprop-example \
       <div style="font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.9rem;">Developers</div>
       <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; font-size: 0.82rem;">
         <li><a href="/docs/">Docs</a></li>
-        <li><a href="/docs/how-to/">How-to guides</a></li>
         <li><a href="/docs/cli/">CLI reference</a></li>
         <li><a href="/docs/governance-violations/">Governance violations</a></li>
         <li><a href="/supported-languages/">Supported languages</a></li>

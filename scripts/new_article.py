@@ -6,6 +6,11 @@ composing the JSON-LD @graph (BreadcrumbList + TechArticle [+ FAQPage])
 from structured arguments. The emitted page is already on the shared
 base.css system; sync_shared.py remains a safety net, not a requirement.
 
+--type is the article's one canonical content type (see
+scripts/check_insight_types.py). It fills both the eyebrow and
+article:section, which CI requires to match. --eyebrow is accepted as an
+alias.
+
 Registration is still manual per PUBLISHING.md: sitemap entry, archive /
 topic-hub card (scripts/sync_insights_catalog.py), an OG card record in
 site/og/cards.yaml rendered via scripts/render_og.py, and at least one
@@ -19,7 +24,7 @@ Usage:
     --date 2026-08-23 \
     --lede "One-paragraph standfirst." \
     --body-file body.html \
-    [--section Engineering] [--eyebrow Concept] [--read-time "9 min read"] \
+    --type "Report Response" [--read-time "9 min read"] \
     [--faq faq.json] [--about-terms "term one","term two"] \
     [--force]
 """
@@ -32,6 +37,8 @@ import json
 import re
 import sys
 from pathlib import Path
+
+from check_insight_types import CANONICAL_TYPES
 
 REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
@@ -96,8 +103,10 @@ def main(argv: list[str]) -> int:
     ap.add_argument("--date", required=True, help="ISO date, e.g. 2026-08-23")
     ap.add_argument("--body-file", required=True, type=Path,
                     help="HTML fragment: everything between </header> and the newsletter aside")
-    ap.add_argument("--section", default="Engineering")
-    ap.add_argument("--eyebrow", default="Concept", help="Concept | Guide | Analysis ...")
+    ap.add_argument("--type", "--eyebrow", dest="content_type", required=True,
+                    choices=list(CANONICAL_TYPES),
+                    help="canonical content type, used for both the eyebrow "
+                         "and article:section")
     ap.add_argument("--read-time", default=None, help='e.g. "7 min read"')
     ap.add_argument("--faq", type=Path, default=None,
                     help="JSON file of FAQPage mainEntity items")
@@ -154,13 +163,13 @@ def main(argv: list[str]) -> int:
         "{{PUB_TIMESTAMP}}": date_iso + "T00:00:00Z",
         "{{PUB_DATE_ISO}}": date_iso,
         "{{PUB_DATE_HUMAN}}": date_human,
-        "{{SECTION}}": esc(args.section),
-        "{{EYEBROW_TAG}}": esc(args.eyebrow),
+        "{{SECTION}}": esc(args.content_type),
+        "{{EYEBROW_TAG}}": esc(args.content_type),
         "{{READ_TIME}}": esc(read_time),
         "{{LEDE}}": args.lede,
         "{{JSON_LD_BLOCK}}": render_jsonld(
             slug_url, og_image, args.title, args.description,
-            date_iso, args.section, about_terms, faq_data),
+            date_iso, args.content_type, about_terms, faq_data),
         "{{BODY_CONTENT}}": args.body_file.read_text(encoding="utf-8").strip(),
     }
     for token, value in replacements.items():
