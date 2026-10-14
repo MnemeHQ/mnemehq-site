@@ -29,6 +29,10 @@ not every chat in the project.
 | ***Post - Microsoft Assess Mneme Thesis | 2026-09-22 | `microsoft-ai-decision-brief-architectural-intent` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
 | ***Post-Atlassian Mneme Comparison | 2026-09-19 | `atlassian-agentic-pivot-engineering-system-of-record` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
 | ***Post-Package hallucinations explainer | 2026-09-14 | `package-hallucinations-pre-action-governance` | [#150](https://github.com/MnemeHQ/mnemehq-site/pull/150) | 2026-09-25 |
+| ***Post-Assess EY Report | 2026-10-07 | `ey-beyond-the-code-ai-software-development` | [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216) | 2026-10-14 |
+| ***Post- Cohesion And Reddit Thread | 2026-10-04 | `return-of-the-silo-engineer` (insight 1); insights 2 and 3 became `/concepts/engineering-coherence/` and a section of `/concepts/engineering-decision-governance/` | [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216), [#214](https://github.com/MnemeHQ/mnemehq-site/pull/214) | 2026-10-14 |
+| ***Post-AI Silo Breakdown Content | 2026-09-12 | folded into `return-of-the-silo-engineer` as one section | [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216) | 2026-10-14 |
+| ***Post-Scope pre action governance | 2026-09-08 | `pre-action-enforcement-agent-governance` | [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216) | 2026-10-14 |
 
 Notes carried over: the software-factory pillar is one article refined across two chats (the 2nd adds the Bob Bemer/1968 historical framing) — it's the pillar of a planned 5-article cluster, only the pillar is scoped/shipped so far. Conway and Brooks are cross-linked as a pair. The private AI piece's Latham facts were verified against Bloomberg Law and Legal IT Insider; the FT citation named in the original scope chat could not be located and was dropped.
 
@@ -68,3 +72,5 @@ Do not rename this chat with `***` until these are either shipped or explicitly 
 **Last insight-article PR before this ledger was created:** [#136](https://github.com/MnemeHQ/mnemehq-site/pull/136),
 merged 2026-09-17T13:37:05Z — "Position Mneme's Decision Index against post-MCP
 agentic change management."
+
+Notes for #216 (batch 1, 2026-10-14): deployed at `93d47012` (deploy run 38632284531; `site-deployed` = `main`). The Reddit thread from the Cohesion chat was dropped as unverifiable (reddit.com is blocked in both browsers). The pre-merge Opus audit caught one blocker, the EY chart's code-review and test-generation figures swapped by text extraction. All four chats were renamed with the `***` marker on 2026-10-14 after the deploy, and the new titles were verified by re-listing the project.

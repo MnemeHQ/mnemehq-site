@@ -1,6 +1,6 @@
 # Scope brief: Post- Cohesion And Reddit Thread
 
-Status: **insight 1 built 2026-10-14** as `/insights/return-of-the-silo-engineer/` (batch 1 PR; not yet merged or deployed); the concept moved to its own brief; insight 3 folds into the decision-governance concept (decision 2026-10-14)
+Status: **insight 1 published 2026-10-14 in [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216), deployed at `93d47012`** as `/insights/return-of-the-silo-engineer/`. Insights 2 and 3 shipped as the Engineering Coherence and Engineering Decision Governance concept pages in #214, which also did the light refresh of `ai-makes-software-more-ambitious` and `agent-governance-in-the-sdlc`. Every site item is done; the drafted Reddit comment is social work, not site work; the concept moved to its own brief; insight 3 folds into the decision-governance concept (decision 2026-10-14)
 
 | Field | Value |
 |---|---|

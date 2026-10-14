@@ -1,6 +1,6 @@
 # Scope brief: Post-AI Silo Breakdown Content
 
-Status: **merged** (decision 2026-10-12): folded into "The Return of the Silo Engineer" as the section "The same silo, one level up: decision silos" (built 2026-10-14, batch 1 PR; not yet merged or deployed); see [Cohesion brief](2026-10-04-cohesion-and-reddit-thread.md). Not built separately. Do not treat the chat as published until that article ships.
+Status: **merged** (decision 2026-10-12): folded into "The Return of the Silo Engineer" as the section "The same silo, one level up: decision silos" (published 2026-10-14 in [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216), deployed at `93d47012`); see [Cohesion brief](2026-10-04-cohesion-and-reddit-thread.md). Not built separately.
 
 | Field | Value |
 |---|---|

@@ -11,12 +11,12 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | gathered, not built |
-| [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | built 2026-10-14 (batch 1 PR, not yet merged) |
+| [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | published 2026-10-14 (#216) |
 | [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | gathered, not built |
 | [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | concept built in the terminology-amendment PR (2026-10-14), pending merge; insights not built |
-| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | insight 1 built 2026-10-14 (batch 1 PR, not yet merged) |
+| [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | insight 1 published 2026-10-14 (#216); concepts in #214 |
 | [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
-| [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | built 2026-10-14 (batch 1 PR, not yet merged) |
+| [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | published 2026-10-14 (#216) |
 | [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | gathered, not built |
 | [OKF architecture article scope](2026-09-01-okf-architecture-article-scope.md) | 2026-09-01 | update existing insight | gathered, not built |
 | [Writing ROI Content (backlog)](2026-09-08-writing-roi-content-backlog.md) | 2026-09-08 (updated 09-10) | insight cluster | gathered, not built; chat must stay un-marked |
