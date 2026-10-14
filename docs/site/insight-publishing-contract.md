@@ -37,6 +37,27 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 9. **CollectionPage hasPart entry** — the slug must appear in the `hasPart` array of a `CollectionPage` JSON-LD on the **archive** (`/insights/all/`) or homepage. The archive carries the authoritative full list. The visible card (check 2) and the `hasPart` entry are checked independently; both must be present.
 
+**Content type**
+
+10. **One canonical content type** — the article's eyebrow (`<span class="eyebrow-tag">`), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v2.js` all carry the same label, and it is one of:
+
+    | Label | Public type in the archive filter | Use when the article's primary object is |
+    |---|---|---|
+    | `Analysis` | Analysis | a development, launch, market shift or argument the article analyses |
+    | `Research` | Research & reports | an academic paper, empirical study, benchmark or experiment |
+    | `Report Response` | Research & reports | a named industry report, survey, whitepaper or decision brief |
+    | `Guide` | Guides | a task the reader wants to do |
+    | `Concept` | Concepts & reference | a concept or term the article defines and explains |
+    | `Perspective` | Perspective | Mneme's own argument or viewpoint; it may cite studies or reports, but none of them is the article's primary object |
+    | `Comparison` | Product & comparison | a comparison between approaches or tools |
+    | `Integration` | Product & comparison | using Mneme with a specific tool |
+
+    Classify by the article's **primary object**, not by what it cites: an article that references a paper or report is not a Research or Report Response article unless that paper or report is what the article is about.
+
+    Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). `scripts/new_article.py --type <label>` writes both page fields.
+
+    `scripts/check_insight_types.py` (CI) enforces **consistency only**: one canonical label, identical in all four places. It cannot judge whether the label fits the article. That is a manual editorial review at publication and whenever an article's framing changes.
+
 ## How to register a new insight
 
 After writing `site/insights/<slug>/index.html`, do the following before opening the PR:
