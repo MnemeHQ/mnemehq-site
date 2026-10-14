@@ -6,14 +6,14 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
-| [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | scoped, not built; waits on terminology amendment |
+| [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | built in the terminology-amendment PR (2026-10-14), pending merge |
 | [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | gathered, not built |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | gathered, not built |
 | [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | gathered, not built; title decided |
 | [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | gathered, not built |
-| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | gathered, not built; concept waits on terminology amendment |
+| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | concept built in the terminology-amendment PR (2026-10-14), pending merge; insights not built |
 | [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | gathered; insight 1 ready |
 | [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
 | [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | gathered, not built |
@@ -35,7 +35,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 **Folded into concept pages (not articles):** The Coherence Problem in Agentic Software Development (into Engineering Coherence); When Code Becomes Cheap, Decisions Become the Scarce Asset (a section of Engineering Decision Governance).
 
-**After the terminology amendment (both terms in one amendment):** Engineering Coherence concept page; Engineering Decision Governance concept page; From Decision Records to Decision Governance.
+**Terminology amendment and both concept pages:** in one PR (2026-10-14), pending merge. **Ready once it merges:** From Decision Records to Decision Governance.
 
 ## Read before building
 

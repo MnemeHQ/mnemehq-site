@@ -1,6 +1,6 @@
 # Scope brief: Engineering Coherence (concept page)
 
-Status: **scoped, not built**; waits on the terminology amendment (see below)
+Status: **built** with the PUBLISHING.md terminology amendment in one PR (2026-10-14), pending merge
 
 | Field | Value |
 |---|---|
@@ -64,10 +64,10 @@ This reverses the 2026-10-12 decision of "no Engineering Coherence concept page"
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 40 (scored by hand: directness 8, rhythm 8, trust 8, authenticity 8, density 8); two slogan lines cut after the cold read |
+| `lint_prose.py` | errors: 0; warnings: 0 (both pages; the decision-governance page's one long-paragraph warning was fixed by splitting it) |
+| Cold read: thesis as restated | "Each change can be correct and still pull the system away from its own design decisions; coherence is how well changes stay consistent with them." Matches. |
+| Cold read: unclear terms, and how resolved | executor (defined inline), Mneme (introduced as the product), supported surfaces (examples added), ADR-031 (named and described before use), effective governance (reworded), supersession (defined); the coherence figure moved under its section. The cold read also caught an evidence overclaim ("links three to six"), fixed with the Opus audit's findings. |
 
 ## Open questions
 

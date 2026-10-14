@@ -451,6 +451,36 @@ decisions a team maintains) or for the industry-wide "decision layer"; do not ca
 store". A version is "immutable"; say what the index records (version history, lifecycle, source)
 and never imply it records approver identity, which it does not.
 
+**[ED] Terminology amendment, 2026-10-14: "engineering coherence" and "engineering decision
+governance".** Admitted as concept terms, each owned by one canonical concept page:
+`/concepts/engineering-coherence/` and `/concepts/engineering-decision-governance/`. Articles use
+the terms and link to those pages; they do not redefine them. Neither is a category, tagline or
+hero term: ADR-001 keeps "the decision and control layer for agentic software development" as the
+category and forbids "governance" as the category name, so no ADR-001/013/014 change is needed and
+neither term may replace the category on any surface. Rules of use:
+
+- **Engineering coherence** is the extent to which independently executed changes stay consistent
+  with the decisions, boundaries, constraints and assumptions that govern a system. "Drift" keeps
+  its locked meaning and is defined relative to it: architectural drift is the degradation of
+  coherence over time. Do not use "coherence" for code style or formatting consistency. The short
+  form "coherence" is fine after first use. Mneme does not "create" coherence; it carries decisions
+  into independent execution.
+- **Engineering decision governance** is the system that determines which engineering decisions
+  govern a given change, why, and with what evidence. Its product meaning comes from ADR-031
+  (Decision Governance Semantics, MnemeHQ/mneme): effective resolution, governance change and
+  evidence identity. ADR-031 is accepted but unreleased; describe those three as Mneme's design
+  direction, not as shipped behaviour, until a release ships them. Work merged to core `main` but
+  listed under "Unreleased" in the core CHANGELOG is not shipped: anchor shipped claims to the
+  released version (0.10.0 as of this amendment). The short form "decision
+  governance" is fine after first use. It is the umbrella over `/concepts/precedence-semantics/`
+  and `/concepts/decision-continuity/`, not a replacement for "decision corpus" (the decisions
+  themselves), "Decision Index" (the shipped store) or "decision layer" (the thesis-level layer,
+  2026-09-11 amendment).
+- Mneme did not coin either phrase. Do not write or imply that it did.
+- Not admitted: "decision engineering", "decision enforcement", "decision evidence" and "decision
+  infrastructure" as new defined terms ("decision infrastructure" keeps its 2026-09-11 thesis
+  meaning only). "Pre-action" names a mechanism, not a category.
+
 ---
 
 ## Validators
