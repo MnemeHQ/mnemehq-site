@@ -1,6 +1,6 @@
 # Scope brief: Post- Cohesion And Reddit Thread
 
-Status: **gathered, not built**; insight 1 ready; the concept moved to its own brief; insight 3 folds into the decision-governance concept (decision 2026-10-14)
+Status: **insight 1 built 2026-10-14** as `/insights/return-of-the-silo-engineer/` (batch 1 PR; not yet merged or deployed); the concept moved to its own brief; insight 3 folds into the decision-governance concept (decision 2026-10-14)
 
 | Field | Value |
 |---|---|
@@ -30,10 +30,10 @@ Report-anchored: no. Eyebrows: Concept / Analysis.
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 39 (directness 8, rhythm 8, trust 8, authenticity 8, density 7) |
+| `lint_prose.py` | 0 errors; 1 warning kept: "EY" is a brand name |
+| Cold read: thesis as restated | "AI coding agents recreate the silo engineer at team scale, so the architectural decisions that review and meetings used to carry must now be recorded with scope and status and checked automatically, instead of restoring the meetings." Matches. |
+| Cold read: unclear terms, and how resolved | Architectural drift (glossed inline), typed rules and hooks (glossed), Mneme (introduced by its category), MCP (expanded). Overstatements cut: "in an afternoon what used to take a sprint", "review capacity is fixed by headcount". The two examples are now labelled illustrative. |
 
 ## Agreed scope
 
@@ -70,8 +70,9 @@ Implementation abundance / coordination scarcity; verification moving earlier; s
 
 | Claim | Source | Verified? |
 |---|---|---|
-| r/ExperiencedDevs thread: developers overwhelmed by generated code and reduced collaboration; commenters ask for decisions before agents execute, call out architecture drift, siloing, an explicit owner for architectural decisions, and agent-approves-agent PRs | https://www.reddit.com/r/ExperiencedDevs/s/1DwHX4SXAW (share link; resolve to the canonical thread URL) | no |
-| Individual comment citations | ChatGPT internal references only, **no URLs** | no |
+| r/ExperiencedDevs thread: developers overwhelmed by generated code and reduced collaboration; commenters ask for decisions before agents execute, call out architecture drift, siloing, an explicit owner for architectural decisions, and agent-approves-agent PRs | https://www.reddit.com/r/ExperiencedDevs/s/1DwHX4SXAW (share link; resolve to the canonical thread URL) | **dropped 2026-10-14 (unverifiable)**: reddit.com is blocked by safety policy in both Claude in Chrome and the in-app browser, and scripted requests get a 403. TheoV823 chose to ship without it; the article argues from mechanism and cites no Reddit content |
+| Individual comment citations | ChatGPT internal references only, **no URLs** | dropped with the thread |
+| 13% of CTOs say AI weakened the junior-to-senior apprenticeship model; recommendation of "deliberate exposure to architectural decisions" | EY *Beyond the code* (see the EY brief), pp. 24-25 | verified |
 
 Reddit is anecdotal (it shows the pain in practitioners' own words; it is not market validation). Quote paraphrased, not verbatim, unless the comment is re-read and attributed.
 

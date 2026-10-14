@@ -1,6 +1,6 @@
 # Scope brief: Post-Scope pre action governance
 
-Status: **gathered, not built.** Do not treat as published; no `***` mark.
+Status: **built 2026-10-14** as `/insights/pre-action-enforcement-agent-governance/` (batch 1 PR; not yet merged or deployed). No `***` mark until deployed.
 
 | Field | Value |
 |---|---|
@@ -32,10 +32,10 @@ Status: **gathered, not built.** Do not treat as published; no `***` mark.
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 40 (8 on each dimension) |
+| `lint_prose.py` | 0 errors, 0 warnings |
+| Cold read: thesis as restated | "Agent governance only counts as enforcement if a control can refuse an action before it executes, but this works only on action paths the gate can fully see, so it must be paired with end-of-turn and CI backstops." Matches. |
+| Cold read: unclear terms, and how resolved | "decisions", "gate" and "backstop" defined at first use; Mneme introduced before its integrations are cited; heredoc, MultiEdit, tree and the Audit tiers glossed. "The most common mistake" softened to "a common mistake". |
 
 ## Agreed scope
 
@@ -106,5 +106,6 @@ None cited. No statistics, no URLs. References are only to Mneme's own prior pub
 ## Unverified / needs checking
 
 - Every statement about what Mneme enforces today (PreToolUse, native write paths, warn vs block) must be re-checked against the current release's documented behaviour (mneme-hq 0.10.0 release notes and docs) and classified SHIPPED / VALIDATED EXPERIMENT / PLANNED / CONCEPTUAL by the Opus audit.
-- Mentions of the O'Reilly and TechTalks pieces are unlinked; find the live URLs before citing.
-- AgentInspect is named without context; confirm what it is before referencing.
+- Mentions of the O'Reilly and TechTalks pieces are unlinked; find the live URLs before citing. **Not cited in the 2026-10-14 build.**
+- AgentInspect is named without context; confirm what it is before referencing. **Not referenced in the 2026-10-14 build.**
+- 2026-10-14 build: the article cites no external sources. Every Mneme claim is drawn from `/docs/how-enforcement-works/` and the Claude Code, Codex CLI, Kiro, Antigravity and Claude Agent SDK integration pages, and checked by the Opus audit.
