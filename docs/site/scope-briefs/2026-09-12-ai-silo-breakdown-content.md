@@ -1,6 +1,6 @@
 # Scope brief: Post-AI Silo Breakdown Content
 
-Status: **merged** (decision 2026-10-12): folded into "The Return of the Silo Engineer" as one section; see [Cohesion brief](2026-10-04-cohesion-and-reddit-thread.md). Not built separately. Do not treat the chat as published until that article ships.
+Status: **merged** (decision 2026-10-12): folded into "The Return of the Silo Engineer" as the section "The same silo, one level up: decision silos" (built 2026-10-14, batch 1 PR; not yet merged or deployed); see [Cohesion brief](2026-10-04-cohesion-and-reddit-thread.md). Not built separately. Do not treat the chat as published until that article ships.
 
 | Field | Value |
 |---|---|

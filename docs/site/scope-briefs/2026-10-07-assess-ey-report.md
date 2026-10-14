@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess EY Report
 
-Status: **gathered, not built**
+Status: **built 2026-10-14** as `/insights/ey-beyond-the-code-ai-software-development/` (batch 1 PR; not yet merged or deployed)
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,10 @@ Status: **gathered, not built**
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 39 (directness 8, rhythm 8, trust 8, authenticity 7, density 8) |
+| `lint_prose.py` | 0 errors; 1 warning kept: "EY" is the firm's legal brand name, not an abbreviation to expand |
+| Cold read: thesis as restated | "With AI generating code cheaply, the real delivery constraints are now QA, architecture/context and security review, so teams need machine-applicable decision governance rather than relying on human review alone." Matches. |
+| Cold read: unclear terms, and how resolved | Software Strategy Group (replaced with "EY's strategy consulting brand"), context-setting (glossed after the table), escaped defects (glossed), typed rules and hooks (glossed in Where Mneme fits), Mneme (introduced by its category). Unsourced generalisations ("few teams", "most teams") rewritten to EY figures; the four-layer stack is now attributed as Mneme's reading of EY. |
 
 ## Agreed scope
 
@@ -53,22 +53,23 @@ Status: **gathered, not built**
 
 ## Key facts, figures, sources
 
-**None verified.** EY figures must be checked against the PDF pages and quoted as CTO self-reports.
+**Verified 2026-10-14** against the live PDF (read in Chrome via pdf.js on ey.com, then cross-checked with `pdftotext`). Verbatim cover title: *Beyond the code: How AI is redefining the software industry*, subtitle "Insights from 400 European software CTOs", 2026, EY-Parthenon with Potloc. Page numbers below are the report's printed pages.
 
 | Claim | Source | Verified? |
 |---|---|---|
-| Survey of 400 CTOs across 13 European countries; CATI/CAWI interviews; ~43-minute average; 24% UK, 14% Germany, 13% France; size/turnover quotas | EY PDF (tracking query removed): https://www.ey.com/content/dam/ey-unified-site/ey-com/en-nl/services/strategy/documents/ey-beyond-the-code-how-ai-is-redefining-the-software-industry-2026.pdf | no |
-| Top-3 SDLC constraints: QA/validation 54%, architecture and context-setting 39%, security/compliance 38%, requirements/specs 36%, code review 32%, coding/implementation 22% | same | no |
-| About one in three software companies had an AI/agent-related production incident in the past year | same | no |
-| Controls in use: 62% mandatory human review before merge, 45% static/security analysis, 41% AI coding policies, 36% approved tool lists, 35% privacy/compliance checks, 34% automated test requirements, 20% traceability of AI-assisted code | same | no |
-| Evidence boards would accept: 45% production AI/agent use cases with live controls and audit trail; 44% architecture and data foundations that absorb new AI use cases without rework | same | no |
-| CTO mandates: 69% primary rights over internal R&D coding agents; 45% production AI governance accountability; 45% model/vendor selection; 31% AI data governance | same | no |
-| One-third of CTOs expect over half of new or materially modified production code to be AI-authored within 3-5 years | same | no |
-| Quote "AI didn't remove the bottleneck — it pushed it downstream" | same; quoting it needs a `voice-ok` comment and must be verbatim | no |
-| Enterprise coding-agent market moving control and validation toward platforms | https://www.gartner.com/en/newsroom/press-releases/2026-05-20-gartner-says-the-market-for-enterprise-ai-coding-agents-is-entering-a-new-phase-of-expansion-and-competitive-realignment | no |
-| Exact-match competitor article "Decision Governance for Coding Agents" | https://asdecided.com/articles/decision-governance-for-coding-agents | no |
-| AI shifting the constraint toward requirements | https://www.wearedevelopers.com/videos/1855-the-intent-engineer-closing-the-gap-between-business-engineering-manuel-klein | no |
-| Investor framing of "software moat" | https://www.bailliegifford.com/en/uk/individual-investors/insights/ic-article/2026-q1-us-perspectives-is-ai-eating-software-10060821/ | no |
+| Survey of 400 CTOs across 13 European countries; CATI/CAWI interviews June 16 to July 10; ~43-minute average; 24% UK, 14% Germany, 13% France; size/turnover quotas | EY PDF (tracking query removed): https://www.ey.com/content/dam/ey-unified-site/ey-com/en-nl/services/strategy/documents/ey-beyond-the-code-how-ai-is-redefining-the-software-industry-2026.pdf | verified, pp. 40-41 |
+| Top-3 SDLC constraints: QA/validation 54%, architecture and context-setting 39%, security/compliance 38%, requirements/specs 36%, code review 32%, test generation and test maintenance 24%, coding/implementation 22% | same | verified, p. 18, against the rendered chart image. Text extraction misorders this chart's labels and values (pdf.js put the 32% next to test generation); the Opus audit caught that swap in the first draft, and the rendered page confirms the scope chat's code-review figure |
+| About one in three software companies had an AI/agent-related production incident in the past year | same | verified, pp. 18-19 ("roughly one-third"; breakdown base 100% = 131, pp. 20-21) |
+| Controls in use: 62% mandatory human review before merge, 45% static/security analysis, 41% AI coding policies, 36% approved tool lists, 35% privacy/compliance checks, 34% automated test requirements, 20% traceability of AI-assisted code (plus 22% developer training) | same | verified, pp. 18-19 |
+| Evidence boards would accept: 45% production AI/agent use cases with live controls and audit trail; 44% architecture and data foundations that absorb new AI use cases without rework | same | verified, pp. 8-9 (44% used; 45% not used) |
+| CTO mandates: 69% primary rights over internal R&D coding agents; 45% production AI governance accountability; 45% model/vendor selection; 31% AI data governance | same | verified, pp. 26-27 (not used in the article) |
+| One-third of CTOs expect over half of new or materially modified production code to be AI-authored within 3-5 years | same | verified, pp. 14-15 (not used) |
+| Quote "AI didn’t remove the bottleneck — it pushed it downstream" | same; quoted once with `<!-- voice-ok: verbatim EY report heading -->` | verified, p. 18 (section heading) |
+| Additional figures used: 56% redeploy saved time to QA and code review, 55% to new features; among CTOs who measure it, 84% improved lead time/release cadence and 60% saw no material change in escaped defects and incidents; "The construction of the software code is becoming replicable. The context around it is not."; "moved up the stack" | same | verified, pp. 6-7, 16-17 |
+| Enterprise coding-agent market moving control and validation toward platforms | https://www.gartner.com/en/newsroom/press-releases/2026-05-20-gartner-says-the-market-for-enterprise-ai-coding-agents-is-entering-a-new-phase-of-expansion-and-competitive-realignment | verified 2026-10-14 in the in-app browser (scripted fetch returns 403): "by 2027, over 65% of engineering teams using agentic coding will treat integrated development environments (IDEs) as optional, shifting control, governance, and validation to automated platforms" |
+| Exact-match competitor article "Decision Governance for Coding Agents" | https://asdecided.com/articles/decision-governance-for-coding-agents | not used (context only) |
+| AI shifting the constraint toward requirements | https://www.wearedevelopers.com/videos/1855-the-intent-engineer-closing-the-gap-between-business-engineering-manuel-klein | not used |
+| Investor framing of "software moat" | https://www.bailliegifford.com/en/uk/individual-investors/insights/ic-article/2026-q1-us-perspectives-is-ai-eating-software-10060821/ | not used (the moat section cites EY's own chapter instead) |
 
 The chat linked some Mneme pages on `mail.mnemehq.com`; use `mnemehq.com` only (house rule). The chat says keyword volumes were not scored (Semrush API units exhausted).
 
