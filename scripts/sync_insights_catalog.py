@@ -79,7 +79,7 @@ def article_publication_dates() -> dict[str, str]:
     errors: list[str] = []
 
     for directory in sorted(INSIGHTS_DIR.iterdir()):
-        if not directory.is_dir() or directory.name in {"all", "topics"}:
+        if not directory.is_dir() or directory.name in {"all", "topics", "research"}:
             continue
 
         article_path = directory / "index.html"

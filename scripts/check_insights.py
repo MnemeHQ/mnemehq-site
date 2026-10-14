@@ -56,7 +56,7 @@ SITE_BASE = "https://mnemehq.com"
 
 # Directories under site/insights/ that are index *surfaces*, not articles. They
 # carry article cards but must never be validated as insight slugs themselves.
-NON_ARTICLE_DIRS = {"all", "topics"}
+NON_ARTICLE_DIRS = {"all", "topics", "research"}
 
 
 def index_surfaces() -> list[Path]:
