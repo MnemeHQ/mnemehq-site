@@ -58,7 +58,17 @@ CANONICAL_TYPES: dict[str, str] = {
     "Integration": "Product & comparison",
 }
 
-INDEX_DIRS = {"all", "topics"}
+INDEX_DIRS = {"all", "topics", "research"}
+RESEARCH_PAGE = SITE / "insights" / "research" / "index.html"
+RESEARCH_LABELS = {"Research", "Report Response"}
+
+
+def type_href(label: str) -> str:
+    """Where an article's eyebrow type links: the Research & reports page for
+    its two labels, otherwise the archive filtered to the label's public type."""
+    if label in RESEARCH_LABELS:
+        return "/insights/research/"
+    return "/insights/all/?type=" + CANONICAL_TYPES[label].replace(" ", "%20").replace("&", "%26")
 ARTICLE_HREF_RE = re.compile(r"^(?:https?://(?:www\.)?mnemehq\.com)?/insights/([a-z0-9-]+)/?(?:[?#].*)?$")
 JS_BLOCK_RE = re.compile(r"var TYPE_LABELS = \{(.*?)\};", re.S)
 JS_ENTRY_RE = re.compile(r"""(['"])(.+?)\1\s*:\s*(['"])(.+?)\3""")
@@ -79,19 +89,22 @@ class _ArticleParser(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.sections: list[str] = []
         self.eyebrows: list[str] = []
+        self.eyebrow_hrefs: list[str | None] = []
         self._eyebrow: list[str] | None = None
+        self._eyebrow_tag: str | None = None
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "meta" and a.get("property") == "article:section":
             self.sections.append(_norm(a.get("content") or ""))
-        elif tag == "span" and "eyebrow-tag" in _classes(a):
-            self._eyebrow = []
+        elif tag in ("span", "a") and "eyebrow-tag" in _classes(a):
+            self._eyebrow, self._eyebrow_tag = [], tag
+            self.eyebrow_hrefs.append(a.get("href") if tag == "a" else None)
 
     def handle_endtag(self, tag):
-        if tag == "span" and self._eyebrow is not None:
+        if tag == self._eyebrow_tag and self._eyebrow is not None:
             self.eyebrows.append(_norm("".join(self._eyebrow)))
-            self._eyebrow = None
+            self._eyebrow, self._eyebrow_tag = None, None
 
     def handle_data(self, data):
         if self._eyebrow is not None:
@@ -162,6 +175,11 @@ def article_labels(insights: Path) -> tuple[dict[str, str], list[str]]:
             )
         if section != eyebrow:
             errors.append(f"{slug}: article:section {section!r} does not match eyebrow {eyebrow!r}")
+        if eyebrow in CANONICAL_TYPES and parser.eyebrow_hrefs[0] != type_href(eyebrow):
+            errors.append(
+                f"{slug}: eyebrow type should link to {type_href(eyebrow)!r}, "
+                f"found {parser.eyebrow_hrefs[0]!r}"
+            )
         labels[slug] = eyebrow
     return labels, errors
 
@@ -201,10 +219,28 @@ def catalog_errors(catalog_js: Path) -> list[str]:
     return []
 
 
+def research_page_errors(page: Path, labels: dict[str, str]) -> list[str]:
+    """The Research & reports page cards exactly the Research and Report Response articles."""
+    if not page.is_file():
+        return [f"research page missing: {page.relative_to(page.parents[2]).as_posix()}"]
+    parser = _CardParser()
+    parser.feed(page.read_text(encoding="utf-8"))
+    carded = set()
+    for href, _ in parser.cards:
+        match = ARTICLE_HREF_RE.match(href)
+        if match and match.group(1) in labels:
+            carded.add(match.group(1))
+    want = {slug for slug, label in labels.items() if label in RESEARCH_LABELS}
+    errors = [f"{slug}: {labels[slug]} article has no card on /insights/research/" for slug in sorted(want - carded)]
+    errors += [f"{slug}: carded on /insights/research/ but labelled {labels[slug]!r}" for slug in sorted(carded - want)]
+    return errors
+
+
 def check(site: Path = SITE, catalog_js: Path = CATALOG_JS) -> list[str]:
     labels, errors = article_labels(site / "insights")
     errors += card_errors(site, labels)
     errors += catalog_errors(catalog_js)
+    errors += research_page_errors(site / "insights" / "research" / "index.html", labels)
     return errors
 
 

@@ -36,7 +36,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSIGHTS_DIR = REPO_ROOT / "site" / "insights"
-NON_ARTICLE_DIRS = {"all", "topics"}
+NON_ARTICLE_DIRS = {"all", "topics", "research"}
 
 # Marker that makes the insertion idempotent and greppable by check_insights.
 MARKER = 'data-mneme-cta="context"'

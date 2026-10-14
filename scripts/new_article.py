@@ -44,7 +44,7 @@ import re
 import sys
 from pathlib import Path
 
-from check_insight_types import CANONICAL_TYPES
+from check_insight_types import CANONICAL_TYPES, type_href
 
 REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
@@ -186,6 +186,7 @@ def main(argv: list[str]) -> int:
         "{{PUB_DATE_HUMAN}}": date_human,
         "{{SECTION}}": esc(args.content_type),
         "{{EYEBROW_TAG}}": esc(args.content_type),
+        "{{TYPE_HREF}}": esc(type_href(args.content_type)),
         "{{READ_TIME}}": esc(read_time),
         "{{TOPIC_SLUG}}": args.topic,
         "{{TOPIC_NAME}}": esc(TOPIC_NAMES[args.topic]),
@@ -214,6 +215,9 @@ def main(argv: list[str]) -> int:
         f"  [ ] archive card in the {args.topic!r} section of site/insights/all/index.html\n"
         f"      and a card on site/insights/topics/{args.topic}/index.html (+ both hasPart arrays)\n"
         "  [ ] sync dates -> python scripts/sync_insights_catalog.py\n"
+        + ("  [ ] card on site/insights/research/index.html (Research & reports page)\n"
+           if type_href(args.content_type) == "/insights/research/" else "")
+        +
         "      then verify with: python scripts/sync_insights_catalog.py --check\n"
         f"  [ ] add a record to site/og/cards.yaml\n"
         f"      then render -> python scripts/render_og.py --strict --out site\n"

@@ -32,7 +32,7 @@ BENCHMARK_CLUSTER = """  <div class="cta-row" style="margin-top:1.5rem;" id="ben
 # ── 1. Insights ──
 ins_changed = skipped = 0
 for d in sorted((SITE / "insights").iterdir()):
-    if not d.is_dir() or d.name in ("topics", "all"):
+    if not d.is_dir() or d.name in ("topics", "all", "research"):
         continue
     f = d / "index.html"
     if not f.exists():

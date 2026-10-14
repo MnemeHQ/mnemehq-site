@@ -39,7 +39,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 **Content type**
 
-10. **One canonical content type** — the article's eyebrow (`<span class="eyebrow-tag">`), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v3.js` all carry the same label, and it is one of:
+10. **One canonical content type** — the article's eyebrow (`<a class="eyebrow-tag">`, linking to `/insights/research/` for Research and Report Response, otherwise to the archive filtered to the public type), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v3.js` all carry the same label, and it is one of:
 
     | Label | Public type in the archive filter | Use when the article's primary object is |
     |---|---|---|
@@ -58,7 +58,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
     Content type is not topic: topics and collections are assigned separately (topic hubs, archive sections). `scripts/new_article.py --type <label>` writes both page fields.
 
-    `scripts/check_insight_types.py` (CI) enforces **consistency only**: one canonical label, identical in all four places. It cannot judge whether the label fits the article. That is a manual editorial review at publication and whenever an article's framing changes.
+    Research and Report Response articles are also carded on `/insights/research/` (and nothing else is). `scripts/check_insight_types.py` (CI) enforces **consistency only**: one canonical label, identical in all four places. It cannot judge whether the label fits the article. That is a manual editorial review at publication and whenever an article's framing changes.
 
 ## How to register a new insight
 

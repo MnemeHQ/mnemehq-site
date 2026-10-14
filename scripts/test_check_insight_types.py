@@ -9,11 +9,13 @@ from pathlib import Path
 import check_insight_types as c
 
 
-def article(label: str, section: str | None = None) -> str:
+def article(label: str, section: str | None = None, href: str | None = None) -> str:
     section = label if section is None else section
+    if href is None:
+        href = c.type_href(label) if label in c.CANONICAL_TYPES else ""
     return (
         f'<meta property="article:section" content="{section}" />\n'
-        f'<div class="article-eyebrow"><span class="eyebrow-tag">{label}</span></div>\n'
+        f'<div class="article-eyebrow"><a class="eyebrow-tag" href="{href}">{label}</a></div>\n'
     )
 
 
@@ -61,12 +63,36 @@ class TestPagesAndCards(unittest.TestCase):
         self.s = SiteFixture()
         self.addCleanup(self.s.tmp.cleanup)
         self.s.page("stanford-ai-index", article("Report Response"))
+        self.s.surface("insights/research/index.html", card("stanford-ai-index", "Report Response"))
 
     def test_consistent_site_passes(self):
         self.s.surface("insights/all/index.html", card("stanford-ai-index", "Report Response"))
         self.s.surface("insights/topics/hub/index.html", card("stanford-ai-index", "Report Response"))
         self.s.surface("insights/index.html", card("stanford-ai-index", "Report Response"))
         self.assertEqual(self.s.errors(), [])
+
+    def test_eyebrow_type_must_link_to_its_type_page(self):
+        self.s.page("wrong-link", article("Analysis", href="/insights/research/"))
+        self.assertTrue(any("eyebrow type should link to" in e for e in self.s.errors()))
+
+    def test_research_page_must_card_every_research_article(self):
+        self.s.page("metr-study", article("Research"))
+        self.assertTrue(any("metr-study: Research article has no card on /insights/research/" in e
+                            for e in self.s.errors()))
+
+    def test_research_page_must_not_card_other_types(self):
+        self.s.page("opinion", article("Perspective"))
+        self.s.surface("insights/research/index.html",
+                       card("stanford-ai-index", "Report Response") + card("opinion", "Perspective"))
+        self.assertTrue(any("carded on /insights/research/ but labelled 'Perspective'" in e
+                            for e in self.s.errors()))
+
+    def test_unlinked_span_eyebrow_still_reads_but_fails_link_rule(self):
+        self.s.page("span-eyebrow", '<meta property="article:section" content="Guide" />'
+                    '<span class="eyebrow-tag">Guide</span>')
+        errors = self.s.errors()
+        self.assertTrue(any("span-eyebrow: eyebrow type should link to" in e for e in errors))
+        self.assertFalse(any("span-eyebrow: expected one eyebrow-tag" in e for e in errors))
 
     def test_legacy_label_fails(self):
         self.s.page("legacy", article("Market Context"))
@@ -77,8 +103,8 @@ class TestPagesAndCards(unittest.TestCase):
         self.assertTrue(any("does not match eyebrow" in e for e in self.s.errors()))
 
     def test_page_attribute_order_does_not_matter(self):
-        self.s.page("reordered", '<meta content="Research" property="article:section">'
-                                 '<span data-x="1" class="eyebrow-tag big">Research</span>')
+        self.s.page("reordered", '<meta content="Guide" property="article:section">'
+                                 '<a data-x="1" href="/insights/all/?type=Guides" class="eyebrow-tag big">Guide</a>')
         self.assertEqual(self.s.errors(), [])
 
     def test_archive_card_must_match_article(self):
