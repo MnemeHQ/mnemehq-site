@@ -10,13 +10,21 @@
     'Perspective',
     'Product & comparison'
   ];
+  // Topic = the article's primary topic hub; the archive groups cards in one
+  // .cards-section per hub (id = hub slug). scripts/check_insights.py enforces it.
   var COLLECTION_LABELS = {
-    'ai-native': 'Architectural intent',
-    'governance-problem': 'Governance',
-    'market-context': 'Industry & market',
-    'mneme-in-practice': 'Mneme in practice',
-    'reference': 'Reference',
-    'latest-analysis': 'Latest analysis'
+    'architectural-governance': 'Architectural governance',
+    'architectural-drift-prevention': 'Architectural drift prevention',
+    'architectural-intent': 'Architectural intent',
+    'ai-coding-agents': 'AI coding agents',
+    'agent-infrastructure': 'Agent infrastructure',
+    'engineering-performance': 'Engineering performance',
+    'software-migrations-modernization': 'Software migrations and modernization'
+  };
+  // ?collection= links from before topics replaced the old archive collections.
+  var LEGACY_COLLECTIONS = {
+    'ai-native': 'architectural-intent',
+    'governance-problem': 'architectural-governance'
   };
   // Canonical content-type labels (card tag = article eyebrow =
   // article:section) and their public type. Must match CANONICAL_TYPES in
@@ -68,7 +76,7 @@
 
   function readState(validCollections, validTypes) {
     var params = new URLSearchParams(window.location.search);
-    var collection = params.get('collection') || 'all';
+    var collection = params.get('topic') || LEGACY_COLLECTIONS[params.get('collection')] || 'all';
     var type = params.get('type') || 'all';
     var sort = params.get('sort') || 'newest';
     var page = parseInt(params.get('page') || '1', 10);
@@ -95,7 +103,7 @@
     var status = document.getElementById('catalog-status');
     var empty = document.getElementById('catalog-empty');
     var search = document.getElementById('catalog-search');
-    var collectionSelect = document.getElementById('catalog-collection');
+    var collectionSelect = document.getElementById('catalog-topic');
     var typeSelect = document.getElementById('catalog-type');
     var sortSelect = document.getElementById('catalog-sort');
     var clearButton = document.getElementById('catalog-clear');
@@ -115,8 +123,8 @@
       var readTime = link.querySelector('.card-read-time');
       var title = link.querySelector('h3');
       var summary = link.querySelector('p');
-      var collection = section && COLLECTION_LABELS[section.id] ? section.id : 'latest-analysis';
-      var collectionLabel = COLLECTION_LABELS[collection];
+      var collection = section && COLLECTION_LABELS[section.id] ? section.id : '';
+      var collectionLabel = COLLECTION_LABELS[collection] || '';
       var rawType = tag ? tag.textContent.trim() : 'Analysis';
       var type = normalizedType(rawType);
       var published = link.getAttribute('data-published') || '';
@@ -125,8 +133,10 @@
 
       if (meta) {
         meta.textContent = '';
-        meta.appendChild(makeMetaItem('card-topic', collectionLabel));
-        meta.appendChild(makeMetaDot());
+        if (collectionLabel) {
+          meta.appendChild(makeMetaItem('card-topic', collectionLabel));
+          meta.appendChild(makeMetaDot());
+        }
         meta.appendChild(makeMetaItem('card-tag', type));
         if (dateLabel) {
           meta.appendChild(makeMetaDot());
@@ -186,7 +196,7 @@
     function updateUrl(mode) {
       var params = new URLSearchParams();
       if (state.q) params.set('q', state.q);
-      if (state.collection !== 'all') params.set('collection', state.collection);
+      if (state.collection !== 'all') params.set('topic', state.collection);
       if (state.type !== 'all') params.set('type', state.type);
       if (state.sort !== 'newest') params.set('sort', state.sort);
       if (state.page > 1) params.set('page', String(state.page));

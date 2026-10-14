@@ -17,9 +17,14 @@ Checks (all hard errors):
     ERROR  -- no incoming internal links from elsewhere in site/
   Breadcrumb:
     ERROR  -- missing <nav class="breadcrumb-nav"> block
-    ERROR  -- visible breadcrumb does not follow Home -> Insights -> article
+    ERROR  -- visible breadcrumb does not follow Home -> Insights -> topic -> article
     ERROR  -- BreadcrumbList JSON-LD missing or malformed
     ERROR  -- BreadcrumbList items do not match the visible breadcrumb
+  Primary topic:
+    ERROR  -- not exactly one eyebrow topic link to an existing topic hub
+    ERROR  -- breadcrumb topic differs from the eyebrow topic
+    ERROR  -- the primary topic hub has no card for the article
+    ERROR  -- the archive card is not in the primary topic's section
   Article schema:
     ERROR  -- TechArticle/Article JSON-LD missing
     ERROR  -- TechArticle url does not match the article's canonical URL
@@ -177,22 +182,61 @@ def parse_visible_breadcrumb(nav_html: str) -> list[dict]:
     return items
 
 
+EYEBROW_TOPIC_RE = re.compile(
+    r'<a\b[^>]*class="[^"]*\beyebrow-topic\b[^"]*"[^>]*href="/insights/topics/([a-z0-9-]+)/"'
+    r'|<a\b[^>]*href="/insights/topics/([a-z0-9-]+)/"[^>]*class="[^"]*\beyebrow-topic\b'
+)
+
+
+def eyebrow_topics(html: str) -> list[str]:
+    """Topic-hub slugs linked from the article eyebrow (exactly one expected)."""
+    return [a or b for a, b in EYEBROW_TOPIC_RE.findall(html)]
+
+
+def check_topic(slug: str, html: str, archive_html: str) -> list[str]:
+    """One primary topic: eyebrow link, breadcrumb, hub card and archive section agree."""
+    errors: list[str] = []
+    topics = eyebrow_topics(html)
+    if len(topics) != 1:
+        return [f"{slug}: expected one eyebrow-topic link to /insights/topics/<hub>/, found {len(topics)}"]
+    hub = topics[0]
+    hub_page = TOPICS_DIR / hub / "index.html"
+    if not hub_page.exists():
+        return [f"{slug}: eyebrow topic {hub!r} has no hub page at site/insights/topics/{hub}/"]
+    nav_inner = find_breadcrumb_block(html) or ""
+    items = parse_visible_breadcrumb(nav_inner)
+    if len(items) == 4 and items[2]["href"] != f"/insights/topics/{hub}/":
+        errors.append(f"{slug}: breadcrumb topic {items[2]['href']!r} differs from eyebrow topic {hub!r}")
+    hub_html = hub_page.read_text(encoding="utf-8")
+    if not re.search(rf'<a\b[^>]*href="/insights/{re.escape(slug)}/"[^>]*class="[^"]*\binsight-card-link\b', hub_html):
+        errors.append(f"{slug}: primary topic hub {hub!r} has no insight card for it")
+    section = None
+    for m in re.finditer(r'<div class="cards-section" id="([a-z0-9-]+)">', archive_html):
+        end = archive_html.find('<div class="cards-section"', m.end())
+        if f'href="/insights/{slug}/"' in archive_html[m.end(): end if end != -1 else len(archive_html)]:
+            section = m.group(1)
+            break
+    if section != hub:
+        errors.append(f"{slug}: archive card is in section {section!r}, expected primary topic {hub!r}")
+    return errors
+
+
 def check_breadcrumb(slug: str, html: str) -> list[str]:
-    """Verify visible breadcrumb nav follows Home -> Insights -> article."""
+    """Verify visible breadcrumb nav follows Home -> Insights -> topic -> article."""
     errors: list[str] = []
     nav_inner = find_breadcrumb_block(html)
     if nav_inner is None:
         errors.append(
             f'Missing breadcrumb nav block in {slug}: expected '
-            f'<nav class="breadcrumb-nav"> with Home -> Insights -> article'
+            f'<nav class="breadcrumb-nav"> with Home -> Insights -> topic -> article'
         )
         return errors
 
     items = parse_visible_breadcrumb(nav_inner)
-    if len(items) != 3:
+    if len(items) != 4:
         errors.append(
-            f"Breadcrumb in {slug} has {len(items)} items, expected 3 "
-            f"(Home, Insights, article)"
+            f"Breadcrumb in {slug} has {len(items)} items, expected 4 "
+            f"(Home, Insights, topic, article)"
         )
         return errors
 
@@ -206,16 +250,21 @@ def check_breadcrumb(slug: str, html: str) -> list[str]:
             f"Breadcrumb item 2 in {slug} should link to /insights/, "
             f"found href={items[1]['href']!r}"
         )
-    if not items[2]["is_current"] and items[2]["href"] is not None:
+    if not re.fullmatch(r"/insights/topics/[a-z0-9-]+/", items[2]["href"] or ""):
         errors.append(
-            f"Breadcrumb item 3 in {slug} should be the current page "
-            f"(no <a> or aria-current); found a link to {items[2]['href']!r}"
+            f"Breadcrumb item 3 in {slug} should link to its topic hub "
+            f"/insights/topics/<hub>/, found href={items[2]['href']!r}"
+        )
+    if not items[3]["is_current"] and items[3]["href"] is not None:
+        errors.append(
+            f"Breadcrumb item 4 in {slug} should be the current page "
+            f"(no <a> or aria-current); found a link to {items[3]['href']!r}"
         )
     return errors
 
 
-def check_breadcrumb_jsonld(slug: str, blocks: list[dict]) -> list[str]:
-    """Verify a BreadcrumbList JSON-LD entry matches Home -> Insights -> article."""
+def check_breadcrumb_jsonld(slug: str, blocks: list[dict], topic: str | None = None) -> list[str]:
+    """Verify a BreadcrumbList JSON-LD entry matches Home -> Insights -> topic -> article."""
     errors: list[str] = []
     bcs = [b for b in blocks if b.get("@type") == "BreadcrumbList"]
     if not bcs:
@@ -228,17 +277,18 @@ def check_breadcrumb_jsonld(slug: str, blocks: list[dict]) -> list[str]:
 
     bc = bcs[0]
     items = bc.get("itemListElement", [])
-    if len(items) != 3:
+    if len(items) != 4:
         errors.append(
             f"BreadcrumbList in {slug} has {len(items)} itemListElement entries, "
-            f"expected 3"
+            f"expected 4"
         )
         return errors
 
     expected = [
         (1, f"{SITE_BASE}/"),
         (2, f"{SITE_BASE}/insights/"),
-        (3, article_canonical_url(slug)),
+        (3, f"{SITE_BASE}/insights/topics/{topic}/" if topic else items[2].get("item")),
+        (4, article_canonical_url(slug)),
     ]
     for pos, want_url in expected:
         item = items[pos - 1]
@@ -307,6 +357,16 @@ def hub_haspart_slugs() -> set[str]:
                 if m and m.group(1) not in NON_ARTICLE_DIRS:
                     slugs.add(m.group(1))
     return slugs
+
+
+_ARCHIVE_HTML: str | None = None
+
+
+def _archive_html() -> str:
+    global _ARCHIVE_HTML
+    if _ARCHIVE_HTML is None:
+        _ARCHIVE_HTML = ARCHIVE.read_text(encoding="utf-8") if ARCHIVE.exists() else ""
+    return _ARCHIVE_HTML
 
 
 def incoming_link_pages(slug: str) -> list[Path]:
@@ -406,8 +466,12 @@ def check_slug(
 
     # 7. BreadcrumbList + TechArticle JSON-LD
     blocks = jsonld_blocks(html)
-    errors.extend(check_breadcrumb_jsonld(slug, blocks))
+    topics = eyebrow_topics(html)
+    errors.extend(check_breadcrumb_jsonld(slug, blocks, topics[0] if len(topics) == 1 else None))
     errors.extend(check_article_schema(slug, blocks))
+
+    # 7b. one primary topic, consistent across eyebrow, breadcrumb, hub and archive
+    errors.extend(check_topic(slug, html, _archive_html()))
 
     # 8. hub CollectionPage hasPart includes this slug
     if slug not in hub_haspart_set:

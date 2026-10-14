@@ -39,7 +39,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 **Content type**
 
-10. **One canonical content type** — the article's eyebrow (`<span class="eyebrow-tag">`), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v2.js` all carry the same label, and it is one of:
+10. **One canonical content type** — the article's eyebrow (`<span class="eyebrow-tag">`), its `article:section` meta, every card that links to it (archive, homepage, topic hubs), and the archive filter's `TYPE_LABELS` in `site/assets/js/insights-catalog-v3.js` all carry the same label, and it is one of:
 
     | Label | Public type in the archive filter | Use when the article's primary object is |
     |---|---|---|
@@ -92,7 +92,7 @@ Append a `<url>` block to `site/sitemap.xml`:
 
 ### 3. Index card(s) and `hasPart`
 
-Add a card to **`site/insights/all/index.html`** (the archive) in the most thematically appropriate `cards-section`, **and** to the relevant topic hub under `site/insights/topics/<hub>/index.html`. Mirror the structure of neighboring cards: eyebrow tag, read time, `<h3>` title, summary `<p>`, and the `read-pill` footer. The curated homepage's six Latest cards are derived from the archive; only its single Featured card is selected manually.
+Every insight has **one primary topic**: a hub under `site/insights/topics/<hub>/`, passed to `scripts/new_article.py --topic <hub>`, which writes the eyebrow topic link and the breadcrumb (Home › Insights › topic › article, visible and JSON-LD). Add a card to **`site/insights/all/index.html`** (the archive) in the `cards-section` whose `id` is that hub, **and** to the hub page itself (`site/insights/topics/<hub>/index.html`, card plus its `hasPart` entry). Other hubs may also list the article as a secondary topic. `scripts/check_insights.py` (CI) enforces that the eyebrow, breadcrumb, hub card and archive section agree. The 2026-10-14 assignment of all existing articles is recorded in `docs/site/insight-primary-topics.md`. Mirror the structure of neighboring cards: eyebrow tag, read time, `<h3>` title, summary `<p>`, and the `read-pill` footer. The curated homepage's six Latest cards are derived from the archive; only its single Featured card is selected manually.
 
 **Also append a matching entry to the `hasPart` array** in the `CollectionPage` JSON-LD of `site/insights/all/index.html`. The visible card and the `hasPart` entry are checked independently — both are required.
 

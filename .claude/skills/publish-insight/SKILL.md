@@ -114,7 +114,7 @@ batch compete too; settle them together under the terminology lock before buildi
    ```bash
    python scripts/new_article.py --slug <slug> --title "<title>" \
      --description "<150-160 chars>" --date <YYYY-MM-DD> --lede "<standfirst>" \
-     --body-file <body.html> --type "<canonical type>" [--read-time ...] [--faq faq.json]
+     --body-file <body.html> --type "<canonical type>" --topic <hub> [--read-time ...] [--faq faq.json]
    ```
    It writes the page only. There is no `--register` flag; registration is the next step.
 
@@ -125,8 +125,9 @@ Registration (all manual, per `docs/site/insight-publishing-contract.md`):
 1. OG record under `insights/<slug>/` in `site/og/cards.yaml` (editorial: headline only), then
    `python scripts/render_og.py --strict --out site --only insights/<slug>/`.
 2. `<url>` block in `site/sitemap.xml`.
-3. Card in `site/insights/all/index.html` **and** its `CollectionPage.hasPart` entry; card on the
-   topic hub `site/insights/topics/<hub>/index.html`.
+3. Card in `site/insights/all/index.html`, inside the `cards-section` whose `id` is the primary
+   topic, **and** its `CollectionPage.hasPart` entry; card plus `hasPart` entry on the primary topic
+   hub `site/insights/topics/<hub>/index.html`.
 4. `python scripts/sync_insights_catalog.py`
 5. Reciprocal links from 2-3 related insights.
 

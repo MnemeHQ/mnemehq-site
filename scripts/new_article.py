@@ -11,6 +11,11 @@ scripts/check_insight_types.py). It fills both the eyebrow and
 article:section, which CI requires to match. --eyebrow is accepted as an
 alias.
 
+--topic is the article's one primary topic hub (a directory under
+site/insights/topics/). It fills the eyebrow topic link and the breadcrumb
+(visible and JSON-LD); scripts/check_insights.py requires the hub to carry a
+card for the article and the archive card to sit in that hub's section.
+
 Registration is still manual per PUBLISHING.md: sitemap entry, archive /
 topic-hub card (scripts/sync_insights_catalog.py), an OG card record in
 site/og/cards.yaml rendered via scripts/render_og.py, and at least one
@@ -24,7 +29,8 @@ Usage:
     --date 2026-08-23 \
     --lede "One-paragraph standfirst." \
     --body-file body.html \
-    --type "Report Response" [--read-time "9 min read"] \
+    --type "Report Response" --topic engineering-performance \
+    [--read-time "9 min read"] \
     [--faq faq.json] [--about-terms "term one","term two"] \
     [--force]
 """
@@ -44,11 +50,22 @@ REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
 TEMPLATE = REPO / "templates" / "article.html"
 FOUNDER_URL = "https://mnemehq.com/founder/"
+TOPICS_DIR = SITE / "insights" / "topics"
+# Display name of each topic hub, as used in article eyebrows and breadcrumbs.
+TOPIC_NAMES = {
+    "agent-infrastructure": "Agent infrastructure",
+    "ai-coding-agents": "AI coding agents",
+    "architectural-drift-prevention": "Architectural drift prevention",
+    "architectural-governance": "Architectural governance",
+    "architectural-intent": "Architectural intent",
+    "engineering-performance": "Engineering performance",
+    "software-migrations-modernization": "Software migrations and modernization",
+}
 
 
 def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
                   date_iso: str, section: str, about_terms: list[str],
-                  faq_items: list | None) -> str:
+                  faq_items: list | None, topic: str = "") -> str:
     graph = [
         {
             "@type": "BreadcrumbList",
@@ -57,7 +74,9 @@ def render_jsonld(slug_url: str, og_image: str, title: str, description: str,
                  "item": "https://mnemehq.com/"},
                 {"@type": "ListItem", "position": 2, "name": "Insights",
                  "item": "https://mnemehq.com/insights/"},
-                {"@type": "ListItem", "position": 3, "name": title,
+                {"@type": "ListItem", "position": 3, "name": TOPIC_NAMES[topic],
+                 "item": f"https://mnemehq.com/insights/topics/{topic}/"},
+                {"@type": "ListItem", "position": 4, "name": title,
                  "item": slug_url},
             ],
         },
@@ -107,6 +126,8 @@ def main(argv: list[str]) -> int:
                     choices=list(CANONICAL_TYPES),
                     help="canonical content type, used for both the eyebrow "
                          "and article:section")
+    ap.add_argument("--topic", required=True, choices=sorted(TOPIC_NAMES),
+                    help="primary topic hub (directory under site/insights/topics/)")
     ap.add_argument("--read-time", default=None, help='e.g. "7 min read"')
     ap.add_argument("--faq", type=Path, default=None,
                     help="JSON file of FAQPage mainEntity items")
@@ -166,10 +187,12 @@ def main(argv: list[str]) -> int:
         "{{SECTION}}": esc(args.content_type),
         "{{EYEBROW_TAG}}": esc(args.content_type),
         "{{READ_TIME}}": esc(read_time),
+        "{{TOPIC_SLUG}}": args.topic,
+        "{{TOPIC_NAME}}": esc(TOPIC_NAMES[args.topic]),
         "{{LEDE}}": args.lede,
         "{{JSON_LD_BLOCK}}": render_jsonld(
             slug_url, og_image, args.title, args.description,
-            date_iso, args.content_type, about_terms, faq_data),
+            date_iso, args.content_type, about_terms, faq_data, args.topic),
         "{{BODY_CONTENT}}": args.body_file.read_text(encoding="utf-8").strip(),
     }
     for token, value in replacements.items():
@@ -188,12 +211,15 @@ def main(argv: list[str]) -> int:
     print(
         "\nRegistration checklist (PUBLISHING.md):\n"
         f"  [ ] sitemap.xml entry for {slug_url}\n"
-        "  [ ] archive/topic-hub card -> python scripts/sync_insights_catalog.py\n"
+        f"  [ ] archive card in the {args.topic!r} section of site/insights/all/index.html\n"
+        f"      and a card on site/insights/topics/{args.topic}/index.html (+ both hasPart arrays)\n"
+        "  [ ] sync dates -> python scripts/sync_insights_catalog.py\n"
         "      then verify with: python scripts/sync_insights_catalog.py --check\n"
         f"  [ ] add a record to site/og/cards.yaml\n"
         f"      then render -> python scripts/render_og.py --strict --out site\n"
         f"  [ ] >=1 incoming internal link from a hub or related article\n"
-        f"  [ ] visible breadcrumb Home -> Insights -> {args.title[:40]}...\n"
+        f"  [ ] python scripts/check_insights.py (breadcrumb Home -> Insights -> "
+        f"{TOPIC_NAMES[args.topic]} -> article, topic consistency)\n"
     )
     return 0
 
