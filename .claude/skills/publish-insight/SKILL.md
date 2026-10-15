@@ -31,6 +31,10 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
 Tip: `get_page_text` reads a whole chat. Inline citations render only as labels ("Reuters +2");
 pull their real URLs from the `<a href>` elements in `main`, and strip `?utm_source=chatgpt.com`.
 
+Reddit is unreachable: reddit.com is blocked by safety policy in both Claude in Chrome and the
+in-app browser, and scripted requests get a 403. If a chat cites a Reddit thread, flag it in the
+brief's source list up front: the user pastes the content, or the citation is dropped.
+
 **This repository is public.** Briefs and every other file here are world-readable. Never copy
 into them: investor or fundraising details, sales-pipeline or customer-conversation facts, names
 of prospects, design partners or private contacts, internal competitive threat or valuation
@@ -87,6 +91,14 @@ batch compete too; settle them together under the terminology lock before buildi
 
 1. **Verify every citation against the live source** before writing a sentence that depends on it.
    Never ship a fabricated ID, report title or statistic. Record the check in the brief.
+   - **Chart figures need a rendered page.** Text extraction misreads charts: pdf.js and
+     `pdftotext -layout` both misordered the EY "Most common SDLC bottlenecks" bar chart and put
+     code review's 32% on test generation; only the Opus audit caught it (batch 1, #216). Render
+     the page with PyMuPDF and read the image:
+     `python -c "import fitz; fitz.open('r.pdf')[N].get_pixmap(dpi=150).save('pN.png')"`
+     (`N` is zero-based).
+   - **PDFs that download instead of rendering** (in either browser): open a page on the report's
+     own domain, `fetch()` the PDF from there, and parse it with pdf.js loaded from cdnjs.
 2. Write the body following PUBLISHING.md: News → Problem → Governance; for engineering leaders;
    concrete and declarative; never "bottleneck"; no em dashes as connective tissue; domain is
    `mnemehq.com`; terminology lock ("decision corpus", "enforcement", "drift"...); "decision
@@ -159,7 +171,10 @@ in body prose. Apply it to new and substantially edited articles only.
    against the live source, with the page or section) before the PR is opened. Unverifiable
    claims are cut, not softened.
 3. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
-4. Batch all insights from one run into one PR on a `site/` branch. Fill the Execution provenance
+4. Batch all insights from one run into one PR on a `site/` branch. Right before each commit,
+   confirm `git branch --show-current` (or run `scripts/check_worktree_context.py`). In a reused or
+   shared worktree another session can switch the branch mid-run; in batch 1 a commit landed on
+   the wrong branch that way. Fill the Execution provenance
    block (`AGENTS.md`). Confirm titles and count with the user. Squash merge.
 5. Deployed means: a successful "Deploy site to mnemehq.com" run for the exact `main` SHA, and
    `site-deployed` resolving to it. Merge alone is not deployment.
