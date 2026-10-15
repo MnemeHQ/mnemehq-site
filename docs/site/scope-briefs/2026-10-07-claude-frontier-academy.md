@@ -1,6 +1,6 @@
 # Scope brief: Post-claude frontier academy Assess program relevance
 
-Status: news piece **built 2026-10-14** in the batch 2 PR (not yet merged or deployed) as `/insights/claude-frontier-academy-frontier-deployed-engineers/`. Judged still newsworthy on 2026-10-14 (12 days after launch; cohorts running, first badges early 2027). The FDE pillar update and the other cluster verdicts remain open, so this chat stays unmarked
+Status: news piece **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`** as `/insights/claude-frontier-academy-frontier-deployed-engineers/`. Judged still newsworthy on 2026-10-14 (12 days after launch; cohorts running, first badges early 2027). The FDE pillar update and the other cluster verdicts remain open, so this chat stays unmarked
 
 | Field | Value |
 |---|---|

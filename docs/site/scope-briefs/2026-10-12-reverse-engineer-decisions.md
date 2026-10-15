@@ -1,6 +1,6 @@
 # Scope brief: post-reverse engineer decisions
 
-Status: **built 2026-10-14** in the batch 2 PR (not yet merged or deployed) as `/insights/reverse-engineering-architectural-decisions-research/` (hub: architectural-intent; also carded on `/insights/research/`)
+Status: **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`** as `/insights/reverse-engineering-architectural-decisions-research/` (hub: architectural-intent; also carded on `/insights/research/`)
 
 | Field | Value |
 |---|---|
