@@ -1,6 +1,6 @@
 # Scope brief: Post-claude frontier academy Assess program relevance
 
-Status: news piece **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`** as `/insights/claude-frontier-academy-frontier-deployed-engineers/`. Judged still newsworthy on 2026-10-14 (12 days after launch; cohorts running, first badges early 2027). The FDE pillar update shipped in the batch 3 PR, and every other cluster item was merged or dropped on 2026-10-15 (see the verdict table). The chat can be marked once batch 3 is deployed
+Status: news piece **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`** as `/insights/claude-frontier-academy-frontier-deployed-engineers/`. Judged still newsworthy on 2026-10-14 (12 days after launch; cohorts running, first badges early 2027). The FDE pillar update shipped in #224, and every other cluster item was merged or dropped on 2026-10-15 (see the verdict table). The chat can be marked once batch 3 is deployed
 
 | Field | Value |
 |---|---|
@@ -29,7 +29,7 @@ Status: news piece **published 2026-10-15 in [#221](https://github.com/MnemeHQ/m
 
 | Article (chat priority) | Verdict |
 |---|---|
-| What Is a Frontier Deployed Engineer? (P0, evergreen FDE pillar) | **done** in the batch 3 PR: `forward-deployed-engineers-enterprise-ai` gains a "From forward deployed to frontier deployed" section |
+| What Is a Frontier Deployed Engineer? (P0, evergreen FDE pillar) | **done** in #224: `forward-deployed-engineers-enterprise-ai` gains a "From forward deployed to frontier deployed" section |
 | The Missing Control Layer in Enterprise AI Deployment (P0) | **dropped** (decided 2026-10-15 (TheoV823)): overlaps `microsoft-agent-forge-enterprise-ai-infrastructure` 57.5 and `enterprise-ai-guardrails-five-layers` 56.8 |
 | What Happens After the AI Engineer Leaves? (P0) | **merged** (decided 2026-10-15 (TheoV823)): covered by the FDE pillar's handoff-failure section and the Frontier Academy piece |
 | From AI Deployment to AI Governance: What Has to Become Machine-Readable (P1) | **merged**: shipped as `from-decision-records-to-decision-governance` (#221) |
@@ -39,7 +39,7 @@ Status: news piece **published 2026-10-15 in [#221](https://github.com/MnemeHQ/m
 | Why Guardrails Are Not the Same as Governance (P1) | **dropped** (decided 2026-10-15 (TheoV823)): overlaps `enterprise-ai-guardrails-five-layers` and `ai-coding-agent-guardrails` |
 | The AI Deployment Stack Is Missing a Decision Plane (P2) | **dropped** (decided 2026-10-15 (TheoV823)): would introduce a new term ("decision plane") under the terminology lock |
 | Who Owns a Decision When an AI Agent Writes the Code? (P2) | **dropped** (decided 2026-10-15 (TheoV823)): overlaps `architecture/decision-memory-vs-documentation` 47.1; authority is covered on the decision-governance concept page |
-| Why Software Factories Need a Decision Index (P2) | **merged**: the batch 3 PR adds a decision-governance section to `software-factory-governance-layer` |
+| Why Software Factories Need a Decision Index (P2) | **merged**: #224 adds a decision-governance section to `software-factory-governance-layer` |
 
 The chat also proposed a content architecture (pillar "Decision Governance for Agentic Software" with discover / understand / enforce / operate clusters; FDE content in "operate"). That depends on the decision-governance terminology decision.
 

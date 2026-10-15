@@ -12,8 +12,8 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | published 2026-10-15 (#221) |
 | [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | published 2026-10-14 (#216) |
-| [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | news piece published 2026-10-15 (#221); FDE pillar update in the batch 3 PR; other cluster items merged or dropped 2026-10-15 |
-| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | concept published (#214); From Decision Records published 2026-10-15 (#221); software-factory insight merged into the existing pillar (batch 3 PR) |
+| [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | news piece published 2026-10-15 (#221); FDE pillar update published (#224); other cluster items merged or dropped 2026-10-15 |
+| [Business Type and decision governance](2026-10-07-business-type-and-decision-governance.md) | 2026-10-07 | concept + 2 insights | concept published (#214); From Decision Records published 2026-10-15 (#221); software-factory insight merged into the existing pillar (#224) |
 | [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | insight 1 published 2026-10-14 (#216); concepts in #214 |
 | [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
 | [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | published 2026-10-14 (#216) |

@@ -35,8 +35,8 @@ not every chat in the project.
 | ***Post-Scope pre action governance | 2026-09-08 | `pre-action-enforcement-agent-governance` | [#216](https://github.com/MnemeHQ/mnemehq-site/pull/216) | 2026-10-14 |
 | ***Post-Assess paper relevance | 2026-10-07 | `multi-agent-coding-shared-context` | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221) | 2026-10-15 |
 | ***post-reverse engineer decisions | 2026-10-12 | `reverse-engineering-architectural-decisions-research` | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221) | 2026-10-15 |
-| Post-Business Type Comparison and decision governance — **no `***`, see "Partially processed"** | 2026-10-07 | `from-decision-records-to-decision-governance` (+ concept page in #214) | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221) | 2026-10-15 |
-| Post-claude frontier academy Assess program relevance — **no `***`, see "Partially processed"** | 2026-10-07 | `claude-frontier-academy-frontier-deployed-engineers` | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221) | 2026-10-15 |
+| ***Post-Business Type Comparison and decision governance | 2026-10-07 | `from-decision-records-to-decision-governance` (#221), concept page (#214), software-factory section in `software-factory-governance-layer` (#224) | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), [#224](https://github.com/MnemeHQ/mnemehq-site/pull/224) | 2026-10-15 |
+| ***Post-claude frontier academy Assess program relevance | 2026-10-07 | `claude-frontier-academy-frontier-deployed-engineers` (#221), frontier section in `forward-deployed-engineers-enterprise-ai` (#224); other cluster items merged or dropped 2026-10-15 | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), [#224](https://github.com/MnemeHQ/mnemehq-site/pull/224) | 2026-10-15 |
 
 Notes carried over: the software-factory pillar is one article refined across two chats (the 2nd adds the Bob Bemer/1968 historical framing) — it's the pillar of a planned 5-article cluster, only the pillar is scoped/shipped so far. Conway and Brooks are cross-linked as a pair. The private AI piece's Latham facts were verified against Bloomberg Law and Legal IT Insider; the FT citation named in the original scope chat could not be located and was dropped.
 
@@ -57,10 +57,6 @@ All three chats were renamed with the `***` marker on 2026-09-25 after #150 depl
 None currently.
 
 ## Partially processed — do not mark done
-
-**Post-Business Type Comparison and decision governance** (2026-10-15): the Engineering Decision Governance concept page (#214) and "From Decision Records to Decision Governance" (#221) shipped. Still open: "Why AI Software Factories Need Decision Governance", whose verdict is to extend `software-factory-governance-layer` rather than publish a new article. Leave the chat unmarked until that extension ships or the item is explicitly dropped.
-
-**Post-claude frontier academy Assess program relevance** (2026-10-15): only the news piece shipped (#221). Still open: the FDE pillar update (extend `forward-deployed-engineers-enterprise-ai` to cover "frontier deployed engineer"), "What Happens After the AI Engineer Leaves?" and the other cluster verdicts in the brief. Leave the chat unmarked.
 
 **Post-Writing ROI Content** (located 2026-09-19) scoped a full pillar + ~10 supporting-article cluster for AI Engineering ROI. Only the pillar and one deferred spoke shipped, in PR #135 ("pillar + AI Throughput Is Not Engineering Throughput only, hold the rest for a follow-up round"). The five *other* articles named in that PR's description as "already-published spokes" (`ai-roi-problem-is-about-systems-not-models`, `ai-coding-agent-verification-tax`, `dora-metrics-insufficient-for-agentic-development`, `acceleration-whiplash-governance-gap`, `ai-coding-productivity-gains-rework`) predate this chat's scoping and are unrelated to its backlog.
 
@@ -84,3 +80,5 @@ agentic change management."
 Notes for #216 (batch 1, 2026-10-14): deployed at `93d47012` (deploy run 38632284531; `site-deployed` = `main`). The Reddit thread from the Cohesion chat was dropped as unverifiable (reddit.com is blocked in both browsers). The pre-merge Opus audit caught one blocker, the EY chart's code-review and test-generation figures swapped by text extraction. All four chats were renamed with the `***` marker on 2026-10-14 after the deploy, and the new titles were verified by re-listing the project.
 
 Notes for #221 (batch 2, 2026-10-15): deployed at `88d8edd9` (deploy run 38718979840; `site-deployed` = `main`). The pre-merge Opus audit caught five blockers: a misattributed definition of knowledge vaporization in the erosion study, and four Mneme enforcement overclaims (all decisions path-scoped and enforced before every write; accepted proposals enforced). The two fully shipped chats (AECP and reverse engineer decisions) were renamed with the `***` marker on 2026-10-15 and verified by re-listing the project; the Business Type and Frontier Academy chats stay unmarked (see "Partially processed").
+
+Notes for #224 (batch 3, 2026-10-15): deployed at `7dfed00a` together with the install-and-activate how-to (#225); deploy runs 38800394435 and 38800444133 succeeded and `site-deployed` = `main`. It closed the last open items of the Business Type and Frontier Academy chats (the Frontier cluster verdicts were decided by TheoV823 on 2026-10-15). Both chats were renamed with the `***` marker on 2026-10-15 and verified by re-listing the project.
