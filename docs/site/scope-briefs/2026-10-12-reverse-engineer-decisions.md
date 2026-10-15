@@ -1,6 +1,6 @@
 # Scope brief: post-reverse engineer decisions
 
-Status: **gathered, not built**
+Status: **built 2026-10-14** in the batch 2 PR (not yet merged or deployed) as `/insights/reverse-engineering-architectural-decisions-research/` (hub: architectural-intent; also carded on `/insights/research/`)
 
 | Field | Value |
 |---|---|
@@ -42,10 +42,10 @@ Later, separate: a `/research/open-architecture/` page with the first experiment
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 38 (directness 8, rhythm 7, trust 8, authenticity 7, density 8) |
+| `lint_prose.py` | 0 errors; 1 warning kept: ARCADE is a tool's proper name |
+| Cold read: thesis as restated | "AI can recover structure with mature tools, but recovering why is early and unreliable, so model-extracted decisions should be human-confirmed drafts before they constrain agents." Matches. |
+| Cold read: unclear terms, and how resolved | Zero- and few-shot glossed; metric named (BERTScore); the absence claim scoped to "we found no"; the vaporization overstatement and the false-alarm assertion rewritten; who confirms decisions when the original engineers have left made explicit. |
 
 ## Agreed scope
 
@@ -60,18 +60,18 @@ Later, separate: a `/research/open-architecture/` page with the first experiment
 
 ## Key facts, figures, sources
 
-**None verified.**
+**Verified 2026-10-14**: arXiv 2112.10934 (full text extracted from the PDF) and arXiv 2609.03721 (abstract page). The two uncaptured citations were dropped.
 
 | Claim | Source | Verified? |
 |---|---|---|
-| Li, Liang, Soliman & Avgeriou (2022), "Understanding Software Architecture Erosion: A Systematic Mapping Study", Journal of Software: Evolution and Process; reviews 73 studies (literature up to May 2019) | https://arxiv.org/abs/2112.10934 (PDF: https://arxiv.org/pdf/2112.10934) | no |
-| Distinguishes implemented vs currently intended architecture; erosion as structural degradation or growing resistance to change | same | no |
-| Knowledge vaporization is the most-mentioned nontechnical cause (11 of 73 studies) | same | no |
-| Recommends recording and tracing architectural knowledge (decisions, assumptions) to code and changes | same | no |
-| Reviews tools including ARCADE, Lattix, Structure101, Axivion, Sonargraph | same | no |
-| A September 2026 study on recovering architectural decisions from commits finds LLMs often miss the rationale | https://arxiv.org/abs/2609.03721 | no |
-| A 2025 systematic mapping study on mining repositories to recover software architecture | ScienceDirect, **URL not captured** | no |
-| Research on deriving business-process event logs from legacy code and database activity | Springer, **URL not captured** | no |
+| Li, Liang, Soliman & Avgeriou (2022), "Understanding Software Architecture Erosion: A Systematic Mapping Study", Journal of Software: Evolution and Process; reviews 73 studies (literature up to May 2019) | https://arxiv.org/abs/2112.10934 (PDF: https://arxiv.org/pdf/2112.10934) | verified (search period January 2006 to May 2019) |
+| Distinguishes implemented vs currently intended architecture; erosion as structural degradation or growing resistance to change | same | verified |
+| Knowledge vaporization is the most-mentioned nontechnical cause (11 of 73 studies) | same | verified |
+| Recommends recording and tracing architectural knowledge (decisions, assumptions) to code and changes | same | verified |
+| Reviews tools including ARCADE, Lattix, Structure101, Axivion, Sonargraph | same | verified |
+| A September 2026 study on recovering architectural decisions from commits finds LLMs often miss the rationale | https://arxiv.org/abs/2609.03721 | verified: Karan, Dhar, Soliman and Vaidhyanathan, preliminary exploratory study; four LLMs, 30 decisions, BERTScore F1 above 0.81, outputs "miss the rationale behind the decision" |
+| A 2025 systematic mapping study on mining repositories to recover software architecture | ScienceDirect, **URL not captured** | **dropped**: no matching 2025 study found |
+| Research on deriving business-process event logs from legacy code and database activity | Springer, **URL not captured** | **dropped**: no URL; the functional layer is described without a citation |
 
 ## Mneme claims and maturity
 
@@ -97,4 +97,4 @@ None for this article. Later, only if research results exist and may be publishe
 
 ## Open questions
 
-- Hub: architectural-intent or software-migrations-modernization?
+- Resolved 2026-10-14: architectural-intent.
