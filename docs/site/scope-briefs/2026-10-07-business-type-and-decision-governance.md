@@ -1,6 +1,6 @@
 # Scope brief: Post-Business Type Comparison and decision governance
 
-Status: concept published in #214; insight 3 (`/insights/from-decision-records-to-decision-governance/`) **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`**, typed **Perspective** under the 2026-10-14 type rule (no external anchor; the concept page owns the definition). Insight 2 (software factories) is not built: the verdict is to extend `software-factory-governance-layer`, so this chat stays unmarked
+Status: concept published in #214; insight 3 (`/insights/from-decision-records-to-decision-governance/`) **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`**, typed **Perspective** under the 2026-10-14 type rule (no external anchor; the concept page owns the definition). Insight 2 (software factories) is merged into `software-factory-governance-layer` in the batch 3 PR, as a "Six ways factory output loses engineering intent" section. Every item is then shipped, so the chat can be marked once batch 3 is deployed
 
 | Field | Value |
 |---|---|
