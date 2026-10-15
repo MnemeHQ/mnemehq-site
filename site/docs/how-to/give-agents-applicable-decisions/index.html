@@ -88,7 +88,7 @@
       },
       "inLanguage": "en",
       "datePublished": "2026-10-04",
-      "dateModified": "2026-10-13",
+      "dateModified": "2026-10-15",
       "image": {
         "@type": "ImageObject",
         "@id": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/#primaryimage",
@@ -336,9 +336,9 @@
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Give coding agents the decisions that apply to a task</h1>
-  <p class="lede">Ask by task or by path. In Claude Code, <code>/mneme:context</code> has Claude run <code>mneme test_query</code> with your task, and an MCP host can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file it&rsquo;s editing. That tool matches only a decision&rsquo;s scope, and the CLI lookup scores a scope match highest, so give each decision a scope word your paths contain.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Claude Code, any MCP host</p>
-  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a lookup that returns ADR-012 for any file under <code>app/handlers/</code>, from the CLI that <code>/mneme:context</code> uses and from the Mneme MCP server.</p>
+  <p class="lede">Ask by task or by file path. In Claude Code, the <code>/mneme:context</code> command runs <code>mneme test_query</code> with your task. Other agents can call <code>decision.applicable_to</code> on Mneme&rsquo;s local server with the file they are editing. Both work best when each decision has a scope word that appears in the paths it governs.</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Claude Code, any MCP host</p>
+  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a lookup that returns the decision governing <code>app/handlers/</code> for any file there, both from the command line that <code>/mneme:context</code> uses and from Mneme&rsquo;s local server for agents.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
     <a href="#prerequisites">Prerequisites</a>
@@ -353,14 +353,14 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>Guide 2 stops a bad write after the agent has decided to make it. Giving the agent ADR-012 before it starts on <code>app/handlers/invoices.py</code> can save that round trip. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak MCP (Model Context Protocol), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
-    <p>Lookup only informs the agent. Enforcement stays with the hook and CI checks from guides <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">2</a> and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">4</a>.</p>
+    <p><a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Stop an AI coding agent from crossing an architectural boundary</a> blocks a bad write after the agent has already written the change, and the agent then has to redo it. Showing the agent the relevant architecture decision record (ADR), here ADR-012, before it starts on <code>app/handlers/invoices.py</code> avoids that. Mneme can look up the decisions that match a task or a path. Claude Code reaches that lookup through the plugin's <code>/mneme:context</code> command. Agents that speak the Model Context Protocol (MCP), Codex among them, can reach it through Mneme's local MCP server; see Limits for what we tested.</p>
+    <p>Lookup only informs the agent. Enforcement stays with the agent hook and the continuous integration (CI) check from the other guides.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>ADR-012 in <code>docs/adr/</code> and imported into <code>.mneme/project_memory.json</code>, as in <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
+      <li>ADR-012 in <code>docs/adr/</code>, imported into the memory file <code>.mneme/project_memory.json</code> with <code>mneme adr import docs/adr --memory .mneme/project_memory.json --apply</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> explains the ADR; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> covers a first install.</li>
       <li>Mneme 0.10.0 with the optional MCP runtime:</li>
     </ul>
     <div class="howto-code howto-code--command">
@@ -368,7 +368,7 @@
   <pre class="term-block">pipx install "mneme-hq[mcp]==0.10.0"</pre>
 </div>
     <ul class="plain">
-      <li>For the Claude Code path, the plugin loaded as in <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Guide 2</a>.</li>
+      <li>For the Claude Code path, the Mneme plugin loaded as in <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Stop an AI coding agent from crossing an architectural boundary</a>.</li>
     </ul>
   </section>
 
@@ -385,12 +385,20 @@ status: accepted
 priority: foundational
 date: "2026-10-01"
 scope: handlers
----</pre>
+---
+Handlers call repositories. A direct client import skips the transaction
+and tenancy handling that lives in app/repositories.
+
+## Constraints
+- FORBID_LITERAL:
+    value: from app.db.client import
+    include_paths:
+      - "app/handlers/**"</pre>
 </div>
-    <p>For the CLI lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart, with one catch for MCP, covered in Troubleshooting.</p>
+    <p>For the command-line lookup, words shorter than four letters never match, so <code>api</code> can't work as a scope there. Give every accepted ADR its own scope, too: when two share one, the import keeps only one of them (<a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> shows it). A dotted scope such as <code>handlers.invoices</code> keeps related ADRs apart, with one catch for MCP, covered in Troubleshooting.</p>
 
     <h3>2. Register the MCP server with your agent</h3>
-    <p>The server runs on your machine and talks over standard input and output. Agents keep MCP servers in their own config files, each with its own format. This is the process definition to put there:</p>
+    <p>The server runs on your machine and talks to the agent over standard input and output (stdio). Each agent lists such servers in its own config file; Claude Code reads them from a <code>.mcp.json</code> file in the repository root. This is the entry to add:</p>
     <div class="howto-code howto-code--config">
   <div class="howto-code-head"><span class="howto-code-label">Configuration</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to config" data-label="Copy config" aria-live="polite">Copy config</button></div>
   <pre class="term-block" data-fixture="manual" data-block="config">{
@@ -402,7 +410,8 @@ scope: handlers
   }
 }</pre>
 </div>
-    <p><code>--memory</code> points the server at the project memory your ADR import wrote. The server returns the decisions in its Decision Index, so after you edit an ADR, re-run <code>mneme adr import</code> with <code>--update-existing</code>; a running server picks the change up on its next read. Memory created by <code>mneme init</code> on 0.10.0 is ready as it is. Memory from 0.9.x needs migrating first, covered in Troubleshooting. To have the server also check your ADR folder at startup, add <code>"--adr-dir", "docs/adr"</code>; it validates the folder and doesn&rsquo;t change what the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Hosts that don't use this JSON format, such as Codex with its TOML config, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
+    <p><code>--memory</code> points the server at the memory file your ADR import wrote. The server returns the decisions in its Decision Index, the versioned record of decisions inside that file, so after you edit an ADR, re-run <code>mneme adr import</code> with <code>--update-existing</code>; a running server picks the change up on its next read.</p>
+    <p>Memory created by <code>mneme init</code> on 0.10.0 is ready as it is. Memory from 0.9.x needs migrating first, covered in Troubleshooting. To have the server also check your ADR folder at startup, add <code>"--adr-dir", "docs/adr"</code>; it validates the folder and doesn&rsquo;t change what the server returns. Paths in <code>args</code> resolve against the folder the host starts the server in, so use absolute paths if your host doesn't start in the repository root. Agents with a different config format, such as Codex, take the same command and arguments in their own format. The <a href="/docs/mcp/">MCP server reference</a> covers every option.</p>
   </section>
 
   <section class="prose-section" id="run">
@@ -415,7 +424,7 @@ scope: handlers
 </div>
 
     <h3>Any MCP host: <code>decision.applicable_to</code></h3>
-    <p>This small client starts the server the way an agent does and calls one tool. Save it as <code>mcp_probe.py</code> in the repository root:</p>
+    <p>This small client starts the server the way an agent does and calls one tool. It imports the <code>mcp</code> Python package, which a pipx install keeps inside Mneme&rsquo;s own environment, so run it from a virtual environment where you ran <code>pip install "mneme-hq[mcp]==0.10.0"</code>. It passes <code>--proposals ""</code>, so the server keeps proposals in memory and writes no file; the probe only reads decisions. Save it as <code>mcp_probe.py</code> in the repository root:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>mcp_probe.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:mcp_probe.py">"""Call Mneme's decision-mcp server over stdio, the way an MCP host does.
@@ -594,6 +603,11 @@ Injected (top 3):
   "proposal_hint_matches": []
 }</pre>
 </div>
+    <p>To reproduce this, import the dotted-scope version of ADR-012 into a second memory file:</p>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="cmd">mneme init --path .mneme/dotted.json &gt; /dev/null &amp;&amp; mneme adr import troubleshooting/dotted --memory .mneme/dotted.json --apply &gt; /dev/null</pre>
+</div>
     <p>Pass the scope in <code>context</code> as well and the ADR comes back:</p>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
@@ -622,7 +636,7 @@ Injected (top 3):
   Preview the migration:  mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json
   After reviewing it, apply: mneme decision-index migrate --memory troubleshooting/memory-from-0.9/project_memory.json --apply</pre>
 </div>
-    <p>Run the first command, read the preview, then run the second. Before you apply, move every process that writes the file to 0.10.0, including CI jobs and teammates&rsquo; installs: a 0.9.2 writer on migrated memory succeeds silently, and 0.10.0 then refuses to read the file. The <a href="/docs/cli/#decision-index-migrate">migrate reference</a> covers what the migration changes.</p>
+    <p>Run the first command, read the preview, then run the second. Before you apply, move every process that writes the file to 0.10.0, including CI jobs and teammates&rsquo; installs: if anything still running 0.9.2 writes to the migrated file, the write succeeds without a warning, and 0.10.0 then refuses to read the file. The <a href="/docs/cli/#decision-index-migrate">migrate reference</a> covers what the migration changes.</p>
     <p>An <code>--adr-dir</code> problem stops the server too:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
@@ -637,7 +651,7 @@ Injected (top 3):
       <li>Lookup gives the agent context. It doesn't stop anything. Keep the hook and the CI check in place.</li>
       <li>Matching is by shared words, not meaning. A task phrased in words the decision doesn't use won't find it.</li>
       <li>The MCP setup is the generic process definition. We haven't verified it inside Codex or another named agent.</li>
-      <li>The MCP server is local and stdio-only. It has no HTTP endpoint and no authentication.</li>
+      <li>The MCP server is local and talks over stdio only. It has no HTTP endpoint and no authentication.</li>
       <li>Over MCP an agent can read decisions and submit proposals. It can't accept a proposal or change enforcement; <a href="/docs/decision-proposals/">people review proposals</a> with the CLI.</li>
     </ul>
   </section>

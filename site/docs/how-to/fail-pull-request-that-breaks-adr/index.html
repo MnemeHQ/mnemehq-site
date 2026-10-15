@@ -88,7 +88,7 @@
       },
       "inLanguage": "en",
       "datePublished": "2026-10-05",
-      "dateModified": "2026-10-13",
+      "dateModified": "2026-10-15",
       "image": {
         "@type": "ImageObject",
         "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#primaryimage",
@@ -336,8 +336,8 @@
 <section class="hero">
   <div class="section-eyebrow">How-to guide</div>
   <h1>Fail a pull request that breaks an ADR</h1>
-  <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in the pull request, each with its real path. A FAIL exits 2 and fails the check; mark the check as required in branch protection and that blocks the merge. The workflow also re-imports your ADRs, so a change to an accepted ADR that nobody re-imported fails the check too.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-13">Oct 13, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
+  <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in a pull request. A file that breaks an architecture decision record (ADR) makes the check fail, and a required status check then blocks the merge. The workflow also fails if someone edited an ADR without re-importing it.</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -353,14 +353,36 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>Teams that aren't ready to put a hook in front of every agent can still catch a violation at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
+    <p>Teams that aren't ready to put a hook in front of every agent can still catch a violation at merge. The workflow below runs on every pull request into <code>main</code>. It checks that the committed memory file (<code>.mneme/project_memory.json</code>, where Mneme stores the decisions compiled from your ADRs) is up to date with edited ADRs, then runs <code>mneme check</code> on each added or modified text file. If any file breaks a decision, the job fails and the pull request shows a failed check.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>A GitHub repository with ADR-012 in <code>docs/adr/</code>, and <code>.mneme/project_memory.json</code> committed. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> creates both.</li>
-      <li>Permission to add workflows under <code>.github/workflows/</code>. To block merging, mark the check as required in your branch protection rules.</li>
+      <li>A GitHub repository with ADR-012 in <code>docs/adr/</code> and the memory file committed. This is ADR-012, which bans importing the database client under <code>app/handlers/</code>:</li>
+    </ul>
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>docs/adr/ADR-012-handlers-use-repositories.md</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md">---
+id: ADR-012
+title: Request handlers do not import the database client
+status: accepted
+priority: foundational
+date: "2026-10-01"
+scope: handlers
+---
+Handlers call repositories. A direct client import skips the transaction
+and tenancy handling that lives in app/repositories.
+
+## Constraints
+- FORBID_LITERAL:
+    value: from app.db.client import
+    include_paths:
+      - "app/handlers/**"</pre>
+</div>
+    <ul class="plain">
+      <li>The memory file, created with <code>mneme init</code> and <code>mneme adr import docs/adr --memory .mneme/project_memory.json --apply</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> explains both; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> covers installing Mneme.</li>
+      <li>Permission to add workflows under <code>.github/workflows/</code>. To block merging, make the check required: in the repository settings, add a branch ruleset (or branch protection rule) for <code>main</code> with &ldquo;Require status checks to pass&rdquo;, and select this workflow&rsquo;s <code>mneme</code> job.</li>
     </ul>
   </section>
 
@@ -433,9 +455,10 @@ jobs:
 </div>
     <ul class="plain">
       <li><code>fetch-depth: 0</code> fetches the history the workflow needs to compare the pull request against <code>main</code>.</li>
-      <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. Ignore the conflicts note the import prints; the step passes when <code>git diff</code> exits 0.</li>
-      <li>That step catches edited ADRs only. A deprecated, superseded or deleted ADR leaves its decision active. To retire a decision, add a new ADR that lists it under <code>supersedes</code> (keep the old ADR file in <code>docs/adr</code>; the import rejects a <code>supersedes</code> reference to an ADR that isn&rsquo;t there) and re-import with <code>mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</code>; don&rsquo;t edit the memory file by hand, because from 0.10.0 a memory file whose decisions no longer match its decision index fails to load.</li>
-      <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it.</li>
+      <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. The import also prints a note that the ADRs already exist in the memory file. That is expected; the step passes when <code>git diff</code> finds no change.</li>
+      <li>That step catches edited ADRs only. Marking an ADR deprecated or superseded, or deleting it, leaves its decision active.</li>
+      <li>To retire a decision, write a new ADR that lists the old one under <code>supersedes</code>, keep the old file in <code>docs/adr</code>, and re-import with <code>--update-existing</code> (see Troubleshooting). Don&rsquo;t edit the memory file by hand: from 0.10.0 a hand-edited file can fail to load.</li>
+      <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it. <code>--query</code> describes the change; Mneme uses it to choose which decisions to show as guidance, and checks <code>FORBID_LITERAL</code> rules like ADR-012 either way.</li>
       <li>Binary files (images, archives) are skipped, because <code>mneme check</code> reads text only. Renamed files count as added.</li>
       <li>The loop keeps the worst exit code, so a passing file checked later can't hide an earlier failure. If <code>git diff</code> itself fails, the step exits 2 instead of passing with nothing checked.</li>
       <li>The last step uploads every JSON verdict, even when the check fails.</li>
@@ -444,7 +467,7 @@ jobs:
 
   <section class="prose-section" id="run">
     <h2>Run</h2>
-    <p>Open a pull request that adds three files: a handler with the forbidden import, <code>app/handlers/invoices.py</code>; a repository file that is allowed to import the client, <code>app/repositories/invoices.py</code>; and an image, <code>app/static/logo.png</code>. The handler:</p>
+    <p>Open a pull request that adds three files. The first is a handler with the forbidden import, saved as <code>app/handlers/invoices.py</code>:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>inputs/invoices_direct.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:inputs/invoices_direct.py">from app.db.client import get_connection
@@ -454,12 +477,18 @@ def list_invoices(customer_id: str):
     conn = get_connection()
     return conn.execute("SELECT * FROM invoices WHERE customer_id = ?", (customer_id,))</pre>
 </div>
+    <p>The second is a repository file, which is allowed to import the client, saved as <code>app/repositories/invoices.py</code>:</p>
+    <div class="howto-code howto-code--file">
+  <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>inputs/repository_invoices.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
+  <pre class="term-block" data-fixture="file:inputs/repository_invoices.py">from app.db.client import get_connection</pre>
+</div>
+    <p>The third is any image, saved as <code>app/static/logo.png</code>.</p>
     <p>The workflow starts on its own. We tested it by running the workflow's exact <code>run:</code> scripts against a local copy of that pull request, not on GitHub's runners.</p>
   </section>
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
-    <p>The memory check passes. The decision check prints one line per changed file and the job exits with code 2:</p>
+    <p>The memory check passes. The decision check prints one line per changed file, with the exit code <code>mneme check</code> returned for it, or <code>skip</code> for a binary file. The job itself exits with code 2:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:check-changed-files">exit=2  app/handlers/invoices.py
@@ -471,7 +500,7 @@ skip    app/static/logo.png (binary)</pre>
 
   <section class="prose-section" id="evidence">
     <h2>Evidence</h2>
-    <p>Download the <code>mneme-verdicts</code> artifact from the workflow run. It holds one JSON verdict per changed file. The one for the handler names the decision, the matched text and the path selector:</p>
+    <p>Download the <code>mneme-verdicts</code> artifact from the workflow run. It holds one JSON verdict per changed file. The one for the handler names the decision, its rule (<code>FORBID_LITERAL</code>, a ban on exact text), the matched text and the path selector that made the rule apply:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:show-verdict">{
@@ -510,9 +539,9 @@ skip    app/static/logo.png (binary)</pre>
 </div>
     <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can't complete reports INCOMPLETE and exits 2, so it fails the job instead of passing it.</p>
 
-    <h3>Protect the governance surface</h3>
-    <p>A required check is only authoritative when the actor it governs cannot silently weaken the check after it fails. An agent may repair the implementation, but it should not have unilateral authority to change the governing ADR, rewrite the compiled decision state, disable the workflow, move a compatibility baseline, or approve its own exception.</p>
-    <p>GitHub documented this failure mode during its AI-assisted Copilot runtime migration: a compatibility check caught a missing SDK method, and the agent applied an escape-hatch label instead of restoring the method. Human review rejected the waiver and required the implementation to be fixed. GitHub's resulting lesson was to <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">protect the behavioral oracle from the agent</a>.</p>
+    <h3>Stop an agent from weakening the check</h3>
+    <p>A required check only means something if the agent it judges can't quietly change the check after it fails. An agent may fix its code. It should not be able, on its own, to edit the ADR, rewrite the memory file, disable this workflow, or approve its own exception. Together those files are the check's governance surface.</p>
+    <p>GitHub documented this failure mode during its AI-assisted Copilot runtime migration: a compatibility check caught a missing SDK method, and the agent applied an escape-hatch label instead of restoring the method. Human review rejected the waiver and required the implementation to be fixed. GitHub's resulting lesson was to make sure <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">the agent changing the code can't redefine correctness without oversight</a>.</p>
     <p>Put the governance surface behind separate ownership and approval:</p>
     <ul class="plain">
       <li>Require the Mneme status check in the branch ruleset or branch protection rule, and restrict bypass permission.</li>
@@ -537,10 +566,10 @@ skip    app/static/logo.png (binary)</pre>
     <p>The step exits 2 when <code>git diff</code> can't compare against <code>origin/$BASE_REF</code>, usually because the checkout is shallow. Keep <code>fetch-depth: 0</code> on the checkout step.</p>
 
     <h3>Every file passes, even one with the import</h3>
-    <p>The <code>--target-path</code> flag is missing. Without it, Mneme can't tell which path-scoped rules apply. <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows the output.</p>
+    <p>The <code>--target-path</code> flag is missing. Without it, Mneme can't tell which path-scoped rules apply. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> shows the output.</p>
 
     <h3>You want to see findings without failing pull requests yet</h3>
-    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0:</p>
+    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0 for WARN and FAIL. An INCOMPLETE evaluation still exits 2:</p>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
@@ -565,7 +594,7 @@ Result: FAIL</pre>
     <ul class="bound-list">
       <li>The check reads each changed file whole. A file that already broke ADR-012 before the pull request fails as soon as someone touches it.</li>
       <li>Deleted files aren't checked, because there is nothing left to read.</li>
-      <li>The rule matches exact text. See <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> for the import forms it misses.</li>
+      <li>The rule matches exact text. See <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> for the import forms it misses.</li>
       <li>The workflow syntax is GitHub-only. The same loop runs in GitLab CI with <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code> as the base; the <a href="/integrations/gitlab/">GitLab page</a> has that version.</li>
     </ul>
   </section>
