@@ -1,6 +1,6 @@
 # Scope brief: Post-claude frontier academy Assess program relevance
 
-Status: **gathered, not built**; build card decided 2026-10-14, ready to build
+Status: news piece **built 2026-10-14** in the batch 2 PR (not yet merged or deployed) as `/insights/claude-frontier-academy-frontier-deployed-engineers/`. Judged still newsworthy on 2026-10-14 (12 days after launch; cohorts running, first badges early 2027). The FDE pillar update and the other cluster verdicts remain open, so this chat stays unmarked
 
 | Field | Value |
 |---|---|
@@ -47,10 +47,10 @@ The chat also proposed a content architecture (pillar "Decision Governance for A
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 38 (directness 8, rhythm 7, trust 8, authenticity 7, density 8) |
+| `lint_prose.py` | 0 errors, 0 warnings |
+| Cold read: thesis as restated | "Anthropic's plan scales deployments faster than it scales the way their decisions are recorded, so enterprises need a vendor-independent decision layer that outlives each engineer." Matches. |
+| Cold read: unclear terms, and how resolved | The "industrial process" leap and "most live in the engineer's head" rewritten; Anthropic's rationale now quoted; "five of the eight named" made precise; silo glossed. |
 
 ## Agreed scope (news article)
 
@@ -66,17 +66,17 @@ Publish quickly; news value decays. The chat orders it first, with the FDE pilla
 
 ## Key facts, figures, sources
 
-**None verified.**
+**Verified 2026-10-14** against the live Anthropic announcement (headline: "Anthropic invests $100 million to train 10,000 engineers and tackle the enterprise AI talent gap", 2 October 2026). Corrections to the rows below: the programme is a multi-day in-person programme with a simulated deployment "from the right use case through security review to handover" and a graded practical (Claude Resident Engineer badge), then a 12-week residency leading a real Claude use case at the engineer's own organisation, reassessed for the Claude Frontier Deployed Engineer badge (first expected early 2027). The Partner Network and startup-programme rows are not used.
 
 | Claim | Source | Verified? |
 |---|---|---|
-| Launched 2 October 2026; $100M to train 10,000 Frontier Deployed Engineers by end of 2027 | https://www.anthropic.com/news/claude-frontier-academy | no |
-| First cohorts include Accenture, Bain, Capgemini, Deloitte, McKinsey, Morgan Stanley, Commonwealth Bank, Novo Nordisk | same | no |
-| In-person enterprise deployment simulation, then 12 weeks on a real production Claude project; curriculum runs from use-case selection through security review, deployment and handover | same | no |
-| Participants return with a named project and lead it to production ("from an idea to a system in production") | same | no |
-| Nomination-based; via Anthropic account team or Partner Account Manager; cohorts in San Francisco, New York, London | same | no |
-| Claude Partner Network: 40,000+ firms applied; service-partner tiers based on certified engineers and production deployments | https://www.anthropic.com/news/services-track-partner-hub | no |
-| Startup programme open to bootstrapped, pre-seed and venture-backed startups | https://claude.com/programs/startups | no |
+| Launched 2 October 2026; $100M to train 10,000 Frontier Deployed Engineers by end of 2027 | https://www.anthropic.com/news/claude-frontier-academy | verified |
+| First cohorts include Accenture, Bain, Capgemini, Deloitte, McKinsey, Morgan Stanley, Commonwealth Bank, Novo Nordisk | same | verified (see the corrections above) |
+| In-person enterprise deployment simulation, then 12 weeks on a real production Claude project; curriculum runs from use-case selection through security review, deployment and handover | same | verified (see the corrections above) |
+| Participants return with a named project and lead it to production ("from an idea to a system in production") | same | verified (see the corrections above) |
+| Nomination-based; via Anthropic account team or Partner Account Manager; cohorts in San Francisco, New York, London | same | verified (see the corrections above) |
+| Claude Partner Network: 40,000+ firms applied; service-partner tiers based on certified engineers and production deployments | https://www.anthropic.com/news/services-track-partner-hub | not used |
+| Startup programme open to bootstrapped, pre-seed and venture-backed startups | https://claude.com/programs/startups | not used |
 
 ## Mneme claims and maturity
 

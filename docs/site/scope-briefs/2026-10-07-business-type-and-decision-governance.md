@@ -1,6 +1,6 @@
 # Scope brief: Post-Business Type Comparison and decision governance
 
-Status: **gathered, not built**
+Status: concept published in #214; insight 3 (`/insights/from-decision-records-to-decision-governance/`) **built 2026-10-14** in the batch 2 PR (not yet merged or deployed), typed **Perspective** under the 2026-10-14 type rule (no external anchor; the concept page owns the definition). Insight 2 (software factories) is not built: the verdict is to extend `software-factory-governance-layer`, so this chat stays unmarked
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,10 @@ Five questions (technical insight): changed: agents now execute decisions that w
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 39 (directness 8, rhythm 8, trust 8, authenticity 7, density 8) |
+| `lint_prose.py` | 0 errors, 0 warnings |
+| Cold read: thesis as restated | "An ADR is only text to a coding agent; it becomes an enforceable governed decision only after it gains lifecycle, scope, authority, precedence, retrieval, enforcement and evidence, and each missing stage causes a specific agent failure." Matches. |
+| Cold read: unclear terms, and how resolved | Decision Index, hooks, typed rules, provenance and the snapshot jargon glossed; unsupported generalisations ("most teams stop at stage 0 or 1", "a few dozen decisions") rewritten; the authority stage reconciled with the index storing no approver name. |
 
 ## Agreed scope
 
@@ -62,12 +62,12 @@ Decision Engineering (discipline), Decision Governance (what has force), Decisio
 
 | Claim | Source | Verified? |
 |---|---|---|
-| IBM wrote about decision governance years ago (enterprise decision management) | https://www.redbooks.ibm.com/redbooks/pdfs/sg248127.pdf | no |
-| AsDecided article "Decision Governance for Coding Agents" defines it around authority, applicability, delivery and deterministic checks | https://asdecided.com/articles/decision-governance-for-coding-agents | no |
-| Gartner includes decision governance within Decision Intelligence platforms | **no URL in chat** | no |
-| SAS argues in 2026 that decisions should be first-class governed assets | **no URL in chat** | no |
-| Other new projects use "decision governance for code and the agents editing it" | **no URL in chat** | no |
-| Entrepreneur/HBR post on AI-native startups shipping in weeks | image only, **no URL** | no |
+| IBM wrote about decision governance years ago (enterprise decision management) | https://www.redbooks.ibm.com/redbooks/pdfs/sg248127.pdf | not used (the insight cites no external sources) |
+| AsDecided article "Decision Governance for Coding Agents" defines it around authority, applicability, delivery and deterministic checks | https://asdecided.com/articles/decision-governance-for-coding-agents | not used |
+| Gartner includes decision governance within Decision Intelligence platforms | **no URL in chat** | not used |
+| SAS argues in 2026 that decisions should be first-class governed assets | **no URL in chat** | not used |
+| Other new projects use "decision governance for code and the agents editing it" | **no URL in chat** | not used |
+| Entrepreneur/HBR post on AI-native startups shipping in weeks | image only, **no URL** | not used |
 
 ## Mneme claims and maturity
 
