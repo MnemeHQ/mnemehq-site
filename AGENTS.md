@@ -8,6 +8,15 @@ Use purpose-based prefixes: `feat/`, `fix/`, `site/`, `ci/`, `docs/`, or `refact
 Keep names short and kebab-case. Do not use an agent name such as `codex/` as the
 branch prefix; record agent identity in execution provenance instead.
 
+## Pre-merge review gates for all content
+
+Any PR that adds or substantially changes reader-facing prose under `site/` (insights, how-to
+guides, concepts, docs, integration, comparison, persona and landing pages) passes the claim audit
+and the comprehension and slop filter before merge: a `stop-slop` score of at least 35/50,
+`scripts/lint_prose.py` with zero errors, and a cold read of the built page by a reviewer who has
+seen nothing else. The rules are in `PUBLISHING.md`, "Pre-merge review gates (all content)".
+Record the results in the PR body.
+
 ## Publishing insights
 
 Follow `.claude/skills/publish-insight/SKILL.md` end to end: intake from the ChatGPT

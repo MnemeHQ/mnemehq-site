@@ -158,3 +158,11 @@ by either adding the node or adding the slug to `docs/site/svg-omitted.txt`.
 
 The validator is also a good smoke-check after any bulk edit to the hub — run it
 whenever you touch `site/concepts/index.html`.
+
+## 8. Pass the pre-merge review gates
+
+A concept page is reader-facing prose, so it passes the claim audit and the comprehension and
+slop filter (stop-slop score of at least 35/50, `lint_prose.py` with zero errors, and a cold read
+of the built page) before merge. See
+[Pre-merge review gates](../../PUBLISHING.md#pre-merge-review-gates-all-content) in PUBLISHING.md,
+and record the results in the PR body.

@@ -137,7 +137,7 @@ Do **not** publish another article merely because a new company announcement can
 
 Before scoping a new article, run `python scripts/find_overlap.py "<title>" --keywords "<kw1>,<kw2>"` to find existing pages competing for the same query, and record the verdict in the scope brief (see the `publish-insight` skill).
 
-Before the final write-up, every draft passes the comprehension and slop filter in that skill: a `stop-slop` score of at least 35/50, `python scripts/lint_prose.py <draft>` with zero errors, and a cold read by a reviewer who has seen only the draft.
+Before the final write-up, every draft passes the comprehension and slop filter in that skill: a `stop-slop` score of at least 35/50, `python scripts/lint_prose.py <draft>` with zero errors, and a cold read by a reviewer who has seen only the draft. The same filter, and the claim audit, apply to every other content type too; see [Pre-merge review gates](../../PUBLISHING.md#pre-merge-review-gates-all-content) in PUBLISHING.md.
 
 Editorial pattern for every piece:
 
