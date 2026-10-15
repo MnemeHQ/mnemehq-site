@@ -43,6 +43,43 @@ Rules fall into three kinds. Each rule below is tagged with one:
 
 ---
 
+## Pre-merge review gates (all content)
+
+**[OP] Every PR that adds or substantially changes reader-facing prose passes two review gates
+before it merges.** This covers every content type: insights, how-to guides, concept pages, docs
+and reference pages, integration and comparison pages, persona and landing pages, and the pricing
+and product pages. "Substantially" means a new page, a new section, or a rewritten paragraph; a
+typo fix, a link change, registration or a date bump is exempt. Neither gate is a CI check, so
+record each result in the PR body's Validation section (and, for insights, in the scope brief).
+
+1. **Claim audit (is it true?).** An adversarial review, run as a fresh reviewer with read-only
+   access, checks every claim against its source:
+   - Every external citation, figure and quote is verified against the live source.
+   - Every sentence about Mneme is classified SHIPPED / VALIDATED EXPERIMENT / PLANNED /
+     CONCEPTUAL, and none may imply a higher maturity than the truth.
+   - Category and vision claims may lead implementation, per ADR-001's claim levels in
+     MnemeHQ/mneme. Concrete claims stay literal: integrations and their support levels,
+     enforcement paths, rule types, evidence, versions.
+   - Behaviour claims are checked against the released version named in
+     `scripts/core_version.json`, never against core `main`.
+2. **Comprehension and slop filter (can a reader follow it?).** All three parts are required:
+   1. **Slop:** score the prose with the `stop-slop` rubric (directness, rhythm, trust,
+      authenticity, density, 10 points each). It must reach at least 35/50.
+   2. **Lint:** `python scripts/lint_prose.py <page>` reports zero errors (house voice: no
+      "bottleneck", no em dashes as connective tissue). Fix every warning, or justify it in the
+      PR. Lint the built page; for a how-to guide, that is the page `build_howto_page.py` writes.
+   3. **Cold read:** a reviewer who has seen only the built page, never the brief, chat or diff,
+      reports four things: what the page gets them, whether they could follow it unaided, which
+      terms were unclear or used before being defined, and which sentences confuse. Every unclear
+      term is defined at first use or removed, including internal names such as ADR numbers or
+      codenames. For a how-to guide, the cold reader also checks that every step can be
+      reproduced from what the page shows.
+
+The two gates catch different defects. The claim audit does not check whether a reader can
+follow the page, and the filter does not check whether a claim is true. Run both.
+
+---
+
 ## Repository layout and current paths
 
 ```
