@@ -1,0 +1,59 @@
+# Guide: /docs/how-to/install-mneme-and-activate-protection/
+steps:
+  - name: version
+    run: python -m pip show mneme-hq | sed -n 2p
+  - name: init-repo
+    run: git init -q
+  - name: setup
+    run: mneme setup
+  - name: preview
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json
+    expect_exit: 1
+  - name: apply
+    run: mneme adr import docs/adr --memory .mneme/project_memory.json --apply
+  - name: audit-before
+    run: mneme audit --memory .mneme/project_memory.json --repo-root .
+  - name: list
+    run: mneme protect list --memory .mneme/project_memory.json
+  - name: validate
+    run: mneme protect validate ADR-001 --memory .mneme/project_memory.json
+  - name: activate
+    run: mneme protect activate ADR-001 --memory .mneme/project_memory.json
+  - name: status
+    run: mneme protect status ADR-001 --memory .mneme/project_memory.json
+  - name: audit-after
+    run: mneme audit --memory .mneme/project_memory.json --repo-root .
+  - name: check-celery
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/jobs_celery.py
+      --target-path workers/jobs.py
+      --query "edit to workers/jobs.py"
+    expect_exit: 2
+  - name: check-pubsub
+    run: >-
+      mneme check --memory .mneme/project_memory.json
+      --input inputs/jobs_pubsub.py
+      --target-path workers/jobs.py
+      --query "edit to workers/jobs.py"
+  # Troubleshooting cases
+  - name: activate-again
+    run: mneme protect activate ADR-001 --memory .mneme/project_memory.json
+  - name: no-priority
+    run: mneme adr import troubleshooting/no-priority --memory .mneme/project_memory.json 2>&1 | tail -n 1
+  - name: prose-only
+    run: >-
+      mneme init --path .mneme/prose.json > /dev/null &&
+      mneme adr import troubleshooting/prose --memory .mneme/prose.json --apply > /dev/null &&
+      mneme protect list --memory .mneme/prose.json
+  - name: edit-reimport
+    run: >-
+      printf '\nRetries use the queue dead-letter topic.\n' >> docs/adr/ADR-001-no-celery.md &&
+      mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+    expect_exit: 2
+  - name: preserve
+    run: >-
+      mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+      --preserve-protection ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7
+  - name: status-after-edit
+    run: mneme protect status ADR-001 --memory .mneme/project_memory.json

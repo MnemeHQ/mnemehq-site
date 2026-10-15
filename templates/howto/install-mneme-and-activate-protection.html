@@ -1,0 +1,166 @@
+<!--meta
+{
+  "title": "Install Mneme and Activate Your First Protection · Mneme how-to — Mneme HQ",
+  "description": "Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails.",
+  "og_alt": "How to install Mneme and activate your first protection: set up, import an ADR, audit, validate, activate, check.",
+  "eyebrow": "How-to guide",
+  "h1": "Install Mneme and activate your first protection",
+  "h1_plain": "Install Mneme and activate your first protection",
+  "crumb": "Install and activate",
+  "minutes": "",
+  "surface": "CLI only",
+  "end_up": "Mneme installed in a repository, one ADR turned into an active <code>FORBID_LITERAL</code> rule, an audit that reports the decision as Protected, and a <code>mneme check</code> that fails when code reintroduces the banned library.",
+  "date": "2026-10-15",
+  "modified": "2026-10-15",
+  "answer": "Install the Mneme command-line tool with pipx, run <code>mneme setup</code> in the repository, and import your architecture decision records (ADRs) with <code>mneme adr import --apply</code>. Then run <code>mneme audit</code>: a decision it marks Mneme-ready has a rule Mneme can install. Check that rule with <code>mneme protect validate</code>, install it with <code>mneme protect activate</code>, and the next audit reports the decision as Protected. Setup never turns on enforcement by itself; activation is an explicit step, one decision at a time."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>Installing Mneme and protecting a decision are two separate steps, on purpose. <code>mneme setup</code> prepares a repository but never blocks anything. Enforcement starts only when you activate a rule for a specific decision. This guide takes one ADR from a fresh install to an active, verified rule.</p>
+    <p>Three terms come up throughout:</p>
+    <ul class="plain">
+      <li><strong>Memory file:</strong> <code>.mneme/project_memory.json</code>, where Mneme stores your compiled decisions and their rules.</li>
+      <li><strong>Mneme-ready:</strong> the audit found a decision with a clear, checkable intent and a rule Mneme could install for it, but no rule is installed yet.</li>
+      <li><strong>Protected:</strong> the audit observes enforcement for the decision. In this guide, that is an installed rule.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>Python 3.11 or newer, and <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a>.</li>
+      <li>A git repository with a <code>docs/adr/</code> directory.</li>
+      <li>No coding agent and no continuous integration (CI) setup. Later guides add both.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Install the command-line tool</h3>
+    <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.10.0"</pre>
+
+    <h3>2. Write an ADR Mneme can protect</h3>
+    <p>Save this as <code>docs/adr/ADR-001-no-celery.md</code>:</p>
+    <pre class="term-block" data-fixture="file:docs/adr/ADR-001-no-celery.md"></pre>
+    <ul class="plain">
+      <li><code>status: accepted</code> puts the ADR in the active set.</li>
+      <li><code>priority</code> is required. The import stops without it (see Troubleshooting).</li>
+      <li>The title <strong>No Celery</strong> is what makes this ADR Mneme-ready. With no rule in the ADR, the audit can derive one from the title in two shapes: a <code>No &lt;one term&gt;</code> headline, or a title that bans a quoted term, such as <code>Must not use the term "seamless"</code>. A single-term <code>FORBID_DEPENDENCY</code> line under <code>## Constraints</code> also makes an ADR Mneme-ready. Any other wording stays Requires modelling until you write the rule yourself, as <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows.</li>
+    </ul>
+
+    <h3>3. Run setup</h3>
+    <p>From the repository root:</p>
+    <pre class="term-block" data-fixture="cmd">mneme setup</pre>
+    <pre class="term-block" data-fixture="out:setup"></pre>
+    <p>Setup creates the memory file and reports what it found, including the ADR it noticed. <strong>Enforcement: Not enabled</strong> is expected: setup never installs a rule, a hook or a CI check.</p>
+
+    <h3>4. Preview, then apply the import</h3>
+    <p>Without <code>--apply</code>, the import writes nothing. Here the preview exits with code 1 and warns that the ADR has no enforceable rule yet. That is expected: activation adds the rule later.</p>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:preview"></pre>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply</pre>
+    <pre class="term-block" data-fixture="out:apply" data-lines="11-11"></pre>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <h3>5. Audit the repository</h3>
+    <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
+    <pre class="term-block" data-fixture="out:audit-before"></pre>
+    <p>ADR-001 is Mneme-ready, and the audit names the rule it would install: <code>FORBID_LITERAL: celery</code>.</p>
+
+    <h3>6. List the activation candidates</h3>
+    <pre class="term-block" data-fixture="cmd">mneme protect list --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:list"></pre>
+    <p>Read the <strong>applies to</strong> line before you go on. This rule applies to every file you check except ADR-001's own file and the memory file.</p>
+
+    <h3>7. Validate the rule</h3>
+    <p>Validation runs four checks on the proposed rule and changes nothing:</p>
+    <pre class="term-block" data-fixture="cmd">mneme protect validate ADR-001 --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:validate"></pre>
+
+    <h3>8. Activate it</h3>
+    <pre class="term-block" data-fixture="cmd">mneme protect activate ADR-001 --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:activate"></pre>
+    <p>Activation adds the rule to ADR-001's current version in the memory file, switches the project out of setup mode, then re-runs the audit's assessment for ADR-001 to confirm it is now Protected.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The audit now counts ADR-001 as Protected:</p>
+    <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
+    <pre class="term-block" data-fixture="out:audit-after"></pre>
+    <p>And the rule is live. Here is a worker that brings Celery back, saved as <code>inputs/jobs_celery.py</code>:</p>
+    <pre class="term-block" data-fixture="file:inputs/jobs_celery.py"></pre>
+    <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
+  --input inputs/jobs_celery.py \
+  --target-path workers/jobs.py \
+  --query "edit to workers/jobs.py"</pre>
+    <pre class="term-block" data-fixture="out:check-celery"></pre>
+    <p>The check fails with exit code 2. The same worker written against Pub/Sub passes with exit code 0:</p>
+    <pre class="term-block" data-fixture="out:check-pubsub"></pre>
+  </section>
+
+  <section class="prose-section" id="evidence">
+    <h2>Evidence</h2>
+    <p><code>mneme protect status</code> shows one decision's tier, its rule and whether the rule is installed. Nothing in it is stored separately; Mneme derives it from the memory file each time.</p>
+    <pre class="term-block" data-fixture="cmd">mneme protect status ADR-001 --memory .mneme/project_memory.json</pre>
+    <pre class="term-block" data-fixture="out:status"></pre>
+    <p>Commit <code>.mneme/project_memory.json</code> with the ADR. The installed rule lives in that file. The agent hooks and CI checks in the next guides read it, so they enforce every rule installed in it.</p>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The import stops with <code>missing required field 'priority'</code></h3>
+    <p>The import crashes with a Python traceback. The last line names the file and the missing field:</p>
+    <pre class="term-block" data-fixture="out:no-priority"></pre>
+    <p>Add <code>priority: foundational</code> (or another priority) to the ADR's frontmatter and import again.</p>
+
+    <h3>The audit says Requires modelling, and there are no candidates</h3>
+    <p>The ADR's intent is clear to a person, but the title doesn't name a single banned term, so Mneme won't guess a rule. This ADR is titled "Request handlers must not import the database client":</p>
+    <pre class="term-block" data-fixture="out:prose-only"></pre>
+    <p>Either retitle it in one of the shapes from step 2, or write the rule yourself in a <code>## Constraints</code> section, as <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a> shows.</p>
+
+    <h3><code>Already Protected</code> when you activate again</h3>
+    <pre class="term-block" data-fixture="out:activate-again"></pre>
+    <p>Activation is idempotent. Running it twice never installs a second copy of the rule.</p>
+
+    <h3>Re-importing an edited ADR is refused</h3>
+    <p>After you edit an activated ADR and re-import it with <code>--update-existing</code>, the import stops with exit code 2:</p>
+    <pre class="term-block" data-fixture="out:edit-reimport" data-lines="1-1"></pre>
+    <p>The activated rule lives in the memory file, not in the ADR, so a new version of the ADR would drop it. Mneme refuses rather than switch protection off silently. Say what you want: <code>--preserve-protection</code> with the rule id from the message keeps the rule, and <code>--release-protection</code> drops it.</p>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing --preserve-protection ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7</pre>
+    <pre class="term-block" data-fixture="out:preserve" data-lines="19-19"></pre>
+    <pre class="term-block" data-fixture="out:status-after-edit"></pre>
+  </section>
+
+  <section class="prose-section" id="limits">
+    <h2>Limits</h2>
+    <ul class="bound-list">
+      <li>The installed rule matches <code>celery</code> as a whole, case-sensitive token, in any file you check except ADR-001's own file and the memory file. It does not match <code>Celery</code>, <code>CELERY</code> or <code>celery_app</code>. A document or comment that mentions <code>celery</code> as a word fails too. To limit a rule to certain paths, write it yourself with <code>include_paths</code>, as in <a href="/docs/how-to/adr-to-enforceable-decision/">Guide 1</a>.</li>
+      <li>Activation installs one rule for one decision. It doesn't start any agent hook or CI job. Until you add those, the rule runs only when you call <code>mneme check</code>.</li>
+      <li>The audit derives a rule only from the title shapes in step 2 or a single-term <code>FORBID_DEPENDENCY</code> constraint. It never invents a rule from free prose.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next</h2>
+    <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Stop an AI coding agent from crossing an architectural boundary</span>
+        <span class="cl-sub">Run the same check before Claude Code writes a file.</span>
+      </a>
+      <a class="cross-card" href="/docs/how-to/fail-pull-request-that-breaks-adr/">
+        <span class="cl-label">How-to</span>
+        <span class="cl-title">Fail a pull request that breaks an ADR</span>
+        <span class="cl-sub">Run mneme check on every changed file in CI.</span>
+      </a>
+      <a class="cross-card" href="/docs/protection-activation/">
+        <span class="cl-label">Reference</span>
+        <span class="cl-title">Protection activation</span>
+        <span class="cl-sub">The four tiers, and what validate, activate and status each guarantee.</span>
+      </a>
+    </div>
+  </section>

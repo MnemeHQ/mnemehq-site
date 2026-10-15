@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Task-shaped Mneme guides: turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
+  <meta name="description" content="Task-shaped Mneme guides: install Mneme and activate a protection, turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="How-to Guides — Mneme Docs — Mneme HQ" />
-  <meta property="og:description" content="Task-shaped Mneme guides: turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
+  <meta property="og:description" content="Task-shaped Mneme guides: install Mneme and activate a protection, turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
   <meta property="og:url" content="https://mnemehq.com/docs/how-to/" />
   <meta property="og:image" content="https://mnemehq.com/docs/how-to/og-v3.png" />
 <meta property="og:image:width" content="1200" />
@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="Mneme how-to guides: each solves one engineering job, with commands tested against mneme-hq 0.10.0." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="How-to Guides — Mneme Docs — Mneme HQ" />
-  <meta name="twitter:description" content="Task-shaped Mneme guides: turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
+  <meta name="twitter:description" content="Task-shaped Mneme guides: install Mneme and activate a protection, turn an ADR into an enforced decision, block an agent&#x27;s forbidden import, load decisions per task, and fail a pull request that breaks an ADR." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/how-to/og-v3.png" />
 <meta name="twitter:image:alt" content="Mneme how-to guides: each solves one engineering job, with commands tested against mneme-hq 0.10.0." />
   <!-- Consent defaults -->
@@ -65,11 +65,11 @@
       "@type": "CollectionPage",
       "@id": "https://mnemehq.com/docs/how-to/#webpage",
       "name": "How-to guides",
-      "description": "Task-shaped Mneme guides: turn an ADR into an enforced decision, block an agent's forbidden import, load decisions per task, and fail a pull request that breaks an ADR.",
+      "description": "Task-shaped Mneme guides: install Mneme and activate a protection, turn an ADR into an enforced decision, block an agent's forbidden import, load decisions per task, and fail a pull request that breaks an ADR.",
       "url": "https://mnemehq.com/docs/how-to/",
       "inLanguage": "en",
       "datePublished": "2026-10-05",
-      "dateModified": "2026-10-13",
+      "dateModified": "2026-10-15",
       "image": {
         "@type": "ImageObject",
         "@id": "https://mnemehq.com/docs/how-to/#primaryimage",
@@ -91,6 +91,16 @@
         "@id": "https://mnemehq.com/docs/how-to/#itemlist"
       },
       "hasPart": [
+        {
+          "@type": [
+            "Article",
+            "TechArticle"
+          ],
+          "@id": "https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/#article",
+          "headline": "Install Mneme and activate your first protection",
+          "name": "Install Mneme and activate your first protection",
+          "url": "https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/"
+        },
         {
           "@type": [
             "Article",
@@ -137,33 +147,40 @@
       "@type": "ItemList",
       "@id": "https://mnemehq.com/docs/how-to/#itemlist",
       "name": "Mneme how-to guides",
-      "numberOfItems": 4,
+      "numberOfItems": 5,
       "itemListOrder": "https://schema.org/ItemListOrderAscending",
       "itemListElement": [
         {
           "@type": "ListItem",
           "position": 1,
           "item": {
-            "@id": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/#article"
+            "@id": "https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/#article"
           }
         },
         {
           "@type": "ListItem",
           "position": 2,
           "item": {
-            "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#article"
+            "@id": "https://mnemehq.com/docs/how-to/adr-to-enforceable-decision/#article"
           }
         },
         {
           "@type": "ListItem",
           "position": 3,
           "item": {
-            "@id": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/#article"
+            "@id": "https://mnemehq.com/docs/how-to/stop-agent-crossing-architectural-boundary/#article"
           }
         },
         {
           "@type": "ListItem",
           "position": 4,
+          "item": {
+            "@id": "https://mnemehq.com/docs/how-to/give-agents-applicable-decisions/#article"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
           "item": {
             "@id": "https://mnemehq.com/docs/how-to/fail-pull-request-that-breaks-adr/#article"
           }
@@ -390,16 +407,21 @@
 <section class="hero">
   <div class="section-eyebrow">Docs &middot; How-to guides</div>
   <h1>How-to guides</h1>
-  <p class="lede">Follow four tested guides from a written ADR to agent and pull-request enforcement. Every recorded command and output is replayed in CI; steps that need your own setup are marked.</p>
+  <p class="lede">Follow five tested guides from installing Mneme to agent and pull-request enforcement. Every recorded command and output is replayed in CI; steps that need your own setup are marked.</p>
 </section>
 
 <div class="wrap">
 
   <section class="prose-section">
     <h2>Recommended path</h2>
-    <p>Start with an ADR, then add enforcement where your agents work and where changes merge. Each guide builds on the same ADR-012 example, so you can follow the path in order without resetting your project.</p>
+    <p>New to Mneme? Start by installing it and activating one protection. Then write enforceable ADRs, and add enforcement where your agents work and where changes merge. Steps 1 to 4 build on the same ADR-012 example, so you can follow them in order without resetting your project.</p>
     <p><strong>Already partway through?</strong> If your ADR is imported, jump to agent enforcement in step 2 or task-specific retrieval in step 3. If local checks already pass, go straight to the pull-request gate in step 4.</p>
     <div class="cross-links">
+      <a class="cross-card" href="/docs/how-to/install-mneme-and-activate-protection/">
+        <span class="cl-label">Start here &middot; CLI</span>
+        <span class="cl-title">Install Mneme and activate your first protection</span>
+        <span class="cl-sub">Run setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule.</span>
+      </a>
       <a class="cross-card" href="/docs/how-to/adr-to-enforceable-decision/">
         <span class="cl-label">Step 1 &middot; CLI</span>
         <span class="cl-title">Turn an ADR into an enforceable decision</span>
