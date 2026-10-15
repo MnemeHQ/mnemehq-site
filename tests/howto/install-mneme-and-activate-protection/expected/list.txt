@@ -1,0 +1,15 @@
+Protection activation candidates
+============================================================
+Protected: 0  Mneme-ready: 1  Requires modelling: 0  Guidance: 0
+Candidates: 1
+
+[1] ADR-001: No Celery
+    source: <tmp>/repo/docs/adr/ADR-001-no-celery.md
+    guardrail: FORBID_LITERAL: celery
+    rule to install: FORBID_LITERAL "celery"
+    applies to: global applicability (canonical policy sources exempt)
+    enforcement: FORBID_LITERAL fails on an exact case-sensitive match, enforced independently of retrieval score; canonical policy sources are exempt (ADR-019/ADR-020)
+
+Validate before activating:  mneme protect validate <decision-id>
+Activate (explicit):         mneme protect activate <decision-id>
+exit=0

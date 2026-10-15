@@ -1,0 +1,11 @@
+Validating proposed protection for [ADR-001]
+  decision:  No Celery
+  proposal:  FORBID_LITERAL "celery"
+  checks:
+    PASS prohibited_detected: input containing 'celery' is a typed FAIL
+    PASS permitted_allowed: permitted input without 'celery' is not blocked
+    PASS path_scope_respected: artifact path enforced=True, canonical policy source exempt=True
+    PASS unrelated_paths_unaffected: unrelated artifact path enforced=True, permitted content blocked=False
+Result: VALID
+Validation never activates protection.
+exit=0
