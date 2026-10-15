@@ -41,7 +41,7 @@
       <li>The second step re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. The import also prints a note that the ADRs already exist in the memory file. That is expected; the step passes when <code>git diff</code> finds no change.</li>
       <li>That step catches edited ADRs only. Marking an ADR deprecated or superseded, or deleting it, leaves its decision active.</li>
       <li>To retire a decision, write a new ADR that lists the old one under <code>supersedes</code>, keep the old file in <code>docs/adr</code>, and re-import with <code>--update-existing</code> (see Troubleshooting). Don&rsquo;t edit the memory file by hand: from 0.10.0 a hand-edited file can fail to load.</li>
-      <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it. <code>--query</code> describes the change; Mneme uses it to choose which decisions to show as guidance, and checks typed rules either way.</li>
+      <li><code>--target-path "$f"</code> tells Mneme where each file lives. Path-scoped rules like ADR-012 depend on it. <code>--query</code> describes the change; Mneme uses it to choose which decisions to show as guidance, and checks <code>FORBID_LITERAL</code> rules like ADR-012 either way.</li>
       <li>Binary files (images, archives) are skipped, because <code>mneme check</code> reads text only. Renamed files count as added.</li>
       <li>The loop keeps the worst exit code, so a passing file checked later can't hide an earlier failure. If <code>git diff</code> itself fails, the step exits 2 instead of passing with nothing checked.</li>
       <li>The last step uploads every JSON verdict, even when the check fails.</li>
@@ -60,7 +60,7 @@
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
-    <p>The memory check passes. The decision check prints one line per changed file, with the exit code <code>mneme check</code> returned for it, and the job itself exits with code 2:</p>
+    <p>The memory check passes. The decision check prints one line per changed file, with the exit code <code>mneme check</code> returned for it, or <code>skip</code> for a binary file. The job itself exits with code 2:</p>
     <pre class="term-block" data-fixture="out:check-changed-files"></pre>
     <p>The handler fails. The repository file passes, because ADR-012 applies only under <code>app/handlers/</code>. The image is skipped.</p>
   </section>
@@ -73,7 +73,7 @@
 
     <h3>Stop an agent from weakening the check</h3>
     <p>A required check only means something if the agent it judges can't quietly change the check after it fails. An agent may fix its code. It should not be able, on its own, to edit the ADR, rewrite the memory file, disable this workflow, or approve its own exception. Together those files are the check's governance surface.</p>
-    <p>GitHub documented this failure mode during its AI-assisted Copilot runtime migration: a compatibility check caught a missing SDK method, and the agent applied an escape-hatch label instead of restoring the method. Human review rejected the waiver and required the implementation to be fixed. GitHub's resulting lesson was to <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">keep the checks that judge the agent's work out of the agent's reach</a>.</p>
+    <p>GitHub documented this failure mode during its AI-assisted Copilot runtime migration: a compatibility check caught a missing SDK method, and the agent applied an escape-hatch label instead of restoring the method. Human review rejected the waiver and required the implementation to be fixed. GitHub's resulting lesson was to make sure <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">the agent changing the code can't redefine correctness without oversight</a>.</p>
     <p>Put the governance surface behind separate ownership and approval:</p>
     <ul class="plain">
       <li>Require the Mneme status check in the branch ruleset or branch protection rule, and restrict bypass permission.</li>
@@ -98,7 +98,7 @@
     <p>The <code>--target-path</code> flag is missing. Without it, Mneme can't tell which path-scoped rules apply. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> shows the output.</p>
 
     <h3>You want to see findings without failing pull requests yet</h3>
-    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0:</p>
+    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Mneme still prints every verdict, but exits 0 for WARN and FAIL. An INCOMPLETE evaluation still exits 2:</p>
     <pre class="term-block" data-fixture="cmd">mneme check --memory .mneme/project_memory.json \
   --input app/handlers/invoices.py --target-path app/handlers/invoices.py \
   --query "PR change: app/handlers/invoices.py" --mode warn</pre>

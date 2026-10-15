@@ -424,7 +424,7 @@ and tenancy handling that lives in app/repositories.
 </div>
 
     <h3>Any MCP host: <code>decision.applicable_to</code></h3>
-    <p>This small client starts the server the way an agent does and calls one tool. It imports the <code>mcp</code> Python package, which a pipx install keeps inside Mneme&rsquo;s own environment, so run it from a virtual environment where you ran <code>pip install "mneme-hq[mcp]==0.10.0"</code>. It passes an empty <code>--proposals</code> path because it only reads decisions. Save it as <code>mcp_probe.py</code> in the repository root:</p>
+    <p>This small client starts the server the way an agent does and calls one tool. It imports the <code>mcp</code> Python package, which a pipx install keeps inside Mneme&rsquo;s own environment, so run it from a virtual environment where you ran <code>pip install "mneme-hq[mcp]==0.10.0"</code>. It passes <code>--proposals ""</code>, so the server keeps proposals in memory and writes no file; the probe only reads decisions. Save it as <code>mcp_probe.py</code> in the repository root:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>mcp_probe.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:mcp_probe.py">"""Call Mneme's decision-mcp server over stdio, the way an MCP host does.

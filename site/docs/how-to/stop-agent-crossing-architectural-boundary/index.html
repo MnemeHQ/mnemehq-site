@@ -412,7 +412,7 @@ and tenancy handling that lives in app/repositories.
   <section class="prose-section" id="run">
     <h2>Run</h2>
     <p>Ask Claude Code for a change that breaks ADR-012, for example: <em>&ldquo;Add a list_invoices handler in app/handlers/invoices.py that queries the invoices table with get_connection from app.db.client.&rdquo;</em></p>
-    <p>When the agent goes to write the file, Claude Code sends the hook an event: a JSON description of the tool call (<code>Write</code> here; <code>Edit</code> and <code>MultiEdit</code> are Claude Code's other file-editing tools). This one is shortened to relative paths; Claude Code sends absolute ones.</p>
+    <p>When the agent goes to write the file, Claude Code sends the hook an event: a JSON description of the tool call (<code>Write</code> here; the hook also checks <code>Edit</code> and <code>MultiEdit</code>). This one is shortened to relative paths; Claude Code sends absolute ones.</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>events/write-direct-import.json</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:events/write-direct-import.json">{
@@ -482,7 +482,7 @@ and tenancy handling that lives in app/repositories.
 Path("app/handlers").mkdir(parents=True, exist_ok=True)
 Path("app/handlers/invoices.py").write_text("from app.db.client import get_connection\n")</pre>
 </div>
-    <p>At session start the hook records the state of the repository, its baseline. When the agent finishes its turn, Claude Code sends a <code>Stop</code> event, and the hook checks every file that changed since the baseline. Replayed in order:</p>
+    <p>At session start the hook records the state of the repository, its baseline. When the agent finishes its turn, Claude Code sends a <code>Stop</code> event, and the hook checks the content each file gained since the baseline. Replayed in order:</p>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/session-start.json
@@ -535,7 +535,7 @@ mneme-hook &lt; events/stop.json</pre>
     <p>The end-of-turn check compares against git. Run Claude Code inside a git repository. Checks before each write still work without git.</p>
 
     <h3>Edits that break ADR-012 go through, with no message</h3>
-    <p><code>MNEME_HOOK_MODE=warn</code> is set. Check with <code>echo $MNEME_HOOK_MODE</code> in the shell that started Claude Code. In warn mode the hook doesn't block; it answers <code>defer</code>, which hands the edit to Claude Code's normal permission prompt, with the violation as the reason:</p>
+    <p><code>MNEME_HOOK_MODE=warn</code> is set. Check <code>echo $MNEME_HOOK_MODE</code> in the shell that started Claude Code, and the plugin's <code>mode</code> option, which sets the same thing. In warn mode the hook doesn't block; it answers <code>defer</code>, which hands the edit to Claude Code's normal permission flow. Claude Code doesn't show the violation the hook attaches as the reason:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:hook-warn-mode">{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "defer", "permissionDecisionReason": "mneme: FAIL - architectural decision violated\n  [ADR-012] FAIL \"from app.db.client import\" - trigger: from app.db.client import\n      Request handlers do not import the database client\n      path: app/handlers/invoices.py via app/handlers/**"}}</pre>
@@ -546,7 +546,7 @@ mneme-hook &lt; events/stop.json</pre>
   <section class="prose-section" id="limits">
     <h2>Limits</h2>
     <ul class="bound-list">
-      <li>The hook fails open: if a <code>mneme check</code> call crashes or takes longer than 10 seconds, the hook allows the change without telling the agent. Its notes go to Claude Code's debug log only.</li>
+      <li>The hook fails open: if a <code>mneme check</code> call crashes, takes longer than 10 seconds, or can't complete its evaluation (INCOMPLETE), the hook allows the change without telling the agent. Its notes go to Claude Code's debug log only.</li>
       <li>Shell writes other than that single <code>cat</code> heredoc form are checked only when the agent finishes its turn, after the file exists. The hook then keeps the agent working and feeds back the violation. It doesn't undo the write.</li>
       <li>The rule matches exact text, so <code>import app.db.client as db</code> isn't caught by this ADR. See <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a>.</li>
       <li>Other agents get different coverage. <a href="/integrations/codex-cli/">Codex CLI</a> checks <code>apply_patch</code> add and update operations before they run, and audits each changed file as a whole when the agent stops. <a href="/integrations/kiro/">Kiro</a> checks its native write tools only, with no shell or end-of-turn checks.</li>

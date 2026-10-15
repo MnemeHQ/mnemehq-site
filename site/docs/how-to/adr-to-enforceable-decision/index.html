@@ -568,7 +568,7 @@ python -m json.tool verdict.json</pre>
 </div>
     <ul class="plain">
       <li><code>verdict</code> is PASS, WARN, FAIL or INCOMPLETE (the check could not finish).</li>
-      <li><code>mode</code> is <code>strict</code> by default: FAIL and INCOMPLETE exit 2 and WARN exits 1. Pass <code>--mode warn</code> to report without failing.</li>
+      <li><code>mode</code> is <code>strict</code> by default: FAIL and INCOMPLETE exit 2 and WARN exits 1. Pass <code>--mode warn</code> to report WARN and FAIL without failing; INCOMPLETE still exits 2.</li>
       <li><code>evaluation_complete</code> must be <code>true</code> before you trust the verdict. An incomplete evaluation exits 2 and never reports PASS.</li>
       <li><code>applicability</code> shows which path selector matched, so you can see why a rule applied or didn't.</li>
     </ul>
