@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess paper relevance
 
-Status: **built 2026-10-14** in the batch 2 PR (not yet merged or deployed) as `/insights/multi-agent-coding-shared-context/`
+Status: **published 2026-10-15 in [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), deployed at `88d8edd9`** as `/insights/multi-agent-coding-shared-context/`
 
 | Field | Value |
 |---|---|
