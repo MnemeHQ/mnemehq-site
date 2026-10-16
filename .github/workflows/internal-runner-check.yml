@@ -1,0 +1,38 @@
+name: Verify dedicated Mneme website runner
+
+# Operator-only check of the trusted default branch. Does not deploy files.
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  connection:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, mnemehq-site-deploy-candidate]
+    timeout-minutes: 5
+    steps:
+      - name: Verify authenticated cPanel access from the candidate runner
+        env:
+          CPANEL_API_TOKEN: ${{ secrets.CPANEL_API_TOKEN }}
+          CPANEL_HOST: ${{ vars.CPANEL_HOST }}
+          CPANEL_PORT: ${{ vars.CPANEL_PORT }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          host = os.environ['CPANEL_HOST']
+          port = os.environ.get('CPANEL_PORT') or '2083'
+          query = urllib.parse.urlencode({'dir': '/home/cadafdd1/mnemehq.com'})
+          request = urllib.request.Request(
+              f'https://{host}:{port}/execute/Fileman/list_files?{query}',
+              headers={'Authorization': 'cpanel cadafdd1:' + os.environ['CPANEL_API_TOKEN']})
+          try:
+              with urllib.request.urlopen(request, timeout=45) as response:
+                  result = json.load(response)
+          except Exception as exc:
+              raise SystemExit('Candidate cPanel connection failed: ' + type(exc).__name__)
+          if result.get('status') != 1:
+              raise SystemExit('Candidate cPanel authentication or directory access denied')
+          print('Authenticated cPanel read succeeded; no website files changed.')
+          PY
