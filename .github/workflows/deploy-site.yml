@@ -21,22 +21,16 @@ permissions:
 jobs:
   deploy:
     name: Upload changed site files via cPanel API
-    # Runs on a Mneme-specific self-hosted runner registered on the shared
-    # static-egress GCP VM (Cloud NAT egress 35.209.208.146, whitelisted in
-    # Krystal). GitHub-hosted runners use rotating IPs the cPanel firewall
-    # blocks, so the upload must leave from the whitelisted static IP.
-    #
-    # This is a SEPARATE runner registration from the core repository's runner —
-    # repo-scoped self-hosted runners are not shared across repositories.
-    # Register a dedicated runner service on the same VM, attached to THIS
-    # repository (MnemeHQ/mnemehq-site), with the labels `self-hosted` +
-    # `mnemehq-site-deploy`.
+    # MNEME_SITE_RUNNER_LABEL selects the verified deployment runner. During
+    # migration the unset variable retains the existing runner; cut over only
+    # after the candidate passes the authenticated cPanel connection check.
+    # GitHub-hosted runners have rotating IPs that the cPanel firewall blocks.
     #
     # Security: this job runs ONLY on trusted events (push to main, manual
     # dispatch, and the daily schedule) and never on pull_request, so untrusted
     # PR code is never executed on the self-hosted runner. Do not add a
     # pull_request trigger.
-    runs-on: [self-hosted, mnemehq-site-deploy]
+    runs-on: [self-hosted, "${{ vars.MNEME_SITE_RUNNER_LABEL || 'mnemehq-site-deploy' }}"]
     steps:
       - uses: actions/checkout@v4
         with:
