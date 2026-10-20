@@ -24,7 +24,13 @@ Insights only. Concept pages, landing pages, pricing, roadmap and other page edi
    chats, so list position means nothing.
 4. Skip `Post-tv-` chats: they belong to theovalmis.com and never enter `site/`.
 5. Read every candidate chat **in full**: expand "Show more", read every turn. The last turns often
-   reverse earlier ones; the final agreed scope is what counts.
+   reverse earlier ones; the final agreed scope is what counts. **Prove completeness before
+   briefing:** `get_page_text` returns collapsed turns cut off at "…Show more", and a long scope
+   answer can hide its middle behind one (the 2026-10-20 batch missed this on two chats). For each
+   chat, click every in-chat "Show more" (`find "Show more"`, then click; the project sidebar has
+   its own, ignore those), re-run `get_page_text`, and confirm no "…Show more" marker remains in
+   the turn text. A chat is not read until the page text shows no truncation marker. Briefs list
+   each chat's turn count and note that the check passed.
 6. Never rename, delete or message a chat in this stage (marking happens only at close-out, Stage 5).
 7. Confirm the list of chats and titles with the user before writing anything.
 
