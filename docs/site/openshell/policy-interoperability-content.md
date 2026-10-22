@@ -1,52 +1,73 @@
-# Policy interoperability: content and integration information architecture
+# OPA + NVIDIA Sentry: separate integration tracks, not generic policy content
 
-**Status:** content specification, 21 October 2026; no implementation or connector claim.
+**Corrected scope:** 22 October 2026. The intended third deliverable is an **integration layer** connecting Mneme with **Open Policy Agent (OPA)** and **NVIDIA Sentry** as two distinct integration targets. It is **not** a generic policy-engine explainer or one combined `/integrations/policy-engines/` page.
 
-## Existing site coverage (do not duplicate)
+## Integration information architecture
 
-- Canonical **concept**: [Policy as Code](/concepts/policy-as-code/) defines machine-evaluable rules.
-- Existing **analysis**: [Programmable AI Policy Is Not Enough for Coding Agents](/insights/programmable-ai-policy-executable-architectural-intent/) explains why architectural intent must become enforceable.
-- Existing **runtime** analysis: [Agent Runtime Governance](/insights/agent-runtime-governance/).
-- There is **no dedicated policy-engine integration entry** in the current `/integrations/` inventory for Open Policy Agent/Rego, Conftest or an external policy-engine adapter. Do not imply otherwise.
+| Target | Proposed site URL | Distinct target outcome | Priority | Current status |
+|---|---|---|---|---|
+| NVIDIA OpenShell | `/integrations/nvidia-openshell/` | Integrate reviewed decisions at an actual OpenShell tool/gateway mutation seam; correlate evidence | P1 research | Unimplemented |
+| **Open Policy Agent (OPA)** | `/integrations/open-policy-agent/` | Map exact, human-approved decision constraints into an operator-approved Rego/OPA policy at an existing admission/API gate; alternatively consume OPA evaluation and versioned decision logs without creating a second decision authority | **P1 research** | Unimplemented |
+| **NVIDIA Sentry** | `/integrations/nvidia-sentry/` | Evaluate a supported DOCA Tower/OPA policy input/plugin seam and correlate hardware-isolated telemetry to Mneme decision evidence, where NVIDIA makes those interfaces accessible | **P2 gated research** | Unimplemented; NVIDIA describes Sentry planned availability in early 2027 |
 
-## Content architecture decision
+These target distinct artifacts and technical proofs. A Mneme–OPA adapter does **not** establish NVIDIA Sentry compatibility. An OpenShell sandbox configuration is **not** an OPA adapter. NVIDIA Sentry is not the unrelated Sentry.io service.
 
-A technical **policy interoperability** page adds value, but it should have its own label and not be positioned as a shipped Mneme integration.
+The detailed research-only page drafts are [OPA integration](./opa-integration-page-draft.md), [NVIDIA Sentry integration](./nvidia-sentry-integration-page-draft.md), and [OpenShell integration](./integration-page-draft.md). The sourced NVIDIA/OpenShell technical architecture is [reference architecture](./reference-architecture.md).
 
-**Proposed URL (conditional):** `/integrations/policy-engines/`  
-**Proposed title:** Mneme and Policy Engines: Engineering Decisions, OpenShell and OPA  
-**Intent:** how an authoritative architectural decision becomes an enforceable check, including a clear separation of decision source, typed evaluation, sandbox permission policy and optional downstream OPA/Rego enforcement.
+## Proposed layer: decision authority → policy adapters → enforcement surfaces
 
-Avoid prematurely creating separate `/integrations/opa/`, `/integrations/conftest/` or `/integrations/nvidia-sentry/` product cards. Those imply validated integration to a named engine, which we do not have.
+```text
+Human-approved engineering decision
+    ↓ Mneme canonical Decision Index
+    ↓ scope, lifecycle, precedence, waiver, rule revision
+┌───────────────────┬────────────────────────────┐
+│ Mneme typed checks│ Policy adapters (research) │
+│ code/CI where real│ OPA/Rego projection OR      │
+│ seam is supported │ structured OPA evaluation  │
+└───────────────────┴────────────────────────────┘
+    ↓                             ↓
+Coding agent + CI        Existing OPA-consuming gate
+                               ↓ if independently supported
+                        NVIDIA Sentry/DOCA Tower/OPA
+                        (BlueField-4 isolated enforcement)
+    ↘ evidence from each actually observed enforcement seam ↙
+        decision-linked, revision-pinned, with UNEVALUATED gaps
+```
 
-### Proposed user-facing outline
+**Important:** This is *proposed architecture*, not an implemented unified pipeline. Mneme remains the decision authority; OPA evaluates structured Rego policies; Sentry enforces security policies in its own trusted hardware domain. Do not automatically generate or activate Rego from ADR text. Authoritative rule identity and policy semantics must be preserved by a human-reviewed, equivalence-tested adapter.
 
-1. **What a policy engine answers:** given structured input and a rule/policy, decide whether an operation satisfies it. OPA/Rego may run in an API gateway or Sentry's DOCA Tower.
-2. **What Mneme answers:** which source-reviewed engineering decision applies, with scope/authority/precedence/lifecycle/exception, and which verified typed-rule checks are available for a concrete change.
-3. **How OpenShell fits:** sandbox YAML filesystem/process/network/middleware policy; its global policy **replaces** per-sandbox policy while active; its effective policy may also include provider permissions. Policy Prover proves access-boundary properties, not software architecture correctness.
-4. **How NVIDIA Sentry fits:** optional hardware enforcement using DOCA Flow, DOCA Tower and OPA/Rego plus DOCA Argus context. Distinguish the runtime policy outcome from an architectural decision.
-5. **Integration patterns to test:** (a) Mneme governs a code change at a supported coding seam; (b) a reviewed decision authorizes a control-plane change at an explicit gateway interceptor; (c) a narrowly representable reviewed constraint is translated into an OPA/Conftest check, with parity tests and human approval; (d) OCSF/Sentry security event correlation with decision evidence.
-6. **The failure modes:** translating natural language ADR text directly to executable Rego; authority drift; unversioned exceptions; provider-contributed effective access; false blocks; policy bypass; fail-open middleware; lack of an interception point; post-commit logs presented as prevention.
-7. **Runnable example only after integration evidence:** provide tested configuration, pinned versions, supported host, input, passing and failing cases, exception validity, error behavior and rollback.
-8. **FAQ and comparison:** Mneme vs OPA (complementary roles); Mneme vs OpenShell (architectural decisions vs access policy); OpenShell Policy Prover vs Mneme verified rule (different proofs); NVIDIA Sentry vs Sentry.io (different products).
+## OPA integration — phase 1 (P1)
 
-### Relationship to current content
+1. Pick a pinned OPA version and existing, reproducible policy consumer: a disposable admission/API gate or a small Conftest fixture. Identify which request fields the gate actually receives.
+2. Choose one reviewed Mneme decision expressible using those fields; document predicate, scope, explicit exception, expected rule revision and policy freshness requirements.
+3. Implement *only a proposed, manually reviewed mapping* to one Rego policy OR an OPA evaluation adapter. Do not claim any current Mneme exporter.
+4. Test compliant, violating, benign, wrong target, stale policy, unsupported input, expired waiver and unavailable OPA. Fail closed where the selected host promises enforcement; otherwise classify UNEVALUATED/advisory.
+5. Correlate OPA `decision_id`, bundle/revision and masked decision log with Mneme's decision/evidence identity. Respect sensitive input redaction and local execution requirements.
 
-**Do not create a second policy-as-code concept page.** Link from the canonical concept and existing programmable-policy insight *after* the interoperability page passes validation. The new page should target integration architecture and mapping contracts; it does not replace the conceptual definition.
+**Promotion:** working adapter with exact supported host, decision/policy equivalence testing, safe upgrade/rollback and evidence chain; otherwise research only.
 
-**Internal link path:** Policy as Code concept → policy interoperability explainer → proposed NVIDIA OpenShell integration → Mneme Decision Index/enforcement documentation.
+## NVIDIA Sentry integration — phase 2 (P2, hardware/access gate)
 
-### Classification and proof gates
+1. Establish actual Sentry release/availability, access to the required BlueField-4/DOCA environment and documented policy/plugin or telemetry extension API.
+2. Understand which OPA/Rego policy input Sentry exposes through DOCA Tower and how it relates to OpenShell policies. No assumption that a generic OPA REST endpoint or user-defined plugin is exposed in the same way.
+3. Test one reviewed, *access-oriented* architectural decision on a supported external API/tool request and compliant control. Sentry blocks or permits at its hardware enforcement boundary, not at Mneme's source-code write seam.
+4. Correlate permitted Sentry event streams and versioned, authorized policy deployment with Mneme enforcement evidence. Include missing metadata, bypass, latency, privacy, policy update/rollback and containment failure modes.
+5. No supported integration, certification, partnership, shipped adapter or hardware policy projection claim until real evidence exists.
 
-| Item | Current status | Earliest public claim |
-|---|---|---|
-| Mneme canonical decision index / verified typed rules | Shipped to the extent in current released support matrix | State exact released version and enforced rule family |
-| OpenShell YAML policy and policy prover | NVIDIA-documented external capability | Cite NVIDIA; do not imply Mneme integration |
-| NVIDIA Sentry OPA in BlueField-4 | NVIDIA-documented reference architecture | Cite NVIDIA; hardware optional |
-| Mneme + OpenShell interceptor | Hypothesis | After pinned mandatory seam, failure tests, version/target binding |
-| Mneme + OPA/Conftest exporter | Hypothesis | After equivalence, bypass/false-block and authority tests |
-| Combined evidence stream | Hypothesis | After event identity/correlation, local egress and integrity evaluation |
+## Editorial placement and dependencies
 
-**Release sequence:** first factual OpenShell architecture reference; next research-labeled OpenShell integration page; policy-engine interoperability page after an inspectable mapping example. Do not divert DG1/CI1/partner pilots.
+- **OPA** and **NVIDIA Sentry** deserve **separate integration pages**, both labeled research/unavailable until proof. The broader "policy interoperability" narrative belongs as an explanatory section on these pages, not as a substitute for the integration targets.
+- Crosslink the factual OpenShell architecture/integration with OPA and NVIDIA Sentry once those pages are built. Place all three in an explicitly marked research group, *not* the site's native/validated integrations group.
+- Link to the existing [Policy as Code](/concepts/policy-as-code/) concept and [Programmable AI Policy Is Not Enough for Coding Agents](/insights/programmable-ai-policy-executable-architectural-intent/) without creating another conceptual duplicate.
+- Implement site template, OG manifest/image, canonical, sitemap, schema, navigation, claim audit and copy gates separately for each public page.
+- Technical priority remains real pilots, DG1 convergence and CI1 assurance first; adapter investigations must not become a second Mneme policy authority or displace them.
 
-**References:** [OpenShell Policy Schema](https://docs.nvidia.com/openshell/latest/reference/policy-schema), [OpenShell Policy Prover](https://docs.nvidia.com/openshell/latest/how-it-works/policies/prover), [NVIDIA Sentry + OPA](https://developer.nvidia.com/blog/inside-nvidia-sentry-secure-ai-agents-at-runtime/), [Roadmap issue](https://github.com/MnemeHQ/mneme-growth-ops/issues/73).
+## External references
+
+- [OPA integration overview](https://www.openpolicyagent.org/docs/integration)
+- [OPA REST evaluation API](https://www.openpolicyagent.org/docs/rest-api)
+- [OPA policy bundles](https://www.openpolicyagent.org/docs/management-bundles)
+- [OPA decision logs](https://www.openpolicyagent.org/docs/management-decision-logs)
+- [NVIDIA Sentry / DOCA Tower](https://developer.nvidia.com/blog/inside-nvidia-sentry-secure-ai-agents-at-runtime/)
+- [NVIDIA reference architecture](https://nvidianews.nvidia.com/news/openshell-reference-architecture)
+- [Private integration research intake](https://github.com/MnemeHQ/mneme-growth-ops/issues/73)
