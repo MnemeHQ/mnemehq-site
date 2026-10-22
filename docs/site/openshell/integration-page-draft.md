@@ -65,7 +65,9 @@ Two reviewed decisions in a disposable service: preserve the approved storage ad
 
 **Is there a ready-to-install Mneme connector?** Not yet. This page describes a proposed integration that needs testing.
 
-**How does this relate to policy-as-code?** Access policies and reviewed architectural decisions are different objects. See [Policy as Code](/concepts/policy-as-code/) and [Programmable AI Policy Is Not Enough for Coding Agents](/insights/programmable-ai-policy-executable-architectural-intent/).
+**Does OpenShell integration also mean an OPA or NVIDIA Sentry integration?** No. Mneme → OPA is a separate potential policy-engine adapter, and Mneme → NVIDIA Sentry is a hardware-isolated policy/evidence integration hypothesis. NVIDIA Sentry uses OPA internally, but that alone provides neither a Mneme–OPA exporter nor access to Sentry's integration contract. Each needs independent interface, version and failure-mode validation.
+
+**How does this relate to policy-as-code?** Access policies and reviewed architectural decisions are different objects. See [Policy as Code](/concepts/policy-as-code/) and [Programmable AI Policy Is Not Enough for Coding Agents](/insights/programmable-ai-policy-executable-architectural-intent/). The separate proposed integration targets are documented in [OPA integration copy](./opa-integration-page-draft.md) and [NVIDIA Sentry integration copy](./nvidia-sentry-integration-page-draft.md).
 
 ## Sources and related reading
 
