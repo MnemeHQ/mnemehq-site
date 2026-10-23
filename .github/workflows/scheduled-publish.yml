@@ -1,0 +1,128 @@
+name: Scheduled insight publish
+
+# Publishes at most one queued insight per day at 13:00 UTC.
+#
+# A queued insight is an open PR labelled `scheduled-publish` whose branch adds
+# the article directory (index.html + pre-rendered og-v2.png) and one manifest
+# at publish-queue/<slug>.json with its publish_on date. See PUBLISHING.md,
+# "Scheduled publishing".
+#
+# At publish time this job rebuilds the PR on a fresh checkout of main: it takes
+# only the article directory and manifest from the PR branch, re-runs
+# scripts/register_insight.py (sitemap, archive, hub, OG record, reciprocal
+# links, catalogue sync) dated today, runs the validators, force-pushes the
+# result to the PR branch and squash-merges it. Rebuilding from main is what
+# keeps a queue of article PRs from conflicting on the shared index files.
+#
+# A merge by GITHUB_TOKEN does not fire push-triggered workflows, so the job
+# dispatches the deploy workflow explicitly. Deployment evidence is unchanged:
+# a successful deploy run for the merged main SHA and site-deployed at that SHA.
+
+on:
+  schedule:
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Compose and validate only; do not push, merge or deploy'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+concurrency:
+  group: scheduled-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install manifest dependency
+        run: pip install pyyaml==6.0.1
+
+      - name: Show the queue
+        run: python scripts/publish_queue.py list
+
+      - name: Pick the next due article
+        id: pick
+        run: python scripts/publish_queue.py pick >> "$GITHUB_OUTPUT"
+
+      - name: Nothing due
+        if: steps.pick.outputs.pr == ''
+        run: echo "No queued insight is due today."
+
+      - name: Require green checks on the PR
+        if: steps.pick.outputs.pr != ''
+        run: gh pr checks "${{ steps.pick.outputs.pr }}"
+
+      - name: Compose on main
+        if: steps.pick.outputs.pr != ''
+        env:
+          HEAD_REF: ${{ steps.pick.outputs.head }}
+          SLUG: ${{ steps.pick.outputs.slug }}
+          DATE: ${{ steps.pick.outputs.date }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "publish/$SLUG" origin/main
+          git checkout "origin/$HEAD_REF" -- "site/insights/$SLUG" "publish-queue/$SLUG.json"
+          python scripts/register_insight.py "$SLUG" --date "$DATE"
+          git rm --quiet "publish-queue/$SLUG.json"
+          git add -A site
+          git commit --quiet -m "site: publish insight $SLUG ($DATE)"
+
+      - name: Validate
+        if: steps.pick.outputs.pr != ''
+        env:
+          SLUG: ${{ steps.pick.outputs.slug }}
+        run: |
+          python scripts/render_og.py --strict --dry-run
+          python scripts/check_og_coverage.py
+          python scripts/lint_og_voice.py
+          python scripts/sync_insights_catalog.py --check
+          python scripts/check_insight_types.py
+          python scripts/check_insights.py
+          python scripts/check_encoding.py site scripts
+          python scripts/lint_prose.py "site/insights/$SLUG/index.html"
+
+      - name: Push and squash-merge
+        if: steps.pick.outputs.pr != '' && inputs.dry_run != true
+        env:
+          PR: ${{ steps.pick.outputs.pr }}
+          HEAD_REF: ${{ steps.pick.outputs.head }}
+          TITLE: ${{ steps.pick.outputs.title }}
+        run: |
+          git push --force origin "HEAD:refs/heads/$HEAD_REF"
+          gh pr merge "$PR" --squash --match-head-commit "$(git rev-parse HEAD)" \
+            --subject "$TITLE (#$PR)" \
+            --body "Published by the scheduled insight publisher on ${{ steps.pick.outputs.date }}."
+
+      - name: Dispatch the deploy
+        if: steps.pick.outputs.pr != '' && inputs.dry_run != true
+        run: gh workflow run deploy-site.yml --ref main
+
+      - name: Block the PR on failure
+        if: failure() && steps.pick.outputs.pr != ''
+        env:
+          PR: ${{ steps.pick.outputs.pr }}
+        run: |
+          gh label create publish-blocked --color B60205 --description "Scheduled publish failed; needs a person" 2>/dev/null || true
+          gh pr edit "$PR" --add-label publish-blocked
+          gh pr comment "$PR" --body "Scheduled publish failed in run ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}. The PR is labelled publish-blocked and will be skipped until the label is removed."
