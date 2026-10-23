@@ -3,7 +3,7 @@
 /integrations/<slug>/ page. Mirrors scripts/sync_docs_nav.py; rendering is
 shared via scripts/page_switcher.py.
 
-INTEGRATIONS below mirrors the grouping already used on /integrations/
+INTEGRATIONS below mirrors the functional grouping used on /integrations/
 (see the numbered "layer" sections there): add a page to both places.
 The /integrations/ index page itself has no breadcrumb and is left alone --
 it already lists every integration as its main content.
@@ -26,33 +26,38 @@ INTEGRATIONS_DIR = ROOT / "site" / "integrations"
 
 # (group label, [(slug, label)]) -- labels match each page's own breadcrumb text.
 INTEGRATIONS: list[tuple[str, list[tuple[str, str]]]] = [
-    ("Interoperability", [
+    ("Decision interoperability", [
         ("mcp", "MCP"),
-    ]),
-    ("Enforcement", [
-        ("claude-code", "Claude Code"),
-        ("claude-agent-sdk", "Claude Agent SDK"),
-        ("antigravity", "Google Antigravity"),
-        ("paperclip", "Paperclip"),
-        ("codex-cli", "Codex CLI"),
-        ("langchain-langgraph", "LangChain / LangGraph"),
-        ("kiro", "Kiro"),
-    ]),
-    ("Propagation", [
-        ("cursor", "Cursor"),
-        ("github-actions", "GitHub Actions"),
-        ("gitlab", "GitLab CI"),
         ("adr-import", "Import Existing ADRs"),
     ]),
-    ("Host environments", [
+    ("Coding agents and harnesses", [
+        ("claude-code", "Claude Code"),
+        ("claude-agent-sdk", "Claude Agent SDK"),
+        ("codex-cli", "Codex CLI"),
+        ("kiro", "Kiro"),
+        ("antigravity", "Google Antigravity"),
+        ("hermes", "Hermes Agent"),
+        ("opencode", "OpenCode"),
+    ]),
+    ("Editors and hosts", [
         ("vscode", "VS Code"),
+        ("cursor", "Cursor"),
         ("copilot", "GitHub Copilot"),
         ("jetbrains", "JetBrains"),
         ("warp", "Warp"),
     ]),
-    ("Experimental & planned", [
-        ("opencode", "OpenCode"),
-        ("hermes", "Hermes Agent"),
+    ("Agent orchestrators", [
+        ("langchain-langgraph", "LangChain / LangGraph"),
+        ("paperclip", "Paperclip"),
+    ]),
+    ("CI and enforcement", [
+        ("github-actions", "GitHub Actions"),
+        ("gitlab", "GitLab CI"),
+    ]),
+    ("Runtime and policy environments", [
+        ("nvidia-openshell", "NVIDIA OpenShell"),
+        ("open-policy-agent", "Open Policy Agent"),
+        ("nvidia-sentry", "NVIDIA Sentry"),
     ]),
     ("Works alongside", [
         ("perplexity", "Perplexity"),
