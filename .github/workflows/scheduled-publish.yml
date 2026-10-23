@@ -20,7 +20,9 @@ name: Scheduled insight publish
 
 on:
   schedule:
-    - cron: '0 13 * * *'
+    # Off the top of the hour: GitHub delays or drops on-the-hour crons under load
+    # (the first 13:00 run never fired, 2026-10-23).
+    - cron: '7 13 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -110,6 +112,13 @@ jobs:
           TITLE: ${{ steps.pick.outputs.title }}
         run: |
           git push --force origin "HEAD:refs/heads/$HEAD_REF"
+          # GitHub recomputes mergeability after the push; merging before it settles
+          # fails with a spurious "merge conflicts" error (2026-10-23).
+          for i in $(seq 1 30); do
+            state=$(gh pr view "$PR" --json mergeable,headRefOid --jq '.mergeable+" "+.headRefOid')
+            [ "$state" = "MERGEABLE $(git rev-parse HEAD)" ] && break
+            sleep 10
+          done
           gh pr merge "$PR" --squash --match-head-commit "$(git rev-parse HEAD)" \
             --subject "$TITLE (#$PR)" \
             --body "Published by the scheduled insight publisher on ${{ steps.pick.outputs.date }}."
