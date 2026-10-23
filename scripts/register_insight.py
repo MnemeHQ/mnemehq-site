@@ -55,12 +55,25 @@ REQUIRED = ("slug", "title", "description", "type", "topic", "read_time",
             "og_headline", "og_alt", "publish_on")
 
 
+_CRLF: set[Path] = set()
+
+
 def read(path: Path) -> str:
-    return path.read_text(encoding="utf-8")
+    """Read with newlines normalised to \\n, remembering whether the file uses CRLF.
+
+    Some files (site/og/cards.yaml) are stored with CRLF; rewriting them with LF
+    turns a three-line registration into a whole-file diff.
+    """
+    raw = path.read_bytes().decode("utf-8")
+    if "\r\n" in raw:
+        _CRLF.add(path)
+    return raw.replace("\r\n", "\n")
 
 
 def write(path: Path, text: str) -> None:
-    path.write_text(text, encoding="utf-8", newline="")
+    if path in _CRLF:
+        text = text.replace("\n", "\r\n")
+    path.write_bytes(text.encode("utf-8"))
 
 
 def esc(text: str) -> str:
