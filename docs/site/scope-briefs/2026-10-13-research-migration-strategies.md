@@ -1,6 +1,6 @@
 # Scope brief: Post-Research migration strategies
 
-Status: **queued** for the scheduled publisher (one article per day from 2026-10-23; PRs #239-#244) (1: batch 4, phase 1; 3, 4, 5: phase 2; 2 merged into the OpenAI brief; 6 merged into 1)
+Status: **queued** for the scheduled publisher: 1 on 2026-10-28 (#244); phase 2 queued, 4 (strangler vs big-bang) on 10-31 (#251), 3 (Go translation idioms, retitled as a question) on 11-01 (#252), 5 (when not to rewrite) on 11-02 (#253); 2 merged into the OpenAI brief; 6 merged into 1
 
 | Field | Value |
 |---|---|

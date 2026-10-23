@@ -1,6 +1,6 @@
 # Scope brief: Post-Assess OpenAI Modernization Announcement
 
-Status: **queued** for the scheduled publisher (one article per day from 2026-10-23; PRs #239-#244) (A and B: batch 4, phase 1; C: phase 2; D and E: evidence-gated)
+Status: **queued** for the scheduled publisher: A on 2026-10-26 (#242), B on 10-27 (#243), C on 10-29 (#249); D and E evidence-gated
 
 | Field | Value |
 |---|---|
