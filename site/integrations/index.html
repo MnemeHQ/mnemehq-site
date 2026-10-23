@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Choose how to integrate Mneme: local MCP for decision exchange, CLI for deterministic enforcement and CI, or the Python package for custom adapters and agent workflows." />
+  <meta name="description" content="Every Mneme integration grouped by function, each with a status: MCP, CLI and Python API, coding agents, orchestrators, CI, and runtime environments." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Integrate Mneme: MCP, CLI &amp; AI Coding Agent Integrations | Mneme HQ" />
-  <meta property="og:description" content="Choose how to integrate Mneme: local MCP for decision exchange, CLI for deterministic enforcement and CI, or the Python package for custom adapters and agent workflows." />
+  <meta property="og:description" content="Every Mneme integration grouped by function, each with a status: MCP, CLI and Python API, coding agents, orchestrators, CI, and runtime environments." />
   <meta property="og:url" content="https://mnemehq.com/integrations/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="Integration: Mneme HQ Integrations. Claude Code · Cursor · GitHub Actions and more — across your entire AI coding stack." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Integrate Mneme: MCP, CLI &amp; AI Coding Agent Integrations | Mneme HQ" />
-  <meta name="twitter:description" content="Choose how to integrate Mneme: local MCP for decision exchange, CLI for deterministic enforcement and CI, or the Python package for custom adapters and agent workflows." />
+  <meta name="twitter:description" content="Every Mneme integration grouped by function, each with a status: MCP, CLI and Python API, coding agents, orchestrators, CI, and runtime environments." />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/og-v2.png" />
 <meta name="twitter:image:alt" content="Integration: Mneme HQ Integrations. Claude Code · Cursor · GitHub Actions and more — across your entire AI coding stack." />
 
@@ -51,7 +51,7 @@
       {
         "@type": "CollectionPage",
         "name": "Integrate Mneme — MCP, CLI, Python package and coding-agent integrations",
-        "description": "Canonical integration entry point for Mneme: choose local MCP, CLI, or the Python package, then connect the decision layer to validated coding-agent and CI surfaces.",
+        "description": "Canonical integration entry point for Mneme, grouped by function: decision interoperability, coding agents, orchestrators, software factories, CI, and runtime and policy environments. Each entry carries a shipped, validated, experimental, planned or research status.",
         "url": "https://mnemehq.com/integrations/",
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "hasPart": [
@@ -73,7 +73,10 @@
           {"@type": "WebPage", "name": "OpenCode", "url": "https://mnemehq.com/integrations/opencode/"},
           {"@type": "WebPage", "name": "Hermes Agent", "url": "https://mnemehq.com/integrations/hermes/"},
           {"@type": "WebPage", "name": "Perplexity Enterprise", "url": "https://mnemehq.com/integrations/perplexity/"},
-          {"@type": "WebPage", "name": "Microsoft Agent Forge", "url": "https://mnemehq.com/integrations/microsoft-agent-forge/"}
+          {"@type": "WebPage", "name": "Microsoft Agent Forge", "url": "https://mnemehq.com/integrations/microsoft-agent-forge/"},
+          {"@type": "WebPage", "name": "NVIDIA OpenShell", "url": "https://mnemehq.com/integrations/nvidia-openshell/"},
+          {"@type": "WebPage", "name": "Open Policy Agent", "url": "https://mnemehq.com/integrations/open-policy-agent/"},
+          {"@type": "WebPage", "name": "NVIDIA Sentry", "url": "https://mnemehq.com/integrations/nvidia-sentry/"}
         ]
       }
     ]
@@ -126,6 +129,13 @@
     .integration-editorial figcaption { max-width: 640px; margin: 0.9rem auto 0; color: var(--muted); font-size: 0.8rem; line-height: 1.7; text-align: center; }
     .integration-editorial figcaption strong { color: var(--text); font-weight: 500; }
 
+    .status-key { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.75rem; }
+    .status-key > div { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
+    .status-key dt { font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.09em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.45rem; }
+    .status-key dd { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+    .layer-sub { font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--text); margin: 2.25rem 0 0.5rem; }
+    .layer-desc a.inline { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(181, 204, 122,0.3); }
+    .layer-desc code { font-family: 'DM Mono', monospace; font-size: 0.86em; color: var(--teal); }
     .eco-row { border-top: 1px solid var(--border); margin-top: 2.75rem; padding: 2.25rem 0 0; font-size: 0.85rem; color: var(--muted); line-height: 2.1; }
     .eco-row strong { color: var(--text); font-weight: 500; }
     .eco-row a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--border2); }
@@ -247,183 +257,225 @@
 <div class="hero">
   <div class="section-eyebrow">Integrate Mneme</div>
   <h1>Choose the interface, then wire Mneme into your stack</h1>
-  <p class="hero-sub">Start with MCP for agent interoperability, the CLI for repository and CI enforcement, or the Python package for custom application workflows. Then use the integration matrix for the boundary your coding system actually exposes.</p>
+  <p class="hero-sub">Mneme is an open-source tool that stores your team&rsquo;s architectural decisions in the repository, such as &ldquo;request handlers use the storage adapter, never the database driver&rdquo;, and checks code changes against them. A check runs in a coding agent before it writes a file, or in CI on a pull request. This page groups every integration by the job it does, and gives each one a status.</p>
 </div>
 
-<section class="entry" aria-labelledby="choose-interface">
+<section class="entry" aria-labelledby="status-key">
   <div class="entry-head">
-    <h2 id="choose-interface">Three supported entry surfaces</h2>
-    <p>This is the canonical starting point for integrating Mneme. The interfaces share the same decision model, but they serve different jobs and do not imply the same authority or enforcement boundary.</p>
+    <h2 id="status-key">What each status means</h2>
+    <p>Statuses describe what exists in mneme-hq 0.10.0, the current release of Mneme&rsquo;s Python package. Only the status line on each entry says what Mneme supports; some tools have a page without being supported. Text after the status names the path or limit that applies, such as &ldquo;through CI&rdquo;.</p>
   </div>
-  <div class="entry-grid">
-    <article class="entry-card">
-      <div class="entry-kicker">Agent interoperability</div>
-      <h3>Model Context Protocol</h3>
-      <p>Use Mneme's local stdio Decision MCP when an MCP-capable host needs to search decisions, inspect applicability context, trace lineage, or submit non-authoritative proposals. MCP does not accept or activate decisions.</p>
-      <div class="entry-for">Best for: MCP hosts, coding agents, decision exchange</div>
-      <div class="entry-actions"><a href="/docs/mcp/">MCP reference &rarr;</a><a href="/integrations/mcp/">Integration guide &rarr;</a></div>
-    </article>
-    <article class="entry-card">
-      <div class="entry-kicker">Repository control</div>
-      <h3>CLI</h3>
-      <p>Use <code>mneme</code> when a repository, hook, developer workflow, or CI pipeline needs deterministic checks, audits, protection activation, proposal review, or integration commands.</p>
-      <div class="entry-for">Best for: local workflows, hooks, CI gates, operators</div>
-      <div class="entry-actions"><a href="/docs/cli/">CLI reference &rarr;</a><a href="/docs/protection-activation/">Protection workflow &rarr;</a></div>
-    </article>
-    <article class="entry-card">
-      <div class="entry-kicker">Embedded workflows</div>
-      <h3>Python package API</h3>
-      <p>Use the installed <code>mneme</code> package to compose Mneme inside custom Python adapters and agent workflows. Core package surfaces include decision storage, retrieval, context construction and pipeline components; shipped adapters show the supported integration patterns.</p>
-      <div class="entry-for">Best for: custom adapters, Python agent frameworks, application embedding</div>
-      <div class="entry-actions"><a href="https://github.com/MnemeHQ/mneme/tree/main/mneme">Python package source &rarr;</a><a href="/integrations/claude-agent-sdk/">SDK integration example &rarr;</a></div>
-    </article>
-  </div>
+  <dl class="status-key">
+    <div><dt>Shipped</dt><dd>Released in mneme-hq: an adapter, hook, command or reference workflow with tests in the open-source repository.</dd></div>
+    <div><dt>No adapter</dt><dd>Mneme has nothing for this tool itself. The label names the shipped path that still reaches its changes, such as CI.</dd></div>
+    <div><dt>Validated</dt><dd>Unmodified Mneme was tested working through the tool, with published evidence. No dedicated adapter.</dd></div>
+    <div><dt>Experimental</dt><dd>Code exists and some boundaries are tested, but coverage or validation is incomplete. Not for production use.</dd></div>
+    <div><dt>Planned</dt><dd>Design or specification work only. Nothing is merged, released or supported.</dd></div>
+    <div><dt>Research</dt><dd>We are investigating whether an integration is possible. No adapter, no design commitment.</dd></div>
+  </dl>
 </section>
 
 <div class="layers">
 
-  <section class="layer">
-    <div class="layer-head"><span class="layer-num">01</span><h2>Interoperability &mdash; decision exchange</h2></div>
-    <p class="layer-desc">A protocol boundary for retrieving decisions and submitting non-authoritative proposals. Connection is not enforcement, and MCP does not receive human decision authority.</p>
+  <section class="layer" id="decision-interoperability">
+    <div class="layer-head"><span class="layer-num">01</span><h2>Decision interoperability</h2></div>
+    <p class="layer-desc">Model Context Protocol (MCP), the command-line interface (CLI) and the Python API are the three ways to reach Mneme&rsquo;s decisions. They share one decision model but do different jobs, and connecting through one of them is not the same as enforcing a decision.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/mcp/">
-        <div class="int-status">Local stdio &middot; Shipped in 0.9.0</div>
-        <h3>Model Context Protocol</h3>
-        <p>Six frozen Decision Index tools for retrieval and proposal submission, with accept, reject, activation, and supersession deliberately excluded.</p>
+        <div class="int-status">Shipped &middot; local stdio, since 0.9.0</div>
+        <h3>Model Context Protocol (MCP)</h3>
+        <p>Six fixed tools let an MCP-capable agent search decisions, read their context and lineage, and submit proposals. MCP cannot accept, activate or supersede a decision; people do that.</p>
       </a>
-    </div>
-  </section>
-
-  <section class="layer">
-    <div class="layer-head"><span class="layer-num">02</span><h2>Enforcement &mdash; native and validated</h2></div>
-    <p class="layer-desc">A shipped adapter checks proposed changes against the decision corpus before they reach disk. Maintained code, tests on main, published evidence.</p>
-    <div class="layer-grid">
-      <a class="int-card" href="/integrations/claude-code/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>Claude Code</h3>
-        <p>PreToolUse hook blocks violating Edit, Write, and MultiEdit calls before they reach disk.</p>
+      <a class="int-card" href="/docs/cli/">
+        <div class="int-status">Shipped</div>
+        <h3>CLI</h3>
+        <p>The <code>mneme</code> command runs deterministic checks, audits and proposal review for local hooks, developer workflows and CI.</p>
       </a>
-      <a class="int-card" href="/integrations/claude-agent-sdk/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>Claude Agent SDK</h3>
-        <p>Injects relevant decisions when a task starts; checks proposed mutations before they land.</p>
-      </a>
-      <a class="int-card" href="/integrations/antigravity/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>Google Antigravity</h3>
-        <p>Pre-tool adapter gates Antigravity&rsquo;s file-mutation tools through the same engine. Tested on IDE 2.8.1.</p>
-      </a>
-      <a class="int-card" href="/integrations/paperclip/">
-        <div class="int-status">Validated compatibility</div>
-        <h3>Paperclip</h3>
-        <p>Unmodified Mneme enforced under both Paperclip transports &mdash; CLI and ACP. No adapter required.</p>
-      </a>
-      <a class="int-card" href="/integrations/codex-cli/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>Codex CLI</h3>
-        <p>Pre-execution enforcement for native <code>apply_patch</code> mutations, with a Stop whole-file audit covering shell and script-driven writes. Validated 10/10 against Codex CLI 0.149.1.</p>
-      </a>
-      <a class="int-card" href="/integrations/langchain-langgraph/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>LangChain / LangGraph</h3>
-        <p>Inject architectural context before model calls and deterministically govern supported <code>write_file</code> and <code>edit_file</code> mutations through LangChain agent middleware.</p>
-      </a>
-      <a class="int-card" href="/integrations/kiro/">
-        <div class="int-status">Native &middot; Shipped</div>
-        <h3>Kiro</h3>
-        <p>Kiro CLI 3.0 / v3 native write and append mutations are governed before they reach disk.</p>
-      </a>
-    </div>
-  </section>
-
-  <section class="layer">
-    <div class="layer-head"><span class="layer-num">03</span><h2>Propagation &mdash; rules export and CI gates</h2></div>
-    <p class="layer-desc">The same corpus carried into tools without a runtime adapter: generated editor rules, and a deterministic gate in pipelines you own.</p>
-    <div class="layer-grid">
-      <a class="int-card" href="/integrations/cursor/">
-        <div class="int-status">Rules export</div>
-        <h3>Cursor</h3>
-        <p>Generate conflict-resolved Cursor Rules from the corpus with one command.</p>
-      </a>
-      <a class="int-card" href="/integrations/github-actions/">
-        <div class="int-status">CI gate</div>
-        <h3>GitHub Actions</h3>
-        <p>Run <code>mneme check</code> against every PR diff with a reference workflow you own.</p>
-      </a>
-      <a class="int-card" href="/integrations/gitlab/">
-        <div class="int-status">CI gate</div>
-        <h3>GitLab CI</h3>
-        <p>The same deterministic gate, native to merge requests.</p>
+      <a class="int-card" href="https://github.com/MnemeHQ/mneme/tree/main/mneme">
+        <div class="int-status">Shipped</div>
+        <h3>Python package API</h3>
+        <p>Import the installed <code>mneme</code> package to build custom adapters: decision storage, retrieval and context construction. The Claude Agent SDK adapter is built this way.</p>
       </a>
       <a class="int-card" href="/integrations/adr-import/">
-        <div class="int-status">Corpus workflow</div>
+        <div class="int-status">Shipped &middot; CLI command</div>
         <h3>ADR Import</h3>
-        <p>Bring your existing ADRs into the enforcement corpus in one command.</p>
+        <p>Bring existing architecture decision records (ADRs) into the decision corpus with one command.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="layer" id="coding-agents">
+    <div class="layer-head"><span class="layer-num">02</span><h2>Coding agents and harnesses</h2></div>
+    <p class="layer-desc">A harness is the program that runs a coding agent&rsquo;s loop and tools. Where an agent offers a hook, a point where outside code can inspect an action before it runs, Mneme checks a proposed file write there. Most writes made through shell commands reach disk first: Claude Code and Codex CLI check them when the agent ends its turn, and every other agent relies on CI.</p>
+    <div class="layer-grid">
+      <a class="int-card" href="/integrations/claude-code/">
+        <div class="int-status">Shipped</div>
+        <h3>Claude Code</h3>
+        <p>A PreToolUse hook blocks Edit, Write and MultiEdit calls that violate a decision before they reach disk, and a Stop hook checks the turn&rsquo;s changes at the end.</p>
+      </a>
+      <a class="int-card" href="/integrations/claude-agent-sdk/">
+        <div class="int-status">Shipped</div>
+        <h3>Claude Agent SDK</h3>
+        <p>Adds relevant decisions when a task starts and checks proposed file changes before they land.</p>
+      </a>
+      <a class="int-card" href="/integrations/codex-cli/">
+        <div class="int-status">Shipped</div>
+        <h3>Codex CLI</h3>
+        <p>Checks native <code>apply_patch</code> changes before they run, and audits whole files at the end of the turn to catch shell and script writes. Passed 10 of 10 validation runs against Codex CLI 0.149.1.</p>
+      </a>
+      <a class="int-card" href="/integrations/kiro/">
+        <div class="int-status">Shipped &middot; Kiro CLI 3.0 only</div>
+        <h3>Kiro</h3>
+        <p>Native write and append tools in the Kiro CLI 3.0 (v3) engine are checked before they reach disk. The Kiro IDE is not validated.</p>
+      </a>
+      <a class="int-card" href="/integrations/antigravity/">
+        <div class="int-status">Shipped</div>
+        <h3>Google Antigravity</h3>
+        <p>A pre-tool adapter checks Antigravity&rsquo;s file-changing tools with the same engine. Tested on IDE 2.8.1.</p>
+      </a>
+      <a class="int-card muted" href="/integrations/hermes/">
+        <div class="int-status">Experimental</div>
+        <h3>Hermes Agent</h3>
+        <p>Adds decisions to each turn and checks supported file changes before they run. Tested at the plugin dispatch layer against Hermes Agent 0.19.0; most shell writes and all process-tool writes are not checked, and there is no end-of-turn check.</p>
+      </a>
+      <a class="int-card muted" href="/integrations/opencode/">
+        <div class="int-status">Experimental</div>
+        <h3>OpenCode</h3>
+        <p>Mneme through OpenCode&rsquo;s plugin hooks is under evaluation. A finished experiment on context compaction showed no measurable effect. No production plugin ships.</p>
+      </a>
+    </div>
+
+    <h3 class="layer-sub">Editors and hosts without an adapter</h3>
+    <p class="layer-desc">These tools have no Mneme adapter of their own. The status names the shipped path that does reach them.</p>
+    <div class="layer-grid">
+      <a class="int-card" href="/integrations/vscode/">
+        <div class="int-status">No adapter &middot; Claude Code hook (shipped)</div>
+        <h3>VS Code</h3>
+        <p>Claude Code sessions inside VS Code use the same PreToolUse hook. No extension needed.</p>
+      </a>
+      <a class="int-card" href="/integrations/cursor/">
+        <div class="int-status">Shipped &middot; rules export</div>
+        <h3>Cursor</h3>
+        <p><code>mneme cursor generate</code> writes a Cursor Rules file from your recorded decisions, resolving decisions that conflict. Cursor passes them to its model as context; the rules file blocks nothing.</p>
+      </a>
+      <a class="int-card" href="/integrations/copilot/">
+        <div class="int-status">No adapter &middot; CI check (shipped)</div>
+        <h3>GitHub Copilot</h3>
+        <p>Copilot has no hook Mneme can use. The CI check covers its changes.</p>
+      </a>
+      <a class="int-card" href="/integrations/jetbrains/">
+        <div class="int-status">No adapter &middot; CI check (shipped)</div>
+        <h3>JetBrains IDEs</h3>
+        <p>The decision corpus and the CI check apply regardless of which IDE produced the change.</p>
+      </a>
+      <a class="int-card" href="/integrations/warp/">
+        <div class="int-status">No adapter &middot; agent hook or CI (shipped)</div>
+        <h3>Warp</h3>
+        <p>No Warp adapter. Checks apply when the agent Warp runs has a Mneme hook, or when CI checks the diff.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="layer" id="agent-orchestrators">
+    <div class="layer-head"><span class="layer-num">03</span><h2>Agent orchestrators</h2></div>
+    <p class="layer-desc">Orchestrators schedule agents and handle their failures. Mneme supplies the architectural constraints that work must respect. Orchestrator middleware does not see every change: shell commands and custom execution nodes can go around it, so CI stays the backstop.</p>
+    <div class="layer-grid">
+      <a class="int-card" href="/integrations/langchain-langgraph/">
+        <div class="int-status">Shipped &middot; agent middleware only</div>
+        <h3>LangChain / LangGraph</h3>
+        <p>LangChain agent middleware adds decisions before model calls and checks <code>write_file</code> and <code>edit_file</code> changes. Graphs that call tools through their own custom nodes bypass it.</p>
+      </a>
+      <a class="int-card" href="/integrations/paperclip/">
+        <div class="int-status">Validated</div>
+        <h3>Paperclip</h3>
+        <p>Paperclip runs Claude Code in your workspace, so the Claude Code hook applies unchanged. Tested under both Paperclip transports. No adapter required.</p>
+      </a>
+      <a class="int-card muted" href="/insights/openai-symphony-architectural-context/">
+        <div class="int-status">Research &middot; analysis only</div>
+        <h3>OpenAI Symphony</h3>
+        <p>Our analysis of where architectural context would enter Symphony&rsquo;s work loop. No adapter exists.</p>
+      </a>
+      <div class="int-card muted">
+        <div class="int-status">Planned</div>
+        <h3>Deep Agents</h3>
+        <p>Mneme as middleware around Deep Agents&rsquo; filesystem tools. Roadmap only until its own pinned validation passes.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research</div>
+        <h3>n8n</h3>
+        <p>Whether Mneme checks could apply to AI-driven steps in n8n workflow automation. No design exists.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research</div>
+        <h3>Custom orchestrators</h3>
+        <p>A suggested pattern, not a tested one: fetch decisions over MCP, run each agent through its Mneme hook where one exists, and keep the CI check as the fallback.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="layer" id="software-factories">
+    <div class="layer-head"><span class="layer-num">04</span><h2>Software factories</h2></div>
+    <p class="layer-desc">A software factory combines a work queue, an orchestrator, coding agents, CI and human review. Mneme does not integrate with a factory as a unit, and it is not a factory platform. It supplies the decisions the factory&rsquo;s agents must respect, through the shipped checks above. For the argument, read <a class="inline" href="/insights/software-factory-governance-layer/">the software factory&rsquo;s missing decision layer</a>.</p>
+    <div class="layer-grid">
+      <div class="int-card muted">
+        <div class="int-status">Research &middot; proposed workflow</div>
+        <h3>One-issue software factory</h3>
+        <p>A proposed starting workflow, not yet tested: one repository, one supported coding agent, two reviewed decisions, a CI check and a human-approved merge.</p>
+      </div>
+      <div class="int-card">
+        <div class="int-status">Pattern &middot; coverage per agent</div>
+        <h3>Multi-agent workflows</h3>
+        <p>When several agents work on one repository, each agent with a Mneme hook checks against the same recorded decisions, and CI covers the rest. Coverage is whatever each agent has, as listed above.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="layer" id="ci-and-enforcement">
+    <div class="layer-head"><span class="layer-num">05</span><h2>CI and enforcement</h2></div>
+    <p class="layer-desc">CI is the fallback for agents and editors that have no hook. <code>mneme check</code> runs on the changed files of a pull request. You choose the mode: in strict mode, the default, a violation exits with code 2 and fails the job; in warn mode it is reported without failing.</p>
+    <div class="layer-grid">
+      <a class="int-card" href="/integrations/github-actions/">
+        <div class="int-status">Shipped &middot; reference workflow</div>
+        <h3>GitHub Actions</h3>
+        <p>Run <code>mneme check</code> on every pull request diff with a workflow you own.</p>
+      </a>
+      <a class="int-card" href="/integrations/gitlab/">
+        <div class="int-status">Shipped &middot; job you copy</div>
+        <h3>GitLab CI</h3>
+        <p>The same check, run on merge requests.</p>
       </a>
     </div>
   </section>
 
   <figure class="integration-editorial">
     <img src="/assets/images/photo-integration-workflow.webp?v=2" width="1536" height="1024" loading="lazy" decoding="async" alt="An engineer drawing a connected workflow on a whiteboard">
-    <figcaption><strong>One corpus, many enforcement boundaries.</strong> The workflow changes by tool; the architectural decisions do not.</figcaption>
+    <figcaption>The same recorded decisions apply whichever tool makes the change.</figcaption>
   </figure>
 
-  <section class="layer">
-    <div class="layer-head"><span class="layer-num">04</span><h2>Host environments</h2></div>
-    <p class="layer-desc">No dedicated adapters. Governance reaches these tools through the layers above &mdash; an underlying supported agent, generated rules, or CI.</p>
+  <section class="layer" id="runtime-and-policy">
+    <div class="layer-head"><span class="layer-num">06</span><h2>Runtime and policy environments</h2></div>
+    <p class="layer-desc">Runtime environments and policy engines decide what an agent may access: files, processes, network destinations, API calls. Mneme does not enforce infrastructure policy. These pages explain how each system relates to Mneme&rsquo;s architectural decisions, and what would have to be proven before any integration exists.</p>
     <div class="layer-grid">
-      <a class="int-card" href="/integrations/vscode/">
-        <div class="int-status">Host environment</div>
-        <h3>VS Code</h3>
-        <p>Hosts Claude Code sessions; governed by the PreToolUse hook, no extension needed.</p>
-      </a>
-      <a class="int-card" href="/integrations/copilot/">
-        <div class="int-status">Host environment</div>
-        <h3>GitHub Copilot</h3>
-        <p>No hook API. Covered by the CI gate and the rules export.</p>
-      </a>
-      <a class="int-card" href="/integrations/jetbrains/">
-        <div class="int-status">Host environment</div>
-        <h3>JetBrains IDEs</h3>
-        <p>Covered by the corpus and the CI gate, regardless of IDE.</p>
-      </a>
-      <a class="int-card" href="/integrations/warp/">
-        <div class="int-status">Host environment</div>
-        <h3>Warp</h3>
-        <p>No adapter. Governance applies via underlying agent hooks or a CI gate on the diff.</p>
-      </a>
-    </div>
-  </section>
-
-  <section class="layer">
-    <div class="layer-head"><span class="layer-num">05</span><h2>Experimental and planned</h2></div>
-    <p class="layer-desc">Nothing here carries production support yet. Experimental means code exists and specific boundaries are tested, but validation or coverage remains incomplete; planned means design work only.</p>
-    <div class="layer-grid">
-      <a class="int-card muted" href="/integrations/opencode/">
-        <div class="int-status">Experimental</div>
-        <h3>OpenCode</h3>
-        <p>Plugin-hooks approach under evaluation; no production plugin. Compaction experiment: NULL verdict.</p>
-      </a>
-      <a class="int-card muted" href="/integrations/hermes/">
-        <div class="int-status">Experimental</div>
-        <h3>Hermes Agent</h3>
-        <p>Context injection and pre-tool enforcement for supported mutations. Experimental against Hermes Agent 0.19.0; shell/process bypasses remain and no blocking Stop-equivalent is available.</p>
-      </a>
-      <div class="int-card muted">
-        <div class="int-status">Middleware POC planned</div>
-        <h3>Deep Agents</h3>
-        <p>Mneme as custom middleware around filesystem and tool execution: pre-mutation blocking, change reconstruction, subagent propagation.</p>
-      </div>
-      <div class="int-card muted">
+      <a class="int-card muted" href="/integrations/nvidia-openshell/">
         <div class="int-status">Planned</div>
-        <h3>n8n</h3>
-        <p>Governance checks for AI-driven workflow automation.</p>
-      </div>
+        <h3>NVIDIA OpenShell</h3>
+        <p>An optional reference setup for one OpenCode file-write tool inside an OpenShell sandbox is proposed in draft design documents. No release includes it.</p>
+      </a>
+      <a class="int-card muted" href="/integrations/open-policy-agent/">
+        <div class="int-status">Research</div>
+        <h3>Open Policy Agent (OPA)</h3>
+        <p>Whether a reviewed decision could be written by hand as a policy in Rego, OPA&rsquo;s policy language, for an existing OPA deployment to enforce. No adapter or exporter exists.</p>
+      </a>
+      <a class="int-card muted" href="/integrations/nvidia-sentry/">
+        <div class="int-status">Research</div>
+        <h3>NVIDIA Sentry</h3>
+        <p>NVIDIA&rsquo;s agent security layer, which runs on a BlueField-4 network processor in the same server, isolated from the host. In October 2026 NVIDIA said it plans to release it early next year. Not the Sentry.io error tracker. No adapter exists.</p>
+      </a>
     </div>
   </section>
 
   <div class="eco-row">
-    <strong>Works alongside</strong> &mdash; <a href="/integrations/perplexity/">Perplexity Enterprise</a> turns research rationale into enforceable decisions &middot; <a href="/integrations/microsoft-agent-forge/">Microsoft Agent Forge</a> pairs an autonomous workflow substrate with deterministic governance. Research and ecosystem tools, not Mneme integrations.
+    <strong>Works alongside, not integrations</strong>: <a href="/integrations/perplexity/">Perplexity Enterprise</a> helps research the reasoning behind a decision &middot; <a href="/integrations/microsoft-agent-forge/">Microsoft Agent Forge</a> runs autonomous workflows. Neither has a Mneme connection; their pages describe using them side by side.
   </div>
 
   <div class="hub-close">
