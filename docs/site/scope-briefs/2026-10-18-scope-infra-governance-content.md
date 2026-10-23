@@ -1,6 +1,6 @@
 # Scope brief: Post-Scope infra governance content
 
-Status: **queued** for the scheduled publisher (one article per day from 2026-10-23; PRs #239-#244) (1 and 2: batch 4, phase 1; 6: phase 2; 4: evidence-gated; concept page: owner decision, separate contract)
+Status: 2 **published** 2026-10-23 (#239); 1 queued 10-24 (#240); 6 queued 10-30 (#250); 4: evidence-gated; concept page: owner decision, separate contract)
 
 | Field | Value |
 |---|---|

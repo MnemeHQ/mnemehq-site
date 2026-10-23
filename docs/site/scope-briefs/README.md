@@ -8,10 +8,10 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 |---|---|---|---|
 | [OpenShell Assess NVIDIA Interview](2026-10-21-openshell-assess-nvidia-interview.md) | 2026-10-21 | insight (re-angled); AI factory piece dropped; integration pages in #232/#233 | published 2026-10-22 (#238) |
 | [Agent orchestrators and factories](2026-10-20-agent-orchestrators-and-factories.md) | 2026-10-20 | site edit (integrations, use case, how-tos; #231) | gathered, not built |
-| [Assess OpenAI Modernization Announcement](2026-10-20-assess-openai-modernization-announcement.md) | 2026-10-20 | insight cluster (2 now, 1 phase 2, 2 evidence-gated) | A queued 10-26 (#242), B queued 10-27 (#243); C phase 2; D, E evidence-gated |
-| [Scope infra governance content](2026-10-18-scope-infra-governance-content.md) | 2026-10-18 | insight cluster + concept page (owner decision) | 2 queued 10-23 (#239), 1 queued 10-24 (#240); 6 phase 2; 4 and concept page held |
+| [Assess OpenAI Modernization Announcement](2026-10-20-assess-openai-modernization-announcement.md) | 2026-10-20 | insight cluster (2 now, 1 phase 2, 2 evidence-gated) | A queued 10-26 (#242), B 10-27 (#243), C 10-29 (#249); D, E evidence-gated |
+| [Scope infra governance content](2026-10-18-scope-infra-governance-content.md) | 2026-10-18 | insight cluster + concept page (owner decision) | 2 published 10-23 (#239), 1 queued 10-24 (#240), 6 queued 10-30 (#250); 4 and concept page held |
 | [Anthropic code review](2026-10-17-anthropic-code-review.md) | 2026-10-17 | insight | queued 10-25 (#241) |
-| [Research migration strategies](2026-10-13-research-migration-strategies.md) | 2026-10-13 | insight cluster (1 now, 3 phase 2, 2 merged) | 1 queued 10-28 (#244); 3, 4, 5 phase 2 |
+| [Research migration strategies](2026-10-13-research-migration-strategies.md) | 2026-10-13 | insight cluster (1 now, 3 phase 2, 2 merged) | 1 queued 10-28 (#244), 4 10-31 (#251), 3 11-01 (#252), 5 11-02 (#253) |
 | [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | published 2026-10-14 (#214) |
 | [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | published 2026-10-15 (#221) |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
