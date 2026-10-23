@@ -102,7 +102,7 @@
           "name": "Can I use Mneme with NVIDIA Sentry today?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Sentry is not released, and no Mneme adapter exists. Mneme’s CI check still runs on pull requests whatever security layer the agent ran behind."
+            "text": "No. Sentry is not released, and no Mneme adapter exists. Mneme’s CI check runs on pull requests regardless of the security layer the agent ran behind."
           }
         },
         {
@@ -300,24 +300,23 @@
 <section class="hero">
   <div class="hero-eyebrow">Research &middot; no adapter &middot; not Sentry.io</div>
   <h1>Mneme HQ + NVIDIA Sentry</h1>
-  <p class="hero-sub">NVIDIA Sentry is NVIDIA&rsquo;s security layer for AI agents. It runs on dedicated network hardware, separate from the machine the agent runs on, and monitors and controls the agent&rsquo;s traffic. It is not Sentry.io, the error-monitoring service. Mneme records your team&rsquo;s architectural decisions and checks code changes against them. Whether the two can connect is a <strong>research</strong> question. No adapter exists.</p>
+  <p class="hero-sub">NVIDIA Sentry is NVIDIA&rsquo;s security layer for AI agents. It runs on dedicated network hardware, separate from the machine the agent runs on, and monitors and controls the agent&rsquo;s traffic. It is not Sentry.io, the error-monitoring service. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. Whether the two can connect is a <strong>research</strong> question. No adapter exists.</p>
 </section>
 
 <section class="section narrow">
   <h2>Status: research</h2>
-  <p>NVIDIA has not released Sentry yet. In October 2026 it said Sentry has &ldquo;planned availability early next year&rdquo;. Until it ships, and until NVIDIA documents how other software can feed it policy or read its events, there is nothing for Mneme to connect to. We have not had access to Sentry and have run no tests.</p>
-  <div class="callout"><p><strong>The claim, precisely:</strong> research only. No Mneme adapter, no tested setup, and no partnership with NVIDIA.</p></div>
+  <p>NVIDIA has not released Sentry yet. In October 2026 it said Sentry has &ldquo;planned availability early next year&rdquo;. Until it ships, and until NVIDIA documents how other software can feed it policy or read its events, there is nothing for Mneme to connect to. We have not had access to Sentry and have run no tests. Mneme has no partnership with NVIDIA.</p>
 </section>
 
 <section class="section narrow">
   <h2>What NVIDIA Sentry is</h2>
-  <p>NVIDIA describes Sentry in a <a href="https://developer.nvidia.com/blog/inside-nvidia-sentry-secure-ai-agents-at-runtime/" target="_blank" rel="noopener">technical blog post</a> and on its <a href="https://www.nvidia.com/en-us/networking/products/software/sentry/" target="_blank" rel="noopener">product page</a>. It runs on BlueField-4, a data processing unit (DPU): a network card with its own processors. NVIDIA describes it as a separate trust domain, independent of the host where the agent runs. It is built from NVIDIA&rsquo;s DOCA (Data Center Infrastructure-on-a-Chip Architecture) software libraries:</p>
+  <p>NVIDIA describes Sentry in a <a href="https://developer.nvidia.com/blog/inside-nvidia-sentry-secure-ai-agents-at-runtime/" target="_blank" rel="noopener">technical blog post</a> and on its <a href="https://www.nvidia.com/en-us/networking/products/software/sentry/" target="_blank" rel="noopener">product page</a>. It runs on BlueField-4, a data processing unit (DPU): a network card with its own processors. NVIDIA describes it as isolated from, and independent of, the host where the agent runs. It is built from NVIDIA&rsquo;s DOCA (Data Center Infrastructure-on-a-Chip Architecture) software libraries:</p>
   <ul>
     <li><strong>DOCA Flow:</strong> a per-agent firewall that filters connections by address and port.</li>
-    <li><strong>DOCA Tower:</strong> a proxy based on Envoy that inspects allowed traffic at the application level. It takes its allow-or-deny decisions from <a href="/integrations/open-policy-agent/">Open Policy Agent (OPA)</a> policies.</li>
+    <li><strong>DOCA Tower:</strong> a proxy built on Envoy, an open-source network proxy, that inspects allowed traffic at the application level. It takes its allow-or-deny decisions from policies run by <a href="/integrations/open-policy-agent/">Open Policy Agent (OPA)</a>, an open-source policy engine.</li>
     <li><strong>DOCA Argus:</strong> inspects the host&rsquo;s memory from outside it, without software on the host.</li>
   </ul>
-  <p>The blog post says Sentry keeps attested telemetry and tamper-evident records on the BlueField-4. It is an optional part of NVIDIA&rsquo;s <a href="/integrations/nvidia-openshell/">OpenShell Reference Architecture</a>; the OpenShell runtime works without it.</p>
+  <p>The blog post says Sentry keeps attested telemetry and tamper-evident records on the BlueField-4: activity logs that can be shown not to have been altered. Sentry is an optional part of NVIDIA&rsquo;s <a href="/integrations/nvidia-openshell/">OpenShell Reference Architecture</a>, a design for running agents in sandboxes; the OpenShell runtime works without it.</p>
 </section>
 
 <section class="section narrow">
@@ -329,7 +328,7 @@
     <tbody>
       <tr><td>May this agent open this connection or send this request?</td><td>NVIDIA Sentry, where deployed, through DOCA Flow and DOCA Tower</td></tr>
       <tr><td>Is the host or agent behaving like it has been compromised?</td><td>NVIDIA Sentry, through DOCA Argus and its telemetry</td></tr>
-      <tr><td>Does this code change respect a decision the team made?</td><td>Mneme, at a supported agent&rsquo;s write hook or in CI</td></tr>
+      <tr><td>Does this code change respect a decision the team made?</td><td>Mneme, in CI or through a hook in a coding agent Mneme supports</td></tr>
     </tbody>
   </table>
   </div>
@@ -337,19 +336,19 @@
 
 <section class="section narrow">
   <h2>What we would investigate</h2>
-  <p>Each of these depends on interfaces NVIDIA has not yet documented for outside software. NVIDIA says DOCA Tower can be extended with Envoy plugins and plans to publish core plugins; no dedicated public policy or plugin API is documented today.</p>
+  <p>NVIDIA says DOCA Tower can be extended with Envoy plugins and plans to publish core plugins; no dedicated public policy or plugin API is documented today.</p>
   <ol>
-    <li><strong>Policy from a decision.</strong> For a decision about which services an agent may call, a person writes the matching OPA policy for DOCA Tower. Sentry enforces it; Mneme stays the record of why it exists.</li>
-    <li><strong>Events back to the decision.</strong> Link a Sentry security event to the Mneme decision and version it relates to, if Sentry&rsquo;s events carry fields that make that link reliable.</li>
-    <li><strong>Separate verdicts.</strong> Keep a Sentry security block and a Mneme decision check distinct in any report, so neither is mistaken for the other.</li>
+    <li><strong>Write a policy from a decision.</strong> For a decision about which services an agent may call, a person writes the matching OPA policy for DOCA Tower. Sentry enforces the policy; Mneme keeps the record of the decision behind it.</li>
+    <li><strong>Link events to decisions.</strong> Connect a Sentry security event to the Mneme decision, and the decision&rsquo;s version, that it relates to. This works only if Sentry&rsquo;s events carry fields that make the link reliable.</li>
+    <li><strong>Report verdicts separately.</strong> Show Sentry security blocks and Mneme decision checks as different results.</li>
   </ol>
 </section>
 
 <section class="section narrow">
   <h2>What this does not cover</h2>
   <ul>
-    <li><strong>An OPA result is not a Sentry result.</strong> Sentry uses OPA, but a Mneme and OPA test would say nothing about Sentry&rsquo;s interfaces. See <a href="/integrations/open-policy-agent/">Open Policy Agent</a>, also research.</li>
-    <li><strong>No source code checks in Sentry.</strong> Code-content decisions stay with Mneme&rsquo;s write hooks and CI.</li>
+    <li><strong>OPA work does not carry over.</strong> Sentry uses OPA, but testing Mneme with OPA on its own would prove nothing about Sentry. See <a href="/integrations/open-policy-agent/">Open Policy Agent</a>, also research.</li>
+    <li><strong>No source code checks in Sentry.</strong> Code-content decisions stay with Mneme&rsquo;s agent hooks and CI.</li>
     <li><strong>No infrastructure enforcement.</strong> Mneme does not enforce infrastructure or network policy.</li>
     <li><strong>No certification or partnership.</strong> NVIDIA has not reviewed or endorsed Mneme.</li>
   </ul>
@@ -363,7 +362,7 @@
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Can I use Mneme with NVIDIA Sentry today?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. Sentry is not released, and no Mneme adapter exists. Mneme&rsquo;s CI check still runs on pull requests whatever security layer the agent ran behind.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. Sentry is not released, and no Mneme adapter exists. Mneme&rsquo;s CI check runs on pull requests regardless of the security layer the agent ran behind.</div>
   </details>
   <details style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Do I need NVIDIA Sentry to run OpenShell?</summary>

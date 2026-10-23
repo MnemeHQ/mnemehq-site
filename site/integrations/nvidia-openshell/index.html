@@ -102,7 +102,7 @@
           "name": "Does Mneme replace OpenShell policies?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. OpenShell controls what an agent can access. Mneme checks code changes against recorded architectural decisions. You need the first to contain an agent and the second to keep its changes consistent with your architecture."
+            "text": "No. OpenShell controls what an agent can access. Mneme checks code changes against recorded architectural decisions."
           }
         },
         {
@@ -308,13 +308,13 @@
 <section class="hero">
   <div class="hero-eyebrow">Planned integration &middot; nothing implemented or supported</div>
   <h1>Mneme HQ + NVIDIA OpenShell</h1>
-  <p class="hero-sub">NVIDIA OpenShell runs an AI agent inside a sandbox and controls what the agent can reach: files, processes, network destinations. Mneme checks whether a code change respects the architectural decisions your team has recorded. A Mneme integration with OpenShell is <strong>planned</strong>. There is no adapter, no install step and no supported configuration today.</p>
+  <p class="hero-sub">NVIDIA OpenShell runs an AI agent inside a sandbox and controls what the agent can reach: files, processes, network destinations. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. A Mneme integration with OpenShell is <strong>planned</strong>: no adapter or install step exists today.</p>
 </section>
 
 <section class="section narrow">
   <h2>Status: planned</h2>
   <p>Two draft pull requests in Mneme&rsquo;s open-source repository describe an optional reference setup. In it, OpenCode, an open-source terminal coding agent, runs inside an OpenShell sandbox, and Mneme checks what OpenCode&rsquo;s <code>write</code> tool is about to write to a file. <a href="https://github.com/MnemeHQ/mneme/pull/609" target="_blank" rel="noopener">The first</a> adds the setup to the roadmap. <a href="https://github.com/MnemeHQ/mneme/pull/610" target="_blank" rel="noopener">The second</a> lists the tests a future implementation would have to pass. Both contain documentation only and neither is merged.</p>
-  <div class="callout"><p><strong>The claim, precisely:</strong> planned. No mneme-hq release includes OpenShell support, nothing is implemented, and no results are published. The planned scope is one tool of one agent. Other OpenCode tools, shell commands and OpenShell&rsquo;s own settings are outside it.</p></div>
+  <div class="callout"><p><strong>Planned, not built.</strong> No release of mneme-hq, Mneme&rsquo;s Python package, includes OpenShell support, and no results are published. The planned scope covers OpenCode&rsquo;s <code>write</code> tool only. Its other tools, shell commands and OpenShell&rsquo;s own settings are outside it.</p></div>
 </section>
 
 <section class="section narrow">
@@ -324,7 +324,7 @@
     <li><strong>Gateway:</strong> the control plane. It creates and removes sandboxes and holds their policies.</li>
     <li><strong>Sandbox:</strong> isolates the agent and restricts which files and processes it can use.</li>
     <li><strong>Supervisor:</strong> runs outside the sandbox, checks outbound requests against policy and hands out credentials.</li>
-    <li><strong>Policy prover:</strong> checks that a policy grants nothing beyond a boundary policy the organization sets.</li>
+    <li><strong>Policy prover:</strong> checks that a policy grants nothing beyond a boundary policy, an upper limit the organization writes.</li>
   </ul>
   <p>A <a href="https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview" target="_blank" rel="noopener">sandbox policy</a> is a YAML file. In the v0.1.5 documentation, the default version on October 22, 2026, it sets readable and writable paths, the user that sandbox processes run as, which destinations each program may reach, and middleware for allowed traffic. The file and process settings are fixed when the sandbox starts; the network settings can change while it runs. Outbound traffic is denied unless a rule allows it.</p>
   <p>The <a href="https://docs.nvidia.com/openshell/latest/how-it-works/policies/prover" target="_blank" rel="noopener">prover documentation</a> says it uses a satisfiability modulo theories (SMT) solver, a tool that proves logical statements, and that a pass does not mean a policy is safe for a particular task or that a running sandbox enforces it.</p>
@@ -339,11 +339,11 @@
     <tbody>
       <tr><td>Can this process write to that path or reach that host?</td><td>OpenShell sandbox policy and supervisor</td></tr>
       <tr><td>Does this policy grant more than our boundary allows?</td><td>OpenShell policy prover</td></tr>
-      <tr><td>Does this code change respect a decision the team made?</td><td>Mneme, at a point where it can see the change: a supported agent&rsquo;s write hook, or CI</td></tr>
+      <tr><td>Does this code change respect a decision the team made?</td><td>Mneme, where it can see the change: a hook in a coding agent that Mneme supports, or CI</td></tr>
     </tbody>
   </table>
   </div>
-  <p>The two answer different questions, so neither replaces the other. Mneme does not enforce infrastructure policy and is not a sandbox.</p>
+  <p>Mneme does not enforce infrastructure policy and is not a sandbox.</p>
 </section>
 
 <section class="section narrow">
@@ -365,16 +365,16 @@
 
 <section class="section narrow">
   <h2>What you can use today</h2>
-  <p>The <a href="/integrations/github-actions/">CI check</a> runs on the pull request, outside any sandbox, so it does not depend on where the agent ran. In strict mode a violation exits with code 2 and fails the job; in warn mode it is reported without failing.</p>
-  <p>Mneme&rsquo;s pre-write hooks ship for some agents, such as <a href="/integrations/claude-code/">Claude Code</a> and <a href="/integrations/codex-cli/">Codex CLI</a>. Whether they run correctly inside an OpenShell sandbox has not been tested.</p>
+  <p>You can run the <a href="/integrations/github-actions/">CI check</a> today. It runs on the pull request, outside any sandbox, so it does not depend on where the agent ran. In strict mode, the default, a violation exits with code 2 and fails the job; in warn mode it is reported without failing.</p>
+  <p>Mneme also ships hooks for some coding agents, such as <a href="/integrations/claude-code/">Claude Code</a> and <a href="/integrations/codex-cli/">Codex CLI</a>. A hook is a point where Mneme inspects a file write before it happens. Whether these hooks work inside an OpenShell sandbox has not been tested.</p>
 </section>
 
 <section class="section narrow">
   <h2>What would have to be proven</h2>
-  <p>Before this page could say &ldquo;experimental&rdquo; or &ldquo;supported&rdquo;, a pinned OpenShell release and a pinned Mneme release would have to show:</p>
+  <p>Before the status could move past planned, a fixed version of OpenShell and a fixed version of Mneme would have to show:</p>
   <ul>
     <li>a documented point where Mneme sees the exact content of a proposed change before it lands, for both new and existing files;</li>
-    <li>compliant changes allowed and violating changes blocked, with each result linked to the decision it came from;</li>
+    <li>compliant changes allowed and violating changes blocked, with each result recording which decision it came from;</li>
     <li>known gaps, such as shell commands, reported as not checked rather than passed;</li>
     <li>predictable behaviour when the check itself fails.</li>
   </ul>
@@ -388,7 +388,7 @@
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Does Mneme replace OpenShell policies?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. OpenShell controls what an agent can access. Mneme checks code changes against recorded architectural decisions. You need the first to contain an agent and the second to keep its changes consistent with your architecture.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. OpenShell controls what an agent can access. Mneme checks code changes against recorded architectural decisions.</div>
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Does OpenShell include NVIDIA Sentry?</summary>

@@ -102,7 +102,7 @@
           "name": "We already use OPA. What does Mneme add?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A record of why a rule exists and checks on code changes. OPA answers whether a request is allowed. Mneme records which architectural decisions apply to a repository and checks code against the ones with typed rules, at supported agents’ write hooks and in CI."
+            "text": "OPA answers whether a request is allowed. Mneme records which architectural decisions apply to a repository and why, and checks code against the decisions that have typed rules: in CI, and through hooks in the coding agents it supports, such as Claude Code and Codex CLI."
           }
         },
         {
@@ -110,7 +110,7 @@
           "name": "Is this related to the NVIDIA OpenShell work?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Separately. OPA runs anywhere, without NVIDIA hardware or OpenShell. The NVIDIA OpenShell page covers that runtime."
+            "text": "No. OPA runs anywhere, without NVIDIA hardware. NVIDIA OpenShell, a sandbox runtime for AI agents, has its own page and its own planned status."
           }
         }
       ]
@@ -300,18 +300,18 @@
 <section class="hero">
   <div class="hero-eyebrow">Research &middot; no adapter, no exporter</div>
   <h1>Mneme HQ + Open Policy Agent</h1>
-  <p class="hero-sub">Open Policy Agent (OPA) is an open-source engine that answers allow-or-deny questions using policies written in a language called Rego. Mneme records your team&rsquo;s architectural decisions and checks code changes against them. Whether the two can work together is a <strong>research</strong> question. No Mneme adapter for OPA exists, and Mneme does not turn decisions into Rego.</p>
+  <p class="hero-sub">Open Policy Agent (OPA) is an open-source engine that answers allow-or-deny questions using policies written in a language called Rego. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. Whether the two can work together is a <strong>research</strong> question. No Mneme adapter for OPA exists, and Mneme does not turn decisions into Rego.</p>
 </section>
 
 <section class="section narrow">
   <h2>Status: research</h2>
-  <p>We are investigating whether a reviewed Mneme decision could be expressed as a Rego policy that an existing OPA deployment enforces. Nothing is built: no adapter, no export command, no supported host. No mneme-hq release mentions OPA.</p>
-  <div class="callout"><p><strong>The claim, precisely:</strong> research only. There is no automatic translation from a written decision to Rego, and none is planned. Any mapping we test would be written and reviewed by a person.</p></div>
+  <p>We are investigating whether a reviewed Mneme decision could be expressed as a Rego policy that an existing OPA deployment enforces. Nothing is built.</p>
+  <div class="callout"><p><strong>No automatic translation.</strong> Mneme does not convert a written decision into Rego, and no such converter is planned. Any mapping we test would be written and reviewed by a person.</p></div>
 </section>
 
 <section class="section narrow">
   <h2>What OPA does</h2>
-  <p>OPA is a general-purpose policy engine and a <a href="https://www.openpolicyagent.org/docs" target="_blank" rel="noopener">graduated Cloud Native Computing Foundation project</a>. A service sends OPA a structured request, OPA evaluates it against Rego policies, and the service acts on the answer. Teams use it for API authorization, Kubernetes admission control and checks on infrastructure configuration.</p>
+  <p>OPA is a general-purpose policy engine and a <a href="https://www.openpolicyagent.org/docs" target="_blank" rel="noopener">graduated Cloud Native Computing Foundation project</a>. A service sends OPA a structured request, OPA evaluates it against Rego policies, and the service acts on the answer. Teams use it to authorize API calls, to decide whether Kubernetes accepts a new workload (admission control) and to check infrastructure configuration.</p>
   <ul>
     <li><strong>Evaluation:</strong> a service calls the <a href="https://www.openpolicyagent.org/docs/rest-api" target="_blank" rel="noopener">representational state transfer (REST) API</a> with an <code>input</code> document and gets back a <code>result</code>. OPA can also be embedded as a Go library or compiled to WebAssembly.</li>
     <li><strong>Distribution:</strong> policies and data ship as <a href="https://www.openpolicyagent.org/docs/management-bundles" target="_blank" rel="noopener">bundles</a>, each with a <code>revision</code> string.</li>
@@ -327,8 +327,8 @@
   <table class="gov-table">
     <thead><tr><th>Decision</th><th>Can an OPA policy express it?</th></tr></thead>
     <tbody>
-      <tr><td>&ldquo;Production deployments use the approved CPU inference profile&rdquo;</td><td>Possibly, if the deployment admission request carries the profile name. A person would write and review the Rego rule.</td></tr>
-      <tr><td>&ldquo;Request handlers use the storage adapter, never the database driver&rdquo;</td><td>No. This is about code content, which a deployment request does not contain. Mneme checks it at an agent&rsquo;s write hook or in CI.</td></tr>
+      <tr><td>&ldquo;Production deployments use the approved CPU inference profile&rdquo;</td><td>Possibly, if the request to deploy carries the profile name. A person would write and review the Rego rule.</td></tr>
+      <tr><td>&ldquo;Request handlers use the storage adapter, never the database driver&rdquo;</td><td>No. This is about code content, which a deployment request does not contain. Mneme checks it in CI, or with a hook in a coding agent Mneme supports, before the file is written.</td></tr>
     </tbody>
   </table>
   </div>
@@ -337,8 +337,8 @@
 <section class="section narrow">
   <h2>Two shapes we are investigating</h2>
   <ol>
-    <li><strong>OPA as the enforcer.</strong> A reviewed decision is mapped by hand to one Rego policy, published through the operator&rsquo;s normal bundle process, and enforced by a service that already asks OPA. The question is whether the decision&rsquo;s scope, version and exceptions survive the mapping, and whether the policy&rsquo;s bundle revision can be traced back to the decision version.</li>
-    <li><strong>OPA as an extra evaluator.</strong> An adapter asks OPA about structured input and records the answer alongside Mneme&rsquo;s own result. OPA&rsquo;s answer would not replace Mneme&rsquo;s check or become a second place where decisions are made.</li>
+    <li><strong>OPA as the enforcer.</strong> A person maps one reviewed decision to one Rego policy. The team that runs OPA publishes it as a bundle in the usual way, and a service that already asks OPA enforces it. The question is whether the decision&rsquo;s scope (which files or services it covers), version and exceptions survive the mapping, and whether the bundle revision can be traced back to the decision version.</li>
+    <li><strong>OPA as an extra evaluator.</strong> An adapter asks OPA about structured input and records the answer alongside Mneme&rsquo;s own result. OPA&rsquo;s answer would not replace Mneme&rsquo;s check, and OPA would not become a second record of the team&rsquo;s decisions.</li>
   </ol>
   <p>A first test would use a small fixture with one unambiguous decision and a hand-written policy, possibly through <a href="https://www.conftest.dev/" target="_blank" rel="noopener">Conftest</a>, which uses OPA to test configuration files. A result there would show only that one fixture works. It would not make Conftest or OPA a supported integration.</p>
 </section>
@@ -347,9 +347,8 @@
   <h2>What this does not cover</h2>
   <ul>
     <li><strong>No decision-to-Rego compiler.</strong> Mneme does not generate, publish or activate Rego.</li>
-    <li><strong>No code-content checks in OPA.</strong> Rules about imports, file structure or code patterns stay with Mneme&rsquo;s write hooks and CI.</li>
-    <li><strong>No NVIDIA Sentry support.</strong> NVIDIA Sentry uses OPA internally, but an OPA result says nothing about Sentry. See <a href="/integrations/nvidia-sentry/">NVIDIA Sentry</a>.</li>
-    <li><strong>No infrastructure enforcement.</strong> Mneme does not enforce infrastructure policy.</li>
+    <li><strong>No code-content checks in OPA.</strong> Rules about imports, file structure or code patterns stay with Mneme&rsquo;s agent hooks and CI.</li>
+    <li><strong>No NVIDIA Sentry support.</strong> <a href="/integrations/nvidia-sentry/">NVIDIA Sentry</a>, NVIDIA&rsquo;s hardware security layer for AI agents, uses OPA internally, but an OPA result says nothing about Sentry.</li>
   </ul>
 </section>
 
@@ -361,11 +360,11 @@
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">We already use OPA. What does Mneme add?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">A record of why a rule exists and checks on code changes. OPA answers whether a request is allowed. Mneme records which architectural decisions apply to a repository and checks code against the ones with typed rules, at supported agents&rsquo; write hooks and in CI.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">OPA answers whether a request is allowed. Mneme records which architectural decisions apply to a repository and why, and checks code against the decisions that have typed rules: in CI, and through hooks in the coding agents it supports, such as Claude Code and Codex CLI.</div>
   </details>
   <details style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Is this related to the NVIDIA OpenShell work?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Separately. OPA runs anywhere, without NVIDIA hardware or OpenShell. The <a href="/integrations/nvidia-openshell/">NVIDIA OpenShell</a> page covers that runtime.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. OPA runs anywhere, without NVIDIA hardware. <a href="/integrations/nvidia-openshell/">NVIDIA OpenShell</a>, a sandbox runtime for AI agents, has its own page and its own planned status.</div>
   </details>
 </section>
 
