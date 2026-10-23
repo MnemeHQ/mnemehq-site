@@ -84,7 +84,7 @@ jobs:
           git checkout -b "publish/$SLUG" origin/main
           git checkout "origin/$HEAD_REF" -- "site/insights/$SLUG" "publish-queue/$SLUG.json"
           python scripts/register_insight.py "$SLUG" --date "$DATE"
-          git rm --quiet "publish-queue/$SLUG.json"
+          git rm --quiet -f "publish-queue/$SLUG.json"
           git add -A site
           git commit --quiet -m "site: publish insight $SLUG ($DATE)"
 
@@ -119,7 +119,7 @@ jobs:
         run: gh workflow run deploy-site.yml --ref main
 
       - name: Block the PR on failure
-        if: failure() && steps.pick.outputs.pr != ''
+        if: failure() && steps.pick.outputs.pr != '' && inputs.dry_run != true
         env:
           PR: ${{ steps.pick.outputs.pr }}
         run: |
