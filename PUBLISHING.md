@@ -145,7 +145,9 @@ a batch PR by hand.
   takes only the article directory and manifest from the branch and re-runs
   `scripts/register_insight.py` dated today. That script writes the sitemap entry, archive and hub
   cards with their `hasPart` entries, the OG record and reciprocal links, then runs the catalogue
-  sync. The run then executes the validators, force-pushes the result to the PR branch,
+  sync. Links to insights not yet on the site are parked (a related-list item as an HTML comment,
+  an inline link as plain text) and restored when their target publishes, so queued articles that
+  link to each other never ship a dead link. The run then executes the validators, force-pushes the result to the PR branch,
   squash-merges it and dispatches the deploy workflow. Rebuilding from `main` is what stops queued
   PRs from conflicting on the shared index files.
 - **Failure.** A failed run labels the PR `publish-blocked` and comments the run link. Blocked PRs

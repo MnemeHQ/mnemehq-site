@@ -14,7 +14,10 @@ in one idempotent pass:
 6. adds reciprocal links from the related articles listed in the manifest;
 7. bumps the archive ``dateModified`` and the /insights/all/ sitemap
    ``lastmod`` to the publish date;
-8. runs ``sync_insights_catalog.py`` (archive dates + homepage latest set).
+8. parks links to insights not yet on the site and restores parked links to
+   this one (see ``settle_links``), so queued articles that link to each
+   other never publish a dead link;
+9. runs ``sync_insights_catalog.py`` (archive dates + homepage latest set).
 
 It does not render the OG card: ``og-v2.png`` is committed with the article
 (rendering needs Chromium, which CI does not have). Run
@@ -204,6 +207,50 @@ def register_reciprocal(m: dict) -> None:
         write(path, s)
 
 
+PENDING_LI = re.compile(r"<!--pending-insight:([a-z0-9-]+) (<li>.*?</li>)-->", re.S)
+PENDING_SPAN = re.compile(r'<span data-pending-insight="([a-z0-9-]+)">(.*?)</span>', re.S)
+INSIGHT_LI = re.compile(r'<li><a href="/insights/([a-z0-9-]+)/">.*?</a></li>', re.S)
+INSIGHT_A = re.compile(r'<a href="/insights/([a-z0-9-]+)/">(.*?)</a>', re.S)
+
+
+def published(slug: str) -> bool:
+    return (SITE / "insights" / slug / "index.html").exists()
+
+
+def settle_links(path: Path) -> None:
+    """Park links to insights not yet on the site; restore parked links whose target now exists.
+
+    Queued articles often link to each other. Whichever publishes first would carry a dead link
+    until its partner goes live, so a related-list item to an unpublished insight is kept as an
+    HTML comment and an inline link becomes a plain-text span. Both are restored automatically
+    when the target is registered.
+    """
+    s = read(path)
+    original = s
+    s = PENDING_LI.sub(lambda m: m.group(2) if published(m.group(1)) else m.group(0), s)
+    s = PENDING_SPAN.sub(lambda m: f'<a href="/insights/{m.group(1)}/">{m.group(2)}</a>'
+                         if published(m.group(1)) else m.group(0), s)
+    s = INSIGHT_LI.sub(lambda m: m.group(0) if published(m.group(1))
+                       else f"<!--pending-insight:{m.group(1)} {m.group(0)}-->", s)
+    # Inline links outside comments only, so parked list items are left alone.
+    parts = re.split(r"(<!--.*?-->)", s, flags=re.S)
+    for i in range(0, len(parts), 2):
+        parts[i] = INSIGHT_A.sub(lambda m: m.group(0) if published(m.group(1))
+                                 else f'<span data-pending-insight="{m.group(1)}">{m.group(2)}</span>',
+                                 parts[i])
+    s = "".join(parts)
+    if s != original:
+        write(path, s)
+
+
+def settle_all_links(slug: str) -> None:
+    settle_links(SITE / "insights" / slug / "index.html")
+    for page in (SITE / "insights").glob("*/index.html"):
+        text = read(page)
+        if f"pending-insight:{slug} " in text or f'data-pending-insight="{slug}"' in text:
+            settle_links(page)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("slug")
@@ -218,6 +265,7 @@ def main() -> int:
     register_hub(m)
     register_og(m)
     register_reciprocal(m)
+    settle_all_links(args.slug)
     subprocess.run([sys.executable, str(ROOT / "scripts" / "sync_insights_catalog.py")], check=True)
     print(f"registered {args.slug} for {date}")
     return 0
