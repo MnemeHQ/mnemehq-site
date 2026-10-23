@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="NVIDIA OpenShell controls what an AI agent can access. A Mneme integration with OpenShell is planned: nothing is implemented or supported yet." />
+  <meta name="description" content="NVIDIA OpenShell controls what an AI agent can access. A Mneme integration with OpenShell is planned: no release includes it and none is supported." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/nvidia-openshell/" />
@@ -20,12 +20,12 @@
   <meta property="og:image" content="https://mnemehq.com/integrations/nvidia-openshell/og-v2.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Integration: Mneme HQ + NVIDIA OpenShell. Planned integration. Nothing is implemented or supported." />
+<meta property="og:image:alt" content="Integration: Mneme HQ + NVIDIA OpenShell. Planned integration, not in any release." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Mneme HQ + NVIDIA OpenShell: Planned Integration Status" />
   <meta name="twitter:description" content="A Mneme integration with NVIDIA OpenShell is planned, not built. What OpenShell controls, what it does not decide, and where the two could connect." />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/nvidia-openshell/og-v2.png" />
-<meta name="twitter:image:alt" content="Integration: Mneme HQ + NVIDIA OpenShell. Planned integration. Nothing is implemented or supported." />
+<meta name="twitter:image:alt" content="Integration: Mneme HQ + NVIDIA OpenShell. Planned integration, not in any release." />
   <meta name="author" content="Theo Valmis" />
   <meta property="article:published_time" content="2026-10-29T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
@@ -65,7 +65,7 @@
     {
       "@type": "TechArticle",
       "headline": "Mneme HQ + NVIDIA OpenShell: Planned Integration Status",
-      "description": "NVIDIA OpenShell controls what an AI agent can access. A Mneme integration with OpenShell is planned: nothing is implemented or supported yet.",
+      "description": "NVIDIA OpenShell controls what an AI agent can access. A Mneme integration with OpenShell is planned: no release includes it and none is supported.",
       "url": "https://mnemehq.com/integrations/nvidia-openshell/",
       "datePublished": "2026-10-29",
       "dateModified": "2026-10-29",
@@ -94,7 +94,7 @@
           "name": "Is there a Mneme connector for OpenShell I can install?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. The integration is planned, and nothing is implemented. The planned scope is one OpenCode file-write tool inside an OpenShell sandbox."
+            "text": "No. The integration is planned, and no implementation has been merged or released. The planned scope is one OpenCode file-write tool inside an OpenShell sandbox."
           }
         },
         {
@@ -306,7 +306,7 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow">Planned integration &middot; nothing implemented or supported</div>
+  <div class="hero-eyebrow">Planned integration &middot; not in any release</div>
   <h1>Mneme HQ + NVIDIA OpenShell</h1>
   <p class="hero-sub">NVIDIA OpenShell runs an AI agent inside a sandbox and controls what the agent can reach: files, processes, network destinations. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. A Mneme integration with OpenShell is <strong>planned</strong>: no adapter or install step exists today.</p>
 </section>
@@ -314,16 +314,16 @@
 <section class="section narrow">
   <h2>Status: planned</h2>
   <p>Two draft pull requests in Mneme&rsquo;s open-source repository describe an optional reference setup. In it, OpenCode, an open-source terminal coding agent, runs inside an OpenShell sandbox, and Mneme checks what OpenCode&rsquo;s <code>write</code> tool is about to write to a file. <a href="https://github.com/MnemeHQ/mneme/pull/609" target="_blank" rel="noopener">The first</a> adds the setup to the roadmap. <a href="https://github.com/MnemeHQ/mneme/pull/610" target="_blank" rel="noopener">The second</a> lists the tests a future implementation would have to pass. Both contain documentation only and neither is merged.</p>
-  <div class="callout"><p><strong>Planned, not built.</strong> No release of mneme-hq, Mneme&rsquo;s Python package, includes OpenShell support, and no results are published. The planned scope covers OpenCode&rsquo;s <code>write</code> tool only. Its other tools, shell commands and OpenShell&rsquo;s own settings are outside it.</p></div>
+  <div class="callout"><p><strong>Planned, not built.</strong> No release of mneme-hq, Mneme&rsquo;s Python package, includes OpenShell support, no implementation has been merged, and this page cites no test results. The planned scope covers OpenCode&rsquo;s <code>write</code> tool only. Its other tools, shell commands and OpenShell&rsquo;s own settings are outside it.</p></div>
 </section>
 
 <section class="section narrow">
   <h2>What OpenShell controls</h2>
-  <p>On October 21, 2026, NVIDIA <a href="https://nvidianews.nvidia.com/news/openshell-reference-architecture" target="_blank" rel="noopener">announced the OpenShell Reference Architecture</a>. It pairs the open-source OpenShell runtime with NVIDIA hardware, including optional <a href="/integrations/nvidia-sentry/">NVIDIA Sentry</a>. The runtime does not need that hardware. NVIDIA&rsquo;s <a href="https://developer.nvidia.com/blog/how-nvidia-openshell-reference-architecture-secures-and-governs-ai-agent-workloads-at-scale/" target="_blank" rel="noopener">technical walkthrough</a> describes four parts:</p>
+  <p>On October 21, 2026, NVIDIA <a href="https://nvidianews.nvidia.com/news/openshell-reference-architecture" target="_blank" rel="noopener">announced the OpenShell Reference Architecture</a>. It pairs the open-source OpenShell runtime with NVIDIA hardware, including optional <a href="/integrations/nvidia-sentry/">NVIDIA Sentry</a> (not Sentry.io, the error-monitoring service). The runtime does not need that hardware. NVIDIA&rsquo;s <a href="https://developer.nvidia.com/blog/how-nvidia-openshell-reference-architecture-secures-and-governs-ai-agent-workloads-at-scale/" target="_blank" rel="noopener">technical walkthrough</a> describes four parts:</p>
   <ul>
     <li><strong>Gateway:</strong> the control plane. It creates and removes sandboxes and holds their policies.</li>
     <li><strong>Sandbox:</strong> isolates the agent and restricts which files and processes it can use.</li>
-    <li><strong>Supervisor:</strong> runs outside the sandbox, checks outbound requests against policy and hands out credentials.</li>
+    <li><strong>Supervisor:</strong> runs outside the sandbox, checks outbound requests against policy and mediates access to credentials.</li>
     <li><strong>Policy prover:</strong> checks that a policy grants nothing beyond a boundary policy, an upper limit the organization writes.</li>
   </ul>
   <p>A <a href="https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview" target="_blank" rel="noopener">sandbox policy</a> is a YAML file. In the v0.1.5 documentation, the default version on October 22, 2026, it sets readable and writable paths, the user that sandbox processes run as, which destinations each program may reach, and middleware for allowed traffic. The file and process settings are fixed when the sandbox starts; the network settings can change while it runs. Outbound traffic is denied unless a rule allows it.</p>
@@ -354,7 +354,7 @@
     <thead><tr><th>Point</th><th>What it sees</th><th>Mneme status</th></tr></thead>
     <tbody>
       <tr><td>The agent&rsquo;s own file-write tool</td><td>The exact content about to be written. This is where the planned OpenCode <code>write</code> check sits.</td><td><strong>Planned</strong></td></tr>
-      <tr><td><a href="https://docs.nvidia.com/openshell/latest/extensibility/gateway-interceptors" target="_blank" rel="noopener">Gateway interceptors</a></td><td>Changes to OpenShell itself, such as creating a sandbox or updating its configuration, and only those on an explicit allowlist. Before a change is saved, a <code>validate</code> call can allow or deny it and a <code>modify_operation</code> call can rewrite it. A <code>post_commit</code> call only observes. Interceptors never see the agent&rsquo;s file writes.</td><td><strong>Research</strong>: no adapter</td></tr>
+      <tr><td><a href="https://docs.nvidia.com/openshell/latest/extensibility/gateway-interceptors" target="_blank" rel="noopener">Gateway interceptors</a></td><td>Changes to OpenShell itself, such as creating a sandbox or updating its configuration, and only those on an explicit allowlist. Before a change is saved, a <code>validate</code> call can allow or deny it and a <code>modify_operation</code> call can rewrite it. A <code>post_commit</code> call only observes. The documentation describes only these gateway operations, not the agent&rsquo;s file writes.</td><td><strong>Research</strong>: no adapter</td></tr>
       <tr><td>Supervisor middleware</td><td>HTTP and WebSocket traffic that the network policy already allowed. It can inspect, change or deny it.</td><td><strong>Research</strong>: no adapter</td></tr>
       <tr><td><a href="https://docs.nvidia.com/openshell/latest/observability/logging" target="_blank" rel="noopener">Security event logs</a></td><td>Sandbox events in the Open Cybersecurity Schema Framework (OCSF) v1.8.0 format, exportable as JSON to a security monitoring system.</td><td><strong>Research</strong>: no mapping to Mneme evidence</td></tr>
       <tr><td>CI on the pull request</td><td>The final diff, outside the sandbox.</td><td><strong>Shipped</strong>, independent of OpenShell</td></tr>
@@ -384,7 +384,7 @@
   <h2>FAQ</h2>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Is there a Mneme connector for OpenShell I can install?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. The integration is planned, and nothing is implemented. The planned scope is one OpenCode file-write tool inside an OpenShell sandbox.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. The integration is planned, and no implementation has been merged or released. The planned scope is one OpenCode file-write tool inside an OpenShell sandbox.</div>
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Does Mneme replace OpenShell policies?</summary>

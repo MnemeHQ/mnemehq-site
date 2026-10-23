@@ -266,7 +266,8 @@
     <p>Statuses describe what exists in mneme-hq 0.10.0, the current release of Mneme&rsquo;s Python package. Only the status line on each entry says what Mneme supports; some tools have a page without being supported. Text after the status names the path or limit that applies, such as &ldquo;through CI&rdquo;.</p>
   </div>
   <dl class="status-key">
-    <div><dt>Shipped</dt><dd>Released in mneme-hq: an adapter, hook, command or reference workflow with tests in the open-source repository. For tools with no adapter of their own, the qualifier names the shipped path that reaches them.</dd></div>
+    <div><dt>Shipped</dt><dd>Released in mneme-hq: an adapter, hook, command or reference workflow with tests in the open-source repository.</dd></div>
+    <div><dt>No adapter</dt><dd>Mneme has nothing for this tool itself. The label names the shipped path that still reaches its changes, such as CI.</dd></div>
     <div><dt>Validated</dt><dd>Unmodified Mneme was tested working through the tool, with published evidence. No dedicated adapter.</dd></div>
     <div><dt>Experimental</dt><dd>Code exists and some boundaries are tested, but coverage or validation is incomplete. Not for production use.</dd></div>
     <div><dt>Planned</dt><dd>Design or specification work only. Nothing is implemented or supported.</dd></div>
@@ -305,7 +306,7 @@
 
   <section class="layer" id="coding-agents">
     <div class="layer-head"><span class="layer-num">02</span><h2>Coding agents and harnesses</h2></div>
-    <p class="layer-desc">A harness is the program that runs a coding agent&rsquo;s loop and tools. Where an agent offers a hook, a point where outside code can inspect an action before it runs, Mneme checks a proposed file write there. Writes made through shell commands reach disk first: Claude Code and Codex CLI check them when the agent ends its turn, and every other agent relies on CI.</p>
+    <p class="layer-desc">A harness is the program that runs a coding agent&rsquo;s loop and tools. Where an agent offers a hook, a point where outside code can inspect an action before it runs, Mneme checks a proposed file write there. Most writes made through shell commands reach disk first: Claude Code and Codex CLI check them when the agent ends its turn, and every other agent relies on CI.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/claude-code/">
         <div class="int-status">Shipped</div>
@@ -335,7 +336,7 @@
       <a class="int-card muted" href="/integrations/hermes/">
         <div class="int-status">Experimental</div>
         <h3>Hermes Agent</h3>
-        <p>Adds decisions to each turn and checks supported file changes before they run. Tested against Hermes Agent 0.19.0; shell and process writes are not checked, and there is no end-of-turn check.</p>
+        <p>Adds decisions to each turn and checks supported file changes before they run. Tested at the plugin dispatch layer against Hermes Agent 0.19.0; most shell writes and all process-tool writes are not checked, and there is no end-of-turn check.</p>
       </a>
       <a class="int-card muted" href="/integrations/opencode/">
         <div class="int-status">Experimental</div>
@@ -348,7 +349,7 @@
     <p class="layer-desc">These tools have no Mneme adapter of their own. The status names the shipped path that does reach them.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/vscode/">
-        <div class="int-status">Shipped &middot; through the Claude Code hook</div>
+        <div class="int-status">No adapter &middot; Claude Code hook (shipped)</div>
         <h3>VS Code</h3>
         <p>Claude Code sessions inside VS Code use the same PreToolUse hook. No extension needed.</p>
       </a>
@@ -358,17 +359,17 @@
         <p><code>mneme cursor generate</code> writes a Cursor Rules file from your recorded decisions, resolving decisions that conflict. Cursor passes them to its model as context; the rules file blocks nothing.</p>
       </a>
       <a class="int-card" href="/integrations/copilot/">
-        <div class="int-status">Shipped &middot; through CI</div>
+        <div class="int-status">No adapter &middot; CI check (shipped)</div>
         <h3>GitHub Copilot</h3>
         <p>Copilot has no hook Mneme can use. The CI check covers its changes.</p>
       </a>
       <a class="int-card" href="/integrations/jetbrains/">
-        <div class="int-status">Shipped &middot; through CI</div>
+        <div class="int-status">No adapter &middot; CI check (shipped)</div>
         <h3>JetBrains IDEs</h3>
         <p>The decision corpus and the CI check apply regardless of which IDE produced the change.</p>
       </a>
       <a class="int-card" href="/integrations/warp/">
-        <div class="int-status">Shipped &middot; through the agent or CI</div>
+        <div class="int-status">No adapter &middot; agent hook or CI (shipped)</div>
         <h3>Warp</h3>
         <p>No Warp adapter. Checks apply when the agent Warp runs has a Mneme hook, or when CI checks the diff.</p>
       </a>
@@ -400,9 +401,9 @@
         <p>Mneme as middleware around Deep Agents&rsquo; filesystem tools. Roadmap only until its own pinned validation passes.</p>
       </div>
       <div class="int-card muted">
-        <div class="int-status">Planned</div>
+        <div class="int-status">Research</div>
         <h3>n8n</h3>
-        <p>Checks on AI-driven steps in n8n workflow automation. On the roadmap; no design is published yet.</p>
+        <p>Whether Mneme checks could apply to AI-driven steps in n8n workflow automation. No design exists.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research</div>
@@ -417,15 +418,15 @@
     <p class="layer-desc">A software factory combines a work queue, an orchestrator, coding agents, CI and human review. Mneme does not integrate with a factory as a unit, and it is not a factory platform. It supplies the decisions the factory&rsquo;s agents must respect, through the shipped checks above. For the argument, read <a class="inline" href="/insights/software-factory-governance-layer/">the software factory&rsquo;s missing decision layer</a>.</p>
     <div class="layer-grid">
       <div class="int-card muted">
-        <div class="int-status">Planned</div>
+        <div class="int-status">Research &middot; proposed workflow</div>
         <h3>One-issue software factory</h3>
-        <p>A proposed starting workflow: one repository, one supported coding agent, two reviewed decisions, a CI check and a human-approved merge. The runnable guide waits for experiment evidence.</p>
+        <p>A proposed starting workflow, not yet tested: one repository, one supported coding agent, two reviewed decisions, a CI check and a human-approved merge.</p>
       </div>
-      <a class="int-card" href="/use-cases/multi-agent-workflow-governance/">
-        <div class="int-status">Shipped &middot; per supported agent</div>
+      <div class="int-card">
+        <div class="int-status">Pattern &middot; coverage per agent</div>
         <h3>Multi-agent workflows</h3>
-        <p>When several agents work on one repository, each supported agent reads the same decision corpus. Coverage is per agent, as listed above.</p>
-      </a>
+        <p>When several agents work on one repository, each agent with a Mneme hook checks against the same recorded decisions, and CI covers the rest. Coverage is whatever each agent has, as listed above.</p>
+      </div>
     </div>
   </section>
 
@@ -458,7 +459,7 @@
       <a class="int-card muted" href="/integrations/nvidia-openshell/">
         <div class="int-status">Planned</div>
         <h3>NVIDIA OpenShell</h3>
-        <p>An optional reference setup for one OpenCode file-write tool inside an OpenShell sandbox is in draft design documents. Nothing is implemented or supported.</p>
+        <p>An optional reference setup for one OpenCode file-write tool inside an OpenShell sandbox is proposed in draft design documents. No release includes it.</p>
       </a>
       <a class="int-card muted" href="/integrations/open-policy-agent/">
         <div class="int-status">Research</div>

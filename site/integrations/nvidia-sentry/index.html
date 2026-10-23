@@ -300,7 +300,7 @@
 <section class="hero">
   <div class="hero-eyebrow">Research &middot; no adapter &middot; not Sentry.io</div>
   <h1>Mneme HQ + NVIDIA Sentry</h1>
-  <p class="hero-sub">NVIDIA Sentry is NVIDIA&rsquo;s security layer for AI agents. It runs on dedicated network hardware, separate from the machine the agent runs on, and monitors and controls the agent&rsquo;s traffic. It is not Sentry.io, the error-monitoring service. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. Whether the two can connect is a <strong>research</strong> question. No adapter exists.</p>
+  <p class="hero-sub">NVIDIA Sentry is NVIDIA&rsquo;s security layer for AI agents. It runs on a network processor in the same server, in a hardware-isolated domain separate from the software the agent runs on, and monitors and controls the agent&rsquo;s traffic. It is not Sentry.io, the error-monitoring service. Mneme is an open-source tool that stores a team&rsquo;s architectural decisions in the repository and checks code changes against them, either inside a coding agent before it writes a file or in CI on a pull request. Whether the two can connect is a <strong>research</strong> question. No adapter exists.</p>
 </section>
 
 <section class="section narrow">
@@ -312,8 +312,8 @@
   <h2>What NVIDIA Sentry is</h2>
   <p>NVIDIA describes Sentry in a <a href="https://developer.nvidia.com/blog/inside-nvidia-sentry-secure-ai-agents-at-runtime/" target="_blank" rel="noopener">technical blog post</a> and on its <a href="https://www.nvidia.com/en-us/networking/products/software/sentry/" target="_blank" rel="noopener">product page</a>. It runs on BlueField-4, a data processing unit (DPU): a network card with its own processors. NVIDIA describes it as isolated from, and independent of, the host where the agent runs. It is built from NVIDIA&rsquo;s DOCA (Data Center Infrastructure-on-a-Chip Architecture) software libraries:</p>
   <ul>
-    <li><strong>DOCA Flow:</strong> a per-agent firewall that filters connections by address and port.</li>
-    <li><strong>DOCA Tower:</strong> a proxy built on Envoy, an open-source network proxy, that inspects allowed traffic at the application level. It takes its allow-or-deny decisions from policies run by <a href="/integrations/open-policy-agent/">Open Policy Agent (OPA)</a>, an open-source policy engine.</li>
+    <li><strong>DOCA Flow:</strong> a per-agent network firewall that blocks connections to unauthorized destinations.</li>
+    <li><strong>DOCA Tower:</strong> a proxy built on Envoy, an open-source network proxy, that inspects allowed traffic at the application level. It uses <a href="/integrations/open-policy-agent/">Open Policy Agent (OPA)</a>, an open-source policy engine, to extend network access policies.</li>
     <li><strong>DOCA Argus:</strong> inspects the host&rsquo;s memory from outside it, without software on the host.</li>
   </ul>
   <p>The blog post says Sentry keeps attested telemetry and tamper-evident records on the BlueField-4: activity logs that can be shown not to have been altered. Sentry is an optional part of NVIDIA&rsquo;s <a href="/integrations/nvidia-openshell/">OpenShell Reference Architecture</a>, a design for running agents in sandboxes; the OpenShell runtime works without it.</p>
