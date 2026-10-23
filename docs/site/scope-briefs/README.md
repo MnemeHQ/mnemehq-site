@@ -6,6 +6,12 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [OpenShell Assess NVIDIA Interview](2026-10-21-openshell-assess-nvidia-interview.md) | 2026-10-21 | insight (re-angled); AI factory piece dropped; integration pages in #232/#233 | published 2026-10-22 (#238) |
+| [Agent orchestrators and factories](2026-10-20-agent-orchestrators-and-factories.md) | 2026-10-20 | site edit (integrations, use case, how-tos; #231) | gathered, not built |
+| [Assess OpenAI Modernization Announcement](2026-10-20-assess-openai-modernization-announcement.md) | 2026-10-20 | insight cluster (2 now, 1 phase 2, 2 evidence-gated) | A queued 10-26 (#242), B queued 10-27 (#243); C phase 2; D, E evidence-gated |
+| [Scope infra governance content](2026-10-18-scope-infra-governance-content.md) | 2026-10-18 | insight cluster + concept page (owner decision) | 2 queued 10-23 (#239), 1 queued 10-24 (#240); 6 phase 2; 4 and concept page held |
+| [Anthropic code review](2026-10-17-anthropic-code-review.md) | 2026-10-17 | insight | queued 10-25 (#241) |
+| [Research migration strategies](2026-10-13-research-migration-strategies.md) | 2026-10-13 | insight cluster (1 now, 3 phase 2, 2 merged) | 1 queued 10-28 (#244); 3, 4, 5 phase 2 |
 | [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | published 2026-10-14 (#214) |
 | [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | published 2026-10-15 (#221) |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | gathered, not built |
@@ -28,6 +34,16 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 3. **"Cheap code, scarce decisions" lives in Cohesion insight 3** ("When Code Becomes Cheap, Decisions Become the Scarce Asset"). EY uses its survey as evidence and links there; the silo article keeps its own angle. *Update after the #209 audit: this thesis is already argued in 10+ shipped articles (e.g. `ai-makes-software-more-ambitious`), so insight 3, and the Coherence insight with it, is blocked pending a new owner decision; see the Cohesion brief.*
 4. **Silo: one article, "The Return of the Silo Engineer"**, built from the Cohesion scope, with the 09-12 cross-system "decision silos" argument folded in as one section. The 09-12 brief is merged, not built separately.
 5. **2026-10-14: own two terms, coherence and decisions, through one concept page each.** Engineering Coherence gets a concept page ([brief](2026-10-14-engineering-coherence-concept.md)), reversing decision 1's "no coherence concept page"; the Cohesion insight 2 becomes its body. Decision 3's thesis becomes a section of the Engineering Decision Governance concept page instead of an article. Articles support and link to the two concept pages rather than restating them. Both terms go through one PUBLISHING.md terminology amendment as concept terms (not category or tagline copy). Build cards: AECP keeps its evergreen title (AECP named in description and lede), hub agent-infrastructure; the Claude Frontier Academy piece and the FDE cluster go on agent-infrastructure.
+
+## Batch 4 (gathered 2026-10-20; TheoV823 asked for full clusters, phased if too big)
+
+Five unmarked `Post-` chats created 2026-10-13 to 10-20, each read in full with every collapsed turn expanded.
+
+- **Phase 1 (6 insights, one per day 2026-10-23 to 10-28 via the scheduled publisher, #239-#244):** Claude Code review trusted decision boundary; OpenAI COBOL benchmark analysis; AI legacy modernization cornerstone; When Kubernetes Works but the Application Still Fails; Policy as Code vs the decisions behind it; Node.js to Go migration.
+- **Phase 2:** behavioral equivalence vs architectural compliance (merges the migration chat's "why compiling is not enough"); Go translation idioms; strangler vs big-bang; when not to rewrite; platform engineering and enterprise architecture.
+- **Evidence-gated:** infrastructure guardrail reference architecture, COBOL cutover checklist, controlled migration experiment, the runnable software-factory guide.
+- **Merged, not built separately:** business-logic recovery (into the modernization cornerstone; 92.1 overlap with the reverse-engineering research piece), database connection budgets (into the Kubernetes piece), multi-language codebase governance (into the Node.js to Go piece).
+- **Separate contracts:** the infrastructure governance concept page (owner decision; terminology amendment first) and the orchestrators site edit (#231).
 
 **Ready to build** (build card complete; every citation still has to be verified during the build): OKF update to the June page. Shipped since: EY, The Return of the Silo Engineer and the pre-action mechanism article (#216); the AECP multi-agent piece, Claude Frontier Academy news piece, From Decision Records to Decision Governance and the reverse-engineering Research piece (#221).
 
