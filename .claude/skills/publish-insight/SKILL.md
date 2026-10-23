@@ -132,16 +132,20 @@ batch compete too; settle them together under the terminology lock before buildi
 
 ## Stage 4: Register and validate
 
-Registration (all manual, per `docs/site/insight-publishing-contract.md`):
+Registration is scripted. Write the article's manifest at `publish-queue/<slug>.json` (slug,
+title, description, type, topic, read_time, og_headline, og_alt, publish_on, and `reciprocal`: a
+list of `{host, desc}` for 2-3 related insights), then:
 
-1. OG record under `insights/<slug>/` in `site/og/cards.yaml` (editorial: headline only), then
-   `python scripts/render_og.py --strict --out site --only insights/<slug>/`.
-2. `<url>` block in `site/sitemap.xml`.
-3. Card in `site/insights/all/index.html`, inside the `cards-section` whose `id` is the primary
-   topic, **and** its `CollectionPage.hasPart` entry; card plus `hasPart` entry on the primary topic
-   hub `site/insights/topics/<hub>/index.html`.
-4. `python scripts/sync_insights_catalog.py`
-5. Reciprocal links from 2-3 related insights.
+```bash
+python scripts/register_insight.py <slug>          # dates the page, adds sitemap, archive and hub
+                                                   # cards + hasPart, OG record, reciprocal links,
+                                                   # bumps dateModified, runs the catalogue sync
+python scripts/render_og.py --strict --out site --only insights/<slug>/   # needs Chromium; local only
+```
+
+It covers every step in `docs/site/insight-publishing-contract.md` and is idempotent. The
+scheduled publisher re-runs it on `main` at publish time (Stage 5), so registration in the PR only
+has to make the PR's own CI pass.
 
 Validate, in order (all must pass):
 
@@ -171,20 +175,29 @@ in body prose. Apply it to new and substantially edited articles only.
    against the live source, with the page or section) before the PR is opened. Unverifiable
    claims are cut, not softened.
 3. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
-4. Batch all insights from one run into one PR on a `site/` branch. Right before each commit,
+4. **One PR per article, queued for a date.** Insights publish one per day at 13:00 UTC through
+   `.github/workflows/scheduled-publish.yml` (PUBLISHING.md, "Scheduled publishing"). Give each
+   article its own `site/` branch and PR containing the article directory (with its rendered
+   `og-v2.png`), its manifest and its registration, labelled `scheduled-publish`. Set `publish_on`
+   to consecutive days after the last date already queued (`python scripts/publish_queue.py list`).
+   Briefs and other docs go in a separate docs PR, merged normally. Right before each commit,
    confirm `git branch --show-current` (or run `scripts/check_worktree_context.py`). In a reused or
    shared worktree another session can switch the branch mid-run; in batch 1 a commit landed on
-   the wrong branch that way. Fill the Execution provenance
-   block (`AGENTS.md`). Confirm titles and count with the user. Squash merge.
+   the wrong branch that way. Fill the Execution provenance block (`AGENTS.md`). Confirm titles,
+   count and dates with the user before adding the label: the label is the go-ahead, and the
+   publisher squash-merges with no further review.
 5. Deployed means: a successful "Deploy site to mnemehq.com" run for the exact `main` SHA, and
-   `site-deployed` resolving to it. Merge alone is not deployment.
+   `site-deployed` resolving to it. Merge alone is not deployment. The publisher dispatches the
+   deploy itself; check the run for each day's merge SHA. A failed publish labels the PR
+   `publish-blocked` and comments the run link; fix it and remove the label.
 6. Close out, in this order, once deployment is verified:
    1. Add the chat to the ledger's Published table (PR, merge date) and set the brief's status to
       "built" (or "dropped" / "merged", with the reason).
    2. **Mark the chat in ChatGPT (required):** rename it to `***<original title>` in the user's
-      real Chrome, in the Mneme Growth and GTM project. Mark every chat whose scoped items are all
-      shipped, merged into another shipped article, or explicitly dropped by the user; a chat with
-      any open item stays unmarked (e.g. `Post-Writing ROI Content` while its backlog is open).
+      real Chrome, in the Mneme Growth and GTM project. Mark every chat whose batch has shipped,
+      even if later phases are still open (owner decision, 2026-10-22): record each remaining item
+      in the ledger's "Partially processed" section so the marker does not hide it. The briefs
+      carry the full phased scope.
       Marking is a required step, but this file is not a standing authorisation: list the exact
       chats you will rename and get the user's confirmation in chat first. It is the only write
       to ChatGPT in this procedure. Never rename a chat for any other reason, never edit or delete

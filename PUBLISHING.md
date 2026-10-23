@@ -128,6 +128,34 @@ Production deployment of mnemehq.com is owned by **this repository** and is defi
 **[OP]** Deploy behaviour changes (triggers, runner, upload/verify/purge logic) are owned by this
 repository and are made only by editing the workflow and `scripts/deploy_site.py` here.
 
+### Scheduled publishing (insights)
+
+**[OP]** Insights go live one per day at 13:00 UTC through
+[`.github/workflows/scheduled-publish.yml`](.github/workflows/scheduled-publish.yml), not by merging
+a batch PR by hand.
+
+- **Queue.** Each article has its own PR labelled `scheduled-publish`. The PR adds the article
+  directory (with its pre-rendered `og-v2.png`) and one manifest at `publish-queue/<slug>.json`. The
+  manifest's `publish_on` date (UTC) is the single source of truth for the publish day.
+  `python scripts/publish_queue.py list` shows the queue. Adding the label is the editorial
+  go-ahead: the publisher merges with no further review, so add it only after the pre-merge
+  gates pass and the owner has confirmed titles and dates.
+- **Publish.** Each run picks at most one due PR (earliest `publish_on`, then lowest PR number).
+  It requires the PR's checks to be green, then rebuilds the PR on a fresh checkout of `main`: it
+  takes only the article directory and manifest from the branch and re-runs
+  `scripts/register_insight.py` dated today. That script writes the sitemap entry, archive and hub
+  cards with their `hasPart` entries, the OG record and reciprocal links, then runs the catalogue
+  sync. The run then executes the validators, force-pushes the result to the PR branch,
+  squash-merges it and dispatches the deploy workflow. Rebuilding from `main` is what stops queued
+  PRs from conflicting on the shared index files.
+- **Failure.** A failed run labels the PR `publish-blocked` and comments the run link. Blocked PRs
+  are skipped until a person removes the label. A missed day is not made up: the backlog drains
+  one article per day.
+- **Deployment evidence is unchanged.** A merge by the workflow token does not fire the
+  push-triggered deploy, so the publisher dispatches it. Deployed still means a successful deploy
+  run for the merged `main` SHA and `site-deployed` at that SHA.
+- **Not scheduled:** concept pages, docs, landing pages and other site edits merge normally.
+
 ---
 
 ## Deploy and asset conventions
