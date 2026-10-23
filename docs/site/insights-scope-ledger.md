@@ -37,6 +37,14 @@ not every chat in the project.
 | ***post-reverse engineer decisions | 2026-10-12 | `reverse-engineering-architectural-decisions-research` | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221) | 2026-10-15 |
 | ***Post-Business Type Comparison and decision governance | 2026-10-07 | `from-decision-records-to-decision-governance` (#221), concept page (#214), software-factory section in `software-factory-governance-layer` (#224) | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), [#224](https://github.com/MnemeHQ/mnemehq-site/pull/224) | 2026-10-15 |
 | ***Post-claude frontier academy Assess program relevance | 2026-10-07 | `claude-frontier-academy-frontier-deployed-engineers` (#221), frontier section in `forward-deployed-engineers-enterprise-ai` (#224); other cluster items merged or dropped 2026-10-15 | [#221](https://github.com/MnemeHQ/mnemehq-site/pull/221), [#224](https://github.com/MnemeHQ/mnemehq-site/pull/224) | 2026-10-15 |
+| ***Post- OpenShell Assess NVIDIA Interview | 2026-10-21 | `nvidia-openshell-reference-architecture-agent-policy`; integration pages `/integrations/nvidia-openshell/`, `/integrations/open-policy-agent/`, `/integrations/nvidia-sentry/` (#246); "Who Governs the AI Factory?" dropped | [#238](https://github.com/MnemeHQ/mnemehq-site/pull/238), [#246](https://github.com/MnemeHQ/mnemehq-site/pull/246) | 2026-10-22 / 2026-10-23 |
+| ***Post-Scope infra governance content | 2026-10-18 | `policy-as-code-engineering-decisions` (published by the scheduler); `kubernetes-scaling-database-connection-budget` queued 10-24 | [#239](https://github.com/MnemeHQ/mnemehq-site/pull/239), [#240](https://github.com/MnemeHQ/mnemehq-site/pull/240) | 2026-10-23 / queued |
+| ***Post-Anthropic code review | 2026-10-17 | `claude-code-review-trusted-decision-boundary` queued 10-25 | [#241](https://github.com/MnemeHQ/mnemehq-site/pull/241) | queued |
+| ***Post-Assess OpenAI Modernization Announcement | 2026-10-20 | `openai-cobol-migration-benchmark-behavioral-parity` queued 10-26, `ai-legacy-modernization-what-must-survive` queued 10-27 | [#242](https://github.com/MnemeHQ/mnemehq-site/pull/242), [#243](https://github.com/MnemeHQ/mnemehq-site/pull/243) | queued |
+| ***Post-Research migration strategies | 2026-10-13 | `nodejs-to-go-migration-architectural-decisions` queued 10-28 | [#244](https://github.com/MnemeHQ/mnemehq-site/pull/244) | queued |
+| ***Post-Agent orchestrators and factories | 2026-10-20 | Integrations hub regrouped by function (#246) | [#246](https://github.com/MnemeHQ/mnemehq-site/pull/246) | 2026-10-23 |
+
+Notes for batches 4 and 5 (2026-10-22/23): from this batch on, insights publish one per day at 13:07 UTC through the scheduled publisher (#236, #237, #245, #247; PUBLISHING.md, "Scheduled publishing"). The briefs are in #234. OpenShell was published by hand on 2026-10-22 (deploy verified at `c6c1ed46`). The integrations restructure deployed at `71d1f9b9`, and Policy as Code was the publisher's first real merge (deploy verified at `014f8476`). Pre-merge Opus audits found 4 blockers and 11 should-fix items in batch 4, and 2 blockers and 3 should-fix items in batch 5, all fixed. All six chats were renamed with the `***` marker on 2026-10-23 and verified by re-listing the project. By owner decision (2026-10-22), chats are marked once their batch ships even if later phases are open. Their remaining items are listed under "Partially processed" below, and articles still queued are tracked by their PRs.
 
 Notes carried over: the software-factory pillar is one article refined across two chats (the 2nd adds the Bob Bemer/1968 historical framing) — it's the pillar of a planned 5-article cluster, only the pillar is scoped/shipped so far. Conway and Brooks are cross-linked as a pair. The private AI piece's Latham facts were verified against Bloomberg Law and Legal IT Insider; the FT citation named in the original scope chat could not be located and was dropped.
 
@@ -57,6 +65,19 @@ All three chats were renamed with the `***` marker on 2026-09-25 after #150 depl
 None currently.
 
 ## Partially processed — do not mark done
+
+**Marked `***` on 2026-10-23 with open items (owner decision; full scope in the briefs):**
+
+- **Post-Assess OpenAI Modernization Announcement:**
+  - Phase 2: "Behavioral Equivalence Is Not Architectural Compliance", which absorbs the migration chat's "Why Compiling Is Not Enough".
+  - Evidence-gated: the COBOL-to-Java cutover checklist and the controlled migration experiment.
+  - Site edit: a "before the migration" section on `/use-cases/ai-assisted-software-migrations/`.
+- **Post-Research migration strategies:** three phase 2 articles: Go translation idioms, strangler vs big-bang, and when not to rewrite.
+- **Post-Scope infra governance content:**
+  - Phase 2: "The Missing Link Between Platform Engineering and Enterprise Architecture".
+  - Evidence-gated: the decision-to-infrastructure-guardrail reference architecture.
+  - Owner decision: the Infrastructure Governance concept page, which needs a terminology amendment first.
+- **Post-Agent orchestrators and factories:** `/use-cases/software-factory-governance/` and the how-to guides wait on experiment evidence (#231).
 
 **Post-Writing ROI Content** (located 2026-09-19) scoped a full pillar + ~10 supporting-article cluster for AI Engineering ROI. Only the pillar and one deferred spoke shipped, in PR #135 ("pillar + AI Throughput Is Not Engineering Throughput only, hold the rest for a follow-up round"). The five *other* articles named in that PR's description as "already-published spokes" (`ai-roi-problem-is-about-systems-not-models`, `ai-coding-agent-verification-tax`, `dora-metrics-insufficient-for-agentic-development`, `acceleration-whiplash-governance-gap`, `ai-coding-productivity-gains-rework`) predate this chat's scoping and are unrelated to its backlog.
 

@@ -175,7 +175,7 @@ in body prose. Apply it to new and substantially edited articles only.
    against the live source, with the page or section) before the PR is opened. Unverifiable
    claims are cut, not softened.
 3. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
-4. **One PR per article, queued for a date.** Insights publish one per day at 13:00 UTC through
+4. **One PR per article, queued for a date.** Insights publish one per day at 13:07 UTC through
    `.github/workflows/scheduled-publish.yml` (PUBLISHING.md, "Scheduled publishing"). Give each
    article its own `site/` branch and PR containing the article directory (with its rendered
    `og-v2.png`), its manifest and its registration, labelled `scheduled-publish`. Set `publish_on`
