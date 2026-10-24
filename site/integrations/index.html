@@ -390,6 +390,11 @@
         <h3>Paperclip</h3>
         <p>Paperclip runs Claude Code in your workspace, so the Claude Code hook applies unchanged. Tested under both Paperclip transports. No adapter required.</p>
       </a>
+      <a class="int-card" href="/integrations/antigravity/">
+        <div class="int-status">Shipped adapter &middot; orchestration untested</div>
+        <h3>Google Antigravity</h3>
+        <p>The Antigravity App launches and orchestrates teams of agents, and a parent agent can run subagents in parallel. Mneme&rsquo;s adapter checks three file-writing tools and was tested in Antigravity IDE 2.8.1 only, not with subagents or the App. Shell commands are not covered.</p>
+      </a>
       <a class="int-card muted" href="/insights/openai-symphony-architectural-context/">
         <div class="int-status">Research &middot; analysis only</div>
         <h3>OpenAI Symphony</h3>
@@ -404,6 +409,26 @@
         <div class="int-status">Research</div>
         <h3>n8n</h3>
         <p>Whether Mneme checks could apply to AI-driven steps in n8n workflow automation. No design exists.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research &middot; no adapter</div>
+        <h3>CrewAI</h3>
+        <p>CrewAI coordinates crews of agents and step-based flows, and its agents can use tools from MCP servers. Mneme could attach as an MCP server for decision search; nothing would check the crew&rsquo;s file writes, so CI remains the check.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research &middot; no adapter</div>
+        <h3>Microsoft Agent Framework</h3>
+        <p>Microsoft&rsquo;s successor to AutoGen and Semantic Kernel, with graph-based workflows for multi-agent orchestration. Mneme could attach as an MCP server its agents call for decision search, or as middleware that runs <code>mneme check</code> on a proposed write. Neither is built.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research &middot; no adapter</div>
+        <h3>OpenAI Agents SDK</h3>
+        <p>Agents hand work to other agents or call them as tools. Mneme could attach as an MCP server the agents query for decisions; no write check exists, so a change is checked only if it reaches CI.</p>
+      </div>
+      <div class="int-card muted">
+        <div class="int-status">Research &middot; no adapter</div>
+        <h3>GitHub Agent HQ</h3>
+        <p>Its mission control assigns work to coding agents from several vendors in parallel. Mneme has no hook inside it; the CI check covers whatever changes reach a pull request.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research</div>
@@ -457,9 +482,9 @@
     <p class="layer-desc">Runtime environments and policy engines decide what an agent may access: files, processes, network destinations, API calls. Mneme does not enforce infrastructure policy. These pages explain how each system relates to Mneme&rsquo;s architectural decisions, and what would have to be proven before any integration exists.</p>
     <div class="layer-grid">
       <a class="int-card muted" href="/integrations/nvidia-openshell/">
-        <div class="int-status">Planned</div>
+        <div class="int-status">Experimental</div>
         <h3>NVIDIA OpenShell</h3>
-        <p>An optional reference setup for one OpenCode file-write tool inside an OpenShell sandbox is proposed in draft design documents. No release includes it.</p>
+        <p>A controlled experiment checked OpenCode&rsquo;s file-write tool inside an OpenShell sandbox. The reference integration is specified but not merged or released, and the experiment found a coverage gap.</p>
       </a>
       <a class="int-card muted" href="/integrations/open-policy-agent/">
         <div class="int-status">Research</div>
