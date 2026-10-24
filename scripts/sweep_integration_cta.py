@@ -22,7 +22,6 @@ TOOLS = {
     "github-actions": "GitHub Actions",
     "gitlab": "GitLab CI",
     "jetbrains": "JetBrains IDEs",
-    "microsoft-agent-forge": "Microsoft Agent Forge",
     "opencode": "OpenCode",
     "paperclip": "Paperclip",
     "perplexity": "Perplexity",
