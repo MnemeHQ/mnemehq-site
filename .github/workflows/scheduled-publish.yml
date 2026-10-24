@@ -22,7 +22,14 @@ on:
   schedule:
     # Off the top of the hour: GitHub delays or drops on-the-hour crons under load
     # (the first 13:00 run never fired, 2026-10-23).
+    # Fallback slots: GitHub can skip a scheduled run outright (no 13:00/13:07 run
+    # fired on 2026-10-23 or 10-24). publish_queue.py pick publishes nothing once
+    # an article went out that UTC day, so later slots only catch a missed one.
     - cron: '7 13 * * *'
+    - cron: '37 13 * * *'
+    - cron: '17 14 * * *'
+    - cron: '17 15 * * *'
+    - cron: '17 17 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
