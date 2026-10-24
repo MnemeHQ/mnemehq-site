@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://mnemehq.com/integrations/nvidia-openshell/og-v3.png" />
 <meta name="twitter:image:alt" content="Integration: Mneme HQ + NVIDIA OpenShell. Experimental integration, not in any release." />
   <meta name="author" content="Theo Valmis" />
-  <meta property="article:published_time" content="2026-10-29T00:00:00Z" />
+  <meta property="article:published_time" content="2026-10-23T00:00:00Z" />
   <meta property="article:author" content="https://mnemehq.com/founder/" />
   <meta property="article:section" content="Integration" />
 
@@ -67,8 +67,8 @@
       "headline": "Mneme HQ + NVIDIA OpenShell: Experimental Integration Status",
       "description": "NVIDIA OpenShell controls what an AI agent can access. A Mneme integration is experimental: a controlled experiment ran, but nothing is merged or released.",
       "url": "https://mnemehq.com/integrations/nvidia-openshell/",
-      "datePublished": "2026-10-29",
-      "dateModified": "2026-10-29",
+      "datePublished": "2026-10-23",
+      "dateModified": "2026-10-23",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -94,7 +94,7 @@
           "name": "Is there a Mneme connector for OpenShell I can install?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. A controlled experiment ran, but the integration is not merged or released. Its specified scope is one OpenCode file-write tool inside an OpenShell sandbox, and the experiment found a coverage gap."
+            "text": "No. A controlled experiment ran, but the integration is not merged or released. Its proposed scope is one OpenCode file-write tool inside an OpenShell sandbox, and the experiment found a coverage gap."
           }
         },
         {
@@ -314,10 +314,10 @@
 <section class="section narrow">
   <h2>Status: experimental</h2>
   <p>A controlled experiment ran in October 2026. OpenCode, an open-source terminal coding agent, ran inside an OpenShell sandbox, and a Mneme plugin checked what OpenCode&rsquo;s <code>write</code> tool was about to write to a file. The setup pinned OpenShell 0.1.5, OpenCode 1.19.3 and mneme-hq 0.10.0.</p>
-  <p><a href="https://github.com/MnemeHQ/mneme/pull/610" target="_blank" rel="noopener">A draft acceptance contract</a> in Mneme&rsquo;s open-source repository records the results. With the Mneme plugin active, a <code>write</code> that introduced a forbidden database library was blocked before it was written, and a compliant <code>write</code> went through and ran. With external plugins turned off, the same forbidden content was written.</p>
-  <p>The same document records what did not work. An import written in a dynamic form was allowed, because the rule matches literal text: a coverage gap. A change that named the library only in documentation was wrongly blocked. Records from some earlier runs are missing, and one planned test was not run. The document supports no claim that every write is checked or that the check cannot be bypassed.</p>
-  <p><a href="https://github.com/MnemeHQ/mneme/pull/609" target="_blank" rel="noopener">A second draft</a> adds the reference integration to the roadmap. Both pull requests contain documentation only, and neither is merged. The experiment code is not public.</p>
-  <div class="callout"><p><strong>Experimental, not released.</strong> The reference integration is specified, but not merged or released: no release of mneme-hq, Mneme&rsquo;s Python package, includes OpenShell support. Its scope is OpenCode&rsquo;s <code>write</code> tool only. Other OpenCode tools, shell commands and OpenShell&rsquo;s own settings are outside it. Not for production use.</p></div>
+  <p><a href="https://github.com/MnemeHQ/mneme/pull/610" target="_blank" rel="noopener">A draft specification</a> in Mneme&rsquo;s open-source repository records the results and lists the tests a maintained version would have to pass. With the Mneme plugin active, a <code>write</code> that would have added the forbidden library <code>psycopg2</code> to the file was blocked. The experiment checked the whole file, not only the changed lines, while Mneme&rsquo;s shipped hooks check only the lines a change adds. A compliant <code>write</code> was saved, and the resulting code ran. When OpenCode ran with all of its external plugins turned off, Mneme&rsquo;s included, the same forbidden content was written.</p>
+  <p>The same document records what did not work. An import written in a dynamic form was allowed, because the rule matches literal text: a coverage gap. A change that named the library only in documentation was wrongly blocked. The wider benchmark of 14 tests was inconclusive, and the run that showed the block used a different model from the one that benchmark fixed. Records from some earlier runs are missing, and one planned test was not run. The document supports no claim that every write is checked or that the check cannot be bypassed.</p>
+  <p><a href="https://github.com/MnemeHQ/mneme/pull/609" target="_blank" rel="noopener">A second draft</a> adds a reference integration to the roadmap: an optional example setup that Mneme would maintain, separate from OpenShell itself. Both pull requests contain documentation only, and neither is merged. The experiment code is not public.</p>
+  <div class="callout"><p><strong>Experimental, not released.</strong> The reference integration is proposed in a draft specification, not merged or released: no release of mneme-hq, Mneme&rsquo;s Python package, includes OpenShell support. Its scope is OpenCode&rsquo;s <code>write</code> tool only. Other OpenCode tools, shell commands and OpenShell&rsquo;s own settings are outside it. Not for production use.</p></div>
 </section>
 
 <section class="section narrow">
@@ -357,7 +357,7 @@
     <thead><tr><th>Point</th><th>What it sees</th><th>Mneme status</th></tr></thead>
     <tbody>
       <tr><td>The agent&rsquo;s own file-write tool</td><td>The exact content about to be written. This is where the experimental OpenCode <code>write</code> check sits.</td><td><strong>Experimental</strong></td></tr>
-      <tr><td><a href="https://docs.nvidia.com/openshell/latest/extensibility/gateway-interceptors" target="_blank" rel="noopener">Gateway interceptors</a></td><td>Changes to OpenShell itself, such as creating a sandbox or updating its configuration, and only those on an explicit allowlist. Before a change is saved, a <code>validate</code> call can allow or deny it and a <code>modify_operation</code> call can rewrite it. A <code>post_commit</code> call only observes. The documentation describes only these gateway operations, not the agent&rsquo;s file writes.</td><td><strong>Research</strong>: no adapter</td></tr>
+      <tr><td><a href="https://docs.nvidia.com/openshell/latest/extensibility/gateway-interceptors" target="_blank" rel="noopener">Gateway interceptors</a></td><td>Changes to OpenShell itself, such as creating a sandbox or updating its configuration, and only operations on an allowlist that OpenShell&rsquo;s gateway maintains. Operators choose which of those operations to intercept. Before a change is saved, a <code>validate</code> call can allow or deny it and a <code>modify_operation</code> call can rewrite it. A <code>post_commit</code> call only observes. The documentation describes only these gateway operations, not the agent&rsquo;s file writes.</td><td><strong>Research</strong>: no adapter</td></tr>
       <tr><td>Supervisor middleware</td><td>HTTP and WebSocket traffic that the network policy already allowed. It can inspect, change or deny it.</td><td><strong>Research</strong>: no adapter</td></tr>
       <tr><td><a href="https://docs.nvidia.com/openshell/latest/observability/logging" target="_blank" rel="noopener">Security event logs</a></td><td>Sandbox events in the Open Cybersecurity Schema Framework (OCSF) v1.8.0 format, exportable as JSON to a security monitoring system.</td><td><strong>Research</strong>: no mapping to Mneme evidence</td></tr>
       <tr><td>CI on the pull request</td><td>The final diff, outside the sandbox.</td><td><strong>Shipped</strong>, independent of OpenShell</td></tr>
@@ -387,7 +387,7 @@
   <h2>FAQ</h2>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Is there a Mneme connector for OpenShell I can install?</summary>
-    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. A controlled experiment ran, but the integration is not merged or released. Its specified scope is one OpenCode file-write tool inside an OpenShell sandbox, and the experiment found a coverage gap.</div>
+    <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. A controlled experiment ran, but the integration is not merged or released. Its proposed scope is one OpenCode file-write tool inside an OpenShell sandbox, and the experiment found a coverage gap.</div>
   </details>
   <details style="border-top:1px solid var(--border); padding:1.05rem 0;">
     <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500;">Does Mneme replace OpenShell policies?</summary>

@@ -257,7 +257,7 @@
 <div class="hero">
   <div class="section-eyebrow">Integrate Mneme</div>
   <h1>Choose the interface, then wire Mneme into your stack</h1>
-  <p class="hero-sub">Mneme is an open-source tool that stores your team&rsquo;s architectural decisions in the repository, such as &ldquo;request handlers use the storage adapter, never the database driver&rdquo;, and checks code changes against them. A check runs in a coding agent before it writes a file, or in CI on a pull request. This page groups every integration by the job it does, and gives each one a status.</p>
+  <p class="hero-sub">Mneme is an open-source tool that stores your team&rsquo;s architectural decisions in the repository, such as &ldquo;request handlers use the storage adapter, never the database driver&rdquo;, and checks code changes against them. A check runs in a supported coding agent before its native file-write tool runs, or in CI on a pull request. Most writes made through shell commands reach disk before any check. This page groups every integration by the job it does, and gives each one a status.</p>
 </div>
 
 <section class="entry" aria-labelledby="status-key">
@@ -269,9 +269,10 @@
     <div><dt>Shipped</dt><dd>Released in mneme-hq: an adapter, hook, command or reference workflow with tests in the open-source repository.</dd></div>
     <div><dt>No adapter</dt><dd>Mneme has nothing for this tool itself. The label names the shipped path that still reaches its changes, such as CI.</dd></div>
     <div><dt>Validated</dt><dd>Unmodified Mneme was tested working through the tool, with published evidence. No dedicated adapter.</dd></div>
-    <div><dt>Experimental</dt><dd>Code exists and some boundaries are tested, but coverage or validation is incomplete. Not for production use.</dd></div>
+    <div><dt>Experimental</dt><dd>Code exists and some boundaries are tested, but coverage or validation is incomplete. Not for production use. An entry may rest on an unpublished experiment; when it does, its status says so.</dd></div>
     <div><dt>Planned</dt><dd>Design or specification work only. Nothing is merged, released or supported.</dd></div>
     <div><dt>Research</dt><dd>We are investigating whether an integration is possible. No adapter, no design commitment.</dd></div>
+    <div><dt>Pattern</dt><dd>A way to combine shipped checks, not a product. Coverage is whatever each part already has.</dd></div>
   </dl>
 </section>
 
@@ -282,9 +283,9 @@
     <p class="layer-desc">Model Context Protocol (MCP), the command-line interface (CLI) and the Python API are the three ways to reach Mneme&rsquo;s decisions. They share one decision model but do different jobs, and connecting through one of them is not the same as enforcing a decision.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/mcp/">
-        <div class="int-status">Shipped &middot; local stdio, since 0.9.0</div>
+        <div class="int-status">Shipped &middot; runs locally, since 0.9.0</div>
         <h3>Model Context Protocol (MCP)</h3>
-        <p>Six fixed tools let an MCP-capable agent search decisions, read their context and lineage, and submit proposals. MCP cannot accept, activate or supersede a decision; people do that.</p>
+        <p>Six fixed tools let an MCP-capable agent search decisions, read why each was made, trace which decision replaced which, and submit a new decision for people to review. MCP cannot accept, activate or supersede a decision; people do that.</p>
       </a>
       <a class="int-card" href="/docs/cli/">
         <div class="int-status">Shipped</div>
@@ -299,7 +300,7 @@
       <a class="int-card" href="/integrations/adr-import/">
         <div class="int-status">Shipped &middot; CLI command</div>
         <h3>ADR Import</h3>
-        <p>Bring existing architecture decision records (ADRs) into the decision corpus with one command.</p>
+        <p>Bring existing architecture decision records (ADRs) into Mneme&rsquo;s set of recorded decisions with one command.</p>
       </a>
     </div>
   </section>
@@ -331,7 +332,7 @@
       <a class="int-card" href="/integrations/antigravity/">
         <div class="int-status">Shipped</div>
         <h3>Google Antigravity</h3>
-        <p>A pre-tool adapter checks Antigravity&rsquo;s file-changing tools with the same engine. Tested on IDE 2.8.1.</p>
+        <p>A pre-tool adapter checks Antigravity&rsquo;s three file-writing tools before they run. Tested on IDE 2.8.1. Shell commands are not covered.</p>
       </a>
       <a class="int-card muted" href="/integrations/hermes/">
         <div class="int-status">Experimental</div>
@@ -339,14 +340,14 @@
         <p>Adds decisions to each turn and checks supported file changes before they run. Tested at the plugin dispatch layer against Hermes Agent 0.19.0; most shell writes and all process-tool writes are not checked, and there is no end-of-turn check.</p>
       </a>
       <a class="int-card muted" href="/integrations/opencode/">
-        <div class="int-status">Experimental</div>
+        <div class="int-status">Experimental &middot; no write check released</div>
         <h3>OpenCode</h3>
-        <p>Mneme through OpenCode&rsquo;s plugin hooks is under evaluation. A finished experiment on context compaction showed no measurable effect. No production plugin ships.</p>
+        <p>The only public code is an experimental plugin that added decision summaries when OpenCode shortens a long session by summarizing it. It showed no measurable effect. No plugin that checks writes is released.</p>
       </a>
     </div>
 
-    <h3 class="layer-sub">Editors and hosts without an adapter</h3>
-    <p class="layer-desc">These tools have no Mneme adapter of their own. The status names the shipped path that does reach them.</p>
+    <h3 class="layer-sub">Editors and hosts without a Mneme hook</h3>
+    <p class="layer-desc">These tools have no hook where Mneme can check a write before it lands. The status names the shipped path that does reach them: another agent&rsquo;s hook, a rules export, or CI.</p>
     <div class="layer-grid">
       <a class="int-card" href="/integrations/vscode/">
         <div class="int-status">No adapter &middot; Claude Code hook (shipped)</div>
@@ -366,7 +367,7 @@
       <a class="int-card" href="/integrations/jetbrains/">
         <div class="int-status">No adapter &middot; CI check (shipped)</div>
         <h3>JetBrains IDEs</h3>
-        <p>The decision corpus and the CI check apply regardless of which IDE produced the change.</p>
+        <p>The recorded decisions and the CI check apply regardless of which IDE produced the change.</p>
       </a>
       <a class="int-card" href="/integrations/warp/">
         <div class="int-status">No adapter &middot; agent hook or CI (shipped)</div>
@@ -388,7 +389,7 @@
       <a class="int-card" href="/integrations/paperclip/">
         <div class="int-status">Validated</div>
         <h3>Paperclip</h3>
-        <p>Paperclip runs Claude Code in your workspace, so the Claude Code hook applies unchanged. Tested under both Paperclip transports. No adapter required.</p>
+        <p>Paperclip runs Claude Code in your workspace, so the Claude Code hook applies unchanged. Tested with both ways Paperclip can launch Claude Code. No adapter required.</p>
       </a>
       <a class="int-card" href="/integrations/antigravity/">
         <div class="int-status">Shipped adapter &middot; orchestration untested</div>
@@ -403,7 +404,7 @@
       <div class="int-card muted">
         <div class="int-status">Planned</div>
         <h3>Deep Agents</h3>
-        <p>Mneme as middleware around Deep Agents&rsquo; filesystem tools. Roadmap only until its own pinned validation passes.</p>
+        <p>LangChain&rsquo;s agent harness. Mneme as middleware around its filesystem tools is on the roadmap. Nothing is built, and a test against a fixed Deep Agents version would have to pass before any support claim.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research</div>
@@ -413,22 +414,22 @@
       <div class="int-card muted">
         <div class="int-status">Research &middot; no adapter</div>
         <h3>CrewAI</h3>
-        <p>CrewAI coordinates crews of agents and step-based flows, and its agents can use tools from MCP servers. Mneme could attach as an MCP server for decision search; nothing would check the crew&rsquo;s file writes, so CI remains the check.</p>
+        <p>CrewAI coordinates crews of agents and step-based flows. Its agents can load tools from MCP servers, so a crew could look up recorded decisions through Mneme&rsquo;s MCP server. Nothing would check what the crew writes.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research &middot; no adapter</div>
         <h3>Microsoft Agent Framework</h3>
-        <p>Microsoft&rsquo;s successor to AutoGen and Semantic Kernel, with graph-based workflows for multi-agent orchestration. Mneme could attach as an MCP server its agents call for decision search, or as middleware that runs <code>mneme check</code> on a proposed write. Neither is built.</p>
+        <p>Microsoft&rsquo;s successor to AutoGen and Semantic Kernel, with graph-based workflows for multi-agent orchestration. Its middleware intercepts agent actions, the point where a <code>mneme check</code> call on a proposed write could sit. Nothing is built.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research &middot; no adapter</div>
         <h3>OpenAI Agents SDK</h3>
-        <p>Agents hand work to other agents or call them as tools. Mneme could attach as an MCP server the agents query for decisions; no write check exists, so a change is checked only if it reaches CI.</p>
+        <p>Agents hand work to other agents or call them as tools. A file-writing tool you define could run <code>mneme check</code> on the content before saving it. Nothing like that is built or tested.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research &middot; no adapter</div>
         <h3>GitHub Agent HQ</h3>
-        <p>Its mission control assigns work to coding agents from several vendors in parallel. Mneme has no hook inside it; the CI check covers whatever changes reach a pull request.</p>
+        <p>GitHub runs Copilot, Claude and Codex coding sessions side by side, and each session&rsquo;s work ends in a pull request. Mneme has no hook inside these agents; the CI check on that pull request is where it applies.</p>
       </div>
       <div class="int-card muted">
         <div class="int-status">Research</div>
@@ -482,9 +483,9 @@
     <p class="layer-desc">Runtime environments and policy engines decide what an agent may access: files, processes, network destinations, API calls. Mneme does not enforce infrastructure policy. These pages explain how each system relates to Mneme&rsquo;s architectural decisions, and what would have to be proven before any integration exists.</p>
     <div class="layer-grid">
       <a class="int-card muted" href="/integrations/nvidia-openshell/">
-        <div class="int-status">Experimental</div>
+        <div class="int-status">Experimental &middot; private experiment, nothing released</div>
         <h3>NVIDIA OpenShell</h3>
-        <p>A controlled experiment checked OpenCode&rsquo;s file-write tool inside an OpenShell sandbox. The reference integration is specified but not merged or released, and the experiment found a coverage gap.</p>
+        <p>A controlled experiment checked OpenCode&rsquo;s file-write tool inside an OpenShell sandbox. The integration is proposed in a draft specification, not merged or released, and the experiment found a coverage gap.</p>
       </a>
       <a class="int-card muted" href="/integrations/open-policy-agent/">
         <div class="int-status">Research</div>
