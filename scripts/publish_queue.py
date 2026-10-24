@@ -11,8 +11,10 @@ Commands:
   pick   print GitHub Actions outputs for the next due PR, or nothing if none
          is due: pr, head, slug, title, date
 
-``pick`` returns at most one PR per run, so a daily schedule publishes at most
-one article per day; a backlog drains one day at a time.
+``pick`` returns at most one PR per run, and nothing if a ``scheduled-publish``
+PR was already merged today (UTC). The workflow can therefore run in several
+fallback slots and still publish at most one article per day; a backlog drains
+one day at a time.
 
 Needs ``gh`` (authenticated) and ``git`` with ``origin`` fetched.
 """
@@ -67,6 +69,12 @@ def main() -> int:
             print(f"{i.get('date', '?'):10}  #{i['pr']:<5} {state:10} {i.get('slug', '?')}")
         return 0
     if cmd == "pick":
+        # The workflow has several fallback cron slots; publish at most one article per UTC day.
+        done_today = json.loads(run("gh", "pr", "list", "--label", LABEL, "--state", "merged",
+                                    "--search", f"merged:>={today}", "--json", "number"))
+        if done_today:
+            print(f"Already published today: #{done_today[0]['number']}", file=sys.stderr)
+            return 0
         for i in items:
             if "error" in i or i["blocked"]:
                 continue

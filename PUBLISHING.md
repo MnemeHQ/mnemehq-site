@@ -130,7 +130,7 @@ repository and are made only by editing the workflow and `scripts/deploy_site.py
 
 ### Scheduled publishing (insights)
 
-**[OP]** Insights go live one per day at 13:07 UTC through
+**[OP]** Insights go live one per day from 13:07 UTC (later fallback slots catch a skipped run) through
 [`.github/workflows/scheduled-publish.yml`](.github/workflows/scheduled-publish.yml), not by merging
 a batch PR by hand.
 
