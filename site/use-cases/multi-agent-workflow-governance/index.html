@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="How Mneme HQ governs multi-step AI development workflows — ensuring every agent in a planner-coder-reviewer pipeline respects architectural rules, anti-patterns, and prior decisions." />
+  <meta name="description" content="How Mneme HQ governs multi-step AI development workflows: one decision store for every agent in a planner-coder-reviewer pipeline, with a check on each stage you gate." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/use-cases/multi-agent-workflow-governance/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Multi-Agent Workflow Governance | Mneme HQ" />
-  <meta property="og:description" content="A shared decision layer every agent in your pipeline can query. Mneme HQ enforces architectural rules across planner, coder, and reviewer stages of automated AI workflows." />
+  <meta property="og:description" content="A shared decision layer every agent in your pipeline can query. Mneme HQ checks the output of each stage you gate in an automated AI workflow against your architectural rules." />
   <meta property="og:url" content="https://mnemehq.com/use-cases/multi-agent-workflow-governance/" />
   <meta property="og:image" content="https://mnemehq.com/use-cases/multi-agent-workflow-governance/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Comparison: One memory layer for every agent. Give orchestrators, subagents, and pipelines a shared architectural context they can&#x27;t drift from." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Multi-Agent Workflow Governance | Mneme HQ" />
-  <meta name="twitter:description" content="A shared decision layer every agent in your pipeline can query. Mneme HQ enforces architectural rules across planner, coder, and reviewer stages of automated AI workflows." />
+  <meta name="twitter:description" content="A shared decision layer every agent in your pipeline can query. Mneme HQ checks the output of each stage you gate in an automated AI workflow against your architectural rules." />
   <meta name="twitter:image" content="https://mnemehq.com/use-cases/multi-agent-workflow-governance/og-v2.png" />
 <meta name="twitter:image:alt" content="Comparison: One memory layer for every agent. Give orchestrators, subagents, and pipelines a shared architectural context they can&#x27;t drift from." />
   <!-- Consent defaults -->
@@ -200,10 +200,10 @@
     {
       "@type": "WebPage",
       "name": "Multi-Agent Workflow Governance",
-      "description": "A shared decision corpus every agent in your pipeline can query. Mneme HQ enforces architectural rules across planner, coder, and reviewer stages.",
+      "description": "A shared decision corpus every agent in your pipeline can query. Mneme HQ checks the output of each stage you gate against your architectural rules.",
       "url": "https://mnemehq.com/use-cases/multi-agent-workflow-governance/",
       "datePublished": "2026-04-15",
-      "dateModified": "2026-05-10",
+      "dateModified": "2026-10-23",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -221,22 +221,22 @@
         {
           "@type": "Question",
           "name": "Does Mneme HQ work as a Python library or only as a CLI?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Mneme HQ exposes both a CLI (mneme check) and a Python API (from mneme import check), so it can be embedded directly into orchestration code — LangGraph, custom pipelines, or any Python-based agent framework." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Checks run through the command-line interface (CLI): call mneme check from your orchestrator as a subprocess, as the shipped Claude Agent SDK adapter does. The installed mneme package also has a Python API for decision storage, retrieval and context construction, which the Claude Agent SDK and LangChain adapters build on." }
         },
         {
           "@type": "Question",
           "name": "Can different agents query different subsets of decisions?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use --tags to scope checks per stage — e.g., --tags architecture for the planner, --tags security,compliance for the coder, and no filter for the reviewer to see everything." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Not by tag or by stage: mneme check has no filter flag. A query returns the decisions whose scope and text match it, and decision.applicable_to on the MCP server returns the decisions for given file paths. Typed rules apply across the whole corpus, limited only by their own path selectors, so a planner and a coder checked against the same file path get the same verdict." }
         },
         {
           "@type": "Question",
           "name": "How does this position Mneme HQ relative to single-agent copilots?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Single-agent copilots enforce decisions at one point in the workflow. Mneme HQ as a shared memory layer scales that enforcement to every stage of a multi-agent pipeline — making it infrastructure for AI-assisted development, not just a copilot add-on." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A hook checks one agent's writes. Claude Code, Codex CLI and Kiro CLI 3.0 check supported writes before they reach disk, and only Claude Code and Codex CLI check shell writes, at the end of the turn. In a pipeline, Mneme gives every stage the same decision store, and the checks you add between stages and in CI cover the agents that have no hook." }
         },
         {
           "@type": "Question",
           "name": "What agent frameworks does this work with?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Mneme HQ is framework-agnostic. It works anywhere you can run a Python function or shell command — LangChain, LangGraph, Claude Agent SDK, AutoGen, custom pipelines, or plain subprocess calls from any orchestrator." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Any orchestrator that can run a shell command can call mneme check between stages. Shipped adapters exist for the Claude Agent SDK and for LangChain agent middleware on LangGraph. The middleware checks write_file and edit_file only, and graphs that run tools through their own custom nodes bypass it. AutoGen and other frameworks have no adapter: call the CLI between stages and keep the CI check as the backstop." }
         }
       ]
     }
@@ -264,7 +264,7 @@
 </nav>
 
 <div class="answer-capsule">
-  <strong>Mneme HQ</strong> governs multi-step AI development workflows by acting as a shared decision and control layer that every agent in the pipeline can query. Whether a planner agent is scoping work, a coder agent is generating implementation, or a reviewer agent is evaluating output — all stages check the same decision store, ensuring architectural rules and anti-patterns are respected across the entire automated workflow. Memory tools recall context. Mneme governs implementation.
+  <strong>Mneme HQ</strong> gives a multi-step AI development workflow one shared decision store. A planner agent can receive the decisions that match its task before it scopes the work. Your orchestrator runs <code>mneme check</code> on what a coder agent wrote before a reviewer agent sees it, and the continuous integration (CI) check runs again on the pull request. Decisions with a typed rule get a deterministic verdict; the rest reach agents as guidance. Memory tools recall context. Mneme governs implementation.
 </div>
 
 <main id="main-content" tabindex="-1">
@@ -275,7 +275,7 @@
   <div class="hero">
     <div class="hero-tag">Reference Architecture · Simulated Scenario</div>
     <h1>Governing Multi-Step AI Development Workflows with Mneme HQ</h1>
-    <p class="hero-sub">Give every agent in your pipeline — planner, coder, reviewer, deployer — a shared memory of your architectural decisions. One decision store. Every stage enforced.</p>
+    <p class="hero-sub">Give every agent in your pipeline (planner, coder, reviewer, deployer) a shared memory of your architectural decisions. One decision store. A check at every stage you gate.</p>
     <div class="cta-group">
       <a href="/docs/#quickstart" class="btn-primary">Install Mneme</a>
       <a href="https://github.com/MnemeHQ/mneme" class="btn-ghost">View GitHub</a>
@@ -314,13 +314,13 @@
       <rect x="490" y="18" width="240" height="254" rx="10" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
       <text x="610" y="52" font-family="monospace" font-size="9" fill="#b5cc7a" text-anchor="middle" letter-spacing="4">Mneme HQ</text>
       <text x="610" y="80" font-family="monospace" font-size="15" fill="#e8e8ec" text-anchor="middle">Decision Store</text>
-      <text x="610" y="104" font-family="monospace" font-size="9" fill="#88889a" text-anchor="middle">decisions/*.yml</text>
+      <text x="610" y="104" font-family="monospace" font-size="9" fill="#88889a" text-anchor="middle">.mneme/project_memory.json</text>
       <!-- Divider -->
       <line x1="510" y1="118" x2="710" y2="118" stroke="#222226" stroke-width="1"/>
       <text x="610" y="138" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">shared across all stages</text>
-      <text x="610" y="158" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">semantic retrieval per query</text>
-      <text x="610" y="178" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">violations block next stage</text>
-      <text x="610" y="198" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">full audit trail per run</text>
+      <text x="610" y="158" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">keyword retrieval per query</text>
+      <text x="610" y="178" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">strict exit code gates stage</text>
+      <text x="610" y="198" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">JSON verdict per check</text>
       <!-- Connection lines from each agent right edge → Mneme HQ left edge -->
       <!-- Planner (right=220, cy=48) → Mneme HQ left (490, 75) -->
       <line x1="220" y1="48" x2="490" y2="75" stroke="#2e2e34" stroke-width="1" stroke-dasharray="4 3"/>
@@ -340,29 +340,29 @@
   <div class="section-wrap">
     <div class="section-eyebrow">The Problem</div>
     <h2 class="section-title">Each agent in your pipeline starts with zero project memory.</h2>
-    <p class="prose">Multi-agent development workflows — where a planner scopes tasks, a coder implements them, and a reviewer validates the output — are increasingly common. But each agent operates independently. The planner doesn't know what the coder knows. The reviewer doesn't know what was decided three sprints ago. Without a shared memory layer, architectural drift compounds at every stage of the pipeline.</p>
-    <p class="prose" style="margin-top:1rem;">The result: the planner proposes approaches that violate architecture rules, the coder implements them, and the reviewer — lacking the decision context — approves code that breaks conventions the whole team agreed on months ago.</p>
+    <p class="prose">Multi-agent development workflows, where a planner scopes tasks, a coder implements them, and a reviewer validates the output, are increasingly common. But each agent operates independently. The planner doesn't know what the coder knows. The reviewer doesn't know what was decided three sprints ago. Without a shared memory layer, architectural drift compounds at every stage of the pipeline.</p>
+    <p class="prose" style="margin-top:1rem;">The result: the planner proposes approaches that violate architecture rules, the coder implements them, and the reviewer, lacking the decision context, approves code that breaks conventions the whole team agreed on months ago.</p>
 
     <div class="pipeline">
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 1</div>
         <h3>Planner</h3>
-        <p>Scopes tasks, picks approaches — no memory of past decisions</p>
+        <p>Scopes tasks and picks approaches with no memory of past decisions</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 2</div>
         <h3>Coder</h3>
-        <p>Implements the plan — violates architecture rules it can't see</p>
+        <p>Implements the plan and breaks architecture rules it can't see</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 3</div>
         <h3>Reviewer</h3>
-        <p>Evaluates output — approves violations it has no context to catch</p>
+        <p>Evaluates output and approves violations it has no context to catch</p>
       </div>
       <div class="pipeline-stage">
         <div class="pipeline-badge">Stage 4</div>
         <h3>Deployer</h3>
-        <p>Ships — architectural drift reaches production</p>
+        <p>Ships, and architectural drift reaches production</p>
       </div>
     </div>
 
@@ -370,7 +370,7 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
-          <span class="panel-label bad">Without Mneme HQ — planner proposes:</span>
+          <span class="panel-label bad">Without Mneme HQ, the planner proposes:</span>
         </div>
         <div class="panel-body">
           <div class="panel-prompt">Task: "Build a search feature"</div>
@@ -380,15 +380,15 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-dot"></div><div class="panel-dot"></div><div class="panel-dot"></div>
-          <span class="panel-label good">With Mneme HQ — gate before planning:</span>
+          <span class="panel-label good">With Mneme HQ, decisions reach the planner first:</span>
         </div>
         <div class="panel-body good-response">
-          <div class="panel-prompt">mneme check --stage plan</div>
-          <span style="color:#ff5c7a">✗ FAIL</span> decision/no-direct-db-queries<br>
-          Rule: All DB access via repository layer. Raw SQL in handlers banned ADR-004.<br><br>
-          <span style="color:#ff5c7a">✗ FAIL</span> decision/search-via-indexed-view<br>
-          Rule: Search must use the search_index view, not raw table scans.<br><br>
-          <span style="color:var(--accent)">→ Plan rejected before coder agent is invoked.</span>
+          <div class="panel-prompt">mneme test_query --memory .mneme/project_memory.json --query "build a search feature in the handlers"</div>
+          DECISION [ADR-004]: Handlers reach the database through the repository layer<br>
+          &nbsp;&nbsp;Scope: handlers<br><br>
+          DECISION [ADR-007]: Search reads the search_index view, not raw tables<br>
+          &nbsp;&nbsp;Scope: search<br><br>
+          <span style="color:var(--accent)">→ The planner starts from both decisions. Guidance only: the check on the coder's files is what blocks.</span>
         </div>
       </div>
     </div>
@@ -402,9 +402,9 @@
         <thead><tr><th>Approach</th><th>Limitation</th><th>With Mneme HQ</th></tr></thead>
         <tbody>
           <tr><td>Agent system prompts</td><td>Static; can't cover full decision history; each agent has its own context</td><td>Shared decision store queried by any agent at any stage</td></tr>
-          <tr><td>Shared context window</td><td>Grows too large; stale; not structured for retrieval</td><td>Semantic retrieval — only relevant decisions surfaced per query</td></tr>
-          <tr><td>Reviewer agent</td><td>Evaluates code without decision context; can't catch architecture violations</td><td>Reviewer queries Mneme HQ — violations flagged with rationale</td></tr>
-          <tr><td>CI checks</td><td>Post-pipeline; violations already implemented; expensive to fix</td><td>Gate at each stage — planner, coder, reviewer all pre-checked</td></tr>
+          <tr><td>Shared context window</td><td>Grows too large; stale; not structured for retrieval</td><td>Keyword retrieval: the decisions whose scope and text match the task, the same result on every run</td></tr>
+          <tr><td>Reviewer agent</td><td>Evaluates code without decision context; can't catch architecture violations</td><td>Reviewer gets the JSON verdict, which names the decision and the matched rule</td></tr>
+          <tr><td>CI checks</td><td>Post-pipeline; violations already implemented; expensive to fix</td><td>A check between stages catches the coder's violations first; CI stays as the final check</td></tr>
         </tbody>
       </table>
     </div>
@@ -414,10 +414,10 @@
     <div class="section-eyebrow">How Mneme HQ Solves It</div>
     <h2 class="section-title">A shared architectural decision and control layer for every agent in the pipeline.</h2>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Build a shared decision store</h3><p>All architectural decisions, constraints, and anti-patterns live in one <code>decisions/</code> directory — a single source of truth every agent can query.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Gate each pipeline stage</h3><p>Add a <code>mneme check</code> call before invoking the next agent. If the plan violates decisions, stop before the coder runs. If code violates decisions, stop before the reviewer runs.</p></div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Inject decision context per stage</h3><p>Each agent receives only the decisions relevant to its stage — planners see architecture rules, coders see implementation constraints, reviewers see the full violation report.</p></div></div>
-      <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Log violations for audit</h3><p>Every check is logged. You get a full audit trail of which decisions were evaluated, which violations were caught, and at which stage — across every pipeline run.</p></div></div>
+      <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Build a shared decision store</h3><p>Write your decisions as architecture decision records (ADRs) in <code>docs/adr</code> and import them into <code>.mneme/project_memory.json</code>, one file every stage reads.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Gate each pipeline stage</h3><p>Write each file the coder produces to disk and run <code>mneme check</code> on it before the next agent starts. In strict mode, the default, a WARN exits 1 and a FAIL exits 2, and your orchestrator stops on either. Typed rules match exact text, so a prose plan fails only if it contains a forbidden literal; the check does its real work on code.</p></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Give each stage its decisions</h3><p>Pass each agent the decisions that match its task: <code>mneme test_query</code> for a task description, or <code>decision.applicable_to</code> on the local Model Context Protocol (MCP) server for the files it will touch. Mneme has no stage or tag filter; scope words and path selectors decide what matches.</p></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Keep the verdicts for audit</h3><p>Add <code>--json</code> and store the output. Each verdict names the decision, the rule type, the matched text and the path selector. Mneme does not write a log itself, so your orchestrator keeps the verdicts for each run and records which stage produced them.</p></div></div>
     </div>
   </div>
 
@@ -426,39 +426,43 @@
     <h2 class="section-title">Wiring Mneme HQ into a multi-agent pipeline.</h2>
 
     <div class="code-block">
-      <div class="code-block-label">Pipeline orchestrator — Python pseudocode</div>
-      <pre tabindex="0"><span class="cc"># Before invoking coder agent</span>
-<span class="ck">plan</span> = planner_agent.run(task)
+      <div class="code-block-label">Pipeline orchestrator: Python sketch calling the mneme command-line interface (CLI)</div>
+      <pre tabindex="0"><span class="ck">import</span> json, subprocess
+MEMORY = <span class="cs">".mneme/project_memory.json"</span>
 
-<span class="cs">check</span> = mneme.check(plan, mode=<span class="cs">"strict"</span>, stage=<span class="cs">"plan"</span>)
-<span class="ck">if</span> check.has_violations():
-    <span class="cc"># Return violations to planner for revision</span>
-    plan = planner_agent.revise(plan, violations=check.violations)
+<span class="ck">def</span> mneme(*args):
+    <span class="ck">return</span> subprocess.run([<span class="cs">"mneme"</span>, *args, <span class="cs">"--memory"</span>, MEMORY],
+                          capture_output=True, text=True)
 
-<span class="cc"># Before invoking reviewer agent</span>
-<span class="ck">code</span> = coder_agent.run(plan)
+<span class="cc"># Before invoking the planner: pass it the decisions that match the task</span>
+context = mneme(<span class="cs">"test_query"</span>, <span class="cs">"--query"</span>, task).stdout
+<span class="ck">plan</span> = planner_agent.run(task, context=context)
 
-<span class="cs">check</span> = mneme.check(code, mode=<span class="cs">"strict"</span>, stage=<span class="cs">"code"</span>)
-<span class="ck">if</span> check.has_violations():
-    <span class="cc"># Block reviewer; return to coder with context</span>
-    code = coder_agent.fix(code, violations=check.violations)</pre>
+<span class="cc"># Before invoking the reviewer: check every file the coder wrote</span>
+<span class="ck">files</span> = coder_agent.run(plan)    <span class="cc"># {repo path: draft file on disk}</span>
+<span class="ck">for</span> path, draft <span class="ck">in</span> files.items():
+    result = mneme(<span class="cs">"check"</span>, <span class="cs">"--input"</span>, draft, <span class="cs">"--target-path"</span>, path,
+                   <span class="cs">"--query"</span>, <span class="cs">f"edit to {path}"</span>, <span class="cs">"--json"</span>)
+    <span class="ck">if</span> result.returncode != 0:    <span class="cc"># strict: 1 = WARN, 2 = FAIL or INCOMPLETE</span>
+        verdict = json.loads(result.stdout)
+        coder_agent.fix(path, violations=verdict.get(<span class="cs">"violations"</span>, []))</pre>
     </div>
 
     <div class="code-block">
-      <div class="code-block-label">Terminal — stage-scoped check output</div>
-      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme check</span> <span class="cs">"plan: add search via raw SQL in handler"</span> --stage plan
+      <div class="code-block-label">Terminal: checking the coder's handler before review (simulated output)</div>
+      <pre tabindex="0"><span class="cc">$ </span><span class="ck">mneme check</span> --memory .mneme/project_memory.json \
+    --input out/search.py --target-path app/handlers/search.py \
+    --query <span class="cs">"edit to app/handlers/search.py"</span>
 
-<span class="cc">Checking against 14 decisions (stage: plan)...</span>
+<span style="color:#ff5c7a">FAIL</span>  [ADR-004] FORBID_LITERAL "from app.db.client import" -- trigger: from app.db.client import
+      Handlers reach the database through the repository layer
+      path: app/handlers/search.py via app/handlers/**
+PATH  APPLIED  [ADR-004] app/handlers/search.py via app/handlers/** -- an include selector matched
+<span style="color:#ff5c7a">Result: FAIL</span>
 
-<span style="color:#ff5c7a">✗ FAIL</span> decision/no-direct-db-queries
-  <span class="cc">Stage: plan — approach violates repository layer constraint.</span>
-<span style="color:#ff5c7a">✗ FAIL</span> decision/search-via-indexed-view
-  <span class="cc">Stage: plan — raw table scan violates search architecture decision.</span>
-<span class="cs">✓ PASS</span> decision/search-pagination-required
-<span class="cs">✓ PASS</span> decision/rate-limit-on-search-endpoints
-
-<span style="color:#ff5c7a">Pipeline gate: BLOCKED — 2 violations at plan stage.</span>
-<span class="cc">Coder agent not invoked. Violations returned to planner.</span></pre>
+<span class="cc">$ </span>echo $?
+2
+<span class="cc"># The orchestrator sees exit code 2, skips the reviewer and returns the file to the coder.</span></pre>
     </div>
   </div>
 
@@ -466,20 +470,20 @@
     <div class="section-eyebrow">Simulated Outcome</div>
     <h2 class="section-title">What teams see after adding decision gates to their pipeline.</h2>
     <div class="metrics-row">
-      <div class="metric"><div class="metric-value">4 stages</div><div class="metric-label">where decisions are enforced — planner, coder, reviewer, deployer</div></div>
-      <div class="metric"><div class="metric-value">~0</div><div class="metric-label">architectural violations reaching the reviewer stage</div></div>
-      <div class="metric"><div class="metric-value">1</div><div class="metric-label">shared decision store for all agents — no per-agent prompt duplication</div></div>
+      <div class="metric"><div class="metric-value">3 points</div><div class="metric-label">where decisions apply: context for the planner, a check on the coder's files, and CI</div></div>
+      <div class="metric"><div class="metric-value">~0</div><div class="metric-label">typed-rule violations reaching the reviewer stage</div></div>
+      <div class="metric"><div class="metric-value">1</div><div class="metric-label">shared decision store for all agents, with no per-agent prompt duplication</div></div>
     </div>
-    <div class="simulated-note">These figures are based on a simulated reference scenario — not live customer data.</div>
+    <div class="simulated-note">These figures come from a simulated reference scenario, not live customer data.</div>
   </div>
 
   <div class="section-wrap">
     <div class="section-eyebrow">FAQ</div>
     <h2 class="section-title">Common questions.</h2>
-    <details><summary>Does Mneme HQ work as a Python library or only as a CLI?</summary><div class="faq-body">Mneme HQ exposes both a CLI (<code>mneme check</code>) and a Python API (<code>from mneme import check</code>), so it can be embedded directly into orchestration code — LangGraph, custom pipelines, or any Python-based agent framework.</div></details>
-    <details><summary>Can different agents query different subsets of decisions?</summary><div class="faq-body">Yes. Use <code>--tags</code> to scope checks per stage — e.g., <code>--tags architecture</code> for the planner, <code>--tags security,compliance</code> for the coder, and no filter for the reviewer to see everything.</div></details>
-    <details><summary>How does this position Mneme HQ relative to single-agent copilots?</summary><div class="faq-body">Single-agent copilots enforce decisions at one point in the workflow. Mneme HQ as a shared memory layer scales that enforcement to every stage of a multi-agent pipeline — making it infrastructure for AI-assisted development, not just a copilot add-on.</div></details>
-    <details><summary>What agent frameworks does this work with?</summary><div class="faq-body">Mneme HQ is framework-agnostic. It works anywhere you can run a Python function or shell command — LangChain, LangGraph, Claude Agent SDK, AutoGen, custom pipelines, or plain subprocess calls from any orchestrator.</div></details>
+    <details><summary>Does Mneme HQ work as a Python library or only as a CLI?</summary><div class="faq-body">Checks run through the command-line interface (CLI): call <code>mneme check</code> from your orchestrator as a subprocess, as the shipped Claude Agent SDK adapter does. The installed <code>mneme</code> package also has a Python API for decision storage, retrieval and context construction, which the Claude Agent SDK and LangChain adapters build on.</div></details>
+    <details><summary>Can different agents query different subsets of decisions?</summary><div class="faq-body">Not by tag or by stage: <code>mneme check</code> has no filter flag. A query returns the decisions whose scope and text match it, and <code>decision.applicable_to</code> on the MCP server returns the decisions for given file paths. Typed rules apply across the whole corpus, limited only by their own path selectors, so a planner and a coder checked against the same file path get the same verdict.</div></details>
+    <details><summary>How does this position Mneme HQ relative to single-agent copilots?</summary><div class="faq-body">A hook checks one agent's writes. Claude Code, Codex CLI and Kiro CLI 3.0 check supported writes before they reach disk, and only Claude Code and Codex CLI check shell writes, at the end of the turn. In a pipeline, Mneme gives every stage the same decision store, and the checks you add between stages and in CI cover the agents that have no hook.</div></details>
+    <details><summary>What agent frameworks does this work with?</summary><div class="faq-body">Any orchestrator that can run a shell command can call <code>mneme check</code> between stages. Shipped adapters exist for the Claude Agent SDK and for LangChain agent middleware on LangGraph. The middleware checks <code>write_file</code> and <code>edit_file</code> only, and graphs that run tools through their own custom nodes bypass it. AutoGen and other frameworks have no adapter: call the CLI between stages and keep the CI check as the backstop.</div></details>
   </div>
 
   <div class="related-wrap">
