@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20260921">
-  <meta name="description" content="Centralize architectural standards across AI coding workflows. One decision corpus per repository, checked by agent hooks and CI. No rules sprawl." />
+  <meta name="description" content="Check AI coding assistants against one decision corpus per repository: hooks where agents write, CI on every pull request. No rules sprawl." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/for/platform/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="For Platform &amp; DevEx Teams — Mneme HQ" />
-  <meta property="og:description" content="Centralize architectural standards across AI coding workflows. One decision corpus per repository, checked by agent hooks and CI. No rules sprawl." />
+  <meta property="og:description" content="Check AI coding assistants against one decision corpus per repository: hooks where agents write, CI on every pull request. No rules sprawl." />
   <meta property="og:url" content="https://mnemehq.com/for/platform/" />
   <meta property="og:image" content="https://mnemehq.com/for/platform/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Governance tooling for every team" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="For Platform &amp; DevEx Teams — Mneme HQ" />
-  <meta name="twitter:description" content="Centralize architectural standards across AI coding workflows. One decision corpus per repository, checked by agent hooks and CI. No rules sprawl." />
+  <meta name="twitter:description" content="Check AI coding assistants against one decision corpus per repository: hooks where agents write, CI on every pull request. No rules sprawl." />
   <meta name="twitter:image" content="https://mnemehq.com/for/platform/og-v2.png" />
 <meta name="twitter:image:alt" content="Governance tooling for every team" />
 
@@ -229,8 +229,8 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          {"@type": "Question", "name": "Does this replace our existing policy-as-code tooling?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme checks AI-generated code against your recorded decisions: before a supported write reaches disk, and in CI on the pull request. Existing policy-as-code tools, such as Open Policy Agent (OPA), Sentinel and custom linters, govern deployed configuration and infrastructure, and Mneme does not enforce infrastructure policy. The two work on different artifacts. Mneme catches architectural drift in code; OPA-style tooling stops misconfigured deployments from being applied."}},
-          {"@type": "Question", "name": "How does this fit alongside CodeRabbit, Sentry, or post-generation reviewers?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme works before a change lands: it gives the agent the matching decisions where the harness allows it, and checks a supported write before it reaches disk. Review tools read the change after it exists. Both layers are useful: Mneme stops typed-rule violations before review, which leaves review tools free for correctness, security, and judgment calls. See Mneme vs CodeRabbit and Review Is Not Governance."}},
+          {"@type": "Question", "name": "Does this replace our existing policy-as-code tooling?", "acceptedAnswer": {"@type": "Answer", "text": "No. Mneme checks AI-generated code against your recorded decisions: before a supported write reaches disk, and in CI on the pull request. Policy-as-code tools such as Open Policy Agent (OPA) and HashiCorp Sentinel govern deployed configuration and infrastructure, and Mneme does not enforce infrastructure policy. The two work on different artifacts. Mneme catches architectural drift in code; OPA-style tooling stops misconfigured deployments from being applied."}},
+          {"@type": "Question", "name": "How does this fit alongside CodeRabbit or other post-generation reviewers?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme works before a change lands: it gives the agent the matching decisions where the agent tool accepts extra context, and checks a supported write before it reaches disk. Review tools read the change after it exists. Both layers are useful: in strict mode, Mneme stops typed-rule violations in supported writes before review, which leaves review tools free for correctness, security, and judgment calls. See Mneme vs CodeRabbit and Review Is Not Governance."}},
           {"@type": "Question", "name": "What does the rollout look like for a 50-engineer org?", "acceptedAnswer": {"@type": "Answer", "text": "A sequence we suggest: pilot in one repo with the platform team's own ADRs (week 1–2), wire up the GitHub Actions gate in warn mode (week 3), expand to two or three more repos with team-owned tier-2 decisions (month 2), turn the gate to strict on the most architecturally-stable repos (month 3). Teams write decisions as ADR markdown files with YAML frontmatter, which they already review, not in a custom domain-specific language (DSL)."}}
         ]
       }
@@ -269,7 +269,7 @@
   <!-- HERO -->
   <div class="hero">
     <div class="hero-tag">For Platform &amp; DevEx Teams</div>
-    <h1>Centralize Architectural Standards Across AI Coding Workflows</h1>
+    <h1>Check AI Coding Assistants Against One Decision Corpus per Repository</h1>
     <p class="hero-sub">Every team has their own .cursorrules, their own system prompts, their own interpretation of the standards. Mneme HQ gives each repository one structured decision corpus, which the agent hooks, the local Model Context Protocol (MCP) server and the continuous integration (CI) check all read.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
@@ -309,7 +309,7 @@
       <div class="pain-card">
         <div class="pain-card-num">04</div>
         <h3>Onboarding new teams to AI coding means re-documenting the same standards</h3>
-        <p>Platform teams repeat the same setup work for every new team. There is no reusable distribution mechanism.</p>
+        <p>Platform teams repeat the same setup work for every new team. Mneme does not solve this one yet: it has no way to distribute decisions across repositories, so org-wide architecture decision records (ADRs) are copied into each repository by hand.</p>
       </div>
     </div>
   </div>
@@ -317,16 +317,16 @@
   <!-- SECTION 2: WHAT PLATFORM TEAMS GET -->
   <div class="section-wrap">
     <div class="section-eyebrow">What Platform Teams Get</div>
-    <h2 class="section-title">One corpus. Every agent. Every tool.</h2>
+    <h2 class="section-title">One corpus per repo. Hooks where agents write. CI on every pull request.</h2>
 
     <div class="cap-grid">
       <div class="cap-card">
         <h3>Single source of truth</h3>
-        <p><code>.mneme/project_memory.json</code> is the repository's decision record, compiled from your architecture decision records (ADRs) and read by the command-line interface (CLI), the agent hooks and the MCP server. One file per repository. One place to update.</p>
+        <p><code>.mneme/project_memory.json</code> is the repository's decision record, compiled from your ADRs and read by the command-line interface (CLI), the agent hooks and the MCP server. One file per repository. One place to update.</p>
       </div>
       <div class="cap-card">
         <h3>Scoped rules</h3>
-        <p>A typed literal rule carries path selectors such as <code>payments/**</code>, so a payments rule fails a write under <code>payments/</code> and passes the same text in <code>analytics/</code>. Agents look up the decisions for a task or a file path.</p>
+        <p>A typed rule is an exact text ban (<code>FORBID_LITERAL</code>) that Mneme checks mechanically, not as guidance. It can carry path selectors such as <code>payments/**</code>, so a payments rule fails a write under <code>payments/</code> and passes the same text in <code>analytics/</code>. Agents look up the decisions for a task or a file path.</p>
       </div>
       <div class="cap-card">
         <h3>Conflict resolution</h3>
@@ -334,7 +334,7 @@
       </div>
       <div class="cap-card">
         <h3>Enforcement where agents write</h3>
-        <p>Hooks in Claude Code, Codex CLI and Kiro CLI 3.0 check a supported write before it reaches disk. Agents without a hook, such as GitHub Copilot, meet the CI check on the pull request. Each developer still installs the runtime and the hook.</p>
+        <p>Hooks in Claude Code, Codex CLI and Kiro CLI 3.0 check a supported write before it reaches disk. A supported write is a file change made through the agent's own edit tool: Edit, Write and MultiEdit in Claude Code, apply_patch in Codex CLI, native writes in Kiro CLI 3.0. Agents without a hook, such as GitHub Copilot, meet the CI check on the pull request. Each developer still installs the runtime and the hook.</p>
       </div>
     </div>
   </div>
@@ -357,7 +357,7 @@
     <div class="use-case-grid">
       <a href="/use-cases/coding-assistant-governance/" class="use-case-card">
         <h3>AI Coding Assistant Governance</h3>
-        <p>Enforce architectural standards across every AI coding assistant in your organization from a single decision corpus.</p>
+        <p>Check each AI coding assistant's changes against your repository's decision corpus, through its hook where it has one and through CI where it doesn't.</p>
         <span class="card-arrow">Read use case &rarr;</span>
       </a>
       <a href="/use-cases/multi-agent-workflow-governance/" class="use-case-card">
@@ -372,10 +372,10 @@
   <div class="section-wrap">
     <h2 class="section-title">How platform teams roll this out</h2>
     <p style="color:var(--muted); line-height:1.85; margin-bottom:1.1rem;">We suggest three tiers of ownership. Each tier belongs to a different part of the org, and all three end up as ADRs in the repository the agents work in.</p>
-    <p style="color:var(--muted); line-height:1.85; margin-bottom:1.1rem;"><strong style="color:var(--text);">Tier 1: org-wide policy.</strong> A small set of decisions every repo should carry: approved dependencies, security patterns, observability conventions. Owned by platform / security. Mneme has no cross-repository import yet, so the platform team copies these ADRs into each repo's <code style="font-family:'DM Mono',monospace;font-size:0.82em;">docs/adr</code> folder, marked <code style="font-family:'DM Mono',monospace;font-size:0.82em;">priority: foundational</code>, and each repo imports them.</p>
+    <p style="color:var(--muted); line-height:1.85; margin-bottom:1.1rem;"><strong style="color:var(--text);">Tier 1: org-wide policy.</strong> A small set of decisions every repo should carry: approved dependencies, security patterns, observability conventions. Owned by platform / security. Mneme has no cross-repository import yet, so the platform team copies these ADRs into each repo's <code style="font-family:'DM Mono',monospace;font-size:0.82em;">docs/adr</code> folder with the highest priority value, <code style="font-family:'DM Mono',monospace;font-size:0.82em;">foundational</code> (above <code style="font-family:'DM Mono',monospace;font-size:0.82em;">normal</code> and <code style="font-family:'DM Mono',monospace;font-size:0.82em;">exception</code>), and each repo imports them.</p>
     <p style="color:var(--muted); line-height:1.85; margin-bottom:1.1rem;"><strong style="color:var(--text);">Tier 2: team architecture.</strong> Service boundaries, language and framework choices, data-access patterns. Owned by the team that operates the service. Lives in the repo's own ADRs, compiled into its <code style="font-family:'DM Mono',monospace;font-size:0.82em;">project_memory.json</code>.</p>
     <p style="color:var(--muted); line-height:1.85; margin-bottom:1.1rem;"><strong style="color:var(--text);">Tier 3: exceptions.</strong> Mneme 0.10.0 has no waiver or override record, and nothing expires. You write an exception as an ADR change: an <code style="font-family:'DM Mono',monospace;font-size:0.82em;">exclude_paths</code> selector on the broader rule, or a new ADR that supersedes it. The engineer making the change owns it, and the team reviews it in the pull request like any other diff. Mneme does not record who approved it, so that review is your approval record.</p>
-    <p style="color:var(--muted); line-height:1.85;">When you import ADRs, Mneme resolves overlap in a fixed order. An explicit <code style="font-family:'DM Mono',monospace;font-size:0.82em;">supersedes</code> link retires the older decision. When two accepted ADRs share a scope, the higher priority wins, then the newer date, and Mneme stores the other as inactive and stops enforcing it. A narrower scope does not override a broader one: both stay active and both are checked. Resolving which decisions govern a change across org, team and exception layers is design direction under ADR-031, not part of any release. Today you get one reviewed corpus per repository, which agents can read over MCP, hooks check before supported writes, and CI checks on every pull request.</p>
+    <p style="color:var(--muted); line-height:1.85;">When you import ADRs, Mneme resolves overlap in a fixed order. An explicit <code style="font-family:'DM Mono',monospace;font-size:0.82em;">supersedes</code> link retires the older decision. When two accepted ADRs share a scope, the higher priority wins, then the newer date, and Mneme stores the other as inactive and stops enforcing it. A narrower scope does not override a broader one: both stay active and both are checked. Resolving which decisions govern a change across org, team and exception layers is a planned resolution design, not part of any release. Today you get one reviewed corpus per repository, which agents can read over MCP, hooks check before supported writes, and CI checks on every pull request.</p>
   </div>
 
   <!-- SECTION 3.7: FAQ -->
@@ -384,11 +384,11 @@
     <div class="faq-list" style="margin-top:0.5rem;">
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">Does this replace our existing policy-as-code tooling?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. Mneme checks AI-generated code against your recorded decisions: before a supported write reaches disk, and in CI on the pull request. Existing policy-as-code tools, such as Open Policy Agent (OPA), Sentinel and custom linters, govern deployed configuration and infrastructure, and Mneme does not enforce infrastructure policy. The two work on different artifacts. Mneme catches architectural drift in code; OPA-style tooling stops misconfigured deployments from being applied.</div>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">No. Mneme checks AI-generated code against your recorded decisions: before a supported write reaches disk, and in CI on the pull request. Policy-as-code tools such as Open Policy Agent (OPA) and HashiCorp Sentinel govern deployed configuration and infrastructure, and Mneme does not enforce infrastructure policy. The two work on different artifacts. Mneme catches architectural drift in code; OPA-style tooling stops misconfigured deployments from being applied.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); padding:1.05rem 0;">
-        <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">How does this fit alongside CodeRabbit, Sentry, or post-generation reviewers?</summary>
-        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme works before a change lands: it gives the agent the matching decisions where the harness allows it, and checks a supported write before it reaches disk. Review tools read the change after it exists. Both layers are useful: Mneme stops typed-rule violations before review, which leaves review tools free for correctness, security, and judgment calls. See <a href="/compare/coderabbit/" style="color:var(--accent);">Mneme vs CodeRabbit</a> and <a href="/insights/review-is-not-governance/" style="color:var(--accent);">Review Is Not Governance</a>.</div>
+        <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">How does this fit alongside CodeRabbit or other post-generation reviewers?</summary>
+        <div style="padding-top:0.85rem; font-size:0.85rem; color:var(--muted); line-height:1.8;">Mneme works before a change lands: it gives the agent the matching decisions where the agent tool accepts extra context, and checks a supported write before it reaches disk. Review tools read the change after it exists. Both layers are useful: in strict mode, Mneme stops typed-rule violations in supported writes before review, which leaves review tools free for correctness, security, and judgment calls. See <a href="/compare/coderabbit/" style="color:var(--accent);">Mneme vs CodeRabbit</a> and <a href="/insights/review-is-not-governance/" style="color:var(--accent);">Review Is Not Governance</a>.</div>
       </details>
       <details class="faq-item" style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:1.05rem 0;">
         <summary style="cursor:pointer; font-size:0.92rem; color:var(--text); font-weight:500; list-style:none; position:relative; padding-right:2rem;">What does the rollout look like for a 50-engineer org?</summary>
@@ -399,7 +399,7 @@
 
   <!-- SECTION 4: CTA -->
   <div class="cta-footer">
-    <h2>One corpus. All agents. All tools.</h2>
+    <h2>One corpus per repo. Hooks where agents write. CI on every pull request.</h2>
     <div class="cta-group">
       <a href="/pilot/" class="cta-btn-primary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="hero_cluster">Request a pilot</a>
       <a href="/use-cases/" class="btn-ghost">See all use cases</a>
