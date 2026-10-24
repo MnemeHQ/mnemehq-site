@@ -405,7 +405,7 @@
 
   <div class="section-wrap">
     <div class="section-eyebrow">Why Existing Tools Fall Short</div>
-    <h2 class="section-title">Orchestration layers coordinate agents; they don't check output against your project's decisions.</h2>
+    <h2 class="section-title">Orchestration layers coordinate agents; out of the box, they don't check output against your project's recorded decisions.</h2>
     <div class="rag-table-wrap">
       <table class="rag-table">
         <thead><tr><th>Approach</th><th>Limitation</th><th>With Mneme HQ</th></tr></thead>
@@ -424,7 +424,7 @@
     <h2 class="section-title">A shared architectural decision and control layer for every agent in the pipeline.</h2>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Build a shared decision store</h3><p>Write your decisions as architecture decision records (ADRs) in <code>docs/adr</code> and import them into <code>.mneme/project_memory.json</code>, one file every stage reads.</p></div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Gate each pipeline stage</h3><p>Write each file the coder produces to disk and run <code>mneme check</code> on it before the next agent starts. In strict mode, the default, a WARN exits 1 and a FAIL exits 2, and your orchestrator stops on either. A typed rule is an exact text ban (<code>FORBID_LITERAL</code>) that Mneme checks mechanically, so a prose plan fails or warns only if it contains a forbidden literal, an anti-pattern or a constraint term; the check does its real work on code.</p></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Gate each pipeline stage</h3><p>Write each file the coder produces to disk and run <code>mneme check</code> on it before the next agent starts. In strict mode, the default, a WARN exits 1 and a FAIL exits 2, and your orchestrator stops on either. The typed rule that can fail a check and respect paths is an exact text ban (<code>FORBID_LITERAL</code>), which Mneme checks mechanically, so a prose plan fails or warns only if it contains a forbidden literal, an anti-pattern or a constraint term; the check does its real work on code.</p></div></div>
       <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Give each stage its decisions</h3><p>Pass each agent the decisions that match its task: <code>mneme test_query</code> for a task description, or <code>decision.applicable_to</code> on the local Model Context Protocol (MCP) server for the files it will touch. Mneme has no stage or tag filter; scope words and path selectors decide what matches.</p></div></div>
       <div class="step"><div class="step-num">4</div><div class="step-body"><h3>Keep the verdicts for audit</h3><p>Add <code>--json</code> and store the output. Each verdict names the decision, the rule type, the matched text and the path selector. Mneme does not write a log itself, so your orchestrator keeps the verdicts for each run and records which stage produced them.</p></div></div>
     </div>
