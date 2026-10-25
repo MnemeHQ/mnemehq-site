@@ -1,6 +1,6 @@
 # Scope brief: Post-Open Architecture Page Assessment
 
-Status: **gathered, not built**
+Status: **parked** (owner decision 2026-10-25, TheoV823): no spec or site work until the O1 validation produces results. Revisit then; the open question of where the spec lives (an ADR in `MnemeHQ/mneme` or this repo) is deferred with it.
 
 | Field | Value |
 |---|---|
