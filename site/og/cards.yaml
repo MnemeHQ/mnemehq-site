@@ -80,13 +80,12 @@ benchmark/:
   sup: 36 scenarios. Structured fixtures. Deterministic retrieval.
 compare/:
   accent: vs
-  alt: 'Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory, RAG. How
-    each compares to pre-generation enforcement.'
+  alt: 'Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory and RAG compared with Mneme HQ, which checks supported agent writes and blocks in strict mode.'
   boxes:
-    - {label: ALTERNATIVES, value: Advisory, verdict: MODEL MAY IGNORE, kind: warn}
-    - {label: MNEME HQ, value: Enforced, verdict: BLOCKS AT EDIT/WRITE, kind: accent}
+    - {label: ALTERNATIVES, value: Varies by tool, verdict: 'REVIEW, RULES, MEMORY, RAG', kind: warn}
+    - {label: MNEME HQ, value: Checks supported writes, verdict: BLOCKS IN STRICT MODE, kind: accent}
+  card: og-v3.png
   headline: Mneme HQ vs the Alternatives
-  sup: CodeRabbit, Cursor Rules, Claude Code memory, RAG vs pre-generation enforcement.
 compare/aider/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Aider. Aider is one of the best terminal pair programmers. Mneme is the
@@ -115,13 +114,13 @@ compare/claude-md/:
   sup: CLAUDE.md tells the model rules. Mneme enforces the essential ones.
 compare/coderabbit/:
   accent: vs
-  alt: 'Comparison: Mneme HQ vs CodeRabbit. CodeRabbit reviews code after it''s written. Mneme HQ enforces
-    constraints before generation.'
+  alt: 'Comparison: Mneme HQ vs CodeRabbit. CodeRabbit reviews a change with AI once it exists. Mneme HQ
+    enforces typed rules before supported agent writes and in CI.'
   boxes:
-    - {label: CODERABBIT, value: Post-generation, verdict: SUGGESTS IN PR COMMENTS, kind: warn}
-    - {label: MNEME HQ, value: Pre-generation, verdict: BLOCKS AT VIOLATION, kind: accent}
+    - {label: CODERABBIT, value: Reviews changes, verdict: 'AI REVIEW, PR + LOCAL', kind: warn}
+    - {label: MNEME HQ, value: Enforces decisions, verdict: 'BEFORE SUPPORTED WRITES, IN CI', kind: accent}
+  card: og-v3.png
   headline: Mneme HQ vs CodeRabbit
-  sup: CodeRabbit reviews written code. Mneme enforces constraints before generation.
 compare/continue-dev/:
   accent: vs
   alt: 'Comparison: Mneme HQ vs Continue.dev. Continue rules are configuration the model interprets. Mneme
