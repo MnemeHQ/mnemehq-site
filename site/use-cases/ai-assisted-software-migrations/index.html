@@ -201,7 +201,7 @@
       "description": "During a migration a repository holds more legacy examples than target ones. Mneme HQ scopes each architectural decision to the paths it governs so AI coding agents build toward the target architecture.",
       "url": "https://mnemehq.com/use-cases/ai-assisted-software-migrations/",
       "datePublished": "2026-08-28",
-      "dateModified": "2026-08-28",
+      "dateModified": "2026-10-25",
       "author": {
         "@type": "Person",
         "name": "Theo Valmis",
@@ -219,7 +219,7 @@
         {
           "@type": "Question",
           "name": "How is this different from putting the migration plan in the prompt?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A prompt is advisory and is dropped when context is compacted. Compiled decisions are queried before generation in every session, so the constraint survives a migration that runs across many sessions, many agents, and many months." }
+          "acceptedAnswer": { "@type": "Answer", "text": "A prompt is advisory and is dropped when context is compacted. Typed rules live outside the prompt. Pre-write hooks check supported agents’ native writes, and a strict CI gate checks each pull request whichever agent produced it, so the constraint survives a migration that runs across many sessions, agents and months." }
         },
         {
           "@type": "Question",
@@ -234,7 +234,7 @@
         {
           "@type": "Question",
           "name": "Do we have to model the whole migration before this is useful?",
-          "acceptedAnswer": { "@type": "Answer", "text": "No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover most incorrect pattern copying, and further boundaries are added as the migration proceeds." }
+          "acceptedAnswer": { "@type": "Answer", "text": "No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. A few scoped decisions on that boundary are a reasonable start, and you add further boundaries as the migration proceeds." }
         }
       ]
     }
@@ -312,7 +312,7 @@
       <polygon points="690,50 701,54 690,58" fill="#2e2e34"/>
       <!-- Node 4: Enforcement (accent) -->
       <rect x="701" y="24" width="195" height="60" rx="8" fill="#141416" stroke="#b5cc7a" stroke-width="1.5"/>
-      <text x="798" y="46" font-family="monospace" font-size="9.5" fill="#b5cc7a" text-anchor="middle">before generation</text>
+      <text x="798" y="46" font-family="monospace" font-size="9.5" fill="#b5cc7a" text-anchor="middle">pre-write and CI</text>
       <text x="798" y="66" font-family="monospace" font-size="12" fill="#e8e8ec" text-anchor="middle">Enforcement</text>
       <text x="798" y="80" font-family="monospace" font-size="8.5" fill="#88889a" text-anchor="middle">target architecture holds</text>
     </svg>
@@ -377,7 +377,7 @@
           <tr>
             <td>Migration plan in the prompt</td>
             <td>Advisory, and silently dropped when context is compacted mid-session</td>
-            <td>Compiled decisions are evaluated before generation in every session</td>
+            <td>Typed rules sit outside the prompt, in pre-write hooks and a CI gate, so compaction cannot drop them</td>
           </tr>
           <tr>
             <td>Linters and static analysis</td>
@@ -387,7 +387,7 @@
           <tr>
             <td>Code review</td>
             <td>Sees the diff after the wrong pattern was already copied, at AI output volume</td>
-            <td>Enforcement runs before generation and again as a deterministic CI gate</td>
+            <td>Pre-write hooks stop supported agent writes before review, and a strict CI gate checks the pull request</td>
           </tr>
           <tr>
             <td>Deleting the legacy code</td>
@@ -402,14 +402,15 @@
   <!-- HOW Mneme HQ SOLVES IT -->
   <div class="section-wrap" id="how-it-works">
     <div class="section-eyebrow">How Mneme HQ Solves It</div>
-    <h2 class="section-title">Give every migration state its own decision.</h2>
-    <p class="prose">A migration has more than two states. Treating it as "old code" and "new code" is what makes agents guess. Four states are enough to describe almost any migration, and each one maps onto a decision the enforcement layer can resolve.</p>
+    <h2 class="section-title">Give every migration role its own decision.</h2>
+    <p class="prose">A migration has more than two states. Treating it as "old code" and "new code" is what makes agents guess. Four roles cover most migrations: legacy, target, transitional and forbidden reintroduction. Mneme has no field for these roles. You express each one as its own decision, scoped to the paths it governs.</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <h3>Record the four migration states</h3>
-          <p><strong>Legacy</strong> was valid historically and is no longer the model for new work. <strong>Target</strong> is what new and migrated code follows. <strong>Transitional</strong> covers the adapters, dual writes, and compatibility layers that exist only during the cutover. <strong>Forbidden reintroduction</strong> covers the pattern that must not return to a component once it has migrated. That decision stays <code>status: accepted</code> with selectors on the migrated tree; an ADR marked <code>status: superseded</code> is excluded from the active set and stops being enforced.</p>
+          <h3>Record each migration role as a scoped decision</h3>
+          <p><strong>Legacy</strong> was valid historically and is no longer the model for new work. <strong>Target</strong> is what new and migrated code follows. <strong>Transitional</strong> covers the adapters, dual writes, and compatibility layers that exist only during the cutover. <strong>Forbidden reintroduction</strong> covers the pattern that must not return to a component once it has migrated.</p>
+          <p style="margin-top:0.75rem;">These roles are not lifecycle states. In the <a href="/docs/decision-index/" style="color:var(--teal);">Decision Index</a> each decision has one lifecycle status: active, superseded, deprecated or inactive. An Architecture Decision Record (ADR) with <code>status: accepted</code> becomes an active decision, and only active decisions are enforced. An ADR marked <code>status: superseded</code> leaves the active set. Give each role decision its own <code>scope</code>: when two accepted ADRs share a scope, Mneme keeps the higher-priority one and marks the other inactive.</p>
         </div>
       </div>
       <div class="step">
@@ -430,7 +431,7 @@
         <div class="step-num">4</div>
         <div class="step-body">
           <h3>Gate generation and CI on the applicable decision</h3>
-          <p>Run <code>mneme check --mode strict</code> before the agent writes, and again in CI. A migrated module that reaches for the superseded pattern fails against the decision that governs its path, no matter which agent produced the change.</p>
+          <p>Install the pre-write hook for your agent. It checks native write tools before the file changes: Claude Code Edit, Write and MultiEdit, Codex CLI <code>apply_patch</code>, and writes from Kiro CLI 3.0, the command-line version of the Kiro coding agent. Shell writes reach disk first; Claude Code and Codex CLI check them at end of turn. Then add <code>mneme check --mode strict</code> to CI. With that gate in place, a pull request that reaches for the superseded pattern in a migrated module fails against the decision that governs its path, whichever agent wrote it. Only strict mode blocks. Warn mode reports each violation and exits zero, which suits a team still shaping its decisions.</p>
         </div>
       </div>
     </div>
@@ -451,7 +452,7 @@
 <span class="ck">status</span>: accepted
 <span class="ck">priority</span>: foundational
 <span class="ck">date</span>: <span class="cs">"2026-08-28"</span>
-<span class="ck">scope</span>: code
+<span class="ck">scope</span>: data-access
 <span class="cc">---</span>
 
 Direct database access was the standard in the pre-migration architecture.
@@ -497,11 +498,11 @@ keeps its existing calls until its components are migrated.
   <!-- OUTCOME -->
   <div class="section-wrap">
     <div class="section-eyebrow">Simulated Outcome</div>
-    <h2 class="section-title">What changes once migration states are enforced.</h2>
+    <h2 class="section-title">What changes once migration roles are enforced.</h2>
     <div class="metrics-row">
       <div class="metric">
         <div class="metric-value">4</div>
-        <div class="metric-label">migration states encoded per boundary: legacy, target, transitional, superseded</div>
+        <div class="metric-label">migration roles per boundary, each its own scoped decision: legacy, target, transitional, forbidden reintroduction</div>
       </div>
       <div class="metric">
         <div class="metric-value">10:1</div>
@@ -515,6 +516,17 @@ keeps its existing calls until its components are migrated.
     <div class="simulated-note">⚠ These figures describe a simulated reference scenario, not live customer data.</div>
   </div>
 
+  <!-- BEFORE THE MIGRATION (RESEARCH DIRECTION) -->
+  <div class="section-wrap" id="before-the-migration">
+    <div class="section-eyebrow">Research Direction</div>
+    <h2 class="section-title">Before the migration: deciding what must survive.</h2>
+    <p class="prose">A rewrite can match every tested output and still carry forward things nobody meant to keep: a rounding bug, a workaround for an interface retired years ago, a direct database call someone wrote as a shortcut rather than a design. Before the rewrite starts, sort what you recover from the old system into three classes. <strong>Observed</strong> behavior is what the system does today. An <strong>inferred</strong> decision is a reading, by a person or a tool, of why it does that. An <strong>approved</strong> decision is one a named owner has reviewed and agreed must hold in the target system.</p>
+    <p class="prose" style="margin-top:1rem;">Only approved decisions should constrain the migration. Observed behavior feeds parity tests. Inferred decisions are candidates for review. Neither should bind the new system until someone with authority approves it.</p>
+    <p class="prose" style="margin-top:1rem;">For Mneme HQ this is research direction, not a shipped feature. Mneme does not extract business logic from legacy code. Recovering candidate decisions from a legacy system is conceptual work with no validated results.</p>
+    <p class="prose" style="margin-top:1rem;">What ships today starts after approval. A team records the approved decision as an ADR with <code>status: accepted</code> and a typed rule. Accepted is the nearest thing Mneme has to approved: the Decision Index records each version and its source, not who approved it. A typed rule is active while its ADR is accepted, not superseded or deprecated, and not outranked by another accepted ADR in the same scope. Mneme enforces only active rules, through the pre-write hooks and CI gate described above, and blocks only in strict mode.</p>
+    <p class="prose" style="margin-top:1rem;">The full argument is in <a href="/insights/ai-legacy-modernization-what-must-survive/" style="color:var(--teal);">AI Legacy Modernization: What Must Survive the Rewrite?</a> and <a href="/insights/openai-cobol-migration-benchmark-behavioral-parity/" style="color:var(--teal);">what OpenAI's legacy migration benchmark does not measure</a>.</p>
+  </div>
+
   <!-- FAQ -->
   <div class="section-wrap">
     <div class="section-eyebrow">FAQ</div>
@@ -522,7 +534,7 @@ keeps its existing calls until its components are migrated.
 
     <details>
       <summary>How is this different from putting the migration plan in the prompt?</summary>
-      <div class="faq-body">A prompt is advisory and is dropped when context is compacted. Compiled decisions are queried before generation in every session, so the constraint survives a migration that runs across many sessions, many agents, and many months.</div>
+      <div class="faq-body">A prompt is advisory and is dropped when context is compacted. Typed rules live outside the prompt. Pre-write hooks check supported agents’ native writes, and a strict CI gate checks each pull request whichever agent produced it, so the constraint survives a migration that runs across many sessions, agents and months.</div>
     </details>
 
     <details>
@@ -537,7 +549,7 @@ keeps its existing calls until its components are migrated.
 
     <details>
       <summary>Do we have to model the whole migration before this is useful?</summary>
-      <div class="faq-body">No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. Two or three scoped decisions cover most incorrect pattern copying, and further boundaries are added as the migration proceeds.</div>
+      <div class="faq-body">No. Start with the boundary agents cross most often, usually persistence or service-to-service calls. A few scoped decisions on that boundary are a reasonable start, and you add further boundaries as the migration proceeds.</div>
     </details>
   </div>
 
