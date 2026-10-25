@@ -358,7 +358,7 @@
           {
             "@type": "HowToStep",
             "name": "Record decisions with typed rules",
-            "text": "Write the decisions that must hold as ADRs, attach typed rules where an exact literal can express the constraint, and activate protection. Only active decisions with a typed rule are enforced."
+            "text": "Write the decisions that must hold as ADRs with a FORBID_LITERAL rule in the Constraints section and import them with mneme adr import. A rule scoped to paths lives in the ADR. For a repo-wide rule on a decision the audit marks Mneme-ready, mneme protect activate can install it for you. Only active decisions with a typed rule are enforced."
           },
           {
             "@type": "HowToStep",
@@ -418,7 +418,7 @@
       <span class="eyebrow-meta">7 min read &nbsp;&middot;&nbsp; Updated October 2026</span>
     </div>
     <h1>Mneme HQ vs CodeRabbit</h1>
-    <p class="article-lede">CodeRabbit reviews a change once someone, or some agent, has written it. Mneme checks a proposed agent write against your recorded architectural decisions before it reaches disk, and checks the pull request again in CI. The two tools hold different control boundaries, and both can run on the same pull request.</p>
+    <p class="article-lede">CodeRabbit reviews a change once someone, or some agent, has written it. Mneme checks a supported agent write against your recorded architectural decisions before it reaches disk, and checks the pull request again in CI. The two tools hold different control boundaries, and both can run on the same pull request.</p>
     <p class="byline">
       By <a href="/founder/">Theo Valmis</a>
       <span class="sep">&middot;</span>
@@ -484,7 +484,7 @@
         <tr>
           <td>Control surface</td>
           <td>The PR and review system; error-mode checks can block a merge</td>
-          <td>The agent's write tool call, through a hook, and the CI job; both block in strict mode, the default</td>
+          <td>The agent's write tool call, through a hook, and the CI job. The CI job blocks in strict mode, the default. The Claude Code hook defaults to strict and denies on WARN or FAIL. The Codex CLI hook denies on FAIL. Kiro blocks in strict mode.</td>
         </tr>
       </tbody>
     </table>
@@ -496,7 +496,7 @@
       <li><strong>Before the write.</strong> Claude Code Edit, Write and MultiEdit (plus one narrow quoted <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">cat</code> heredoc form), Codex CLI <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">apply_patch</code>, and the native write tools in Kiro CLI 3.0.</li>
       <li><strong>After shell writes.</strong> Writes made through <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">sed -i</code>, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">tee</code> or a script reach disk first. Claude Code and Codex CLI check them at end of turn, when the agent stops and hands control back to you. Kiro CLI does not, so CI catches them there.</li>
       <li><strong>In CI.</strong> <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check</code> runs against the PR diff. Strict is the CI default: the step exits non-zero on WARN or FAIL. Warn mode reports without failing the job.</li>
-      <li><strong>At the hook.</strong> The Claude Code hook also defaults to strict (set with <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">MNEME_HOOK_MODE</code>) and denies a write on WARN or FAIL. In warn mode it never blocks. The Kiro CLI hook has the same two modes.</li>
+      <li><strong>At the hook.</strong> The Claude Code hook defaults to strict (set with <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">MNEME_HOOK_MODE</code>) and denies a write on WARN or FAIL; in warn mode it never blocks. The Codex CLI hook has no modes: it denies on FAIL and shows a WARN without blocking. The Kiro CLI hook blocks in strict mode and only warns in warn mode.</li>
       <li><strong>What gets enforced.</strong> Only active decisions (current ones, not superseded or deprecated) with a typed rule produce a verdict. <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> is the only rule type that gives a FAIL limited to paths; <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_DEPENDENCY</code> gives a repo-wide WARN. A violation names the decision that produced it.</li>
     </ul>
 
@@ -519,7 +519,7 @@
     <h2>Using both</h2>
 
     <ul>
-      <li><strong>Record the decisions that must hold.</strong> Write them as ADRs, attach typed rules where a literal can express the constraint, and activate protection, which installs the typed rule for one decision at a time. See <a href="/docs/protection-activation/" style="color:var(--accent);text-decoration:none;">protection activation</a>.</li>
+      <li><strong>Record the decisions that must hold.</strong> Write them as ADRs with a <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">FORBID_LITERAL</code> rule in the Constraints section and import them with <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme adr import</code>. A rule scoped to paths, like the one above, lives in the ADR. For a repo-wide rule on a decision the audit marks Mneme-ready, <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme protect activate</code> can install it for you. See <a href="/docs/how-to/adr-to-enforceable-decision/" style="color:var(--accent);text-decoration:none;">turn an ADR into an enforceable decision</a> and <a href="/docs/protection-activation/" style="color:var(--accent);text-decoration:none;">protection activation</a>.</li>
       <li><strong>Gate the PR with both.</strong> Run <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">mneme check --mode strict</code> as a CI step next to CodeRabbit's review and pre-merge checks.</li>
       <li><strong>Leave judgment to review.</strong> Correctness, security, readability and design trade-offs stay with CodeRabbit and your human reviewers. Prose guidance that no literal can capture belongs in its path instructions or guideline files.</li>
     </ul>
@@ -587,7 +587,7 @@
     <div class="related-panel-label" id="related-panel-label">Related governance concepts</div>
     <ul class="related-list">
       <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance before generation</div><p class="rel-desc">Enforcement at the point of AI intent, not at the point of human review.</p></a></li>
-      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints enforced at generation time.</p></a></li>
+      <li><a href="/concepts/architectural-governance/"><div class="rel-title">Architectural governance</div><p class="rel-desc">The system that turns team decisions into machine-evaluable constraints, checked at supported agent writes and in CI.</p></a></li>
       <li><a href="/concepts/governance-infrastructure/"><div class="rel-title">Governance infrastructure</div><p class="rel-desc">The platform layer that encodes, distributes, versions, and enforces decisions across agents and CI.</p></a></li>
       <li><a href="/concepts/verification-contracts/"><div class="rel-title">Verification contracts</div><p class="rel-desc">Pre-registered, machine-evaluable assertions that define what a governance check must prove.</p></a></li>
     </ul>
