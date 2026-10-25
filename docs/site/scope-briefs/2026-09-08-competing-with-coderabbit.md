@@ -1,6 +1,6 @@
 # Scope brief: Post-Competing with CodeRabbit
 
-Status: **gathered, not built.** Do not treat as published; no `***` mark.
+Status: **built as a refresh** of `/compare/coderabbit/` (control boundaries, verified CodeRabbit facts, stale claims removed; compare hub and OG cards corrected), merged in [#264](https://github.com/MnemeHQ/mnemehq-site/pull/264) on 2026-10-25, deploy verified at `82c88b76`. The non-article actions listed below were not part of this build.
 
 | Field | Value |
 |---|---|

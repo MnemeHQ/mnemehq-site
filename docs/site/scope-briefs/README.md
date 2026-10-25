@@ -23,8 +23,8 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Cohesion And Reddit Thread](2026-10-04-cohesion-and-reddit-thread.md) | 2026-10-04 | silo insight + inputs to two concept pages | insight 1 published 2026-10-14 (#216); concepts in #214 |
 | [AI Silo Breakdown Content](2026-09-12-ai-silo-breakdown-content.md) | 2026-09-12 | merged | merged into Cohesion's "Return of the Silo Engineer" |
 | [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | published 2026-10-14 (#216) |
-| [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | gathered, not built |
-| [OKF architecture article scope](2026-09-01-okf-architecture-article-scope.md) | 2026-09-01 | update existing insight | gathered, not built |
+| [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | built as a refresh (#264) |
+| [OKF architecture article scope](2026-09-01-okf-architecture-article-scope.md) | 2026-09-01 | update existing insight | built as an update (#266) |
 | [Writing ROI Content (backlog)](2026-09-08-writing-roi-content-backlog.md) | 2026-09-08 (updated 09-10) | insight cluster | resolved: pillar update (#255), 3 queued 11-03 to 11-05 (#258 to #260), rest dropped |
 
 ## Decisions confirmed (2026-10-12, by TheoV823)

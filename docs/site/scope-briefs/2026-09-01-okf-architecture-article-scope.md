@@ -1,6 +1,6 @@
 # Scope brief: Post-OKF architecture article scope
 
-Status: **gathered, not built.** Do not treat as published; no `***` mark.
+Status: **built as an update** to `open-knowledge-format-vs-governance` (new "What OKF v0.2 Changes" section), merged in [#266](https://github.com/MnemeHQ/mnemehq-site/pull/266) on 2026-10-25, deploy verified at `84825b17`. The follow-up OKF compatibility experiment piece stays evidence-gated.
 
 | Field | Value |
 |---|---|
