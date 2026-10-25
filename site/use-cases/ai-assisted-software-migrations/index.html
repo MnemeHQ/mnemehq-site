@@ -229,7 +229,7 @@
         {
           "@type": "Question",
           "name": "What happens to a decision when a component finishes migrating?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Its status changes. A transitional decision that permitted a compatibility adapter is marked superseded once the adapter is removed, and the target decision governs that path from then on. The superseded record stays as the reason the exception existed." }
+          "acceptedAnswer": { "@type": "Answer", "text": "Write a new ADR that lists the transitional one under supersedes and re-import it with --update-existing; the old decision becomes superseded and stops being enforced. Changing the status in the old ADR file alone does not remove its decision. The superseded record stays in the Decision Index as the reason the exception existed." }
         },
         {
           "@type": "Question",
@@ -264,7 +264,7 @@
 
 <!-- GEO / LLM answer capsule -->
 <div class="answer-capsule">
-  <strong>Mneme HQ</strong> governs AI-assisted software migrations by separating legacy, transitional, and target architecture into decisions that coding agents are checked against before they generate code. During a migration a repository contains more examples of the architecture you are leaving than the one you are moving toward, so an agent that infers patterns from the codebase infers the wrong one. Path applicability decides which decision governs which tree. Retrieval tells an agent what exists. Governance tells it what should survive.
+  <strong>Mneme HQ</strong> governs AI-assisted software migrations by separating legacy, transitional, and target architecture into decisions that supported coding agents’ writes are checked against before they land, and again in CI. During a migration a repository contains more examples of the architecture you are leaving than the one you are moving toward, so an agent that infers patterns from the codebase infers the wrong one. Path applicability decides which decision governs which tree. Retrieval tells an agent what exists. Governance tells it what should survive.
 </div>
 
 <main id="main-content" tabindex="-1">
@@ -410,7 +410,7 @@
         <div class="step-body">
           <h3>Record each migration role as a scoped decision</h3>
           <p><strong>Legacy</strong> was valid historically and is no longer the model for new work. <strong>Target</strong> is what new and migrated code follows. <strong>Transitional</strong> covers the adapters, dual writes, and compatibility layers that exist only during the cutover. <strong>Forbidden reintroduction</strong> covers the pattern that must not return to a component once it has migrated.</p>
-          <p style="margin-top:0.75rem;">These roles are not lifecycle states. In the <a href="/docs/decision-index/" style="color:var(--teal);">Decision Index</a> each decision has one lifecycle status: active, superseded, deprecated or inactive. An Architecture Decision Record (ADR) with <code>status: accepted</code> becomes an active decision, and only active decisions are enforced. An ADR marked <code>status: superseded</code> leaves the active set. Give each role decision its own <code>scope</code>: when two accepted ADRs share a scope, Mneme keeps the higher-priority one and marks the other inactive.</p>
+          <p style="margin-top:0.75rem;">These roles are not lifecycle states. In the <a href="/docs/decision-index/" style="color:var(--teal);">Decision Index</a> each decision has one lifecycle status: active, superseded, deprecated or inactive. An Architecture Decision Record (ADR) with <code>status: accepted</code> becomes an active decision, and only active decisions are enforced. To retire a decision, write a new ADR that lists the old one under <code>supersedes</code> and re-import with <code>--update-existing</code>; the old decision becomes superseded and stops being enforced. Changing an imported ADR’s status alone does not remove its decision. Give each role decision its own <code>scope</code>: when two accepted ADRs share a scope, Mneme keeps the higher-priority one and marks the other inactive.</p>
         </div>
       </div>
       <div class="step">
@@ -430,8 +430,8 @@
       <div class="step">
         <div class="step-num">4</div>
         <div class="step-body">
-          <h3>Gate generation and CI on the applicable decision</h3>
-          <p>Install the pre-write hook for your agent. It checks native write tools before the file changes: Claude Code Edit, Write and MultiEdit, Codex CLI <code>apply_patch</code>, and writes from Kiro CLI 3.0, the command-line version of the Kiro coding agent. Shell writes reach disk first; Claude Code and Codex CLI check them at end of turn. Then add <code>mneme check --mode strict</code> to CI. With that gate in place, a pull request that reaches for the superseded pattern in a migrated module fails against the decision that governs its path, whichever agent wrote it. Only strict mode blocks. Warn mode reports each violation and exits zero, which suits a team still shaping its decisions.</p>
+          <h3>Gate agent writes and CI on the applicable decision</h3>
+          <p>Install the pre-write hook for your agent. It checks native write tools before the file changes: Claude Code Edit, Write and MultiEdit, Codex CLI <code>apply_patch</code>, and native write tools in Kiro CLI 3.0, the command-line version of the Kiro coding agent. Shell writes reach disk first; Claude Code and Codex CLI check them at end of turn. Kiro CLI does not check shell writes; CI catches them. Then add <code>mneme check --mode strict</code> to CI. With that gate in place, a pull request that reaches for the superseded pattern in a migrated module fails against the decision that governs its path, whichever agent wrote it. Only strict mode blocks. Warn mode reports each violation and exits zero, which suits a team still shaping its decisions.</p>
         </div>
       </div>
     </div>
@@ -523,7 +523,7 @@ keeps its existing calls until its components are migrated.
     <p class="prose">A rewrite can match every tested output and still carry forward things nobody meant to keep: a rounding bug, a workaround for an interface retired years ago, a direct database call someone wrote as a shortcut rather than a design. Before the rewrite starts, sort what you recover from the old system into three classes. <strong>Observed</strong> behavior is what the system does today. An <strong>inferred</strong> decision is a reading, by a person or a tool, of why it does that. An <strong>approved</strong> decision is one a named owner has reviewed and agreed must hold in the target system.</p>
     <p class="prose" style="margin-top:1rem;">Only approved decisions should constrain the migration. Observed behavior feeds parity tests. Inferred decisions are candidates for review. Neither should bind the new system until someone with authority approves it.</p>
     <p class="prose" style="margin-top:1rem;">For Mneme HQ this is research direction, not a shipped feature. Mneme does not extract business logic from legacy code. Recovering candidate decisions from a legacy system is conceptual work with no validated results.</p>
-    <p class="prose" style="margin-top:1rem;">What ships today starts after approval. A team records the approved decision as an ADR with <code>status: accepted</code> and a typed rule. Accepted is the nearest thing Mneme has to approved: the Decision Index records each version and its source, not who approved it. A typed rule is active while its ADR is accepted, not superseded or deprecated, and not outranked by another accepted ADR in the same scope. Mneme enforces only active rules, through the pre-write hooks and CI gate described above, and blocks only in strict mode.</p>
+    <p class="prose" style="margin-top:1rem;">What ships today starts after approval. A team records the approved decision as an ADR with <code>status: accepted</code> and a typed rule. Accepted is the nearest thing Mneme has to approved: the Decision Index records each version and its source, not who approved it. A typed rule is active when its decision is: imported from an accepted ADR, not superseded by a later ADR, and not outranked by another accepted ADR in the same scope. Mneme enforces only active rules, through the pre-write hooks and CI gate described above, and blocks only in strict mode.</p>
     <p class="prose" style="margin-top:1rem;">The full argument is in <a href="/insights/ai-legacy-modernization-what-must-survive/" style="color:var(--teal);">AI Legacy Modernization: What Must Survive the Rewrite?</a> and <a href="/insights/openai-cobol-migration-benchmark-behavioral-parity/" style="color:var(--teal);">what OpenAI's legacy migration benchmark does not measure</a>.</p>
   </div>
 
@@ -544,7 +544,7 @@ keeps its existing calls until its components are migrated.
 
     <details>
       <summary>What happens to a decision when a component finishes migrating?</summary>
-      <div class="faq-body">Its status changes. A transitional decision that permitted a compatibility adapter is marked superseded once the adapter is removed, and the target decision governs that path from then on. The superseded record stays as the reason the exception existed.</div>
+      <div class="faq-body">Write a new ADR that lists the transitional one under <code>supersedes</code> and re-import it with <code>--update-existing</code>; the old decision becomes superseded and stops being enforced. Changing the status in the old ADR file alone does not remove its decision. The superseded record stays in the Decision Index as the reason the exception existed.</div>
     </details>
 
     <details>
