@@ -18,15 +18,15 @@
   <meta property="og:title" content="Compare Mneme HQ to AI Coding Governance Alternatives" />
   <meta property="og:description" content="Compare Mneme HQ to AI code review, rules files, agent memory, and RAG approaches. Structured comparisons for evaluating architectural governance for AI coding agents." />
   <meta property="og:url" content="https://mnemehq.com/compare/" />
-  <meta property="og:image" content="https://mnemehq.com/compare/og-v2.png" />
+  <meta property="og:image" content="https://mnemehq.com/compare/og-v3.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory, RAG. How each compares to pre-generation enforcement." />
+<meta property="og:image:alt" content="Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory and RAG compared with Mneme HQ, which checks supported agent writes and blocks in strict mode." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Compare Mneme HQ to AI Coding Governance Alternatives" />
   <meta name="twitter:description" content="Compare Mneme HQ to AI code review, rules files, agent memory, and RAG approaches. Structured comparisons for evaluating architectural governance for AI coding agents." />
-  <meta name="twitter:image" content="https://mnemehq.com/compare/og-v2.png" />
-<meta name="twitter:image:alt" content="Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory, RAG. How each compares to pre-generation enforcement." />
+  <meta name="twitter:image" content="https://mnemehq.com/compare/og-v3.png" />
+<meta name="twitter:image:alt" content="Comparison: Mneme HQ vs the Alternatives. CodeRabbit, Cursor Rules, Claude Code memory and RAG compared with Mneme HQ, which checks supported agent writes and blocks in strict mode." />
 
     <!-- Consent defaults -->
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied'});</script>
@@ -100,12 +100,12 @@
           {
             "@type": "Question",
             "name": "What does Mneme HQ compete with?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme HQ competes with adjacent categories rather than direct replacements: AI code review (CodeRabbit), per-repo rules files (Cursor Rules), built-in agent memory (Claude Code), and retrieval-augmented context (RAG). Most teams use Mneme alongside one of these rather than instead of them, because Mneme operates at a different layer — pre-generation enforcement of architectural decisions."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Mneme HQ competes with adjacent categories rather than direct replacements: AI code review (CodeRabbit), per-repo rules files (Cursor Rules), built-in agent memory (Claude Code), and retrieval-augmented context (RAG). Mneme is built to run alongside one of these rather than replace it, because it operates at a different layer: enforcement of recorded architectural decisions."}
           },
           {
             "@type": "Question",
             "name": "Which Mneme HQ comparison should I read first?",
-            "acceptedAnswer": {"@type": "Answer", "text": "If your team uses Cursor or any rules-file system, start with the Cursor Rules comparison. If you use Claude Code or a similar agent, start with Claude Code Memory. If your stack relies on a vector store of architectural decisions, start with RAG Coding Memory. The CodeRabbit comparison covers the dual-stack pattern — pre-generation enforcement plus post-generation review — that most teams settle on."}
+            "acceptedAnswer": {"@type": "Answer", "text": "If your team uses Cursor or any rules-file system, start with the Cursor Rules comparison. If you use Claude Code or a similar agent, start with Claude Code Memory. If your stack relies on a vector store of architectural decisions, start with RAG Coding Memory. The CodeRabbit comparison shows where each tool's control boundary sits and how to run both."}
           },
           {
             "@type": "Question",
@@ -115,7 +115,7 @@
           {
             "@type": "Question",
             "name": "Why do most Mneme HQ comparisons resolve to 'use both'?",
-            "acceptedAnswer": {"@type": "Answer", "text": "Mneme operates pre-generation; most alternatives operate either at a different stage (PR review, retrieval) or on a different surface (per-repo files, in-session memory). The two layers are complementary. The dual-stack pattern — pre-generation enforcement plus a complementary tool — is the typical outcome, not a replacement decision."}
+            "acceptedAnswer": {"@type": "Answer", "text": "Mneme operates pre-generation; most alternatives operate either at a different stage (PR review, retrieval) or on a different surface (per-repo files, in-session memory). The two layers are complementary. Running Mneme next to a complementary tool is the usual recommendation on these pages, rather than a replacement."}
           },
           {
             "@type": "Question",
@@ -341,10 +341,10 @@
         <div class="card-meta">
           <span class="card-tag">AI Code Review</span>
           <span class="card-dot"></span>
-          <span class="card-tag">6 min read</span>
+          <span class="card-tag">7 min read</span>
         </div>
         <h2>Mneme HQ vs CodeRabbit</h2>
-        <p>CodeRabbit reviews code after it's written. Mneme HQ enforces architectural constraints before generation. They operate at different stages of the same problem — and they're not mutually exclusive.</p>
+        <p>CodeRabbit reviews a change with AI, in the pull request and before commit. Mneme HQ enforces typed rules from recorded decisions before supported agent writes and in CI. They hold different boundaries and work side by side.</p>
         <div class="card-footer">
           <span class="read-link">Compare &rarr;</span>
         </div>
@@ -566,8 +566,8 @@
           <tr>
             <td><a href="/compare/coderabbit/">vs CodeRabbit</a></td>
             <td>AI code review</td>
-            <td>Post-generation, PR stage</td>
-            <td>Need pre-generation blocking, not post-hoc review</td>
+            <td>Review of the change: pull request and local pre-commit</td>
+            <td>A recorded decision needs a deterministic verdict before supported agent writes and in CI</td>
           </tr>
           <tr>
             <td><a href="/compare/cursor-rules/">vs Cursor Rules</a></td>
@@ -639,11 +639,11 @@
     <div class="faq-list">
       <details class="faq-item">
         <summary>What does Mneme HQ compete with?</summary>
-        <div class="faq-body">Mneme HQ competes with adjacent categories rather than direct replacements: AI code review (CodeRabbit), per-repo rules files (Cursor Rules), built-in agent memory (Claude Code), and retrieval-augmented context (RAG). Most teams use Mneme alongside one of these rather than instead of them, because Mneme operates at a different layer &mdash; pre-generation enforcement of architectural decisions.</div>
+        <div class="faq-body">Mneme HQ competes with adjacent categories rather than direct replacements: AI code review (CodeRabbit), per-repo rules files (Cursor Rules), built-in agent memory (Claude Code), and retrieval-augmented context (RAG). Mneme is built to run alongside one of these rather than replace it, because it operates at a different layer: enforcement of recorded architectural decisions.</div>
       </details>
       <details class="faq-item">
         <summary>Which Mneme HQ comparison should I read first?</summary>
-        <div class="faq-body">If your team uses Cursor or any rules-file system, start with the <a href="/compare/cursor-rules/">Cursor Rules comparison</a>. If you use Claude Code or a similar agent, start with <a href="/compare/claude-code-memory/">Claude Code Memory</a>. If your stack relies on a vector store of architectural decisions, start with <a href="/compare/rag-coding-memory/">RAG Coding Memory</a>. The <a href="/compare/coderabbit/">CodeRabbit comparison</a> covers the dual-stack pattern &mdash; pre-generation enforcement plus post-generation review &mdash; that most teams settle on.</div>
+        <div class="faq-body">If your team uses Cursor or any rules-file system, start with the <a href="/compare/cursor-rules/">Cursor Rules comparison</a>. If you use Claude Code or a similar agent, start with <a href="/compare/claude-code-memory/">Claude Code Memory</a>. If your stack relies on a vector store of architectural decisions, start with <a href="/compare/rag-coding-memory/">RAG Coding Memory</a>. The <a href="/compare/coderabbit/">CodeRabbit comparison</a> shows where each tool&rsquo;s control boundary sits and how to run both.</div>
       </details>
       <details class="faq-item">
         <summary>Is Mneme HQ an alternative to GitHub Copilot or Cursor?</summary>
@@ -651,7 +651,7 @@
       </details>
       <details class="faq-item">
         <summary>Why do most Mneme HQ comparisons resolve to &ldquo;use both&rdquo;?</summary>
-        <div class="faq-body">Mneme operates pre-generation; most alternatives operate either at a different stage (PR review, retrieval) or on a different surface (per-repo files, in-session memory). The two layers are complementary. The dual-stack pattern &mdash; pre-generation enforcement plus a complementary tool &mdash; is the typical outcome, not a replacement decision.</div>
+        <div class="faq-body">Mneme operates pre-generation; most alternatives operate either at a different stage (PR review, retrieval) or on a different surface (per-repo files, in-session memory). The two layers are complementary. Running Mneme next to a complementary tool is the usual recommendation on these pages, rather than a replacement.</div>
       </details>
       <details class="faq-item">
         <summary>Are these comparison pages biased toward Mneme HQ?</summary>
@@ -664,13 +664,13 @@
 
   <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">Each comparison page follows the same template. We describe what the alternative tool does (in the alternative tool's own words, not ours), name the dimensions where the two approaches differ, and give an explicit decision matrix for when each tool is the right fit. The goal is to be useful to a buyer who has not yet decided &mdash; not to win every comparison.</p>
 
-  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">Most comparisons resolve to "use both": Mneme operates pre-generation; the alternative usually operates either as a different surface (Cursor Rules in the editor) or at a different stage (CodeRabbit at PR review). The pages name where the categories overlap, where they don't, and the typical operational pattern teams settle on. The migration / dual-stack instructions are shipped as <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> structured data so search engines and LLMs can surface the steps directly.</p>
+  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">Many comparisons resolve to "use both": Mneme operates before supported agent writes and in CI; the alternative usually operates either as a different surface (Cursor Rules in the editor) or at a different boundary (CodeRabbit reviewing the change, in the pull request or before commit). The pages name where the categories overlap, where they don't, and how to run the two together. The migration / dual-stack instructions are shipped as <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> structured data so search engines and LLMs can surface the steps directly.</p>
 
   <h2 style="font-family: 'Inter', sans-serif; font-size: 1.05rem; font-weight: 600; color: var(--text); letter-spacing: -0.01em; margin: 3rem auto 1rem; max-width: 660px;">Related reading</h2>
 
   <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">For the broader argument that no single AI coding tool can carry architectural governance on its own, see <a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">architectural governance across heterogeneous AI coding agents</a>. For the operational case that review tooling cannot absorb the AI generation rate, see <a href="/insights/why-code-review-cannot-scale-with-ai-output/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">why code review cannot scale with AI output</a>. For the standards landscape that any of these tools will eventually have to align with, see <a href="/standards/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">the standards page</a>.</p>
 
-  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">A note on which comparison to read first: if your team is currently using Cursor or evaluating Cursor Rules, start with the <a href="/compare/cursor-rules/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">Cursor Rules comparison</a> &mdash; it includes the migration path from a per-repo rules file to a structured decision corpus, with the <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> steps shipped as schema.org structured data. If your team uses CodeRabbit or similar AI PR review, start with the <a href="/compare/coderabbit/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">CodeRabbit comparison</a> &mdash; it covers the dual-stack pattern most teams settle on, where pre-generation enforcement (Mneme) and post-generation review (CodeRabbit) operate as complementary layers rather than alternatives.</p>
+  <p style="font-size: 0.88rem; color: var(--muted); line-height: 1.85; max-width: 660px; margin: 0 auto 1.1rem;">A note on which comparison to read first: if your team is currently using Cursor or evaluating Cursor Rules, start with the <a href="/compare/cursor-rules/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">Cursor Rules comparison</a> &mdash; it includes the migration path from a per-repo rules file to a structured decision corpus, with the <code style="font-family:'DM Mono',monospace;font-size:0.82em;">HowTo</code> steps shipped as schema.org structured data. If your team uses CodeRabbit or similar AI review, start with the <a href="/compare/coderabbit/" style="color: var(--accent); text-decoration: underline; text-underline-offset: 3px;">CodeRabbit comparison</a>. It shows how CodeRabbit&rsquo;s review of the change and Mneme&rsquo;s typed rules, checked before supported agent writes and in CI, work as complementary layers.</p>
 
 </div>
 </main>
