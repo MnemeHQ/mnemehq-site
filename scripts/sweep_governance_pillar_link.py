@@ -34,7 +34,6 @@ TARGETS = [
     "microsoft-agent-platform-governance-layer",
     "microsoft-execution-containers-ai-agent-runtime-governance",
     "microsoft-project-solara-post-app-governance",
-    "microsoft-agent-forge-enterprise-ai-infrastructure",
     "google-cloud-agent-registry-agent-fleet-governance",
     "google-gemini-deep-research-agent-governance",
     "gartner-ai-governance-engineering-governance",

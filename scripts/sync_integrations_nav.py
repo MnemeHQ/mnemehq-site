@@ -61,7 +61,6 @@ INTEGRATIONS: list[tuple[str, list[tuple[str, str]]]] = [
     ]),
     ("Works alongside", [
         ("perplexity", "Perplexity"),
-        ("microsoft-agent-forge", "Microsoft Agent Forge"),
     ]),
 ]
 
