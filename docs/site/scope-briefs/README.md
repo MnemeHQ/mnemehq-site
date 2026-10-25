@@ -25,7 +25,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Scope pre action governance](2026-09-08-scope-pre-action-governance.md) | 2026-09-08 | insight (mechanism; no pillar) | published 2026-10-14 (#216) |
 | [Competing with CodeRabbit](2026-09-08-competing-with-coderabbit.md) | 2026-09-08 | site edit (compare page) | gathered, not built |
 | [OKF architecture article scope](2026-09-01-okf-architecture-article-scope.md) | 2026-09-01 | update existing insight | gathered, not built |
-| [Writing ROI Content (backlog)](2026-09-08-writing-roi-content-backlog.md) | 2026-09-08 (updated 09-10) | insight cluster | gathered, not built; chat must stay un-marked |
+| [Writing ROI Content (backlog)](2026-09-08-writing-roi-content-backlog.md) | 2026-09-08 (updated 09-10) | insight cluster | resolved: pillar update (#255), 3 queued 11-03 to 11-05 (#258 to #260), rest dropped |
 
 ## Decisions confirmed (2026-10-12, by TheoV823)
 

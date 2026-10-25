@@ -1,6 +1,6 @@
 # Scope brief: Post-Writing ROI Content (unpublished backlog)
 
-Status: **gathered, not built.** This chat must stay without `***` until the backlog ships or is dropped. **Never rename it.**
+Status: **resolved 2026-10-23.** The pillar got a scorecard update (#255, merged); three pieces are queued for 2026-11-03 to 11-05 (#258 to #260); the rest were dropped as covered. Rename the chat with `***` after #260 deploys, with the owner's confirmation.
 
 | Field | Value |
 |---|---|
@@ -8,6 +8,25 @@ Status: **gathered, not built.** This chat must stay without `***` until the bac
 | Created / last updated (UTC) | 2026-09-08 / 2026-09-10 (local timestamps in chat: Tue Sep 8 8:04 AM; Thu Sep 10 2:37 PM) |
 | Shape | Four user turns: ROI for senior leaders; pillar page scope (with a LeadDev link); supporting articles; "Include stats" (a screenshot-driven turn, FT/NBER). |
 | Already shipped from this chat | `ai-engineering-roi` (pillar) and `ai-throughput-is-not-engineering-throughput`, PR #135. The pillar already uses the LeadDev 28x spend / 58% feature-work stats. |
+
+## Resolution (2026-10-23)
+
+**Backlog resolved 2026-10-23** (overlap recheck against shipped pages; every verdict below is recorded in the recheck and the PRs):
+
+| Item | Outcome |
+|---|---|
+| How to Measure AI Coding ROI Without Counting Lines of Code (P0) | Built as an update to `ai-engineering-roi` instead (overlap 82.4): a five-stage scorecard section, merged in [#255](https://github.com/MnemeHQ/mnemehq-site/pull/255) on 2026-10-24 |
+| The Hidden Cost of AI-Generated Rework (P0) | Re-angled to unattributed-hour accounting; queued for 2026-11-03 ([#258](https://github.com/MnemeHQ/mnemehq-site/pull/258)) |
+| What CTOs Should Measure Before Renewing Their AI Coding Tools (P1) | Re-angled to a procurement guide; absorbs "You Bought the AI Agents"; queued for 2026-11-04 ([#259](https://github.com/MnemeHQ/mnemehq-site/pull/259)) |
+| When AI Saves Developer Time but Creates More Work for Senior Engineers (P0) | Built only after a primary source passed: Xu et al., arXiv 2510.10165 (Faros "senior engineer tax" did not qualify); queued for 2026-11-05 ([#260](https://github.com/MnemeHQ/mnemehq-site/pull/260)) |
+| Architectural Drift Is an AI ROI Leak (P1) | Dropped: covered by the pillar's "Where the value leaks", the throughput article and the systems essay |
+| The Economics of Preventing an Incompatible Change Before It Is Written (P2) | Dropped for now: no pilot data, and the qualitative case already exists. Revisit when pilot data exists |
+| From AI Adoption to AI Value: A Maturity Model (P2) | Dropped: `ai-adoption-maturity-model-engineering-analysis` owns the query (overlap 164.1) |
+| 28x More AI Spend ("Include stats" turn) | Dropped: the pillar leads with the same figures |
+| AI Can Write 3x More Code ("Include stats" turn) | Dropped: same finding as `ai-throughput-is-not-engineering-throughput` |
+| 240% / 30% NBER ("Include stats" turn) | Already shipped (#135) |
+
+Close-out: when #260 deploys (2026-11-05), add the shipped rows to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
 
 ## Build card
 
