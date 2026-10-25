@@ -66,6 +66,31 @@
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/"},
         "image": "https://mnemehq.com/insights/open-knowledge-format-vs-governance/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/insights/open-knowledge-format-vs-governance/"
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is the Open Knowledge Format?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Open Knowledge Format (OKF) is an open specification published by Google Cloud in June 2026 for representing organizational knowledge as a directory of markdown files with YAML frontmatter. Version 0.2 makes type the only required field and adds optional provenance, trust, lifecycle and attestation fields such as verified, status and stale_after. It is vendor-neutral, requires no software development kit (SDK), and separates who authors knowledge from who consumes it, so coding agents, enterprise assistants, workflow agents and search can all read the same source."}
+          },
+          {
+            "@type": "Question",
+            "name": "Does the Open Knowledge Format prevent architectural drift?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. OKF solves knowledge discovery: it helps an agent locate a relevant decision. It does not ensure the agent complies with that decision. An agent can retrieve an architectural constraint, reference it during planning, and still write code that violates it. Preventing drift requires a governance layer that enforces the decision on each proposed change and rejects violations, which is an enforcement problem rather than a discovery one."}
+          },
+          {
+            "@type": "Question",
+            "name": "Is structured memory enough for AI coding agents?",
+            "acceptedAnswer": {"@type": "Answer", "text": "Structured memory like OKF answers what the organization knows and what an agent should read. It does not answer what the agent must obey. Because agentic AI generates actions rather than text, a coding agent that ignores a retrieved rule can introduce security vulnerabilities, break architectural boundaries, or create compliance violations that ship to production. Closing that gap takes an enforcement layer on top of the knowledge layer, not a better knowledge format."}
+          },
+          {
+            "@type": "Question",
+            "name": "Does a human-reviewed OKF concept bind an AI agent?",
+            "acceptedAnswer": {"@type": "Answer", "text": "No. OKF v0.2 derives a trust tier (unverified, machine-confirmed or human-reviewed) from the verified field, and the specification calls trust tiers advisory signals, not access control. A human sign-off says the content matches its sources. Whether the decision obliges an agent, which paths and operations it covers, and whether it is still current are questions the consuming governance layer has to answer."}
+          }
+        ]
       }
     ]
   }
@@ -297,8 +322,8 @@
   <div class="article-body">
 
     <h2>What the Open Knowledge Format Is</h2>
-    <p>On June 12, 2026, Google Cloud published the <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">Open Knowledge Format announcement</a>, releasing OKF v0.1 as an open specification. The shape is deliberately plain: a directory of markdown files, each with a YAML frontmatter block carrying fields like <strong>type</strong>, <strong>title</strong>, <strong>description</strong>, <strong>resource</strong>, <strong>tags</strong>, and <strong>timestamp</strong>. No software development kit (SDK). No proprietary runtime. No vendor lock-in. Any system that can read a file can read OKF.</p>
-    <p>That plainness is the point. OKF is vendor-neutral by construction, and it cleanly separates <em>who writes knowledge</em> from <em>who consumes it</em>. A platform team can author and version organizational knowledge once, and a coding agent, an enterprise assistant, a workflow agent, and a search index can all read the same source without any of them owning the format. OKF formalizes a pattern the industry had already been reaching for: the practice we have described as treating your codebase context like a <a href="/insights/llm-wiki-library-not-law/">large language model (LLM) wiki</a>: knowledge written down, structured, and made retrievable instead of scattered.</p>
+    <p>On June 12, 2026, Google Cloud published the <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">Open Knowledge Format announcement</a>, releasing OKF v0.1 as an open specification. The shape is deliberately plain: a directory of markdown files, each with a YAML frontmatter block carrying fields like <strong>type</strong>, <strong>title</strong>, <strong>description</strong>, <strong>resource</strong>, <strong>tags</strong>, and <strong>timestamp</strong> (v0.2 replaces <code style="font-family:'DM Mono',monospace;font-size:0.9em;">timestamp</code> with <code style="font-family:'DM Mono',monospace;font-size:0.9em;">generated</code>). No software development kit (SDK). No proprietary runtime. No vendor lock-in. Any system that can read a file can read OKF.</p>
+    <p>That plainness is the point. OKF is vendor-neutral by construction, and it cleanly separates <em>who writes knowledge</em> from <em>who consumes it</em>. A platform team can author and version organizational knowledge once, and a coding agent, an enterprise assistant, a workflow agent, and a search index can all read the same source without any of them owning the format. OKF formalizes a pattern the industry had already been reaching for, which we have described as treating your codebase context like a <a href="/insights/llm-wiki-library-not-law/">large language model (LLM) wiki</a>: knowledge written down, structured, and made retrievable instead of scattered.</p>
 
     <aside class="cta-band" aria-label="Try Mneme">
   <div class="cta-band-eyebrow">Runnable in five minutes</div>
@@ -385,7 +410,8 @@ stale_after: 2027-04-01T00:00:00Z
     <p>Literal matching cannot express a principle such as the no-direct-SQL rule from earlier. That decision stays guidance unless someone reduces it to a literal, for example the text of an import that application code must not contain.</p>
 
     <h3>The Attested Computation precedent</h3>
-    <p>Version 0.2 adds one new concept type, <code style="font-family:'DM Mono',monospace;font-size:0.9em;">Attested Computation</code>, and it shows how far the format reaches. The concept declares a sanctioned way to compute a value: a <code style="font-family:'DM Mono',monospace;font-size:0.9em;">runtime</code> such as BigQuery or dbt, typed <code style="font-family:'DM Mono',monospace;font-size:0.9em;">parameters</code> the agent may fill, an <code style="font-family:'DM Mono',monospace;font-size:0.9em;">executor</code> that runs the computation and returns a receipt (the evidence of the run, such as a BigQuery job identifier and the SQL the job executed), and an <code style="font-family:'DM Mono',monospace;font-size:0.9em;">attester</code>, deterministic code with no LLM in it, that inspects the receipt and returns a verdict. The consumer runs the attester to confirm the agent ran the approved query and not SQL it wrote itself. The spec is plain about the boundary: OKF records the computation and the means to check it, and executes nothing.</p>
+    <p>Version 0.2 adds one new concept type, <code style="font-family:'DM Mono',monospace;font-size:0.9em;">Attested Computation</code>, and it shows how far the format reaches. The concept declares a sanctioned way to compute a value: a <code style="font-family:'DM Mono',monospace;font-size:0.9em;">runtime</code> such as BigQuery or dbt, typed <code style="font-family:'DM Mono',monospace;font-size:0.9em;">parameters</code> the agent may fill, an <code style="font-family:'DM Mono',monospace;font-size:0.9em;">executor</code> that names how to run it and the receipt fields a run must return (the evidence of the run, such as a BigQuery job identifier and the SQL the job executed), and an <code style="font-family:'DM Mono',monospace;font-size:0.9em;">attester</code>, deterministic code with no LLM in it, that inspects the receipt and returns a verdict.</p>
+    <p>The consumer runs the attester to confirm the agent ran the approved query and not SQL it wrote itself. The spec is plain about the boundary: OKF records the computation and the means to check it, and executes nothing.</p>
     <p>That division of labor carries over to architecture decisions. The organization writes down what is sanctioned, in a portable file. A runtime does the work. A deterministic check outside the model decides whether the work conformed. For a revenue figure, OKF already specifies that contract. For an architecture decision, the matching contract would name scope, operations and the check, and a governance layer on the consumer side would run it. Version 0.2 does not claim that job for code, and nothing in it rules the job out.</p>
     <p>Mneme has no OKF importer. The chain below is a design sketch that the Mneme team is exploring, not a shipped feature.</p>
 
