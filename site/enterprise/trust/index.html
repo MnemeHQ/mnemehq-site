@@ -433,10 +433,10 @@
 
     <h2>The premise</h2>
     <p>Mneme asks organisations to govern their architectural decisions deliberately. Our own treatment of data, evidence, decisions and lifecycle should therefore exhibit the discipline we ask organisations to adopt. This page holds us to that standard: it states what is real today and does not present Enterprise direction as a capability.</p>
-    <p>If your organisation is evaluating Mneme and something you need is listed as Enterprise direction, tell us. That conversation shapes what Enterprise becomes: <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a>.</p>
+    <p>If your organisation is evaluating Mneme and something you need is listed as Enterprise direction, tell us. Enterprise is not built or sold; those conversations decide whether and how it is built: <a href="mailto:hi@theovalmis.com">hi@theovalmis.com</a>.</p>
 
     <h2>What Mneme is, architecturally</h2>
-    <p>Mneme compiles documented architectural intent into deterministic guardrails that govern AI coding agents at the pre-generation stage. That intent comes from Architecture Decision Records (ADRs), agent instructions, architecture documentation and configuration evidence. Five stages, no vector store, no machine learning (ML). Enforcement is deterministic: the same repository state and the same agent action always produce the same verdict, and enforcement produces evidence.</p>
+    <p>Mneme compiles documented architectural intent into deterministic rules (guardrails). That intent comes from Architecture Decision Records (ADRs), agent instructions, architecture documentation and configuration evidence. The rules are checked before a write lands in agents that expose a write hook (Claude Code, Codex CLI, Kiro CLI 3.0), and in CI. There is no vector store and no machine learning (ML). Enforcement is deterministic: the same repository state and the same agent action always produce the same verdict, and enforcement produces evidence.</p>
     <p>The open-source engine (<a href="https://github.com/MnemeHQ/mneme">GitHub</a>, MIT) runs locally in your CLI, your editor agents and your CI. The hosted <a href="/audit/">Architecture Protection Audit</a> is the first hosted surface: it measures how much documented intent is deterministically protected today.</p>
 
     <h2>Enterprise capability posture</h2>
@@ -448,17 +448,17 @@
       <tbody>
         <tr>
           <td>Data handling</td>
-          <td>Deterministic processing; transient source; documented deletion &mdash; see <a href="/security/data-handling/">Security &amp; Data Handling</a></td>
+          <td>The hosted Architecture Audit receives either a public GitHub repository, which it clones, or a ZIP file you upload. Files are extracted to a temporary directory and deleted when the audit ends, whether it succeeds or fails. The audit result is kept until you ask for deletion. Details: <a href="/security/data-handling/">Security &amp; Data Handling</a></td>
           <td>Configurable retention policies per organisation</td>
         </tr>
         <tr>
           <td>Authentication</td>
-          <td>No accounts; local CLI/CI identity and unguessable audit references</td>
-          <td>SSO (SAML / OIDC)</td>
+          <td>No user accounts. The open-source CLI and CI gate run under your own machine and CI identities. A hosted audit result is reached through an unguessable identifier, so anyone holding the identifier can open it</td>
+          <td>Single sign-on (SSO) via SAML or OIDC</td>
         </tr>
         <tr>
           <td>Authorization</td>
-          <td>Local and developer-controlled; explicit activation per guardrail</td>
+          <td>Local and developer-controlled. A rule enforces only after someone runs <code>mneme protect activate</code> for that decision</td>
           <td>RBAC and policy administration</td>
         </tr>
         <tr>
@@ -473,7 +473,7 @@
         </tr>
         <tr>
           <td>Exceptions</td>
-          <td>Setup mode observes without blocking; activation is an explicit, separate decision</td>
+          <td>A new project starts in setup mode, which gives context and non-blocking checks only. Enforcement starts only with the separate activation command. In CI, warn mode reports findings without failing the job; strict mode fails it</td>
           <td>Formal exception approval, expiry, revocation, evidence</td>
         </tr>
         <tr>
@@ -488,7 +488,7 @@
         </tr>
         <tr>
           <td>Security testing</td>
-          <td>CI-governed codebase with automated contract, terminology and discovery checks</td>
+          <td>Automated contract checks in CI. No independent security testing yet</td>
           <td>Independent penetration testing</td>
         </tr>
         <tr>
@@ -520,24 +520,24 @@
     </table>
 
     <h2>The open-source and Enterprise boundary</h2>
-    <p>The public principle: <strong>the open-source (OSS) engine remains MIT-licensed and executes known decisions in each repository. Enterprise is the direction for governing decisions across an organisation.</strong> The mechanism is inspectable and usable on its own. Enterprise would add discovery, reconciliation, administration and reporting across teams. Every cell in the Enterprise column is Enterprise direction. The same boundary appears on the <a href="/pricing/">pricing page</a>.</p>
+    <p>The public principle: <strong>the open-source (OSS) engine remains MIT-licensed and executes known decisions in each repository. Enterprise is the direction for governing decisions across an organisation.</strong> The mechanism is inspectable and usable on its own. Enterprise would add discovery, reconciliation, administration and reporting across teams. Every cell in the Enterprise column is Enterprise direction: it would be built only if organisations need it. The same boundary appears on the <a href="/pricing/">pricing page</a>.</p>
     <table class="sptable">
       <thead>
         <tr><th>Dimension</th><th>Mneme OSS (MIT): available today</th><th>Enterprise direction</th></tr>
       </thead>
       <tbody>
-        <tr><td>Purpose</td><td>Enforce known decisions that have active rules, in each repository</td><td>Find, reconcile and govern decisions across the organisation</td></tr>
-        <tr><td>Decision Index</td><td>Versions, lifecycle and source for every decision; no approver identity</td><td>Built on the same open Decision Index</td></tr>
-        <tr><td>Authority, applicability, precedence</td><td>A person accepts decisions through the command-line tool; rules can be limited to paths; same-scope priority, then date</td><td>Governed workflows for who decides, across teams</td></tr>
-        <tr><td>Enforcement</td><td>Local and deterministic: pre-write checks in each supported agent and a CI gate in each repository; blocking only in strict mode</td><td>Managed across teams and environments</td></tr>
-        <tr><td>CI across repositories</td><td>The gate runs in every repository you add it to, each on its own</td><td>One place to manage the gate across repositories</td></tr>
-        <tr><td>Agent integrations</td><td>Set up per repository, each with a documented support level</td><td>Central management</td></tr>
-        <tr><td>Decision discovery</td><td>ADRs imported from repository files; <code>mneme audit</code> run on a repository</td><td>Discovery across systems</td></tr>
-        <tr><td>Confluence, Jira, Slack</td><td>Not supported; no import path exists</td><td>Confluence ADR ingestion is planned; Jira and Slack are ideas with no scheduled work</td></tr>
-        <tr><td>Evidence</td><td>Local enforcement evidence: verdicts in the terminal and CI log</td><td>Aggregated evidence history and reporting</td></tr>
-        <tr><td>Administration</td><td>Local configuration; developer-controlled exceptions</td><td>Role-based access control (RBAC), SSO, approvals and lifecycle</td></tr>
-        <tr><td>Scope</td><td>Local / project scope</td><td>Multi-repository, organisation-wide governance</td></tr>
-        <tr><td>Support</td><td>Community support; complimentary guided pilots</td><td>SLA and support terms</td></tr>
+        <tr><td>Purpose</td><td>Enforce known decisions that have active rules, in each repository</td><td>Would find, reconcile and govern decisions across the organisation</td></tr>
+        <tr><td>Decision Index</td><td>Versions, lifecycle and, where known, source for every decision; no approver identity</td><td>Would build on the same open Decision Index</td></tr>
+        <tr><td>Authority, applicability, precedence</td><td>Agents can propose a decision through MCP; acceptance happens only through the <code>mneme decision</code> CLI, and no approver identity is recorded. Rules can be limited to paths. Same-scope priority, then date</td><td>Would add governed workflows for who decides, across teams</td></tr>
+        <tr><td>Enforcement</td><td>Pre-write checks where an agent exposes a write hook (Claude Code, Codex CLI, Kiro CLI 3.0), rules export for Cursor, and a CI gate in each repository. Strict mode blocks; warn mode reports.</td><td>Would be managed across teams and environments</td></tr>
+        <tr><td>CI across repositories</td><td>The gate runs in every repository you add it to, each on its own</td><td>Would offer one place to manage the gate across repositories</td></tr>
+        <tr><td>Agent integrations</td><td>Set up per repository, each with a documented support level</td><td>Would be managed centrally</td></tr>
+        <tr><td>Decision discovery</td><td>ADRs imported from repository files; <code>mneme audit</code> run on a repository</td><td>Would discover decisions across systems</td></tr>
+        <tr><td>Confluence, Jira, Slack</td><td>Not supported; no import path exists</td><td>No Enterprise commitment. Confluence ADR ingestion is planned on the <a href="/roadmap/">roadmap</a>; Jira and Slack are ideas with no scheduled work</td></tr>
+        <tr><td>Evidence</td><td>Local enforcement evidence: verdicts in the terminal and CI log</td><td>Would aggregate evidence history and reporting</td></tr>
+        <tr><td>Administration</td><td>Local configuration; developer-controlled exceptions</td><td>Would add role-based access control (RBAC), SSO, approvals and lifecycle</td></tr>
+        <tr><td>Scope</td><td>Local / project scope</td><td>Would cover many repositories across the organisation</td></tr>
+        <tr><td>Support</td><td>Community support; complimentary guided pilots</td><td>Would add SLA and support terms</td></tr>
       </tbody>
     </table>
 
