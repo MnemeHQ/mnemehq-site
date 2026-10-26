@@ -15,7 +15,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 | [Engineering Coherence (concept)](2026-10-14-engineering-coherence-concept.md) | derived 2026-10-14 from the 10-04 chat | concept page | published 2026-10-14 (#214) |
 | [reverse engineer decisions](2026-10-12-reverse-engineer-decisions.md) | 2026-10-12 | insight, content type Research | published 2026-10-15 (#221) |
 | [Open Architecture Page Assessment](2026-10-09-open-architecture-page-assessment.md) | 2026-10-09 | spec/ADR now, site page later | parked until O1 validation results (owner, 2026-10-25) |
-| [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | gathered, not built |
+| [Clarify OSS Enterprise Pricing](2026-10-09-clarify-oss-enterprise-pricing.md) | 2026-10-09 | site edit (pricing, trust, nav) | built 2026-10-26 (#269) |
 | [Assess paper relevance (AECP)](2026-10-07-assess-paper-relevance.md) | 2026-10-07 | insight | published 2026-10-15 (#221) |
 | [Assess EY Report](2026-10-07-assess-ey-report.md) | 2026-10-07 | insight | published 2026-10-14 (#216) |
 | [Claude Frontier Academy](2026-10-07-claude-frontier-academy.md) | 2026-10-07 | insight (news) + FDE cluster verdicts | news piece published 2026-10-15 (#221); FDE pillar update published (#224); other cluster items merged or dropped 2026-10-15 |
