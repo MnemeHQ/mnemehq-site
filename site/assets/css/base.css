@@ -204,7 +204,7 @@ body {
 nav:not(.breadcrumb-nav):where(body > *) { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 2.5rem; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(12,12,13,0.95); backdrop-filter: blur(12px); z-index: 100; }
 .logo { display: flex; align-items: center; text-decoration: none; }
 .nav-links { display: flex; gap: 1.5rem; align-items: center; }
-.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.82rem; transition: color 0.15s; white-space: nowrap; }
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--accent); }
 /* Nav pilot CTA: coral-outline matching the homepage v2 design system */
@@ -314,6 +314,16 @@ nav.breadcrumb-nav {
 }
 
 /* ── Mobile nav ── */
+/* With eight top-level links, labels wrapped between 901px and about 1180px; keep each on one line by tightening the gap. */
+@media (min-width: 901px) and (max-width: 1180px) {
+  .nav-links { gap: 1rem; }
+}
+@media (min-width: 901px) and (max-width: 1000px) {
+  .nav-links { gap: 0.75rem; }
+  .nav-links a { font-size: 0.78rem; }
+  .nav-links a.btn-nav-cta { padding-left: 0.7rem; padding-right: 0.7rem; }
+}
+
 @media (max-width: 900px) {
   html, body { overflow-x: clip; }
   body.menu-open { overflow: hidden; }
