@@ -1,6 +1,6 @@
 # Scope brief: Post-Clarify OSS Enterprise Pricing
 
-Status: **gathered, not built**
+Status: **built 2026-10-26 (#269)**. New H1 "One open decision engine, in each repository today. Enterprise is a direction." replaces the brief headline (owner-approved 2026-10-26), and the design-partner CTA became "Tell us what your organization needs" after the claim audit.
 
 | Field | Value |
 |---|---|
