@@ -104,6 +104,11 @@
     .agent-setup-card p { margin: 0; color: var(--muted); font-size: 0.8rem; line-height: 1.55; }
     .agent-setup-card .agent-setup-note { margin-top: 0.25rem; color: var(--quiet); font-family: 'DM Mono', monospace; font-size: 0.66rem; }
     .agent-setup-actions { min-width: 165px; }
+    .plugin-setup-card { margin-top: 0.75rem; }
+    .plugin-setup-card code { display: block; margin: 0.45rem 0 0.1rem; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.76rem; overflow-wrap: anywhere; }
+    .plugin-setup-card .agent-setup-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+    .plugin-setup-card .agent-setup-actions a { color: var(--action-soft, #f2a08e); font-family: 'DM Mono', monospace; font-size: 0.72rem; text-align: center; text-decoration: none; }
+    .plugin-setup-card .agent-setup-actions a:hover { color: var(--text); }
     .agent-setup-actions button { white-space: nowrap; }
 
     .guide-pointer { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; margin-top: 1.1rem; padding: 0.9rem 1rem; border: 1px solid rgba(234,115,94,0.28); border-radius: 8px; background: rgba(234,115,94,0.055); }
@@ -232,6 +237,19 @@
 - Do not activate blocking protection.
 - Verify the installation and show me every file changed.
 - If hooks, plugins, or other executable integrations require approval or trust, stop before approving them and tell me exactly what I need to review.</script>
+  <div class="agent-setup-card plugin-setup-card" id="claude-code-plugin">
+    <div>
+      <h3>Using Claude Code?</h3>
+      <p>Add the Mneme plugin from Claude&rsquo;s plugin directory:</p>
+      <code>claude plugin install mneme@anthropic-plugin-directory</code>
+      <p class="agent-setup-note">The plugin calls the CLI above. Install it and run mneme setup first, or the plugin checks nothing.</p>
+    </div>
+    <div class="agent-setup-actions">
+      <button type="button" class="cta-btn-outline" data-code-copy data-copy-text="claude plugin install mneme@anthropic-plugin-directory"
+              onclick="navigator.clipboard.writeText('claude plugin install mneme@anthropic-plugin-directory');this.textContent='Copied';setTimeout(()=>this.textContent='Copy plugin command',1600);">Copy plugin command</button>
+      <a href="/integrations/claude-code/#install" data-cta-intent="setup" data-cta-position="hero" data-cta-component="install_module">Plugin setup &rarr;</a>
+    </div>
+  </div>
   </section>
 
   <aside class="guide-pointer" aria-label="How-to guide shortcut">
@@ -248,12 +266,12 @@
   <div class="doc-grid">
     <a class="doc-card" href="/docs/how-enforcement-works/">
       <div class="dh"><span class="dname">How enforcement works</span><span class="dtag">Explainer</span></div>
-      <p>How Mneme turns architectural decisions into a structured corpus with deterministic enforcement across four workflow boundaries: guidance, prevent, catch, verify &mdash; and why retrieval is not enforcement.</p>
+      <p>How Mneme turns architectural decisions into a structured corpus with deterministic enforcement across four workflow boundaries: guidance, prevent, catch and verify, and why retrieval is not enforcement.</p>
       <span class="read">How enforcement works &rarr;</span>
     </a>
     <a class="doc-card" href="/docs/decision-model/">
       <div class="dh"><span class="dname">Decision model</span><span class="dtag">Explainer</span></div>
-      <p>What Mneme can attach to an engineering decision &mdash; identity, applicability, authority, lifecycle, precedence, enforcement, and evidence &mdash; and where each is documented. Architecture is the first decision domain.</p>
+      <p>What Mneme can attach to an engineering decision (identity, applicability, authority, lifecycle, precedence, enforcement and evidence) and where each is documented. Architecture is the first decision domain.</p>
       <span class="read">Decision model &rarr;</span>
     </a>
     <a class="doc-card" href="/docs/protection-activation/">
