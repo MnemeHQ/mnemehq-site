@@ -226,7 +226,7 @@
         "description": "Mneme HQ hooks into every Edit, Write, and MultiEdit Claude Code attempts — intercepting architectural violations before they reach your codebase.",
         "url": "https://mnemehq.com/integrations/claude-code/",
         "datePublished": "2026-05-07",
-        "dateModified": "2026-05-07",
+        "dateModified": "2026-10-28",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}},
         "image": "https://mnemehq.com/integrations/claude-code/og-v2.png",
@@ -248,7 +248,7 @@
         "step": [
           {"@type": "HowToStep", "name": "Install", "text": "pipx install \"mneme-hq>=0.10.0\" installs the runtime; the runtime and the Claude Code plugin are separate artifacts."},
           {"@type": "HowToStep", "name": "Scaffold project memory", "text": "Run mneme init to create .mneme/project_memory.json with an empty valid decision corpus. It refuses to overwrite an existing corpus unless --force is supplied."},
-          {"@type": "HowToStep", "name": "Register the hook", "text": "Load the plugin from a Mneme checkout with claude --plugin-dir ./integrations/claude-code-plugin so Edit, Write, MultiEdit, and supported Bash operations check the corpus before applying changes."},
+          {"@type": "HowToStep", "name": "Register the hook", "text": "Install the plugin from Claude's plugin directory with claude plugin install mneme@anthropic-plugin-directory, or load it from a Mneme checkout with claude --plugin-dir ./integrations/claude-code-plugin, so Edit, Write, MultiEdit, and supported Bash operations check the corpus before applying changes."},
           {"@type": "HowToStep", "name": "Populate decisions", "text": "Add the team's real decisions with mneme add_decision or import existing ADRs with mneme adr import — init seeds an empty valid corpus, never placeholder content."},
           {"@type": "HowToStep", "name": "Verify enforcement", "text": "Trigger a test edit that violates one of the decisions. The hook should block the edit and surface the decision id as feedback. Adjust mode (warn / strict) per environment."}
         ]
@@ -372,7 +372,7 @@
     </div>
     <h1>Claude Code Governance</h1>
     <p class="article-lede">The Mneme plugin registers a hook with Claude Code. Every Edit, Write and MultiEdit, and a single <code>cat &gt; file &lt;&lt;'EOF'</code> command (quoted delimiter, nothing else in the command), is checked against your recorded decisions before it reaches disk. A violation exits 2, which blocks the change, and the agent receives the decision id so it can correct the change. Other shell writes are checked when the agent finishes its turn.</p>
-    <p style="font-size:0.92rem;color:var(--muted);line-height:1.85;margin-top:1rem;max-width:680px;">Claude Code is a harness &mdash; it coordinates execution, tool use, and the agent loop. Mneme is the decision and control layer that runs alongside it, enforcing the architectural intent the harness has no opinion about. They are different layers of the runtime stack, and they run side by side. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/" style="color:var(--teal);">Harness Engineering Still Needs Governance</a>.</p>
+    <p style="font-size:0.92rem;color:var(--muted);line-height:1.85;margin-top:1rem;max-width:680px;">Claude Code is a harness: it coordinates execution, tool use, and the agent loop. Mneme is the decision and control layer that runs alongside it, enforcing the architectural intent the harness has no opinion about. They are different layers of the runtime stack, and they run side by side. The argument in full: <a href="/insights/harness-engineering-still-needs-governance/" style="color:var(--teal);">Harness Engineering Still Needs Governance</a>.</p>
   </header>
 
   <div class="article-body">
@@ -404,9 +404,9 @@
       <p><strong>Fail-open by design.</strong> The hook never blocks on Mneme malfunction. If <code>mneme</code> is not found, an edited file can't be read, or a <code>mneme check</code> call takes longer than 10 seconds, the hook exits 0 and allows the edit. Its notes go to Claude Code&rsquo;s debug log only, so neither you nor the agent sees them in the session. If <code>mneme-hook</code> itself isn&rsquo;t on <code>PATH</code>, Claude Code shows a hook error instead.</p>
     </div>
 
-    <h2>Install</h2>
+    <h2 id="install">Install</h2>
 
-    <p>The Python runtime and the Claude Code plugin are <strong>separate artifacts</strong>: installing one does not install the other, and no auto-install links them. The plugin is not yet listed in the Claude Code marketplace, so loading it currently requires a checkout of the Mneme repository.</p>
+    <p>The Python runtime and the Claude Code plugin are <strong>separate artifacts</strong>: installing one does not install the other, and no auto-install links them. The plugin is listed in Claude&rsquo;s plugin directory, and every check it makes runs through the runtime. Without the runtime and a decision corpus, the plugin installs without error and checks nothing.</p>
 
     <ol>
       <li>
@@ -417,18 +417,23 @@
       <li>
         <strong>Scaffold project memory (if you don't have one yet)</strong>
         <pre tabindex="0"><code>mneme init</code></pre>
-        <p><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty valid decision corpus &mdash; deliberately zero seeded decisions, since every recorded decision is enforceable. It refuses to overwrite an existing corpus unless <code>--force</code> is supplied. Populate it with <code>mneme add_decision</code>, or bring your existing ADRs in with <a href="/integrations/adr-import/"><code>mneme adr import</code></a>.</p>
+        <p><code>mneme init</code> creates <code>.mneme/project_memory.json</code> with an empty valid decision corpus. It deliberately seeds zero decisions, since every recorded decision is enforceable. It refuses to overwrite an existing corpus unless <code>--force</code> is supplied. Populate it with <code>mneme add_decision</code>, or bring your existing ADRs in with <a href="/integrations/adr-import/"><code>mneme adr import</code></a>. The docs quick start uses <code>mneme setup</code> instead, which creates the same file and also reports which decisions are ready to protect.</p>
       </li>
       <li>
-        <strong>Load the plugin</strong>
+        <strong>Add the plugin from Claude&rsquo;s plugin directory</strong>
+        <pre tabindex="0"><code>claude plugin install mneme@anthropic-plugin-directory</code></pre>
+        <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). It starts in <code>strict</code> mode. To report violations without blocking, add <code>--config mode=warn</code> to the install command, or change the option later with <code>/plugin configure</code>.</p>
+        <p>Enforcement runs in Claude Code. The Claude web, desktop and mobile apps don&rsquo;t run plugin hooks, so the plugin blocks nothing there.</p>
+        <p><strong>To load a fixed version from a checkout</strong>, for example to pin it or to work on the plugin:</p>
         <pre tabindex="0"><code>git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme
 claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
-        <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). Reload in-session with <code>/reload-plugins</code> after changes.</p>
+        <p>Reload in-session with <code>/reload-plugins</code> after changes.</p>
         <p>A legacy flat installer (<code>python scripts/install_claude_code.py</code>, with hyphenated <code>/mneme-check</code> commands) still works from a git clone, but <code>scripts/</code> is not shipped in the PyPI wheel.</p>
       </li>
       <li>
         <strong>Verify</strong>
         <p>Open Claude Code in your project, make an edit that violates a recorded decision, and confirm the hook blocks it and surfaces the decision id.</p>
+        <p>A recorded decision blocks nothing until its rule is active. If the edit goes through, follow <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a>, which takes one ADR to an active rule.</p>
       </li>
     </ol>
 
@@ -534,13 +539,13 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
     <ul>
       <li>Confirm <code>mneme-hook</code> is on <code>$PATH</code>: <code>which mneme-hook</code> (or <code>where mneme-hook</code> on Windows).</li>
       <li>If not, the pip scripts directory may not be on <code>$PATH</code>. Add it, or install with <code>pipx</code>.</li>
-      <li>Confirm Claude Code was started with <code>--plugin-dir</code> pointing at the plugin. With the legacy installer, confirm <code>.claude/settings.json</code> contains the <code>PreToolUse</code> entry.</li>
+      <li>Confirm the plugin is installed and enabled: <code>claude plugin list</code> should show <code>mneme@anthropic-plugin-directory</code>. If you load it from a checkout, confirm Claude Code was started with <code>--plugin-dir</code> pointing at the plugin. With the legacy installer, confirm <code>.claude/settings.json</code> contains the <code>PreToolUse</code> entry.</li>
     </ul>
 
     <h3>Hook fires but nothing is blocked</h3>
     <ul>
       <li>Confirm <code>.mneme/project_memory.json</code> exists in the session&rsquo;s working directory or a parent directory, or set <code>MNEME_MEMORY</code>. With no memory file the hook allows every change silently.</li>
-      <li>Check your decision scope keywords against the file names being edited — see the retrieval section above.</li>
+      <li>Check your decision scope keywords against the file names being edited. See the retrieval section above.</li>
       <li>Confirm neither <code>MNEME_HOOK_MODE</code> nor the plugin&rsquo;s <code>mode</code> option is set to <code>warn</code>, which never blocks.</li>
       <li>Check Claude Code&rsquo;s debug log for notes from <code>mneme-hook</code>, such as &ldquo;Failing open&rdquo;.</li>
     </ul>
@@ -556,7 +561,7 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
     <div class="faq-list">
       <details class="faq-item">
         <summary>How is the Mneme hook different from CLAUDE.md?</summary>
-        <div class="faq-body">CLAUDE.md is static context: text injected at session start that the model is asked to respect. The Mneme hook runs as a PreToolUse hook &mdash; it intercepts Edit and Write calls before they touch the filesystem and can return exit code 2 to block the operation outright. CLAUDE.md is advisory; the hook is enforcement. The two are complementary: CLAUDE.md gives the model context, Mneme blocks violations regardless of whether the model attended to that context. See <a href="/insights/why-prompt-memory-fails-at-scale/">why prompt memory fails at scale</a>.</div>
+        <div class="faq-body">CLAUDE.md is static context: text injected at session start that the model is asked to respect. The Mneme hook runs as a PreToolUse hook. It intercepts Edit and Write calls before they touch the filesystem and can return exit code 2 to block the operation outright. CLAUDE.md is advisory; the hook is enforcement. The two are complementary: CLAUDE.md gives the model context, Mneme blocks violations regardless of whether the model attended to that context. See <a href="/insights/why-prompt-memory-fails-at-scale/">why prompt memory fails at scale</a>.</div>
       </details>
 
       <details class="faq-item">
@@ -566,7 +571,7 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
 
       <details class="faq-item">
         <summary>What happens if Mneme itself fails?</summary>
-        <div class="faq-body">The hook is designed fail-open: if the Mneme process errors, returns invalid output, or times out, Claude Code is allowed to proceed rather than being blocked. This is a deliberate safety choice &mdash; a broken governance layer should not lock the team out of editing their codebase. Strict mode (<code>mneme check --mode strict</code>) in CI is where hard-blocking lives; the editor-time hook prioritizes availability.</div>
+        <div class="faq-body">The hook is designed fail-open: if the Mneme process errors, returns invalid output, or times out, Claude Code is allowed to proceed rather than being blocked. This is a deliberate safety choice: a broken governance layer should not lock the team out of editing their codebase. Strict mode (<code>mneme check --mode strict</code>) in CI is where hard-blocking lives; the editor-time hook prioritizes availability.</div>
       </details>
 
       <details class="faq-item">

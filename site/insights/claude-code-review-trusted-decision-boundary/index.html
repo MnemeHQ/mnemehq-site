@@ -418,9 +418,19 @@
 
 <h2>Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, works on the enforcement side of this flow. It keeps a team's decision corpus, the set of architectural decisions the team has recorded, in one file in the repository. A decision is enforced only when it has an active typed rule: a machine-checkable condition, such as an exact text string that must not appear in code, attached to the decision's current version.</p>
-<p>Mneme checks a write before it lands when a supported agent uses its built-in file tools, such as Claude Code's Edit, Write and MultiEdit. Most shell writes land on disk first: Claude Code and Codex CLI check them when the agent finishes its turn, and in other agents only CI catches them. In CI, <code>mneme check</code> applies the same corpus and returns PASS, WARN or FAIL.</p>
+<p>Mneme checks a write before it lands when a supported agent uses its built-in file tools, such as <a href="/integrations/claude-code/">Claude Code's Edit, Write and MultiEdit</a>. Most shell writes land on disk first: Claude Code and Codex CLI check them when the agent finishes its turn, and in other agents only CI catches them. In CI, <code>mneme check</code> applies the same corpus and returns PASS, WARN or FAIL.</p>
 <p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision, with its lifecycle and source, and every stage reads it from the same file. It is a version history, not an approval record: it does not store who approved a decision, so teams that need that keep it where identities are verified, such as reviews of the pull requests that change the decision files.</p>
 <p>Mneme has the gap this article describes, too. Its documented <a href="/use-cases/ci-governance-for-ai-generated-code/">CI recipe</a> reads the decision corpus from the PR's own checkout, so a PR that edits the corpus is checked against its own edit. Resolving decisions from a protected state, independent of the change, is not shipped. Neither are governed waivers, meaning recorded exceptions that name the approver, scope and expiry. Until it is, teams can use their Git host's code-owner rules to require an owner's approval for any change to the <code>.mneme/</code> directory.</p>
+
+<aside class="cta-band" aria-label="Set up Mneme with Claude Code">
+  <div class="cta-band-eyebrow">Claude Code plugin</div>
+  <h3>Check Claude Code's edits against your decisions</h3>
+  <p>Install the CLI and run <code>mneme setup</code>, then add the plugin from Claude's plugin directory. Without the CLI, the plugin checks nothing.</p>
+  <div class="cta-row">
+    <a href="/integrations/claude-code/#install" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="mid" data-cta-component="cta_band">Set up Mneme with Claude Code</a>
+    <a href="/docs/#quickstart" class="cta-btn-outline" data-cta-intent="quickstart" data-cta-position="mid" data-cta-component="cta_band">Read the quickstart</a>
+  </div>
+</aside>
 
 <h2>Five questions before you trust an AI review gate</h2>
 <ul>
