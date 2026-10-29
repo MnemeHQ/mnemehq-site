@@ -36,7 +36,7 @@ and page views remain funnel signals rather than GA4 key events.
 ```js
 {
   event: 'cta_click',
-  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit|compare',
+  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit|compare|docs|use_case|concept|integration',
   cta_position: 'nav|hero|mid|end',
   cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card|context',
   cta_destination: '<href>',
@@ -343,6 +343,14 @@ sequence itself still requires a production GA4 session.
       bucketed /compare/ pages as `other`); all 13 /compare/ detail pages
       instrumented (`sweep_compare_cta.py`), six bridged pages carry
       audit-primary bridges while seven remain the tagged control group
+- [x] 2026-10-29 — insight contextual CTAs tracked: `cta_intent=docs`
+      (docs pages other than the quickstart anchor; already emitted by four
+      pages), `use_case`, `concept` and `integration` added to the contract.
+      160 contextual CTAs now send `cta_position=end`,
+      `cta_component=context` (`sweep_context_cta_placement.py`); the 48
+      Wave 1 links keep `cta_position=mid` unchanged. The values pass through
+      `DLV - cta_intent` as strings; any report that groups intents by a
+      fixed list needs the four new values added
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 
