@@ -492,6 +492,41 @@ def check_slug(
             f"the inaccessible browser-default blue on the dark background."
         )
 
+    # 10. contextual CTA placement and tracking (docs/site/cta-system.md):
+    #     it follows the prose, so it sits before the FAQ, and every link in it
+    #     carries data-cta-intent so cta_click can report it.
+    errors.extend(check_context_cta(slug, html))
+
+    return errors
+
+
+def check_context_cta(slug: str, html: str) -> list[str]:
+    errors: list[str] = []
+    i = html.find(CONTEXT_CTA_MARKER)
+    if i == -1:
+        return errors  # absence is a slug_warnings() warning, not an error
+    faq = html.find('class="article-faq"')
+    if faq != -1 and i > faq:
+        errors.append(
+            f"Contextual CTA in {slug} sits after the FAQ; move it to the end of the "
+            f"prose (python scripts/sweep_context_cta_placement.py --write)"
+        )
+    start = html.rfind("<", 0, i)
+    tag = re.match(r"<(\w+)", html[start:]).group(1)
+    depth, end = 0, len(html)
+    for m in re.finditer(rf"<(/?){tag}\b[^>]*>", html[start:]):
+        depth += -1 if m.group(1) else 1
+        if depth == 0:
+            end = start + m.end()
+            break
+    for a in re.findall(r"<a\s[^>]*>", html[start:end]):
+        if "data-cta-intent" not in a:
+            errors.append(
+                f"Untracked link in the contextual CTA of {slug}: add data-cta-intent, "
+                f"data-cta-position and data-cta-component "
+                f"(python scripts/sweep_context_cta_placement.py --write)"
+            )
+            break
     return errors
 
 

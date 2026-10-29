@@ -457,6 +457,15 @@
   <li><strong>Hold the code boundary.</strong> Enforce the adapter rule in application code, or the pool size stops meaning anything.</li>
 </ul>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Enforce the adapter boundary">
+    <div class="context-cta-eyebrow">How-to guide</div>
+    <p class="context-cta-copy">Turn an ADR into a typed rule that fails any request handler importing the database client directly.</p>
+    <div class="context-cta-actions">
+      <a href="/docs/how-to/adr-to-enforceable-decision/" class="context-cta-primary" data-cta-intent="docs" data-cta-position="end" data-cta-component="context">Turn an ADR into an enforceable decision &rarr;</a>
+      <a href="/docs/how-enforcement-works/" class="context-cta-secondary" data-cta-intent="docs" data-cta-position="end" data-cta-component="context">Read how enforcement works &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -476,15 +485,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Mneme enforces typed rules on application code, such as a path-scoped FORBID_LITERAL rule that fails a request handler importing the database client directly. It does not enforce infrastructure policy, admit deployments, or check replica counts against a connection budget. Admission control belongs to tools such as Kyverno and OPA Gatekeeper, and the runtime side belongs to monitoring.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Enforce the adapter boundary">
-    <div class="context-cta-eyebrow">How-to guide</div>
-    <p class="context-cta-copy">Turn an ADR into a typed rule that fails any request handler importing the database client directly.</p>
-    <div class="context-cta-actions">
-      <a href="/docs/how-to/adr-to-enforceable-decision/" class="context-cta-primary" data-cta-intent="docs" data-cta-position="article-end" data-cta-component="context-cta">Turn an ADR into an enforceable decision &rarr;</a>
-      <a href="/docs/how-enforcement-works/" class="context-cta-secondary">Read how enforcement works &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related governance concepts">
     <div class="related-panel-label">Related governance concepts</div>

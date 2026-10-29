@@ -455,6 +455,15 @@
 <p>Mneme sits mainly at the boundary between a proposed action and its execution. Pre-write hooks ship for five coding agents: Claude Code, the Claude Agent SDK, Codex CLI, Kiro and Google Antigravity, each covering the action paths its integration page lists. The Claude Agent SDK adapter also injects the relevant decisions into the model's context when a task is submitted; in Claude Code, the <code>/mneme:context</code> command retrieves them on request. A reference GitHub Actions workflow runs the same check on every pull request; set as a required status check, it blocks the merge. Extending enforcement beyond code writes, to database migrations, infrastructure changes or agent delegation, is a direction, not a shipped capability.</p>
 <p>The <a href="/audit/">Architecture Audit</a> answers part of that question for a repository. It classifies each documented decision as Protected (verified protection by an existing typed rule), Mneme-ready, Requires modelling or Guidance (no deterministic enforcement shape).</p>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
+    <div class="context-cta-eyebrow">Architecture Audit</div>
+    <p class="context-cta-copy">See which of your architectural decisions are deterministically protected today, which could be, and which remain guidance.</p>
+    <div class="context-cta-actions">
+      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="end" data-cta-component="context">Run the Architecture Audit &rarr;</a>
+      <a href="/docs/how-enforcement-works/" class="context-cta-secondary" data-cta-intent="docs" data-cta-position="end" data-cta-component="context">See how enforcement works &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -474,15 +483,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. It stops the actions it can see, and some actions are always out of view. The working model is prevent, catch, verify: prevent supported actions before they execute, catch what escaped at the end of the turn or session, and verify the final state of the repository in CI before merge. Human review remains the place for design trade-offs that no rule can encode.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
-    <div class="context-cta-eyebrow">Architecture Audit</div>
-    <p class="context-cta-copy">See which of your architectural decisions are deterministically protected today, which could be, and which remain guidance.</p>
-    <div class="context-cta-actions">
-      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="article-end" data-cta-component="context-cta">Run the Architecture Audit &rarr;</a>
-      <a href="/docs/how-enforcement-works/" class="context-cta-secondary">See how enforcement works &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related governance concepts">
     <div class="related-panel-label">Related governance concepts</div>

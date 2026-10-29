@@ -431,6 +431,15 @@
 <h2>Where Mneme fits</h2>
 <p>Mneme applies to the part of a language migration that is a decision about code: which interface the target side may use, and which older decisions the migration supersedes. Its <a href="/audit/">Architecture Audit</a> scans a repository for the decisions it already documents, in ADRs, agent instructions and configuration, and shows which ones a typed rule enforces with the same verdict on every run. Migration-aware enforcement, migration assurance reporting and cross-language equivalence checks are research directions, not shipped capabilities.</p>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
+    <div class="context-cta-eyebrow">Architecture Audit</div>
+    <p class="context-cta-copy">See which architectural decisions your repository already documents, and which of them a typed rule enforces today.</p>
+    <div class="context-cta-actions">
+      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="end" data-cta-component="context">Run the Architecture Audit &rarr;</a>
+      <a href="/docs/supported-languages/" class="context-cta-secondary" data-cta-intent="docs" data-cta-position="end" data-cta-component="context">See supported languages &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -450,15 +459,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Part of it. Mneme enforces decisions that carry an active typed rule, and a rule can be limited to the Go packages, for example to keep them from referencing the old service's internals past the approved interface. Its support for Go, JavaScript and TypeScript is repository-level. It does not check behavioral equivalence, validate performance or perform cutovers; those belong to test and deployment tools.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
-    <div class="context-cta-eyebrow">Architecture Audit</div>
-    <p class="context-cta-copy">See which architectural decisions your repository already documents, and which of them a typed rule enforces today.</p>
-    <div class="context-cta-actions">
-      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="article-end" data-cta-component="context-cta">Run the Architecture Audit &rarr;</a>
-      <a href="/docs/supported-languages/" class="context-cta-secondary">See supported languages &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related migration reading">
     <div class="related-panel-label">Related migration reading</div>

@@ -465,6 +465,15 @@
 <p>Mneme is an open-source decision and control layer for agentic software development. For architectural decisions in a repository, it implements part of decision governance today. It compiles the enforceable parts of accepted decisions into typed rules, which are machine-checkable rules with exact meaning, and checks proposed changes against them. Checks run inside supported agents through hooks, which intercept a file write before it lands, in Claude Code and OpenAI's Codex command-line interface (CLI), and again in continuous integration (CI) before merge. Each violation names the decision and rule that triggered it. Its <a href="/docs/decision-index/">Decision Index</a>, the versioned record of a repository's decisions shipped in mneme-hq 0.10.0, keeps each decision's version history, lifecycle state and source.</p>
 <p>Mneme is not a QA platform or a security scanner, and it does not replace review. Pulling decisions from Confluence, Jira or chat tools is not shipped.</p>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
+    <div class="context-cta-eyebrow">Architecture Audit</div>
+    <p class="context-cta-copy">See which architectural decisions in your repository are documented, which can be protected today, and which still rely on human interpretation.</p>
+    <div class="context-cta-actions">
+      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="end" data-cta-component="context">Run the Architecture Audit &rarr;</a>
+      <a href="/concepts/engineering-decision-governance/" class="context-cta-secondary" data-cta-intent="concept" data-cta-position="end" data-cta-component="context">Read about engineering decision governance &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -488,15 +497,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Code review is a person judging one change. Engineering decision governance determines which of the team's existing decisions apply to that change, whether they are still current, and what evidence shows they were followed. The enforceable decisions can then be checked automatically on every change, before merge, leaving reviewers to focus on trade-offs that need human judgment.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
-    <div class="context-cta-eyebrow">Architecture Audit</div>
-    <p class="context-cta-copy">See which architectural decisions in your repository are documented, which can be protected today, and which still rely on human interpretation.</p>
-    <div class="context-cta-actions">
-      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="article-end" data-cta-component="context-cta">Run the Architecture Audit &rarr;</a>
-      <a href="/concepts/engineering-decision-governance/" class="context-cta-secondary">Read about engineering decision governance &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related governance concepts">
     <div class="related-panel-label">Related governance concepts</div>

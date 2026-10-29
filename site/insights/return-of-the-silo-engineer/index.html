@@ -420,6 +420,15 @@
 <p>Collaboration is still how a team creates and changes its architectural intent. Mneme's job is to carry those decisions into work that happens far from the conversations that produced them.</p>
 <p>Today that covers architectural decisions in a repository. Mneme, an open-source decision and control layer for agentic software development, compiles the enforceable parts of accepted decisions into typed rules: machine-checkable rules with exact meaning. It checks proposed changes against them through hooks inside supported agents, which intercept a file write before it lands, such as Claude Code and OpenAI's Codex command-line interface (CLI), and in continuous integration (CI) before merge. Agents can also query the local <a href="/docs/mcp/">Decision Index MCP server</a>, which uses the Model Context Protocol (MCP), for the decisions that apply to the files they are about to change. Decisions that live in chat tools, tickets or wikis outside the repository are not ingested today.</p>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
+    <div class="context-cta-eyebrow">Architecture Audit</div>
+    <p class="context-cta-copy">See which architectural decisions in your repository are documented, which can be protected today, and which still rely on human interpretation.</p>
+    <div class="context-cta-actions">
+      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="end" data-cta-component="context">Run the Architecture Audit &rarr;</a>
+      <a href="/concepts/engineering-coherence/" class="context-cta-secondary" data-cta-intent="concept" data-cta-position="end" data-cta-component="context">Read about engineering coherence &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -439,15 +448,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Not as the main answer. Review capacity is fixed by headcount and does not grow with agent output, so more mandatory review mostly slows teams down. Keep review for trade-offs that need judgment. Record the decisions that are expensive to reverse with a scope and a status, put them where engineers and agents work, and check the enforceable ones automatically before merge.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
-    <div class="context-cta-eyebrow">Architecture Audit</div>
-    <p class="context-cta-copy">See which architectural decisions in your repository are documented, which can be protected today, and which still rely on human interpretation.</p>
-    <div class="context-cta-actions">
-      <a href="/audit/" class="context-cta-primary" data-cta-intent="audit" data-cta-position="article-end" data-cta-component="context-cta">Run the Architecture Audit &rarr;</a>
-      <a href="/concepts/engineering-coherence/" class="context-cta-secondary">Read about engineering coherence &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related governance concepts">
     <div class="related-panel-label">Related governance concepts</div>

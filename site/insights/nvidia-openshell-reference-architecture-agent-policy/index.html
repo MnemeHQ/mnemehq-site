@@ -440,6 +440,15 @@
 <p>In CI, a FAIL exits with code 2 and fails the job when the check runs in strict mode; in warn mode it reports the violation without failing the job. The <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted, versioned record of decisions, keeps each decision's versions, lifecycle status and source. It does not record who approved a decision. Which decisions govern a change, and why, is the question of <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>.</p>
 <p>No supported or released Mneme integration with OpenShell exists. A narrowly scoped example integration, covering only the file-write tool of OpenCode (an open-source terminal coding agent) in an OpenShell setup, is proposed in draft design documents in Mneme's open-source repository. No implementation has been merged, released or supported. Running a Mneme check behind a gateway interceptor or supervisor middleware, mapping OCSF events to Mneme evidence, and translating decisions into OPA or NVIDIA Sentry policy are conceptual. No adapter for any of them exists. The <a href="/integrations/nvidia-openshell/">NVIDIA OpenShell integration page</a> tracks this status, alongside separate pages for <a href="/integrations/open-policy-agent/">OPA</a> and <a href="/integrations/nvidia-sentry/">NVIDIA Sentry</a>.</p>
 
+  <aside class="context-cta" data-mneme-cta="context" aria-label="Read how enforcement works">
+    <div class="context-cta-eyebrow">How enforcement works</div>
+    <p class="context-cta-copy">See which boundaries Mneme enforces typed rules at, per agent, and which writes are caught before they land, at the end of a turn, or in CI. The Architecture Audit shows which of your repository's decisions are protected today.</p>
+    <div class="context-cta-actions">
+      <a href="/docs/how-enforcement-works/" class="context-cta-primary" data-cta-intent="docs" data-cta-position="end" data-cta-component="context">Read how enforcement works &rarr;</a>
+      <a href="/audit/" class="context-cta-secondary" data-cta-intent="audit" data-cta-position="end" data-cta-component="context">Run the Architecture Audit &rarr;</a>
+    </div>
+  </aside>
+
 <section class="article-faq" aria-labelledby="faq-heading" style="margin-top:3rem;">
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
@@ -459,15 +468,6 @@
     <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Not in any supported or released form. A narrowly scoped example integration, covering only the file-write tool of OpenCode (an open-source coding agent) in an OpenShell setup, is proposed in draft design documents in Mneme's open-source repository. No implementation has been merged, released or supported. Adapters for OpenShell gateway interceptors, supervisor middleware, OPA or NVIDIA Sentry are conceptual. What ships in mneme-hq 0.10.0 is typed-rule enforcement in supported coding agents and in CI.</div>
   </details>
 </section>
-
-  <aside class="context-cta" data-mneme-cta="context" aria-label="Read how enforcement works">
-    <div class="context-cta-eyebrow">How enforcement works</div>
-    <p class="context-cta-copy">See which boundaries Mneme enforces typed rules at, per agent, and which writes are caught before they land, at the end of a turn, or in CI. The Architecture Audit shows which of your repository's decisions are protected today.</p>
-    <div class="context-cta-actions">
-      <a href="/docs/how-enforcement-works/" class="context-cta-primary" data-cta-intent="docs" data-cta-position="article-end" data-cta-component="context-cta">Read how enforcement works &rarr;</a>
-      <a href="/audit/" class="context-cta-secondary">Run the Architecture Audit &rarr;</a>
-    </div>
-  </aside>
 
   <section class="related-panel" aria-label="Related governance concepts">
     <div class="related-panel-label">Related governance concepts</div>
