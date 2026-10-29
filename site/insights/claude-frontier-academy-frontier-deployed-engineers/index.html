@@ -369,22 +369,7 @@
   </header>
 
 <div class="article-body">
-
-  <nav class="toc" aria-label="Table of contents">
-    <div class="toc-title">In this article</div>
-    <ol>
-      <li><a href="#what-claude-frontier-academy-is">What Claude Frontier Academy is</a></li>
-      <li><a href="#why-anthropic-is-training-people-not">Why Anthropic is training people, not shipping a model</a></li>
-      <li><a href="#the-simulation-ends-at-handover-governance">The simulation ends at handover. Governance starts there.</a></li>
-      <li><a href="#what-changes-at-10-000-engineers">What changes at 10,000 engineers</a></li>
-      <li><a href="#the-missing-layer-is-organisational-decisions">The missing layer is organisational decisions</a></li>
-      <li><a href="#why-this-matters-beyond-claude">Why this matters beyond Claude</a></li>
-      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
-      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
-      <li><a href="#faq-heading">Frequently asked questions</a></li>
-    </ol>
-  </nav>
-<h2 id="what-claude-frontier-academy-is">What Claude Frontier Academy is</h2>
+<h2>What Claude Frontier Academy is</h2>
 <p>On 2 October 2026, Anthropic <a href="https://www.anthropic.com/news/claude-frontier-academy" target="_blank" rel="noopener">announced Claude Frontier Academy</a>, backed by a $100 million commitment. Its goal is to train 10,000 Frontier Deployed Engineers (FDEs) by the end of 2027. Anthropic's Steve Corfield describes them as engineers who can "take Claude from an idea to a system in production."</p>
 <p>The first programme is the Frontier Deployed Engineer Residency. It runs in two parts:</p>
 <ul>
@@ -393,16 +378,16 @@
 </ul>
 <p>Participation is by nomination, and each engineer arrives with a named Claude project. The first cohorts are running in San Francisco, New York and London, with engineers from Accenture, Bain, Capgemini, Commonwealth Bank of Australia, Deloitte, McKinsey, Morgan Stanley and Novo Nordisk, among others.</p>
 
-<h2 id="why-anthropic-is-training-people-not">Why Anthropic is training people, not shipping a model</h2>
+<h2>Why Anthropic is training people, not shipping a model</h2>
 <p>Anthropic's own explanation is that the people with the skills "to make it work inside a real business have become the hardest talent to find." Our reading: access to strong models is no longer what limits most enterprises. Getting a model into production, through security review, integration and adoption, is.</p>
 <p>The forward deployed engineer role itself is not new. Our <a href="/insights/forward-deployed-engineers-enterprise-ai/">guide to forward deployed engineers</a> covers where it came from and what it involves. What is new is the scale. Ten thousand engineers trained on one curriculum means deployment is starting to be taught as a repeatable process, rather than learned one project at a time. Five of the eight first-cohort organisations Anthropic names are consultancies, which deploy for many clients.</p>
 
-<h2 id="the-simulation-ends-at-handover-governance">The simulation ends at handover. Governance starts there.</h2>
+<h2>The simulation ends at handover. Governance starts there.</h2>
 <p>The simulated deployment at the heart of the in-person programme runs to handover, and that is the right place to end a training exercise. In a real deployment it is where the hard part begins.</p>
 <p>During a deployment, the engineer makes dozens of decisions: which data the agent may read, which actions it may take without approval, which systems it must not touch, which exceptions were agreed with the security team and why. Some end up in a design document. The rest live in the engineer's head and in conversations with the client, unless someone records them.</p>
 <p>When the engineer moves on, the system keeps running and keeps changing. New agents are added, prompts are revised, coding agents modify the integration code. Each change is made by someone, or something, that was not in the room when the original decisions were made. This is the failure we described for forward-deployed architects: <a href="/insights/forward-deployed-architects-need-a-decision-layer/">the architect becomes another silo</a>, the one person the system's knowledge depends on.</p>
 
-<h2 id="what-changes-at-10-000-engineers">What changes at 10,000 engineers</h2>
+<h2>What changes at 10,000 engineers</h2>
 <p>One engineer leaving one deployment is a handover problem. Thousands of engineers, many at consultancies that deploy for many clients, turn it into a structural one:</p>
 <ul>
   <li>Each deployment accumulates its own local decisions, with no shared format.</li>
@@ -411,15 +396,15 @@
 </ul>
 <p>Training more deployers raises the number of decisions being made. It does not, on its own, give those decisions a home after the deployer leaves.</p>
 
-<h2 id="the-missing-layer-is-organisational-decisions">The missing layer is organisational decisions</h2>
+<h2>The missing layer is organisational decisions</h2>
 <p>What has to survive handover is not the model, the prompts or the code. Those are already versioned. It is the decisions: what was agreed, which part of the system each decision covers, who agreed it, whether it still holds, and how anyone can tell it is being respected.</p>
 <p>That set of decisions needs the properties described on the <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> concept page: scope, authority, lifecycle and evidence, recorded in a form both people and agents can use. We call the place they live a decision layer. It sits under every agent in the deployment, not inside any one of them.</p>
 
-<h2 id="why-this-matters-beyond-claude">Why this matters beyond Claude</h2>
+<h2>Why this matters beyond Claude</h2>
 <p>Nothing here is specific to Anthropic. Enterprises run Claude next to other models, coding agents from several vendors, and internal automation. A decision about which customer data an agent may touch has to hold whichever agent is acting. If each vendor's tooling keeps its own copy of the rules, nothing keeps the copies consistent.</p>
 <p>The <a href="/insights/fde-coding-agents/">coding-agent side of FDE work</a> shows the same pattern at the code level. The deployment is multi-vendor, so the decisions that govern it cannot belong to one vendor.</p>
 
-<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
+<h2>What engineering leaders should do</h2>
 <ul>
   <li><strong>If you nominate engineers, ask for decisions as a deliverable.</strong> The residency project should end with its key decisions recorded, scoped and owned, not only working software.</li>
   <li><strong>Treat handover as a transfer of decisions.</strong> Before a deployer leaves, list what was decided, who agreed it and what it applies to.</li>
@@ -427,7 +412,7 @@
   <li><strong>Check the enforceable ones automatically.</strong> Where a decision can be expressed as a rule, check changes against it rather than relying on the next engineer to remember it.</li>
 </ul>
 
-<h2 id="where-mneme-fits">Where Mneme fits</h2>
+<h2>Where Mneme fits</h2>
 <p>Mneme is an open-source decision and control layer for agentic software development, and it is tool-independent. Today it covers architectural decisions in a repository. It records them with lifecycle and version history, and enforces the ones expressed as typed rules deterministically when supported coding agents, including Claude Code, OpenAI's Codex command-line interface (CLI) and Kiro, write files, and again in continuous integration (CI). A decision layer that spans an organisation's systems beyond the repository is the direction this argument points to, not a shipped capability.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">

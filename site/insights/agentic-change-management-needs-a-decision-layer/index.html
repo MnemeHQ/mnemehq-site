@@ -349,28 +349,16 @@
   </header>
 
 <div class="article-body">
-
-  <nav class="toc" aria-label="Table of contents">
-    <div class="toc-title">In this article</div>
-    <ol>
-      <li><a href="#the-pr-queue-is-becoming-a">The PR queue is becoming a decision system</a></li>
-      <li><a href="#a-pr-is-not-an-architectural">A PR is not an architectural decision</a></li>
-      <li><a href="#change-evidence-and-decision-authority-are">Change evidence and decision authority are different things</a></li>
-      <li><a href="#the-agentic-sdlc-now-has-two">The agentic SDLC now has two control planes</a></li>
-      <li><a href="#mcp-is-the-interoperability-boundary-between">MCP is the interoperability boundary between them</a></li>
-      <li><a href="#where-to-start">Where to start</a></li>
-    </ol>
-  </nav>
-<h2 id="the-pr-queue-is-becoming-a">The PR queue is becoming a decision system</h2>
+<h2>The PR queue is becoming a decision system</h2>
 <p>CodeRabbit calls Triage the "prioritization layer" of what it calls Agentic Change Management: its system for governing software change from both people and agents (<a href="https://www.coderabbit.ai/blog/coderabbit-triage" target="_blank" rel="noopener">CodeRabbit, September 2026</a>). Triage replaces FIFO ordering with a deterministic P0-to-P3 score per pull request, and it shows the evidence behind each score. That is not marketing language stretched onto a review feature. It is a genuine move from probabilistic AI review toward deterministic, evidence-backed governance output, and it is the clearest signal yet that agentic development is pushing governance into the delivery pipeline itself.</p>
 
-<h2 id="a-pr-is-not-an-architectural">A PR is not an architectural decision</h2>
+<h2>A PR is not an architectural decision</h2>
 <p>Triage's own framing is honest about its object: it governs the change, not the architecture the change has to fit inside. CodeRabbit says explicitly that architectural judgment, including whether an abstraction makes sense for the application, remains human. That is the right boundary, and it is also the gap. A pull request is a transient artifact: opened, scored, merged, closed. An architectural decision is not. It survives the PR that prompted it, the next thousand PRs, a framework migration, a team rewrite, and every agent that touches the codebase afterward. A system that scores PRs needs a durable, separate answer to what decisions apply to this PR before it can meaningfully judge whether the PR is safe to advance.</p>
 
-<h2 id="change-evidence-and-decision-authority-are">Change evidence and decision authority are different things</h2>
+<h2>Change evidence and decision authority are different things</h2>
 <p>Triage can explain why a PR is P0 instead of P3: it shows the evidence behind the score. That is change evidence. It is a different kind of evidence from decision authority: why an architectural decision governs this action, who approved it, what constraint follows from it, and whether it is still in force. Change evidence answers whether a change is good. Decision authority answers what the change is bound by. Conflating the two produces tools that can explain their own risk model but cannot say whether the code violates an architecture the organization already agreed on.</p>
 
-<h2 id="the-agentic-sdlc-now-has-two">The agentic SDLC now has two control planes</h2>
+<h2>The agentic SDLC now has two control planes</h2>
 <p>Put together, the emerging stack for governed agentic delivery has two distinct planes, not one:</p>
 <pre tabindex="0"><code>Human architectural judgment
         |
@@ -393,11 +381,11 @@ Review / risk / prioritization
        Merge</code></pre>
 <p>The decision plane sits before the change exists: what has been decided, what applies, what is enforced before generation. The change plane sits after: what changed, is it correct, what risk it carries, whether it is ready to merge. Neither plane can do the other's job. A prioritization engine that tries to encode architectural authority ends up re-deriving governance ad hoc, per repository, per rule. A decision layer that tries to score PR risk ends up duplicating review tooling it has no advantage building. See the full breakdown in <a href="/architecture/#decision-vs-change-plane">Mneme's architecture overview</a>.</p>
 
-<h2 id="mcp-is-the-interoperability-boundary-between">MCP is the interoperability boundary between them</h2>
+<h2>MCP is the interoperability boundary between them</h2>
 <p>Until recently, connecting the two planes meant one of two bad options: a change-management system re-implements architectural governance itself, or a governance system builds bespoke adapters into every review and CI product it wants to reach. Mneme's Decision MCP server, shipped in 0.9.0, is built for the second boundary: a stable, six-tool protocol surface an agent, IDE, or other MCP host can call to retrieve the architectural decisions applicable to a proposed action, with provenance attached, without adopting Mneme's storage model or internals. It runs as a local stdio process, so a hosted reviewer or change-management service is a pattern the protocol enables, not a connection available today.</p>
 <p>To be precise about maturity: Mneme has no CodeRabbit integration today, and this is not a roadmap announcement. It is the shape of what MCP enables. A change-management system built the way CodeRabbit describes Triage could call <code>decision.applicable_to</code> to retrieve the decisions governing a change, while continuing to own its own review, impact analysis, and prioritization entirely. See <a href="/integrations/mcp/">how that boundary is designed to work</a> and the <a href="/docs/mcp/">full six-tool reference</a>.</p>
 
-<h2 id="where-to-start">Where to start</h2>
+<h2>Where to start</h2>
 <p>Before a system can decide which change deserves attention, the organization needs a durable, enforceable answer to what it has already decided about the architecture. Most codebases do not have one: the decisions exist in someone's memory, an old ADR, or a chat thread, not in a form any system, human or agent, can query. The decision-plane-versus-change-plane distinction only pays off once decisions are actually represented in enforceable form. The <a href="/audit/">Architecture Audit</a> is the place to find out how much of your architecture already is, using the same <a href="/insights/four-architecture-protection-states/">four protection states</a> that turn "we decided this once" into a queue you can act on.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Operationalize this">

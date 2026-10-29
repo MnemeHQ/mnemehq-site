@@ -296,19 +296,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-first-fallback-was-in-the">The first fallback was in the code</a></li>
-        <li><a href="#the-bigger-fallbacks-happen-above-the">The bigger fallbacks happen above the code</a></li>
-        <li><a href="#silent-degradation-is-an-architectural-problem">Silent degradation is an architectural problem</a></li>
-        <li><a href="#what-breaks-when-it-stays-silent">What breaks when it stays silent</a></li>
-        <li><a href="#intent-preserving-degradation">Intent-preserving degradation</a></li>
-        <li><a href="#what-teams-should-do">What teams should do</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-first-fallback-was-in-the">The first fallback was in the code</h2>
+    <h2>The first fallback was in the code</h2>
     <p>Developers spent two years fighting AI assistants that wrapped everything in defensive recovery. Instead of failing clearly, generated code recovered. Instead of one execution path, it produced several. This was not robustness. It was intent drift, hidden inside a passing test.</p>
     <p>That problem is now well understood. Linters flag bare exception handlers. Reviewers reject silent defaults. The industry has largely agreed that hidden recovery in code is an anti-pattern because it turns a loud failure into a quiet wrong answer.</p>
     <div class="callout"><p><strong>The same anti-pattern moved up the stack.</strong> The recovery that used to hide inside a function now hides inside the execution environment.</p></div>
@@ -322,7 +310,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="the-bigger-fallbacks-happen-above-the">The bigger fallbacks happen above the code</h2>
+<h2>The bigger fallbacks happen above the code</h2>
     <p>Today's agents do not just write fallback code. The entire environment falls back, and usually without telling anyone.</p>
     <ul>
       <li><strong>Model downgrade.</strong> A session that started on a frontier model continues on a smaller one after a limit or a safety reroute.</li>
@@ -333,12 +321,12 @@
     </ul>
     <p>A developer asked the system to build a feature using the team's architectural standards. What the agent receives later might be: build this, with a different model, without the project's decisions, without the database rules, without the design constraints. That is no longer the same request. The intent changed, and nobody chose the change.</p>
 
-    <h2 id="silent-degradation-is-an-architectural-problem">Silent degradation is an architectural problem</h2>
+    <h2>Silent degradation is an architectural problem</h2>
     <p>Fallbacks are not wrong. Silent fallbacks are. When a change of this size happens without a signal, the operator loses the one thing they need: the ability to decide whether the degraded run is acceptable. A model swap mid-session deserves the same treatment as switching compilers or changing languages. It is a material change to how the software is produced.</p>
     <p>There is a good example of the opposite discipline. Anthropic's <a href="https://docs.anthropic.com/en/docs/about-claude/model-deprecations" target="_blank" rel="noopener">model deprecation policy</a> does not quietly substitute one model for another when a version is retired. It publishes a lifecycle (active, legacy, deprecated, retired), names a recommended replacement, gives at least 60 days of notice, and notifies affected customers by email. In their words, requests to retired models fail rather than silently rerouting. A model change is a versioned, announced, fail-loud event.</p>
     <div class="callout"><p><strong>Explicit degradation is achievable engineering practice, not an idealist's wish.</strong> The API layer already treats a model change as a governed, announced transition. The gap is that the discipline stops at the API boundary.</p></div>
 
-    <h2 id="what-breaks-when-it-stays-silent">What breaks when it stays silent</h2>
+    <h2>What breaks when it stays silent</h2>
     <p>The failure is not that the model got worse. It may not have. The failure is that the operator cannot tell the difference between a coherent run and a degraded one. Bugs get attributed to the wrong cause. Architecture drifts because the constraints that should have traveled with the request were quietly absent. Review queues absorb the cost, one confusing diff at a time.</p>
     <table class="gov-table">
       <thead><tr><th>Fallback</th><th>What silently changes</th><th>What the operator needs</th></tr></thead>
@@ -350,11 +338,11 @@
       </tbody>
     </table>
 
-    <h2 id="intent-preserving-degradation">Intent-preserving degradation</h2>
+    <h2>Intent-preserving degradation</h2>
     <p>The design principle is simple to state. When the environment degrades, the intent must not degrade with it silently. Either the constraints still apply, or the system announces that they no longer do. Good systems make degradation explicit: architecture unavailable, different model in use, enforcement disabled, memory missing. Now a person can decide.</p>
     <p>This is where an independent governance layer matters. Architectural intent should not disappear because the model changed, the window overflowed, an MCP server disconnected, or the agent switched vendors. Intent should survive degradation, or the degradation should be surfaced. That is the whole job of a guardrail layer that lives outside the model rather than inside it.</p>
 
-    <h2 id="what-teams-should-do">What teams should do</h2>
+    <h2>What teams should do</h2>
     <ul>
       <li><strong>Treat model changes as versioned events.</strong> Log the model actually used per run, and surface a downgrade the way you would surface a failed build.</li>
       <li><strong>Make enforcement independent of the model.</strong> Architectural constraints should produce the same verdict whether the run used a frontier model or a fallback.</li>

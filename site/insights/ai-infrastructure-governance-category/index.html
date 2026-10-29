@@ -190,19 +190,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-pattern-behind-every-infrastructure-wave">The pattern behind every infrastructure wave</a></li>
-        <li><a href="#ai-coding-changes-the-failure-surface">AI coding changes the failure surface</a></li>
-        <li><a href="#review-does-not-scale-with-agent">Review does not scale with agent velocity</a></li>
-        <li><a href="#why-memory-is-not-governance">Why memory is not governance</a></li>
-        <li><a href="#governance-infrastructure-emerges">Governance infrastructure emerges</a></li>
-        <li><a href="#the-long-term-shift">The long-term shift</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-pattern-behind-every-infrastructure-wave">The pattern behind every infrastructure wave</h2>
+    <h2>The pattern behind every infrastructure wave</h2>
     <p>Infrastructure categories emerge on a predictable schedule: a new capability scales fast enough that humans can no longer manage its operational failure modes manually, and a new layer arrives to do the management. The new layer is rarely the same vendors who built the capability &mdash; it is usually a specialized category that grows up beside it.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="pattern-table">
@@ -227,7 +215,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="ai-coding-changes-the-failure-surface">AI coding changes the failure surface</h2>
+<h2>AI coding changes the failure surface</h2>
     <p>Early AI coding pain was concrete and local. Hallucinated APIs. Syntax errors. Bad completions. The failure modes were the same shape as the unit of work &mdash; one line, one function, one suggestion.</p>
     <p>The current frontier is different. Better models have largely solved the local problems. What they have not solved &mdash; and arguably cannot solve, because it is not a model-layer problem &mdash; is architectural integrity at scale. The recurring symptoms in teams running AI coding seriously:</p>
     <ul>
@@ -241,7 +229,7 @@
     </ul>
     <div class="callout"><p><strong>Better models reduce syntax mistakes.</strong> They do not solve governance.</p></div>
 
-    <h2 id="review-does-not-scale-with-agent">Review does not scale with agent velocity</h2>
+    <h2>Review does not scale with agent velocity</h2>
     <p>The default answer to all of this has been &ldquo;the reviewer will catch it.&rdquo; That answer assumed a human-paced rate of code change. It does not survive autonomous generation.</p>
     <p>Concrete failure modes when human review tries to carry the governance weight at agent velocity:</p>
     <ul>
@@ -254,7 +242,7 @@
     <p>PR review was designed as the human-judgment layer that catches what slipped through the rest of the system. It was not designed to <em>be</em> the rest of the system. When it becomes the only enforcement surface, it stops being a quality gate and starts being <a href="/insights/pr-review-is-becoming-incident-response/">incident response</a>.</p>
     <p>The pattern is the same one that emerged in every previous wave: the manual layer breaks first, and a specialized layer takes over the load.</p>
 
-    <h2 id="why-memory-is-not-governance">Why memory is not governance</h2>
+    <h2>Why memory is not governance</h2>
     <p>The first instinct when teams hit drift is to give the agent more context &mdash; bigger windows, better retrieval, richer memory. That is the recall layer. It improves how much the agent knows. It does not change what the agent is allowed to do.</p>
     <p>The category that is emerging is governance, not memory. The capabilities are different:</p>
     <ul>
@@ -263,7 +251,7 @@
     </ul>
     <div class="callout"><p><strong>Retrieval improves recall.</strong> Governance preserves integrity. <a href="/insights/why-rag-fails-for-architectural-governance/">RAG fails for architectural governance</a> not because retrieval is broken but because retrieval is the wrong primitive for binary enforcement.</p></div>
 
-    <h2 id="governance-infrastructure-emerges">Governance infrastructure emerges</h2>
+    <h2>Governance infrastructure emerges</h2>
     <p>The shape the category is settling into. Capabilities that show up across the products and platforms now starting to address the layer:</p>
     <ul>
       <li><a href="/concepts/architectural-governance/"><strong>ADR enforcement</strong></a> &mdash; architectural decisions compiled into machine-evaluable constraints</li>
@@ -277,7 +265,7 @@
     </ul>
     <p>None of these are exotic ideas. They are the same primitives every other governance category developed &mdash; specialized for the agent-era surface.</p>
 
-    <h2 id="the-long-term-shift">The long-term shift</h2>
+    <h2>The long-term shift</h2>
     <p>Software engineering is shifting from one operating model to another.</p>
     <div class="callout"><p><strong>From:</strong> human-authored systems with AI assistance.<br><strong>To:</strong> AI-generated systems with human governance.</p></div>
     <p>That transition does not change the need for software engineering judgment. It changes <em>where</em> the judgment is applied. Engineers spend less time writing lines and more time defining the constraints that the system writes lines under. The work moves up a layer.</p>

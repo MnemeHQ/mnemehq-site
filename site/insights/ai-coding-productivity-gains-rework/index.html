@@ -294,21 +294,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#ai-is-generating-more-code-than">AI Is Generating More Code Than Ever</a></li>
-        <li><a href="#what-the-faros-2026-data-shows">What the Faros 2026 Data Shows</a></li>
-        <li><a href="#churn-is-often-rework">Churn Is Often Rework</a></li>
-        <li><a href="#why-traditional-quality-controls-miss-this">Why Traditional Quality Controls Miss This</a></li>
-        <li><a href="#architectural-drift-at-scale">Architectural Drift at Scale</a></li>
-        <li><a href="#after-ai-you-approve-more-than">After AI, You Approve More Than You Write</a></li>
-        <li><a href="#the-emerging-layer-is-architectural-governance">The Emerging Layer Is Architectural Governance</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="ai-is-generating-more-code-than">AI Is Generating More Code Than Ever</h2>
+    <h2>AI Is Generating More Code Than Ever</h2>
     <p>The productivity case for AI coding tools is real and measurable. In Faros AI&rsquo;s analysis of two years of engineering telemetry across 22,000 developers and more than 4,000 teams, moving from the lowest to the highest periods of AI adoption raised epics completed per developer by 66%, task throughput per developer by 33.7%, and pull-request merge rate per developer by 16.2%. Teams are shipping more, and faster.</p>
     <p>But throughput is an input, not an outcome. The same dataset shows what arrives alongside the extra output, and it complicates the story considerably.</p>
 
@@ -321,7 +307,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="what-the-faros-2026-data-shows">What the Faros 2026 Data Shows</h2>
+<h2>What the Faros 2026 Data Shows</h2>
     <p>Faros calls the pattern <a href="https://www.faros.ai/blog/ai-acceleration-whiplash-takeaways" target="_blank" rel="noopener">acceleration whiplash</a>: output accelerates while the work needed to keep that output safe accelerates faster. The quality signals are the part most coverage skips.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -340,24 +326,24 @@
 
     <p>The headline is the first row. Bugs per developer rose 54% in the 2026 dataset, against a 9% rise the year before &mdash; the relationship between AI adoption and defects is not just present, it is steepening. The blunt answer to &ldquo;does AI-generated code increase bugs?&rdquo; is, on this evidence, yes &mdash; and increasingly so.</p>
 
-    <h2 id="churn-is-often-rework">Churn Is Often Rework</h2>
+    <h2>Churn Is Often Rework</h2>
     <p>The most striking number is code churn &mdash; the share of recently merged lines that get deleted or rewritten in the same quarter &mdash; up 861% under high AI adoption. Faros&rsquo;s own first-listed explanation is rework: developers accept AI-generated code quickly, then come back to replace it when it proves insufficient in practice. Faros notes other contributors too, including newly feasible large-scale refactors, so the number is strongly suggestive of rework rather than proof that all of it is rework.</p>
     <p>For an engineering leader, the reframe matters. A large fraction of that churn is teams correcting AI changes after the fact &mdash; and a meaningful slice of <em>that</em> is correction of changes that were locally fine but violated a decision the system depended on. Rework is often where <a href="/concepts/architectural-drift/">architectural drift</a> finally shows up on a dashboard.</p>
 
-    <h2 id="why-traditional-quality-controls-miss-this">Why Traditional Quality Controls Miss This</h2>
+    <h2>Why Traditional Quality Controls Miss This</h2>
     <p>The reason the defects and rework slip through is that the controls teams already run were not built to catch them. Tests verify correctness. Linters verify style. Security scanners verify vulnerabilities. None of them verify whether a change conforms to the team&rsquo;s architectural decisions.</p>
     <div class="callout"><p><strong>Every existing gate answers &ldquo;does it work?&rdquo;</strong> None answers &ldquo;is this how our system is supposed to be built?&rdquo; That second question is the one AI-generated volume makes urgent &mdash; and the one with no automated answerer in most pipelines.</p></div>
     <p>We have itemized that control gap in detail in <a href="/insights/ai-coding-agent-verification-tax/">the verification tax of AI coding agents</a>. The Faros data is what that gap looks like once you measure it across thousands of teams instead of one.</p>
 
-    <h2 id="architectural-drift-at-scale">Architectural Drift at Scale</h2>
+    <h2>Architectural Drift at Scale</h2>
     <p>Concretely, the drift looks mundane. A new service reaches the database directly instead of going through the agreed boundary. A second authentication pattern appears next to the approved one. Three different implementations of the same approved utility accumulate because three agents each solved the problem locally. A decision the team made last quarter is quietly forgotten. Every one of those changes can pass review. The architecture still degrades &mdash; one reasonable-looking diff at a time.</p>
     <p>Faros adds an uncomfortable detail: organizations with mature DevOps practices experienced the same downstream deterioration as everyone else, which cuts against the comfortable assumption that strong foundations simply amplify AI&rsquo;s benefits. The erosion is structural, not a sign of a weak engineering culture &mdash; which is why &ldquo;just review more carefully&rdquo; does not scale as an answer.</p>
 
-    <h2 id="after-ai-you-approve-more-than">After AI, You Approve More Than You Write</h2>
+    <h2>After AI, You Approve More Than You Write</h2>
     <p>The deeper shift the data implies is about authorship. Before AI, humans wrote most of the changes they were accountable for. After AI, humans approve far more changes than they personally write. When the bottleneck moves from authorship to approval, the binding problem stops being generation and becomes governance: not &ldquo;can we produce this change?&rdquo; but &ldquo;does this change respect the decisions we already made?&rdquo;</p>
     <p>Faros frames the imperative as pushing quality back to the point of authorship, before code ever reaches review. That is the right instinct. The open question is what mechanism does it &mdash; and a human reading every AI diff is not a mechanism that scales alongside a 33.7% throughput increase.</p>
 
-    <h2 id="the-emerging-layer-is-architectural-governance">The Emerging Layer Is Architectural Governance</h2>
+    <h2>The Emerging Layer Is Architectural Governance</h2>
     <p>The layers of the AI delivery stack are filling in: generation, then review, then security validation. The Faros data points to the next one. <a href="/concepts/architectural-governance/">Architectural governance</a> &mdash; recording the team&rsquo;s decisions as executable constraints, retrieving them at generation time, and checking each proposed change against them deterministically before it merges &mdash; is the control the existing gates leave out.</p>
     <p>AI acceleration is real, and worth keeping. The question is no longer whether teams can generate more code. It is whether they can preserve their engineering decisions while generating it. That is what turns throughput back into progress &mdash; and what keeps the 861% churn from being the standing price of the 33.7% speedup. For the broader read on the same report, see our companion piece on <a href="/insights/acceleration-whiplash-governance-gap/">the acceleration whiplash and the governance gap</a>.</p>
 

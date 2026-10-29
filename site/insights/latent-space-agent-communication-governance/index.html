@@ -294,19 +294,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-case-for-dropping-natural-language">The case for dropping natural language</a></li>
-        <li><a href="#natural-language-is-an-accidental-governance">Natural language is an accidental governance layer</a></li>
-        <li><a href="#why-observability-gets-harder">Why observability gets harder</a></li>
-        <li><a href="#the-answer-is-to-govern-the">The answer is to govern the change, not the conversation</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="the-case-for-dropping-natural-language">The case for dropping natural language</h2>
+    <h2>The case for dropping natural language</h2>
     <p>When two agents coordinate by exchanging natural-language messages, they pay a tax. Language is lossy and slow: a model compresses its internal state into tokens, the other model re-expands those tokens into its own state, and information is lost at both ends. A 2026 paper, <a href="https://arxiv.org/abs/2604.25917">Recursive Multi-Agent Systems</a>, proposes exactly that: agents collaborate entirely in latent space through a lightweight cross-agent link, decoding to text only after the final recursion round &mdash; and report token-usage reductions of 35 to 76 percent against text-passing baselines. The promise is faster, more capable multi-agent systems that are not bottlenecked by the inefficiency of human language.</p>
     <p>As an efficiency argument, it is sound. Language is an abstraction designed for humans, and there is no law that says agents must use it to talk to each other.</p>
     <div class="callout"><p><strong>The performance gain is not the interesting part.</strong> The interesting part is what we lose when agents stop coordinating in a language we can read.</p></div>
@@ -320,7 +309,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="natural-language-is-an-accidental-governance">Natural language is an accidental governance layer</h2>
+<h2>Natural language is an accidental governance layer</h2>
     <p>Today, almost everything we use to oversee multi-agent systems depends on the fact that agents communicate in readable text. We inspect prompts. We read tool calls. We follow plans, agent discussions, reasoning traces, and approval steps. Auditing, debugging, and verification all lean on the legibility of agent communication.</p>
     <p>None of that legibility was designed as governance. It is a side effect of agents happening to think out loud in English. But it functions as governance: it is the surface on which we currently catch mistakes, trace decisions, and confirm that an agent did what it claimed. Latent-space communication removes that surface. The agents become more capable and the system becomes less observable at the same time.</p>
 
@@ -337,10 +326,10 @@
     </table>
     </div>
 
-    <h2 id="why-observability-gets-harder">Why observability gets harder</h2>
+    <h2>Why observability gets harder</h2>
     <p>The instinct, when communication goes dark, is to add observability: log the latent exchanges, build tools to interpret them. But interpreting latent vectors is not the same as reading a sentence. You can record the traffic without being able to understand it, and a recorded exchange you cannot interpret is not an audit trail &mdash; it is storage. <a href="/insights/why-observability-is-not-governance/">Observability was never the same as governance</a>, and latent communication widens the gap: even if you can see that agents communicated, you may not be able to tell what they decided.</p>
 
-    <h2 id="the-answer-is-to-govern-the">The answer is to govern the change, not the conversation</h2>
+    <h2>The answer is to govern the change, not the conversation</h2>
     <p>If the conversation becomes illegible, governance cannot depend on reading it. It has to attach to the thing that remains concrete: the change the agents actually make to the system. Whatever an agent fleet decides in latent space, it eventually produces a diff, a schema change, a configuration edit &mdash; an action with consequences. That action can be checked against architectural decisions deterministically, regardless of how the agents talked about it.</p>
     <p>Future agent architectures will likely need explicit translation and governance layers between latent coordination and consequential action &mdash; points where the system re-surfaces what is about to happen and verifies it against the rules. The governable boundary moves from the message to the act.</p>
     <div class="callout"><p><strong>If agents stop talking in a language we can read, governance cannot live in the transcript.</strong> It has to live at the boundary where latent intent becomes a real change &mdash; and verify the change.</p></div>

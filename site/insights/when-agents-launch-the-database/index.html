@@ -297,20 +297,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#agents-are-now-provisioning-infrastructure">Agents are now provisioning infrastructure</a></li>
-        <li><a href="#the-platforms-are-already-adapting">The platforms are already adapting</a></li>
-        <li><a href="#why-repository-level-governance-is-not">Why repository-level governance is not enough</a></li>
-        <li><a href="#governance-has-to-follow-the-agent">Governance has to follow the agent</a></li>
-        <li><a href="#what-this-validates">What this validates</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="agents-are-now-provisioning-infrastructure">Agents are now provisioning infrastructure</h2>
+    <h2>Agents are now provisioning infrastructure</h2>
     <p>The headline number is striking on its own: <a href="https://supabase.com/blog/supabase-series-f">Supabase reports that more than 60% of new databases on its platform are now started by an AI coding tool</a> rather than by a person typing into a console &mdash; with Claude Code the single largest source. But the number is not the point. The point is what it reveals about where software work is happening.</p>
     <p>Agents are no longer confined to generating application code that a human then reviews and commits. They provision infrastructure. They create tables, alter schemas, configure row-level security, and wire up integrations &mdash; actions that used to sit firmly on the human side of the boundary, behind a review.</p>
     <div class="callout"><p><strong>When an agent can launch a database, the governance question is no longer &ldquo;is this code correct?&rdquo;</strong> It is &ldquo;was this infrastructure change allowed, and who decided that?&rdquo;</p></div>
@@ -324,11 +312,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="the-platforms-are-already-adapting">The platforms are already adapting</h2>
+<h2>The platforms are already adapting</h2>
     <p>Infrastructure vendors are responding to this shift in their product defaults. In a <a href="https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically">2026 breaking change</a>, Supabase made new tables in the public schema no longer automatically exposed through its Data API &mdash; explicitly because the old model assumed a human reviewed each schema change before it went live. Supabase stated plainly that agents, CLI scripts, and AI platforms now create tables, often without a human reviewing the diff, and moved to require an explicit Postgres grant before the API can see a table &mdash; enforced at the role layer regardless of how, or by whom, the table was created.</p>
     <p>That is a vendor encoding governance into the platform because the human review step it used to rely on has quietly disappeared. It is a direct, external confirmation of the pattern: as agents act on infrastructure, safe defaults have to be enforced by the system, not assumed from a reviewer.</p>
 
-    <h2 id="why-repository-level-governance-is-not">Why repository-level governance is not enough</h2>
+    <h2>Why repository-level governance is not enough</h2>
     <p>Most governance for AI-assisted development today is anchored to the repository. Linters, CI checks, branch protections, and review gates all operate on code that flows through Git. That is a real and useful layer &mdash; but it has a blind spot the size of everything that happens outside the commit.</p>
     <p>An agent operating through a database API, a cloud CLI, a dashboard integration, or an external runtime can change the system without ever producing a diff that the repository sees. The architectural decision &mdash; &ldquo;all schema changes go through a migration,&rdquo; &ldquo;this table must have row-level security,&rdquo; &ldquo;no service may be granted public access by default&rdquo; &mdash; is exactly the kind of invariant that repository governance was meant to protect, and exactly the kind that an agent can now bypass by acting on a different surface.</p>
 
@@ -345,11 +333,11 @@
     </table>
     </div>
 
-    <h2 id="governance-has-to-follow-the-agent">Governance has to follow the agent</h2>
+    <h2>Governance has to follow the agent</h2>
     <p>The lesson is not that the repository stops mattering. It is that governance can no longer be defined only where code lands. It has to <a href="/concepts/governance-propagation/">propagate to the surfaces where agents actually act</a> &mdash; the API call, the CLI invocation, the tool execution &mdash; and apply the same architectural decisions there.</p>
     <p>This is the difference between governing a location and governing a decision. A decision like &ldquo;no table is publicly readable without an explicit, reviewed grant&rdquo; should hold whether the table was created by a migration in a pull request or by an agent calling an API at 3 a.m. The constraint belongs to the architecture, not to the path the change happened to take.</p>
 
-    <h2 id="what-this-validates">What this validates</h2>
+    <h2>What this validates</h2>
     <p>The shift to agent-provisioned infrastructure is an external proof point for a thesis that predates it: governance has to live below the prompt layer and across <a href="/concepts/execution-surfaces/">execution surfaces</a>, not just in the codebase. Specifically, it validates the need for verification contracts that apply regardless of which tool made the change, deterministic enforcement that does not depend on a human being in the loop, and provenance for changes made outside the normal pull-request flow.</p>
     <div class="callout"><p><strong>When agents launch the database, the repository is no longer the boundary of the system.</strong> Governance that stops at the commit stops short of where the work now happens.</p></div>
 

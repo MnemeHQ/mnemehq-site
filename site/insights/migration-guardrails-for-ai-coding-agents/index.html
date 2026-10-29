@@ -378,27 +378,11 @@
 
 <div class="article-body">
 
-  <nav class="toc" aria-label="Table of contents">
-    <div class="toc-title">In this article</div>
-    <ol>
-      <li><a href="#most-migration-guidance-stops-at-the">Most migration guidance stops at the diagram</a></li>
-      <li><a href="#1-no-new-imports-from-the">1. No new imports from the legacy tree</a></li>
-      <li><a href="#2-new-persistence-goes-through-the">2. New persistence goes through the target repository</a></li>
-      <li><a href="#3-a-service-is-read-only">3. A service is read-only during its migration window</a></li>
-      <li><a href="#4-only-the-named-adapter-may">4. Only the named adapter may call the legacy interface</a></li>
-      <li><a href="#5-deprecated-apis-do-not-appear">5. Deprecated APIs do not appear in newly generated code</a></li>
-      <li><a href="#compiling-and-checking-these">Compiling and checking these</a></li>
-      <li><a href="#where-to-start">Where to start</a></li>
-      <li><a href="#conclusion">Conclusion</a></li>
-      <li><a href="#faq-heading">Frequently asked questions</a></li>
-    </ol>
-  </nav>
-
-    <h2 id="most-migration-guidance-stops-at-the">Most migration guidance stops at the diagram</h2>
+    <h2>Most migration guidance stops at the diagram</h2>
     <p>A migration plan usually has a good architecture diagram: here is the target, here are the phases, here is roughly when each component moves. What it rarely has is anything an AI coding agent can be checked against directly. The diagram lives in a slide deck. The agent lives in a terminal. Between them is a translation step most teams never do.</p>
     <p>This is a practical, developer-facing pass at that translation: five guardrail shapes that cover most of what a migration actually needs enforced, written the way a decision needs to be written to be evaluable rather than just readable.</p>
 
-    <h2 id="1-no-new-imports-from-the">1. No new imports from the legacy tree</h2>
+    <h2>1. No new imports from the legacy tree</h2>
     <p>The most common boundary in any migration is the line between old code and new code. The rule is simple to state and easy to get wrong in practice, because "avoid the legacy code" is not specific enough for an agent to act on.</p>
     <p><em>## Constraints</em></p>
     <pre><code>- FORBID_LITERAL:
@@ -409,7 +393,7 @@
       - "modern/adapters/**"</code></pre>
     <p>The exclusion matters as much as the rule. Almost every migration needs exactly one sanctioned crossing point, and naming it explicitly is what keeps the rule from either blocking legitimate adapter code or silently permitting everything.</p>
 
-    <h2 id="2-new-persistence-goes-through-the">2. New persistence goes through the target repository</h2>
+    <h2>2. New persistence goes through the target repository</h2>
     <p>Persistence is usually the boundary agents cross most often, because nearly every feature touches data. A rule scoped to the migrated tree, forbidding the literal call an agent would otherwise reach for, is usually the single highest-leverage guardrail in a migration.</p>
     <p><em>## Constraints</em></p>
     <pre><code>- FORBID_LITERAL:
@@ -420,7 +404,7 @@
       - "legacy/**"</code></pre>
     <p>This is the exact decision the <a href="/demo/legacy-vs-target-architecture/">migration demo</a> traces end to end: denied in the migrated tree, and reported as excluded in the legacy tree where the old pattern is still correct.</p>
 
-    <h2 id="3-a-service-is-read-only">3. A service is read-only during its migration window</h2>
+    <h2>3. A service is read-only during its migration window</h2>
     <p>Some components need a hard freeze while they move, particularly when a migration involves a cutover with a defined window rather than a gradual strangler boundary. Write access resuming a day early, because an agent had no way to know the freeze was in effect, is a common and avoidable failure.</p>
     <p><em>## Constraints</em></p>
     <pre><code>- FORBID_LITERAL:
@@ -429,7 +413,7 @@
       - "services/billing/**"</code></pre>
     <p>This is a transitional decision in the sense from the pillar article: it has a start and an expected end, and it should be removed, not just ignored, once the freeze lifts. A freeze rule with no corresponding removal step is how a two-week cutover becomes permanently frozen code nobody remembers why.</p>
 
-    <h2 id="4-only-the-named-adapter-may">4. Only the named adapter may call the legacy interface</h2>
+    <h2>4. Only the named adapter may call the legacy interface</h2>
     <p>Covered in depth in the <a href="/insights/strangler-fig-migrations-architectural-drift/">strangler-fig migration article</a>: an agent is allowed to touch legacy code without creating a new dependency back into it. Encoding this as a scoped exception, rather than a general convention, is what makes it enforceable rather than aspirational.</p>
     <p><em>## Constraints</em></p>
     <pre><code>- FORBID_LITERAL:
@@ -439,7 +423,7 @@
     exclude_paths:
       - "services/adapter.py"</code></pre>
 
-    <h2 id="5-deprecated-apis-do-not-appear">5. Deprecated APIs do not appear in newly generated code</h2>
+    <h2>5. Deprecated APIs do not appear in newly generated code</h2>
     <p>A deprecated library or API often keeps working long after it stops being the intended path, which is exactly why agents keep reaching for it: it is present, it compiles, and nothing signals that it is going away. This rule targets the surface an agent actually sees, the call itself, rather than trying to remove every trace of the old dependency at once.</p>
     <p><em>## Constraints</em></p>
     <pre><code>- FORBID_LITERAL:
@@ -450,7 +434,7 @@
       - "legacy/**"</code></pre>
     <p>Scoping by file extension rather than a specific tree works well here, because the goal is that no <em>new</em> code anywhere reaches for the deprecated client, regardless of which package it happens to sit in.</p>
 
-    <h2 id="compiling-and-checking-these">Compiling and checking these</h2>
+    <h2>Compiling and checking these</h2>
     <p>Each of the five patterns above is a <code>## Constraints</code> block inside an ordinary ADR: identity and status in the frontmatter, the reasoning in prose, the enforceable rule in the constraints section. <code>mneme adr import</code> compiles the block into a typed rule; <code>mneme check --mode strict</code> evaluates a proposed change against the whole corpus and reports a PASS or FAIL verdict, plus an APPLIED or EXCLUDED line with the reason for each path-scoped rule.</p>
     <p><em>Terminal</em></p>
     <pre><code>$ mneme adr import docs/adr --memory .mneme/project_memory.json --apply
@@ -473,11 +457,11 @@ PATH  APPLIED  [ADR-045] modern/orders/customer_lookup.py via **/*.py -- an incl
 
 Result: FAIL</code></pre>
 
-    <h2 id="where-to-start">Where to start</h2>
+    <h2>Where to start</h2>
     <p>Five rules is a ceiling worth resisting the urge to front-load. Encoding all five before writing any migration code is usually slower than encoding the one or two that actually matter for the first component being moved, watching what an agent tries to do against them, and adding the next rule when a real bypass attempt shows what is actually needed.</p>
     <p>In practice the persistence rule and the adapter-boundary rule cover the majority of incorrect pattern copying on their own. The other three are worth having in reserve, not worth blocking the first migrated component to write in advance.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <p>None of these five patterns require new tooling concepts. They are ordinary typed rules with path selectors, the same mechanism used everywhere else in the corpus. What makes them migration guardrails specifically is that they are scoped to a tree that moves over time, and written with an explicit exception for the one crossing point a migration usually needs. Writing five short rules is a fraction of the cost of discovering, after the fact, how many agents quietly copied the pattern the migration existed to remove.</p>
 
   </div><!-- /.article-body -->

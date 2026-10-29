@@ -189,20 +189,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#from-assistant-to-operator">From assistant to operator</a></li>
-        <li><a href="#mission-control-changes-the-developer-role">Mission Control changes the developer role</a></li>
-        <li><a href="#artifacts-improve-reviewability">Artifacts improve reviewability</a></li>
-        <li><a href="#reviewability-is-not-enforcement">Reviewability is not enforcement</a></li>
-        <li><a href="#the-governance-gap">The governance gap</a></li>
-        <li><a href="#the-infrastructure-claim">The infrastructure claim</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="from-assistant-to-operator">From assistant to operator</h2>
+    <h2>From assistant to operator</h2>
     <p>Antigravity&rsquo;s key shift is not smarter autocomplete. It is supervised autonomy across editor, terminal, and browser. The agent is no longer a suggestion engine sitting beside the developer &mdash; it is a coworker that plans tasks, executes commands, exercises the application in a browser, and surfaces its work for review.</p>
     <p>That reframes what a developer&rsquo;s job inside the IDE actually is. Less typing, more supervision.</p>
 
@@ -215,19 +202,19 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="mission-control-changes-the-developer-role">Mission Control changes the developer role</h2>
+<h2>Mission Control changes the developer role</h2>
     <p>Developers increasingly manage tasks, workspaces, and agents rather than individual keystrokes. Antigravity&rsquo;s Agent Manager makes that explicit &mdash; multiple agents working in parallel, each with their own plan, terminal session, and verification trail. The mental model is closer to running a small team than to writing code.</p>
     <p>When the unit of work moves from line edits to delegated tasks, the constraints that govern those tasks have to be enforced somewhere the human is no longer in the loop.</p>
 
-    <h2 id="artifacts-improve-reviewability">Artifacts improve reviewability</h2>
+    <h2>Artifacts improve reviewability</h2>
     <p>Antigravity Artifacts are genuinely useful. Plans, screenshots, browser recordings, task lists, verification outputs &mdash; all collected per task, all reviewable. They make agent work inspectable in a way that was not possible when the only artifact was a diff.</p>
     <p>That is real progress for human review. It is not the same thing as enforcement.</p>
 
-    <h2 id="reviewability-is-not-enforcement">Reviewability is not enforcement</h2>
+    <h2>Reviewability is not enforcement</h2>
     <p>Artifacts tell you what the agent did. They do not guarantee the agent followed your architecture. A screenshot can prove the browser opened. It cannot prove the implementation respected an ADR.</p>
     <div class="callout"><p><strong>Reviewability is downstream of execution.</strong> The agent has already chosen the architecture by the time the artifact exists. Review can flag what slipped through; it cannot prevent it.</p></div>
 
-    <h2 id="the-governance-gap">The governance gap</h2>
+    <h2>The governance gap</h2>
     <p>Multi-agent execution needs constraints <em>before</em> generation, not just logs <em>after</em> execution. The questions that matter are not answered by the artifact trail:</p>
     <ul>
       <li>Did the agent stay inside the architectural boundaries that govern this surface?</li>
@@ -238,11 +225,11 @@
     </ul>
     <p>These are <a href="/concepts/agentic-ide-governance/">agentic IDE governance</a> questions. The artifact stream does not answer them. A separate enforcement layer does.</p>
 
-    <h2 id="the-infrastructure-claim">The infrastructure claim</h2>
+    <h2>The infrastructure claim</h2>
     <p>As agentic IDEs become normal, architectural governance becomes part of the development runtime &mdash; not a CI-only concern, not a PR-time concern. It needs to run at hook, before tool execution, during multi-step plans, and at every commit boundary the agent crosses.</p>
     <p>That is the same shape the rest of the AI engineering control plane is converging toward (see <a href="/insights/anthropic-claude-marketplace-ai-engineering-control-plane/">the emerging AI engineering control plane</a>). Antigravity validates the orchestration and visibility layers. The governance layer is what comes next.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <div class="callout"><p><strong>Antigravity makes agent work visible.</strong> The next layer has to make agent work governable.</p></div>
     <p>Agent-first IDEs increase autonomous execution. Architectural governance keeps that execution aligned. The two are not alternatives &mdash; they are layers of the same stack.</p>
 

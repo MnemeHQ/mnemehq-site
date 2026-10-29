@@ -170,20 +170,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#why-artifacts-matter">Why artifacts matter</a></li>
-        <li><a href="#what-artifacts-can-show">What artifacts can show</a></li>
-        <li><a href="#what-artifacts-cannot-prevent">What artifacts cannot prevent</a></li>
-        <li><a href="#the-difference-between-provenance-and-policy">The difference between provenance and policy</a></li>
-        <li><a href="#why-agent-systems-need-both">Why agent systems need both</a></li>
-        <li><a href="#mneme-s-role">Mneme&rsquo;s role</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="why-artifacts-matter">Why artifacts matter</h2>
+    <h2>Why artifacts matter</h2>
     <p>Agent-first IDEs like Google Antigravity surface what agents do as inspectable Artifacts: plans, diffs, screenshots, browser recordings, task lists, verification outputs. That is real progress. Before Artifacts, the only thing a reviewer could examine was the diff &mdash; and even that was missing context about why the agent took the path it took.</p>
     <p>Artifacts make agent work auditable. They are necessary for trust at scale.</p>
 
@@ -196,7 +183,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="what-artifacts-can-show">What artifacts can show</h2>
+<h2>What artifacts can show</h2>
     <p>A good artifact stream can answer:</p>
     <ul>
       <li>What the agent planned</li>
@@ -207,7 +194,7 @@
     </ul>
     <p>That is enough to reconstruct the run, identify failure modes, and reproduce or roll back the result. It is downstream observability for an autonomous agent.</p>
 
-    <h2 id="what-artifacts-cannot-prevent">What artifacts cannot prevent</h2>
+    <h2>What artifacts cannot prevent</h2>
     <p>Artifacts cannot prevent the agent from:</p>
     <ul>
       <li>Introducing a forbidden dependency</li>
@@ -219,11 +206,11 @@
     <p>By the time the artifact exists, the choice has already been made.</p>
     <div class="callout"><p><strong>A screenshot can prove the agent opened the browser.</strong> It cannot prove the agent respected your architecture.</p></div>
 
-    <h2 id="the-difference-between-provenance-and-policy">The difference between provenance and policy</h2>
+    <h2>The difference between provenance and policy</h2>
     <p><a href="/concepts/artifact-provenance/">Artifact provenance</a> is a record of what happened &mdash; the trail. <a href="/concepts/architectural-governance/">Architectural governance</a> is a policy &mdash; a binding constraint about what is allowed. The two are complementary, not substitutes.</p>
     <p>You can have artifacts without policy: every agent run is auditable, but nothing prevents drift. You can have policy without artifacts: violations are blocked, but reviewers cannot reconstruct why a particular run did what it did. The robust pattern is both: policy that constrains, artifacts that document.</p>
 
-    <h2 id="why-agent-systems-need-both">Why agent systems need both</h2>
+    <h2>Why agent systems need both</h2>
     <p>Three reasons the combination matters:</p>
     <ul>
       <li><strong>Pre-generation constraints</strong> &mdash; the governance layer says no before the work is done. Cheaper than rework.</li>
@@ -231,11 +218,11 @@
       <li><strong>Provenance over verdicts</strong> &mdash; the governance verdict itself becomes part of the artifact stream, so reviewers see not just what the agent did but which constraints applied to that work.</li>
     </ul>
 
-    <h2 id="mneme-s-role">Mneme&rsquo;s role</h2>
+    <h2>Mneme&rsquo;s role</h2>
     <p>Mneme turns architectural decisions into checks, not just documentation. The check produces a structured verdict &mdash; PASS, WARN, FAIL &mdash; with a provenance trace back to the originating ADR. That verdict becomes a first-class artifact in its own right: the policy layer&rsquo;s contribution to the agent&rsquo;s evidence trail.</p>
     <p>The artifact stream tells you what happened. The governance verdict tells you whether it was supposed to happen. Both belong in the post-execution view, and the policy layer&rsquo;s output belongs at the front of it.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <div class="callout"><p><strong>Reviewability is not enforcement.</strong> Build both: provenance so humans can inspect, and policy so the system can constrain. Either one alone leaves a hole the other is supposed to cover.</p></div>
 
   </div>

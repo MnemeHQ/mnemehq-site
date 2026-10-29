@@ -294,20 +294,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#what-gartner-now-means-by-ai">What Gartner Now Means by AI Governance</a></li>
-        <li><a href="#ai-coding-agents-create-a-different">AI Coding Agents Create a Different Governance Problem</a></li>
-        <li><a href="#two-governance-planes">Two Governance Planes</a></li>
-        <li><a href="#why-existing-software-controls-don-t">Why Existing Software Controls Don&rsquo;t Close It</a></li>
-        <li><a href="#what-engineering-leaders-should-do">What Engineering Leaders Should Do</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="what-gartner-now-means-by-ai">What Gartner Now Means by AI Governance</h2>
+    <h2>What Gartner Now Means by AI Governance</h2>
     <p>Gartner&rsquo;s inaugural Magic Quadrant for AI Governance Platforms, published June 16, 2026, matters less for who ranked where than for what it settles: AI governance is now a recognized enterprise software category rather than a loose set of consulting practices and compliance checklists. Gartner defines these platforms as tools that centrally define, approve, and enforce responsible-AI policies across AI use cases, applications, and agents.</p>
     <p>That definition is anchored in enterprise risk and compliance. The category centers on AI inventory and shadow-AI discovery, responsible-AI policy management, risk assessments and controls, approval workflows, regulatory compliance, and integration with existing governance, risk, and compliance systems. Gartner named three Leaders &mdash; IBM, with watsonx.governance; ServiceNow, with AI Control Tower; and Truyo &mdash; alongside a field of visionaries, challengers, and niche players. The lineage is clear: this is governance of how an organization develops, procures, and uses AI.</p>
     <p>One number deserves a correction, because it travels with the report and is usually misattributed. The widely cited growth figures &mdash; roughly a 67.5% compound annual growth rate, from about $65 million in 2024 toward $1.4 billion by 2030 &mdash; come from Gartner&rsquo;s <a href="https://www.gartner.com/en/newsroom/press-releases/2026-02-17-gartner-global-ai-regulations-fuel-billion-dollar-market-for-ai-governance-platforms" target="_blank" rel="noopener">separate market-sizing research</a>, not the Magic Quadrant. That February 2026 forecast put spending at $492 million in 2026 and above $1 billion by 2030. The signal is the same either way: governance is becoming enterprise software infrastructure, on a published growth curve.</p>
@@ -321,11 +309,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="ai-coding-agents-create-a-different">AI Coding Agents Create a Different Governance Problem</h2>
+<h2>AI Coding Agents Create a Different Governance Problem</h2>
     <p>Here is the gap the category leaves open. An organization can have an approved model, an approved coding assistant, completed risk assessments, the right data controls, and a complete AI inventory &mdash; everything Gartner&rsquo;s platforms are built to manage &mdash; and still allow that approved agent to introduce a prohibited dependency, cross a service boundary, ignore an architecture decision record, or write locally valid code that conflicts with system-level design. The AI system is governed. Its engineering output is not.</p>
     <p>Make it concrete. An organization approves Claude Code or GitHub Copilot through its AI governance process. A developer asks the agent to add a feature. The code compiles, the tests pass, and the agent calls a database directly from a layer that is required to go through an internal service API. Nothing in that sequence is a model-risk failure or a responsible-AI violation. It is an engineering governance failure, and no AI governance platform was designed to catch it.</p>
 
-    <h2 id="two-governance-planes">Two Governance Planes</h2>
+    <h2>Two Governance Planes</h2>
     <p>The two are easy to collapse into one word and worth keeping apart.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -343,7 +331,7 @@
 
     <p>One plane governs whether and how the organization may use the agent. The other governs what the agent may change inside the software system. Gartner&rsquo;s Magic Quadrant is a thorough map of the first. The second is not a smaller version of it; it is a different control plane with different policies, owners, and enforcement points.</p>
 
-    <h2 id="why-existing-software-controls-don-t">Why Existing Software Controls Don&rsquo;t Close It</h2>
+    <h2>Why Existing Software Controls Don&rsquo;t Close It</h2>
     <p>Engineering teams already run controls on their code. They are necessary and, against AI-generated change at volume, insufficient.</p>
     <ul>
       <li><strong>Linters</strong> enforce syntax and statically detectable conventions, not organization-specific architectural decisions.</li>
@@ -354,7 +342,7 @@
     </ul>
     <p>Engineering governance begins where documentation, retrieval, and review stop being reliable control mechanisms &mdash; by turning the decisions that matter into <a href="/concepts/executable-architectural-intent/">executable constraints</a> that are checked, not merely hoped for.</p>
 
-    <h2 id="what-engineering-leaders-should-do">What Engineering Leaders Should Do</h2>
+    <h2>What Engineering Leaders Should Do</h2>
     <p>The two categories should integrate, not compete. An AI governance platform records which coding agents are approved, which repositories they may access, what data they may process, and which organizational policies apply. An engineering governance layer enforces which architectural rules apply to each repository, which dependencies and patterns are permitted, and whether a given change satisfies them. A mature enterprise will need both.</p>
     <ol>
       <li><strong>Convert architectural decisions into constraints.</strong> Make the high-cost decisions &mdash; boundaries, approved dependencies, mandatory patterns &mdash; <a href="/concepts/executable-architectural-intent/">machine-readable</a>, not slideware.</li>

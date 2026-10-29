@@ -280,21 +280,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-marketplace-is-a-signal-not">The marketplace is a signal, not the story</a></li>
-        <li><a href="#the-first-wave-was-monolithic">The first wave was monolithic</a></li>
-        <li><a href="#the-stack-is-fragmenting-into-governance">The stack is fragmenting into governance surfaces</a></li>
-        <li><a href="#verification-alone-is-not-enough">Verification alone is not enough</a></li>
-        <li><a href="#why-memory-systems-fail-as-governance">Why memory systems fail as governance</a></li>
-        <li><a href="#the-emerging-ai-engineering-control-plane">The emerging AI engineering control plane</a></li>
-        <li><a href="#conclusion-the-industrialization-of-ai-assisted">Conclusion: the industrialization of AI-assisted development</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-marketplace-is-a-signal-not">The marketplace is a signal, not the story</h2>
+    <h2>The marketplace is a signal, not the story</h2>
     <p>The marketplace mechanics &mdash; apply existing Anthropic spend commitment toward Claude-powered partner products &mdash; matter for procurement. The vendor list matters for category structure. The five names announced map almost cleanly to distinct operational layers:</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -319,7 +305,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="the-first-wave-was-monolithic">The first wave was monolithic</h2>
+<h2>The first wave was monolithic</h2>
     <p>Copilot-era tooling assumed a single agent, a single developer, a single session. The mental model was an AI pair programmer sitting beside one human. Most of the assumptions baked into that wave still show up in today&rsquo;s products:</p>
     <ul>
       <li>Single-agent execution</li>
@@ -329,7 +315,7 @@
     </ul>
     <p>That model breaks the moment work scales out: multi-agent systems, autonomous execution, long-running workflows, organizational scale. The vendor categories now appearing in the Claude Marketplace are exactly what teams have been hand-building to compensate &mdash; review systems, repo-memory layers, sandboxed runtimes, orchestration. The market is productizing the missing layers.</p>
 
-    <h2 id="the-stack-is-fragmenting-into-governance">The stack is fragmenting into governance surfaces</h2>
+    <h2>The stack is fragmenting into governance surfaces</h2>
     <p>The useful frame for what comes next is the <strong>governance surface</strong>: any boundary where architectural intent has to survive an autonomous handoff. Once agents are doing the work, each of these is a place drift can enter:</p>
     <ul>
       <li>Generation</li>
@@ -343,14 +329,14 @@
     <p>Architectural drift propagates across all of them. Solving it at one surface and ignoring the rest is how teams end up with code that passes review, runs in production, and still violates the architecture nobody was checking against.</p>
     <div class="callout"><p><strong>The shift is from &ldquo;AI in the IDE&rdquo; to a multi-layer control plane.</strong> Each layer needs its own infrastructure. None of them, alone, is the whole job.</p></div>
 
-    <h2 id="verification-alone-is-not-enough">Verification alone is not enough</h2>
+    <h2>Verification alone is not enough</h2>
     <p>CodeRabbit-style review systems are doing real, valuable work. They scale review throughput in a regime where generation throughput has already outpaced human reading. They are increasingly necessary.</p>
     <p>They are also fundamentally <strong>post-generation</strong>.</p>
     <p>By the time a review-stage system sees the change, the agent has already made the architectural choice. The reviewer can flag it, push back, demand a rewrite. What it cannot do is prevent the choice from being made in the first place. As autonomous development scales the volume of generated code, pushing all architectural verification into review turns the queue into <a href="/insights/pr-review-is-becoming-incident-response/">incident response</a>.</p>
     <div class="callout"><p><strong>Review systems scale review.</strong> They do not preserve architectural intent upstream. That is a different layer with a different job.</p></div>
     <p>The missing layer is <a href="/concepts/governance-before-generation/">governance before generation</a>: invariant preservation, deterministic enforcement, <a href="/concepts/verification-contracts/">verification contracts</a> that run before the agent acts &mdash; not after the diff is on the screen.</p>
 
-    <h2 id="why-memory-systems-fail-as-governance">Why memory systems fail as governance</h2>
+    <h2>Why memory systems fail as governance</h2>
     <p>Repo-memory and context infrastructure &mdash; the layer Augment Code is validating &mdash; is also real, useful work. The agent that has the whole codebase indexed makes fewer obvious mistakes than the one that does not. But memory systems and governance systems solve different problems.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -366,7 +352,7 @@
     </div>
     <p>Context-window dilution, ranking instability, and conflicting decisions are real properties of retrieval pipelines. They are not properties governance can tolerate. <a href="/insights/why-rag-fails-for-architectural-governance/">RAG fails for architectural governance</a> not because retrieval is broken but because retrieval is the wrong primitive for a binary enforcement question.</p>
 
-    <h2 id="the-emerging-ai-engineering-control-plane">The emerging AI engineering control plane</h2>
+    <h2>The emerging AI engineering control plane</h2>
     <p>The shape that is settling into place is a layered control plane, much like the ones cloud and CI/CD developed before it:</p>
     <div class="layer-stack">
       <div class="layer-row"><div class="layer-num">01</div><div class="layer-name">Generation</div><div class="layer-job">Claude, GPT, Gemini, Mistral &mdash; the model layer</div></div>
@@ -378,7 +364,7 @@
     </div>
     <p>The Claude Marketplace announcement names layers 1, 2, 3, 4, and 6. Layer 5 is what sits between them &mdash; the place that says &ldquo;these are the architectural rules; every generation, every tool call, every CI run has to clear them.&rdquo; That layer is not yet productized at the marketplace level. It is the next category.</p>
 
-    <h2 id="conclusion-the-industrialization-of-ai-assisted">Conclusion: the industrialization of AI-assisted development</h2>
+    <h2>Conclusion: the industrialization of AI-assisted development</h2>
     <p>The important trend is not better coding models. It is the <strong>industrialization of AI-assisted software development into specialized operational infrastructure</strong>. The first wave was a pair programmer. The second is an engineering organization&rsquo;s worth of infrastructure, decomposed into layers, each with its own vendor category and operational discipline.</p>
     <p>The next phase of the market is not better autocomplete. It is <strong>coordination, governance, and architectural integrity at agent scale</strong>. The Claude Marketplace is one of the clearer signals that the stack has started to look this way for real.</p>
     <div class="callout"><p><strong>What&rsquo;s missing from the marketplace today is the layer that says no.</strong> Generation, memory, orchestration, and review are all about producing and inspecting output. Governance is about constraining what the system is allowed to do in the first place. That is the category Mneme is built around.</p></div>

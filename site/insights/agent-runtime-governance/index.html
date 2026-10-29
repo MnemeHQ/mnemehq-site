@@ -272,23 +272,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#we-spent-two-years-building-brains">We spent two years building brains in jars</a></li>
-        <li><a href="#the-runtime-layer-for-ai-agents">The runtime layer for AI agents is arriving</a></li>
-        <li><a href="#why-persistent-agent-systems-change-governance">Why persistent agent systems change governance</a></li>
-        <li><a href="#execution-environments-expand-the-governance-surface">Execution environments expand the governance surface</a></li>
-        <li><a href="#why-pr-review-governance-stops-scaling">Why PR review governance stops scaling</a></li>
-        <li><a href="#runtime-governance-and-architectural-invariants">Runtime governance and architectural invariants</a></li>
-        <li><a href="#the-emerging-ai-infrastructure-stack">The emerging AI infrastructure stack</a></li>
-        <li><a href="#execution-environments-need-verification-layers">Execution environments need verification layers</a></li>
-        <li><a href="#conclusion-the-next-ai-infrastructure-battle">Conclusion: the next AI infrastructure battle</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="we-spent-two-years-building-brains">We spent two years building brains in jars</h2>
+    <h2>We spent two years building brains in jars</h2>
     <p>For most of the current AI cycle, the system around the model has been thin. Models could reason, propose commands, and orchestrate small tool calls. But they ran in short sessions, against narrow APIs, under human supervision, with ephemeral state. The model was a brain; the body was a few HTTP requests and a JSON tool schema.</p>
     <p>That assumption is ending. The frontier is not just better reasoning. It is a body for the brain.</p>
     <div class="callout"><p><strong>The brain finally has a body.</strong> Now it needs governance.</p></div>
@@ -302,7 +286,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="the-runtime-layer-for-ai-agents">The runtime layer for AI agents is arriving</h2>
+<h2>The runtime layer for AI agents is arriving</h2>
     <p>Google Managed Agents (and the parallel motion across the ecosystem &mdash; OpenAI&rsquo;s containerized execution work, Claude Code&rsquo;s persistent sessions, MCP-based tool ecosystems, hosted agent harnesses) formalizes the runtime as a product:</p>
     <ul>
       <li>Sandboxed execution</li>
@@ -316,7 +300,7 @@
     </ul>
     <p>This resembles the transition from scripts &rarr; applications &rarr; cloud platforms. Agents are no longer just <em>calling</em> tools. They are beginning to <strong>inhabit programmable environments</strong>.</p>
 
-    <h2 id="why-persistent-agent-systems-change-governance">Why persistent agent systems change governance</h2>
+    <h2>Why persistent agent systems change governance</h2>
     <p>Once agents can continuously modify filesystems, maintain state across sessions, autonomously remediate, inject tools dynamically, operate against production systems, and coordinate across workflows, governance failures stop being one-off review misses. They <strong>compound over time</strong>.</p>
     <p>What that compounding looks like:</p>
     <ul>
@@ -330,7 +314,7 @@
     </ul>
     <div class="callout"><p><strong>Architectural governance becomes an execution-time systems concern,</strong> not a review-time coding concern.</p></div>
 
-    <h2 id="execution-environments-expand-the-governance-surface">Execution environments expand the governance surface</h2>
+    <h2>Execution environments expand the governance surface</h2>
     <p>The surface that needs governance is no longer "a diff before merge." It is everything an agent can touch while it runs:</p>
     <ul>
       <li>Filesystem mutations</li>
@@ -346,7 +330,7 @@
     </ul>
     <p>Every one of those is an execution surface that can carry, or fail to carry, architectural intent. The point of <a href="/concepts/governance-propagation/">governance propagation</a> is that the same compiled constraints reach all of them &mdash; or the layer is not doing its job.</p>
 
-    <h2 id="why-pr-review-governance-stops-scaling">Why PR review governance stops scaling</h2>
+    <h2>Why PR review governance stops scaling</h2>
     <p>Traditional governance assumes a human reviews generated artifacts after execution. That worked when generation was human-paced.</p>
     <p>Long-running agents generate continuously:</p>
     <ul>
@@ -362,7 +346,7 @@
     <div class="callout"><p><strong>Persistent agent runtimes break review-based governance models.</strong></p></div>
     <p>The implication is that governance has to move where the execution is &mdash; <a href="/concepts/governance-before-generation/">before generation</a>, during the run, and at every tool boundary the runtime exposes.</p>
 
-    <h2 id="runtime-governance-and-architectural-invariants">Runtime governance and architectural invariants</h2>
+    <h2>Runtime governance and architectural invariants</h2>
     <p>The right primitive for this is the <strong>invariant</strong>: a constraint that must hold continuously across the agent&rsquo;s execution, not just be true at one merge point.</p>
     <p>Examples of runtime invariants:</p>
     <ul>
@@ -375,7 +359,7 @@
     </ul>
     <p>These are the runtime-time equivalent of an ADR: a rule the system enforces, not a paragraph the human remembers. They compose with <a href="/concepts/verification-contracts/">verification contracts</a> &mdash; predefined checks that prove the invariant held across the run.</p>
 
-    <h2 id="the-emerging-ai-infrastructure-stack">The emerging AI infrastructure stack</h2>
+    <h2>The emerging AI infrastructure stack</h2>
     <p>The shape that is starting to settle:</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -391,12 +375,12 @@
     </div>
     <p>The governance and verification layers used to sit downstream of model and runtime, applied at the PR or the deploy. In a persistent-agent world, they have to sit <em>inside</em> the loop &mdash; reachable from every tool call, every orchestration step, every remediation tick.</p>
 
-    <h2 id="execution-environments-need-verification-layers">Execution environments need verification layers</h2>
+    <h2>Execution environments need verification layers</h2>
     <p>Persistent agents introduce continuity, memory, authority, and compounding execution. Those properties are the source of the capability gains. They are also the source of the new failure mode.</p>
     <p>Continuity without invariants creates drift. Memory without provenance creates plausible but ungrounded decisions. Authority without verification creates silent state divergence. Compounding execution without enforcement traces creates incidents nobody can reconstruct.</p>
     <div class="callout"><p><strong>Persistent agent runtimes transform governance from a review-time concern into a runtime systems problem.</strong></p></div>
 
-    <h2 id="conclusion-the-next-ai-infrastructure-battle">Conclusion: the next AI infrastructure battle</h2>
+    <h2>Conclusion: the next AI infrastructure battle</h2>
     <p>The industry solved how agents execute. The next problem is ensuring they continue executing within architectural intent over time.</p>
     <p>The first generation of AI systems optimized reasoning. The next generation is optimizing execution. The generation after that will optimize <strong>governance across persistent execution environments</strong> &mdash; runtime governance, runtime invariants, deterministic enforcement, and provenance that survives across long-running agent workflows.</p>
     <p>The next AI infrastructure layer is not more reasoning. It is invariant preservation across execution surfaces. For the conceptual definition, see <a href="/concepts/runtime-governance/">runtime governance</a>.</p>

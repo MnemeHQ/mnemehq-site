@@ -293,24 +293,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-new-vocabulary-loop-engineering">The New Vocabulary: Loop Engineering</a></li>
-        <li><a href="#before-ai-programs-were-already-loops">Before AI, Programs Were Already Loops</a></li>
-        <li><a href="#structured-programming-made-loops-explicit">Structured Programming Made Loops Explicit</a></li>
-        <li><a href="#event-loops-took-over-modern-software">Event Loops Took Over Modern Software</a></li>
-        <li><a href="#devops-introduced-autonomous-loops">DevOps Introduced Autonomous Loops</a></li>
-        <li><a href="#machine-learning-added-feedback-loops">Machine Learning Added Feedback Loops</a></li>
-        <li><a href="#agents-put-llms-inside-loops">Agents Put LLMs Inside Loops</a></li>
-        <li><a href="#why-everyone-suddenly-notices-loops">Why Everyone Suddenly Notices Loops</a></li>
-        <li><a href="#the-real-innovation-is-governance-of">The Real Innovation Is Governance of Autonomous Loops</a></li>
-        <li><a href="#the-novelty-is-not-the-loop">The Novelty Is Not the Loop</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-new-vocabulary-loop-engineering">The New Vocabulary: Loop Engineering</h2>
+    <h2>The New Vocabulary: Loop Engineering</h2>
     <p>The term comes from a practical shift in how people use coding agents. Instead of writing a prompt, reading the response, and writing the next prompt, you build the system that does the prompting for you. Google engineer Addy Osmani <a href="https://addyosmani.com/blog/loop-engineering/" target="_blank" rel="noopener">gave the pattern its name</a>: a loop is a recursive goal &mdash; you define a purpose and let the agent iterate until it is met. Practitioners around Claude Code and Codex have been converging on the same idea, with Anthropic&rsquo;s Boris Cherny describing his own work as writing loops that run the agent rather than prompting it directly.</p>
     <p>The building blocks people list are real and useful: automations that schedule and triage work, worktrees that let parallel agents run without overwriting each other, skills that persist project knowledge between runs, connectors that wire in external tools, sub-agents that split making from checking, and a memory layer that holds state outside the conversation. Claude Code, Codex, and Devin all operate on this model: give the agent a task, a codebase, and tools, and it loops &mdash; read, write, run, read the errors, revise, repeat.</p>
     <p>It is a useful frame. It is also not new. The loop is the oldest idea in computing.</p>
@@ -324,33 +307,33 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="before-ai-programs-were-already-loops">Before AI, Programs Were Already Loops</h2>
+<h2>Before AI, Programs Were Already Loops</h2>
     <p>The first computers were not prompt-and-response systems. They were machines executing a cycle: fetch an instruction, decode it, execute it, update state, repeat. The CPU itself is a loop. Every program ever written runs on top of that loop. The abstraction predates AI by decades, and nothing about it was incidental &mdash; repetition over changing state is what computation <em>is</em>.</p>
 
-    <h2 id="structured-programming-made-loops-explicit">Structured Programming Made Loops Explicit</h2>
+    <h2>Structured Programming Made Loops Explicit</h2>
     <p>Between the 1960s and 1980s, languages lifted the loop out of machine code and into syntax: <code style="font-family:'DM Mono',monospace;font-size:0.85em;color:var(--teal)">for</code>, <code style="font-family:'DM Mono',monospace;font-size:0.85em;color:var(--teal)">while</code>, <code style="font-family:'DM Mono',monospace;font-size:0.85em;color:var(--teal)">do-while</code>, and recursion. Developers stopped thinking in instructions and started thinking in control flow. The loop became the primary unit of behavior, and structured programming was, in large part, a discipline for keeping loops comprehensible.</p>
 
-    <h2 id="event-loops-took-over-modern-software">Event Loops Took Over Modern Software</h2>
+    <h2>Event Loops Took Over Modern Software</h2>
     <p>Then everything became event-driven. A browser tab waits for an event, handles it, updates state, and repeats. A web server accepts a request, processes it, returns a response, and repeats. An operating system scheduler picks a task, runs it, switches context, and repeats. GUIs, web servers, and kernels are all loops at their core. Most production software already <em>is</em> loop engineering &mdash; we just stopped calling it that.</p>
 
-    <h2 id="devops-introduced-autonomous-loops">DevOps Introduced Autonomous Loops</h2>
+    <h2>DevOps Introduced Autonomous Loops</h2>
     <p>CI/CD moved the loop past simple execution. A pipeline detects a change, runs tests, deploys, monitors, and rolls back &mdash; then repeats. For the first time the loop made decisions, and humans moved outside the execution path. We did not respond by trusting the loop blindly. We wrapped it in deployment gates, approvals, and policy.</p>
 
-    <h2 id="machine-learning-added-feedback-loops">Machine Learning Added Feedback Loops</h2>
+    <h2>Machine Learning Added Feedback Loops</h2>
     <p>Training is a loop: predict, measure the error, update the weights, repeat. Reinforcement learning is a loop: observe, act, receive a reward, update the policy, repeat. Intelligence itself, as the field builds it, is loop-based. The loop stopped merely executing fixed logic and started changing its own behavior over time.</p>
 
-    <h2 id="agents-put-llms-inside-loops">Agents Put LLMs Inside Loops</h2>
+    <h2>Agents Put LLMs Inside Loops</h2>
     <p>This is the current shift. The structure is familiar &mdash; plan, act, evaluate, revise, repeat. What is new is the component sitting inside it. The loop is not the innovation. The model is. An LLM has become another executable inside a control system, the same way a function or a service was before it.</p>
 
-    <h2 id="why-everyone-suddenly-notices-loops">Why Everyone Suddenly Notices Loops</h2>
+    <h2>Why Everyone Suddenly Notices Loops</h2>
     <p>Because for the first time the thing inside the loop can generate genuinely new behavior. Traditional software is a loop wrapped around a deterministic function: same input, same output, predictable over a million iterations. An agent system is a loop wrapped around a probabilistic generator. Run it a thousand times and it explores a thousand slightly different paths.</p>
     <div class="callout"><p><strong>That is the real change.</strong> The loop can now <em>drift</em>. A deterministic loop converges; a probabilistic loop, left unconstrained, wanders &mdash; and at agent velocity it wanders fast.</p></div>
 
-    <h2 id="the-real-innovation-is-governance-of">The Real Innovation Is Governance of Autonomous Loops</h2>
+    <h2>The Real Innovation Is Governance of Autonomous Loops</h2>
     <p>Here is the pattern the loop-engineering discussion usually stops short of. Every historical increase in loop autonomy produced a corresponding increase in governance. Operating systems gained permission rings and process isolation. Databases gained ACID transactions. Cloud platforms gained policy engines like IAM and OPA. CI/CD gained deployment controls. The more autonomous the loop, the more its surrounding system had to constrain what the loop was allowed to do.</p>
     <p>Agent systems are following the same arc. The next layer is not more loops, better harnesses, or smarter sub-agents &mdash; those are this generation&rsquo;s execution machinery, and they are being solved. The next layer is <a href="/concepts/governance-before-generation/">governance of autonomous loops</a>: deterministic constraints that decide what the probabilistic generator inside the loop is permitted to commit, applied before the change lands rather than discovered after. Even the loop-engineering advocates concede the seam &mdash; their own best practices say to define explicit exit conditions, persist state, and read what the loop merges rather than just watching tests pass. Those are governance instincts without a governance layer.</p>
 
-    <h2 id="the-novelty-is-not-the-loop">The Novelty Is Not the Loop</h2>
+    <h2>The Novelty Is Not the Loop</h2>
     <p>Loop engineering is not a new programming paradigm. It is the latest chapter in a seventy-year history of computing systems built around repetitive execution and feedback. The novelty is not that we have loops. It is that the actor inside the loop is now an AI capable of generating its own actions. That single change shifts the engineering challenge from execution to governance &mdash; from making the loop run to constraining what it does while it runs.</p>
 
   </div><!-- /.article-body -->

@@ -268,19 +268,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#from-assistant-to-execution-stack">From assistant to execution stack</a></li>
-        <li><a href="#codebase-context-is-necessary-but-not">Codebase context is necessary but not sufficient</a></li>
-        <li><a href="#enterprise-coding-platforms-need-governance-seams">Enterprise coding platforms need governance seams</a></li>
-        <li><a href="#mneme-s-position-vibe-executes-mneme">Mneme&rsquo;s position: Vibe executes, Mneme governs</a></li>
-        <li><a href="#the-category-point">The category point</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="from-assistant-to-execution-stack">From assistant to execution stack</h2>
+    <h2>From assistant to execution stack</h2>
     <p><a href="https://mistral.ai/products/vibe" rel="noopener">Mistral Vibe</a> is described as an enterprise coding-agent stack rather than a single tool. The surface area is what matters: a terminal-native agent, IDE extensions, async agents, MCP and connectors, a codebase index and sandbox, multi-file workflows, CI/CD automation, code review, refactoring, testing, modernization, and fine-tuning on proprietary code.</p>
     <p>That is not a list of features. It is a list of <em>execution surfaces</em>. Each one is a place where AI is now allowed to generate, modify, or deploy code on the team&rsquo;s behalf.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -309,19 +297,19 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="codebase-context-is-necessary-but-not">Codebase context is necessary but not sufficient</h2>
+<h2>Codebase context is necessary but not sufficient</h2>
     <p>Vibe&rsquo;s pitch leans heavily on deep project understanding and fine-tuning on proprietary code. Both are real advantages. An agent that has read the codebase will make fewer obvious mistakes than one that has not.</p>
     <p>But knowing the codebase is not the same as enforcing what should be true about the codebase.</p>
     <div class="callout"><p><strong>Context helps the agent know more.</strong> It does not by itself decide which architectural constraints are binding.</p></div>
     <p>An agent with a complete repo index can still introduce a dependency that an ADR has explicitly forbidden, cross a service boundary nobody documented, or refactor away an invariant that lives in a senior engineer&rsquo;s head. The model&rsquo;s confidence scales with its context. Its compliance does not, unless something else enforces it.</p>
 
-    <h2 id="enterprise-coding-platforms-need-governance-seams">Enterprise coding platforms need governance seams</h2>
+    <h2>Enterprise coding platforms need governance seams</h2>
     <p>Once agents operate across terminal, IDE, async, and CI, governance has to follow the workflow surfaces &mdash; not live in a single prompt file or a senior reviewer&rsquo;s queue.</p>
     <p>The natural question for any enterprise coding platform &mdash; Vibe included &mdash; becomes:</p>
     <div class="callout"><p>When coding agents can modify whole systems, where do architectural decisions live, and how are they enforced across terminal, IDE, async, and CI surfaces?</p></div>
     <p>This is the same question that shows up for <a href="/insights/microsoft-agent-platform-governance-layer/">Microsoft&rsquo;s agent platform</a> and for <a href="/insights/agent-runtime-governance/">Google Managed Agents</a> at the runtime layer. Different vendors, same pattern: the execution layer is being productized faster than the governance layer.</p>
 
-    <h2 id="mneme-s-position-vibe-executes-mneme">Mneme&rsquo;s position: Vibe executes, Mneme governs</h2>
+    <h2>Mneme&rsquo;s position: Vibe executes, Mneme governs</h2>
     <p>Mistral Vibe executes. Mneme governs. Those are different jobs at different layers, and they compose.</p>
     <ul>
       <li>Vibe can generate, refactor, modernize, review, and test.</li>
@@ -330,7 +318,7 @@
     </ul>
     <p>Mneme&rsquo;s works-with page already covers Mistral-family models alongside other open-weight and self-hosted systems. Vibe extends that picture: it is the platform <em>around</em> the model that Mneme sits beside. See the <a href="/works-with/">Coding agent ecosystem section</a> for the full picture of how Mneme operates alongside enterprise coding stacks.</p>
 
-    <h2 id="the-category-point">The category point</h2>
+    <h2>The category point</h2>
     <p>Vibe is one more data point in the same trend. <a href="/insights/microsoft-agentic-transformation-playbook-ai-agent-governance/">Microsoft</a>, <a href="/insights/agent-runtime-governance/">Google</a>, Anthropic, OpenAI, and now Mistral are all productizing the agent execution layer. None of them is shipping the governance layer that has to sit above it.</p>
     <div class="callout"><p><strong>Enterprise coding platforms are becoming infrastructure.</strong> Architectural governance becomes the missing layer above them &mdash; not a prompt-file, a senior reviewer, or a checklist, but a constraint set that travels with the repo across every surface those platforms expose.</p></div>
 

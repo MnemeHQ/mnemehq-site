@@ -296,18 +296,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#what-changed">What changed</a></li>
-        <li><a href="#three-layers-are-converging">Three layers are converging</a></li>
-        <li><a href="#the-earliest-point-is-before-generation">The earliest point is before generation</a></li>
-        <li><a href="#why-the-distinction-matters">Why the distinction matters</a></li>
-        <li><a href="#what-teams-should-do">What teams should do</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="what-changed">What changed</h2>
+    <h2>What changed</h2>
     <p>AI has increased the volume and speed of change beyond what code review was designed to absorb. As LeadDev put it in <a href="https://leaddev.com/ai/you-cant-verify-all-the-ai-generated-code" target="_blank" rel="noopener">You can't verify all the AI-generated code</a>, checks now have to run at every level, from the line and commit up to the codebase and application. The shared conclusion across engineering leaders is that verification must move earlier in the software lifecycle, and that agents need enough context to produce reviewable work from the beginning.</p>
     <p>That framing is correct, and it usually stops one step short. Moving verification earlier is read as moving review earlier. But review, however early, still runs after the agent has made its architectural choices.</p>
 
@@ -320,7 +309,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="three-layers-are-converging">Three layers are converging</h2>
+<h2>Three layers are converging</h2>
     <p>The market conversation is organizing around three layers that are often discussed separately:</p>
     <ul>
       <li><strong>Agent context.</strong> What the agent knows before it acts.</li>
@@ -329,7 +318,7 @@
     </ul>
     <div class="callout"><p><strong>These three are usually owned by different tools. The connective layer between them is executable architectural intent.</strong></p></div>
 
-    <h2 id="the-earliest-point-is-before-generation">The earliest point is before generation</h2>
+    <h2>The earliest point is before generation</h2>
     <p>Review is not governance. Reviewing generated code, even continuously, evaluates a change after its architectural decisions are already embedded. The earliest and cheapest place to enforce intent is before generation, when the agent receives the applicable decisions, approved patterns, and repository constraints as machine-evaluable rules. At that point the agent is constrained to produce compliant work rather than reviewed for compliance afterward.</p>
     <table class="gov-table">
       <thead><tr><th>Approach</th><th>When it acts</th><th>What it can do</th></tr></thead>
@@ -340,10 +329,10 @@
       </tbody>
     </table>
 
-    <h2 id="why-the-distinction-matters">Why the distinction matters</h2>
+    <h2>Why the distinction matters</h2>
     <p>Review vendors are increasingly good at inspecting generated changes. Delivery platforms are increasingly good at enforcing controls across pipelines. Neither of those, on its own, makes repository-specific architectural decisions available as enforceable constraints at the moment of generation. That is a separate control plane, and it is the one that determines whether verification is reconstructing intent or applying it.</p>
 
-    <h2 id="what-teams-should-do">What teams should do</h2>
+    <h2>What teams should do</h2>
     <ul>
       <li><strong>Distinguish review from governance.</strong> Faster review reduces latency. It does not move the decision point earlier.</li>
       <li><strong>Give agents constraints, not just context.</strong> Context tells the agent what exists. Constraints tell it what is not allowed. <a href="/insights/package-hallucinations-pre-action-governance/">Package hallucinations</a> are the clearest small case: a registry can confirm a package exists, but not whether it is allowed here.</li>

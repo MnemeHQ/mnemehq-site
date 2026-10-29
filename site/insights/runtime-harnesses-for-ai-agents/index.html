@@ -294,20 +294,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#what-is-a-runtime-harness-for">What is a runtime harness for an AI agent?</a></li>
-        <li><a href="#why-agent-failures-occur-at-the">Why agent failures occur at the model-environment boundary</a></li>
-        <li><a href="#environment-contracts-versus-prompt-instructions">Environment contracts versus prompt instructions</a></li>
-        <li><a href="#why-software-engineering-agents-need-governance">Why software-engineering agents need governance checkpoints</a></li>
-        <li><a href="#where-architectural-governance-fits-in-the">Where architectural governance fits in the harness stack</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="what-is-a-runtime-harness-for">What is a runtime harness for an AI agent?</h2>
+    <h2>What is a runtime harness for an AI agent?</h2>
     <p>Between a model and a useful agent sits a layer that does not get enough credit: the harness. It is the runtime that mediates everything the model does in the world &mdash; how tools are exposed and called, how actions are executed, how environment constraints are applied, how feedback is interpreted, and how the agent&rsquo;s trajectory is steered when it goes wrong. The model proposes; the harness is what actually turns proposals into bounded, recoverable action.</p>
     <p>Research into agent reliability increasingly locates the bottleneck here rather than in the model. A 2026 paper makes the point in its title &mdash; <a href="https://arxiv.org/abs/2605.22166">Adapting the Interface, Not the Model: Runtime Harness Adaptation for Deterministic LLM Agents</a> &mdash; and shows a lifecycle-aware harness improving frozen models across 116 of 126 model-environment settings without changing a single weight. The blunt finding: when you want a more reliable agent, the highest-leverage move is often to adapt the interface around the model, not to wait for a better model.</p>
     <div class="callout"><p><strong>Adapt the interface, not the model.</strong> Reliability is a property of the system around the model at least as much as the model itself.</p></div>
@@ -321,11 +309,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="why-agent-failures-occur-at-the">Why agent failures occur at the model-environment boundary</h2>
+<h2>Why agent failures occur at the model-environment boundary</h2>
     <p>Most visible agent failures are not the model being &ldquo;wrong&rdquo; in the abstract. They happen at the boundary where the agent meets a real environment: a tool used incorrectly, an action taken with a side effect the agent did not anticipate, feedback misread, a trajectory that wandered because nothing constrained it. These are interface failures. A better model reduces some of them, but it does not change the fact that the boundary is where reliability is won or lost.</p>
     <p>This maps cleanly onto a distinction we have drawn before. <a href="/insights/what-is-harness-engineering/">Harness engineering</a> is the discipline of building this boundary well &mdash; the execution layer between a model and production. It is real and necessary work. But a reliable harness is not automatically a <em>governed</em> one.</p>
 
-    <h2 id="environment-contracts-versus-prompt-instructions">Environment contracts versus prompt instructions</h2>
+    <h2>Environment contracts versus prompt instructions</h2>
     <p>The harness lesson generalizes to governance directly. A prompt instruction is a request the model may or may not honor. An environment contract is a property the harness enforces regardless of what the model decides. The whole reason &ldquo;adapt the interface&rdquo; works is that the interface can <em>guarantee</em> things the prompt can only <em>ask</em> for.</p>
     <p>Architectural governance is exactly an environment contract. &ldquo;Do not introduce a second HTTP client.&rdquo; &ldquo;All persistence goes through the repository layer.&rdquo; &ldquo;This module may not import that one.&rdquo; These are not prompt suggestions to a coding agent; they are constraints the harness should enforce before the agent&rsquo;s action takes effect.</p>
 
@@ -342,11 +330,11 @@
     </table>
     </div>
 
-    <h2 id="why-software-engineering-agents-need-governance">Why software-engineering agents need governance checkpoints</h2>
+    <h2>Why software-engineering agents need governance checkpoints</h2>
     <p>A coding agent operating without architectural checkpoints can produce changes that pass every test, run cleanly in the environment, and still erode the architecture. The harness handled execution perfectly; what it never had was a contract about <em>which changes are allowed</em>. The fix is to add governance checkpoints to the harness at the points where action becomes consequential: before tool execution, before commit, before pull request, and in CI.</p>
     <p>Each checkpoint is the harness doing what harnesses do &mdash; mediating between the model&rsquo;s proposal and the world &mdash; but with architectural decisions as part of the mediation. A change that violates an invariant does not get to be an action.</p>
 
-    <h2 id="where-architectural-governance-fits-in-the">Where architectural governance fits in the harness stack</h2>
+    <h2>Where architectural governance fits in the harness stack</h2>
     <p>Think of the agent stack as layers: the model proposes, the harness executes, and governance constrains. The research says the harness matters more than the model for reliability. The same logic says governance matters more than the model for architectural integrity &mdash; because integrity, like reliability, is a property of the interface, not a property you can prompt the model into. <a href="/insights/harness-engineering-verification-layer/">The missing layer in harness engineering is verification</a>: a harness that can prove its actions respected the architecture, not just that they ran.</p>
     <div class="callout"><p><strong>Better models will keep coming, and they will help.</strong> But reliability lives in the harness and integrity lives in governance &mdash; and neither arrives in the next checkpoint.</p></div>
 

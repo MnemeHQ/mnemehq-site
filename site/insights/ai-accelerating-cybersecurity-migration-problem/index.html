@@ -206,21 +206,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-warning-isn-t-only-about">The warning isn't only about better security tools</a></li>
-        <li><a href="#much-of-today-s-cyber-debt">Much of today's cyber debt is architectural debt</a></li>
-        <li><a href="#ai-changes-the-economics-of-migration">AI changes the economics of migration</a></li>
-        <li><a href="#migration-has-a-two-sided-drift">Migration has a two-sided drift problem</a></li>
-        <li><a href="#the-missing-artifact-is-the-executable">The missing artifact is the executable target architecture</a></li>
-        <li><a href="#security-scanners-and-architectural-guardrails-solve">Security scanners and architectural guardrails solve different problems</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-warning-isn-t-only-about">The warning isn't only about better security tools</h2>
+    <h2>The warning isn't only about better security tools</h2>
     <p>On August 27, 2026, OpenAI published <a href="https://openai.com/collective-cyberdefense/" target="_blank" rel="noopener">a call for collective action on cyber defense</a>, co-signed by Anthropic, Google, Microsoft, AWS, Cisco, Cloudflare, CrowdStrike, IBM, Oracle and more than 110 other technology, security, and financial organizations. The letter is blunt about timing: &ldquo;We have a limited window&rdquo; before AI-enabled attacks become far more widespread and sophisticated.</p>
     <p>What is easy to miss is that the letter does not stop at detection and response. It names the underlying exposure directly &mdash; &ldquo;longstanding bugs, excessive permissions, misconfigurations, insecure and unpatched software, weak authentication and technical debt in legacy systems&rdquo; &mdash; and it calls on organizations to &ldquo;fix the highest-risk weaknesses, verify results without disrupting essential services and raise the security bar for what you buy, build and deploy, including AI-generated code.&rdquo;</p>
     <p>Read together, that is not only a cybersecurity program. For a large share of enterprises, fixing that list requires changing the systems, not just patching them. For many organizations, it is a modernization program with a security mandate attached.</p>
@@ -235,15 +221,15 @@
       </div>
     </aside>
 
-    <h2 id="much-of-today-s-cyber-debt">Much of today's cyber debt is architectural debt</h2>
+    <h2>Much of today's cyber debt is architectural debt</h2>
     <p>Not every vulnerability on that list can be patched in place. A meaningful subset requires changing the system's architecture: obsolete authentication schemes, unsupported dependencies that carry excessive privilege, direct database access that should have become a controlled API years ago, monoliths whose service boundaries were never drawn, deprecated platforms, and trust assumptions nobody wrote down.</p>
     <p>None of that is patchable with a version bump. It requires deciding what the system should look like, then rebuilding toward that decision &mdash; which is exactly what a migration is.</p>
 
-    <h2 id="ai-changes-the-economics-of-migration">AI changes the economics of migration</h2>
+    <h2>AI changes the economics of migration</h2>
     <p>This is where the timing of the letter matters. AI coding agents can now read legacy code, recover undocumented behavior, generate migration specifications, transform implementations, write tests, and execute large numbers of changes with very little human involvement per change. Thoughtworks' own account of <a href="https://www.thoughtworks.com/en-us/insights/articles/ai-assisted-migration-lessons" target="_blank" rel="noopener">AI-assisted legacy migration</a> describes the front half of this pattern: extracting undocumented business logic from a legacy codebase into structured specifications, structured enough to feed directly into code generation.</p>
     <p>That capability is genuinely useful. It is also the reason &ldquo;AI makes migration faster&rdquo; is no longer an interesting claim on its own. The open question is different: <strong>what happens when migration execution becomes faster than architectural review?</strong></p>
 
-    <h2 id="migration-has-a-two-sided-drift">Migration has a two-sided drift problem</h2>
+    <h2>Migration has a two-sided drift problem</h2>
     <p>An AI-driven migration can fail in two directions at once, and both are easy for a fast-moving agent to produce without anyone noticing until much later.</p>
     <h3>Legacy preservation failure</h3>
     <p>The agent carries forward something the migration was supposed to eliminate: excessive permissions, an insecure communication pattern, an obsolete library, a workaround nobody remembers the reason for, coupling that was never supposed to survive the rewrite.</p>
@@ -251,7 +237,7 @@
     <p>The agent understands what the old system did, but implements the replacement incorrectly: the wrong persistence technology, a bypassed service boundary, a new unauthorized dependency, an incorrect trust boundary, business logic duplicated instead of consolidated.</p>
     <p>Both failure modes look identical from the outside &mdash; tests pass, the migration &ldquo;completes&rdquo; &mdash; and both are precisely what the collective cyber-defense letter is asking organizations to eliminate, not reintroduce at higher speed.</p>
 
-    <h2 id="the-missing-artifact-is-the-executable">The missing artifact is the executable target architecture</h2>
+    <h2>The missing artifact is the executable target architecture</h2>
     <p>Traditional migration reasoning goes: current state &rarr; migration plan &rarr; target architecture &rarr; implementation. Agentic migration needs one more step in the middle: current state &rarr; recover intent &rarr; define target decisions &rarr; make those decisions machine-consumable &rarr; agent changes &rarr; verify the result.</p>
     <p>A hundred-page target-architecture document is not a guardrail. Neither is pasting every ADR into a prompt. An agent moving at migration speed needs to know, for each proposed change: which decision applies, to what scope, whether it is guidance or enforceable, and what a violation of it looks like &mdash; before the change lands, not after.</p>
 
@@ -276,7 +262,7 @@
       <p class="diag-caption">The migration control loop &mdash; enforcement is the stage architectural guardrails own</p>
     </div>
 
-    <h2 id="security-scanners-and-architectural-guardrails-solve">Security scanners and architectural guardrails solve different problems</h2>
+    <h2>Security scanners and architectural guardrails solve different problems</h2>
     <p>Avoiding category confusion here matters, because a security-modernization program will already be running several of these tools at once.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -292,7 +278,7 @@
     </div>
     <p>AI-assisted modernization may require all of these complementary controls. Mneme does not compete with Snyk, Wiz, or Checkmarx &mdash; it addresses the one question none of them are built to answer: whether the architectural constraints a team encoded for the migration were actually enforced while agents did the work.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <p>AI may shorten the time required to replace insecure legacy systems, which is exactly what the collective cyber-defense letter is asking for. It also shortens the window in which architectural mistakes can be introduced at scale, which the letter does not address directly.</p>
     <div class="callout"><p><strong>The next modernization problem isn't making migrations faster.</strong> It's making the target architecture enforceable while agents perform them.</p></div>
 

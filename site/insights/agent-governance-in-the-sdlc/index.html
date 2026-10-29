@@ -293,19 +293,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#orchestration-moved-the-bottleneck">Orchestration moved the bottleneck</a></li>
-        <li><a href="#why-orchestration-makes-governance-harder-not">Why orchestration makes governance harder, not easier</a></li>
-        <li><a href="#where-governance-attaches-to-the-orchestrated">Where governance attaches to the orchestrated SDLC</a></li>
-        <li><a href="#a-stronger-category-than-another-coding">A stronger category than &ldquo;another coding assistant&rdquo;</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="orchestration-moved-the-bottleneck">Orchestration moved the bottleneck</h2>
+    <h2>Orchestration moved the bottleneck</h2>
     <p>The first wave of AI coding was about a single agent generating code well. The current wave is about orchestration: harnesses that run multiple agents, in the cloud, in parallel &mdash; spawning subagents, coordinating across repositories, and deciding how to split a task. Tools like Warp&rsquo;s multi-harness cloud agent orchestration make this concrete: the unit of work is no longer one agent in one editor, it is a fleet.</p>
     <p>That shift relocates the bottleneck. When generation is parallelized and cheap, the constraint is not how fast agents can write code. It is whether the code they write &mdash; across many agents, many repos, and many handoffs &mdash; adds up to a <a href="/concepts/engineering-coherence/">coherent system</a>.</p>
     <div class="callout"><p><strong>Subagents parallelize execution. They also parallelize inconsistency.</strong> Two agents making locally reasonable choices can produce a globally incoherent architecture, and neither one is wrong from where it sits.</p></div>
@@ -319,11 +308,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="why-orchestration-makes-governance-harder-not">Why orchestration makes governance harder, not easier</h2>
+<h2>Why orchestration makes governance harder, not easier</h2>
     <p>Every additional agent is a new execution surface where architectural intent can fail to propagate. Every asynchronous handoff is an opportunity for a decision made at the planning stage to drop out before implementation. Every layer of orchestration adds distance between the original architectural intent and the eventual change that lands.</p>
     <p>Orchestration solves coordination &mdash; who does what, in what order, with what dependencies. It does not, by itself, solve governance &mdash; whether what they do respects the architecture. A manager view that shows you ten agents working is a dashboard. It becomes a control plane only when policy is attached to it.</p>
 
-    <h2 id="where-governance-attaches-to-the-orchestrated">Where governance attaches to the orchestrated SDLC</h2>
+    <h2>Where governance attaches to the orchestrated SDLC</h2>
     <p>Governing a fleet of agents is not one gate; it is a set of checkpoints distributed across the lifecycle, each enforcing the same architectural decisions:</p>
     <ul>
       <li><strong>Pre-agent execution</strong> &mdash; load the architectural decisions, invariants, and forbidden patterns relevant to the work before any agent starts.</li>
@@ -347,7 +336,7 @@
     </table>
     </div>
 
-    <h2 id="a-stronger-category-than-another-coding">A stronger category than &ldquo;another coding assistant&rdquo;</h2>
+    <h2>A stronger category than &ldquo;another coding assistant&rdquo;</h2>
     <p>This reframing matters strategically as much as technically. As orchestration expands, the durable layer is not the agent that writes the code &mdash; that is commoditizing. It is the infrastructure that keeps an autonomous, multi-agent SDLC architecturally coherent: invariant enforcement, execution verification, provenance, policy propagation, and cross-agent consistency. That is governance for agent ecosystems, and it is a different category from a faster autocomplete.</p>
     <div class="callout"><p><strong>The more autonomous orchestration expands, the more software delivery shifts from generation problems to governance problems.</strong> Coordinating the agents is the visible half. Governing what they build is the half that determines whether the system survives.</p></div>
 

@@ -3,8 +3,12 @@
 Give every insight article the "In this article" contents box from the
 reference layout (/insights/emerging-ai-agent-infrastructure-stack/).
 
-For each article without a .toc, and with at least MIN_SECTIONS section
-headings, this script:
+Only longer, sectioned articles get one: at least MIN_WORDS words of prose
+and at least MIN_SECTIONS sections of MIN_SECTION_WORDS words or more.
+Short commentary and announcement posts do not need navigation. A page that
+already has a .toc (hand-made) is never touched.
+
+For each eligible article, this script:
 
   * gives each section <h2> an id if it has none (a slug of its text,
     unique on the page),
@@ -33,7 +37,9 @@ from link_insight_editorial import is_article  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSIGHTS = REPO_ROOT / "site" / "insights"
-MIN_SECTIONS = 4
+MIN_SECTIONS = 4        # sections with at least MIN_SECTION_WORDS words
+MIN_SECTION_WORDS = 80
+MIN_WORDS = 1000        # prose words; shorter commentary and announcements get no box
 
 BODY_OPEN = re.compile(r'<div class="article-body"[^>]*>')
 H2 = re.compile(r"<h2\b([^>]*)>(.*?)</h2>", re.DOTALL)
@@ -65,6 +71,19 @@ def prose_end(text: str, start: int) -> int:
     return min(ends) if ends else len(text)
 
 
+def word_count(fragment: str) -> int:
+    return len(re.sub(r"<[^>]+>", " ", fragment).split())
+
+
+def eligible(prose: str, sections: list, offset: int) -> bool:
+    if word_count(prose) < MIN_WORDS:
+        return False
+    bounds = [m.start() - offset for m in sections] + [len(prose)]
+    substantial = sum(1 for i in range(len(sections))
+                      if word_count(prose[bounds[i]:bounds[i + 1]]) >= MIN_SECTION_WORDS)
+    return substantial >= MIN_SECTIONS
+
+
 def stamp(text: str, rel_posix: str) -> str:
     """Return text with a contents box inserted, or unchanged."""
     if 'class="toc"' in text or not is_article(rel_posix, text):
@@ -74,7 +93,7 @@ def stamp(text: str, rel_posix: str) -> str:
         return text
     end = prose_end(text, body.end())
     sections = list(H2.finditer(text, body.end(), end))
-    if len(sections) < MIN_SECTIONS:
+    if not eligible(text[body.end():end], sections, body.end()):
         return text
 
     taken = set(re.findall(r'\bid="([^"]+)"', text))
@@ -129,7 +148,7 @@ def main() -> int:
             skipped.append(rel_posix)
     print(f"{'added' if write else 'would add'} contents box: {len(changed)} article(s)")
     for p in skipped:
-        print(f"  skipped (under {MIN_SECTIONS} sections): {p}")
+        print(f"  not eligible (under {MIN_WORDS} words or {MIN_SECTIONS} substantial sections): {p}")
     return 0
 
 

@@ -294,20 +294,8 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#what-databricks-announced">What Databricks Announced</a></li>
-        <li><a href="#orchestration-governs-execution-it-doesn-t">Orchestration Governs Execution. It Doesn&rsquo;t Govern Intent.</a></li>
-        <li><a href="#the-stack-databricks-just-validated">The Stack Databricks Just Validated</a></li>
-        <li><a href="#the-gap-omnigent-doesn-t-close">The Gap Omnigent Doesn&rsquo;t Close</a></li>
-        <li><a href="#what-engineering-leaders-should-do">What Engineering Leaders Should Do</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
 
-
-    <h2 id="what-databricks-announced">What Databricks Announced</h2>
+    <h2>What Databricks Announced</h2>
     <p><a href="https://www.databricks.com/blog/introducing-omnigent-meta-harness-combine-control-and-share-your-agents" target="_blank" rel="noopener">Omnigent</a> is an open-source meta-harness, released under Apache 2.0 and in alpha at launch. It sits above individual agent harnesses &mdash; Claude Code, Codex, Pi, and custom agents &mdash; and treats each as an interchangeable worker under one orchestrator, exposing a common interface to combine, control, and share them.</p>
     <p>Databricks frames the product around three capabilities. <strong>Composition</strong> lets teams combine models, harnesses, and techniques without rewriting, switching between agents with one-line changes. <strong>Control</strong> applies stateful, contextual policies that track agent actions and enforce guardrails such as cost budgets and permissions at the meta-harness layer rather than through prompts. <strong>Collaboration</strong> shares a live agent session by URL so teammates can review files, comment, and steer in real time. Underneath sits sandboxed execution with operating-system access controls. The thesis is stated plainly: to combine agents, govern them, and work on them with other people, you need a layer above the harness, and Omnigent is that layer.</p>
     <p>Omnigent&rsquo;s control plane is genuinely governance-flavored &mdash; budgets, permissions, action tracking. But it governs agent <em>execution</em>: which agent runs, what it may spend, what it may access. That is a different object from the architecture of the code those agents change.</p>
@@ -321,11 +309,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="orchestration-governs-execution-it-doesn-t">Orchestration Governs Execution. It Doesn&rsquo;t Govern Intent.</h2>
+<h2>Orchestration Governs Execution. It Doesn&rsquo;t Govern Intent.</h2>
     <p>The questions a meta-harness answers are execution questions. Which agent should run this step? What is its budget? What can it touch? Can a human take the wheel mid-session? Those matter, and Omnigent answers them well. They are not the questions a codebase asks.</p>
     <p>Multi-agent orchestration actually makes the architectural problem harder, not easier. When Omnigent composes a workflow &mdash; one agent plans, another implements, another reviews &mdash; every agent that does not know a given architectural decision re-decides it. The orchestration layer routes work between agents; it does not carry the architecture decision records, the service boundaries, and the engineering standards along with the work. More agents means more independent chances to <a href="/concepts/architectural-drift/">drift</a> from the intended design.</p>
 
-    <h2 id="the-stack-databricks-just-validated">The Stack Databricks Just Validated</h2>
+    <h2>The Stack Databricks Just Validated</h2>
     <p>Omnigent&rsquo;s real significance is that a company of Databricks&rsquo; weight is now teaching the market that the layer above the agent is a category. That makes the shape of the full stack easier to see &mdash; including the layer Omnigent does not occupy.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -342,11 +330,11 @@
     </table>
     </div>
 
-    <h2 id="the-gap-omnigent-doesn-t-close">The Gap Omnigent Doesn&rsquo;t Close</h2>
+    <h2>The Gap Omnigent Doesn&rsquo;t Close</h2>
     <p>Across a multi-agent workflow, the questions that go unanswered are the ones that keep a system coherent. Why was this architectural decision made? Which ADR applies to this change? Which domain boundaries must hold? Which standards govern this repository? How does each agent in the chain inherit the same engineering intent? When Omnigent composes five agents to plan, implement, and review a change, the architecture gets five chances to drift unless intent is enforced at the point where each agent generates code.</p>
     <p>Could Databricks extend Omnigent into this layer? Possibly; it has the resources. But the starting points differ. Databricks reasons from data to models to agents to orchestration. Engineering governance reasons from intent to architecture to code. The control plane that preserves architectural decisions is a different product from the one that routes and budgets agents, even when both wear the word &ldquo;governance.&rdquo;</p>
 
-    <h2 id="what-engineering-leaders-should-do">What Engineering Leaders Should Do</h2>
+    <h2>What Engineering Leaders Should Do</h2>
     <p>Adopt orchestration for what it is good at &mdash; composing agents, controlling cost and access, collaborating on sessions &mdash; and add the layer it does not provide.</p>
     <ol>
       <li><strong>Make architectural intent executable.</strong> ADRs, boundaries, and standards become <a href="/concepts/executable-architectural-intent/">machine-readable constraints</a> that survive whichever agent the orchestrator selects.</li>

@@ -318,20 +318,7 @@
 
   <div class="article-body">
 
-    <nav class="toc" aria-label="Table of contents">
-      <div class="toc-title">In this article</div>
-      <ol>
-        <li><a href="#the-promise-of-killing-rag">The promise of killing RAG</a></li>
-        <li><a href="#retrieval-did-not-die-filtering-moved">Retrieval did not die &mdash; filtering moved</a></li>
-        <li><a href="#long-context-creates-an-observability-problem">Long context creates an observability problem</a></li>
-        <li><a href="#why-this-matters-more-for-agentic">Why this matters more for agentic systems</a></li>
-        <li><a href="#the-next-architecture-layer">The next architecture layer</a></li>
-        <li><a href="#conclusion">Conclusion</a></li>
-        <li><a href="#faq-heading">Frequently asked questions</a></li>
-      </ol>
-    </nav>
-
-    <h2 id="the-promise-of-killing-rag">The promise of killing RAG</h2>
+    <h2>The promise of killing RAG</h2>
     <p>The emotional appeal is real. Retrieval stacks are operationally painful: chunking strategies, reranker tuning, hybrid search, embedding refreshes, eval pipelines that nobody owns. Teams want to delete most of it. The 1M-context narrative promises exactly that simplification &mdash; just put everything in the prompt and let the model figure it out.</p>
     <p>Engineering teams have started reporting the experiment in public. A common pattern: a team removes its retrieval layer after upgrading to a long-context model, sees it work for single-document lookups, then watches it quietly fail on multi-hop synthesis across postmortems, ADRs, or runbooks. The model does not flag the failure. It produces a coherent answer that happens to be operating on incomplete material.</p>
     <div class="callout"><p><strong>The failure was not obvious hallucination.</strong> The model sounded coherent while operating on incomplete retrieval. That is operationally more dangerous, not less.</p></div>
@@ -345,7 +332,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2 id="retrieval-did-not-die-filtering-moved">Retrieval did not die &mdash; filtering moved</h2>
+<h2>Retrieval did not die &mdash; filtering moved</h2>
     <p>The clearest way to read what actually happened is as a shift in where filtering lives.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -361,7 +348,7 @@
     <p>The reranker became optional. <strong>Retrieval did not.</strong></p>
     <p>The thing that disappeared is the brittle middle layer of the old pipeline. The thing that remained &mdash; selecting which documents are even candidates for the prompt &mdash; still has to happen somewhere. If the candidate set is wrong, no amount of context window saves you. The model can only filter what it was handed.</p>
 
-    <h2 id="long-context-creates-an-observability-problem">Long context creates an observability problem</h2>
+    <h2>Long context creates an observability problem</h2>
     <p>Once a prompt reaches hundreds of thousands of tokens, the observability properties of the system change in ways that matter more than the throughput numbers.</p>
     <ul>
       <li><strong>Humans cannot inspect effective context.</strong> A million-token prompt is not auditable by reading it.</li>
@@ -372,7 +359,7 @@
     <div class="callout"><p><strong>The dangerous failure mode is no longer obvious hallucination.</strong> It is partial-context reasoning that appears complete.</p></div>
     <p>That is exactly the failure mode that infrastructure has historically existed to prevent. Tests, code review, type systems, CI, deploy gates &mdash; they exist because humans cannot reliably catch silent partial failures by reading the output. Long-context systems reproduce that class of problem in a place that does not yet have its tests-and-CI equivalent: the prompt itself.</p>
 
-    <h2 id="why-this-matters-more-for-agentic">Why this matters more for agentic systems</h2>
+    <h2>Why this matters more for agentic systems</h2>
     <p>The stakes scale with execution authority. A chatbot missing a postmortem is annoying. An <a href="/insights/long-running-agents-need-governance/">autonomous coding agent missing an ADR is architectural drift</a>.</p>
     <p>What that looks like in practice:</p>
     <ul>
@@ -384,7 +371,7 @@
     <div class="callout"><p><strong>As agents gain execution authority, incomplete retrieval becomes a governance problem, not just a search problem.</strong></p></div>
     <p>The model is not the only thing that needs to know which ADRs apply. The system that gates the agent&rsquo;s action needs to know too &mdash; deterministically, repeatably, and on every run.</p>
 
-    <h2 id="the-next-architecture-layer">The next architecture layer</h2>
+    <h2>The next architecture layer</h2>
     <p>The replacement framing &mdash; LLM-with-1M-context replaces retrieval &mdash; is the wrong shape. The right shape is layered.</p>
     <ul>
       <li><strong>Long context</strong> &mdash; lets the model attend to more material in a single call</li>
@@ -396,7 +383,7 @@
     <p>These are not alternatives. They are different jobs that compose. Long context improves how much the model can attend to. <a href="/concepts/governance-before-generation/">Governance before generation</a> determines what the agent is allowed to do with what it attended to. <a href="/concepts/verification-contracts/">Verification contracts</a> prove that intent survived. <a href="/concepts/enforcement-provenance/">Provenance</a> makes the chain auditable after the fact.</p>
     <p>The retrieval pipeline got simpler. The infrastructure around the model got more important.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <p>The industry treated long context as a replacement for retrieval infrastructure. In practice, it is becoming a force multiplier for governance infrastructure instead.</p>
     <div class="callout"><p><strong>The larger the context window becomes,</strong> the more important it is to know what the model actually used, what it ignored, and which architectural constraints remained invariant throughout execution.</p></div>
     <p>Bigger windows do not make architecture safer. They make the gaps in architecture harder to see.</p>

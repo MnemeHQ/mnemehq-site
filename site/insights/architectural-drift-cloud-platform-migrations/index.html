@@ -378,30 +378,15 @@
 
 <div class="article-body">
 
-  <nav class="toc" aria-label="Table of contents">
-    <div class="toc-title">In this article</div>
-    <ol>
-      <li><a href="#the-infrastructure-move-is-not-the">The infrastructure move is not the hard part</a></li>
-      <li><a href="#why-platform-migrations-produce-more-drift">Why platform migrations produce more drift, not less</a></li>
-      <li><a href="#the-pattern-repeats-across-five-common">The pattern repeats across five common migrations</a></li>
-      <li><a href="#framework-upgrades-are-the-same-problem">Framework upgrades are the same problem in miniature</a></li>
-      <li><a href="#what-does-not-change-the-fix">What does not change: the fix is still path applicability</a></li>
-      <li><a href="#cross-cutting-platform-state-needs-its">Cross-cutting platform state needs its own decision</a></li>
-      <li><a href="#sequencing-matters-more-here">Sequencing matters more here</a></li>
-      <li><a href="#conclusion">Conclusion</a></li>
-      <li><a href="#faq-heading">Frequently asked questions</a></li>
-    </ol>
-  </nav>
-
-    <h2 id="the-infrastructure-move-is-not-the">The infrastructure move is not the hard part</h2>
+    <h2>The infrastructure move is not the hard part</h2>
     <p>AWS to Azure or GCP. VMs to Kubernetes. A monolith split into services. REST replaced by an event-driven backbone. A database engine swap. A framework major-version upgrade. These are usually described, and budgeted, as infrastructure or platform projects. The actual difficulty rarely lives in the infrastructure. It lives in what happens to the application code that has to keep running correctly while the ground underneath it changes.</p>
     <p>Every one of these projects is, underneath the platform work, an architectural migration of exactly the kind the rest of this cluster describes: two valid patterns coexisting in one codebase for the length of the project, with agents statistically likely to reproduce the one being retired.</p>
 
-    <h2 id="why-platform-migrations-produce-more-drift">Why platform migrations produce more drift, not less</h2>
+    <h2>Why platform migrations produce more drift, not less</h2>
     <p>It is tempting to assume a platform migration is lower risk for this problem than an application-level one, because so much of the change happens in configuration and infrastructure code rather than business logic. The opposite tends to be true. Platform migrations usually touch more of the codebase, over a longer period, with less of the change concentrated in code anyone is reading line by line.</p>
     <p>A Kubernetes migration means every service's deployment story changes, generally on a per-service schedule stretched across months. A database engine change means every query, every migration script, and often every ORM mapping is touched somewhere. An agent generating code for a not-yet-migrated service, next to a dozen already-migrated ones, faces the exact frequency problem from the pillar article: the migrated pattern is newer and rarer, the legacy pattern is older and more numerous, and nothing marks one as historical.</p>
 
-    <h2 id="the-pattern-repeats-across-five-common">The pattern repeats across five common migrations</h2>
+    <h2>The pattern repeats across five common migrations</h2>
 
     <div style="overflow-x:auto;">
     <table class="gov-table">
@@ -420,22 +405,22 @@
 
     <p>The specific pattern being copied changes with the migration. The mechanism does not. In every row, an agent generating code near a not-yet-migrated majority reaches for what it sees, and what it sees is the platform being replaced.</p>
 
-    <h2 id="framework-upgrades-are-the-same-problem">Framework upgrades are the same problem in miniature</h2>
+    <h2>Framework upgrades are the same problem in miniature</h2>
     <p>A major framework version upgrade rarely happens as one commit. It happens module by module, sometimes over quarters, with old-API and new-API usage coexisting the entire time. An agent asked to add a feature near recently-upgraded code has the same frequency problem as any other migration: the old API is usually still the majority pattern until the upgrade is nearly complete, which is exactly when the temptation to relax vigilance is highest.</p>
     <p>This is worth naming separately from the infrastructure cases above because it is the one most likely to be treated as routine maintenance rather than a governed migration, and therefore the one most likely to have no scoped decisions at all.</p>
 
-    <h2 id="what-does-not-change-the-fix">What does not change: the fix is still path applicability</h2>
+    <h2>What does not change: the fix is still path applicability</h2>
     <p>None of these five migrations need a different governance mechanism from the one covered throughout this cluster. Each is a legacy pattern and a target pattern occupying the same codebase, resolved by a decision scoped with <code>include_paths</code> for the migrated tree and <code>exclude_paths</code> for the legacy tree, the same shape as the persistence and adapter examples in the guardrails article.</p>
     <p>What differs across the five is only the specific literal or pattern being scoped: a provider SDK import, a deployment manifest convention, a synchronous call shape, a query dialect, an old-version API call. The scoping mechanism, and the reason it is needed, is identical in every case.</p>
 
-    <h2 id="cross-cutting-platform-state-needs-its">Cross-cutting platform state needs its own decision</h2>
+    <h2>Cross-cutting platform state needs its own decision</h2>
     <p>One thing platform migrations add that a pure application migration usually does not: cross-cutting concerns like observability, secrets, and networking often change shape at the same time as everything else, and they tend to be the parts nobody writes an ADR for because they feel like plumbing rather than architecture.</p>
     <p>They are architecture. A service that migrates its business logic to the target platform but keeps the old logging or secrets pattern is not fully migrated, and an agent has no way to know that unless the decision covering it is recorded and scoped the same way as everything else.</p>
 
-    <h2 id="sequencing-matters-more-here">Sequencing matters more here</h2>
+    <h2>Sequencing matters more here</h2>
     <p>Platform migrations frequently have hard ordering constraints that application migrations do not: a service cannot move to the new cluster until its dependencies are reachable there, a table cannot move to the new database until its consumers can read from both. As the pillar article covers, the corpus cannot express the ordering directly, but it can hold the rule that keeps a downstream tree on the legacy pattern until its dependency lands. That is worth doing because a project plan is not something an agent is checked against.</p>
 
-    <h2 id="conclusion">Conclusion</h2>
+    <h2>Conclusion</h2>
     <p>The infrastructure work in a cloud or platform migration gets the budget, the timeline, and the runbook. The architectural drift it creates in application code, while old and new platforms coexist, usually gets neither. The governance need is not specific to any one of these five migrations; it is the same path-scoped decision mechanism this cluster has covered throughout, applied to whichever platform boundary the project is actually crossing.</p>
     <p>The <a href="/demo/legacy-vs-target-architecture/">migration demo</a> traces the same path-scoped mechanism end to end, on the persistence boundary that recurs across all five migration types above.</p>
 
