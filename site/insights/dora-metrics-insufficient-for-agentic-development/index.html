@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="DORA metrics measure software delivery, not whether an agentic, autonomous engineering system stays architecturally coherent. Governance is the missing layer." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -326,7 +327,24 @@
 
   <div class="article-body">
 
-    <h2>The KPI confusion</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-kpi-confusion">The KPI confusion</a></li>
+        <li><a href="#why-dora-still-matters">Why DORA still matters</a></li>
+        <li><a href="#what-changes-under-agentic-development">What changes under agentic development</a></li>
+        <li><a href="#the-hidden-failure-mode-dora-metrics">The hidden failure mode: DORA metrics can improve while architecture degrades</a></li>
+        <li><a href="#a-three-layer-model-for-ai">A three-layer model for AI software engineering metrics</a></li>
+        <li><a href="#governance-changes-the-optimization-target">Governance changes the optimization target</a></li>
+        <li><a href="#the-analogy">The analogy</a></li>
+        <li><a href="#the-enterprise-angle">The enterprise angle</a></li>
+        <li><a href="#what-this-means-for-measurement">What this means for measurement</a></li>
+        <li><a href="#the-structural-arc">The structural arc</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-kpi-confusion">The KPI confusion</h2>
     <p>Most teams now measure autonomous development with numbers that were already controversial before AI existed. Tokens consumed. Pull requests opened. Lines of code generated. Agent tasks completed. Percentage of a backlog closed by a coding agent. These are the dashboards going up in engineering reviews this quarter, and they share one property: none of them prove the engineering system actually got better.</p>
     <p>This is an old confusion wearing new clothes. The industry spent a decade learning that activity is not productivity &mdash; that counting commits and lines rewards motion, not outcomes. Agentic tooling did not resolve that lesson. It amplified it. When a machine can open forty pull requests in an afternoon, activity metrics stop being merely unhelpful and start being actively misleading, because the volume looks like progress.</p>
     <div class="callout"><p><strong>AI has made engineering activity easier to measure while making engineering outcomes harder to reason about.</strong> The instrumentation got cheaper at exactly the moment the thing worth instrumenting got more complicated.</p></div>
@@ -341,7 +359,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why DORA still matters</h2>
+<h2 id="why-dora-still-matters">Why DORA still matters</h2>
     <p>DORA &mdash; DevOps Research and Assessment, the research program behind the annual State of DevOps reports and the 2018 book <em>Accelerate</em> by Nicole Forsgren, Jez Humble, and Gene Kim, now part of Google Cloud &mdash; got the hardest part right. It refused to measure individual developers and instead measured the delivery system they work inside.</p>
     <p>The four key DORA metrics are well known:</p>
     <ul>
@@ -354,7 +372,7 @@
     <p>The pairing is the genius of the framework. Throughput and stability are tracked together so that teams are not rewarded for trading one against the other. DORA&rsquo;s repeatedly validated finding is that speed and stability are not a tradeoff: elite performers score well on both at once, while low performers score poorly on both. Measuring them as a pair guards against shipping faster by quietly accepting more breakage.</p>
     <p>None of this is wrong, and the argument here is not against DORA. The point is narrower and structural. DORA measures the behavior of a delivery system that assumes humans remain the primary coordination layer &mdash; the people who decide what to build, review what gets built, and hold the architecture in their heads. That assumption is exactly what agentic development erodes.</p>
 
-    <h2>What changes under agentic development</h2>
+    <h2 id="what-changes-under-agentic-development">What changes under agentic development</h2>
     <p>Agentic development is software engineering in which autonomous AI agents, not humans, generate most of the change &mdash; and the agentic development metrics that matter most are the ones that survive that shift.</p>
     <p>When agents become the execution layer, three things shift at once. Each one moves load onto a part of the system that DORA does not observe.</p>
 
@@ -367,7 +385,7 @@
     <h3>Local correctness diverges from system correctness</h3>
     <p>An agent optimizes for the task in front of it. The function works, the test passes, the ticket closes. But a change that is locally correct can be globally corrosive: it introduces a second way to do something the codebase already does one way, reaches across a boundary it should respect, or contradicts a decision made three quarters ago in an ADR no one re-read. Repeated across many agents and many PRs, these locally reasonable choices compound. That compounding is <a href="/concepts/architectural-drift/">architectural drift</a> &mdash; distinct from model or data drift &mdash; the divergence of generated code from the architectural decisions it was supposed to honor. And because each violation makes the next one look normal, drift propagates: <a href="/concepts/governance-propagation/">governance propagation</a> is the dynamic by which an unenforced decision decays a little further with every change built on top of it.</p>
 
-    <h2>The hidden failure mode: DORA metrics can improve while architecture degrades</h2>
+    <h2 id="the-hidden-failure-mode-dora-metrics">The hidden failure mode: DORA metrics can improve while architecture degrades</h2>
     <p>Here is the failure mode that should worry anyone running an agentic delivery pipeline. Every DORA metric can move in the right direction while the system gets structurally worse.</p>
     <p>Deployment frequency rises, because agents ship constantly. Lead time for changes falls, because implementation is no longer the bottleneck. Change failure rate stays acceptable, because the changes pass their tests. Time to restore service holds, because individual fixes are fast. The dashboard is green. Leadership sees an elite-performing delivery system.</p>
     <p>Underneath, something else is happening. Duplication spreads because no agent knows what the others already built. Abstractions fragment into near-identical variants. ADR compliance decays one reasonable-looking exception at a time. Invariants that used to hold &mdash; this layer never calls that one, this data is always validated here &mdash; start drifting. Enforcement that exists in one part of the repo is silently absent in another. None of this registers as a failed deployment. All of it is the architecture coming apart at a speed proportional to how productive the delivery metrics say you are.</p>
@@ -388,7 +406,7 @@
       <p class="diag-caption">Without governance, delivery metrics stay green while architectural integrity declines</p>
     </div>
 
-    <h2>A three-layer model for AI software engineering metrics</h2>
+    <h2 id="a-three-layer-model-for-ai">A three-layer model for AI software engineering metrics</h2>
     <p>The clean way to think about this is as a stack. Each layer answers a different question, and a healthy reading of one tells you nothing about the layer below it.</p>
     <p><strong>Layer 1 &mdash; Activity.</strong> Tokens, lines, commits, agent runs, tasks closed. These measure motion. In isolation they have almost no value, and under agentic generation their capacity to mislead grows, because activity can rise without delivery improving at all.</p>
     <p><strong>Layer 2 &mdash; Delivery.</strong> DORA&rsquo;s four keys plus broader throughput. This measures what the delivery system produces: working software, shipped at a cadence, with bounded instability. This is real and necessary, and it is where most mature teams stop.</p>
@@ -421,28 +439,28 @@
       <p class="diag-caption">Activity and delivery metrics cannot see the governance layer</p>
     </div>
 
-    <h2>Governance changes the optimization target</h2>
+    <h2 id="governance-changes-the-optimization-target">Governance changes the optimization target</h2>
     <p>The reason this matters is not measurement for its own sake. It is what each layer tells the system to optimize for.</p>
     <p>With only activity and delivery metrics in view, the implicit target of an agentic pipeline is <strong>maximize generation speed</strong>. Ship more, faster, with acceptable failure rates. That target is exactly what produces the green-dashboard-degrading-architecture failure mode, because nothing in it accounts for structural cost.</p>
     <p>Add a governance layer and the target changes shape. It becomes <strong>maximize sustainable autonomous throughput without destabilizing the system</strong> &mdash; speed bounded by the constraint that the architecture stays coherent. The same way DORA paired throughput with stability so neither could be gamed, a governance layer pairs generation velocity with structural integrity.</p>
     <div class="callout"><p><strong>Without governance, the target is &ldquo;generate faster.&rdquo; With governance, the target is &ldquo;generate as fast as the system can absorb without coming apart.&rdquo;</strong> That is the difference between throughput and sustainable throughput.</p></div>
 
-    <h2>The analogy</h2>
+    <h2 id="the-analogy">The analogy</h2>
     <p>This pattern has played out twice before, and both times the response was the same: when the rate of change rose, the industry added a feedback loop to keep speed from outrunning safety.</p>
     <p>CI/CD systematized a fast, automated feedback loop for integration and release. Every commit is built, tested, and validated on its way to production, so the signal about whether a change is safe arrives in minutes instead of weeks. That loop sits before and at deploy time.</p>
     <p>Observability added a different loop, after deploy. By making a system&rsquo;s internal state inferable from its outputs, it let teams operate and debug distributed systems they could no longer reason about by inspection &mdash; the foundation that reliability practices like SLOs and incident response are built on top of.</p>
     <p>Agentic engineering raises the rate and the opacity of change again, and the historical pattern suggests the same kind of response: a third loop. A <a href="/concepts/governance-infrastructure/">governance</a> feedback loop checks generated change against durable intent &mdash; the recorded decisions and constraints the system must preserve &mdash; before and around the act of generation. It does not replace the delivery loop or the observability loop. It is complementary to both, operating on a dimension neither was built to see.</p>
 
-    <h2>The enterprise angle</h2>
+    <h2 id="the-enterprise-angle">The enterprise angle</h2>
     <p>For enterprises, this stops being an abstraction quickly. Enterprises do not actually want maximum AI output. Maximum output is a liability if you cannot account for it. What they want is narrower and harder: predictable delivery, controlled autonomy, explainable change, bounded behavior, and stability that holds as execution velocity climbs.</p>
     <p>Those are governance properties, not generation properties. A faster model does not deliver any of them. They come from the system around the model &mdash; the layer that decides what an agent is allowed to do, checks that it did only that, and can show its work afterward. As autonomy increases, that layer stops being a nice-to-have process and becomes load-bearing. This is why governance becomes <a href="/concepts/governance-infrastructure/">infrastructure</a>: the same way CI and observability became infrastructure once their respective loops became indispensable, governance becomes infrastructure once machines are doing most of the writing.</p>
 
-    <h2>What this means for measurement</h2>
+    <h2 id="what-this-means-for-measurement">What this means for measurement</h2>
     <p>It is worth being honest about scope, because the term &ldquo;governance metrics&rdquo; is already overloaded. In AI governance it means compliance and ethics KPIs &mdash; bias, fairness, regulatory adherence. That is not what this is. What this essay describes is narrower: <strong>architectural governance telemetry</strong>, the codebase-level question of whether generated code stayed bound to recorded architectural decisions.</p>
     <p>And it is telemetry, not a dashboard product. The defensible first surfaces are conceptual and deterministic, not a new analytics suite. Three are the tractable first surfaces: governance-violation telemetry &mdash; what was checked and what failed; architectural-drift indicators &mdash; where generated change is pulling away from recorded decisions; and <a href="/concepts/enforcement-provenance/">enforcement provenance</a> &mdash; a traceable record of which constraints ran against which change and what they decided. All three are repo-native and deterministic, derived from the same enforcement that already runs at hooks and CI rather than from a sampled estimate.</p>
     <p>It is worth saying plainly what this is not. It is not a productivity dashboard. It is not a way to rank or compare individual developers &mdash; the same misuse DORA explicitly warns against. It is not an AI-ROI score. It measures one thing: whether the system stayed inside its own decisions while the machines worked.</p>
 
-    <h2>The structural arc</h2>
+    <h2 id="the-structural-arc">The structural arc</h2>
     <p>The progression is the point. Activity metrics measure motion and were always weak signal. Delivery metrics &mdash; DORA &mdash; measure the behavior of the delivery system and remain necessary. Governance metrics measure whether the system stayed architecturally coherent while autonomy rose, and that is the layer agentic development makes unavoidable.</p>
     <p>DORA was the right answer to its era&rsquo;s question: are we shipping well? It is not the wrong answer now. It is an incomplete one, because it answers a question that assumed humans held the architecture together. When agents hold the keyboard, a new question becomes primary &mdash; not are we shipping, but are we staying who we decided to be while we ship.</p>
     <div class="callout"><p><strong>DORA is necessary but insufficient for agentic development.</strong> Delivery metrics tell you the system is moving fast and not breaking visibly. Only governance metrics tell you it is still the system you designed.</p></div>

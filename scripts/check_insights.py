@@ -595,6 +595,21 @@ def slug_warnings(slug: str, html: str, inbound: int) -> list[str]:
     return warns
 
 
+def check_toc(slug: str, html: str) -> list[str]:
+    """Every "In this article" link must land on a heading id on the page, so a
+    renamed or removed section cannot leave a dead entry behind."""
+    m = re.search(r'<nav class="toc".*?</nav>', html, re.DOTALL)
+    if not m:
+        return []
+    ids = set(re.findall(r'\bid="([^"]+)"', html))
+    return [
+        f'Contents box in {slug} links to #{a}, which no element on the page has: '
+        f"update the entry to match the renamed heading, or delete the box and run "
+        f"python scripts/insert_insight_toc.py --write"
+        for a in re.findall(r'href="#([^"]+)"', m.group(0)) if a not in ids
+    ]
+
+
 def main() -> int:
     if not HUB.exists():
         print(f"ERROR  Hub not found: {HUB}", file=sys.stderr)
@@ -611,6 +626,9 @@ def main() -> int:
     all_errors: dict[str, list[str]] = {}
     for slug in slugs:
         errs = check_slug(slug, sitemap_set, hub_card_set, hub_haspart_set)
+        page = INSIGHTS_DIR / slug / "index.html"
+        if page.exists():
+            errs += check_toc(slug, page.read_text(encoding="utf-8"))
         if errs:
             all_errors[slug] = errs
 

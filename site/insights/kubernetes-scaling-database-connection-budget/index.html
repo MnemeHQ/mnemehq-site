@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Kubernetes autoscaling can add pods past what PostgreSQL accepts. Treat a connection budget as an architecture decision, and see which tool enforces each part." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -371,18 +372,34 @@
   </header>
 
 <div class="article-body">
-<h2>The incident shape</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-incident-shape">The incident shape</a></li>
+      <li><a href="#what-each-layer-guarantees">What each layer guarantees</a></li>
+      <li><a href="#the-connection-budget-worked-through">The connection budget, worked through</a></li>
+      <li><a href="#what-a-pooler-changes">What a pooler changes</a></li>
+      <li><a href="#the-budget-is-an-architecture-decision">The budget is an architecture decision</a></li>
+      <li><a href="#static-controls-and-runtime-controls">Static controls and runtime controls</a></li>
+      <li><a href="#where-mneme-fits-and-where-it">Where Mneme fits, and where it does not</a></li>
+      <li><a href="#one-decision-several-enforcement-points">One decision, several enforcement points</a></li>
+      <li><a href="#what-to-do-now">What to do now</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="the-incident-shape">The incident shape</h2>
 <p>Picture an orders service on a busy afternoon. Traffic climbs, and the Kubernetes Horizontal Pod Autoscaler (HPA) adds pods, exactly as configured. Each new pod opens its own pool of connections to PostgreSQL. A few pods into the scale-up, the database starts refusing new connections. Requests fail, and every pod the autoscaler adds from here asks for connections that do not exist.</p>
 <p>Nothing in that story is a Kubernetes defect or a PostgreSQL defect. The autoscaler scaled. The database protected itself by enforcing its limit. Each layer passed its own checks. The failure lives in a number nobody owns: how many connections the whole deployment can open, against how many the database will accept.</p>
 <p>Site reliability engineers (SREs) and platform engineers know this failure well. Two current changes add new ways to trigger it. Autoscaling changes replica counts without a person in the loop, and coding agents can now edit Deployment manifests, HPA objects and pool settings in the same change as application code, without anyone re-running the arithmetic.</p>
 
-<h2>What each layer guarantees</h2>
+<h2 id="what-each-layer-guarantees">What each layer guarantees</h2>
 <p>Kubernetes documents the HPA as a control loop. By default the controller runs <a href="https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/" target="_blank" rel="noopener">every 15 seconds</a>, compares the current metric with the target, and computes the desired replica count from their ratio. It never goes above the maximum you configure. Scaling up has no stabilization window by default: the controller may add 4 pods or double the running count every 15 seconds, whichever is more. Its inputs are CPU, memory, custom and external metrics. The database's connection limit is not one of them unless you build that metric yourself.</p>
 <p>A rolling update adds a second multiplier. A Deployment's <code>maxSurge</code> setting allows extra pods above the desired count during a rollout, and its <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank" rel="noopener">default is 25%</a>, rounded up.</p>
 <p>PostgreSQL enforces its own ceiling. In the PostgreSQL 18 documentation, <a href="https://www.postgresql.org/docs/18/runtime-config-connection.html" target="_blank" rel="noopener"><code>max_connections</code></a> defaults to "typically 100", and you can only change it at server start. Part of that number is not yours. <code>superuser_reserved_connections</code> holds back 3 slots by default for superusers, and <code>reserved_connections</code> (default 0) can hold back more for roles granted <code>pg_use_reserved_connections</code>. Once free slots fall to those reserves, the server admits only those roles.</p>
 <p>Both systems behave as documented. The HPA object has no field for the database limit, and PostgreSQL has no idea how many pods exist.</p>
 
-<h2>The connection budget, worked through</h2>
+<h2 id="the-connection-budget-worked-through">The connection budget, worked through</h2>
 <p>The figures below are hypothetical. They show the shape of the calculation, not a measured system.</p>
 <div style="overflow-x:auto;margin:2rem 0;">
 <table class="gov-table">
@@ -400,12 +417,12 @@
 <p>At full scale the service can ask for 144 connections from a database that accepts 97 ordinary ones, and 180 during a rollout. That is before migration jobs, scheduled workers, admin sessions or a second service that shares the database take their share. Their numbers live in other files, or in nobody's file.</p>
 <p>Run the arithmetic the other way and the decision becomes concrete. With 12 connections per pod and 97 slots, at most 8 pods fit: 8 replicas use 96 connections. Count the 25% rollout surge as well and the HPA maximum drops to 6 (6 plus 2 surge pods is 8). Cut the pool to 8 connections per pod and the cap rises to 9, surge included (9 plus 3 surge pods is 12, using 96 connections). Either answer is a trade-off a team has to choose and write down.</p>
 
-<h2>What a pooler changes</h2>
+<h2 id="what-a-pooler-changes">What a pooler changes</h2>
 <p>A connection pooler such as PgBouncer changes the terms. It does not remove the budget. Pods connect to PgBouncer, and PgBouncer holds a smaller set of server connections to PostgreSQL. In <a href="https://www.pgbouncer.org/features.html" target="_blank" rel="noopener">transaction pooling</a>, a client holds a server connection only for the length of a transaction.</p>
 <p>The budget now has three terms instead of one. Server connections are bounded per user and database pair by <a href="https://www.pgbouncer.org/config.html" target="_blank" rel="noopener"><code>default_pool_size</code></a> (default 20), and per database by <code>max_db_connections</code>, which defaults to 0, meaning unlimited. Client connections are bounded by <code>max_client_conn</code>, default 100. The hypothetical 144 client connections would exceed that default on a single PgBouncer instance. Run three PgBouncer replicas with a pool of 20 each for one user and database, and PostgreSQL sees up to 60 server connections from them, plus anything that bypasses the pooler.</p>
 <p>Transaction pooling also constrains the application. PgBouncer's feature map lists session features that transaction mode does not support, including <code>SET</code>/<code>RESET</code>, <code>LISTEN</code> and session-level advisory locks. Choosing the pooling mode is a decision the code has to respect too.</p>
 
-<h2>The budget is an architecture decision</h2>
+<h2 id="the-budget-is-an-architecture-decision">The budget is an architecture decision</h2>
 <p>A connection budget has the properties of an architecture decision: a reason, an owner, a scope and consequences across several components. Written down, it reads something like this:</p>
 <ul>
   <li>The orders service reaches PostgreSQL only through its data adapter: the one module that opens database connections and owns the connection pool.</li>
@@ -414,7 +431,7 @@
 </ul>
 <p>Once the decision exists as a record, each part has a home. <a href="/concepts/architecture-as-code/">Architecture as Code</a> describes the intent in a form tools can read. <a href="/concepts/policy-as-code/">Policy as Code</a> turns parts of it into rules that engines evaluate. Keeping those rules tied to the current version of the decision is a lifecycle problem of its own, covered in <a href="/insights/policy-as-code-engineering-decisions/">Policy as Code Enforces Rules. Who Governs the Decisions Behind Them?</a></p>
 
-<h2>Static controls and runtime controls</h2>
+<h2 id="static-controls-and-runtime-controls">Static controls and runtime controls</h2>
 <p>Some parts of the budget are deterministic: you can compute them from files before anything deploys. Others only exist at runtime. A static check cannot see a client that leaks connections, and a dashboard cannot stop a bad manifest from deploying, so the budget needs both kinds.</p>
 <div style="overflow-x:auto;margin:2rem 0;">
 <table class="gov-table">
@@ -431,7 +448,7 @@
 <p>The static check proves the deployment cannot request more than the budget on paper. It cannot prove what is open right now. PostgreSQL's <a href="https://www.postgresql.org/docs/18/monitoring-stats.html" target="_blank" rel="noopener"><code>pg_stat_activity</code></a> view shows one row per server process, and that is where a forgotten cron job or a leaking client appears. You need both: arithmetic before deploy, measurement after.</p>
 <p>The arithmetic check has to see the HPA object, the Deployment, the application's pool setting and the database limit together. Rendered manifests in CI give it all four in one place. Kyverno, which runs as a <a href="https://kyverno.io/docs/introduction/how-kyverno-works/" target="_blank" rel="noopener">dynamic admission controller</a>, and <a href="https://open-policy-agent.github.io/gatekeeper/website/docs/" target="_blank" rel="noopener">Gatekeeper</a>, a validating and mutating webhook that enforces policies executed by Open Policy Agent (OPA), are the right tools when the cluster itself must refuse the change.</p>
 
-<h2>Where Mneme fits, and where it does not</h2>
+<h2 id="where-mneme-fits-and-where-it">Where Mneme fits, and where it does not</h2>
 <p>Mneme is an open-source decision and control layer for agentic software development, and it enforces the first row today, in the agent and in <a href="/use-cases/ci-governance-for-ai-generated-code/">CI on every pull request</a>, in warn or strict mode. The decision lives in an architecture decision record (ADR) with a typed rule: a constraint written in a fixed format that Mneme can evaluate mechanically. This one forbids the direct client import inside request handlers:</p>
 <pre><code>## Constraints
 - FORBID_LITERAL:
@@ -443,12 +460,12 @@
 <p>The rule has documented limits. <a href="/docs/how-to/adr-to-enforceable-decision/"><code>FORBID_LITERAL</code> matches exact text</a>, so <code>import app.db.client as db</code> passes; you add one rule per import form or run an import linter beside it.</p>
 <p>No Mneme rule type checks replica counts and pool sizes against a connection budget. Doing that from a recorded decision is a concept, not a shipped feature. Mneme does not enforce infrastructure policy or admit deployments; Kyverno, OPA and similar tools do that work.</p>
 
-<h2>One decision, several enforcement points</h2>
+<h2 id="one-decision-several-enforcement-points">One decision, several enforcement points</h2>
 <p>The budget decision feeds at least four enforcement points: the code rule, the CI arithmetic, the admission policy and the alert. When one fails, the on-call engineer should be able to answer which decision it protects, which version, which rule fired, on which artifact, and with what verdict. That is the evidence question <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> asks.</p>
 <p>Part of that chain ships today. A Mneme violation names the decision and rule behind it, and the <a href="/docs/decision-index/">Decision Index</a>, the versioned record of decisions that Mneme keeps in the repository's <code>.mneme/project_memory.json</code> file, records each decision's versions, lifecycle and source. Linking the CI budget check, the Kyverno policy and the alert to the same decision version is something teams do by convention, for example by citing the ADR identifier in each policy. Mneme does not link them across layers for you.</p>
 <p>The urgency comes from who edits the numbers. An agent that raises an HPA maximum from 12 to 20 to fix a latency ticket has made a reasonable local change. The budget breaks in a file it never opened. As <a href="/insights/when-agents-launch-the-database/">When Agents Launch the Database</a> argued, agents now act on infrastructure directly, so the decision has to be enforceable wherever they act.</p>
 
-<h2>What to do now</h2>
+<h2 id="what-to-do-now">What to do now</h2>
 <ul>
   <li><strong>Write the budget down.</strong> Record the arithmetic as a decision: database limit, reserved slots, other clients, pool size per pod, HPA maximum and surge.</li>
   <li><strong>Compute it in CI.</strong> Fail the build when rendered manifests can request more than the budget.</li>

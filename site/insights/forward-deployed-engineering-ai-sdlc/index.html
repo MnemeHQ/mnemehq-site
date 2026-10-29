@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Forward-deployed engineers change systems whose architectural reasoning they never inherited. Coding agents widen that gap, and make it the general case." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -298,19 +299,38 @@
 
   <div class="article-body">
 
-    <h2>The deployment that works in the demo and fails in the building</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-deployment-that-works-in-the">The deployment that works in the demo and fails in the building</a></li>
+        <li><a href="#what-the-role-actually-is">What the role actually is</a></li>
+        <li><a href="#why-enterprise-ai-made-this-role">Why enterprise AI made this role structural</a></li>
+        <li><a href="#repository-state-is-not-architectural-intent">Repository state is not architectural intent</a></li>
+        <li><a href="#coding-agents-change-the-economics-and">Coding agents change the economics and sharpen the problem</a></li>
+        <li><a href="#retrieval-is-necessary-and-it-is">Retrieval is necessary and it is not sufficient</a></li>
+        <li><a href="#the-problem-has-two-sides-and">The problem has two sides, and they want different things</a></li>
+        <li><a href="#where-this-sits-in-the-delivery">Where this sits in the delivery stack</a></li>
+        <li><a href="#not-every-decision-should-become-a">Not every decision should become a rule</a></li>
+        <li><a href="#what-good-forward-deployed-infrastructure-would">What good forward-deployed infrastructure would look like</a></li>
+        <li><a href="#the-handoff-problem">The handoff problem</a></li>
+        <li><a href="#forward-deployed-engineering-is-an-early">Forward-deployed engineering is an early look at the general case</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-deployment-that-works-in-the">The deployment that works in the demo and fails in the building</h2>
     <p>An AI vendor sells a claims-triage product to a large insurer. The model is good. The evaluation numbers are good. The demo, run against a clean sample, is genuinely impressive.</p>
     <p>Then it goes into the insurer&rsquo;s actual environment. The claims system exposes an API that behaves differently from its documentation in three places nobody can explain. Twelve percent of historical records use a status code that was deprecated in 2019 and never migrated. The workflow has an exception path for commercial policies that exists in the heads of four adjusters and in no specification. Security will not permit the service to reach the customer datastore directly. And there is a platform migration underway that means half the integration points the vendor assumed will move within eight months.</p>
     <p>None of this is an AI problem. All of it determines whether the AI product produces value.</p>
     <p>Someone has to stand inside the customer&rsquo;s environment and close that distance. That person is a forward-deployed engineer, and the role is growing because the distance is growing.</p>
 
-    <h2>What the role actually is</h2>
+    <h2 id="what-the-role-actually-is">What the role actually is</h2>
     <p>The forward-deployed engineer is often described as a consultant who codes, which undersells the distinguishing feature. Consultants advise on a system. FDEs modify one, and the system they modify is not theirs.</p>
     <p>In practice the work is a mixture: product engineering, integration, customer discovery, data cleanup, debugging across organizational boundaries, workflow redesign, and enough architecture to avoid building something the customer&rsquo;s platform team will reject. The proportions change weekly.</p>
     <p>The constant is the operating condition. An FDE works inside an environment they did not design, under a delivery deadline, with materially less institutional knowledge than the engineers who maintain that environment day to day. Every decision they make is made with partial information about why the system is the way it is.</p>
     <div class="callout"><p><strong>The defining constraint of forward-deployed engineering is not technical difficulty.</strong> It is making consequential changes to a system whose reasoning you have not inherited.</p></div>
 
-    <h2>Why enterprise AI made this role structural</h2>
+    <h2 id="why-enterprise-ai-made-this-role">Why enterprise AI made this role structural</h2>
     <p>Traditional enterprise software asked the customer to adapt to the product. Implementation meant configuration: field mappings, permission models, a data import, some reports. The product&rsquo;s surface area against the customer&rsquo;s systems was narrow and well-defined.</p>
     <p>AI products invert this. They adapt to the customer. They ingest the customer&rsquo;s unstructured data, sit inside the customer&rsquo;s workflows, make judgements about the customer&rsquo;s specific operational reality, and increasingly take actions in the customer&rsquo;s systems. The surface area is no longer a configuration screen. It is the customer&rsquo;s whole operating environment.</p>
     <p>That widening is what created the role. When the integration surface was narrow, a solutions engineer and a good API were enough. When the integration surface is the business itself, someone has to go and live in it.</p>
@@ -326,7 +346,7 @@
   </div>
 </aside>
 
-    <h2>Repository state is not architectural intent</h2>
+    <h2 id="repository-state-is-not-architectural-intent">Repository state is not architectural intent</h2>
     <p>Here is the problem that sits underneath all forward-deployed work, and it is worth stating precisely because it is usually described as a documentation failure when it is not one.</p>
     <p>A repository tells you what exists. Documentation, where it is current, tells you how some of it works. Neither reliably tells you which parts of the current state are <em>deliberate</em>.</p>
     <p>An engineer reading a codebase sees a service that could obviously be merged into its neighbour. The code gives no indication whether that separation is an accident of history, a decision someone would defend, or a boundary that exists because of data residency obligations in one jurisdiction. All three look identical in the source.</p>
@@ -343,19 +363,19 @@
     </table>
     <p>Internal engineers acquire the third kind slowly, by being present when decisions are made and by being corrected when they violate one. An FDE has neither the years nor the corrections. They have a deadline.</p>
 
-    <h2>Coding agents change the economics and sharpen the problem</h2>
+    <h2 id="coding-agents-change-the-economics-and">Coding agents change the economics and sharpen the problem</h2>
     <p>Give that same FDE a competent coding agent and the delivery maths changes substantially. Unfamiliar code can be explored far faster. Integrations, migration scripts, adapters and tests can be generated in a fraction of the time. Work that was not economically viable for a single customer becomes viable. One engineer can plausibly carry more deployments.</p>
     <p>This is a real and significant gain, and it is why FDE organizations are adopting agents quickly.</p>
     <p>But look at what the agent brings and what it does not. It brings high implementation capability, fast iteration, and broad general knowledge of how software is usually built. It does not bring any knowledge of why <em>this</em> customer&rsquo;s software is built the way it is, which of its oddities are load-bearing, or which decisions are still in force.</p>
     <p>So the asymmetry that already defined the role gets wider. Before, an FDE with incomplete architectural knowledge produced changes at human speed, which gave review a chance to catch the ones that violated something. Now the same incomplete knowledge produces changes at machine speed. The knowledge gap did not grow. The rate at which it converts into committed code did.</p>
     <p>The practical consequence is that the FDE becomes the limiting factor for context rather than for code. Their scarce resource is no longer implementation hours. It is the ability to tell the agent what must remain true in this environment, and to notice when it has not.</p>
 
-    <h2>Retrieval is necessary and it is not sufficient</h2>
+    <h2 id="retrieval-is-necessary-and-it-is">Retrieval is necessary and it is not sufficient</h2>
     <p>The obvious response is to give the agent the customer&rsquo;s documentation: index the wiki, the decision records, the runbooks, and retrieve them at generation time. This is worth doing. It is not a solution, and the reason matters.</p>
     <p>Suppose the customer has an architecture decision record stating that all persistent transactional data lives in PostgreSQL. Retrieval works perfectly: the agent surfaces the record, cites it in its plan, and can restate the rule accurately if asked. It then writes a component that uses SQLite for a local cache that quietly becomes a source of truth, because that was the shortest path to a passing test.</p>
     <p>Nothing malfunctioned. Retrieval answered the question it was designed to answer, which is <em>did the agent have access to the decision</em>. It was never designed to answer <em>was the agent prevented from contradicting it</em>. Those are different system responsibilities, and we have written about that separation in <a href="/insights/why-rag-fails-for-architectural-governance/">retrieval</a> and <a href="/insights/memory-is-not-governance/">memory</a> terms elsewhere. Forward-deployed work is simply where the distinction becomes most expensive, because the person best placed to catch the violation is the person with the least context.</p>
 
-    <h2>The problem has two sides, and they want different things</h2>
+    <h2 id="the-problem-has-two-sides-and">The problem has two sides, and they want different things</h2>
     <p>So far this has been described from the vendor&rsquo;s side. The enterprise receiving the forward-deployed team has its own version, and it is worth stating because the two sides are usually negotiating without naming it.</p>
     <p>The vendor wants velocity. Their engagement is priced, staffed and scheduled on the assumption that the deployment completes in a known number of weeks, and every delay erodes the margin that made the deal work. Agents are attractive to them precisely because they compress that schedule.</p>
     <p>The enterprise wants containment. They are permitting an external team, and increasingly an external team&rsquo;s agents, to make changes inside systems they are accountable for long after the vendor leaves. Their platform and architecture groups are the ones who will maintain whatever gets built, absorb whatever breaks, and answer for whatever violates a commitment made to a regulator, a customer, or another internal team.</p>
@@ -363,18 +383,18 @@
     <p>An explicit, machine-checkable boundary is the one instrument that serves both sides at once. The enterprise gets containment that does not depend on reviewer availability. The vendor gets to move quickly inside a known perimeter rather than guessing where the perimeter is and discovering it in review. Neither side has to trust the other&rsquo;s judgement about a decision neither of them has written down.</p>
     <div class="callout"><p><strong>The negotiation is usually framed as access and permissions.</strong> The more useful frame is: which commitments must hold, who states them, and what checks them.</p></div>
 
-    <h2>Where this sits in the delivery stack</h2>
+    <h2 id="where-this-sits-in-the-delivery">Where this sits in the delivery stack</h2>
     <p>It helps to be concrete about which layer is being discussed, because &ldquo;give the agent better context&rdquo; and &ldquo;constrain what the agent may do&rdquo; get conflated constantly.</p>
     <p>A forward-deployed agent workflow has roughly five layers. The <strong>model</strong> generates. The <strong>agent runtime</strong> plans, calls tools, and decides what to attempt. The <strong>context layer</strong> determines what information the runtime sees, which is where retrieval, instruction files and project memory live. The <strong>constraint layer</strong> determines which proposed changes are permitted. And the <strong>execution surface</strong> is where the change actually lands: the filesystem, the commit, the pipeline.</p>
     <p>Almost all current tooling investment is in the middle three. The context layer in particular has absorbed enormous effort, because it is the layer where progress is easy to demonstrate: retrieve a better document, show the agent citing it, declare the problem addressed.</p>
     <p>The constraint layer is thinner, and in most forward-deployed engagements it does not exist at all. Its responsibilities are not exotic. It has to know which commitments apply to the part of the system being touched, evaluate a proposed change against them, and produce a verdict that does not vary with how the task was phrased or how long the session has run. What makes it distinct from the context layer is that it is permitted to say no, and nothing in the context layer is.</p>
 
-    <h2>Not every decision should become a rule</h2>
+    <h2 id="not-every-decision-should-become-a">Not every decision should become a rule</h2>
     <p>A caution, because the failure mode in the other direction is real. An organization that tries to convert every architectural preference into a hard constraint produces a system that blocks reasonable work constantly, and engineers respond by routing around it. Over-constraint destroys the credibility of the constraints that matter.</p>
     <p>A workable split has three tiers. Some decisions can be expressed mechanically and should be enforced: a prohibited dependency direction, a required persistence technology in a specific domain, a boundary that must not be crossed. Some could be enforced but have not been modelled yet. And some genuinely require human judgement and should stay as guidance for review, honestly labelled as guidance rather than dressed up as enforcement.</p>
     <p>For forward-deployed work the first tier is the valuable one, because it is the tier that does not depend on the FDE already knowing the answer.</p>
 
-    <h2>What good forward-deployed infrastructure would look like</h2>
+    <h2 id="what-good-forward-deployed-infrastructure-would">What good forward-deployed infrastructure would look like</h2>
     <p>Pulling this together, an FDE organization operating agents at scale inside customer environments needs several things that mostly do not exist as products yet:</p>
     <ul>
       <li><strong>Fast context acquisition.</strong> A way to establish what a customer&rsquo;s architecture actually commits to, in days rather than months.</li>
@@ -385,12 +405,12 @@
       <li><strong>A handoff artifact.</strong> Something that survives the engagement, which is the subject of the next point.</li>
     </ul>
 
-    <h2>The handoff problem</h2>
+    <h2 id="the-handoff-problem">The handoff problem</h2>
     <p>Forward-deployed engagements end. The engineer leaves, and what remains is a working system plus whatever was written down about why it works that way.</p>
     <p>Historically that has been a slide deck, a README, and a small amount of tribal knowledge transferred in a handover call. The customer inherits an implementation whose reasoning walked out of the building. Six months later their own team treats a deliberate boundary as an accident, changes it, and discovers why it was there.</p>
     <p>Agents make this both worse and more tractable. Worse because the volume of code produced per engagement goes up, so there is more implementation carrying unstated reasoning. More tractable because the constraints the FDE had to establish in order to direct the agent safely are, if captured, exactly the handoff artifact that was always missing. The work of making architectural intent explicit stops being documentation overhead and becomes a byproduct of operating agents at all.</p>
 
-    <h2>Forward-deployed engineering is an early look at the general case</h2>
+    <h2 id="forward-deployed-engineering-is-an-early">Forward-deployed engineering is an early look at the general case</h2>
     <p>It would be easy to read all of this as a niche staffing topic. It is not, and the reason is that the FDE&rsquo;s defining condition is becoming everyone&rsquo;s.</p>
     <p>An FDE works inside a system whose architectural reasoning they did not inherit, under time pressure, directing a capable agent that has no access to that reasoning. Now consider a large internal engineering organization three years into heavy agent adoption: multiple teams, high turnover, services that outlived the people who designed them, and agents producing a growing share of the changes. The condition is the same. The FDE just arrived at it first, because they cross an organizational boundary on day one instead of reaching it gradually.</p>
     <p>Which makes forward-deployed engineering a useful place to test whether architectural intent can be made explicit, scoped, and enforced, rather than carried in people&rsquo;s heads. If it works where the context deficit is most severe, it works in the easier internal case.</p>

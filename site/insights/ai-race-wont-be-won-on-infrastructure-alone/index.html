@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The 2026 consensus says the AI race is won on infrastructure, not algorithms. That explains how organizations access intelligence, not how they govern it. The next competitive layer is governance infrastructure." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -295,7 +296,20 @@
 
   <div class="article-body">
 
-    <h2>The Infrastructure-First Thesis Is Right About the Wrong Half</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-infrastructure-first-thesis-is-right">The Infrastructure-First Thesis Is Right About the Wrong Half</a></li>
+        <li><a href="#walking-the-stack-the-industry-has">Walking the Stack the Industry Has Already Climbed</a></li>
+        <li><a href="#the-layer-nobody-is-pricing-governance">The Layer Nobody Is Pricing: Governance Infrastructure</a></li>
+        <li><a href="#organizational-memory-is-what-infrastructure-cannot">Organizational Memory Is What Infrastructure Cannot Buy</a></li>
+        <li><a href="#velocity-creates-governance-debt">Velocity Creates Governance Debt</a></li>
+        <li><a href="#the-next-layer-of-infrastructure-is">The Next Layer of Infrastructure Is About Enforcement, Not Generation</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-infrastructure-first-thesis-is-right">The Infrastructure-First Thesis Is Right About the Wrong Half</h2>
     <p>A clean argument has hardened into consensus across 2026 commentary, surfacing in Forbes columns and industry analysis alike: the AI race will be won on infrastructure, not algorithms. The reasoning is sound. Frontier models are converging. The gap between the best general-purpose models has narrowed to the point where capability is no longer a durable moat. What separates organizations now, the argument goes, is the substrate underneath &mdash; compute, data centers, networking, and the AWS-scale modernization needed to run intelligence at production volume. One representative version of this case, <a href="https://beingguru.com/the-real-winner-in-ai-race-will-be-infrastructure-not-algorithms/" target="_blank" rel="noopener">the infrastructure-over-algorithms framing argued in recent industry commentary</a>, makes it explicitly, leaning on the modernization story as the real competitive event.</p>
     <p>It is correct as far as it goes. The problem is where it stops. Infrastructure determines how much intelligence an organization can <strong>access</strong>. It says nothing about how much of that intelligence can be safely <strong>deployed</strong>. Those are different questions, and the second one is where the next race is actually run.</p>
 
@@ -308,29 +322,29 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Walking the Stack the Industry Has Already Climbed</h2>
+<h2 id="walking-the-stack-the-industry-has">Walking the Stack the Industry Has Already Climbed</h2>
     <p>The infrastructure conversation has moved in phases, and each phase quietly answered a different question. Naming them in order makes the missing layer obvious.</p>
     <p><strong>Phase 1 was model infrastructure.</strong> The question was simply which model is smartest. For a few years that was the whole game. It is no longer decisive, because the frontier converged and raw capability stopped being scarce.</p>
     <p><strong>Phase 2 was compute infrastructure.</strong> Once models were broadly comparable, the question became who can scale them most efficiently &mdash; whose data centers, networking, and modernization let them serve intelligence cheaply and at volume. This is the layer the infrastructure-first thesis describes, and it is real.</p>
     <p><strong>Phase 3 is agent infrastructure.</strong> The newest question is how multiple agents coordinate. Augment Code&rsquo;s Cosmos gives a fleet of agents a shared memory and context layer so they operate as a team rather than as isolated sessions. Anthropic&rsquo;s published multi-agent research describes orchestrator-worker systems where one agent delegates to several others in parallel. The frontier of effort has visibly shifted from making one agent smarter to making many agents work together. We have written about this <a href="/insights/emerging-ai-agent-infrastructure-stack/">emerging agent infrastructure stack</a> at length, because it is where most current investment is concentrated.</p>
     <p>Each phase made agents more capable. None of them answered the question that capability creates.</p>
 
-    <h2>The Layer Nobody Is Pricing: Governance Infrastructure</h2>
+    <h2 id="the-layer-nobody-is-pricing-governance">The Layer Nobody Is Pricing: Governance Infrastructure</h2>
     <p>There is a fourth layer, and it is the one the infrastructure thesis omits. Call it governance infrastructure: the layer whose job is not to generate intelligence or scale it or coordinate it, but to <strong>control</strong> it. Agents do not fail because they cannot generate code. By 2026 they generate working code fluently. They fail because they generate code that violates organizational decisions.</p>
     <p>Look closely at how agentic work actually breaks in production and the pattern is consistent. An agent ignores an architectural standard the team agreed to hold. It circumvents a security requirement because the shortest path to a passing test went around it. It reintroduces a pattern the organization deliberately rejected two quarters ago, because nothing told it that decision existed. It produces an implementation inconsistent with three others built the same week. It changes something material without the review that change warranted.</p>
     <div class="callout"><p><strong>None of those are intelligence failures.</strong> They are governance failures. The agent was capable enough. It was not constrained enough &mdash; and a more capable agent does not fix that. It makes it worse.</p></div>
     <p>This is the counterintuitive turn. More capable agents increase governance complexity rather than reducing it. A weak agent makes a bounded number of mistakes slowly. A strong agent acts on more of the codebase, faster, with more confidence &mdash; and every one of those actions is a chance to violate a decision nobody enforced. Capability scales output. It does not scale compliance. The argument that the race is won on the layer that maximizes capability quietly assumes that capability is the constraint. It is not. <a href="/insights/ai-infrastructure-governance-category/">Governance is becoming its own infrastructure category</a> precisely because the constraint moved.</p>
 
-    <h2>Organizational Memory Is What Infrastructure Cannot Buy</h2>
+    <h2 id="organizational-memory-is-what-infrastructure-cannot">Organizational Memory Is What Infrastructure Cannot Buy</h2>
     <p>Human engineering teams carry something agents do not: organizational memory. A senior engineer remembers <em>why</em> a decision was made &mdash; why the team standardized on one boundary, why a tempting pattern was banned, what failure prompted a rule. That memory is the connective tissue that keeps a system coherent as it grows. It is also exactly what an agent lacks by default.</p>
     <p>An agent without enforced organizational memory rediscovers old mistakes. It re-proposes the rejected pattern, re-opens the closed debate, re-introduces the boundary violation a postmortem once fixed. Multiply that across a fleet of agents working in parallel and the result is predictable: <a href="/concepts/architectural-drift/">architectural drift</a>, inconsistency between implementations, compliance risk where requirements were silently bypassed, and a review burden that grows faster than any team can staff against. The decisions exist. They are simply not reaching the point of generation in an enforceable form. That is a <a href="/concepts/governance-propagation/">governance propagation</a> problem, not a memory-retrieval one &mdash; knowing a decision and being bound by it are not the same thing.</p>
     <p>This is also why the model layer is not where durable advantage lives. <a href="/insights/models-are-temporary-architectural-intent-is-not/">Models are temporary; architectural intent is not.</a> The model serving an organization will be swapped three times before its core architectural decisions change once. An organization that encodes its intent in a form that outlives any individual model has built something the infrastructure thesis cannot price.</p>
 
-    <h2>Velocity Creates Governance Debt</h2>
+    <h2 id="velocity-creates-governance-debt">Velocity Creates Governance Debt</h2>
     <p>The cleanest way to see the gap is to watch what happens when an organization wins the infrastructure race and nothing else. It gets faster. Far more code ships, far more quickly, across far more of the system. And every increment of that velocity, applied without enforcement, accrues <strong>governance debt</strong> &mdash; the accumulated distance between what the organization decided and what its agents actually built.</p>
     <p>Governance debt behaves like technical debt with worse compounding. It is invisible at commit time, because each change passed its own tests. It surfaces later, as inconsistency that has to be reconciled, security gaps that have to be closed, and architectural decisions that have to be re-litigated because the codebase quietly stopped honoring them. Coordination layers like Cosmos and orchestrator-worker systems raise the rate at which work is produced. Without enforcement, they raise the rate at which governance debt is produced at exactly the same pace. This is the structural reason <a href="/insights/coordination-governance-multi-agent-systems/">coordination governance</a> has to sit on top of agent infrastructure: parallel agents parallelize output and inconsistency in the same motion, and only an enforcement layer resolves the second one.</p>
 
-    <h2>The Next Layer of Infrastructure Is About Enforcement, Not Generation</h2>
+    <h2 id="the-next-layer-of-infrastructure-is">The Next Layer of Infrastructure Is About Enforcement, Not Generation</h2>
     <p>So the next generation of AI infrastructure will not be defined by how much intelligence it generates. It will be defined by how much of that intelligence it can govern. The competitive surface is shifting from generation to control, and the components of that layer are already namable: architectural governance, organizational memory made enforceable, policy enforcement at generation time, execution governance over what agents are permitted to do, and deterministic verification that a proposed change honors prior decisions before it lands. None of those are about making the model smarter. All of them are about controlling what a smart model is allowed to do.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">

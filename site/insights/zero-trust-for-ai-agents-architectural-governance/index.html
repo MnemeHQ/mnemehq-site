@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic's Zero Trust for AI Agents secures what an agent is allowed to do. It never verifies whether the diff it produces preserves your architecture — the last untrusted packet." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -308,10 +309,22 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-zero-trust-for-agents-actually">What zero trust for agents actually does</a></li>
+        <li><a href="#the-one-trust-the-doctrine-still">The one trust the doctrine still leaves standing</a></li>
+        <li><a href="#architectural-zero-trust-verify-the-diff">Architectural zero trust: verify the diff, not just the agent</a></li>
+        <li><a href="#drift-is-not-a-breach-which">Drift is not a breach, which is why security never catches it</a></li>
+        <li><a href="#architectural-governance-is-the-completion-of">Architectural governance is the completion of zero trust, not a second wall</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>In May 2026, Anthropic published <a href="https://claude.com/blog/zero-trust-for-ai-agents" rel="noopener">&ldquo;Zero Trust for AI Agents,&rdquo;</a> a security framework for deploying autonomous agents in the enterprise. It is one of the most complete treatments of agent security yet, and it does exactly what its title promises: it takes the discipline that reshaped network security and applies it, carefully, to systems that can now act on their own.</p>
 <p>This essay is not a critique of it. The framework is right about what it covers. It is an argument that the doctrine it borrows has one more step to take &mdash; a step the security framing makes visible precisely because it is so disciplined everywhere else.</p>
 
-<h2>What zero trust for agents actually does</h2>
+<h2 id="what-zero-trust-for-agents-actually">What zero trust for agents actually does</h2>
 <p>Classic zero trust replaced perimeter security with a premise: trust nothing, verify everything, assume breach has already happened. The old model trusted whoever was inside the network. Zero trust said the inside is not a thing &mdash; verify every request, every time, regardless of where it came from. Anthropic&rsquo;s framework carries the three tenets over intact: <strong>never trust and always verify, assume breach, least privilege.</strong></p>
 <p>Applied to agents, that becomes a thorough security program. Cryptographically-rooted agent identity instead of static API keys (which the framework says to &ldquo;treat as already-compromised&rdquo;). Short-lived tokens and deny-by-default access control. OWASP&rsquo;s <strong>&ldquo;Least Agency&rdquo;</strong> &mdash; least privilege extended to agents, restricting what each tool can do, how often, and where. Sandboxed execution, secrets management, immutable audit, behavioral monitoring, prompt-injection defense. The framework even offers a sharp design test for every control: <em>does this make the attack impossible, or just tedious?</em> Friction is not security.</p>
 <p>Notice what all of it verifies. Identity verifies <em>who the agent is</em>. Access control and Least Agency verify <em>what it is allowed to touch</em>. Sandboxing verifies <em>what it can reach if it goes wrong</em>. Every control answers one shape of question: <strong>can this agent perform this action, and how do we contain it if it is compromised?</strong> That is the right question for security. It is not the only question an autonomous coding agent raises.</p>
@@ -325,13 +338,13 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The one trust the doctrine still leaves standing</h2>
+<h2 id="the-one-trust-the-doctrine-still">The one trust the doctrine still leaves standing</h2>
 <p>Here is the move. Zero trust&rsquo;s great insight was that authentication is not authorization, and authorization is not safety &mdash; so you stop trusting the actor and verify every request at the boundary. But when the agent is writing code, there is a step after the request that the framework never reaches: the agent acts <em>within its permissions</em> and produces an <strong>artifact</strong> &mdash; a diff. And every system in the stack implicitly trusts that artifact, because the action that produced it was permitted.</p>
 <p>That is the last unexamined trust. A permitted action is silently assumed to yield a conforming change. But a cryptographic identity, a least-agency tool scope, and a sandbox say nothing about whether the diff introduces a banned dependency, crosses a ratified service boundary, or contradicts an architectural decision the team made on purpose. The agent can be fully zero-trust compliant and the change can still be wrong &mdash; not insecure, just architecturally wrong. Authentication is not conformance. <strong>A permission grant is not a conformance guarantee.</strong></p>
 <div class="callout"><p><strong>Zero trust taught security to stop trusting the authenticated actor. The diff is the one packet it still waves through</strong> &mdash; permitted, therefore presumed conforming. By the doctrine&rsquo;s own logic, that presumption is exactly the trust you are not allowed to extend.</p></div>
 <p>That an authorized agent can still degrade a system is not a new observation on this site &mdash; it is the spine of <a href="/insights/ai-agent-governance-two-markets/">why agent governance is splitting into two markets</a> (runtime control protects the action; architectural governance protects the structure) and of <a href="/insights/google-cloud-agent-registry-agent-fleet-governance/">why a registry governs the actor, not the artifact</a>. What the zero-trust lens adds is not the observation. It is the <em>obligation</em>: the same doctrine the security team already accepted, followed one step further, requires verifying the change too.</p>
 
-<h2>Architectural zero trust: verify the diff, not just the agent</h2>
+<h2 id="architectural-zero-trust-verify-the-diff">Architectural zero trust: verify the diff, not just the agent</h2>
 <p>So the principle has a name worth stating plainly. <strong>Architectural zero trust is the doctrine of extending &ldquo;never trust, always verify&rdquo; from the agent&rsquo;s identity and access to the agent&rsquo;s output.</strong> Zero trust verifies every request before it crosses the network perimeter. Architectural zero trust verifies every diff before it crosses into the codebase. The object changes; the doctrine does not.</p>
 <p>The questions change with the object:</p>
 <table class="gov-table">
@@ -345,11 +358,11 @@
 </table>
 <p>Turn Anthropic&rsquo;s own test on this layer and it lands hard. <em>Does the control make the violation impossible, or just tedious?</em> Identity and permissions make a single catastrophic <em>action</em> impossible. They make an architectural <em>violation</em> neither impossible nor tedious &mdash; they do not see it at all. A diff that quietly breaks a layering rule sails through every security control because it broke no security control. The only thing that makes that violation impossible is a verdict rendered on the change itself.</p>
 
-<h2>Drift is not a breach, which is why security never catches it</h2>
+<h2 id="drift-is-not-a-breach-which">Drift is not a breach, which is why security never catches it</h2>
 <p>Most architectural decay does not arrive as a catastrophic event the way a breach does. It accumulates through thousands of individually reasonable, fully permitted changes &mdash; and autonomous agents raise the mutation rate of that process by orders of magnitude. Security is built to detect the anomaly, the exfiltration, the privilege escalation. Architectural <a href="/concepts/architectural-drift/">drift</a> is none of those. It is a sequence of normal, authorized commits that are each fine and collectively wrong. There is no breach to assume, so the security model has nothing to fire on.</p>
 <p>Rendering the missing verdict is a different mechanism, and it is the one Mneme exists to provide: the team&rsquo;s architectural decisions <a href="/concepts/governance-before-generation/">compiled before generation</a> into <a href="/concepts/verification-contracts/">machine-evaluable constraints</a>, evaluated <a href="/concepts/deterministic-enforcement/">deterministically</a> against the diff at the commit, the pull request, and in CI, returning the same verdict regardless of which agent produced the change &mdash; with the <a href="/concepts/enforcement-provenance/">provenance</a> to say exactly which decision a change violated and where it came from. That is what verifying the artifact actually requires, and it is structurally absent from any control that only inspects the actor.</p>
 
-<h2>Architectural governance is the completion of zero trust, not a second wall</h2>
+<h2 id="architectural-governance-is-the-completion-of">Architectural governance is the completion of zero trust, not a second wall</h2>
 <p>It is tempting to file this as &ldquo;you need security <em>and</em> governance, two complementary layers.&rdquo; That is true but it undersells the logic. Architectural zero trust is not a second, adjacent discipline bolted next to the first. It is the <strong>same doctrine finishing its own argument.</strong> Zero trust already refuses to trust the actor; refusing to trust the actor&rsquo;s unverified output is the next instance of the identical rule, applied to the one object the security framework never opened.</p>
 <p>Anthropic&rsquo;s framework verifies the agent with admirable rigor and then, at the moment the agent produces a change, stops &mdash; because verifying the change is not a security question and was never the framework&rsquo;s job. That is the seam. The agent is verified; the diff is trusted. Close that seam and zero trust for AI agents is finally complete: nothing trusted, everything verified &mdash; including the code.</p>
 <div class="callout"><p><strong>Never trust, always verify does not end at the agent&rsquo;s identity. It ends at the agent&rsquo;s output.</strong> Secure what the agent is allowed to do. Then verify that what it built preserves what you decided. The second is not a different doctrine. It is the first one, finished.</p></div>

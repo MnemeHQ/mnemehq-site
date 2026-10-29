@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Sandboxes, approvals, traces, and policy enforcement protect a single agent run. They do not prevent systems from drifting architecturally over time. Architectural verification is a different infrastructure category." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -254,7 +255,23 @@
 
   <div class="article-body">
 
-    <h2>The three problems agent infrastructure is solving</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-three-problems-agent-infrastructure-is">The three problems agent infrastructure is solving</a></li>
+        <li><a href="#what-runtime-verification-actually-checks">What runtime verification actually checks</a></li>
+        <li><a href="#what-architectural-verification-has-to-check">What architectural verification has to check</a></li>
+        <li><a href="#multi-agent-systems-make-this-worse">Multi-agent systems make this worse</a></li>
+        <li><a href="#what-architectural-verification-is-not">What architectural verification is not</a></li>
+        <li><a href="#the-agent-infrastructure-stack-in-layers">The agent infrastructure stack, in layers</a></li>
+        <li><a href="#why-architectural-verification-has-to-be">Why architectural verification has to be deterministic</a></li>
+        <li><a href="#why-this-matters-now">Why this matters now</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-three-problems-agent-infrastructure-is">The three problems agent infrastructure is solving</h2>
     <p>The first generation of agent infrastructure focused on getting agents to work. Tool calling, reasoning, retrieval, basic orchestration. The second generation, where most of the market is now, is focused on making agents safe to operate. Sandboxes, traces, approvals, permissions, observability, lifecycle frameworks, telemetry, policy enforcement.</p>
     <p>That is the right work. Treating agents as production software infrastructure rather than experimental assistants is the correct maturity arc. Prompting matured into orchestration. Orchestration is now maturing into operationalization.</p>
     <p>But a third problem is already appearing underneath the second one. Even when agents execute safely, systems can still degrade architecturally. A multi-agent workflow can pass every runtime check while slowly accumulating duplicated patterns, broken boundaries, inconsistent abstractions, undocumented decisions, and quiet governance fragmentation.</p>
@@ -270,7 +287,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What runtime verification actually checks</h2>
+<h2 id="what-runtime-verification-actually-checks">What runtime verification actually checks</h2>
     <p>Runtime verification, as currently practised, answers a tightly scoped set of questions about a single agent run:</p>
     <ul>
       <li>Did the agent behave safely?</li>
@@ -280,7 +297,7 @@
     </ul>
     <p>These questions are necessary. They are also local. They are answered with full context about <em>this run</em> and almost no context about how this run changes <em>the system over time</em>.</p>
 
-    <h2>What architectural verification has to check</h2>
+    <h2 id="what-architectural-verification-has-to-check">What architectural verification has to check</h2>
     <p>Architectural verification answers a different class of question. It is concerned with the trajectory of the system, not the safety of any individual run.</p>
     <ul>
       <li>Did the system evolve correctly?</li>
@@ -303,7 +320,7 @@
 
     <p>An agent can pass runtime policies, generate syntactically correct code, stay within permissions, and produce successful outputs while still degrading the system. The two layers fail in different ways, and they protect against different things.</p>
 
-    <h2>Multi-agent systems make this worse</h2>
+    <h2 id="multi-agent-systems-make-this-worse">Multi-agent systems make this worse</h2>
     <p>One coding assistant produces localized mistakes. A fleet of autonomous sub-agents produces coordination risk. Each agent may optimize locally while degrading globally.</p>
     <p>The concrete failure modes are familiar to anyone who has watched a large codebase fragment over time:</p>
     <ul>
@@ -317,7 +334,7 @@
     <p>None of these are runtime failures. Each individual agent run is fine. The system degrades on the time axis, between runs, across handoffs, in the cumulative effect of thousands of locally rational decisions.</p>
     <div class="callout"><p><strong>The scaling bottleneck shifts from generation quality to coordination integrity.</strong> The more scalable agent systems become, the more architectural governance becomes mandatory.</p></div>
 
-    <h2>What architectural verification is not</h2>
+    <h2 id="what-architectural-verification-is-not">What architectural verification is not</h2>
     <p>It is worth being precise about the category. Architectural verification is not:</p>
     <ul>
       <li><strong>Content moderation</strong> &mdash; that operates on text safety, not system structure</li>
@@ -328,7 +345,7 @@
     </ul>
     <p>Architectural verification is deterministic structural enforcement. The same constraint, against the same codebase state, produces the same verdict on every run, regardless of which agent, harness, or session emitted the change.</p>
 
-    <h2>The agent infrastructure stack, in layers</h2>
+    <h2 id="the-agent-infrastructure-stack-in-layers">The agent infrastructure stack, in layers</h2>
     <p>It helps to lay out the layers explicitly. Most companies today are building infrastructure between layers 1 and 4. The long-term reliability problem emerges at layers 5 and 6.</p>
 
     <div class="diag-wrap">
@@ -368,7 +385,7 @@
       <p class="diag-caption">The six-layer agent infrastructure stack</p>
     </div>
 
-    <h2>Why architectural verification has to be deterministic</h2>
+    <h2 id="why-architectural-verification-has-to-be">Why architectural verification has to be deterministic</h2>
     <p>One subtlety: architectural verification cannot be implemented as another probabilistic agent reviewing the work. A reviewer agent inherits the same failure modes &mdash; local optimization, context dilution, inconsistent verdicts &mdash; that produced the drift in the first place.</p>
     <p>Architectural verification has to be deterministic structural enforcement. The properties that matter:</p>
     <ul>
@@ -380,11 +397,11 @@
     </ul>
     <div class="callout"><p><strong>Runtime verification protects execution.</strong> Architectural verification protects system integrity across time.</p></div>
 
-    <h2>Why this matters now</h2>
+    <h2 id="why-this-matters-now">Why this matters now</h2>
     <p>The market is currently treating agent reliability as a runtime problem. That framing is correct as far as it goes. It also has a ceiling. Once runtime verification is mature &mdash; sandboxes hardened, approvals in place, policies enforced &mdash; the remaining failure mode is not bad runs. It is good runs accumulating into a structurally weaker system.</p>
     <p>That failure mode does not show up in any individual trace. It shows up in the codebase over weeks and months. By the time it is visible, remediation is expensive: large rewrites, broad architectural cleanup, and the kind of debt that compounds quietly until something finally breaks.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>The future of agent engineering is not just better generation. It is controlled system evolution. The real challenge is no longer &ldquo;can agents write code?&rdquo; It is &ldquo;can autonomous systems scale without fragmenting architecture?&rdquo;</p>
     <p>That requires a new category of infrastructure. Not better sandboxes. Not better traces. A different layer entirely: architectural verification, sitting between runtime safety and organizational memory, enforcing the structural decisions a team has already made.</p>
 

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Claude /goal, AutoResearch, and enterprise AI decision loops show a shift from prompt-based coding to objective-driven development. Goal-driven agents need architectural governance, not just tests." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -328,7 +329,24 @@
 
   <div class="article-body">
 
-    <h2>The interface is changing</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-interface-is-changing">The interface is changing</a></li>
+        <li><a href="#programming-is-becoming-search">Programming is becoming search</a></li>
+        <li><a href="#shopify-shows-this-is-not-just">Shopify shows this is not just research</a></li>
+        <li><a href="#metrics-are-not-architecture">Metrics are not architecture</a></li>
+        <li><a href="#the-enterprise-layer-this-is-not">The enterprise layer: this is not just a developer-tool shift</a></li>
+        <li><a href="#the-missing-layer-governance-before-generation">The missing layer: governance before generation</a></li>
+        <li><a href="#the-governed-execution-stack">The governed execution stack</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+        <li><a href="#glossary">Glossary</a></li>
+        <li><a href="#closing">Closing</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-interface-is-changing">The interface is changing</h2>
     <p>Claude Code&rsquo;s <a href="https://code.claude.com/docs/en/goal" target="_blank" rel="noopener"><code>/goal</code></a> command lets a developer set a completion condition and then keep working across turns until a smaller model decides the condition has been met. The shift it points at is bigger than the feature itself.</p>
 
     <div class="loop-block" aria-label="Old workflow vs new workflow">
@@ -371,7 +389,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Programming is becoming search</h2>
+<h2 id="programming-is-becoming-search">Programming is becoming search</h2>
     <p>Andrej Karpathy&rsquo;s <a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">AutoResearch</a> is the cleanest example of this pattern outside of editors. The agent proposes a change, edits code, runs a short experiment, measures the result, keeps or reverts, and repeats. It is not a chatbot. It is a search loop with code as the move set and a metric as the fitness function.</p>
 
     <p>The developer is no longer directly writing every candidate solution. The developer defines the search space, the success condition, and the evaluation loop. That is a different job than what prompt engineering describes.</p>
@@ -388,7 +406,7 @@
 
     <p>Once coding becomes search, the agent stops being a junior engineer that needs instruction and starts being an optimizer that needs constraints. That distinction matters.</p>
 
-    <h2>Shopify shows this is not just research</h2>
+    <h2 id="shopify-shows-this-is-not-just">Shopify shows this is not just research</h2>
     <p>Shopify&rsquo;s engineering team <a href="https://shopify.engineering/autoresearch" target="_blank" rel="noopener">generalized AutoResearch beyond model training</a> and used it to improve more than 40 metrics across the company. That is the proof point that turns the pattern from interesting research toy into mainstream engineering practice.</p>
 
     <p>Once a team can give an agent a metric and a loop, &ldquo;make this faster,&rdquo; &ldquo;reduce memory usage,&rdquo; &ldquo;improve conversion,&rdquo; or &ldquo;fix all failing tests&rdquo; becomes an executable instruction. That is powerful. It is also dangerous if the metric is the only thing the agent is optimizing for.</p>
@@ -397,7 +415,7 @@
       <p><strong>Goal-driven agents optimize for what they can measure.</strong> Architectural intent is usually not measurable unless it has been made explicit, retrievable, and enforceable.</p>
     </div>
 
-    <h2>Metrics are not architecture</h2>
+    <h2 id="metrics-are-not-architecture">Metrics are not architecture</h2>
     <p>This is where the model breaks down without an additional layer. A loop that scores itself only against tests and metrics can pass while quietly violating things the team cares about:</p>
 
     <ul>
@@ -409,12 +427,12 @@
 
     <p>None of these are bugs in the loop. They are limits of what the loop knows to check. The verifier confirms that the objective was reached. It does not confirm that the agent stayed inside the architecture while reaching it.</p>
 
-    <h2>The enterprise layer: this is not just a developer-tool shift</h2>
+    <h2 id="the-enterprise-layer-this-is-not">The enterprise layer: this is not just a developer-tool shift</h2>
     <p>IBM&rsquo;s 2026 <a href="https://newsroom.ibm.com/2026-05-04-ibm-study-ceos-are-reshaping-c-suite-roles-for-the-ai-era" target="_blank" rel="noopener">CEO study</a> reports that 76% of surveyed organizations now have a Chief AI Officer, up from 26% in 2025, and that 64% of CEOs say they are comfortable making major strategic decisions based on AI-generated input. The broader framing in the report is that AI is forcing companies to redesign decision-making and authority structures.</p>
 
     <p>Software engineering is experiencing the same operating-model shift earlier and more visibly. Coding agents are becoming delegated decision-makers inside the SDLC. The governance question is the same at both levels: when an autonomous system can pursue a goal on its own, what constraints must it obey while pursuing it, and how are those constraints enforced rather than hoped for?</p>
 
-    <h2>The missing layer: governance before generation</h2>
+    <h2 id="the-missing-layer-governance-before-generation">The missing layer: governance before generation</h2>
     <p>The full stack of a goal-driven agent is not just &ldquo;goal plus model.&rdquo; It has five distinguishable layers, and most current tooling addresses only the first four.</p>
 
     <div class="layer-stack">
@@ -431,7 +449,7 @@
       <p><strong>A governed objective loop</strong> is an agent workflow where a goal, metric, and verifier drive autonomous execution, while architectural constraints define what the agent is allowed to change along the way.</p>
     </div>
 
-    <h2>The governed execution stack</h2>
+    <h2 id="the-governed-execution-stack">The governed execution stack</h2>
     <p>Drawn as a pipeline, the layers look like this. The agent loop and the verifier do not change; governance is the additional checkpoint between the loop&rsquo;s output and the surfaces it would otherwise write to unchallenged.</p>
 
     <div class="exec-stack" aria-label="Governed execution stack">
@@ -485,7 +503,7 @@
 
     <p>The orchestration and execution layers above Mneme are the exploration / optimization / execution side. They are where most current investment is going, and they are improving fast. Mneme&rsquo;s scope is the invariant / governance / verification side &mdash; the layer that decides whether what was explored is allowed to land.</p>
 
-    <h2>Where Mneme fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme fits</h2>
     <p>Mneme is the architectural constraint layer for governed objective loops. It turns ADRs, dependency rules, scope boundaries, and governance decisions into retrievable, machine-evaluable constraints that an agent receives <em>before</em> it generates a candidate change, and that CI can check after the change lands.</p>
 
     <p>That means a goal-driven agent does not only receive the task. It receives the architectural context for the task: which abstractions it must go through, which dependencies are out of bounds, which ADRs the area it is touching is already pinned to.</p>
@@ -560,7 +578,7 @@
       </div>
     </div>
 
-    <h2>Glossary</h2>
+    <h2 id="glossary">Glossary</h2>
     <dl class="gloss-block">
       <dt>Goal</dt>
       <dd>The desired outcome the agent is pursuing.</dd>
@@ -576,7 +594,7 @@
       <dd>An agent workflow where a goal drives autonomous execution and architectural constraints bound what the agent is allowed to change while pursuing it.</dd>
     </dl>
 
-    <h2>Closing</h2>
+    <h2 id="closing">Closing</h2>
     <p>The next programming model is not prompt engineering. It is objective design. Developers define goals. Agents explore solutions. Verifiers measure outcomes. But teams still need a way to preserve architectural intent while the loop runs.</p>
 
     <p>Goal-driven agents make software faster. Architectural governance keeps that speed from becoming drift.</p>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Cursor Rules and CLAUDE.md load your conventions into every prompt. That is the right first answer and the wrong long-term one. Why architectural intent has to be retrieved, not pasted." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -292,8 +293,22 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#rule-files-were-the-right-first">Rule files were the right first answer</a></li>
+        <li><a href="#what-a-rule-file-actually-is">What a rule file actually is</a></li>
+        <li><a href="#three-axes-where-static-instructions-stop">Three axes where static instructions stop scaling</a></li>
+        <li><a href="#retrieval-memory-load-the-relevant-subset">Retrieval memory: load the relevant subset at the moment it matters</a></li>
+        <li><a href="#this-is-not-rag-and-it">This is not RAG, and it is not a bigger context window</a></li>
+        <li><a href="#what-changes-in-practice">What changes in practice</a></li>
+        <li><a href="#rule-files-and-retrieval-are-not">Rule files and retrieval are not rivals</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>Rule files were the right first answer</h2>
+
+    <h2 id="rule-files-were-the-right-first">Rule files were the right first answer</h2>
     <p>Every AI coding tool eventually ships a rule file. Cursor has Rules. Claude Code reads <code>CLAUDE.md</code>. Windsurf, Copilot, and a dozen others have their own variants. The instinct behind all of them is correct: an agent begins each task with no memory of your conventions, so you give it a document that says &ldquo;here is how we build things here.&rdquo;</p>
     <p>For a small repository with a handful of conventions, this works well. The agent reads the file, follows the patterns, and produces code that looks like yours. Rule files solve the cold-start problem &mdash; the gap between a generic model and a project-specific one. That is a genuine and useful job.</p>
     <div class="callout"><p><strong>A rule file is not documentation. It is an always-on prompt prefix.</strong> Every token in it is prepended to every request, whether or not it is relevant to the task at hand.</p></div>
@@ -307,11 +322,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What a rule file actually is</h2>
+<h2 id="what-a-rule-file-actually-is">What a rule file actually is</h2>
     <p>It helps to be precise about the mechanism. A rule file is not consulted when needed; it is loaded unconditionally. When the agent edits a CSS file, your database-migration conventions are still in the context window. When it writes a test, your API-versioning policy is still there. The model is asked to hold every rule you have ever written in working memory and apply only the ones that matter &mdash; for every single call.</p>
     <p>That design has a predictable failure curve. It is fine at ten rules and degrades steadily toward a hundred. The degradation is not a bug in any particular tool. It is structural, and it shows up along three axes.</p>
 
-    <h2>Three axes where static instructions stop scaling</h2>
+    <h2 id="three-axes-where-static-instructions-stop">Three axes where static instructions stop scaling</h2>
 
     <h3>1. Token budget</h3>
     <p>A rule file competes for the same context window as the code being edited, the retrieved files, the conversation history, and the agent&rsquo;s own scratch work. Every convention you add is a permanent tax on every request. Teams respond by trimming the file &mdash; which means deleting governance to make room for work. The instruction surface and the working surface are zero-sum, and the rules lose.</p>
@@ -323,7 +338,7 @@
     <p>A rule that should apply only to <code>src/payments/</code> is, in a flat rule file, applied to the whole repository or to nothing. There is no clean way to say &ldquo;this invariant holds here and not there.&rdquo; You either over-apply the rule (and fight false positives) or under-specify it (and let the real violations through).</p>
     <div class="callout"><p><strong>The failure mode is not that the agent forgets the rule.</strong> It is that the rule was present, diluted, out-ranked, or applied in the wrong place. More tokens do not fix any of those.</p></div>
 
-    <h2>Retrieval memory: load the relevant subset at the moment it matters</h2>
+    <h2 id="retrieval-memory-load-the-relevant-subset">Retrieval memory: load the relevant subset at the moment it matters</h2>
     <p>The alternative is to stop treating architectural intent as a preamble and start treating it as a queryable store. Instead of pasting every convention into every prompt, you record decisions as structured records and retrieve only the ones relevant to the change in front of the agent.</p>
     <p>When the agent is about to touch <code>src/payments/charge.ts</code>, the system surfaces the decisions that govern payments &mdash; the idempotency rule, the forbidden direct-charge path, the required audit log &mdash; and nothing about your CSS conventions. The relevant subset is small, sharp, and scoped. Token budget stops being zero-sum because you are not carrying the whole rulebook on every call. Precedence becomes explicit, because a retrieval system can rank and resolve. Scope becomes native, because records are keyed to the surfaces they apply to.</p>
 
@@ -340,11 +355,11 @@
     </table>
     </div>
 
-    <h2>This is not RAG, and it is not a bigger context window</h2>
+    <h2 id="this-is-not-rag-and-it">This is not RAG, and it is not a bigger context window</h2>
     <p>Two objections come up immediately. The first: &ldquo;this is just RAG.&rdquo; It is not. Retrieving documentation chunks by semantic similarity surfaces prose for the model to read; it does not produce a decision with a known scope, a precedence rank, and a verdict. Architectural retrieval returns <em>constraints</em>, not paragraphs. <a href="/insights/rag-is-not-memory/">Retrieval is a transport mechanism, not a memory model</a>.</p>
     <p>The second: &ldquo;longer context windows make this moot.&rdquo; They do not. A million-token window lets you paste a bigger rule file; it does not make the rules out-rank a closer, more recent instruction, and it does not give a flat document scope. Bigger windows raise the ceiling on the static approach without changing its shape. <a href="/insights/why-claude-md-stops-scaling/">CLAUDE.md stops scaling for reasons that more context does not address</a>.</p>
 
-    <h2>What changes in practice</h2>
+    <h2 id="what-changes-in-practice">What changes in practice</h2>
     <p>The shift from rule files to retrieval memory changes the daily mechanics of AI-assisted work in a few concrete ways:</p>
     <ul>
       <li><strong>Decisions get recorded once</strong> &mdash; as structured records with a scope, a rationale, and the constraint they imply &mdash; instead of re-pasted into every tool&rsquo;s rule file.</li>
@@ -353,7 +368,7 @@
       <li><strong>Enforcement becomes possible</strong> &mdash; a retrieved constraint can be checked against the proposed change, which a pasted paragraph never can.</li>
     </ul>
 
-    <h2>Rule files and retrieval are not rivals</h2>
+    <h2 id="rule-files-and-retrieval-are-not">Rule files and retrieval are not rivals</h2>
     <p>This is not an argument to delete your <code>CLAUDE.md</code> or your Cursor Rules. They remain the right tool for a short, stable set of always-true conventions &mdash; the cold-start primer. The point is narrower: the instruction surface is the wrong place to put governance that has to scale, resolve conflicts, and be enforced. For a deeper comparison of where each fits, see <a href="/compare/cursor-rules/">Mneme vs Cursor Rules</a> and <a href="/compare/claude-md/">Mneme vs CLAUDE.md</a>.</p>
     <div class="callout"><p><strong>Static instructions tell the model your rules. Retrieval memory brings the right rule to the right change &mdash; and lets you enforce the ones that must hold.</strong></p></div>
 

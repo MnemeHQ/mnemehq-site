@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Microsoft's Agentic Transformation Playbook shows why enterprise AI agents need more than pilots, productivity tools, and model access. The next scaling layer is governance infrastructure: ownership, constraints, release gates, and enforceable operating boundaries." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -321,11 +322,27 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-is-microsoft-s-agentic-transformation">What is Microsoft&rsquo;s Agentic Transformation Playbook?</a></li>
+        <li><a href="#the-important-shift-is-assist-execute">The important shift is Assist &rarr; Execute</a></li>
+        <li><a href="#why-agentic-transformation-becomes-an-operating">Why agentic transformation becomes an operating-model problem</a></li>
+        <li><a href="#ai-agent-governance-cannot-stay-trapped">AI agent governance cannot stay trapped in policy documents</a></li>
+        <li><a href="#for-software-teams-architectural-governance-is">For software teams, architectural governance is the missing agent infrastructure layer</a></li>
+        <li><a href="#from-ai-agent-governance-framework-to">From AI agent governance framework to governance infrastructure</a></li>
+        <li><a href="#what-microsoft-s-playbook-means-for">What Microsoft&rsquo;s playbook means for engineering leaders</a></li>
+        <li><a href="#the-pattern-microsoft-is-naming-restated">The pattern Microsoft is naming, restated for software</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>Microsoft&rsquo;s playbook describes <strong>six transformation patterns</strong> and emphasizes that each pattern requires different ownership, governance, and operating discipline. That is the move worth paying attention to. It reframes agentic AI from a model question into an enterprise operating-model question.</p>
 
     <div class="callout"><p><strong>That shift matters for software teams because coding agents are following the same path.</strong> They are moving from autocomplete to execution. Once agents edit files, open PRs, modify infrastructure, or coordinate multi-step changes, architectural governance becomes infrastructure.</p></div>
 
-    <h2>What is Microsoft&rsquo;s Agentic Transformation Playbook?</h2>
+    <h2 id="what-is-microsoft-s-agentic-transformation">What is Microsoft&rsquo;s Agentic Transformation Playbook?</h2>
     <p>Microsoft&rsquo;s playbook is a practical guide for choosing, scaling, and operating AI agents across the enterprise. Public summaries describe it as a 52-slide guide covering six transformation patterns, from employee productivity to core business processes and customer-facing agents. The throughline is that agents are not a single category &mdash; they are a family of patterns with different ownership models, different risk surfaces, and different requirements for governance.</p>
     <p>That framing matters because it cuts against the dominant adoption narrative. Most enterprises are still treating AI as a per-team productivity story: this team gets Copilot, that team gets an internal assistant, another team is piloting an agent for support tickets. Microsoft is arguing that the pattern of deployment determines the operating discipline required, and that ad-hoc deployment does not scale into core processes.</p>
 
@@ -338,26 +355,26 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The important shift is Assist &rarr; Execute</h2>
+<h2 id="the-important-shift-is-assist-execute">The important shift is Assist &rarr; Execute</h2>
     <p>The meaningful distinction in this playbook is not chatbot vs agent. It is <strong>assist vs execute</strong>.</p>
     <p>Assistive AI supports human work. Agentic AI increasingly performs work. That changes the governance requirement because the agent is no longer merely producing text. It may trigger workflows, access systems, make changes, and coordinate actions across processes that previously required a human signature, a code review, or a change ticket.</p>
     <p>An assistant that drafts a paragraph and an agent that opens a pull request, modifies infrastructure, or updates a customer record are not the same risk surface. They look similar from a UX perspective. They are not similar from a governance perspective.</p>
 
-    <h2>Why agentic transformation becomes an operating-model problem</h2>
+    <h2 id="why-agentic-transformation-becomes-an-operating">Why agentic transformation becomes an operating-model problem</h2>
     <p>One of the more useful arguments in the Microsoft material is that the six patterns are <strong>design choices, not maturity stages</strong>. An enterprise does not graduate from employee-productivity agents to core-process agents. It runs them in parallel, each with its own ownership, escalation, and release discipline.</p>
     <p>The governance implication is that enterprises cannot manage every agent with the same lightweight checklist. A productivity assistant in marketing and a coding agent that edits production services need different boundaries, different release gates, and different escalation paths.</p>
     <div class="callout"><p><strong>The failure mode is not that enterprises lack AI agents.</strong> It is that every team starts deploying agents with different assumptions about what agents are allowed to know, change, approve, and escalate.</p></div>
 
-    <h2>AI agent governance cannot stay trapped in policy documents</h2>
+    <h2 id="ai-agent-governance-cannot-stay-trapped">AI agent governance cannot stay trapped in policy documents</h2>
     <p>Most organizations already have governance language. They have architecture principles, security standards, ADRs, platform rules, review processes, and release criteria. The problem is not absence of intent &mdash; it is that <strong>agents do not reliably inherit that intent</strong> unless it is made available as an enforceable part of the workflow.</p>
     <p>Policy documents work for humans because humans interpret them inside an institutional culture. They have weak gravitational pull on a model that has never read them, will not retain them across sessions, and is optimizing for the prompt in front of it. Governance that lives only in PDFs becomes invisible the moment work is delegated to a non-human executor.</p>
 
-    <h2>For software teams, architectural governance is the missing agent infrastructure layer</h2>
+    <h2 id="for-software-teams-architectural-governance-is">For software teams, architectural governance is the missing agent infrastructure layer</h2>
     <p>A coding agent that only receives a task prompt has no durable understanding of the architecture it is operating inside. It may generate correct code that violates local decisions: bypassing a service boundary, introducing a forbidden dependency, duplicating an integration pattern, or placing logic in the wrong layer.</p>
     <p>That is why AI coding governance has to move earlier than PR review. <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">Review remains necessary, but it is too late to be the first place architectural intent appears</a>. By the time a non-compliant PR exists, the agent has already done the work, the deviation is already in the diff, and the cost of correction is paid by a human reviewer.</p>
     <p>The architectural governance layer answers a question that retrieval and prompting cannot: <em>is this change allowed, given everything this codebase has already decided?</em> That is a binary enforcement question, not a recall question.</p>
 
-    <h2>From AI agent governance framework to governance infrastructure</h2>
+    <h2 id="from-ai-agent-governance-framework-to">From AI agent governance framework to governance infrastructure</h2>
     <p><strong>Frameworks define what good governance looks like. Infrastructure makes governance executable.</strong></p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -371,7 +388,7 @@
     </div>
     <p>A governance framework says agents need ownership, monitoring, approvals, and release gates. <a href="/concepts/governance-infrastructure/">Governance infrastructure turns those rules into checks, constraints, context packets, CI gates, and workflow-level boundaries</a>. The first is necessary. The second is what scales.</p>
 
-    <h2>What Microsoft&rsquo;s playbook means for engineering leaders</h2>
+    <h2 id="what-microsoft-s-playbook-means-for">What Microsoft&rsquo;s playbook means for engineering leaders</h2>
     <p>The practical reading for an engineering leader looking at this material:</p>
     <ol>
       <li><strong>Treat coding agents as execution systems, not just developer tools.</strong> The risk surface is closer to a deploy pipeline than to a code editor.</li>
@@ -381,11 +398,11 @@
       <li><strong>Build governance that travels with the repo, not only with the policy team.</strong> <a href="/concepts/governance-propagation/">The same compiled constraints should reach every agent, IDE, hook, and CI surface</a> &mdash; not depend on which agent happened to run.</li>
     </ol>
 
-    <h2>The pattern Microsoft is naming, restated for software</h2>
+    <h2 id="the-pattern-microsoft-is-naming-restated">The pattern Microsoft is naming, restated for software</h2>
     <p>Microsoft&rsquo;s adoption maturity material makes a related point worth quoting in spirit: agents create value when they operate within well-designed processes, and layering agents onto existing workflows without redesign can fail to improve end-to-end outcomes. The lift is not from the agent. It is from the operating model around the agent.</p>
     <p>For software, the operating model around the agent is architectural governance. It is the thing that says: this is the boundary, these are the constraints, this is the release gate, this is what counts as a violation, this is what gets escalated. Without that layer, faster agents simply produce architectural drift faster.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>Microsoft&rsquo;s Agentic Transformation Playbook makes the enterprise point clear: scaling agents is not only about better models or more pilots. It is about operating discipline.</p>
     <p>For software teams, that discipline needs a technical layer. As AI agents begin executing engineering work, architectural governance becomes part of the infrastructure stack &mdash; not a policy artifact, not a review-time backstop, but a layer that the agent must pass through to act.</p>
     <div class="callout"><p><strong>Agents do not need more memory.</strong> They need an enforceable operating model.</p></div>

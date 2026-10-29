@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Google Cloud's Open Knowledge Format (June 2026) standardizes organizational knowledge as markdown for AI agents. But finding a decision is not following it. OKF solves discovery; governance solves whether agents obey what they read." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -322,7 +323,21 @@
 
   <div class="article-body">
 
-    <h2>What the Open Knowledge Format Is</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-open-knowledge-format-is">What the Open Knowledge Format Is</a></li>
+        <li><a href="#the-three-problems-okf-solves">The Three Problems OKF Solves</a></li>
+        <li><a href="#the-retrieval-fallacy">The Retrieval Fallacy</a></li>
+        <li><a href="#the-four-layer-agentic-stack">The Four-Layer Agentic Stack</a></li>
+        <li><a href="#memory-retrieval-storage-governance-four-different">Memory, Retrieval, Storage, Governance: Four Different Questions</a></li>
+        <li><a href="#what-okf-v0-2-changes">What OKF v0.2 Changes</a></li>
+        <li><a href="#the-next-layer-is-not-memory">The Next Layer Is Not Memory. It Is Governance.</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-the-open-knowledge-format-is">What the Open Knowledge Format Is</h2>
     <p>On June 12, 2026, Google Cloud published the <a href="https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/" target="_blank" rel="noopener">Open Knowledge Format announcement</a>, releasing OKF v0.1 as an open specification. The shape is deliberately plain: a directory of markdown files, each with a YAML frontmatter block carrying fields like <strong>type</strong>, <strong>title</strong>, <strong>description</strong>, <strong>resource</strong>, <strong>tags</strong>, and <strong>timestamp</strong> (v0.2 replaces <code style="font-family:'DM Mono',monospace;font-size:0.9em;">timestamp</code> with <code style="font-family:'DM Mono',monospace;font-size:0.9em;">generated</code>). No software development kit (SDK). No proprietary runtime. No vendor lock-in. Any system that can read a file can read OKF.</p>
     <p>That plainness is the point. OKF is vendor-neutral by construction, and it cleanly separates <em>who writes knowledge</em> from <em>who consumes it</em>. A platform team can author and version organizational knowledge once, and a coding agent, an enterprise assistant, a workflow agent, and a search index can all read the same source without any of them owning the format. OKF formalizes a pattern the industry had already been reaching for, which we have described as treating your codebase context like a <a href="/insights/llm-wiki-library-not-law/">large language model (LLM) wiki</a>: knowledge written down, structured, and made retrievable instead of scattered.</p>
 
@@ -335,7 +350,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Three Problems OKF Solves</h2>
+<h2 id="the-three-problems-okf-solves">The Three Problems OKF Solves</h2>
     <p>OKF is a useful piece of infrastructure, and it is worth being precise about what it fixes. It solves three real problems, all of them about getting knowledge <em>to</em> the agent.</p>
     <ul>
       <li><strong>Knowledge organization.</strong> Today organizational knowledge is scattered across Confluence, Notion, Google Docs, Slack threads, and half-maintained wikis. OKF gives it a single structured representation instead of a dozen inconsistent ones.</li>
@@ -344,14 +359,14 @@
     </ul>
     <p>The value here is standardization. A common language for organizational knowledge is exactly the kind of primitive the agentic ecosystem needs, and Google publishing it as an open spec rather than a closed product is the right move. None of what follows is a criticism of OKF. It is a description of the layer that sits above it.</p>
 
-    <h2>The Retrieval Fallacy</h2>
+    <h2 id="the-retrieval-fallacy">The Retrieval Fallacy</h2>
     <p>Most knowledge-for-agents architectures carry an assumption: <strong>Knowledge Retrieved equals Knowledge Applied</strong>. Get the right document in front of the agent and the agent will act on it. OKF does not make that assumption itself; its specification calls trust tiers advisory signals rather than access control. The assumption lives in the systems that consume OKF and hand its contents to an agent. For a chatbot answering a question, that assumption mostly holds. For a coding agent that <em>writes and ships code</em>, it quietly falls apart.</p>
     <p>Consider a concrete case. A team has a stored architectural decision: <strong>all database access must go through repository abstractions, with no direct SQL in application code</strong>. The decision lives in the knowledge directory. The agent is asked to add a reporting endpoint. It retrieves the decision. It references it during planning. It can quote the rule back to you. And then it writes a direct SQL query against the table, because that was faster and the query was simple.</p>
     <div class="callout"><p><strong>Nothing failed.</strong> Retrieval worked: the agent found the decision, read it, and understood it. What was missing was the layer that enforces the decision on the proposed change and rejects the violation. That missing layer is governance, and its absence is how <a href="/concepts/architectural-drift/">architectural drift</a> enters a codebase one reasonable-looking commit at a time.</p></div>
     <p>This is the failure mode we keep returning to: <a href="/insights/memory-is-not-governance/">memory is not governance</a>, and the same logic applies to discovery. Retrieving a security requirement, a naming standard, or a framework convention tells the agent what the rule is. It does nothing to guarantee the agent obeys it. Knowing and complying are different systems with different failure modes, and a knowledge format only addresses the first.</p>
     <p>The reason this matters more for agents than for people is throughput. A human engineer who reads the repository-abstraction rule internalizes it once and applies it across hundreds of changes. An agent re-reads the rule on every task and re-decides whether to honor it on every task, under local pressure to produce a working diff fast. Each decision is independent, which means the rule has to win every single time or the boundary erodes. A storage format that makes the rule easy to find does not change the odds at the moment the agent chooses to bypass it.</p>
 
-    <h2>The Four-Layer Agentic Stack</h2>
+    <h2 id="the-four-layer-agentic-stack">The Four-Layer Agentic Stack</h2>
     <p>It helps to place OKF in the stack that the agentic ecosystem is assembling. Each layer answers a different question, and the questions are not interchangeable.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -371,7 +386,7 @@
     <p>Notice that the four layers fail in different directions. Layers one through three are <em>permissive</em> by design: storage holds everything, retrieval surfaces what is relevant, planning proposes whatever moves the task forward. Their job is to make more knowledge usable. Layer four is the only one whose job is to say <em>no</em>: to reject an action that contradicts a decision the organization already made.</p>
     <p>You cannot build a permissive layer well enough to produce a restrictive guarantee. Better storage, better retrieval, and better planning all increase what the agent can do; none of them constrains what it is allowed to do. That asymmetry is why governance cannot be folded into the lower layers and has to sit on top of them as its own concern.</p>
 
-    <h2>Memory, Retrieval, Storage, Governance: Four Different Questions</h2>
+    <h2 id="memory-retrieval-storage-governance-four-different">Memory, Retrieval, Storage, Governance: Four Different Questions</h2>
     <p>The vocabulary in this space is overloaded, so it is worth separating the terms by the question each one answers. They are not competing solutions to one problem. They are sequential answers to four different problems.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -389,7 +404,7 @@
     <p>For architecture decisions, OKF is a storage standard. It makes the first row excellent. But better storage does not improve the last row, because obedience is a property of enforcement, not of how knowledge is filed. This is the same distinction that makes <a href="/insights/why-rag-fails-for-architectural-governance/">retrieval-augmented generation (RAG) insufficient for architectural governance</a>: a retrieval system can surface the perfect constraint and still have no mechanism to stop the agent from violating it. The gap is not in what the agent can find. It is in what happens to the agent&rsquo;s output when it ignores what it found.</p>
     <p>If you are evaluating where this fits in a real workflow, the practical question is which constraints your agents must <em>never</em> violate, regardless of what they retrieve, the kind of thing our <a href="/use-cases/">use cases</a> walk through. That list is your governance layer. OKF can hold the decisions; it cannot be the thing that enforces them, and it was never designed to be.</p>
 
-    <h2>What OKF v0.2 Changes</h2>
+    <h2 id="what-okf-v0-2-changes">What OKF v0.2 Changes</h2>
     <p>The <a href="https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md" target="_blank" rel="noopener">OKF specification</a> moved to Version 0.2 in July 2026. Its motivation section lists five questions a consumer needs answered once agents write most of a corpus: provenance, trust, freshness, lifecycle and attestation. Version 0.2 answers the first four with optional frontmatter: <code style="font-family:'DM Mono',monospace;font-size:0.9em;">sources</code> for provenance, <code style="font-family:'DM Mono',monospace;font-size:0.9em;">generated</code> and <code style="font-family:'DM Mono',monospace;font-size:0.9em;">verified</code> for trust, <code style="font-family:'DM Mono',monospace;font-size:0.9em;">stale_after</code> for freshness and <code style="font-family:'DM Mono',monospace;font-size:0.9em;">status</code> for lifecycle. Attestation gets a concept type of its own, covered below. <code style="font-family:'DM Mono',monospace;font-size:0.9em;">type</code> is still the only required key, and type values are not registered centrally, so consumers must tolerate types they do not recognize. OKF defines no <code style="font-family:'DM Mono',monospace;font-size:0.9em;">Architecture Decision</code> type, but a producer can write one today:</p>
     <pre style="font-family:'DM Mono',monospace;font-size:0.82rem;line-height:1.7;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:0 0 1.25rem;overflow-x:auto;color:var(--text);">---
 type: Architecture Decision
@@ -432,7 +447,7 @@ stale_after: 2027-04-01T00:00:00Z
 
     <p>OKF v0.2 covers the first two stages, and for computed values it specifies an attestation step that resembles the fifth. Stages three and four belong to whoever turns trusted knowledge into binding constraints.</p>
 
-    <h2>The Next Layer Is Not Memory. It Is Governance.</h2>
+    <h2 id="the-next-layer-is-not-memory">The Next Layer Is Not Memory. It Is Governance.</h2>
     <p>Open Knowledge Format is an important common language for organizational knowledge, and standardizing how agents discover what a company knows is a real contribution to the ecosystem. But structured memory alone does not solve the hardest problem in agentic engineering. The challenge is no longer whether agents can <strong>find</strong> company knowledge. OKF and the retrieval stack around it give agents a standard way to find it.</p>
     <p>The challenge is whether agents will <strong>follow</strong> what they find. A decision the agent retrieved, referenced, and then violated is not a discovery failure. It is a governance failure, and no improvement in how knowledge is stored or surfaced closes it. The way an enforced decision reaches every agent action is its own discipline, the one we call <a href="/concepts/governance-propagation/">governance propagation</a>: a constraint checked deterministically against each proposed change before that change becomes part of the system. OKF makes the knowledge legible. Governance is what makes it binding. The next layer of agentic infrastructure is not memory. It is governance.</p>
 

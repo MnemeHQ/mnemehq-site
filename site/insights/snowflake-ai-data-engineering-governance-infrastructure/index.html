@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="MIT/Snowflake report: data engineers' time on AI is tripling toward 61% by 2027, and 74% of organizations expect agentic AI deployed within 12 months. The deeper signal &mdash; data engineering is evolving into governance infrastructure for autonomous AI systems." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -292,6 +293,19 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#ai-is-turning-infrastructure-into-execution">AI is turning infrastructure into execution systems</a></li>
+        <li><a href="#why-agentic-ai-changes-the-role">Why agentic AI changes the role of data engineering</a></li>
+        <li><a href="#the-emerging-governance-infrastructure-layer">The emerging governance infrastructure layer</a></li>
+        <li><a href="#observability-cannot-solve-execution-drift-alone">Observability cannot solve execution drift alone</a></li>
+        <li><a href="#the-new-enterprise-ai-infrastructure-stack">The new enterprise AI infrastructure stack</a></li>
+        <li><a href="#conclusion-from-data-engineering-to-governance">Conclusion: from data engineering to governance engineering</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>The report &mdash; <a href="https://www.snowflake.com/en/redefining-data-engineering-in-the-age-of-ai/" rel="noopener"><em>Redefining Data Engineering in the Age of AI</em></a>, sponsored by Snowflake and editorially independent of it &mdash; surveyed 400 CIOs, CTOs, CDOs, CAIOs, and equivalent execs across 7 industries and 10 countries. The headline numbers are striking on their own:</p>
     <ul>
       <li><strong>Time spent on AI is tripling.</strong> Data engineers spent an average of 19% of their workday on AI projects in 2023, 37% in 2025, and respondents expect <strong>61% by 2027</strong>.</li>
@@ -306,7 +320,7 @@
     <div class="callout"><p>&ldquo;Over time, the data engineer role will shift from writing code for all pipelines toward <strong>managing the infrastructure that these are running in, orchestrating across a lot of these, and setting the rules and tests to make sure the right data is coming in</strong>.&rdquo; &mdash; Chris Child, VP Product, Data Engineering, Snowflake</p></div>
     <p>That is not pipeline work. That is governance work, named in pipeline-friendly language.</p>
 
-    <h2>AI is turning infrastructure into execution systems</h2>
+    <h2 id="ai-is-turning-infrastructure-into-execution">AI is turning infrastructure into execution systems</h2>
     <p>The reason this matters is that AI changes the assumptions enterprise infrastructure was designed around.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -332,7 +346,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why agentic AI changes the role of data engineering</h2>
+<h2 id="why-agentic-ai-changes-the-role">Why agentic AI changes the role of data engineering</h2>
     <p>Snowflake&rsquo;s population is well-positioned to see this first. Data engineering teams already own:</p>
     <ul>
       <li>Orchestration</li>
@@ -350,7 +364,7 @@
     <div class="callout"><p><strong>Context tells the model more.</strong> Constraints tell the system what is allowed. As autonomy scales, the gap between &ldquo;the model knows&rdquo; and &ldquo;the rule is enforced&rdquo; becomes the dominant failure mode.</p></div>
     <p>This is the same line that shows up at the runtime layer: <a href="/insights/why-rag-fails-for-architectural-governance/">retrieval surfaces information; it does not enforce constraints</a>. Snowflake&rsquo;s data is one more data point in the same picture.</p>
 
-    <h2>The emerging governance infrastructure layer</h2>
+    <h2 id="the-emerging-governance-infrastructure-layer">The emerging governance infrastructure layer</h2>
     <p>Enterprise AI stacks are quietly adding a new layer between agents and production systems: <a href="/concepts/governance-infrastructure/">governance infrastructure</a>.</p>
     <p>Concretely, it is the systems layer that enforces:</p>
     <ul>
@@ -364,13 +378,13 @@
     <p>The numbers point in the same direction. <strong>Data governance is the second-highest-rated challenge of new AI tools</strong> at 40%, only behind integration complexity at 45%. <strong>Tool sprawl and fragmentation comes third at 38%</strong> &mdash; which is exactly the problem governance propagation solves. The biggest companies in the survey rate data governance their <em>single greatest</em> challenge. And the stakes are not theoretical:</p>
     <div class="callout"><p>&ldquo;The best case scenario is that a breach results in some embarrassment. <strong>The worst case is that your business is forced to shut down.</strong>&rdquo; &mdash; Dave Masino, Senior Director of Data and Intelligence, Slalom</p></div>
 
-    <h2>Observability cannot solve execution drift alone</h2>
+    <h2 id="observability-cannot-solve-execution-drift-alone">Observability cannot solve execution drift alone</h2>
     <p>Most enterprise AI tooling today focuses on logs, traces, monitoring, evals, observability. All of it is necessary. None of it is the layer being discussed here.</p>
     <p>Observability explains failures <em>after</em> execution. Governance infrastructure shapes execution <em>before</em> drift occurs.</p>
     <div class="callout"><p><strong>The next enterprise AI challenge is not understanding autonomous behavior after the fact.</strong> It is constraining operational behavior before systems drift into invalid states.</p></div>
     <p>That is the difference between forensics and infrastructure &mdash; and it is the same distinction that <a href="/concepts/governance-before-generation/">governance-before-generation</a> names at the per-agent level.</p>
 
-    <h2>The new enterprise AI infrastructure stack</h2>
+    <h2 id="the-new-enterprise-ai-infrastructure-stack">The new enterprise AI infrastructure stack</h2>
     <p>The shape the market is converging toward is six layers, not four:</p>
     <div class="layer-stack">
       <div class="layer-row"><div class="layer-num">01</div><div class="layer-name">Foundation models</div><div class="layer-job">Reasoning and generation capability</div></div>
@@ -383,7 +397,7 @@
     <p>Most organizations currently stop at orchestration and observability. That is enough to ship a pilot. It is not enough to operate autonomous systems in production at scale.</p>
     <p>The layers being added next are not optional. Layer 5 is what makes autonomy operationally sustainable. Layer 6 is what makes it auditable. Together they are what turn agentic AI from a demo into infrastructure.</p>
 
-    <h2>Conclusion: from data engineering to governance engineering</h2>
+    <h2 id="conclusion-from-data-engineering-to-governance">Conclusion: from data engineering to governance engineering</h2>
     <p>Snowflake&rsquo;s report frames this transition as an evolution in data engineering. The broader shift is infrastructural. As AI systems gain operational authority, enterprise engineering organizations are being pulled toward a new requirement: governance infrastructure for autonomous systems.</p>
     <p>The future AI stack likely includes a dedicated governance layer sitting between agents and production execution. And the teams closest to infrastructure reliability &mdash; the ones the MIT/Snowflake research describes &mdash; may be the first operators of that layer. Chris Child puts the urgency for senior leaders bluntly:</p>
     <div class="callout"><p>&ldquo;If your C-suite still considers data engineering as a support role, <strong>you&rsquo;re already five years behind &mdash; and probably training your future competitors</strong>.&rdquo; &mdash; Chris Child, Snowflake</p></div>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="EY-Parthenon&#x27;s survey of 400 European software CTOs ranks QA (54%) and architecture (39%) above coding (22%) as delivery constraints. What leaders should do." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -384,7 +385,24 @@
   </header>
 
 <div class="article-body">
-<h2>AI removed one constraint and exposed the others</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#ai-removed-one-constraint-and-exposed">AI removed one constraint and exposed the others</a></li>
+      <li><a href="#what-are-the-biggest-software-development">What are the biggest software development constraints with AI?</a></li>
+      <li><a href="#why-ai-moves-the-constraint-downstream">Why AI moves the constraint downstream</a></li>
+      <li><a href="#architecture-and-context-are-now-production">Architecture and context are now production constraints</a></li>
+      <li><a href="#human-review-cannot-be-the-whole">Human review cannot be the whole control system</a></li>
+      <li><a href="#the-missing-piece-is-decision-governance">The missing piece is decision governance</a></li>
+      <li><a href="#what-changes-in-the-ai-native">What changes in the AI-native SDLC</a></li>
+      <li><a href="#the-moat-moved-too">The moat moved too</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="ai-removed-one-constraint-and-exposed">AI removed one constraint and exposed the others</h2>
 <p>EY-Parthenon, EY's strategy consulting brand, worked with the survey platform Potloc and interviewed 400 chief technology officers (CTOs) of software companies headquartered in 13 European countries. The results are published as <a href="https://www.ey.com/content/dam/ey-unified-site/ey-com/en-nl/services/strategy/documents/ey-beyond-the-code-how-ai-is-redefining-the-software-industry-2026.pdf" target="_blank" rel="noopener"><em>Beyond the code: How AI is redefining the software industry</em></a> (2026). The UK, Germany and France account for just over half of the sample.</p>
 <p>One question asked CTOs to rank the three biggest constraints in their software development lifecycle (SDLC). Coding came seventh.</p>
 <table class="gov-table">
@@ -401,22 +419,22 @@
 </table>
 <p>Source: EY-Parthenon and Potloc CTO survey, report pages 18-19. These are self-reported rankings from European CTOs, not measured throughput. Still, 78% of these CTOs left coding out of their top three.</p>
 
-<h2>What are the biggest software development constraints with AI?</h2>
+<h2 id="what-are-the-biggest-software-development">What are the biggest software development constraints with AI?</h2>
 <p>According to EY-Parthenon's 2026 survey of 400 European software CTOs, the biggest constraints are now downstream of coding. Quality assurance and validation lead, followed by architecture and context-setting, then security and compliance review. Coding and implementation ranks below all three.</p>
 <p>The report's own heading for that page:</p>
 <!-- voice-ok: verbatim EY report heading -->
 <blockquote><p>"AI didn’t remove the bottleneck — it pushed it downstream"</p></blockquote>
 
-<h2>Why AI moves the constraint downstream</h2>
+<h2 id="why-ai-moves-the-constraint-downstream">Why AI moves the constraint downstream</h2>
 <p>The survey shows where the freed capacity goes. 56% of CTOs say they redeploy time saved by AI coding tools into quality assurance and code review. 55% put it into new features. Among CTOs who measure it, 84% say delivery lead time and release cadence improved.</p>
 <p>Quality has not kept pace. Among those who measure it, 60% report no material change in escaped defects (bugs found after release) and production incidents. When generation gets faster and checking does not, work queues at the checking stage. We covered the queueing mechanics in <a href="/insights/why-code-review-cannot-scale-with-ai-output/">Why Code Review Cannot Scale With AI Output</a>. EY's data is the survey-level version of the same effect.</p>
 
-<h2>Architecture and context are now production constraints</h2>
+<h2 id="architecture-and-context-are-now-production">Architecture and context are now production constraints</h2>
 <p>Test suites and security scanners serve the first and third constraints. The second has far less tooling. We read "architecture and context-setting" as telling the people and agents doing the work what the system is supposed to look like: which boundaries hold, which libraries were ruled out, which decisions are still current.</p>
 <p>Coding agents make this harder, not easier. An agent can retrieve ten documents that mention a database and still not know which decision is in force. More context is not the same as authoritative context. That gap is the subject of <a href="/insights/memory-is-not-governance/">Memory Is Not Governance</a>.</p>
 <p>The report's view of competition points the same way. In its words: "The construction of the software code is becoming replicable. The context around it is not." Boards see it too. 44% of CTOs say investors and boards treat architecture and data foundations that absorb new AI use cases without rework as strong evidence of AI advantage.</p>
 
-<h2>Human review cannot be the whole control system</h2>
+<h2 id="human-review-cannot-be-the-whole">Human review cannot be the whole control system</h2>
 <p>EY asked which practices teams use to keep AI-generated code reliable, maintainable and secure:</p>
 <table class="gov-table">
   <thead><tr><th>Practice</th><th>In use</th></tr></thead>
@@ -434,12 +452,12 @@
 <p>The leading control is a person reading a diff. Policies and standards are documents that someone has to remember. Only one team in five can trace which code AI produced. Meanwhile, about one in three respondents had at least one AI- or agent-related production incident in the past year.</p>
 <p>Human review scales with reviewers, not with output. It is good at judgment and poor at checking the same fifty constraints on every change. Gartner expects the control point to move: it <a href="https://www.gartner.com/en/newsroom/press-releases/2026-05-20-gartner-says-the-market-for-enterprise-ai-coding-agents-is-entering-a-new-phase-of-expansion-and-competitive-realignment" target="_blank" rel="noopener">predicts</a> that by 2027, over 65% of engineering teams using agentic coding will treat integrated development environments (IDEs) as optional, "shifting control, governance, and validation to automated platforms."</p>
 
-<h2>The missing piece is decision governance</h2>
+<h2 id="the-missing-piece-is-decision-governance">The missing piece is decision governance</h2>
 <p>Put EY's top constraints side by side. Architecture and context-setting is about knowing which decisions apply. Validation and security review are about checking that a change respected them. Both depend on decisions the team has already made. EY did not ask how teams record those decisions, but its control data points the same way: 41% rely on AI-specific coding policies or standards, and the most common control is mandatory human review (62%).</p>
 <p>That is the job of <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>: the system that determines which engineering decisions govern a given change, why, and with what evidence. An architecture decision record (ADR) says what was decided. Decision governance gives it force: where it applies, whether it is still current, and how anyone can tell it was followed.</p>
 <p>Without it, every independently made change is a chance to lose <a href="/concepts/engineering-coherence/">engineering coherence</a>. Each change passes its own tests while the system drifts from the decisions that hold it together.</p>
 
-<h2>What changes in the AI-native SDLC</h2>
+<h2 id="what-changes-in-the-ai-native">What changes in the AI-native SDLC</h2>
 <p>We read EY's findings as pointing to a delivery stack with four layers, each answering a different question:</p>
 <ol>
   <li><strong>Generation.</strong> Agents and assistants write the change. This layer is now cheap and widely available.</li>
@@ -449,11 +467,11 @@
 </ol>
 <p>EY's control figures suggest most teams still rely on people and documents for the last two. The <a href="/concepts/ai-native-sdlc/">AI-native SDLC</a> concept page covers the full lifecycle.</p>
 
-<h2>The moat moved too</h2>
+<h2 id="the-moat-moved-too">The moat moved too</h2>
 <p>EY's first finding is about strategy, not delivery. The CTOs see the standardised layers of a product, such as dashboards, interfaces and standard integrations, as most exposed to AI-built copies. They see proprietary data, compliance logic and customer-specific implementation as safest. The report calls this the moat moving "up the stack."</p>
 <p>The same logic applies inside an engineering organisation. If code becomes cheap to reproduce, the durable asset is the set of decisions needed to reproduce the right code. We argued the strategic side in <a href="/insights/ai-makes-software-more-ambitious/">AI Won't Just Write More Software. It Will Make Software More Ambitious.</a> and <a href="/insights/ai-roi-problem-is-about-systems-not-models/">The AI ROI Problem Is Not About Models</a>.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>Measure where work waits, not how fast code appears.</strong> EY's CTOs already see the constraint downstream. Track review queue time, rework and escaped defects next to generation speed.</li>
   <li><strong>Turn your top constraint into a list of decisions.</strong> If architecture and context-setting is where work waits, write down the boundaries and dependency rules agents most often get wrong, and give each one a scope.</li>
@@ -461,7 +479,7 @@
   <li><strong>Make AI-assisted work traceable.</strong> Only 20% of EY's respondents trace AI-assisted code. Every verdict should point back to the decision that produced it.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme is an open-source decision and control layer for agentic software development. For architectural decisions in a repository, it implements part of decision governance today. It compiles the enforceable parts of accepted decisions into typed rules, which are machine-checkable rules with exact meaning, and checks proposed changes against them. Checks run inside supported agents through hooks, which intercept a file write before it lands, in Claude Code and OpenAI's Codex command-line interface (CLI), and again in continuous integration (CI) before merge. Each violation names the decision and rule that triggered it. Its <a href="/docs/decision-index/">Decision Index</a>, the versioned record of a repository's decisions shipped in mneme-hq 0.10.0, keeps each decision's version history, lifecycle state and source.</p>
 <p>Mneme is not a QA platform or a security scanner, and it does not replace review. Pulling decisions from Confluence, Jira or chat tools is not shipped.</p>
 

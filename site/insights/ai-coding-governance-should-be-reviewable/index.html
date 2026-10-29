@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Most AI memory is opaque hidden state. Mneme treats governance as versioned engineering infrastructure — reviewable, auditable, and co-located with the code it governs." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -316,13 +317,25 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-assumption-most-teams-haven-t">The assumption most teams haven't questioned</a></li>
+        <li><a href="#what-reviewable-governance-actually-means">What reviewable governance actually means</a></li>
+        <li><a href="#how-this-differs-from-current-approaches">How this differs from current approaches</a></li>
+        <li><a href="#repo-native-governance-as-engineering-infrastructure">Repo-native governance as engineering infrastructure</a></li>
+        <li><a href="#why-this-matters-for-enterprise-trust">Why this matters for enterprise trust</a></li>
+        <li><a href="#governance-decisions-are-infrastructure-decisions">Governance decisions are infrastructure decisions</a></li>
+      </ol>
+    </nav>
+
     <p>When something goes wrong with an AI coding agent — a banned framework gets introduced, a cross-boundary call slips into production, a deprecated pattern resurfaces after three ADRs told the team to stop using it — the first question an engineering lead asks is: <strong>what was the agent operating under when this happened?</strong></p>
 
     <p>With most current AI tooling, you cannot answer that question. The constraints the agent was aware of exist somewhere in accumulated prompt history, a cloud memory service, or per-session context that was never persisted. The governance state is opaque. The incident is unreproducible. The audit trail is empty.</p>
 
     <p>This is not an edge case. It is the default condition for AI coding governance today.</p>
 
-    <h2>The assumption most teams haven't questioned</h2>
+    <h2 id="the-assumption-most-teams-haven-t">The assumption most teams haven't questioned</h2>
 
     <p>AI memory, as most tools implement it, inherits its design from consumer AI assistants: hidden embeddings, cloud persistence, black-box retrieval, state that accumulates behind an API. The mental model is a human assistant who "remembers" things. The implementation is a vector database that approximates similarity.</p>
 
@@ -341,7 +354,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What reviewable governance actually means</h2>
+<h2 id="what-reviewable-governance-actually-means">What reviewable governance actually means</h2>
 
     <p>Reviewable governance is not just "we can read the config." It is a set of properties that the governance state must have for engineering teams to trust and maintain it:</p>
 
@@ -357,7 +370,7 @@
       <p><strong>The key reframe:</strong> governance state is not AI memory. It is engineering infrastructure. It should be treated accordingly — version-controlled, reviewed, and auditable — not hidden in a cloud service your team cannot inspect.</p>
     </div>
 
-    <h2>How this differs from current approaches</h2>
+    <h2 id="how-this-differs-from-current-approaches">How this differs from current approaches</h2>
 
     <p>The contrast with existing approaches is concrete:</p>
 
@@ -392,7 +405,7 @@
 
     <p>None of these approaches produce governance state you can review in a pull request. None of them produce governance state that branches when your codebase branches. None of them produce governance state an auditor can examine six months after an incident.</p>
 
-    <h2>Repo-native governance as engineering infrastructure</h2>
+    <h2 id="repo-native-governance-as-engineering-infrastructure">Repo-native governance as engineering infrastructure</h2>
 
     <p>Mneme stores its governance state as a structured JSON file — <code style="font-family:'DM Mono',monospace;font-size:0.9em;color:var(--teal);">project_memory.json</code> — co-located with the repository it governs. The file contains architectural decisions, constraints, and prior decision records in a format that is human-readable, machine-executable, and version-controlled.</p>
 
@@ -413,7 +426,7 @@
 
     <p>When a new ADR supersedes an old one, the change is a pull request. Reviewers can see exactly what constraint was removed, what replaced it, and why. The governance history is the git history.</p>
 
-    <h2>Why this matters for enterprise trust</h2>
+    <h2 id="why-this-matters-for-enterprise-trust">Why this matters for enterprise trust</h2>
 
     <p>The reviewability property connects directly to the concerns that block AI coding adoption at the enterprise level:</p>
 
@@ -424,7 +437,7 @@
       <li><strong>Governance state travels with the repo.</strong> When a team forks the codebase for a new product line, the governance state forks with it. When a contractor clones the repo, they get the constraints. When an agent runs in CI on a branch, it applies the branch's governance state.</li>
     </ul>
 
-    <h2>Governance decisions are infrastructure decisions</h2>
+    <h2 id="governance-decisions-are-infrastructure-decisions">Governance decisions are infrastructure decisions</h2>
 
     <p>The deeper principle here is architectural. Governance decisions — "we use Pub/Sub, not Celery," "BigQuery clients live in backend services," "no raw SQL string concatenation in production paths" — are engineering decisions with the same authority and permanence as the infrastructure decisions they constrain. They should be stored with the same discipline.</p>
 

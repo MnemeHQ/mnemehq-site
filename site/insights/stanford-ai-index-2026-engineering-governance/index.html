@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The Stanford AI Index 2026 shows AI coding approaching saturation and adoption at scale. The unsolved layer is engineering governance: keeping agent output aligned with architectural decisions." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -293,8 +294,20 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-stanford-ai-index-2026">What the Stanford AI Index 2026 Shows</a></li>
+        <li><a href="#if-code-generation-is-solved-what">If Code Generation Is Solved, What&rsquo;s Left?</a></li>
+        <li><a href="#engineering-governance-not-model-governance">Engineering Governance, Not Model Governance</a></li>
+        <li><a href="#differentiation-moves-to-proprietary-context">Differentiation Moves to Proprietary Context</a></li>
+        <li><a href="#what-engineering-leaders-should-take-from">What Engineering Leaders Should Take From This</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What the Stanford AI Index 2026 Shows</h2>
+
+    <h2 id="what-the-stanford-ai-index-2026">What the Stanford AI Index 2026 Shows</h2>
     <p>The <a href="https://hai.stanford.edu/ai-index/2026-ai-index-report" target="_blank" rel="noopener">Stanford AI Index Report 2026</a>, published by the Stanford Institute for Human-Centered AI (HAI), is the field&rsquo;s annual measurement of where AI stands. Its through-line this year is that capability is compounding faster than the institutions meant to direct it. A few findings matter most for engineering leaders.</p>
     <ul>
       <li><strong>Coding is among the fastest-improving capability areas.</strong> The report finds AI coding performance rising sharply against difficult software benchmarks, with results on SWE-bench Verified climbing toward near-human levels inside a single year.</li>
@@ -314,12 +327,12 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>If Code Generation Is Solved, What&rsquo;s Left?</h2>
+<h2 id="if-code-generation-is-solved-what">If Code Generation Is Solved, What&rsquo;s Left?</h2>
     <p>Benchmarks like SWE-bench Verified measure whether a model can resolve a well-specified issue: read the task, produce a patch, pass the tests. As scores approach saturation, that question stops being the interesting one. The interesting questions are the ones no benchmark scores.</p>
     <p>Does the change respect the architectural decisions this organization already made? Does it comply with the relevant <a href="/concepts/executable-architectural-intent/">architectural decision records</a> rather than reinventing a pattern the platform team retired two quarters ago? When five agents touch the same service in a day, do their changes coordinate, or does each one optimize locally? Does the system retain organizational memory of why a boundary exists, so the next agent does not quietly erase it?</p>
     <p>None of those are code-generation problems. They are <a href="/concepts/architectural-drift/">architectural drift</a> problems, coordination problems, and memory problems. An agent that completes its assigned task but violates an architectural decision is benchmark-correct and architecturally wrong. It passes the tests and adds long-term engineering debt at the same time. The more capable the agent, the faster it produces work of exactly this kind, because nothing in its objective function rewards consistency with decisions it was never told about.</p>
 
-    <h2>Engineering Governance, Not Model Governance</h2>
+    <h2 id="engineering-governance-not-model-governance">Engineering Governance, Not Model Governance</h2>
     <p>The word governance is already crowded. Most vendors who use it mean model governance: risk, safety, bias, compliance, regulatory reporting, the controls that keep a model&rsquo;s outputs acceptable to a board or a regulator. That layer matters, and the AI Index tracks its own slice of it. It is not the layer this article is about.</p>
     <p>Engineering governance is a different problem, and it is the one lagging agent adoption. As organizations deploy Claude Code, Codex, Cursor agents, Devin, and multi-agent workflows into real repositories, they need mechanisms that ensure engineering decisions survive across agent interactions. Which service owns billing. Which dependencies are forbidden. Which integration pattern is the standard. Whether a new module sits behind the platform abstraction layer or talks to the vendor directly. These are decisions a team made deliberately, and they have to hold whether the next change is written by a senior engineer, a junior, or an agent at 2 a.m.</p>
     <p>Consider a concrete case. A team has an architectural decision record on its <code>BillingService</code>: all external integrations must route through the platform abstraction layer, never call a vendor SDK directly. The reasons are sound, swappable providers, centralized retries, one place to audit. An agent is asked to add a refund webhook. It ships a clean, well-tested handler that calls the payment vendor&rsquo;s SDK directly. Every test passes. On any benchmark, the task is resolved. Against the organization&rsquo;s own architecture, it is a violation that will cost a painful refactor the day the team switches providers. The model did nothing wrong by its own measure. The decision simply never reached it.</p>
@@ -335,12 +348,12 @@
 
     <div class="callout"><p><strong>Benchmark-correct is not architecture-correct.</strong> The AI Index 2026 shows models resolving real software tasks at near-human rates. None of those benchmarks ask whether the change respected the organization&rsquo;s own architectural decisions. That question is the unsolved layer.</p></div>
 
-    <h2>Differentiation Moves to Proprietary Context</h2>
+    <h2 id="differentiation-moves-to-proprietary-context">Differentiation Moves to Proprietary Context</h2>
     <p>The AI Index finding that frontier models now come overwhelmingly from industry has a second-order effect worth naming. If the leading models are commercial products, every company can buy access to roughly the same frontier capability. When the model is a commodity available to your competitors on identical terms, it stops being a source of advantage.</p>
     <p>Advantage shifts to what cannot be bought off a shelf: proprietary context, institutional knowledge, the specific engineering practices and architecture a team has built over years. The reason your system is reliable is not the model that wrote the last commit. It is the accumulated set of decisions about how your system is supposed to fit together. That is precisely what an engineering governance layer preserves and operationalizes, turning decisions that currently live in senior engineers&rsquo; heads into constraints that every agent and every surface can retrieve and obey.</p>
     <p>Seen this way, governance is not overhead on top of AI coding. It is where the durable advantage relocates once the coding itself is commoditized. The teams that win the agentic era will not be the ones with the best model. Everyone will have a comparable model. They will be the ones whose architectural intent is <a href="/concepts/model-independent-governance/">enforced independently of any model</a>, so capability gains compound into a coherent system instead of a faster pile of drift.</p>
 
-    <h2>What Engineering Leaders Should Take From This</h2>
+    <h2 id="what-engineering-leaders-should-take-from">What Engineering Leaders Should Take From This</h2>
     <p>The AI Index 2026 is good news for capability and a warning for control. Capturing the capability without inheriting the drift takes three moves the benchmarks will never measure for you.</p>
     <ol>
       <li><strong>Write architectural decisions down as enforceable constraints.</strong> A decision that exists only as a slide or a Slack thread cannot bind an agent. A decision encoded as a structured, machine-readable constraint can be checked automatically, every time.</li>

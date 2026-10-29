@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Uber&#x27;s Go gateway migration took two years; Grab cut over one endpoint at a time. The decisions a Node.js to Go rewrite must keep: scope, authority, evidence." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -371,7 +372,21 @@
   </header>
 
 <div class="article-body">
-<h2>What the published migrations say</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-the-published-migrations-say">What the published migrations say</a></li>
+      <li><a href="#the-language-choice-is-an-architecture">The language choice is an architecture decision</a></li>
+      <li><a href="#two-implementations-one-authority">Two implementations, one authority</a></li>
+      <li><a href="#writing-the-migration-decision-down">Writing the migration decision down</a></li>
+      <li><a href="#what-can-be-enforced-and-what">What can be enforced, and what cannot</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="what-the-published-migrations-say">What the published migrations say</h2>
 <p>Uber's account of its API gateway is one of the most detailed published Node.js to Go migrations. Grab, which was moving off a Rails and Node.js stack, and Dropbox, which moved from Python, are other moves to Go. They appear here because the same decisions recur, whatever language a team leaves.</p>
 <p><strong>Uber's edge gateway.</strong> In a <a href="https://www.uber.com/blog/gatewayuberapi/" target="_blank" rel="noopener">2020 post on its Edge Gateway</a>, Uber describes its second-generation API gateway, a Node.js system that peaked at 800,000 requests per second and had become one of its largest Node.js applications. The problems it lists are organizational as much as technical. Upgrading 2,500 npm libraries to a newer Node.js version kept getting harder, 50,000 tests ran on every change, and onboarding engineers onto its asynchronous Node.js patterns slowed teams down. The rest of Uber had settled on "Golang and Java as the primarily supported languages" and was adopting gRPC, a remote procedure call framework.</p>
 <p>In the third generation, a single standalone Go service replaced the edge layer. Uber reports that the move "improved our resource utilization and request/core metrics significantly," without giving figures. The move took two years.</p>
@@ -380,11 +395,11 @@
 <p><strong>Dropbox's backends.</strong> In 2014 Dropbox <a href="https://dropbox.tech/infrastructure/open-sourcing-our-go-libraries" target="_blank" rel="noopener">described migrating its performance-critical backends from Python to Go</a> for concurrency support and execution speed: around 200,000 lines of Go, written by a small team that had to build the libraries the ecosystem lacked.</p>
 <p>None of these is a controlled comparison. They show that the migrations happened and what each team traded, not that Go would produce the same result in your organization.</p>
 
-<h2>The language choice is an architecture decision</h2>
+<h2 id="the-language-choice-is-an-architecture">The language choice is an architecture decision</h2>
 <p>Uber's reasons (supported languages, protocol alignment, test volume, onboarding cost) are platform reasons. Choosing Go was a decision about which runtime the organization would staff, tool and support, for a defined part of the system and a defined period.</p>
 <p>That makes it an architecture decision like any other: it has a scope, a lifecycle, an owner, and a reason someone will need in two years. Coding agents now make it cheaper to act on, because they can draft a Go translation of a Node.js handler quickly. Deciding which handlers move, in what order, through which interface and on what evidence costs as much as it always did. At Uber, the period after the decision was two years of migration.</p>
 
-<h2>Two implementations, one authority</h2>
+<h2 id="two-implementations-one-authority">Two implementations, one authority</h2>
 <p>Uber and Grab both describe a long period with both implementations in production. Grab ran Rails and Go side by side, one endpoint at a time. Uber's central team migrated a few high-scale APIs first as a pilot, then product teams migrated their own, with an automated tracker following progress. The sources do not catalogue failures, but our reading is that three are likely in a period like this, and none shows up as a broken build:</p>
 <ul>
   <li><strong>New work lands in the wrong stack.</strong> A feature goes into the Node.js service because the code nearby is Node.js, and one more endpoint now has to be migrated later.</li>
@@ -394,7 +409,7 @@
 <p>Each failure is a question of authority: which implementation is current for this path, and who may say it has changed. Grab's rollout answers part of that. The unit of cutover was the endpoint, not the service, so the authority to cut over attached to each endpoint. Its percentage lesson answers another part. The acceptance evidence has to be stated in units that reflect real load, and written down before rollout starts, or the rollout defines its own success.</p>
 <p><a href="/insights/adrs-for-software-migrations/">ADRs for software migrations</a> covers how architecture decision records (ADRs) carry legacy, target and transitional states, each limited to the paths it governs. <a href="/insights/strangler-fig-migrations-architectural-drift/">Strangler-fig migrations</a> covers moving traffic one boundary at a time behind a compatibility adapter, the translation layer between old and new, and keeping new code from reaching past it. A language migration adds one thing: the two sides are different runtimes, often in different directories or repositories, so the decision has to name each side's role.</p>
 
-<h2>Writing the migration decision down</h2>
+<h2 id="writing-the-migration-decision-down">Writing the migration decision down</h2>
 <p>An illustrative decision for a payment service moving from Node.js to Go might read:</p>
 <blockquote><p>All new payment-processing functionality is built in the Go implementation. Existing Node.js endpoints keep serving until each one cuts over. Calls between the two implementations use the approved payment interface only. An endpoint cuts over when its contract tests (tests that check both sides honour the agreed request and response formats) pass and its latency and error rates are validated against the Node.js endpoint it replaces.</p></blockquote>
 <p>Broken into the properties someone has to own, the same illustrative decision looks like this:</p>
@@ -412,7 +427,7 @@
 <p>The precedence row is the easiest one to skip. The Node.js service almost certainly has older decisions about how payments are handled, and some conflict with the target. If the migration decision does not explicitly supersede them for its scope, an agent working in the payment code may find conflicting guidance and no record of which one wins. That is the question <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> exists to answer: which decision governs this change, why, and with what evidence. <a href="/concepts/precedence-semantics/">Precedence semantics</a> covers the ordering when several decisions apply.</p>
 <p>The authority row matters for a different reason. Approving Go as the target and approving one endpoint's cutover are separate acts by different people. Collapsing them into "the migration is approved" is how endpoints cut over on schedule rather than on evidence.</p>
 
-<h2>What can be enforced, and what cannot</h2>
+<h2 id="what-can-be-enforced-and-what">What can be enforced, and what cannot</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, can enforce part of this decision today. It enforces only decisions that carry an active typed rule: a machine-checkable constraint written into the decision, such as a forbidden literal, an exact string that must not appear in code. A rule can also list the paths it includes or excludes, so it can apply to the Go payment packages and stay silent in the Node.js tree. Forbidding the old service's internal hostname or database driver in the Go packages, with the approved interface client excluded, catches the second failure: the Go side reaching past the contract.</p>
 <p>When an agent such as Claude Code changes a file through its own editing tools, the check runs before the file changes. Changes made through shell commands are checked when the agent finishes its turn, and CI checks every pull request. Each result is PASS, WARN or FAIL (a pass, a reported warning or a failure), and a violation names the decision it broke.</p>
 <p>The decision lives in the Decision Index, Mneme's persisted, versioned record of decisions, which keeps each version, its <a href="/docs/decision-index/">lifecycle status and its source</a>. That status is active, superseded, deprecated or inactive. "Transitional" and "target" are migration roles, not index states: you write them as separate decisions with their own paths, and you mark the transitional one superseded when the last endpoint moves. When an older decision should lose to the migration decision, name it in the new ADR's <code>supersedes:</code> field, the metadata at the top of the file, rather than relying on two accepted decisions to resolve themselves.</p>
@@ -420,7 +435,7 @@
 <p>Mneme's <a href="/docs/supported-languages/">supported languages reference</a> lists TypeScript and JavaScript as Tier 1 (operationally supported), where repository-level enforcement works today, and Go as Tier 2, where the same repository-level rules apply but no Go-specific checks exist yet. In both, a typed rule matches exact literal text, optionally limited to certain paths. Neither has abstract syntax tree (AST) or compiler-aware enforcement, so anything that needs to understand Go types or Node.js module resolution comes from a language-specific tool.</p>
 <p>Two more limits apply. The Decision Index records what each version said and where it came from, not who approved it, so keep the cutover approvals in pull request reviews or your deployment system. And whether governing a migration this way produces fewer decision violations without blocking legitimate transitional work is a claim nobody has tested yet.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>Write the language choice as a decision, with its reasons.</strong> Uber's were platform support, protocol and test cost. Record yours, so the next team can tell whether they still hold.</li>
   <li><strong>Give each implementation a stated role and scope.</strong> Name which paths are transitional and which are target, and the condition that retires the transitional side.</li>
@@ -428,7 +443,7 @@
   <li><strong>Enforce the interface mechanically; verify behavior elsewhere.</strong> Shadow testing and contract tests prove the behavior.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme applies to the part of a language migration that is a decision about code: which interface the target side may use, and which older decisions the migration supersedes. Its <a href="/audit/">Architecture Audit</a> scans a repository for the decisions it already documents, in ADRs, agent instructions and configuration, and shows which ones a typed rule enforces with the same verdict on every run. Migration-aware enforcement, migration assurance reporting and cross-language equivalence checks are research directions, not shipped capabilities.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">

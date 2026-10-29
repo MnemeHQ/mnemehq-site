@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A practical guide to maintaining architectural intent in agent-first workflows: record decisions as constraints, retrieve them at generation, and check agent changes before they reach a pull request." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -292,8 +293,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-changed-agents-removed-the-architectural">What Changed: Agents Removed the Architectural Checkpoint</a></li>
+        <li><a href="#why-architectural-intent-gets-lost">Why Architectural Intent Gets Lost</a></li>
+        <li><a href="#the-failure-mode-correct-code-that">The Failure Mode: Correct Code That Violates a Decision</a></li>
+        <li><a href="#the-loop-record-retrieve-check-reject">The Loop: Record, Retrieve, Check, Reject, Return</a></li>
+        <li><a href="#what-teams-should-do">What Teams Should Do</a></li>
+        <li><a href="#where-mneme-hq-fits">Where Mneme HQ Fits</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Changed: Agents Removed the Architectural Checkpoint</h2>
+
+    <h2 id="what-changed-agents-removed-the-architectural">What Changed: Agents Removed the Architectural Checkpoint</h2>
     <p>For most of the last two years, AI assistance meant suggestions. A developer stayed in the loop, accepting or rejecting each line. That developer was also, without anyone naming it, an architectural checkpoint: the person who knew the ledger is reached only through its API and quietly declined the shortcut.</p>
     <p>Agent-first workflows remove that checkpoint. Coding agents now read the repository, plan a change, edit several files, run the tests, and open a pull request. The human moves from author to reviewer of finished work. The speed is real, and so is the loss of the moment where someone used to ask whether the change was built the way the system is supposed to be built. <a href="/insights/agent-first-ides-need-architectural-invariants/">Agent-first IDEs need architectural invariants</a> precisely because the invariant no longer lives in a person&rsquo;s head at the point of change.</p>
 
@@ -306,7 +320,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why Architectural Intent Gets Lost</h2>
+<h2 id="why-architectural-intent-gets-lost">Why Architectural Intent Gets Lost</h2>
     <p><a href="/concepts/executable-architectural-intent/">Architectural intent</a> is the set of system-level decisions a team commits to: which modules may depend on which, where data access is allowed, which boundaries are load-bearing, which patterns are approved. An agent loses that intent for four ordinary reasons.</p>
     <ul>
       <li><strong>Context windows are finite.</strong> The agent sees the files in front of it, not the decision made eighteen months ago in a discussion that produced no durable artifact.</li>
@@ -315,12 +329,12 @@
       <li><strong>Autonomy compounds.</strong> Every step an agent takes without review removes a checkpoint faster than teams replace it, and <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">context alone does not prevent the drift</a> that follows.</li>
     </ul>
 
-    <h2>The Failure Mode: Correct Code That Violates a Decision</h2>
+    <h2 id="the-failure-mode-correct-code-that">The Failure Mode: Correct Code That Violates a Decision</h2>
     <p>The failure is rarely broken code. It is correct code that breaks a decision. Take a concrete case. The billing service is supposed to reach the ledger only through its API boundary. An agent asked to cut latency adds a direct database read. The change works. The tests pass, because they test behavior and the behavior is fine. The latency target is met. And the architecture just drifted, because the constraint that mattered was never written anywhere a test could see it.</p>
     <p><a href="/concepts/architectural-drift/">Architectural drift</a> compounds this way: a run of individually reasonable changes, each locally valid, each approved by a reviewer who had no machine-checkable statement of the system&rsquo;s intent. Fluent, well-formatted diffs are the engineering version of fluent prose. The polish is exactly what makes the drift hard to see.</p>
     <div class="callout"><p><strong>Tests answer &ldquo;does it work?&rdquo;</strong> Maintaining architectural intent answers a different question: &ldquo;is this how our system is supposed to be built?&rdquo; Most pipelines have no automated answerer for the second question.</p></div>
 
-    <h2>The Loop: Record, Retrieve, Check, Reject, Return</h2>
+    <h2 id="the-loop-record-retrieve-check-reject">The Loop: Record, Retrieve, Check, Reject, Return</h2>
     <p>Maintaining architectural intent in an agent-first workflow is a loop, not a document. Each step is something an engineering team can put in place this quarter.</p>
     <ol>
       <li><strong>Record</strong> each architectural decision as structured data with its constraints, not as prose in a wiki. An <a href="https://adr.github.io/" target="_blank" rel="noopener">architecture decision record</a> is the right unit: the decision, its rationale, and the rule it implies.</li>
@@ -331,7 +345,7 @@
     </ol>
     <p>The property that makes the loop work is that the check runs <a href="/concepts/governance-before-generation/">before generation</a>, not after merge. A <a href="/concepts/verification-contracts/">verification contract</a> turns a recorded decision into a check the agent has to satisfy, and <a href="/concepts/deterministic-enforcement/">deterministic enforcement</a> keeps the verdict stable so agents and reviewers can trust it.</p>
 
-    <h2>What Teams Should Do</h2>
+    <h2 id="what-teams-should-do">What Teams Should Do</h2>
     <p>You do not need to encode the whole architecture. You need the few decisions that hurt most when an agent breaks them.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -346,7 +360,7 @@
     </div>
     <p>Start with three or four decisions. The point is not coverage on day one. It is to move the highest-stakes intent out of people&rsquo;s heads and into a form an agent has to respect. <a href="/insights/ai-coding-agent-guardrails/">AI coding-agent guardrails</a> are how that intent stays enforced as the number of agents and the volume of generated code grow.</p>
 
-    <h2>Where Mneme HQ Fits</h2>
+    <h2 id="where-mneme-hq-fits">Where Mneme HQ Fits</h2>
     <p>Mneme is open-source infrastructure for exactly this loop. It records architectural decisions as structured, retrievable constraints, surfaces the relevant ones when an agent works, and checks a proposed change against them before generation and before edits land. When a change violates a decision, Mneme returns the reason so the agent can retry compliantly. The checks are deterministic: the same change earns the same verdict, and no decision depends on the model staying in a good mood.</p>
     <p>It is worth being precise about the boundary. Mneme does not watch your repository for drift after the fact, and it does not reconstruct who changed what. The design point is earlier: catch the change that would break a decision at the moment an agent proposes it, so the drift never reaches the pull request. If you want to see that loop run, the <a href="/demo/">live demo</a> walks a violating change through record, check, and reject, and you can <a href="/pilot/">request a pilot</a> to try it against your own decisions.</p>
 

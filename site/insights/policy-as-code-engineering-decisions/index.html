@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Kyverno exceptions, Sentinel overrides and OPA plan checks all work. The harder question: is the decision behind a policy still current, and who owns it?" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -371,7 +372,21 @@
   </header>
 
 <div class="article-body">
-<h2>The engines are mature</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-engines-are-mature">The engines are mature</a></li>
+      <li><a href="#a-rule-that-outlived-its-decision">A rule that outlived its decision</a></li>
+      <li><a href="#evaluating-a-rule-is-not-governing">Evaluating a rule is not governing its source</a></li>
+      <li><a href="#what-a-governed-decision-needs-to">What a governed decision needs to carry</a></li>
+      <li><a href="#giving-existing-engines-decision-context">Giving existing engines decision context</a></li>
+      <li><a href="#why-agents-make-this-urgent">Why agents make this urgent</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="the-engines-are-mature">The engines are mature</h2>
 <p>Many platform teams already run policy as code in their delivery path, with tools such as Open Policy Agent (OPA), Kyverno and HashiCorp Sentinel. A policy engine takes structured data about a proposed change (a Terraform plan, a Kubernetes manifest) and returns allow or deny; the system that asked, such as an admission controller or a pipeline, then acts on the answer. <a href="/concepts/policy-as-code/">Policy as Code</a> covers those mechanics. This article asks a narrower question: what happens to a policy after the decision behind it changes?</p>
 <p>First, what the tools already do.</p>
 <ul>
@@ -381,7 +396,7 @@
 </ul>
 <p>Scoping, exceptions, graded enforcement, permissioned overrides and result reporting all exist. The engines evaluate well. The trouble sits upstream, in the decisions they encode.</p>
 
-<h2>A rule that outlived its decision</h2>
+<h2 id="a-rule-that-outlived-its-decision">A rule that outlived its decision</h2>
 <p>Take one example, shared with a companion article on Kubernetes scaling. A team decides that the orders service has a PostgreSQL connection budget. The database accepts 100 connections with 3 reserved for superusers, and each pod opens a pool of 12. Eight pods fit (96 connections), but a rolling update can briefly add 25% more pods, so the Horizontal Pod Autoscaler (HPA) for the service must not scale past 6 replicas. The platform team encodes that as a Kyverno policy: reject any HPA in the orders namespace whose maximum replica count exceeds 6. It works. The full arithmetic is in <a href="/insights/kubernetes-scaling-database-connection-budget/">When Kubernetes Works but the Application Still Fails</a>.</p>
 <p>Six months later the team puts a connection pooler in front of the database. The architecture review accepts a new decision: the budget is now enforced at the pooler, and application pods may scale on load alone. The old decision is superseded. Nobody changes the Kyverno policy, because nobody connects it to the review.</p>
 <p>Now the policy is wrong in a way no test will catch. It still evaluates correctly. It still blocks an HPA set to 10 replicas, which is now an approved configuration. An engineer hits the block during an incident, files a PolicyException for the orders namespace, and moves on. The policy report shows a skip, which is accurate: a deliberate bypass of a rule that still exists.</p>
@@ -389,7 +404,7 @@
 <p>Sentinel produces the same pattern on the infrastructure side. A soft-mandatory policy caps the database instance class for one environment. It fails on a legitimate upgrade, a user with override permission overrides it, and the run continues. The override is attributable to the user who made it. What the override does not carry is a link to the decision behind the cap. Without one, nobody can tell from the run history whether this was a one-off exception, as the policy's author intended, or the fifth override since that decision was replaced.</p>
 <p>In each case the engine did exactly what it was told. The fault is that what it was told no longer matched what the organization had decided, and the engine had no way to know.</p>
 
-<h2>Evaluating a rule is not governing its source</h2>
+<h2 id="evaluating-a-rule-is-not-governing">Evaluating a rule is not governing its source</h2>
 <p>A policy engine answers one question very well: does this input satisfy this rule? It does not, and should not, answer a different set of questions about the rule itself:</p>
 <table class="gov-table">
   <thead><tr><th>Question</th><th>Where the answer lives today</th></tr></thead>
@@ -404,7 +419,7 @@
 <p>The engines provide hooks for some of this. OPA's <a href="https://www.openpolicyagent.org/docs/policy-language#annotations" target="_blank" rel="noopener">metadata annotations</a> include authors, related resources (a list of URLs to related documentation) and a custom map for arbitrary data. A team can put a decision link in an annotation on a Rego module (Rego is OPA's policy language) today. But a link is a pointer, not a lifecycle. When the decision it points to is superseded, the annotation does not change, and the rule keeps evaluating.</p>
 <p>Policy as Code made rules versioned, testable and reviewable. It did not make the decisions behind them versioned, owned and current, because that was never the engine's job. <a href="/concepts/engineering-decision-governance/">Engineering decision governance</a> is the name for that upstream job.</p>
 
-<h2>What a governed decision needs to carry</h2>
+<h2 id="what-a-governed-decision-needs-to">What a governed decision needs to carry</h2>
 <p>For a policy to stay honest, the decision it encodes needs five properties that live outside the rule file.</p>
 <ul>
   <li><strong>Ownership.</strong> A named person or team who can say whether the decision still holds. The owner of the policy file is often the platform team; the owner of the decision may be a database or service team.</li>
@@ -414,7 +429,7 @@
   <li><strong>Exceptions with a reason.</strong> Kyverno exceptions and Sentinel overrides already record that a bypass happened. The decision record is where the reason belongs, so that a growing pile of exceptions against one decision reads as a signal to revisit it.</li>
 </ul>
 
-<h2>Giving existing engines decision context</h2>
+<h2 id="giving-existing-engines-decision-context">Giving existing engines decision context</h2>
 <p>None of this argues for a new policy engine. OPA, Kyverno and Sentinel are the right enforcement points for admission, plans and runs. They would be more trustworthy if each policy carried a stable reference to the decision it encodes, and if that decision's state could flow back to the policy.</p>
 <p>One version of that integration:</p>
 <ol>
@@ -426,11 +441,11 @@
 <p>Step 1 is possible today with annotations and naming conventions. Steps 2 to 4 need a decision record with versions and lifecycle, plus integration work on each engine. This is a proposal, not a shipped feature.</p>
 <p>Traceability matters most at the moment of change. When the connection budget decision is superseded, the question that should take one query is "what enforced the old decision?" The answer spans a Kyverno policy, a pool setting in application config, a monitoring alert on database connection count and perhaps a Sentinel policy on the database tier. Without decision references, finding that set is archaeology. <a href="/insights/programmable-ai-policy-executable-architectural-intent/">Programmable AI Policy Is Not Enough for Coding Agents</a> makes the same point for coding agents: without a record of what was enforced under the old decision, an override is indistinguishable from a violation.</p>
 
-<h2>Why agents make this urgent</h2>
+<h2 id="why-agents-make-this-urgent">Why agents make this urgent</h2>
 <p>Agents now write the Kubernetes manifests, Terraform modules and application config these engines evaluate. They also write policy. An agent asked to fix a blocked deployment can write a well-formed PolicyException in seconds, and it will be correct by every check the engine runs. Whether that exception reflects the team's current decision is a question the agent cannot answer from the policy repository alone, because the repository does not contain the decision.</p>
 <p>The rate of change is the problem. A team that changes HPA limits twice a year can keep a policy aligned by hand. A team where agents can propose replica, pool and exception changes in any pull request will struggle to, and stale rules pile up as exceptions rather than as visible failures.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme is open-source software that records a team's engineering decisions and enforces the checkable parts of them while coding agents and developers change code (its own term is a decision and control layer for agentic software development). It works on the decision side of this problem, inside the repository. It does not enforce infrastructure policy, provision cloud resources or manage identity and access; that remains the job of OPA, Kyverno, Sentinel and the platforms that run them.</p>
 <p>What ships in mneme-hq 0.10.0 (Mneme's open-source package; 0.10.0 is the current release) is narrower and specific. The <a href="/docs/decision-index/">Decision Index</a> is Mneme's persisted, versioned record of decisions. Each decision has immutable versions and, for decisions imported from architecture decision records (ADRs), the source file and its content hash. Each also has a lifecycle status: active, superseded, deprecated, or inactive, which Mneme uses for an accepted decision that lost to another one in the same scope on priority or date.</p>
 <p>Supersession comes from the ADRs themselves: a new ADR lists the one it replaces in a <code>supersedes</code> field, you mark the old ADR <code>status: superseded</code>, and Mneme records both when it imports them. Only active decisions are enforced.</p>

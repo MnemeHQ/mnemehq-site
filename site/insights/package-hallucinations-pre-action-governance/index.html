@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="USENIX 2025 found LLMs hallucinate packages in 5.2% to 21.7% of samples. Registry checks help, but a real package can still be the wrong one for your system." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -339,18 +340,33 @@
   </header>
 
 <div class="article-body">
-<h2>The dependency that does not exist</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-dependency-that-does-not-exist">The dependency that does not exist</a></li>
+      <li><a href="#how-common-it-is">How common it is</a></li>
+      <li><a href="#hallucination-is-becoming-an-action-problem">Hallucination is becoming an action problem</a></li>
+      <li><a href="#verification-helps-and-answers-one-question">Verification helps, and answers one question</a></li>
+      <li><a href="#retrieval-is-not-a-decision">Retrieval is not a decision</a></li>
+      <li><a href="#the-control-belongs-before-the-action">The control belongs before the action</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#the-warning-not-the-real-problem">The warning, not the real problem</a></li>
+    </ol>
+  </nav>
+<h2 id="the-dependency-that-does-not-exist">The dependency that does not exist</h2>
 <p>An engineer asks a coding agent to add a background job queue to a Python service. The agent proposes a plan, edits the manifest, and runs:</p>
 <pre tabindex="0"><code>pip install fastqueue-pro</code></pre>
 <p>The name fits the ecosystem. The import statements look idiomatic. The package does not exist. (<code>fastqueue-pro</code> is an illustrative name, unregistered on PyPI at the time of writing.)</p>
 <p>This is a <strong>package hallucination</strong>: a model recommending a dependency that was never published. The security concern built on it is <strong>slopsquatting</strong>. If models invent the same plausible names repeatedly, an attacker can register those names on a public registry and wait for the next developer, or the next agent, to install them.</p>
 
-<h2>How common it is</h2>
+<h2 id="how-common-it-is">How common it is</h2>
 <p>The phenomenon is well measured. <a href="https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen" target="_blank" rel="noopener">"We Have a Package for You!"</a> by Spracklen et al., a Distinguished Paper at USENIX Security 2025, tested 16 code-generating models across 576,000 samples in two languages. It found hallucination rates of at least 5.2% for commercial models and 21.7% for open-source models, and 205,474 unique invented package names.</p>
 <p>Newer models are better but not clean. A <a href="https://arxiv.org/abs/2605.17062" target="_blank" rel="noopener">May 2026 replication</a> on five frontier models, including Claude Sonnet 4.6, GPT-5.4-mini, and Gemini 2.5 Pro, measured rates between 4.62% and 6.10% across 199,845 responses. It found 127 names that all five models invented, 53 of which were still available to register. The paper is from an independent researcher and has not been peer reviewed, but the direction is consistent: the range has narrowed, and the attack surface has not closed.</p>
 <p>The exploitation evidence is thinner, and it is worth being precise about that. A <a href="https://orygn.tech/research/slopsquatting" target="_blank" rel="noopener">July 2026 study by Orygn</a> checked hallucinated names that had circulated publicly and found 22 had been registered, none of them malicious; 19 were placeholders registered by one person. Its authors note that zero malicious is not zero risk, because a benign placeholder can be updated later. The defensible claim is that package hallucination creates a predictable supply-chain attack surface, not that agents are routinely installing malware today.</p>
 
-<h2>Hallucination is becoming an action problem</h2>
+<h2 id="hallucination-is-becoming-an-action-problem">Hallucination is becoming an action problem</h2>
 <p>Language models have always been wrong some of the time. What has changed is the distance between a model's claim and its consequences.</p>
 <pre tabindex="0"><code>Before:  model suggests a dependency  ->  human reads it  ->  human decides
 
@@ -361,7 +377,7 @@ Now:     agent chooses a dependency
            -> runs the tests</code></pre>
 <p>In the first flow, a hallucinated package costs a failed search. In the second, the agent acts on its own wrong answer, and the first human to look at the result may be a reviewer three steps later. <strong>Agents can now act on their own mistakes before anyone sees them</strong>, which moves the question from model accuracy to control points.</p>
 
-<h2>Verification helps, and answers one question</h2>
+<h2 id="verification-helps-and-answers-one-question">Verification helps, and answers one question</h2>
 <p>The obvious control is to check the registry before installing. It works well. <a href="https://www.trendaisecurity.com/en-us/resources-insights/research/slopsquatting-when-ai-agents-hallucinate-malicious-packages" target="_blank" rel="noopener">Trend Micro's June 2025 research</a> tested Claude Code CLI, OpenAI Codex CLI, and Cursor with MCP-backed validation across 100 web development tasks. Reasoning-enhanced agents with live web search cut the hallucination rate roughly in half compared with base models, and MCP-backed real-time validation filtered out most of the hallucinations the other agents produced. In edge cases, a small number of hallucinated names still got through.</p>
 <p>Registry lookups, vulnerability databases, and dependency scanners answer factual questions. Does this package exist? Does it have known vulnerabilities? Who publishes it? Those are necessary checks. They are not the whole decision, because a package can be real and still be wrong for this system:</p>
 <ul>
@@ -374,7 +390,7 @@ Now:     agent chooses a dependency
 </ul>
 <p>Checking that a package exists answers a factual question. It does not answer the organizational one: <strong>should this package be introduced into this system?</strong></p>
 
-<h2>Retrieval is not a decision</h2>
+<h2 id="retrieval-is-not-a-decision">Retrieval is not a decision</h2>
 <p>An MCP server connected to a package registry can tell an agent that a library exists, what version is current, and what licence it carries. It cannot tell the agent that, eighteen months ago, the team decided every outbound HTTP call in the payments service must go through the internal client that handles retries, auth, and audit logging. That fact is not in the registry. It is in an ADR, or a platform standard, or someone's memory.</p>
 <p>There are three different kinds of knowledge in play:</p>
 <table class="gov-table">
@@ -387,7 +403,7 @@ Now:     agent chooses a dependency
 </table>
 <p>Package hallucination is a failure of the first kind, and tools for the first kind are catching up. The third kind is the one agents are least equipped to find on their own, and the one that matters more as they gain autonomy. MCP is useful infrastructure for reaching all three. Connecting an agent to a source of decisions is still not the same as binding the agent to them.</p>
 
-<h2>The control belongs before the action</h2>
+<h2 id="the-control-belongs-before-the-action">The control belongs before the action</h2>
 <p>If a dependency violates a security or architectural decision, the cheapest time to find out is before the agent installs it, not during code review three pull requests later. A governed dependency change looks roughly like this:</p>
 <pre tabindex="0"><code>Agent proposes a dependency
   -> Does it exist?                        (registry)
@@ -400,7 +416,7 @@ Now:     agent chooses a dependency
 <p>The governance system did not make the architectural decision. People made it, once, for reasons that are written down. The system's job is to make sure an autonomous agent respects it without anyone having to repeat it in every prompt.</p>
 <p>Dependencies are the most visible example, not the only one. The same pattern applies when an agent picks a database, a cloud service, an authentication method, a framework, or an external API. Package hallucination is just the case where the failure is obvious enough to measure.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li>Put registry validation in front of any agent that can install packages. It is cheap and the evidence says it removes most hallucinated names.</li>
   <li>Keep dependency security in dedicated tools: registries, advisory databases, SBOMs, and package scanners already do this well.</li>
@@ -408,11 +424,11 @@ Now:     agent chooses a dependency
   <li>Make those decisions reachable by agents at the moment they change code, and check the changes against them before merge at the latest.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme is not a package-security tool. It does not check registries, licences, or vulnerability data, and it does not prevent slopsquatting. Those belong to the tools above.</p>
 <p>What Mneme handles is the organizational layer for architectural decisions in a repository. Today that means compiling an accepted decision into a typed rule that forbids a specific literal, such as a direct import of a disallowed client, scoped to the paths the decision governs, and returning a deterministic FAIL when a proposed change contains it. Agents can also ask Mneme's local Decision MCP server, shipped in 0.9.0, which decisions apply to the files they are about to touch. Consuming registry and security evidence as inputs to the same verdict is a direction, not a shipped capability.</p>
 
-<h2>The warning, not the real problem</h2>
+<h2 id="the-warning-not-the-real-problem">The warning, not the real problem</h2>
 <p>Package hallucinations are easy to understand because the failure is obvious: the model invented something that does not exist. The harder problem starts when the thing does exist. A real package, API, database, or pattern can still be the wrong choice for a particular organization. As coding agents move from suggesting changes to executing them, organizations need a way to represent their decisions, determine when those decisions apply, and apply them before the action, not after.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">

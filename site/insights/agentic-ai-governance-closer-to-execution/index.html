@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The Bank of England says financial rules assumed a human signs off every decision. Agentic AI breaks that assumption. Software engineering is hitting the same inflection point: a different domain, the same principle &mdash; constraints must become executable before autonomous systems act." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -321,7 +322,22 @@
 
   <div class="article-body">
 
-    <h2>The Assumption We&rsquo;ve Always Made</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-assumption-we-ve-always-made">The Assumption We&rsquo;ve Always Made</a></li>
+        <li><a href="#what-changes-with-agents">What Changes With Agents</a></li>
+        <li><a href="#what-the-bank-of-england-said">What the Bank of England Said</a></li>
+        <li><a href="#the-same-pattern-is-appearing-everywhere">The Same Pattern Is Appearing Everywhere</a></li>
+        <li><a href="#governance-moves-closer-to-execution">Governance Moves Closer to Execution</a></li>
+        <li><a href="#engineering-is-a-different-question">Engineering Is a Different Question</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme Fits</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-assumption-we-ve-always-made">The Assumption We&rsquo;ve Always Made</h2>
     <p>Almost every governance system ever built assumes a human is in the loop at the decisive moment. A person approves the trade, signs the release, merges the change, reviews the output before it reaches the world. The rule is enforced because a human pauses to apply it. Speed is human speed. Volume is human volume. The reviewer is the enforcement mechanism.</p>
     <p>That assumption is so deep it is rarely stated. Financial regulation encodes it. Change-management processes encode it. Code review encodes it. Each one presumes there is time for a human to look, understand, and decide before anything irreversible happens. The presumption held for decades because it matched how work actually got done.</p>
     <p>Autonomous agents remove the pause. And once the pause is gone, a governance model built entirely around it stops working.</p>
@@ -335,7 +351,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What Changes With Agents</h2>
+<h2 id="what-changes-with-agents">What Changes With Agents</h2>
     <p>Agentic systems differ from earlier automation in a specific way: they chain actions toward a goal without stopping for approval between steps. That changes four things a reviewer-based model quietly relied on.</p>
     <ul>
       <li><strong>Speed.</strong> Agents act at machine speed. Decisions land faster than a human can read them, let alone intervene.</li>
@@ -345,13 +361,13 @@
     </ul>
     <p>Put together, these mean the reviewer is no longer standing at the gate. They are downstream of it, looking at what already happened. Review after the fact catches problems. It does not prevent them. When actions are fast, numerous, and irreversible, catching is not the same as governing.</p>
 
-    <h2>What the Bank of England Said</h2>
+    <h2 id="what-the-bank-of-england-said">What the Bank of England Said</h2>
     <p>Breeden&rsquo;s speech, titled &ldquo;Agents of change,&rdquo; made this concrete for finance. Existing rules, she argued, were written on the assumption that a human ultimately holds decision authority. Agentic AI overturns that. In her <a href="https://www.bankofengland.co.uk/speech/2026/june/sarah-breeden-panel-at-the-european-central-bank-forum-on-central-banking-2026" target="_blank" rel="noopener">remarks</a>, she argued that existing frameworks were never built to contemplate autonomous agents, and that leaning on a human in the loop for every agent action will not stay realistic once agents act at machine speed.</p>
     <p>Her most striking point is about correlation. If many firms run similar models that respond the same way to the same triggers, they can act in concert and amplify volatility under stress. Individually reasonable decisions become a systemic event because they are synchronized and executed faster than anyone can step in. The regulator&rsquo;s toolkit she floated in response &mdash; market-wide circuit breakers and &ldquo;kill switches&rdquo; to halt trading, enhanced recovery arrangements so one institution can take over another&rsquo;s core functions, stronger accountability and operational resilience &mdash; is a toolkit for a world where you cannot rely on a person to intervene in time.</p>
     <p>The framing matters. The concern is not that the AI becomes too smart. It is objective drift: agents optimizing for a goal that quietly diverges from the one you intended, reinforcing each other, and acting before intervention is possible. That is not a science-fiction problem. It is a governance-timing problem. The mechanism you use to keep systems in line has to be in place <em>before</em> they act, because there is no reliable moment afterward to apply it.</p>
     <div class="callout"><p><strong>A different problem, the same architectural principle.</strong> Financial regulators are not commenting on software architecture, and the Bank of England is not validating any engineering tool. But the structural lesson is domain-independent: when autonomous systems act at speed, governance has to be expressed as a constraint in front of the action, not a review behind it.</p></div>
 
-    <h2>The Same Pattern Is Appearing Everywhere</h2>
+    <h2 id="the-same-pattern-is-appearing-everywhere">The Same Pattern Is Appearing Everywhere</h2>
     <p>What makes the Sintra speech worth reading outside finance is that it is not an isolated observation. Independent institutions, looking at agentic AI from very different angles, keep landing on the same structural conclusion: oversight has to move upstream of autonomous action. The vocabulary differs; the shape does not.</p>
     <ul>
       <li>Anthropic, describing agents that increasingly modify code with limited human review, points to governance that constrains what agents may do rather than inspecting everything afterward &mdash; the theme of <a href="/insights/anthropic-recursive-self-improvement-engineering-governance/">recursive self-improvement and engineering governance</a>.</li>
@@ -362,7 +378,7 @@
     </ul>
     <p>A central bank worried about market meltdowns and an infrastructure vendor shipping agent guardrails are not coordinating. They are responding to the same underlying change. When the actor is autonomous and fast, control cannot live in a human review step. It has to be encoded ahead of time, in a form the system meets as it runs.</p>
 
-    <h2>Governance Moves Closer to Execution</h2>
+    <h2 id="governance-moves-closer-to-execution">Governance Moves Closer to Execution</h2>
     <p>The practical consequence is a change in where governance sits in the lifecycle. The old model puts it at the end, as a gate a human staffs. The new model puts it at the front, as a constraint the system must satisfy before it acts. The two are not cosmetic variations; they place the enforcement in different places relative to the irreversible step.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -378,15 +394,15 @@
     </div>
     <p>The point is not that review disappears. It is that review can no longer be the primary control when the volume and speed of autonomous action exceed what any reviewer can absorb. The primary control moves to the front, where intent becomes an executable constraint that gates the action itself. Breeden&rsquo;s kill switches and circuit breakers are the finance-shaped version of exactly this move: pre-agreed constraints that fire without waiting for a committee.</p>
 
-    <h2>Engineering Is a Different Question</h2>
+    <h2 id="engineering-is-a-different-question">Engineering Is a Different Question</h2>
     <p>Here the domains split, and the distinction is worth being precise about. Financial regulators care about <em>systemic risk</em>: whether correlated agent behavior can destabilize markets. AI-governance and model-risk platforms care about <em>policy, model behavior, and audit</em>: whether an AI system is compliant, explainable, and logged. Both are real. Neither is the engineering question.</p>
     <p>The engineering question is narrower and specific to how software gets built. When an AI coding agent generates a change, the thing you need to know is not only &ldquo;is it safe?&rdquo; It is: does this follow our architecture? Does it respect the decisions recorded in our ADRs? Does it honor our engineering standards and project constraints? Or does it quietly <a href="/concepts/autonomous-software-engineering-governance/">drift</a> from the system we committed to &mdash; a second HTTP client here, a crossed service boundary there, a convention ignored because it was convenient?</p>
     <p>This is the same timing problem in a software costume. AI coding agents already generate more change than humans can meaningfully review. The answer is not to review harder. It is to make architectural intent, standards, and constraints <a href="/concepts/executable-architectural-intent/">executable</a> so they are enforced <a href="/concepts/governance-before-generation/">before the code is generated</a>, not discovered three sprints later when the architecture has already drifted.</p>
 
-    <h2>Where Mneme Fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme Fits</h2>
     <p>Mneme is the decision and control layer for that move. It turns architectural decisions, engineering standards, and project constraints into <a href="/concepts/deterministic-enforcement/">deterministic, executable checks</a> that AI coding agents must satisfy before code lands. The intent is recorded as structured data, retrieved for the change in hand, and checked the same way every time regardless of which model produced the code &mdash; <a href="/concepts/model-independent-governance/">model-independent by design</a>, because the rules must outlast the model. It is not a policy dashboard and it is not a market circuit breaker. It is the specific piece that makes architectural intent something an autonomous agent meets at generation time rather than something a reviewer hopes to catch afterward. That is what <a href="/concepts/ai-governance-infrastructure/">governance infrastructure for AI-generated code</a> has to do.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>Breeden was talking about markets, not merge requests. But the sentence that carries across is simple: as autonomy rises, governance shifts from reviewing outcomes to constraining execution. A central bank reaches that conclusion by way of systemic risk. Software engineering reaches it by way of architectural drift. The direction of travel is identical. When systems act faster than humans can review, the only governance that works is governance that has already been made executable &mdash; in front of the action, not behind it. <a href="/pilot/">See what that looks like in your own codebase.</a></p>
 
   </div><!-- /.article-body -->

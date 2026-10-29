@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI data firms bid $7.5M to $12.5M for a bankrupt airline's deidentified internal records. The asset was never the volume. It was the decisions." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -298,7 +299,22 @@
 
   <div class="article-body">
 
-    <h2>A dead airline&rsquo;s archive became a contested AI asset</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#a-dead-airline-s-archive-became">A dead airline&rsquo;s archive became a contested AI asset</a></li>
+        <li><a href="#volume-is-not-what-makes-an">Volume is not what makes an archive valuable</a></li>
+        <li><a href="#every-organization-has-a-latent-decision">Every organization has a latent decision corpus</a></li>
+        <li><a href="#language-models-made-recovery-plausible">Language models made recovery plausible</a></li>
+        <li><a href="#recovering-a-decision-is-not-inheriting">Recovering a decision is not inheriting its authority</a></li>
+        <li><a href="#the-last-row-is-the-one">The last row is the one that keeps being skipped</a></li>
+        <li><a href="#where-this-actually-leads">Where this actually leads</a></li>
+        <li><a href="#what-mneme-does-and-does-not">What Mneme does and does not do here</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="a-dead-airline-s-archive-became">A dead airline&rsquo;s archive became a contested AI asset</h2>
     <p>Spirit Airlines stopped flying on 2 May 2026, in its second Chapter 11 in two years. What remained was the part of a company nobody itemizes on a balance sheet: the internal record of how it actually operated.</p>
     <p>In August that record went to auction. Per court filings reported by <a href="https://www.axios.com/2026/08/17/google-spirit-airlines-bankruptcy" rel="nofollow">Axios</a> and <a href="https://www.cnn.com/2026/08/18/business/google-spirit-airlines-data" rel="nofollow">CNN</a>, Google submitted the highest bid, $10 million, for a package reported to include roughly 100 million corporate emails, about 500 million Microsoft Teams messages and collaboration records, 516 source code repositories holding on the order of 30 million lines of code, 667,563 IT tickets, and employee records reaching back to 1986. Google outbid the AI data firm Mercor.io, which offered $7.5 million.</p>
     <p>The sale is not settled. The Association of Flight Attendants-CWA <a href="https://fortune.com/2026/08/21/flight-attendant-union-google-confidential-data-spirit-airlines/" rel="nofollow">objected on employee-privacy grounds</a>, a bankruptcy judge in the Southern District of New York <a href="https://nydailyrecord.com/2026/08/19/us-court-delays-hearing-on-googles-purchase-of-spirit-airlines-data-as-union-objects/" rel="nofollow">postponed the approval hearing</a>, and the AI training startup Micro1 filed a late counter-offer of $12.5 million. As this is published, no final ruling has been reported. Whether Google ends up owning this archive is genuinely unresolved.</p>
@@ -306,7 +322,7 @@
     <p>So remove the passenger data. Remove the identities. What is left still drew a $7.5 million rival bid at auction and a $12.5 million counter-offer afterward, both from AI data firms, for the correspondence of a company that no longer exists.</p>
     <div class="callout"><p><strong>The contested asset is not the identities and not the passengers.</strong> It is the record of how one organization decided things, for as long as it operated.</p></div>
 
-    <h2>Volume is not what makes an archive valuable</h2>
+    <h2 id="volume-is-not-what-makes-an">Volume is not what makes an archive valuable</h2>
     <p>It is tempting to read a number like 500 million Teams messages as the point. It is not. Most of any corporate archive is logistics: scheduling, acknowledgements, forwarded threads, status updates that mattered for a week. Nobody pays seven figures for that.</p>
     <p>What gives an operational archive durable value is that it contains the reasoning of a working organization under real constraints. Somewhere in those threads are the moments where a company confronted a tradeoff and resolved it. Those moments are scattered, unlabelled, and interleaved with noise, but they are there, and they are qualitatively different from the rest of the corpus.</p>
     <p>Read a sample of any large company&rsquo;s internal communication and you will find sentences with this shape:</p>
@@ -320,7 +336,7 @@
     </ul>
     <p>Each of those is a decision. Almost none of them were ever written down as one. They were made in passing, recorded incidentally, and then relied upon for years by people who were present when they were made.</p>
 
-    <h2>Every organization has a latent decision corpus</h2>
+    <h2 id="every-organization-has-a-latent-decision">Every organization has a latent decision corpus</h2>
     <p>A company&rsquo;s formal decision record, the architecture decision records and the approved policies, is the small visible portion. The larger portion is distributed across email, chat, tickets, review comments, meeting transcripts, and the memory of long-tenured engineers. We would call that the <strong>latent decision corpus</strong>: the set of decisions that genuinely govern how a system is built, most of which exist in no canonical form.</p>
     <p>The latent corpus has three properties that make it awkward. It is unlabelled, so a decision looks exactly like an opinion. It is undated in any useful sense, so a superseded decision looks exactly like a current one. And it is unscoped, so a decision that applied to one service reads as though it applied to the whole system.</p>
     <p>This is not a documentation-hygiene complaint. Organizations have been told to write more things down for thirty years and the latent corpus persists anyway, because most decisions are not recognized as decisions at the moment they are made. They are recognized later, usually when somebody violates one.</p>
@@ -335,12 +351,12 @@
   </div>
 </aside>
 
-    <h2>Language models made recovery plausible</h2>
+    <h2 id="language-models-made-recovery-plausible">Language models made recovery plausible</h2>
     <p>The reason this is worth discussing now, rather than in 2015, is that extracting decisions from unstructured text used to be impractical and is no longer. A model can read a decade of threads and propose a normalized record: the decision, the stated reason, the apparent scope, the people involved, the date, what it appears to replace, and the passages it was drawn from.</p>
     <p>That capability is what makes a bankrupt airline&rsquo;s correspondence a purchasable asset rather than a storage cost. And it is why the interesting question for an enterprise is no longer whether its own history could be mined. It is what the output of that mining is actually worth.</p>
     <p>Here the answer gets more constrained than the excitement suggests.</p>
 
-    <h2>Recovering a decision is not inheriting its authority</h2>
+    <h2 id="recovering-a-decision-is-not-inheriting">Recovering a decision is not inheriting its authority</h2>
     <p>An extracted decision is a <em>claim</em> about what an organization once decided. It is not yet a rule, and the distinction is the whole problem.</p>
     <p>A model reading a Teams thread cannot reliably tell the difference between a principal engineer stating a binding constraint and a confident engineer stating a preference that was overruled twenty minutes later in a meeting that left no record. Both look like assertions. Both are fluent. Only one has authority.</p>
     <p>Authority is an organizational property, not a textual one. It cannot be inferred from tone, seniority in a signature block, or how often something was repeated. Which means the output of decision recovery has to be treated as a queue of candidates for human confirmation, not as a policy set.</p>
@@ -357,12 +373,12 @@
     </table>
     <p>Skipping a row produces a specific failure. Extraction without verification promotes old arguments into fake policy. Verification without scoping produces rules that are technically true and operationally useless, because a constraint that applies everywhere gets ignored everywhere. And all three without the last row produce a very well-organized description of rules that nothing obeys.</p>
 
-    <h2>The last row is the one that keeps being skipped</h2>
+    <h2 id="the-last-row-is-the-one">The last row is the one that keeps being skipped</h2>
     <p>This is the same gap we have written about in narrower settings, and it does not change shape as the input gets bigger. Structured knowledge formats make organizational decisions <a href="/insights/open-knowledge-format-vs-governance/">portable and discoverable</a> without making them binding. Retrieval puts the right decision in front of an agent <a href="/insights/why-rag-fails-for-architectural-governance/">without constraining what the agent then does</a>. Persistent context helps an agent recall a constraint, which is <a href="/insights/memory-is-not-governance/">not the same as obeying it</a>.</p>
     <p>Decision recovery would sit upstream of all of those. It would make the corpus larger and more complete. It would not, by itself, change what happens when an agent proposes a change that contradicts one of the recovered decisions. That still depends on whether the decision was ever compiled into something a machine checks before the change lands.</p>
     <p>An organization that recovers ten thousand decisions and enforces none of them has produced an excellent history and no additional control.</p>
 
-    <h2>Where this actually leads</h2>
+    <h2 id="where-this-actually-leads">Where this actually leads</h2>
     <p>The Spirit auction is being read as a story about training data. The more durable reading is about what companies are carrying without knowing it. A firm with thirty years of operating history holds a decision record that is more specific to its systems than any general-purpose model will ever be, and that record is currently doing no work.</p>
     <p>The sequence that would make it do work is not complicated to state:</p>
     <ul>
@@ -375,7 +391,7 @@
     <p>Most of the current enthusiasm is concentrated in the first step, because that is the step language models made easy. The value is concentrated in the last two, because that is where a decision stops being a description and starts being a control.</p>
     <p>It is also where the privacy argument resolves. The objection raised in the Spirit case is that decades of employee communication are being transferred wholesale for model training. A verified decision record is a far smaller artifact than the corpus it was derived from. An organization that extracts constraints inside its own boundary and retains the decisions rather than the correspondence ends up with something more useful and considerably less sensitive than the archive it started with.</p>
 
-    <h2>What Mneme does and does not do here</h2>
+    <h2 id="what-mneme-does-and-does-not">What Mneme does and does not do here</h2>
     <p>To be precise about our own position: Mneme HQ today operates on <em>explicit</em> architectural decisions in a repository. It compiles the ones that can be expressed mechanically into constraints, and enforces those constraints deterministically against proposed changes, with a <a href="/concepts/governance-propagation/">single compiled constraint set</a> applied across agents and CI. That is shipped and you can run it on your own code in a few minutes.</p>
     <p>Recovering decisions from email, chat, tickets and meeting transcripts across an enterprise is <strong>not</strong> something Mneme does. It is a direction we find credible, and the argument above is the reason, but it is a thesis about where this goes rather than a description of a product. We would rather state that plainly than let an interesting idea imply a capability that does not exist.</p>
     <p>The part that is available now is narrower and more testable. If you want to know how much of your architecture is currently protected rather than merely documented, that is a question you can answer today against a real repository.</p>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="During a migration a repository holds more examples of the architecture you are leaving than the one you are moving toward. Here is how to keep agents on target." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -385,20 +386,37 @@
 
 <div class="article-body">
 
-    <h2>Migrations are the hardest case for an AI coding agent</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#migrations-are-the-hardest-case-for">Migrations are the hardest case for an AI coding agent</a></li>
+      <li><a href="#legacy-code-is-misleading-context">Legacy code is misleading context</a></li>
+      <li><a href="#frequency-is-not-architectural-intent">Frequency is not architectural intent</a></li>
+      <li><a href="#four-states-not-two">Four states, not two</a></li>
+      <li><a href="#transitional-decisions-are-the-ones-that">Transitional decisions are the ones that expire</a></li>
+      <li><a href="#sequencing-is-a-constraint-not-a">Sequencing is a constraint, not a plan</a></li>
+      <li><a href="#documentation-does-not-survive-a-long">Documentation does not survive a long migration</a></li>
+      <li><a href="#enforcement-has-to-be-scoped-by">Enforcement has to be scoped by path</a></li>
+      <li><a href="#what-to-encode-first">What to encode first</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
+    <h2 id="migrations-are-the-hardest-case-for">Migrations are the hardest case for an AI coding agent</h2>
     <p>Greenfield development gives a coding agent a clean signal. There is one architecture, the codebase demonstrates it, and copying the surrounding patterns is usually the right instinct. A migration inverts that. For the entire duration of the project the repository contains two architectures at once, and the one you are trying to eliminate is almost always the better represented of the two.</p>
     <p>This is not a temporary annoyance. It is the defining condition of the work. A migration that took two years to schedule will take at least as long to execute, and for all of that time the agent's most reliable heuristic, follow the surrounding code, points in exactly the wrong direction.</p>
     <div class="callout"><p><strong>The dominant pattern in a repository may be precisely the pattern you are paying to remove.</strong></p></div>
 
-    <h2>Legacy code is misleading context</h2>
+    <h2 id="legacy-code-is-misleading-context">Legacy code is misleading context</h2>
     <p>Retrieval and context engineering have made agents much better at finding what exists in a codebase. During a migration that improvement cuts against you. A more thorough search returns more examples of the legacy structure, because there are more of them. The better the retrieval, the more confidently the agent reproduces the architecture you are leaving.</p>
     <p>Suppose the system you are moving away from is organized as <code>Controller &rarr; Service &rarr; Repository &rarr; Database</code>, and the target is <code>API &rarr; Domain &rarr; Port &rarr; Adapter</code>. Both are present. Both compile. Both pass their tests. Nothing in the repository marks one as historical and the other as intended, because that distinction does not live in code. It lives in a decision that was made in a meeting and recorded, at best, in a document nobody compiles.</p>
 
-    <h2>Frequency is not architectural intent</h2>
+    <h2 id="frequency-is-not-architectural-intent">Frequency is not architectural intent</h2>
     <p>An agent asked to add a feature will inspect the codebase and find, say, two hundred instances of the legacy pattern and twenty of the target. It concludes that the legacy pattern is how this system is built. As a statistical claim about the current repository, that is correct. As an architectural claim about what should be written next, it is exactly backwards.</p>
     <p>This is the gap that migration governance has to close. What exists in the codebase is a description of the past. What should be created next is a decision, and decisions are not recoverable by counting.</p>
 
-    <h2>Four states, not two</h2>
+    <h2 id="four-states-not-two">Four states, not two</h2>
     <p>Most migration tooling treats the problem as binary: old code and new code. That framing is what forces agents to guess, because the interesting cases are the ones in between. Four states describe almost any migration, and each maps onto a decision an enforcement layer can resolve against a path.</p>
 
     <div style="overflow-x:auto;">
@@ -439,24 +457,24 @@
       <p class="diag-caption">The same rule resolves differently depending on which tree the agent is editing</p>
     </div>
 
-    <h2>Transitional decisions are the ones that expire</h2>
+    <h2 id="transitional-decisions-are-the-ones-that">Transitional decisions are the ones that expire</h2>
     <p>A compatibility adapter is not a mistake. It is a deliberate, temporary exception, and it needs to be recorded as one. The failure mode is not that teams create adapters. It is that the adapter's expiry is never written down anywhere a machine can read it, so the adapter quietly becomes permanent architecture.</p>
     <p>A transitional decision should state its boundary and its termination condition. Both live in the ADR's prose, not in a field the compiler reads: there is no expiry attribute, so retiring the exception on time is a human step. What the corpus guarantees is that the exception is visible and attributable while it lasts. When the component behind the adapter finishes migrating, the decision is marked <code>status: superseded</code>, which removes it from the active set, and the target decision governs that path. The retired record stays in the corpus as the reason the exception existed, which is the part that ordinarily gets lost.</p>
 
-    <h2>Sequencing is a constraint, not a plan</h2>
+    <h2 id="sequencing-is-a-constraint-not-a">Sequencing is a constraint, not a plan</h2>
     <p>Migrations have ordering requirements. Component B cannot move until component A has moved. Those requirements usually live in a project plan, which agents do not read, rather than in the decision corpus, which they can be checked against.</p>
     <p>There is no ordering primitive to reach for here. What a corpus can hold is the consequence of the ordering: while component A has not moved, a rule forbids the target pattern in component B's tree, and that rule is retired as part of A's migration. The ordering is still enforced by whoever retires the rule. What the corpus adds is that an agent is checked against it in the meantime, rather than discovering the constraint through a merge conflict three weeks later.</p>
 
-    <h2>Documentation does not survive a long migration</h2>
+    <h2 id="documentation-does-not-survive-a-long">Documentation does not survive a long migration</h2>
     <p>Every organization running a migration has a document describing the target architecture. It is usually accurate on the day it is written. The problem is not accuracy. It is that a document is advisory, and an agent that never reads it is not violating anything.</p>
     <p>Prompt-level instruction has the same weakness in a sharper form. You can tell an agent about the target architecture at the start of a session, and that instruction is real until the context is compacted, the session restarts, a different agent picks up the work, or the task runs long enough that the instruction is outranked by more recent material. Over a migration measured in quarters, every one of those happens repeatedly.</p>
     <div class="callout"><p><strong>Retrieval tells an agent what exists. Governance tells it what should survive.</strong></p></div>
 
-    <h2>Enforcement has to be scoped by path</h2>
+    <h2 id="enforcement-has-to-be-scoped-by">Enforcement has to be scoped by path</h2>
     <p>The reason migration governance needs more than a global rule list is that the same rule must produce different verdicts in different parts of the repository. Forbidding the legacy pattern everywhere breaks the legacy tree, which is still running in production. Allowing it everywhere is what created the problem.</p>
     <p>Path applicability resolves this. A rule that carries explicit include and exclude selectors governs the migrated tree while staying silent where migration has not reached, and reports which of the two happened on every check. An agent working across a half-migrated repository then gets a specific answer for the file it is editing rather than one blanket rule it has to reason around.</p>
 
-    <h2>What to encode first</h2>
+    <h2 id="what-to-encode-first">What to encode first</h2>
     <p>You do not need to model the whole migration before this is useful. Start with the boundary agents cross most often, which in practice is nearly always persistence or service-to-service calls. Two or three scoped decisions cover the majority of incorrect pattern copying.</p>
     <ul>
       <li>The persistence boundary. New and migrated modules reach data through the target abstraction.</li>
@@ -466,7 +484,7 @@
     </ul>
     <p>Each of these is a sentence a staff engineer can write in a minute and an agent can be checked against for the rest of the migration.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>Adding autonomous coding agents to a migration raises a specific risk that greenfield work does not carry: the agents are statistically likely to rebuild the architecture the migration exists to remove, and they will do it at machine speed while every individual change looks locally reasonable.</p>
     <p>The fix is not a better prompt or a larger context window. It is making the distinction between historical architecture and current architectural intent machine-readable, scoping it to the paths it governs, and enforcing it at the moment an agent acts.</p>
     <p>The <a href="/demo/architectural-drift/">architectural drift demo</a> shows the same enforcement path on a week of agent-produced changes.</p>

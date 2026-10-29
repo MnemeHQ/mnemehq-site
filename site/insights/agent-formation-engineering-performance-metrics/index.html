@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A DevOps study found collaborative team structures outperform both silos and full integration. Applied to AI agents, the missing variable is an engineering governance layer &mdash; and the metrics to prove it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -299,8 +300,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-study-found">What the Study Found</a></li>
+        <li><a href="#an-agent-team-taxonomy">An Agent Team Taxonomy</a></li>
+        <li><a href="#old-metrics-don-t-capture-agentic">Old Metrics Don&rsquo;t Capture Agentic Engineering</a></li>
+        <li><a href="#proposed-agentic-engineering-performance-metrics">Proposed Agentic Engineering Performance Metrics</a></li>
+        <li><a href="#formation-governance-performance">Formation -&gt; Governance -&gt; Performance</a></li>
+        <li><a href="#what-engineering-leaders-should-take-from">What Engineering Leaders Should Take From This</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What the Study Found</h2>
+
+    <h2 id="what-the-study-found">What the Study Found</h2>
     <p>A 2025 study in <a href="https://www.frontiersin.org/journals/computer-science/articles/10.3389/fcomp.2025.1554299/full" target="_blank" rel="noopener">Frontiers in Computer Science</a> on team structure and collaboration in DevOps reached a result that cuts against the usual prescription. Adopting DevOps practices was not what separated high performers from the rest. How teams were structured, and how heavily they collaborated, mattered more.</p>
     <p>The research examined four ways of organizing the people who build and run software:</p>
     <ul>
@@ -320,7 +334,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>An Agent Team Taxonomy</h2>
+<h2 id="an-agent-team-taxonomy">An Agent Team Taxonomy</h2>
     <p>The same four formations map cleanly onto how organizations are wiring up AI coding agents. The question the study answered for human teams is the question the industry is now answering, mostly by guessing, for agents: how much should you separate, how much should you merge, and what holds the pieces together.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -337,12 +351,12 @@
 
     <p>The current market mirrors this split almost exactly. One camp bets on a single, more capable agent that does everything &mdash; the Type 4 monolith. Another builds multi-agent systems of specialists that pass work between them &mdash; Type 1 or, if they invest in shared context, Type 2. A third wraps agents in orchestration and policy layers &mdash; Type 3. Nobody has proven which formation wins. If the DevOps study generalizes, the safe bet is not the biggest agent. It is specialized agents that collaborate heavily, sitting on a shared platform that keeps them coherent.</p>
 
-    <h2>Old Metrics Don&rsquo;t Capture Agentic Engineering</h2>
+    <h2 id="old-metrics-don-t-capture-agentic">Old Metrics Don&rsquo;t Capture Agentic Engineering</h2>
     <p>The instinct, once you pick a formation, is to measure it with the metrics you already trust. For software delivery that means DORA: lead time for changes, deployment frequency, mean time to restore, and change-failure rate. Those four remain useful. They tell you whether work ships quickly and survives contact with production, and that is worth knowing whether the work came from humans or agents.</p>
     <p>But DORA was built to measure human teams shipping to production. It says nothing about the questions that decide whether a system of agents is healthy. Are agents reusing the architectural decisions the organization already made, or re-deciding them per task? Is shared context actually reaching the agent at the moment it writes code? When an agent makes an autonomous choice, is that choice consistent with the choices other agents are making elsewhere in the same codebase? A team can post excellent DORA numbers while every agent quietly builds its own incompatible version of the system. Speed measured, integrity unmeasured.</p>
     <p>This is the same gap that makes <a href="/insights/dora-metrics-insufficient-for-agentic-development/">DORA metrics insufficient for agentic development</a>: the outcomes are visible, but the multi-agent collaboration, shared context, and autonomous decisions that produce them are not.</p>
 
-    <h2>Proposed Agentic Engineering Performance Metrics</h2>
+    <h2 id="proposed-agentic-engineering-performance-metrics">Proposed Agentic Engineering Performance Metrics</h2>
     <p>If DORA measures delivery, agentic engineering needs a parallel set that measures whether agents are building one coherent system and reusing what the organization knows. Each of the following has a name, a formula, and a reason it matters.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -365,14 +379,14 @@
 
     <p>The composite matters most. Individual rates can be gamed or read in isolation; a single Engineering Governance Effectiveness Score forces the same trade-off DORA forced on delivery, but for integrity. It answers one question a leader can act on: is this organization getting better or worse at keeping its agents coherent over time.</p>
 
-    <h2>Formation -&gt; Governance -&gt; Performance</h2>
+    <h2 id="formation-governance-performance">Formation -&gt; Governance -&gt; Performance</h2>
     <p>The DevOps study modeled a relationship from formation to performance: how you structure teams predicts how well they deliver. Applied to agents, that model is missing its most important term. Formation alone does not produce coherent software; a perfectly chosen agent formation with no shared constraints will still drift. The relationship is <strong>Formation &rarr; Governance &rarr; Performance</strong>, and governance is the independent variable the original study did not need to name because, for human teams, hierarchy and collaboration supplied it informally.</p>
     <p>Agents have no informal layer. A senior engineer carries the architecture in their head and vetoes the duplicate service; an agent does not, unless the decision is written down and enforced. Without that layer, multi-agent systems drift &mdash; <a href="/concepts/architectural-drift/">architectural drift</a> accumulates at machine speed, and the <a href="/concepts/multi-agent-continuity/">continuity across agents</a> that the collaborative formation depends on never materializes. With it, the formation pays off: specialized agents collaborate against a shared, enforced set of decisions, and the organization optimizes for architectural integrity and knowledge continuity rather than raw speed.</p>
     <p>This is why <a href="/concepts/governance-before-generation/">governance before generation</a> and <a href="/concepts/decision-continuity/">decision continuity</a> are not add-ons to an agent strategy. They are the variable that converts a good formation into good performance. The metrics above exist to make that variable visible &mdash; to show, in numbers, whether the governance layer is doing its job.</p>
 
     <div class="callout"><p><strong>Formation is necessary, not sufficient.</strong> The DevOps study found structure beats practice. For agents, structure beats nothing without a governance layer underneath it. Pick the collaborative formation, then measure whether shared decisions actually reach and bind every agent.</p></div>
 
-    <h2>What Engineering Leaders Should Take From This</h2>
+    <h2 id="what-engineering-leaders-should-take-from">What Engineering Leaders Should Take From This</h2>
     <p>The temptation in 2026 is to win the agent race by buying the biggest model and pointing it at the codebase. The DevOps evidence points elsewhere: the strongest structure was specialized units collaborating heavily, supported by a shared platform. Translated to AI engineering, the strongest formation is collaborative agents on a governance layer &mdash; Type 2 and Type 3 from the taxonomy above, not the Type 4 monolith.</p>
     <p>Getting there takes two moves. First, encode your architectural decisions as machine-readable constraints so agents can reuse them instead of re-deciding. Second, instrument the formation with the metrics that capture what DORA misses, anchored by the Engineering Governance Effectiveness Score, so you can tell whether the governance layer is holding. You can <a href="/demo/">see how a governance layer enforces decisions at generation time in the live demo</a> &mdash; the same mechanism that turns these metrics from a wish list into readings off a running system.</p>
 

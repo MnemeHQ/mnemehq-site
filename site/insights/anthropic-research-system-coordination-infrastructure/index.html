@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic&rsquo;s engineering breakdown of its multi-agent research system reads as a preview of the infrastructure layer emerging between orchestration and execution. Coordination infrastructure is becoming a category of its own." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -254,7 +255,22 @@
 
   <div class="article-body">
 
-    <h2>The shift the article quietly documents</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-shift-the-article-quietly-documents">The shift the article quietly documents</a></li>
+        <li><a href="#the-most-important-sentence-in-the">The most important sentence in the article</a></li>
+        <li><a href="#orchestration-problems-are-becoming-coordination-problems">Orchestration problems are becoming coordination problems</a></li>
+        <li><a href="#prompt-engineering-is-quietly-becoming-operational">Prompt engineering is quietly becoming operational policy</a></li>
+        <li><a href="#observability-alone-cannot-solve-coordination-drift">Observability alone cannot solve coordination drift</a></li>
+        <li><a href="#coordination-complexity-is-becoming-an-economic">Coordination complexity is becoming an economic problem</a></li>
+        <li><a href="#the-next-layer-named">The next layer, named</a></li>
+        <li><a href="#the-bigger-shift">The bigger shift</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-shift-the-article-quietly-documents">The shift the article quietly documents</h2>
     <p>For most of the recent AI cycle, the discussion has centered on prompts, context windows, memory, reasoning benchmarks, retrieval, and copilots. The implicit unit of analysis was a single agent answering a single user.</p>
     <p>Anthropic&rsquo;s architecture is structurally different. The system they describe includes orchestrator agents, delegated subagents, parallel execution, state management, iterative planning, coordination loops, execution monitoring, task decomposition, and resumable workflows. This is no longer chatbot infrastructure. It is operational infrastructure.</p>
     <p>That distinction matters. Operational infrastructure introduces a class of complexity the chatbot era never had to deal with: coordination at execution scale.</p>
@@ -269,7 +285,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The most important sentence in the article</h2>
+<h2 id="the-most-important-sentence-in-the">The most important sentence in the article</h2>
     <p>Anthropic notes, almost in passing, that minor changes cascade into large behavioral changes. That single observation captures the defining challenge of multi-agent systems.</p>
     <p>Once a system becomes long-running, autonomous, multi-agent, tool-connected, stateful, and execution-oriented, small coordination changes stop being isolated. They propagate. A prompt tweak can alter:</p>
     <ul>
@@ -284,7 +300,7 @@
     </ul>
     <p>That is not prompt engineering. That is infrastructure engineering with a probabilistic substrate. The leverage of any single change is much larger than it appears.</p>
 
-    <h2>Orchestration problems are becoming coordination problems</h2>
+    <h2 id="orchestration-problems-are-becoming-coordination-problems">Orchestration problems are becoming coordination problems</h2>
     <p>Anthropic describes a familiar list of failure modes: excessive subagent spawning, duplicated work, looping behavior, inconsistent coordination, unstable execution paths, behavioral unpredictability. These are typically framed as orchestration challenges. They increasingly resemble coordination challenges emerging from autonomous execution environments.</p>
     <p>The question is no longer simply &ldquo;how do we coordinate agents?&rdquo; It is:</p>
     <div class="callout"><p><strong>How do we maintain reliable execution behavior as systems scale in autonomy and complexity?</strong></p></div>
@@ -302,7 +318,7 @@
 
     <p>Orchestration scales what an agent system <em>can do</em>. Coordination infrastructure scales whether what it does is <em>operationally stable</em>.</p>
 
-    <h2>Prompt engineering is quietly becoming operational policy</h2>
+    <h2 id="prompt-engineering-is-quietly-becoming-operational">Prompt engineering is quietly becoming operational policy</h2>
     <p>One of the most revealing aspects of Anthropic&rsquo;s system is how much behavioral guidance is embedded directly into prompts. Their prompts define:</p>
     <ul>
       <li>delegation rules</li>
@@ -351,7 +367,7 @@
       <p class="diag-caption">A new layer is appearing between orchestration and execution</p>
     </div>
 
-    <h2>Observability alone cannot solve coordination drift</h2>
+    <h2 id="observability-alone-cannot-solve-coordination-drift">Observability alone cannot solve coordination drift</h2>
     <p>Another signal from Anthropic&rsquo;s writeup is the emphasis on debugging and observability complexity in multi-agent systems. This reflects a broader transition.</p>
     <p>Traditional observability assumes deterministic systems, traceable execution paths, and predictable state transitions. Multi-agent systems violate all three assumptions. You can trace execution and still fail to prevent:</p>
     <ul>
@@ -363,7 +379,7 @@
     </ul>
     <p>Observability explains what happened after execution. Operational coordination increasingly needs mechanisms that shape behavior <em>before</em> execution. As autonomous systems scale, that distinction becomes structurally important. Tracing a failure mode is not the same as preventing it.</p>
 
-    <h2>Coordination complexity is becoming an economic problem</h2>
+    <h2 id="coordination-complexity-is-becoming-an-economic">Coordination complexity is becoming an economic problem</h2>
     <p>Anthropic also notes the significant token overhead associated with multi-agent execution. This changes the economics of agent systems in a way the single-agent era did not have to deal with.</p>
     <p>In single-agent workflows, a poor generation wastes a request, a completion, a review cycle. In multi-agent systems, failures compound:</p>
     <ul>
@@ -376,7 +392,7 @@
     </ul>
     <p>Autonomous inefficiency scales faster than human review capacity. That is what makes coordination infrastructure not just a technical concern but an economic one. The cost of unreliable coordination grows with agent autonomy, not the other way around.</p>
 
-    <h2>The next layer, named</h2>
+    <h2 id="the-next-layer-named">The next layer, named</h2>
     <p>The industry currently has models, orchestration frameworks, tool runtimes, memory systems, and observability stacks. Anthropic&rsquo;s system hints at the next infrastructure layer emerging between orchestration and execution.</p>
     <p>Coordination infrastructure is not a static policy document. It is an operational system that maintains:</p>
     <ul>
@@ -389,7 +405,7 @@
     </ul>
     <div class="callout"><p><strong>As agent systems become operational systems, infrastructure shifts from model capability toward execution reliability.</strong></p></div>
 
-    <h2>The bigger shift</h2>
+    <h2 id="the-bigger-shift">The bigger shift</h2>
     <p>Anthropic&rsquo;s article is important not because it proves multi-agent systems work. It is important because it reveals what becomes difficult <em>after</em> they start working.</p>
     <p>The next generation of AI infrastructure will not be defined solely by larger models, longer context windows, faster inference, or deeper reasoning. It will be defined by whether organizations can maintain coordination integrity as autonomous systems scale.</p>
     <p>The emerging challenge is no longer intelligence alone. It is operational reliability for autonomous execution systems.</p>

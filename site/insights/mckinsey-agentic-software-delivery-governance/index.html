@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="McKinsey rewires the software-delivery operating model for agents. An operating model is an org-design artifact though, and nothing in it executes at the moment code is written." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -310,9 +311,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-mckinsey-s-rewiring-covers">What McKinsey&rsquo;s rewiring covers</a></li>
+        <li><a href="#an-operating-model-is-an-org">An operating model is an org-design artifact. Nothing in it executes.</a></li>
+        <li><a href="#a-spec-the-agent-reads-versus">A spec the agent reads, versus a spec the agent cannot cross</a></li>
+        <li><a href="#the-substrate-the-rewiring-needs-but">The substrate the rewiring needs but cannot produce</a></li>
+        <li><a href="#what-the-report-actually-confirms">What the report actually confirms</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>In May 2026, McKinsey Technology published <a href="https://www.mckinsey.com/capabilities/mckinsey-technology/our-insights/rewiring-software-delivery-for-the-agentic-era" rel="noopener">&ldquo;Rewiring software delivery for the agentic era.&rdquo;</a> It is a strategy-consulting read on a shift this site has tracked from the engineering side, and it is worth taking seriously precisely because it comes from the operating-model direction rather than the tooling one.</p>
 
-<h2>What McKinsey&rsquo;s rewiring covers</h2>
+<h2 id="what-mckinsey-s-rewiring-covers">What McKinsey&rsquo;s rewiring covers</h2>
 <p>The report&rsquo;s argument is that agentic AI rewires the entire software delivery lifecycle, so human roles move from execution to <strong>supervision and orchestration.</strong> Engineers stop writing every line and instead spend their time &ldquo;supervising generation, validating architecture, and managing quality,&rdquo; and &ldquo;structuring agent tasks into precisely defined workflows&rdquo; with &ldquo;templates for agentic output.&rdquo; New roles appear &mdash; prompt engineers, agent orchestrators, human-in-the-loop designers &mdash; and demand rises for senior engineers and architects who set standards across teams, vendors, and agents.</p>
 <p>And McKinsey says something that lands very close to home:</p>
 <blockquote>Architecture becomes more important, not less, because someone still has to define what the system is allowed to do.<cite>McKinsey, &ldquo;Rewiring software delivery for the agentic era&rdquo; (2026)</cite></blockquote>
@@ -327,13 +340,13 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>An operating model is an org-design artifact. Nothing in it executes.</h2>
+<h2 id="an-operating-model-is-an-org">An operating model is an org-design artifact. Nothing in it executes.</h2>
 <p>Here is the seam. Everything McKinsey describes is an <strong>org-design artifact</strong>: roles, pods, review processes, talent, standards, the shape of the delivery org. Redrawing those decides <em>who is accountable</em> for architecture. It does not produce the thing that actually holds at the moment an agent generates code &mdash; a machine-checkable constraint the change is evaluated against before it lands.</p>
 <p>The reason is a mismatch of speed. An org chart is a <strong>human-latency control loop</strong>: a reviewer reads, an architect weighs in, a standard gets discussed. The agent does not run at that latency. It runs underneath the org chart, at machine latency, in the gap between the redrawn roles &mdash; producing dozens of changes in the time it takes one review thread to start. McKinsey&rsquo;s notion that &ldquo;someone still has to define what the system is allowed to do&rdquo; is right; what the report leaves implicit is that, for an autonomous agent, &ldquo;define&rdquo; has to mean <em>compile into something that executes</em>, not <em>write down for a human to uphold</em>. A definition only a person can enforce is not reachable at the speed the agent is moving.</p>
 <div class="callout"><p><strong>McKinsey rewires the operating model around agents; nothing in an operating model executes at generation time.</strong> The rewired org names the architect who owns a decision. It does not give that decision a way to reach the agent at the moment of the change.</p></div>
 <p>This is why a perfectly rewired delivery org can still accumulate <a href="/concepts/architectural-drift/">architectural drift</a>. Every role is staffed, every review point exists, every standard is written &mdash; and the system still slides off its design, because no role&rsquo;s authority operates at the latency the agent does. That an authorized, well-supervised process still produces drift is the recurring finding behind <a href="/insights/harness-engineering-still-needs-governance/">harness engineering still needs governance</a> and the broader case that <a href="/insights/ai-infrastructure-governance-category/">governance becomes an infrastructure layer</a>, not a process one.</p>
 
-<h2>A spec the agent reads, versus a spec the agent cannot cross</h2>
+<h2 id="a-spec-the-agent-reads-versus">A spec the agent reads, versus a spec the agent cannot cross</h2>
 <p>The sharpest place to see the gap is in McKinsey&rsquo;s own remedy. Its answer to agent unpredictability is better structure on the way in: &ldquo;precisely defined workflows&rdquo; and &ldquo;templates for agentic output.&rdquo; That is a real improvement &mdash; and it upgrades only one side of the loop. A precisely defined workflow is a <strong>spec as input</strong>: a richer instruction the agent reads, and may follow or quietly override. It is not a <strong>spec as enforced constraint</strong>: a binary verdict the change is checked against and cannot cross.</p>
 <table class="gov-table">
   <thead><tr><th>Spec as input (the rewiring)</th><th>Spec as enforced constraint</th></tr></thead>
@@ -346,11 +359,11 @@
 </table>
 <p>McKinsey&rsquo;s rewiring makes the input side excellent: better-organized humans feeding better-structured tasks to agents. It leaves the enforcement side &mdash; the part that makes autonomy <em>safe</em> rather than merely faster &mdash; structurally unaddressed, because that side is not an org artifact and an operating-model redesign cannot mint it. This is the same reason a retrieved document is not a rule: <a href="/insights/rag-is-not-memory/">retrieval explains architecture; it does not enforce it</a>.</p>
 
-<h2>The substrate the rewiring needs but cannot produce</h2>
+<h2 id="the-substrate-the-rewiring-needs-but">The substrate the rewiring needs but cannot produce</h2>
 <p>What closes the gap is not another role or another review gate. It is a layer that turns &ldquo;what the system is allowed to do&rdquo; into something evaluated at the moment of the change: the team&rsquo;s architectural decisions <a href="/concepts/governance-before-generation/">compiled before generation</a> into <a href="/concepts/governance-infrastructure/">enforceable infrastructure</a>, applied <a href="/concepts/deterministic-enforcement/">deterministically</a> at the commit, the pull request, and in CI, with the <a href="/concepts/enforcement-provenance/">provenance</a> to say which decision a change violated and where it came from. It sits below the operating model and runs at the agent&rsquo;s latency, which is exactly where the org chart cannot reach. It is the runtime counterpart to McKinsey&rsquo;s human architecture &mdash; the place where <a href="/concepts/runtime-governance/">a defined boundary becomes an enforced one</a>.</p>
 <p>That is the one layer a rewiring presupposes and never supplies. McKinsey hands architecture back its authority on the org chart. Enforcement is what lets that authority survive contact with an agent moving faster than any review it sits above.</p>
 
-<h2>What the report actually confirms</h2>
+<h2 id="what-the-report-actually-confirms">What the report actually confirms</h2>
 <p>McKinsey&rsquo;s report matters because of where it comes from. When a top-tier strategy voice describes software delivery as an operating-model problem rather than a developer-tooling one, it confirms the shift is structural: enterprises are redesigning how software is built around autonomous execution, not just buying faster autocomplete. That is the right diagnosis.</p>
 <p>It also draws the boundary of its own frame. An operating-model redesign can decide who owns architecture, how work is structured, and which humans supervise which agents. It cannot, by construction, produce the layer that enforces a decision at the instant an agent acts on it &mdash; because that layer is infrastructure, not org design. The rewiring is necessary. It is not, on its own, enough to make autonomous execution hold its shape.</p>
 <div class="callout"><p><strong>The rewiring decides who is accountable for the architecture. The enforcement substrate is what lets their decisions hold when an agent executes between the redrawn roles.</strong> McKinsey describes the first with unusual clarity. The second is the layer the org chart cannot contain.</p></div>

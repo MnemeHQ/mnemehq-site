@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="CMU SEI and Accenture's AI Adoption Maturity Model arrives as only 21% of organizations redesign processes around AI. The harder gap is governance execution." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -293,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-is-the-ai-adoption-maturity">What Is the AI Adoption Maturity Model?</a></li>
+        <li><a href="#the-eight-dimensions-read-by-an">The Eight Dimensions, Read by an Engineering Leader</a></li>
+        <li><a href="#aligned-ai-is-where-governance-gets">Aligned AI Is Where Governance Gets Hard</a></li>
+        <li><a href="#the-governance-execution-gap">The Governance Execution Gap</a></li>
+        <li><a href="#from-documentation-to-execution">From Documentation to Execution</a></li>
+        <li><a href="#what-level-4-and-level-5">What Level 4 and Level 5 Organizations Will Need</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Is the AI Adoption Maturity Model?</h2>
+
+    <h2 id="what-is-the-ai-adoption-maturity">What Is the AI Adoption Maturity Model?</h2>
     <p>Carnegie Mellon University&rsquo;s Software Engineering Institute (SEI) and Accenture released the <a href="https://www.sei.cmu.edu/library/ai-adoption-maturity-model/">AI Adoption Maturity Model v1.0</a> on June 8, 2026. The SEI is the organization behind CMM and CMMI, the maturity models that gave enterprise software development a shared yardstick for three decades. That lineage matters: this model applies software-engineering maturity discipline to AI adoption, and it carries an institutional weight the consulting-deck maturity matrices of the last two years never had.</p>
     <p>The methodology is heavier than the genre norm. The model rests on a systematic review of more than 100 existing AI maturity efforts, roughly 25 executive interviews, a survey of about 600 practitioners, and intensive pilots with Fortune 500 organizations. The <a href="https://newsroom.accenture.com/news/2026/accenture-and-the-carnegie-mellon-university-software-engineering-institute-launch-ai-adoption-maturity-model-to-help-organizations-scale-ai-with-predictable-outcomes">launch announcement</a> frames the goal as scaling AI with predictable outcomes, and the SEI&rsquo;s preliminary report from December 2025 named generative AI and agentic AI implementations as a key driver behind the model. The full model is available from the SEI Digital Library.</p>
     <p>It defines five maturity levels. Read by an engineering leader, they translate cleanly:</p>
@@ -315,23 +329,23 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Eight Dimensions, Read by an Engineering Leader</h2>
+<h2 id="the-eight-dimensions-read-by-an">The Eight Dimensions, Read by an Engineering Leader</h2>
     <p>The model assesses organizations across eight core dimensions: Organizational Strategy; Workforce and Culture; Workflow Re-engineering; Risk and Governance; Data; Engineering; Operations and Sustainment; and Ecosystem. Most belong to the executive layer. Two sit squarely with engineering teams: Risk and Governance, and Engineering itself.</p>
     <p>Risk and Governance covers the policies, standards, and controls that bound AI use &mdash; who may deploy what, against which data, under which review. Engineering covers how AI-enabled systems get built, tested, and maintained. At every maturity level, assessing those two dimensions reduces to one practical question: when an agent writes code, do the organization&rsquo;s rules reach it?</p>
     <p>Workflow Re-engineering deserves more attention than its name invites, because it is where coding agents live. Redesigning a development workflow around agents &mdash; intent to diff to review to production &mdash; is process redesign, and Accenture&rsquo;s launch research shows how rare that is. 86% of C-suite leaders plan to increase AI spending in 2026, yet only 21% of organizations are redesigning end-to-end processes with AI at the core. Most organizations are bolting agents onto workflows designed for humans typing, then scoring the result as adoption.</p>
 
-    <h2>Aligned AI Is Where Governance Gets Hard</h2>
+    <h2 id="aligned-ai-is-where-governance-gets">Aligned AI Is Where Governance Gets Hard</h2>
     <p>Alignment in an enterprise codebase is specific. An agent is aligned when its output conforms to the architecture, the security standards, the team&rsquo;s engineering practices, and the decisions already recorded in ADRs and review threads. An agent that ships a working feature while violating last quarter&rsquo;s layering decision is unaligned no matter how clean the diff looks &mdash; that is <a href="/concepts/architectural-drift/">architectural drift</a> with better throughput.</p>
     <p>Ipek Ozkaya, Technical Director of AI-native Software Engineering at the SEI, framed the launch this way: &ldquo;True AI maturity is not measured by how much AI an organization deploys, but by its ability to build trustworthy and resilient capabilities...&rdquo; Trustworthy is the load-bearing word. For an engineering team, trusting an agent means trusting that <a href="/concepts/architectural-governance/">architectural governance</a> holds when no reviewer is watching the prompt.</p>
     <p>The jump from Level 3 to Level 4 changes the problem class. At Aligned AI, a strong team can hold the line with review culture and a few senior engineers who remember every decision. At Scaled AI, that stops working. Dozens of teams. Hundreds of agent sessions a day. Decisions made in one repository that bind twelve others. Governance becomes a systems problem: infrastructure has to produce alignment, because attention does not replicate.</p>
 
-    <h2>The Governance Execution Gap</h2>
+    <h2 id="the-governance-execution-gap">The Governance Execution Gap</h2>
     <p>The model treats governance as a capability dimension &mdash; something an organization builds and scores. That is the right framing for assessment, and it still leaves the hardest engineering question unanswered: how do architectural and governance decisions propagate into the AI agents doing the work? A maturity score tells you the policies exist. <a href="/concepts/governance-propagation/">Governance propagation</a> is whether they arrive.</p>
     <p>Take a concrete case. Policy: all customer-data access goes through the approved service layer. The policy is written, the architecture diagram shows the layer, security signed off on it eighteen months ago. A developer asks an agent to add a churn-report feature. The agent generates a direct SQL query against the customer table. The query is correct, the tests pass, the diff is small. Policy exists. Governance exists. Architecture exists. Execution does not.</p>
     <p>Multiply that small failure across an enterprise and the launch statistics look less mysterious. Nearly half of executives report that AI has so far delivered little impact on profit. Part of that gap is the distance between deploying AI and deploying AI that follows the organization&rsquo;s own decisions &mdash; the same distance security teams spent a decade closing, which is why <a href="/insights/beyond-security-by-design-governance-by-design/">governance by design</a> is now retracing the security-by-design playbook.</p>
     <div class="callout"><p><strong>A maturity assessment measures whether governance exists.</strong> It does not test whether a recorded decision survives contact with an agent at generation time. That test happens in the diff, and most organizations have never run it.</p></div>
 
-    <h2>From Documentation to Execution</h2>
+    <h2 id="from-documentation-to-execution">From Documentation to Execution</h2>
     <p>Governance capability moves through five stages, and the model&rsquo;s level language maps onto them. Most organizations today sit at the first two. Level 3 demands the third. Levels 4 and 5 are unreachable without the last two.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -347,7 +361,7 @@
     </div>
     <p>The first three stages share a failure mode: they target humans. The agent never read the wiki, never attended the training, and produces diffs faster than the reviewer can hold the standard. This is the difference between documentation and <a href="/architecture/decision-memory-vs-documentation/">decision memory</a> &mdash; prose describes a decision; memory makes it retrievable and checkable at the moment code is generated. Automation closes part of the gap by checking output in CI. Execution closes the rest by enforcing decisions while the code is being written, the one stage where the agent itself is governed rather than merely audited.</p>
 
-    <h2>What Level 4 and Level 5 Organizations Will Need</h2>
+    <h2 id="what-level-4-and-level-5">What Level 4 and Level 5 Organizations Will Need</h2>
     <p>Scaled AI and Future-Ready AI assume governance that runs without a human in every loop. Four capabilities follow from that assumption:</p>
     <ul>
       <li><strong>Decision memory.</strong> Architectural and governance decisions stored as structured, versioned records a system can query &mdash; ADRs as data, with scope and constraints attached.</li>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI tools now extract business rules from legacy code. Before a rewrite, decide which recovered behavior is observed, inferred or approved, and who approves it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -371,14 +372,32 @@
   </header>
 
 <div class="article-body">
-<h2>Extraction stopped being the hard part</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#extraction-stopped-being-the-hard-part">Extraction stopped being the hard part</a></li>
+      <li><a href="#what-the-old-system-does-is">What the old system does is not the specification</a></li>
+      <li><a href="#recovering-business-logic-is-not-recovering">Recovering business logic is not recovering decisions</a></li>
+      <li><a href="#three-labels-before-anything-is-rewritten">Three labels before anything is rewritten</a></li>
+      <li><a href="#from-evidence-to-governing-constraints">From evidence to governing constraints</a></li>
+      <li><a href="#who-authorizes-a-changed-business-rule">Who authorizes a changed business rule?</a></li>
+      <li><a href="#when-the-sources-disagree">When the sources disagree</a></li>
+      <li><a href="#what-can-be-automated">What can be automated</a></li>
+      <li><a href="#after-adjudication-governing-the-migration-itself">After adjudication: governing the migration itself</a></li>
+      <li><a href="#where-mneme-fits-and-where-it">Where Mneme fits, and where it does not</a></li>
+      <li><a href="#before-the-first-module-is-rewritten">Before the first module is rewritten</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="extraction-stopped-being-the-hard-part">Extraction stopped being the hard part</h2>
 <p>A few years ago, the first year of a mainframe modernization went to reading code. Teams paid specialists to trace COBOL (Common Business-Oriented Language) programs, job control language (JCL) and copybooks (shared COBOL files that define record layouts) until someone could say what the system did. Vendors now describe much of that reading as automated.</p>
 <p>AWS Transform for mainframe, in Amazon Web Services' (AWS) June 2026 post on its <a href="https://aws.amazon.com/blogs/migration-and-modernization/reimagine-mainframe-applications-with-traceability-and-speed-using-aws-transform/" target="_blank" rel="noopener">Reimagine workflow</a>, builds dependency graphs across programs, entry points and data stores, runs deterministic static analysis on each program (rule-based analysis of the source that gives the same result on every run, without executing it), and extracts business rules with a natural-language description and traceability back to source. It turns those rules into requirements with testable acceptance criteria.</p>
 <p>International Business Machines' (IBM) <a href="https://www.ibm.com/products/watsonx-code-assistant-z" target="_blank" rel="noopener">watsonx Code Assistant for Z</a>, built for IBM Z mainframes, covers similar ground: it maps mainframe applications and their dependencies, refactors COBOL and PL/I (Programming Language One) into modular business services, converts COBOL to Java with generative AI, and generates unit tests "to compare semantic equivalence" between the new Java service and the original COBOL.</p>
 <p>General-purpose models are closing in from the other side. On 19 October 2026 OpenAI published new evaluations for coding in low-resource programming languages, COBOL migration among them. We cover what those results do and do not measure in <a href="/insights/openai-cobol-migration-benchmark-behavioral-parity/">our analysis of OpenAI's COBOL migration benchmark</a>.</p>
 <p>You can now get a fairly complete account of what the old system does. You still have to decide which parts of that account the new system is obliged to keep.</p>
 
-<h2>What the old system does is not the specification</h2>
+<h2 id="what-the-old-system-does-is">What the old system does is not the specification</h2>
 <p>The tempting shortcut is to treat the extracted behavior as the specification. That shortcut carries the old bugs, the retired workarounds and the accidental structure into the new codebase, now with fresh tests that lock them in.</p>
 <p>Take a legacy banking application. Recovery tools and a careful team would surface facts like these:</p>
 <table class="gov-table">
@@ -394,13 +413,13 @@
 <p>Each row needs a different owner and a different kind of check. The truncation may be a regulatory requirement, or it may be a defect that customers have absorbed for decades. The direct database read may be a performance decision someone defended in 1998, or a shortcut nobody reviewed. The rows also come from different sources with different authority: rows 1, 2 and 5 come out of the old code, row 3 from the target design, row 4 from regulation and contracts. An extraction tool sees only the first group, and it cannot tell you which of those behaviors are binding.</p>
 <p>Observed does not automatically mean authoritative.</p>
 
-<h2>Recovering business logic is not recovering decisions</h2>
+<h2 id="recovering-business-logic-is-not-recovering">Recovering business logic is not recovering decisions</h2>
 <p>Business-rule extraction answers "what does this code do?" The modernization needs a second answer: "which of these behaviors did someone with authority decide to keep?" The two get confused because extracted rules look like decisions. They have a name, a description and a line of source.</p>
 <p>The AWS post shows where the vendor tooling draws its line. Its traceability step maps every extracted rule to one of three dispositions: captured in the new requirements, not applicable (platform mechanics with no cloud equivalent), or delegated to a shared module. The key metric is "not accounted for = 0", which AWS presents as proof that no business logic was lost. That is a useful completeness check: every rule landed somewhere. The post does not describe a disposition for "this rule is a defect, change it", or say who assigns dispositions.</p>
 <p>Our <a href="/insights/reverse-engineering-architectural-decisions-research/">review of the research on reverse-engineering architectural decisions</a> found the same split from the academic side. Recovering structure and function is mature. Recovering the reasons behind them is early, and model-generated decisions tend to describe the change and miss the rationale. A modernization program inherits that gap at scale: thousands of extracted rules and no record of which ones were intended.</p>
 <p>For mainframes, extraction is a product category with established vendors and dedicated parsers. Buy it. The work this article is about starts once the extracted rules arrive and someone has to decide which of them the new system must honor.</p>
 
-<h2>Three labels before anything is rewritten</h2>
+<h2 id="three-labels-before-anything-is-rewritten">Three labels before anything is rewritten</h2>
 <p>Before migration work starts, every recovered fact should carry one of three labels:</p>
 <ul>
   <li><strong>Observed:</strong> the old system demonstrably does this. Evidence is code, a trace, a test or production data.</li>
@@ -409,7 +428,7 @@
 </ul>
 <p>The research review makes the general case for labels like these, drawing on a September 2026 preliminary study by Karan, Dhar, Soliman and Vaidhyanathan in which a manual review of one model's extracted decisions found they often described the change but missed the rationale. For a modernization the point is narrower: only approved facts may become constraints the migration is checked against. Observed facts become parity tests, which check behavioral parity (the new code produces the same outputs as the old for the same inputs). Label them as such, so that a test failure on a known defect is a decision to make and not an automatic block.</p>
 
-<h2>From evidence to governing constraints</h2>
+<h2 id="from-evidence-to-governing-constraints">From evidence to governing constraints</h2>
 <p>The labels describe a sequence. Each stage has a different output and a different owner, and skipping one is how bugs get promoted into the specification.</p>
 <ol>
   <li><strong>System evidence.</strong> Source, JCL, schemas, batch schedules, production logs, incident history and whatever documentation survives. Collect it before anyone interprets it.</li>
@@ -422,7 +441,7 @@
 </ol>
 <p>Stage 2 is well tooled, and vendors have started on stage 7: IBM's tool generates unit tests to compare the new Java service with the original COBOL. Stages 3 to 5 are where modernization programs lose information, because they are organizational work that looks like a technical step.</p>
 
-<h2>Who authorizes a changed business rule?</h2>
+<h2 id="who-authorizes-a-changed-business-rule">Who authorizes a changed business rule?</h2>
 <p>Suppose the team finds that the truncation produces a fraction of a cent of difference against the documented rounding policy on some accounts. Matching the old behavior exactly keeps every downstream reconciliation stable. Fixing it brings the system in line with policy and changes balances. An engineer cannot make that call alone, and neither can a model.</p>
 <p>Decide before the program starts who owns each class of fact:</p>
 <ul>
@@ -433,7 +452,7 @@
 </ul>
 <p>Write the approval down with the decision: who approved it, when, and what evidence they saw. A rule without a recorded approver will be re-argued at cutover, when the cost of changing it is highest.</p>
 
-<h2>When the sources disagree</h2>
+<h2 id="when-the-sources-disagree">When the sources disagree</h2>
 <p>Recovered facts conflict. The code truncates; the product manual says it rounds; a 2011 change request says rounding was approved and never implemented; the operations team says customers were compensated manually for years. None of these sources settles the question on its own.</p>
 <p>Three conventions keep conflicts from stalling the program:</p>
 <ul>
@@ -442,7 +461,7 @@
   <li><strong>Time-box adjudication.</strong> Unresolved conflicts default to behavioral parity, labelled as unadjudicated, so the migration can proceed without treating the old behavior as approved.</li>
 </ul>
 
-<h2>What can be automated</h2>
+<h2 id="what-can-be-automated">What can be automated</h2>
 <p>Most of the pipeline can. Adjudication cannot, and should not look as if it can.</p>
 <table class="gov-table">
   <thead><tr><th>Stage</th><th>Automation</th></tr></thead>
@@ -457,10 +476,10 @@
 </table>
 <p>The order of the adjudication row and the checking row matters. A deterministic check is only as good as the decision behind it. If an inferred decision gets a rule before anyone approves it, the migration is blocked by a guess.</p>
 
-<h2>After adjudication: governing the migration itself</h2>
+<h2 id="after-adjudication-governing-the-migration-itself">After adjudication: governing the migration itself</h2>
 <p>Once approved decisions exist, the migration itself raises a different set of problems: agents copy the legacy patterns they see most often, transitional adapters outlive their purpose, and the same rule must apply to migrated code but not to code the migration has not reached. Our article on <a href="/insights/ai-assisted-software-migrations-architectural-drift/">AI-assisted software migrations and architectural drift</a> covers that stage. This piece is about the stage before it: deciding what the migration is obliged to preserve.</p>
 
-<h2>Where Mneme fits, and where it does not</h2>
+<h2 id="where-mneme-fits-and-where-it">Where Mneme fits, and where it does not</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, covers a narrow part of this sequence today. It does not compete on extraction: AWS and IBM already do that, with mainframe parsers Mneme does not have. Most of what Mneme could add beyond enforcement is design direction or research.</p>
 <p><strong>Shipped in mneme-hq 0.10.0</strong> (Mneme's open-source package, current released version). Teams record engineering decisions, such as "target services reach account data only through the storage adapter", as architecture decision records (ADRs) and import them into the <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted record of each decision's versions, lifecycle status and, where known, source.</p>
 <p>Decisions that carry an active typed rule (a machine-checkable rule attached to the decision, such as a forbidden import) are enforced deterministically in supported coding agents (Claude Code, Codex CLI and Kiro among them) and in continuous integration. Each check returns a verdict of PASS, WARN or FAIL, and only a violation names the decision. A rule can carry path selectors (file path patterns that limit where it applies), so a team can apply the adapter rule only to the target tree. The Decision Index does not record who approved a decision, so the approval record from the adjudication stage has to live in the ADR or in the team's own process.</p>
@@ -468,7 +487,7 @@
 <p><strong>Planned design direction.</strong> Distinguishing observed, inferred and approved decisions with provenance is part of Mneme's design direction for <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>. The design is accepted and not released.</p>
 <p><strong>Conceptual.</strong> Recovering candidate decisions from legacy systems, and linking differential test results to the decisions they evidence, are research questions. Mneme has a research-only test setup for running recovery experiments; there are no results to report yet.</p>
 
-<h2>Before the first module is rewritten</h2>
+<h2 id="before-the-first-module-is-rewritten">Before the first module is rewritten</h2>
 <ul>
   <li><strong>Buy extraction, don't build it.</strong> Vendor tools already reconstruct behavior with source traceability. Put your effort into what happens to their output.</li>
   <li><strong>Label every recovered fact.</strong> Observed, inferred or approved, with evidence attached. Make parity tests say which facts they are protecting.</li>

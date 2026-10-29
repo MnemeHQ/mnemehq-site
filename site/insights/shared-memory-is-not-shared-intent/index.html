@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI coding teams are getting shared memory so every agent reads the same context. That solves distribution, not governance &mdash; and better shared memory can amplify architectural drift." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -294,7 +295,21 @@
 
   <div class="article-body">
 
-    <h2>AI Assistants Are Becoming AI Coding Teams</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#ai-assistants-are-becoming-ai-coding">AI Assistants Are Becoming AI Coding Teams</a></li>
+        <li><a href="#what-shared-memory-solves">What Shared Memory Solves</a></li>
+        <li><a href="#memory-does-not-enforce-decisions">Memory Does Not Enforce Decisions</a></li>
+        <li><a href="#context-propagation-vs-governance-propagation">Context Propagation vs Governance Propagation</a></li>
+        <li><a href="#why-shared-memory-can-amplify-drift">Why Shared Memory Can Amplify Drift</a></li>
+        <li><a href="#the-layer-after-memory">The Layer After Memory</a></li>
+        <li><a href="#shared-memory-creates-shared-knowledge-not">Shared Memory Creates Shared Knowledge, Not Shared Intent</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="ai-assistants-are-becoming-ai-coding">AI Assistants Are Becoming AI Coding Teams</h2>
     <p>The framing in the AI coding market is shifting from a single assistant to a coordinated team of agents. Augment Code&rsquo;s <a href="https://tessl.io/blog/with-cosmos-augment-code-wants-to-give-ai-coding-teams-a-shared-memory-and-context/" target="_blank" rel="noopener">Cosmos</a>, launched into public preview this spring, is a clean example of the pattern: it sits across a company&rsquo;s development environment, coordinates multiple agents, stores what they learn, and lets that knowledge be reused across a team. The problem it targets is real. Most agents are effectively stateless between sessions, so they re-derive the same decisions, drift from team conventions, and lose context that someone already established.</p>
     <p>The results vendors report from this shift are striking. In <a href="https://www.augmentcode.com/blog/what-do-engineers-do-when-agents-run-the-full-sdlc" target="_blank" rel="noopener">Augment&rsquo;s own account of running agents across the full SDLC</a>, large pull-request reviews fell from six or seven hours to about 45 minutes, root-cause analysis dropped from roughly 30 minutes to six, agents handled more than 80% of incidents, and weekly output tripled. The notable part is the cause Augment names. The breakthrough was not a smarter model but a system where agents could share context, remember patterns, and hand work across stages. The gains came from the system around the model. Coordination and memory are the visible half of that system. Governance is the half that decides whether what the system produces is actually allowed to ship.</p>
     <p>The interesting part is not the memory. Everyone is converging on memory, context, retrieval, and agent coordination. The interesting part is the phrase: <strong>AI coding teams</strong>. Once multiple agents share memory and operate across the software lifecycle, a different set of questions appears, and none of them are retrieval questions.</p>
@@ -314,17 +329,17 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What Shared Memory Solves</h2>
+<h2 id="what-shared-memory-solves">What Shared Memory Solves</h2>
     <p>Shared memory is genuinely useful. It addresses a cluster of coordination failures that single-session agents run into constantly: duplicated work, lost context, context-window limits, and fragmented project knowledge spread across people and tools. Give every agent the same record of what the team has done and decided, and they coordinate better. They start from prior runs instead of from scratch.</p>
     <p>But coordination is not governance. Memory improves the odds that an agent <em>knows</em> a decision. It does nothing to guarantee the agent <em>complies</em> with it. Those are different problems, and shared memory only solves the first one.</p>
 
-    <h2>Memory Does Not Enforce Decisions</h2>
+    <h2 id="memory-does-not-enforce-decisions">Memory Does Not Enforce Decisions</h2>
     <p>Here is the failure in its simplest form. A system decision states: <strong>all billing operations must go through BillingService</strong>. That decision lives in the shared memory layer. Every agent on the team can retrieve it. Perfect distribution.</p>
     <p>An agent is asked to add subscription-upgrade support. It writes a direct Stripe integration with its own client and payment calls. The change is locally correct. The tests pass. And it bypasses the boundary the team agreed to hold. The decision was available. The decision was retrieved. The decision was still violated.</p>
     <div class="callout"><p><strong>The failure was not retrieval.</strong> The agent had the decision. The failure was enforcement &mdash; there was no layer that checked the proposed change against the decision and rejected it.</p></div>
     <p>This is the same structural gap that databases hit decades ago. Shared storage solved the problem of every process seeing the same data. It did not solve who was allowed to write what. The moment everyone shared the data, access control became necessary. Shared agent memory is at exactly that moment now.</p>
 
-    <h2>Context Propagation vs Governance Propagation</h2>
+    <h2 id="context-propagation-vs-governance-propagation">Context Propagation vs Governance Propagation</h2>
     <p>It helps to name the two layers precisely, because the industry is busy building one and calling it the other. Context propagation moves information to where it is needed. <a href="/concepts/governance-propagation/">Governance propagation</a> moves enforceable decisions to where they are applied. They look similar and solve opposite halves of the problem.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -342,11 +357,11 @@
 
     <p>A shared memory layer is a context-propagation system. It is the layer directly beneath where enforcement has to sit. That is why memory vendors and governance are not competitors: the better the memory, the more it needs a governance layer on top of it.</p>
 
-    <h2>Why Shared Memory Can Amplify Drift</h2>
+    <h2 id="why-shared-memory-can-amplify-drift">Why Shared Memory Can Amplify Drift</h2>
     <p>Here is the counterintuitive part. Better shared memory can make <a href="/concepts/architectural-drift/">architectural drift</a> worse, not better. A single agent with poor memory makes a bounded number of mistakes, slowly. A team of capable agents with excellent shared memory makes more decisions, faster, each one informed by everything the others have done. Capability scales the rate of action. It does not scale compliance.</p>
     <p>Shared memory raises the blast radius of an unenforced decision. When one agent adopts a slightly-off pattern and writes it into the shared record, every other agent can now retrieve and build on it. The mistake propagates as fluently as the correct decisions do. In a multi-agent setting, local optimizations compound, conflicting implementations appear, and architectural consistency degrades faster than any single reviewer can track. As capability goes up, governance becomes more important, not less.</p>
 
-    <h2>The Layer After Memory</h2>
+    <h2 id="the-layer-after-memory">The Layer After Memory</h2>
     <p>It is worth being explicit about the stack the industry is climbing. Each layer made agents more useful, and each made the next layer necessary.</p>
     <ol>
       <li><strong>Code generation</strong> &mdash; the model can write code.</li>
@@ -357,7 +372,7 @@
     </ol>
     <p>Memory makes agents smarter. Governance keeps them aligned. The reason governance is the next layer and not an optional add-on is that every prior layer increases an agent&rsquo;s capacity to act on shared information &mdash; which is precisely what makes an unenforced decision dangerous. This is the same point we make about <a href="/insights/coordination-governance-multi-agent-systems/">coordination governance</a>: parallel agents parallelize output and inconsistency at the same time, and only an enforcement layer resolves the second one.</p>
 
-    <h2>Shared Memory Creates Shared Knowledge, Not Shared Intent</h2>
+    <h2 id="shared-memory-creates-shared-knowledge-not">Shared Memory Creates Shared Knowledge, Not Shared Intent</h2>
     <p>The future challenge for AI coding teams is not whether agents can remember decisions. Memory is being solved, and well. The challenge is whether they consistently obey them. Shared memory creates shared knowledge. It does not create shared intent. Intent has to be enforced, not just remembered &mdash; checked against every proposed change, deterministically, before that change becomes part of the system the next agent reads from.</p>
 
   </div><!-- /.article-body -->

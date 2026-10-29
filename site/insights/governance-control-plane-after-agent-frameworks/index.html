@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Databricks open-sourced Omnigent, a meta-harness that governs many agents with runtime policy. Frameworks coordinate execution; meta-harnesses coordinate agents. Neither enforces architectural intent. That missing layer is a governance control plane." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -296,7 +297,23 @@
 
   <div class="article-body">
 
-    <h2>The News Is Bigger Than the Project</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-news-is-bigger-than-the">The News Is Bigger Than the Project</a></li>
+        <li><a href="#phase-1-the-era-of-the">Phase 1: The Era of the Individual Agent</a></li>
+        <li><a href="#phase-2-agent-orchestration">Phase 2: Agent Orchestration</a></li>
+        <li><a href="#phase-3-the-meta-harness-layer">Phase 3: The Meta-Harness Layer</a></li>
+        <li><a href="#the-missing-layer-governance-of-intent">The Missing Layer: Governance of Intent</a></li>
+        <li><a href="#why-agent-governance-becomes-inevitable">Why Agent Governance Becomes Inevitable</a></li>
+        <li><a href="#from-security-policy-to-engineering-policy">From Security Policy to Engineering Policy</a></li>
+        <li><a href="#the-emerging-stack">The Emerging Stack</a></li>
+        <li><a href="#controlling-behavior-not-just-generating-code">Controlling Behavior, Not Just Generating Code</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-news-is-bigger-than-the">The News Is Bigger Than the Project</h2>
     <p>On June 13, Databricks open-sourced <a href="https://www.databricks.com/blog/introducing-omnigent-meta-harness-combine-control-and-share-your-agents" target="_blank" rel="noopener">Databricks&rsquo; Omnigent</a>, a meta-harness that sits above individual coding harnesses like Claude Code and Codex. Built by Matei Zaharia, Kasey Uhlenhuth, and Corey Zumar and released under Apache 2.0, it adds agent composition, runtime contextual policies, sandboxing, and spend and permission controls &mdash; for example, requiring a human to approve a <code>git push</code> after an agent has downloaded a new package. It is a serious piece of infrastructure.</p>
     <p>But the project itself is not the story. The story is what its existence signals: AI engineering is moving up a layer. For two years the work was about making a single agent more capable. The frontier is now about coordinating many agents safely. Omnigent is one of the first widely-shipped examples of that move, which makes it a clean lens on a question the whole industry is about to face &mdash; not <em>can</em> an agent act, but <em>should</em> it.</p>
 
@@ -309,20 +326,20 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Phase 1: The Era of the Individual Agent</h2>
+<h2 id="phase-1-the-era-of-the">Phase 1: The Era of the Individual Agent</h2>
     <p>The first phase was the capable singleton. Claude Code, Codex, Cursor, and Gemini CLI all pursued the same goal: make one agent better at reading a codebase, planning a change, and writing code that compiles and passes tests. The improvements were real and they compounded quickly.</p>
     <p>Capability, though, was never the same thing as alignment. A more powerful agent writes more code, faster &mdash; including code that quietly violates architectural intent. It can introduce a new dependency the team rejected two quarters ago, reach around a service boundary, or re-implement a pattern an ADR explicitly forbids. None of those are bugs the model can catch, because from the model&rsquo;s point of view the change is locally correct. A smarter singleton does not close that gap. It widens it.</p>
 
-    <h2>Phase 2: Agent Orchestration</h2>
+    <h2 id="phase-2-agent-orchestration">Phase 2: Agent Orchestration</h2>
     <p>The second phase answered a different question: how do multiple agents work together? LangGraph, the OpenAI Agents SDK, CrewAI, and AutoGen are orchestration frameworks. They decide which agent takes which task, how context flows between them, how state is shared, and how a multi-step workflow is managed when one agent hands off to the next.</p>
     <p>This was a genuine advance, and it is where most teams building agentic systems live today. But orchestration is about execution mechanics. It coordinates <em>how</em> agents run. It is silent on <em>what</em> they are permitted to produce. A workflow can be perfectly orchestrated and still ship a change that breaks the system&rsquo;s intended design, because nothing in the framework evaluates the output against the rules the organization actually cares about. The same gap from Phase 1 survives the jump to Phase 2 &mdash; it just now operates across several agents at once. We have written before about how <a href="/insights/coordination-governance-multi-agent-systems/">coordinating multiple agents without an enforcement layer parallelizes inconsistency</a> as fast as it parallelizes output.</p>
 
-    <h2>Phase 3: The Meta-Harness Layer</h2>
+    <h2 id="phase-3-the-meta-harness-layer">Phase 3: The Meta-Harness Layer</h2>
     <p>Omnigent marks a third phase: a layer above the individual harnesses. A meta-harness composes agents, lets them collaborate through shared interfaces, and governs them at runtime with contextual permissions, sandboxing, and spend controls. The unit of attention moves from the individual agent to the agent ecosystem &mdash; a fleet of agents operating across a system, with shared infrastructure for running, isolating, and budgeting them.</p>
     <p>This is the right direction, and it is where a real new category is forming. The emergence of meta-harnesses tracks the broader shape of the <a href="/insights/emerging-ai-agent-infrastructure-stack/">agent infrastructure stack</a> taking form beneath the models. Runtime policy is part of governance. Requiring human approval before a sensitive action, sandboxing what an agent can touch, capping spend &mdash; these are real controls, and they matter.</p>
     <p>They are also, almost entirely, controls about <strong>access and resources</strong>. They answer whether an agent <em>can</em> perform an action: can it reach the network, can it push, can it spend. They do not answer whether the action is <em>allowed</em> in the sense that matters most to an engineering organization.</p>
 
-    <h2>The Missing Layer: Governance of Intent</h2>
+    <h2 id="the-missing-layer-governance-of-intent">The Missing Layer: Governance of Intent</h2>
     <p>The hard question in a multi-agent system is not &ldquo;can this agent perform this action?&rdquo; It is &ldquo;should it?&rdquo; Those are different questions, and only the first one is well served today.</p>
     <ul>
       <li>Should this agent be allowed to modify billing code at all?</li>
@@ -333,19 +350,19 @@
     <p>An orchestration framework will not answer these. A meta-harness with runtime permissions will not either, because the question is not about capability or resource limits &mdash; it is about <em>intent</em>. The decision that billing must route through one service, or that no new message broker enters the stack, is not a permission flag. It is an architectural rule, and it has to be checked against the actual proposed change, deterministically, before that change lands.</p>
     <div class="callout"><p><strong>Access control asks &ldquo;can it?&rdquo; Governance asks &ldquo;should it?&rdquo;</strong> A meta-harness can stop an agent from pushing without approval. It cannot, on its own, stop an approved push from violating the architecture the team agreed to hold.</p></div>
 
-    <h2>Why Agent Governance Becomes Inevitable</h2>
+    <h2 id="why-agent-governance-becomes-inevitable">Why Agent Governance Becomes Inevitable</h2>
     <p>This is not a niche concern that a few regulated teams will eventually need. Four forces make it structural, and each one is already in motion.</p>
     <p><strong>More autonomy.</strong> Agents are taking on longer, more complex tasks with less human review per step. Every increment of autonomy is an increment of unsupervised decision-making, and decisions are exactly where intent gets honored or broken.</p>
     <p><strong>More surface area.</strong> Multiple agents now operate across multiple repositories at once. A change one agent makes in one service interacts with assumptions another agent is relying on elsewhere. The interactions are where consistency quietly fails.</p>
     <p><strong>More architectural risk.</strong> Small, locally-valid changes accumulate. No single commit looks wrong; the system as a whole slides away from its intended shape. This is the mechanism behind <a href="/concepts/governance-propagation/">governance propagation</a> &mdash; a single enforced decision has to reach every agent call, or drift compounds faster than any reviewer can track.</p>
     <p><strong>More accountability.</strong> Organizations increasingly need evidence: why did this action occur, who or what approved it, and which policy permitted it. As agents make more of the changes, &ldquo;the model wrote it&rdquo; stops being an acceptable answer. The trail of <a href="/concepts/enforcement-provenance/">enforcement provenance</a> &mdash; which rule allowed or blocked which change &mdash; becomes part of the engineering record.</p>
 
-    <h2>From Security Policy to Engineering Policy</h2>
+    <h2 id="from-security-policy-to-engineering-policy">From Security Policy to Engineering Policy</h2>
     <p>Today&rsquo;s agent governance is mostly security governance: permissions, sandboxing, spend limits, approval gates. That layer is necessary and Omnigent does it well. But it is the first half of the problem, not the whole of it.</p>
     <p>The governance that engineering organizations actually need extends past security into the substance of the software: architecture, engineering standards, ADR enforcement, dependency controls, and system boundaries. That is where the category has to evolve. A spend cap protects the budget. It does nothing for the service boundary. A sandbox limits the blast radius of a rogue process. It says nothing about whether a sanctioned change respects the data model. The two markets &mdash; <a href="/insights/ai-agent-governance-two-markets/">runtime security governance and architectural governance</a> &mdash; are related but not the same, and the second one is barely served.</p>
     <p>This is also why the missing layer is not a feature to bolt onto a harness but a distinct concern: a <a href="/insights/agent-manager-control-plane-governance/">control plane for agent behavior</a>. If you are mapping where this lands in your own stack, the <a href="/use-cases/">use cases</a> for architectural governance make the boundary concrete &mdash; it is the system that evaluates proposed changes against the rules the organization has actually decided to hold.</p>
 
-    <h2>The Emerging Stack</h2>
+    <h2 id="the-emerging-stack">The Emerging Stack</h2>
     <p>Lay the layers out in order and the shape of the missing piece becomes obvious. Each layer made agents more useful; each made the next one necessary.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -363,7 +380,7 @@
 
     <p>Agent frameworks coordinate execution. Meta-harnesses coordinate teams of agents. A governance control plane coordinates decisions &mdash; it is the layer that holds architectural intent and checks every proposed change against it. The first four layers all increase an agent&rsquo;s capacity to act on a system. The fifth is what keeps that capacity aligned with what the organization decided the system should be.</p>
 
-    <h2>Controlling Behavior, Not Just Generating Code</h2>
+    <h2 id="controlling-behavior-not-just-generating-code">Controlling Behavior, Not Just Generating Code</h2>
     <p>The two-year race to make agents more capable produced extraordinary tools. The next race is different. As AI systems become more autonomous and more numerous, the constraint on engineering quality stops being how much code you can generate and becomes how reliably you can control what that code is allowed to do.</p>
     <p>Omnigent is a strong signal that the industry has noticed the shift &mdash; that the unit of concern is moving from the agent to the agent ecosystem, and from capability to control. The layer it points toward, but does not by itself complete, is a governance control plane: a system that turns architectural decisions into rules agents must satisfy, enforced deterministically, with a record of which rule allowed or blocked which change. Frameworks coordinate how agents run. Governance coordinates what they are allowed to ship. That second layer is where the next durable advantage in AI engineering will be built.</p>
 

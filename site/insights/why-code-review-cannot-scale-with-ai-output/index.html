@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI coding assistants generate code at 10–100× human pace. Code review is still linear. The resulting bottleneck can't be solved by hiring — it requires pre-generation enforcement." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -356,11 +357,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-volume-problem-is-already-here">The volume problem is already here</a></li>
+        <li><a href="#reviewing-ai-output-is-harder-than">Reviewing AI output is harder than reviewing human output</a></li>
+        <li><a href="#the-just-review-more-carefully-response">The "just review more carefully" response doesn't work</a></li>
+        <li><a href="#the-shift-left-argument">The shift-left argument</a></li>
+        <li><a href="#what-pre-generation-enforcement-actually-requires">What pre-generation enforcement actually requires</a></li>
+        <li><a href="#the-cost-of-not-solving-this">The cost of not solving this</a></li>
+        <li><a href="#the-structural-conclusion">The structural conclusion</a></li>
+      </ol>
+    </nav>
+
     <p>For most of software engineering history, writing code was the bottleneck. Senior engineers reviewed what juniors wrote, and the review burden was proportional to human writing speed. The ratio was manageable.</p>
 
     <p>AI coding assistants break this assumption. When a single engineer can generate a thousand lines of plausible, compilable code in an hour, the bottleneck shifts. Generation is no longer scarce. Review is.</p>
 
-    <h2>The volume problem is already here</h2>
+    <h2 id="the-volume-problem-is-already-here">The volume problem is already here</h2>
 
     <p>Teams that have adopted AI coding assistants at scale — Claude Code, Cursor, Copilot, Devin — consistently report the same pattern: PR volume increases faster than review capacity. This isn't surprising. A single AI agent operating on a well-scoped task can produce a multi-file changeset in minutes that would take a human engineer half a day to write.</p>
 
@@ -390,7 +404,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Reviewing AI output is harder than reviewing human output</h2>
+<h2 id="reviewing-ai-output-is-harder-than">Reviewing AI output is harder than reviewing human output</h2>
 
     <p>The volume problem would be difficult enough. But AI-generated code is also <em>harder to review</em> than human-written code in several specific ways.</p>
 
@@ -410,7 +424,7 @@
 
     <p>AI coding assistants have their own implicit style conventions, drawn from training data rather than your codebase's evolution. Without explicit constraint injection, they drift toward generic patterns — which means reviewers must also police style consistency that previously self-enforced via team osmosis. This is low-stakes individually and expensive in aggregate.</p>
 
-    <h2>The "just review more carefully" response doesn't work</h2>
+    <h2 id="the-just-review-more-carefully-response">The "just review more carefully" response doesn't work</h2>
 
     <p>The intuitive organizational response to this problem is to tighten review requirements: require two reviewers, require an architect sign-off on structural changes, institute more thorough checklists. This approach fails for a predictable reason: it reduces velocity precisely when AI-assisted development is supposed to be increasing it.</p>
 
@@ -462,7 +476,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>The shift-left argument</h2>
+    <h2 id="the-shift-left-argument">The shift-left argument</h2>
 
     <p>Security engineering confronted a structurally identical problem a decade ago. When application development accelerated and security testing was relegated to the end of the pipeline, the volume of vulnerabilities reaching production exceeded the security team's capacity to address them. The response was the shift-left movement: move security checks earlier in the development process, so violations are caught before they accumulate.</p>
 
@@ -502,7 +516,7 @@
       </div>
     </div>
 
-    <h2>What pre-generation enforcement actually requires</h2>
+    <h2 id="what-pre-generation-enforcement-actually-requires">What pre-generation enforcement actually requires</h2>
 
     <p>Shifting enforcement left is the right direction. Implementing it correctly requires more than telling the AI agent "follow our rules" in the system prompt.</p>
 
@@ -517,7 +531,7 @@
 
     <p>None of these requirements are met by a system prompt containing your ADR documents, or by a RAG pipeline that retrieves them. They require a governance architecture that treats decisions as structured, executable constraints rather than advisory text.</p>
 
-    <h2>The cost of not solving this</h2>
+    <h2 id="the-cost-of-not-solving-this">The cost of not solving this</h2>
 
     <p>Teams that adopt AI coding assistants without addressing the review bottleneck converge on one of two failure modes:</p>
 
@@ -527,7 +541,7 @@
 
     <p>Both outcomes are predictable. Both are avoidable if the governance problem is addressed at the generation layer rather than the review layer.</p>
 
-    <h2>The structural conclusion</h2>
+    <h2 id="the-structural-conclusion">The structural conclusion</h2>
 
     <p>Code review is a human-time-bounded process. AI code generation is not. You cannot solve a generation-speed problem with a review-speed solution. The governance layer must operate at generation time, enforcing architectural constraints before the code is written — not after it's merged.</p>
 

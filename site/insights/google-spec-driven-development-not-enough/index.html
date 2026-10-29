@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Google&rsquo;s spec-driven development paper is right that code is disposable and specs are the durable asset. But its answer to trust leans on AI reviewing AI. Final architectural compliance needs deterministic engineering governance." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -322,10 +323,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-google-s-spec-driven-development">What Google&rsquo;s Spec-Driven Development Paper Shows</a></li>
+        <li><a href="#the-new-limiting-factor-is-validating">The New Limiting Factor Is Validating Architectural Consistency</a></li>
+        <li><a href="#where-the-paper-is-strongest">Where the Paper Is Strongest</a></li>
+        <li><a href="#where-deterministic-governance-differs-from-ai">Where Deterministic Governance Differs From AI Reviewing AI</a></li>
+        <li><a href="#engineering-governance-is-a-distinct-layer">Engineering Governance Is a Distinct Layer</a></li>
+        <li><a href="#spec-driven-development-plus-engineering-governance">Spec-Driven Development Plus Engineering Governance</a></li>
+        <li><a href="#the-next-step-after-spec-driven">The Next Step After Spec-Driven Development</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>The industry has moved past the question that dominated the last two years. &ldquo;Can an AI write this code?&rdquo; is answered. It can, and it does &mdash; a large and growing share of new code is now machine-generated. The open question is different and harder: how do you trust output arriving faster than any team can read it? Generation stopped being the scarce resource. Validating that what was generated fits the architecture is now the scarce resource.</p>
     <p>Google&rsquo;s spec-driven development paper is one of the clearest statements of this shift to date. It is worth engaging seriously, because it is mostly right. Where it stops short is instructive, and it points directly at the layer that has to come next.</p>
 
-    <h2>What Google&rsquo;s Spec-Driven Development Paper Shows</h2>
+    <h2 id="what-google-s-spec-driven-development">What Google&rsquo;s Spec-Driven Development Paper Shows</h2>
     <p>The <a href="https://www.kaggle.com/whitepaper-spec-driven-production-grade-development-in-the-age-of-vibe-coding" target="_blank" rel="noopener">paper</a>, part of Google&rsquo;s 2026 AI Agents intensive, sets out to bridge the gap between fragile, &ldquo;vibe-coded&rdquo; prototypes and production-grade software. Its central moves are these:</p>
     <ul>
       <li><strong>Code is disposable; the specification is the durable asset.</strong> When a model can regenerate an implementation in seconds, the implementation stops being precious. The blueprint that describes intended behavior is what carries value across regenerations.</li>
@@ -344,11 +359,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The New Limiting Factor Is Validating Architectural Consistency</h2>
+<h2 id="the-new-limiting-factor-is-validating">The New Limiting Factor Is Validating Architectural Consistency</h2>
     <p>Once implementation is cheap, the constraint moves downstream. Every generated change is plausible. Most of them work. The expensive question is whether each one is <em>consistent</em> with the system it just joined &mdash; whether it respected the service boundaries, used the approved libraries, followed the conventions, and honored the architectural decisions the team already made.</p>
     <p>That is not a code-quality question. A change can be clean, tested, and locally correct and still quietly violate an architectural decision recorded eighteen months ago. When one feature fans out across several agents, each optimizing its own slice, the odds of a system-wide decision surviving untouched drop with every additional generation. This is the scarce resource now: not producing code, but verifying that a flood of produced code stays inside the architecture.</p>
 
-    <h2>Where the Paper Is Strongest</h2>
+    <h2 id="where-the-paper-is-strongest">Where the Paper Is Strongest</h2>
     <p>Most of the paper&rsquo;s prescriptions are correct and Mneme agrees with them without reservation. It is worth being specific about what genuinely holds up:</p>
     <ul>
       <li><strong>Spec-driven development itself.</strong> Writing intended behavior down before generation, in the repo, is the right foundation. It is the same premise behind treating <a href="/concepts/executable-architectural-intent/">architectural intent as something explicit</a> rather than tribal knowledge.</li>
@@ -358,7 +373,7 @@
     </ul>
     <p>None of this is in dispute. The disagreement is narrow, and it lives in one specific link of the chain: how the pipeline decides that a change is architecturally acceptable.</p>
 
-    <h2>Where Deterministic Governance Differs From AI Reviewing AI</h2>
+    <h2 id="where-deterministic-governance-differs-from-ai">Where Deterministic Governance Differs From AI Reviewing AI</h2>
     <p>The paper&rsquo;s trust mechanism leans on automated review agents &mdash; models that inspect the output of other models and flag problems. This is useful for catching classes of defects. It is the wrong tool for establishing architectural authority, and the reason is structural.</p>
     <p>Generation is probabilistic. A model produces a plausible answer, not a guaranteed one. Run the same prompt twice and you may get two different verdicts. That is acceptable for drafting code. It is not acceptable for the final decision about whether code is allowed to land. If the reviewer is also probabilistic, you have not established authority &mdash; you have added a second opinion that is confident, fast, and occasionally wrong in ways you cannot predict or reproduce.</p>
     <p>Architecture is not a matter of opinion. &ldquo;This service may not read another service&rsquo;s database directly&rdquo; is a decision that was made once, for stated reasons, and recorded. Checking a change against that decision should return the same verdict every time, for the same change, forever. That is what <a href="/concepts/deterministic-enforcement/">deterministic enforcement</a> means, and it is precisely what a model-reviewing-a-model cannot promise.</p>
@@ -378,7 +393,7 @@
     </div>
     <p>This is not a claim that AI review is worthless. It is a claim about where it belongs. AI review is excellent for the fuzzy, judgment-heavy layer &mdash; readability, likely bugs, missing edge cases. It is the wrong instrument for the yes/no question of whether a change is inside the architecture. That question deserves a check that does not change its mind. We have <a href="/insights/review-is-not-governance/">made this argument at length elsewhere</a>: review, human or machine, is not the same thing as governance.</p>
 
-    <h2>Engineering Governance Is a Distinct Layer</h2>
+    <h2 id="engineering-governance-is-a-distinct-layer">Engineering Governance Is a Distinct Layer</h2>
     <p>It helps to be precise about what this layer does and does not do, because &ldquo;governance&rdquo; is an overloaded word. Engineering governance in this sense is not model-risk management, not regulatory compliance, not content safety. It is the layer that verifies generated code against the engineering organization&rsquo;s own recorded decisions:</p>
     <ul>
       <li><strong>Architectural decisions (ADRs).</strong> The boundaries, the layering, the &ldquo;we chose X over Y and here is why&rdquo; record.</li>
@@ -388,7 +403,7 @@
     </ul>
     <p>These are all things a team already decided. Governance does not invent them. It <a href="/concepts/architectural-governance/">makes them enforceable</a>, so that a decision recorded once is honored by every agent, on every change, without a human re-explaining it each time. That is the difference between a specification, which tells an agent what to build, and governance, which verifies whether it was built within the architecture.</p>
 
-    <h2>Spec-Driven Development Plus Engineering Governance</h2>
+    <h2 id="spec-driven-development-plus-engineering-governance">Spec-Driven Development Plus Engineering Governance</h2>
     <p>The right conclusion is not to reject spec-driven development. It is to finish it. Google&rsquo;s pipeline is close; it needs one more stage with different properties than the rest. The full shape looks like this:</p>
     <ol>
       <li><strong>Requirements.</strong> What the change should accomplish.</li>
@@ -400,7 +415,7 @@
     </ol>
     <p>The critical insight is that steps 4 and 5 are different kinds of check and must not be collapsed into one. Step 5 is judgment, and probabilistic tools are fine there. Step 4 is authority, and it has to be deterministic. Google&rsquo;s paper effectively merges them into &ldquo;AI review with a policy server in front.&rdquo; Pulling architectural verification out into its own deterministic stage is the missing piece. This is the same conclusion our evergreen argument reaches: <a href="/insights/spec-driven-development-still-needs-governance/">spec-driven development still needs governance</a> &mdash; a spec defines intent, but something deterministic has to enforce it.</p>
 
-    <h2>The Next Step After Spec-Driven Development</h2>
+    <h2 id="the-next-step-after-spec-driven">The Next Step After Spec-Driven Development</h2>
     <p>Google is right that code is disposable and the spec is the durable asset. Google is right that trusting AI output is the real problem, and right to reach for zero-trust pipelines, policy servers, and sandboxing to solve it. The one place the paper stops short is treating architectural compliance as something another model can adjudicate. It cannot &mdash; not with authority, not reproducibly.</p>
     <p>Specifications tell AI what to build. Engineering governance verifies whether it was built within the architecture. The next step after spec-driven development is not another reviewer with better prompts. It is a deterministic layer that checks every change against the decisions the team already made and recorded &mdash; and returns the same answer every time. That is the difference between hoping the architecture held and knowing it did.</p>
 

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Context engineering improves recall. It does not enforce architectural constraints. The missing layer between orchestration and verification is governance." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -294,7 +295,22 @@
 
   <div class="article-body">
 
-    <h2>The industry is solving the wrong half of the problem</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-industry-is-solving-the-wrong">The industry is solving the wrong half of the problem</a></li>
+        <li><a href="#what-context-engineering-actually-solves">What context engineering actually solves</a></li>
+        <li><a href="#why-drift-still-happens">Why drift still happens</a></li>
+        <li><a href="#the-missing-layer-architectural-governance">The missing layer: architectural governance</a></li>
+        <li><a href="#why-orchestration-makes-this-worse">Why orchestration makes this worse</a></li>
+        <li><a href="#what-systems-actually-need">What systems actually need</a></li>
+        <li><a href="#practical-implementation-patterns">Practical implementation patterns</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-industry-is-solving-the-wrong">The industry is solving the wrong half of the problem</h2>
     <p>The infrastructure conversation in AI-assisted development has converged on a clear direction: larger context windows, persistent memory layers, retrieval pipelines, agent handoffs, orchestration runtimes, and long-running sessions. These are real advances, and they solve a real problem &mdash; agents forgetting things.</p>
     <p>But teams adopting these systems still encounter architectural inconsistency. Duplicated abstractions. Bypassed repository patterns. Policy violations that context retrieval did not prevent. Review queues that grow faster than governance can keep pace.</p>
     <p>The problem is not that context engineering fails. The problem is that it was never designed to solve what architectural drift actually is.</p>
@@ -309,12 +325,12 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What context engineering actually solves</h2>
+<h2 id="what-context-engineering-actually-solves">What context engineering actually solves</h2>
     <p>Context engineering is a genuine capability advance. Retrieval pipelines surface the right information at the right moment. Persistent memory layers reduce repeated instruction. Session continuity gives agents historical awareness. Cross-agent coordination becomes tractable when context is shared.</p>
     <p>These improvements produce measurable benefits: fewer local hallucinations, better task continuity, reduced prompt repetition, and improved coherence across long-running sessions. That is the right problem to solve if recall is your bottleneck.</p>
     <p>But context engineering answers the question: <em>did the agent have access to the right information?</em> It does not answer: <em>was the agent constrained from violating the architecture?</em> Those are different questions, and retrieval infrastructure can only answer the first one.</p>
 
-    <h2>Why drift still happens</h2>
+    <h2 id="why-drift-still-happens">Why drift still happens</h2>
     <p>Architectural drift enters AI-assisted systems through several distinct mechanisms. Each has a different root cause. None of them is solved by better recall.</p>
 
     <h3>A. Local optimization drift</h3>
@@ -333,7 +349,7 @@
     <p>A retrieved architecture decision record can still be ignored. It can be outweighed by a more recent instruction, overridden by a local optimization, diluted by noise, or simply contradicted by a different part of the context window.</p>
     <p>RAG surfaces information. Information is not constraint. Governance determines whether violations are allowed to proceed &mdash; and that is a binary enforcement question, not a retrieval quality question.</p>
 
-    <h2>The missing layer: architectural governance</h2>
+    <h2 id="the-missing-layer-architectural-governance">The missing layer: architectural governance</h2>
     <p>Context engineering and architectural governance are different infrastructure layers. They solve different problems and they fail in different ways.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -377,7 +393,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>Why orchestration makes this worse</h2>
+    <h2 id="why-orchestration-makes-this-worse">Why orchestration makes this worse</h2>
     <p>As AI systems evolve toward agent swarms, long-running execution, asynchronous delegation, and autonomous remediation loops, the drift problem does not stay linear. It compounds.</p>
     <p>Each additional agent is a new execution surface where architectural constraints can fail to propagate. Each asynchronous handoff is an opportunity for governance to drop out of the loop. Each layer of orchestration adds distance between the original architectural intent and the eventual output.</p>
 
@@ -407,7 +423,7 @@
 
     <p>Human review queues grow faster than governance can be applied manually. The answer is not faster review &mdash; it is enforcement at the point of generation.</p>
 
-    <h2>What systems actually need</h2>
+    <h2 id="what-systems-actually-need">What systems actually need</h2>
     <p>The infrastructure gap is not about better memory or longer context windows. Systems operating at agent velocity need a different class of infrastructure:</p>
     <ul>
       <li><strong>Executable architectural intent</strong> &mdash; decisions encoded as machine-evaluable constraints, not documentation</li>
@@ -418,7 +434,7 @@
     </ul>
     <div class="callout"><p><strong>The future is not agents with larger memories.</strong> It is systems with enforceable architectural integrity.</p></div>
 
-    <h2>Practical implementation patterns</h2>
+    <h2 id="practical-implementation-patterns">Practical implementation patterns</h2>
     <p>Governance infrastructure does not require a full platform rewrite. The insertion points are specific:</p>
 
     <!-- SVG Diagram 3: Governance Insertion Points -->
@@ -454,7 +470,7 @@
       <li><strong>Provenance traces</strong> &mdash; every enforcement verdict is traceable to its originating decision</li>
     </ul>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>Context engineering is becoming foundational infrastructure for AI-assisted development. Larger windows, persistent memory, and retrieval pipelines are not optional &mdash; they are table stakes for operating at agent velocity.</p>
     <p>But recall alone does not preserve architecture. As orchestration complexity grows, systems will increasingly require governance layers that make architectural intent enforceable, portable, and verifiable across every execution surface.</p>
     <div class="callout"><p><strong>The next evolution after context engineering is architectural governance.</strong></p></div>

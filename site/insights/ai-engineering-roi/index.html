@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI spend is up 28x. Feature delivery is flat. Coding activity is up 240%, releases up 30%. Where the value leaks between AI generation and delivered software, and how to measure it in three layers instead of one." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -298,7 +299,22 @@
 
   <div class="article-body">
 
-    <h2>The question has moved</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-question-has-moved">The question has moved</a></li>
+        <li><a href="#coding-productivity-is-not-engineering-roi">Coding productivity is not engineering ROI</a></li>
+        <li><a href="#where-the-value-leaks">Where the value leaks</a></li>
+        <li><a href="#the-reconciliation-cost-is-not-evenly">The reconciliation cost is not evenly distributed</a></li>
+        <li><a href="#three-layers-not-one-dashboard">Three layers, not one dashboard</a></li>
+        <li><a href="#a-five-stage-roi-scorecard">A five-stage ROI scorecard</a></li>
+        <li><a href="#what-to-check-before-renewing-an">What to check before renewing an AI coding budget</a></li>
+        <li><a href="#the-claim-this-page-is-not">The claim this page is not making</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-question-has-moved">The question has moved</h2>
     <p>For two years the AI-coding question was whether the tools worked. That question is settled. Coding agents ship real changes, review real diffs, and pass real continuous integration (CI). The question that replaced it is harder: does any of that translate into an engineering organization delivering more value, or does it just make code generation cheaper while everything downstream of generation absorbs the difference?</p>
     <p>Two datasets published in 2026 answer that question with more precision than the debate has had before, and they don&rsquo;t agree with the optimistic version of the story.</p>
     <table class="gov-table">
@@ -325,7 +341,7 @@
   </div>
 </aside>
 
-    <h2>Coding productivity is not engineering ROI</h2>
+    <h2 id="coding-productivity-is-not-engineering-roi">Coding productivity is not engineering ROI</h2>
     <p>The confusion at the center of most AI-ROI conversations is treating these as the same measurement.</p>
     <table class="gov-table">
       <thead>
@@ -340,7 +356,7 @@
     </table>
     <p>A pull request (PR) produced in half the time but requiring twice the reconciliation is not twice as valuable. It may not be more valuable at all. This is not an argument that developer-productivity metrics are worthless; task completion time and AI-assisted work rate are useful leading indicators of adoption. They are just not sufficient to answer whether the organization is getting a return, and treating them as if they were is how a company ends up 28&times; deeper into AI spend with an unchanged feature-delivery rate and no way to explain why.</p>
 
-    <h2>Where the value leaks</h2>
+    <h2 id="where-the-value-leaks">Where the value leaks</h2>
     <p>The National Bureau of Economic Research (NBER) attenuation, 240% down to 30%, is not evidence that AI coding doesn&rsquo;t work. It is a map of where a system built for human-paced contribution starts to strain once contribution gets three times cheaper. Generation gets faster. Everything downstream, verification, integration, operational stability, was sized for the old rate.</p>
     <p>Put it as a chain and the leak points are visible:</p>
     <p style="font-family:'DM Mono',monospace;font-size:0.85rem;color:var(--muted);line-height:2;">AI investment &rarr; generation gain &rarr; <strong style="color:var(--text);">verification cost</strong> &rarr; <strong style="color:var(--text);">rework cost</strong> &rarr; integration cost &rarr; operational cost &rarr; delivered value</p>
@@ -349,11 +365,11 @@
     <p>The reconciliation case is worth stating precisely, because it is easy to conflate with ordinary bugs and it isn&rsquo;t one. An agent asked to add a reporting endpoint chooses direct SQL because it is the fastest path to a working diff. The organization decided months earlier that all database access goes through repository abstractions. Nothing about the direct-SQL version is functionally wrong; it may pass every test written for it.</p>
     <p>The cost shows up later, in a reviewer who has to notice the pattern, explain the constraint, and wait for a rewrite, or, if nobody notices, in the next engineer who has to reconcile two incompatible patterns in the same codebase. Multiply that by however many decisions a codebase depends on and however fast agents are now proposing changes, and the reconciliation cost stops being a rounding error.</p>
 
-    <h2>The reconciliation cost is not evenly distributed</h2>
+    <h2 id="the-reconciliation-cost-is-not-evenly">The reconciliation cost is not evenly distributed</h2>
     <p>Two responses to rising AI-driven throughput are visible in the data, and they are not the same finding. <a href="/insights/acceleration-whiplash-governance-gap/">Faros AI&rsquo;s Engineering Report</a> found throughput up alongside incidents, review times, and unreviewed merges: the delivery pipeline straining under volume. <a href="/insights/dora-metrics-insufficient-for-agentic-development/">DevOps Research and Assessment (DORA) delivery metrics</a> can register that strain without ever answering the separate question of whether what shipped is architecturally coherent. A change can clear CI, pass review, and deploy cleanly, and still be the thing that makes the next six changes harder to reason about. Throughput metrics and architectural-coherence metrics fail independently, which is why a team can look healthy on one and be accumulating debt on the other at the same time.</p>
     <p>This is also why "just review more carefully" stops scaling before spend does. Review capacity is bounded by reviewer hours, so it grows at most in step with the number of people qualified to review. AI-driven generation capacity does not grow linearly with anything an organization directly controls; it scales with however fast the agent can iterate, which is a different curve entirely. A 28&times; increase in spend does not imply a 28&times; increase in the org&rsquo;s capacity to check what that spend produced. Something has to close the widening part of that gap, and unreviewed merges are the visible symptom of nothing closing it yet.</p>
 
-    <h2>Three layers, not one dashboard</h2>
+    <h2 id="three-layers-not-one-dashboard">Three layers, not one dashboard</h2>
     <p>Most AI-engineering dashboards stop at generation: tasks completed, code produced, adoption rate. A useful measurement model needs three layers, and the third is the one that is almost always missing.</p>
     <table class="gov-table">
       <thead>
@@ -368,7 +384,7 @@
     <p>DORA-family metrics own the delivery layer well, and <a href="/insights/dora-metrics-insufficient-for-agentic-development/">they are necessary</a>. They were not built to answer whether autonomous development is preserving architectural intent, and they don&rsquo;t claim to. The governance layer is where that question gets answered, and it is the layer missing from almost every AI-adoption dashboard published so far.</p>
     <p>It is missing for a structural reason, not an oversight. Generation and delivery metrics are both derivable from systems every engineering org already instruments: the agent platform, the CI pipeline, the issue tracker. Governance metrics require a separate artifact that most organizations don&rsquo;t yet have: an explicit, machine-checkable record of which decisions are supposed to constrain a change, and evidence of whether each proposed change was checked against it. Without that record, "architectural coherence" has no number attached to it, and what has no number attached to it tends not to make the dashboard, regardless of how much it's costing.</p>
 
-    <h2>A five-stage ROI scorecard</h2>
+    <h2 id="a-five-stage-roi-scorecard">A five-stage ROI scorecard</h2>
     <p>The three layers above tell you where to look. A scorecard needs finer cuts, because two costs hide inside the delivery layer and the actual return sits beyond all three. Split the pipeline into five stages and give each one an owner and a number.</p>
     <p>The governance row uses the four states that Mneme, an open-source tool that checks AI-written changes against rules derived from recorded architectural decisions, reports in its <a href="/audit/">Architecture Protection Audit</a>. <strong>Protected</strong>: an active rule enforces the decision. <strong>Mneme-ready</strong>: the audit has written a rule that waits for someone to activate it. <strong>Requires modelling</strong>: the decision needs breaking into smaller parts before a rule can express it. <strong>Guidance</strong>: no rule can express the decision, so it stays with reviewers.</p>
     <table class="gov-table">
@@ -396,7 +412,7 @@
     <p>Suppose a team redeploys 400 hours in a quarter, at a loaded rate of $100 an hour: $40,000. It spends $10,000 on tools, adds 200 hours of review, rework and CI recovery ($20,000), and spends a further 40 senior hours at $150 on corrections ($6,000), counted separately from the 200. The vendor dashboard reports 400 hours saved. The net is $4,000, a tenth of the gross. Count only hours you can show went to delivered work. Self-reported time saved overstates the first term.</p>
     <p>Our six-level ladder runs 0 spend, 1 adoption, 2 productivity, 3 delivery, 4 quality, 5 governed ROI. In the vendor and internal dashboards we have seen, most stop between Levels 1 and 2; we have no survey behind that. The five stages give you a number at each level above that. The <a href="/insights/ai-adoption-maturity-model-engineering-analysis/">AI adoption maturity model</a> is a different scale: five levels from the Carnegie Mellon Software Engineering Institute and Accenture, covering the organizational side of adoption.</p>
 
-    <h2>What to check before renewing an AI coding budget</h2>
+    <h2 id="what-to-check-before-renewing-an">What to check before renewing an AI coding budget</h2>
     <p>A short diagnostic, in order:</p>
     <ol>
       <li>Has code-generation throughput increased?</li>
@@ -408,7 +424,7 @@
     </ol>
     <p>The last question is the one an <a href="/audit/">Architecture Protection Audit</a> answers directly. It doesn&rsquo;t estimate ROI. It measures something narrower and more actionable: of the architectural decisions a codebase depends on, how many are <a href="/insights/four-architecture-protection-states/">Protected by an active rule</a>, how many could be with one activation step, how many need further modelling before they can become a rule, and how many are properly Guidance, left to review by deliberate choice rather than by gap.</p>
 
-    <h2>The claim this page is not making</h2>
+    <h2 id="the-claim-this-page-is-not">The claim this page is not making</h2>
     <p>Architectural drift is one contributor to the gap between AI spend and delivered value. It is not the only one, and this page does not argue otherwise. Requirements churn, organizational structure, security review, and the underlying difficulty of the work all shape the same numbers. What can be said with more confidence is narrower and, for readers evaluating governance tooling specifically, more useful: <strong>architectural reconciliation is a downstream cost that generic AI-productivity measurement does not expose, and it is a cost engineering systems can increasingly prevent rather than merely detect later.</strong></p>
     <p>The other articles on AI engineering ROI follow that thread. <a href="/insights/ai-throughput-is-not-engineering-throughput/">The next piece</a> takes the NBER attenuation and asks the sharper version of this page&rsquo;s question directly: if raw coding activity is up 240% and releases are up 30%, what is the actual unit of AI coding productivity, and why has the industry been measuring the wrong one.</p>
   </div><!-- /.article-body -->

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Google's Agentic Resource Discovery helps AI agents find and verify tools, skills, and other agents. Learn why discovery still requires runtime and architectural governance." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -318,8 +319,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-is-agentic-resource-discovery">What Is Agentic Resource Discovery?</a></li>
+        <li><a href="#ard-vs-mcp-vs-a2a">ARD vs MCP vs A2A</a></li>
+        <li><a href="#discovery-and-identity-are-necessary-not">Discovery and Identity Are Necessary, Not Sufficient</a></li>
+        <li><a href="#platform-governance-vs-architectural-governance">Platform Governance vs Architectural Governance</a></li>
+        <li><a href="#why-dynamic-discovery-increases-the-governance">Why Dynamic Discovery Increases the Governance Requirement</a></li>
+        <li><a href="#how-mneme-complements-ard">How Mneme Complements ARD</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Is Agentic Resource Discovery?</h2>
+
+    <h2 id="what-is-agentic-resource-discovery">What Is Agentic Resource Discovery?</h2>
     <p><strong>Agentic Resource Discovery (ARD) is an open specification for publishing, indexing, finding, and verifying agent-accessible resources &mdash; tools, skills, APIs, MCP servers, and other agents &mdash; so that an AI agent can locate a capability it needs and confirm the capability is genuine before using it.</strong> Google introduced the specification in <a href="https://developers.googleblog.com/announcing-the-agentic-resource-discovery-specification/" target="_blank" rel="noopener">its announcement of the Agentic Resource Discovery specification</a> on the Google Developers Blog, framing it as shared infrastructure rather than a proprietary store.</p>
     <p>The ARD specification has four moving parts:</p>
     <ul>
@@ -339,7 +353,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>ARD vs MCP vs A2A</h2>
+<h2 id="ard-vs-mcp-vs-a2a">ARD vs MCP vs A2A</h2>
     <p>ARD slots alongside two protocols that already define how agents act, and the cleanest way to keep them straight is by the question each one answers:</p>
     <ul>
       <li><strong>ARD</strong> answers <em>&ldquo;Where is it?&rdquo;</em> &mdash; how an agent finds and verifies a capability.</li>
@@ -348,13 +362,13 @@
     </ul>
     <p>Together these three cover finding, invoking, and coordinating. The question none of them answers is the one that decides outcomes: <strong>who decides whether the resulting action is allowed?</strong> A capability can be discoverable, verified, correctly invoked, and coordinated across agents, and still produce a change that violates a project&rsquo;s architecture. Discovery and protocol are necessary plumbing. They are not a decision.</p>
 
-    <h2>Discovery and Identity Are Necessary, Not Sufficient</h2>
+    <h2 id="discovery-and-identity-are-necessary-not">Discovery and Identity Are Necessary, Not Sufficient</h2>
     <p>A valid ARD catalog entry is a strong claim, and worth taking seriously. It proves a capability exists, that it is owned by the domain it is published under, that its metadata is unmodified, and that its endpoint is reachable. For supply-chain integrity that is genuine progress: it closes off impersonation and tampering, the way a signed package closes off a substituted binary.</p>
     <p>It also stops exactly there. A verified entry cannot decide whether the tool fits this repository, whether using it conflicts with an architectural decision record, whether it introduces an unapproved dependency, whether the action crosses an architectural boundary the team has drawn, whether it sends sensitive code off-site, whether the change needs human approval, or whether it meets the project&rsquo;s verification rules. Those are properties of the <em>use</em>, not of the capability. Identity tells you the tool is what it says it is. It says nothing about whether this agent should reach for it, here, now.</p>
 
     <div class="callout"><p><strong>A trusted capability can still be used in an untrusted way.</strong> Verified identity authenticates the tool. It does not authorize the change that calling the tool produces.</p></div>
 
-    <h2>Platform Governance vs Architectural Governance</h2>
+    <h2 id="platform-governance-vs-architectural-governance">Platform Governance vs Architectural Governance</h2>
     <p>Google is not naive about this, and it is worth being precise about what the platform layer does cover. Around ARD, an Agent Registry handles inventory, Agent Identity handles who is requesting, and an Agent Gateway handles access control, tool-call policy, and auditing. That is real platform governance, and most enterprises will need it. The distinction that matters is not platform governance versus nothing; it is platform governance versus architectural governance &mdash; whether the resulting change is compliant with how the system is supposed to be built.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -373,12 +387,12 @@
 
     <p>The platform handles the top four rows well. Discovery, identity, connection, and invocation policy are about whether an agent <em>may</em> reach a capability. The bottom two rows are about whether what the agent <em>did</em> with that capability is allowed to stand. A gateway can confirm an agent is permitted to call a code-generation tool; it cannot read the diff that tool produced and decide whether the diff respects the project&rsquo;s boundaries. That is the layer <a href="/concepts/ai-governance-infrastructure/">governance infrastructure</a> has to add, and it is where Mneme sits.</p>
 
-    <h2>Why Dynamic Discovery Increases the Governance Requirement</h2>
+    <h2 id="why-dynamic-discovery-increases-the-governance">Why Dynamic Discovery Increases the Governance Requirement</h2>
     <p>Before ARD, an agent&rsquo;s toolset was configured by hand. A platform team decided which tools an agent could see, wired them in, and reviewed that list as a static artifact. The set of things an agent could do was known in advance, which meant configuration itself was a form of governance: if a capability was not in the config, it could not be used.</p>
     <p>Dynamic discovery changes that. Capabilities are found and added at runtime, the set expands while the agent is working, registries differ in what they expose, and agents select tools mid-reasoning based on the task in front of them. A capability can be authentic, verified, and entirely unsuitable for the change being made. The window where a human could have vetted the toolset has closed before the work starts.</p>
     <p>The implication is direct. <strong>The more dynamically agents discover capabilities, the less static configuration can serve as the governance model.</strong> What a fixed allowlist used to provide has to move to where the action actually lands &mdash; the moment a change is produced. This is the case for <a href="/concepts/runtime-governance/">runtime governance</a>: governance that evaluates the actual change at the point of generation, not a list of permissions decided weeks earlier.</p>
 
-    <h2>How Mneme Complements ARD</h2>
+    <h2 id="how-mneme-complements-ard">How Mneme Complements ARD</h2>
     <p>ARD and Mneme operate on different questions, which is exactly why they compose cleanly. Trace a single agent action through both:</p>
     <ol>
       <li>ARD exposes the capabilities an agent can discover and verify.</li>

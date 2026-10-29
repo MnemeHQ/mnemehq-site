@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic&#x27;s self-hosted environments move Claude Code execution onto enterprise infrastructure. Architectural decisions must still follow every agent action." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -328,8 +329,24 @@
   </header>
 
   <div class="article-body">
+
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#self-hosting-moves-execution-inside-the">Self-hosting moves execution inside the enterprise boundary</a></li>
+        <li><a href="#a-secure-agent-can-still-make">A secure agent can still make the wrong engineering decision</a></li>
+        <li><a href="#runtime-controls-and-architectural-controls-govern">Runtime controls and architectural controls govern different objects</a></li>
+        <li><a href="#shared-infrastructure-makes-informal-memory-weaker">Shared infrastructure makes informal memory weaker</a></li>
+        <li><a href="#the-enterprise-coding-agent-stack-needs">The enterprise coding-agent stack needs distinct controls</a></li>
+        <li><a href="#self-hosting-creates-a-natural-enforcement">Self-hosting creates a natural enforcement point</a></li>
+        <li><a href="#context-is-useful-enforcement-is-different">Context is useful; enforcement is different</a></li>
+        <li><a href="#the-quiet-risk-is-authorized-drift">The quiet risk is authorized drift</a></li>
+        <li><a href="#what-platform-leaders-should-require">What platform leaders should require</a></li>
+        <li><a href="#the-next-question-is-what-an">The next question is what an authorized agent may build</a></li>
+      </ol>
+    </nav>
     <p>Anthropic's <a href="https://platform.claude.com/docs/en/api/beta/environments/update" target="_blank" rel="noopener">Environment API</a> distinguishes cloud and self-hosted execution, while its <a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank" rel="noopener">sandboxing architecture</a> separates filesystem and network boundaries.</p>
-    <h2>Self-hosting moves execution inside the enterprise boundary</h2>
+    <h2 id="self-hosting-moves-execution-inside-the">Self-hosting moves execution inside the enterprise boundary</h2>
     <p>Claude Code already occupies more of the delivery lifecycle than a traditional autocomplete tool. It can inspect repositories, edit multiple files, run commands, test its work, and participate in CI workflows.</p>
     <p>Anthropic's earlier <a href="https://www.anthropic.com/engineering/claude-code-sandboxing" target="_blank" rel="noopener">sandboxing architecture</a> introduced filesystem and network isolation so the agent could operate with more autonomy inside explicit boundaries. Anthropic reported an 84% reduction in permission prompts in its own internal use.</p>
     <p>Self-hosted environments extend that control story. Instead of requiring tool execution to happen in an external hosted workspace, an organization can provide infrastructure under its own operational control.</p>
@@ -354,7 +371,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>A secure agent can still make the wrong engineering decision</h2>
+<h2 id="a-secure-agent-can-still-make">A secure agent can still make the wrong engineering decision</h2>
     <p>Consider a project with an accepted decision that one component must use SQLite. The rationale may be portability, deployment simplicity, or a dependency elsewhere in the system.</p>
     <p>Claude Code receives a task that requires persistence.</p>
     <p>The session runs in a self-hosted environment. Its identity is valid. Repository access is authorized. Network access is constrained. Tool invocation is legitimate.</p>
@@ -365,7 +382,7 @@
     <p>A permission system answers: <strong>May this agent edit this repository?</strong></p>
     <p>Architectural governance answers: <strong>Is this proposed change consistent with the decisions governing this part of the repository?</strong></p>
     <p>Those are different verification problems.</p>
-    <h2>Runtime controls and architectural controls govern different objects</h2>
+    <h2 id="runtime-controls-and-architectural-controls-govern">Runtime controls and architectural controls govern different objects</h2>
     <p>Anthropic's security work increasingly reduces implicit trust around execution.</p>
     <ul>
       <li>Filesystem isolation controls where an agent may read or write.</li>
@@ -377,14 +394,14 @@
     <p>These controls are valuable because coding agents are becoming more autonomous.</p>
     <p>They do not determine whether a permitted file change violates a service boundary, whether an approved tool introduces a prohibited dependency, or whether a technically valid implementation conflicts with a ratified ADR.</p>
     <p>Sandboxing establishes the area inside which an agent may work. Architectural governance establishes which engineering decisions must remain invariant while it works there.</p>
-    <h2>Shared infrastructure makes informal memory weaker</h2>
+    <h2 id="shared-infrastructure-makes-informal-memory-weaker">Shared infrastructure makes informal memory weaker</h2>
     <p>One developer working interactively with one agent can still carry organizational knowledge in conversation. The developer remembers why a dependency was rejected and notices when a generated change crosses a boundary.</p>
     <p>That model weakens when coding agents become shared infrastructure.</p>
     <p>A self-hosted environment may serve multiple engineers, remote sessions, automated workflows, or several classes of agents. Architectural intent can no longer depend on every operator restating the same history correctly.</p>
     <p>The organization needs relevant decisions to reach the execution surface consistently.</p>
     <p>That is <a href="/concepts/governance-propagation/">governance propagation</a>.</p>
     <p>A decision written in an ADR but absent from the execution path has not propagated. A rule copied into one tool configuration but missing from another has not propagated reliably. A decision placed in context but never checked against the resulting change has propagated as information, not enforcement.</p>
-    <h2>The enterprise coding-agent stack needs distinct controls</h2>
+    <h2 id="the-enterprise-coding-agent-stack-needs">The enterprise coding-agent stack needs distinct controls</h2>
     <p>Engineering leaders should separate five layers.</p>
     <h3>1. Identity and access</h3>
     <p>Who may start a session? Which repositories and organizational resources may it access? What credentials does it receive?</p>
@@ -397,13 +414,13 @@
     <h3>5. Verification</h3>
     <p>Did the result satisfy the properties the organization requires? Tests, static analysis, architectural enforcement, CI, security checks, and human review can all participate in the <a href="/concepts/verification-contracts/">verification contract</a>.</p>
     <p>No layer replaces the others. A self-hosted environment without architectural enforcement can still produce drift. Architectural enforcement without sandboxing does not provide runtime security.</p>
-    <h2>Self-hosting creates a natural enforcement point</h2>
+    <h2 id="self-hosting-creates-a-natural-enforcement">Self-hosting creates a natural enforcement point</h2>
     <p>Placing agent execution closer to infrastructure the organization controls creates a natural point for governance to travel with the workload.</p>
     <p>Suppose a platform team maintains a decision corpus covering approved databases, ownership boundaries, prohibited dependencies, required abstractions, and repository-specific implementation constraints.</p>
     <p>When a Claude Code session starts, the platform should not depend on every developer manually copying those decisions into a prompt.</p>
     <p>The project should resolve the applicable decisions, and its verification contract should determine what is checked as the agent plans and modifies code.</p>
     <p>The ADR still carries human rationale. A machine-enforceable representation serves a different purpose: making the consequence of that decision available where software changes.</p>
-    <h2>Context is useful; enforcement is different</h2>
+    <h2 id="context-is-useful-enforcement-is-different">Context is useful; enforcement is different</h2>
     <p>Project instructions improve agent behavior. The model should know the architecture before it changes the architecture.</p>
     <p>But context delivery is not equivalent to governance.</p>
     <p>Compare two systems.</p>
@@ -413,13 +430,13 @@
     <p>Both expose the decision. Only the second creates an enforcement point.</p>
     <p>Models are probabilistic. More context can improve the odds of conformance, but the presence of an instruction does not guarantee that every relevant action will follow it.</p>
     <p><a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> should remain outside the model wherever the decision can be expressed precisely.</p>
-    <h2>The quiet risk is authorized drift</h2>
+    <h2 id="the-quiet-risk-is-authorized-drift">The quiet risk is authorized drift</h2>
     <p>Agent-security discussions rightly focus on prompt injection, data exfiltration, compromised credentials, unauthorized tool calls, and excessive permissions.</p>
     <p>Engineering leaders also need to account for a quieter failure mode: the agent behaves exactly as authorized and still moves the system away from its intended architecture.</p>
     <p>It chooses a library that conflicts with an organizational standard. It bypasses an approved abstraction. It creates a second implementation of a capability the organization standardized centrally. It follows a locally optimal path that violates a system-level decision.</p>
     <p>These changes may compile, pass tests, clear security scanning, and look reasonable to a reviewer who lacks the architectural history.</p>
     <p>That is why architectural drift is not reducible to code quality or runtime security. It is a failure to preserve established engineering intent.</p>
-    <h2>What platform leaders should require</h2>
+    <h2 id="what-platform-leaders-should-require">What platform leaders should require</h2>
     <p>Before treating self-hosted coding agents as a shared platform capability, teams should answer four questions:</p>
     <ol>
       <li><strong>Which decisions form the decision corpus?</strong> Not every wiki page is policy. Authority and scope must be explicit.</li>
@@ -428,7 +445,7 @@
       <li><strong>What is the verification contract?</strong> Architectural enforcement should sit alongside tests, security checks, static analysis, CI, and human judgment.</li>
     </ol>
     <p>This scales better than making code review responsible for remembering every decision the organization has accumulated.</p>
-    <h2>The next question is what an authorized agent may build</h2>
+    <h2 id="the-next-question-is-what-an">The next question is what an authorized agent may build</h2>
     <p>The first enterprise questions about coding agents were about access: Can the model see our code? Where does execution happen? Which files and services can the agent reach? How are credentials protected?</p>
     <p>Those questions remain essential. Self-hosted environments give enterprises another way to answer them.</p>
     <p>The next question begins after all those controls succeed.</p>

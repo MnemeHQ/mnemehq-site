@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="HTML-shaped AI outputs look like a formatting trend. The real shift is that software artifacts are becoming machine-operable execution surfaces, and that dramatically expands the governance surface area." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -254,7 +255,23 @@
 
   <div class="article-body">
 
-    <h2>The industry thinks this is about better formatting</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-industry-thinks-this-is-about">The industry thinks this is about better formatting</a></li>
+        <li><a href="#software-artifacts-are-becoming-machine-interfaces">Software artifacts are becoming machine interfaces</a></li>
+        <li><a href="#the-boundary-between-output-and-execution">The boundary between output and execution is collapsing</a></li>
+        <li><a href="#structured-outputs-expand-the-governance-surface">Structured outputs expand the governance surface area</a></li>
+        <li><a href="#context-engineering-does-not-replace-governance">Context engineering does not replace governance</a></li>
+        <li><a href="#machine-operable-artifacts-as-a-category">Machine-operable artifacts as a category</a></li>
+        <li><a href="#the-next-layer-is-governance-engineering">The next layer is governance engineering</a></li>
+        <li><a href="#the-pull-quotes-that-matter">The pull quotes that matter</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-industry-thinks-this-is-about">The industry thinks this is about better formatting</h2>
     <p>The current excitement about HTML-shaped AI outputs reads as continuity of a longer trend:</p>
     <ul>
       <li>raw text outputs</li>
@@ -276,7 +293,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Software artifacts are becoming machine interfaces</h2>
+<h2 id="software-artifacts-are-becoming-machine-interfaces">Software artifacts are becoming machine interfaces</h2>
     <p>The artifacts software teams produce &mdash; documentation, pull requests, READMEs, ADRs, scripts, tickets &mdash; were mostly written for humans. They were prose with some structure on top. The structure was a courtesy to make scanning easier.</p>
     <p>That assumption is breaking. The same artifacts are now increasingly consumed by:</p>
     <ul>
@@ -318,7 +335,7 @@
       <p class="diag-caption">From passive documents to executable environments</p>
     </div>
 
-    <h2>The boundary between output and execution is collapsing</h2>
+    <h2 id="the-boundary-between-output-and-execution">The boundary between output and execution is collapsing</h2>
     <p>Historically, software generated outputs, humans interpreted them, and humans executed decisions. The interpretive layer was the human.</p>
     <p>That arrangement is rapidly changing. Agents generate outputs. Outputs trigger workflows. Workflows invoke tools. Tools mutate infrastructure. The output itself becomes part of the execution layer. The artifact is no longer a description of what could happen. It is the substrate on which what happens next runs.</p>
     <p>Concrete examples are everywhere:</p>
@@ -333,7 +350,7 @@
     </ul>
     <div class="callout"><p><strong>AI outputs are no longer documents.</strong> They are operational surfaces. The boundary between output and execution is collapsing.</p></div>
 
-    <h2>Structured outputs expand the governance surface area</h2>
+    <h2 id="structured-outputs-expand-the-governance-surface">Structured outputs expand the governance surface area</h2>
     <p>The industry assumption is that more structure means more reliability. That is partly true. Structured outputs are easier to validate at the surface level &mdash; a JSON schema can reject a malformed field, a tool-call signature can reject a wrong type.</p>
     <p>But schema validity is not architectural integrity. More structure also means more places architectural drift can propagate.</p>
     <p>Once governance has to cover not just generated source code but also generated CI configs, generated infrastructure-as-code, generated workflow definitions, generated dashboards, generated agent-to-agent interfaces, and generated execution metadata, the surface that needs constraints multiplies.</p>
@@ -353,7 +370,7 @@
 
     <p>Governance now has to extend across prompts, workflows, generated code, interfaces, orchestration layers, execution metadata, agent memory, and deployment artifacts. That is a much larger surface than &ldquo;is this code change valid?&rdquo;</p>
 
-    <h2>Context engineering does not replace governance</h2>
+    <h2 id="context-engineering-does-not-replace-governance">Context engineering does not replace governance</h2>
     <p>The dominant infrastructure narrative right now is that context engineering &mdash; better retrieval, larger windows, persistent memory &mdash; is what closes the gap between AI capability and reliable systems. Context engineering improves relevance. It does not enforce architectural constraints.</p>
     <p>Better context retrieval cannot, by itself, guarantee:</p>
     <ul>
@@ -366,13 +383,13 @@
     <p>The more capable the execution layer becomes, the less sufficient retrieval alone becomes. Context tells an agent what exists in the system. Governance defines what is allowed to exist in the system.</p>
     <div class="callout"><p><strong>Context helps agents know what exists.</strong> Governance defines what is allowed to exist.</p></div>
 
-    <h2>Machine-operable artifacts as a category</h2>
+    <h2 id="machine-operable-artifacts-as-a-category">Machine-operable artifacts as a category</h2>
     <p>It is worth naming the underlying object. The artifacts we are talking about here &mdash; CI configs, infrastructure files, workflow definitions, generated interfaces, agent memory, MCP responses, structured tool outputs &mdash; share a property:</p>
     <p>They are software artifacts designed primarily for autonomous system consumption rather than human interpretation.</p>
     <p>That is not the same as &ldquo;machine-readable.&rdquo; A CSV is machine-readable. A machine-operable artifact is one that another system can act on directly, often without further human interpretation. The interpretive layer that used to sit between artifact and action has thinned, and in many workflows has disappeared entirely.</p>
     <p>Once an artifact is machine-operable, every property of that artifact becomes a property of the system that runs it. Mistakes in the artifact are mistakes in the system. The governance question is no longer &ldquo;is the documentation accurate?&rdquo; It is &ldquo;is the artifact a valid configuration of the running system?&rdquo;</p>
 
-    <h2>The next layer is governance engineering</h2>
+    <h2 id="the-next-layer-is-governance-engineering">The next layer is governance engineering</h2>
     <p>The industry has been optimizing the AI stack along visible axes:</p>
     <ul>
       <li>prompts</li>
@@ -407,7 +424,7 @@
       <p class="diag-caption">The bottleneck shifts from capability to controlled autonomous execution</p>
     </div>
 
-    <h2>The pull quotes that matter</h2>
+    <h2 id="the-pull-quotes-that-matter">The pull quotes that matter</h2>
     <p>If you only carry a handful of lines from this piece, these are the ones worth holding:</p>
     <ul>
       <li><strong>AI outputs are becoming operational surfaces.</strong></li>
@@ -417,7 +434,7 @@
       <li><strong>The more autonomous systems become, the more architecture becomes infrastructure.</strong></li>
     </ul>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>The current excitement about HTML prompting and richly structured AI outputs is real, but the surface framing misses what is actually shifting. The artifact and the execution layer are merging. Software is becoming a set of machine-operable environments instead of a set of human-readable documents. That changes what governance has to do, where it has to live, and how much of the system it has to cover.</p>
     <p>The next generation of AI infrastructure will be defined not by the elegance of its outputs but by the integrity of the systems those outputs run on.</p>
 

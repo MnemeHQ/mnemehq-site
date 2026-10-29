@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Microsoft Project Solara, unveiled at Build 2026, powers devices that run AI agents instead of apps. When the app disappears, governance must follow the agent." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -293,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-microsoft-announced-at-build-2026">What Microsoft Announced at Build 2026</a></li>
+        <li><a href="#the-app-was-the-unit-of">The App Was the Unit of Control</a></li>
+        <li><a href="#agents-break-the-app-shaped-permission">Agents Break the App-Shaped Permission Model</a></li>
+        <li><a href="#governance-must-follow-the-agent">Governance Must Follow the Agent</a></li>
+        <li><a href="#every-platform-wave-grows-a-governance">Every Platform Wave Grows a Governance Layer</a></li>
+        <li><a href="#what-this-means-for-engineering-teams">What This Means for Engineering Teams Today</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Microsoft Announced at Build 2026</h2>
+
+    <h2 id="what-microsoft-announced-at-build-2026">What Microsoft Announced at Build 2026</h2>
     <p>Project Solara is a chip-to-cloud software platform for agent-first devices &mdash; hardware that runs AI agents instead of applications. Steven Bathiche, CVP and Technical Fellow in Microsoft&rsquo;s Applied Sciences Group, framed the stakes in <a href="https://commandline.microsoft.com/project-solara-build-2026/">Microsoft&rsquo;s announcement</a>: &ldquo;The next platform shift is from apps to agents &mdash; from software you open to intelligence you invoke.&rdquo;</p>
     <p>The platform skips Windows entirely. Solara runs on MDEP, the Microsoft Device Ecosystem Platform, which Microsoft describes as &ldquo;an enterprise-grade operating system built on AOSP&rdquo; &mdash; the Android Open Source Project. Microsoft chose Android&rsquo;s open-source foundation over its own flagship OS for the agent-first stack, a choice that signals how cleanly the company wanted to break from app-era assumptions.</p>
     <p>Two reference devices make the idea concrete. The first is a wearable badge designed for field workers: a Qualcomm wearable chip, a touchscreen, fingerprint authentication through Hello for Business, a far-field microphone array, a side camera, and 5G, WiFi, and Bluetooth. The second is a desk hub built on MediaTek IoT silicon that signs you in with facial recognition, senses presence through UWB, and becomes a Windows 365 cloud-PC client when a monitor is attached.</p>
@@ -309,18 +323,18 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The App Was the Unit of Control</h2>
+<h2 id="the-app-was-the-unit-of">The App Was the Unit of Control</h2>
     <p>Computing has been governed through the application for fifty years. When an organization asks what happened on a machine, the answer comes back in app-shaped facts: which application ran, which user initiated the action, and what permissions the application held. Those three facts anchor nearly every control an enterprise operates.</p>
     <p>Look at where enforcement lives today. Permission models grant camera, location, and file access to a specific app. App review evaluates a fixed binary before a store distributes it. Mobile device management &mdash; Intune included &mdash; decides which applications may be installed on which devices. Allowlists, code signing, software audits: each one names an application as its subject. The app is the noun in every governance sentence.</p>
     <p>The model worked because the application held still. A reviewed binary behaves tomorrow the way it behaved in review. Permissions granted at install time still describe the software a year later. Control attached to the app was control over behavior, because the app and its behavior were the same thing.</p>
 
-    <h2>Agents Break the App-Shaped Permission Model</h2>
+    <h2 id="agents-break-the-app-shaped-permission">Agents Break the App-Shaped Permission Model</h2>
     <p>An application does what it was programmed to do. An agent decides what to do. The entire app-shaped control stack rests on the first property, and Solara is built around the second.</p>
     <p>Consider the platform&rsquo;s own mechanics. An agent dispatcher and an agent task manager surface relevant agents based on context, so which agent handles a request is itself a runtime decision. Bathiche is explicit that &ldquo;there will not be a single dominant agent.&rdquo; Devices run multiple agents at once with a coordination layer; Microsoft 365 Copilot is offered, and the platform is designed for third-party agents. The actor on the device is plural, contextual, and chosen moment to moment &mdash; agents coordinate across tools and services to finish a single task.</p>
     <p>Just-in-time UI removes the last fixed artifact. Agents generate adaptive interfaces that reflow across screen sizes, in some cases generating new UI on the fly, so that &ldquo;the same agent [can] render a custom experience on multiple screen sizes with little or no additional work from the developer.&rdquo; The screen a field worker taps to approve an action may have existed for three seconds. There is no interface to screenshot for the compliance binder.</p>
     <p>Now trace what an app-era control would attach to. Review which binary? Grant permissions to which interface? Allowlist which of the agents the dispatcher might choose? The badge and the hub are simply new <a href="/concepts/execution-surfaces/">execution surfaces</a>, and what acts on them has no fixed shape to review, sign, or inventory. The governed object dissolves.</p>
 
-    <h2>Governance Must Follow the Agent</h2>
+    <h2 id="governance-must-follow-the-agent">Governance Must Follow the Agent</h2>
     <p>Organizations that deploy agent-first devices will need answers to four questions, and none of them is app-shaped. What can this agent decide autonomously? Which actions require human approval? Which policies travel with the agent as it moves across the badge, the desk hub, and the cloud? And when something goes wrong, how is the agent&rsquo;s decision audited after the fact?</p>
     <p>Microsoft ships real infrastructure for part of this. Entra ID handles identity. Intune handles device management. The hardware carries a physical microphone mute and listening indicators. Microsoft states that &ldquo;enterprise manageability, identity, security, privacy, and user control are not afterthoughts. They are part of Project Solara&rsquo;s foundation.&rdquo; All of that governs the device and the user. Identity tells you who the agent acted as; device management tells you which hardware it ran on. The agent&rsquo;s decisions &mdash; what it chose to do, with which tools, on whose behalf &mdash; remain the unconstrained part.</p>
     <p>Closing that gap means policy that travels to wherever the agent acts. The industry has already met this problem once: <a href="/insights/governance-perimeter-is-moving-to-the-endpoint/">the governance perimeter is moving to the endpoint</a>, and agent-first hardware moves it again. <a href="/concepts/governance-propagation/">Governance propagation</a> &mdash; the property that a decision made once reaches every surface where work happens &mdash; becomes the control plane itself.</p>
@@ -338,12 +352,12 @@
     </div>
     <p>The left column is what current tooling governs well. The right column is what the next audit will ask about.</p>
 
-    <h2>Every Platform Wave Grows a Governance Layer</h2>
+    <h2 id="every-platform-wave-grows-a-governance">Every Platform Wave Grows a Governance Layer</h2>
     <p>Platform shifts grow their control layers after the fact, on a schedule you can almost set a watch by. Cloud shipped first and grew security and compliance tooling once enterprises arrived. CI/CD made deployment continuous and grew observability to watch what it shipped. Data platforms scaled analytics and grew lineage and cataloging when nobody could say where a number came from. Agent platforms will grow governance and verification the same way, for the same reason: enterprises adopt the platform first and discover the missing layer the first time an auditor asks a question the platform cannot answer.</p>
     <p>That is why Solara&rsquo;s fate as hardware is almost beside the point. Maybe the badge ships in volume; maybe the desk hub joins the museum of ambitious reference designs. The direction survives either outcome. Microsoft built a new OS stack so agents could be the primary computing abstraction, and OpenAI is reportedly building an agent phone on the same Qualcomm silicon, per <a href="https://www.geekwire.com/2026/inside-microsofts-project-solara-a-new-platform-for-devices-that-run-ai-agents-instead-of-apps/">Build 2026 press coverage</a>. Days earlier, Microsoft previewed <a href="/insights/microsoft-execution-containers-ai-agent-runtime-governance/">Execution Containers</a>, OS-enforced isolation for agents on Windows. Each move treats the agent as the thing the platform exists to run.</p>
     <div class="callout"><p><strong>When platform companies redesign hardware around agents, the open question is no longer adoption.</strong> It is who supplies the governance layer the wave always grows &mdash; and whether your policies are portable enough to live in it.</p></div>
 
-    <h2>What This Means for Engineering Teams Today</h2>
+    <h2 id="what-this-means-for-engineering-teams">What This Means for Engineering Teams Today</h2>
     <p>Software delivery is already living the post-app shift. Coding agents act across IDEs, CI pipelines, cloud sandboxes, and now hardware like the Solara badge &mdash; the same agent identity can touch a repository from four different surfaces in one afternoon. <a href="/insights/agent-runtime-governance/">Managed agent runtimes</a> make the pattern explicit: the agent moves, and the platform it moves through keeps changing.</p>
     <p>Policies that survive that movement share three properties. They are portable, traveling with the work wherever the work happens. They are repo-native, versioned next to the code they govern, so any agent on any surface can retrieve them. And they are deterministic &mdash; <a href="/concepts/model-independent-governance/">model-independent</a>, producing the same verdict for the same change regardless of which model, harness, or device produced it. A policy locked inside one vendor&rsquo;s platform stops at that platform&rsquo;s edge, and Solara just demonstrated how fast new edges appear.</p>
     <p>That is the durable lesson inside Microsoft&rsquo;s announcement. The app held our governance for fifty years because it was the stable object in the system. The stable object now is the decision &mdash; the architectural choice, the policy, the approval &mdash; and governance has to attach to decisions and changes, enforced wherever the agent happens to be running. Solara just gave that requirement a body: a badge, a desk hub, and five pilot companies.</p>

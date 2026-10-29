@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Constraint decay is the failure mode where LLM coding agents satisfy loose functional specs but lose fidelity to architectural patterns, ORM rules, and framework conventions as structural requirements accumulate. A new arXiv paper quantifies it. The implication: architectural governance must run before the PR review queue." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -321,6 +322,19 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#constraint-decay-becomes-architectural-drift">Constraint decay becomes architectural drift</a></li>
+        <li><a href="#tests-are-necessary-but-not-sufficient">Tests are necessary, but not sufficient</a></li>
+        <li><a href="#backend-systems-expose-the-problem-faster">Backend systems expose the problem faster</a></li>
+        <li><a href="#the-next-layer-is-architectural-governance">The next layer is architectural governance</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+        <li><a href="#generation-needs-boundaries">Generation needs boundaries</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>A new paper, <a href="https://arxiv.org/abs/2605.06445" rel="noopener"><strong>Constraint Decay: The Fragility of LLM Agents in Backend Code Generation</strong></a>, gives a useful name to a failure mode many engineering teams are already starting to feel. The authors study how LLM agents perform when backend generation tasks require not only functional correctness, but also adherence to structural constraints such as architectural patterns, databases, object-relational mappings, and framework conventions. Their finding is direct: agents perform well under loose specifications, but degrade as structural requirements accumulate. The paper evaluates <strong>80 greenfield generation tasks and 20 feature-implementation tasks across eight web frameworks</strong>, using both behavioral tests and static verifiers. Capable configurations lose around <strong>30 points on average</strong> in assertion pass rates from baseline to fully specified tasks.</p>
 
     <p>That phenomenon is what the authors call <strong>constraint decay</strong>.</p>
@@ -345,7 +359,7 @@
 
     <div class="callout"><p><strong>The problem is not that the agent cannot write code.</strong> The problem is that it cannot reliably preserve the rules that make the code belong to this system.</p></div>
 
-    <h2>Constraint decay becomes architectural drift</h2>
+    <h2 id="constraint-decay-becomes-architectural-drift">Constraint decay becomes architectural drift</h2>
     <p>Constraint decay is the local failure mode.</p>
     <p><a href="/concepts/architectural-drift/">Architectural drift</a> is the accumulated consequence.</p>
     <p>A single agent-generated change that ignores an ORM pattern may look harmless. A single shortcut around a service boundary may even pass review if the behavior is correct. But when agents are producing more code, more frequently, across more surfaces, those small structural violations compound.</p>
@@ -377,7 +391,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Tests are necessary, but not sufficient</h2>
+<h2 id="tests-are-necessary-but-not-sufficient">Tests are necessary, but not sufficient</h2>
     <p>One of the most useful parts of the paper is its evaluation design. The authors use both end-to-end behavioral tests and static verifiers. That separation is critical. Behavioral tests evaluate whether the generated application works. Static verifiers evaluate whether the code satisfies structural requirements.</p>
     <p>That maps directly to the infrastructure gap emerging around coding agents.</p>
     <div class="callout"><p><strong>Tests validate behavior. Governance validates intent.</strong></p></div>
@@ -387,7 +401,7 @@
     <p>If agents increase the volume of generated code, and structural validation remains concentrated at PR review, then the review queue becomes the governance layer by accident. Senior engineers become constraint recovery systems.</p>
     <p>That is not scalable.</p>
 
-    <h2>Backend systems expose the problem faster</h2>
+    <h2 id="backend-systems-expose-the-problem-faster">Backend systems expose the problem faster</h2>
     <p>The paper&rsquo;s backend focus is especially useful because backend systems make structural decay harder to hide.</p>
     <p>Frontend demos can often look plausible while hiding poor structure. Backend systems have more explicit architectural commitments: data access patterns, schema constraints, framework conventions, service boundaries, API contracts, and runtime behavior.</p>
     <p>The authors find significant variation across frameworks. Agents do better in minimal, explicit environments such as Flask and worse in more convention-heavy environments such as FastAPI and Django. They also identify data-layer defects, including incorrect query composition and ORM runtime violations, as leading causes.</p>
@@ -397,7 +411,7 @@
     <p>You can put more instructions in the prompt. You can ask the agent to be careful. You can paste the architecture into context. Those things may help, but they do not create a reliable enforcement layer.</p>
     <div class="callout"><p><strong>Instructions are not invariants.</strong></p></div>
 
-    <h2>The next layer is architectural governance</h2>
+    <h2 id="the-next-layer-is-architectural-governance">The next layer is architectural governance</h2>
     <p>The AI coding stack is still heavily focused on generation.</p>
     <ul>
       <li>Better models.</li>
@@ -423,7 +437,7 @@
     <p>That is the shift from documentation to <a href="/concepts/verification-contracts/">verification contracts</a>.</p>
     <p>Architecture cannot remain passive context when agents are actively generating code. It has to become enforceable.</p>
 
-    <h2>Where Mneme fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme fits</h2>
     <p>This is the category Mneme is being built for: <strong>architectural governance for AI-assisted development</strong>.</p>
     <p>Mneme is not trying to be another semantic memory layer or generic RAG system. The goal is to make architectural decisions enforceable across the places where AI-assisted development happens.</p>
     <p>That means turning decisions, ADRs, and project constraints into checks that can run <a href="/concepts/governance-before-generation/">before generation</a>, during agent workflows, and in CI.</p>
@@ -438,7 +452,7 @@
       <li><strong>Architectural governance</strong> is the missing control layer.</li>
     </ul>
 
-    <h2>Generation needs boundaries</h2>
+    <h2 id="generation-needs-boundaries">Generation needs boundaries</h2>
     <p>The answer is not to slow coding agents down.</p>
     <p>The answer is to give them better boundaries.</p>
     <p>As AI-assisted development becomes normal, teams will not only ask whether agents can produce more code. They will ask whether agents can preserve the architecture, respect the decisions already made, and avoid shifting structural risk into review queues.</p>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Protected, Mneme-ready, Requires modelling, Guidance. Why the Architecture Protection Audit uses four states, what each one means, and what moves a decision between them." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -379,6 +380,21 @@
 
 <div class="article-body">
 
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-the-four-states-mean">What the four states mean</a></li>
+      <li><a href="#why-the-audit-uses-four-states">Why the Audit uses four states, and not two</a></li>
+      <li><a href="#protected-is-a-claim-about-the">Protected is a claim about the repository, not the document</a></li>
+      <li><a href="#mneme-ready-means-the-guardrail-is">Mneme-ready means the guardrail is written, not running</a></li>
+      <li><a href="#requires-modelling-is-a-scoping-problem">Requires modelling is a scoping problem, not a defect</a></li>
+      <li><a href="#guidance-is-an-end-state-not">Guidance is an end state, not a backlog</a></li>
+      <li><a href="#what-moves-a-decision-between-states">What moves a decision between states</a></li>
+      <li><a href="#three-things-that-do-not-make">Three things that do not make a decision Protected</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
   <p>Two architectural decisions sit in the same repository. Both were agreed in the same meeting, both are written in the same voice, and both read as settled. One records its prohibition as <code>orm</code>. The other records it as <code>introduce ORM framework</code>.</p>
 
   <p>The Architecture Protection Audit returns <strong>Mneme-ready</strong> for the first and <strong>Requires modelling</strong> for the second. Neither answer is a judgment about which decision matters more, and no model was asked for an opinion. The difference is that the first reduces to one concrete guardrail and the second does not.</p>
@@ -387,11 +403,11 @@
     <p><strong>The wording of a decision is not itself the guardrail.</strong> A decision is classified by what deterministic protection can be represented from what it recorded, not by how firmly it is phrased. An emphatic sentence with nothing mechanical in it is Guidance. A terse one-word prohibition can be Mneme-ready.</p>
   </div>
 
-  <h2>What the four states mean</h2>
+  <h2 id="what-the-four-states-mean">What the four states mean</h2>
 
   <p>Mneme classifies architectural decisions as Protected, Mneme-ready, Requires modelling, or Guidance. <strong>Protected</strong> means deterministic enforcement exists and was verified. <strong>Mneme-ready</strong> means a concrete supported guardrail can be represented without guessing. <strong>Requires modelling</strong> means deterministic intent exists but needs further decomposition or scoping before it is safe to enforce. <strong>Guidance</strong> means the decision should remain contextual rather than become a literal deterministic rule.</p>
 
-  <h2>Why the Audit uses four states, and not two</h2>
+  <h2 id="why-the-audit-uses-four-states">Why the Audit uses four states, and not two</h2>
 
   <p>The intuitive split is binary: enforceable or not. For how this particular classifier works, that split collapses two genuinely different questions into one answer, and the two questions have different owners and different fixes.</p>
 
@@ -445,31 +461,31 @@
 
   <p><a href="/audit/methodology/">How the Audit calculates the summary &rarr;</a></p>
 
-  <h2>Protected is a claim about the repository, not the document</h2>
+  <h2 id="protected-is-a-claim-about-the">Protected is a claim about the repository, not the document</h2>
 
   <p>A decision reaches Protected when a typed rule exists on it. A decision reading &ldquo;do not call boto3 directly from application code&rdquo;, carrying a recorded <code>FORBID_LITERAL boto3</code> rule, comes back Protected, and the Audit reports the guardrail it verified rather than repeating the decision&rsquo;s own claim about itself.</p>
 
   <p>This is the state most often assumed and least often true. A team that has written the decision down, agreed it, and referenced it in onboarding has changed nothing about what an agent can do. Protected is the only state that describes the repository rather than the decision, which is why it is the only one that cannot be improved by editing prose.</p>
 
-  <h2>Mneme-ready means the guardrail is written, not running</h2>
+  <h2 id="mneme-ready-means-the-guardrail-is">Mneme-ready means the guardrail is written, not running</h2>
 
   <p>When a decision records a single significant term, the Audit can state the guardrail without interpretation. An anti-pattern of <code>orm</code> yields <code>FORBID_LITERAL orm</code>. An anti-pattern of <code>litellm</code> yields <code>FORBID_LITERAL litellm</code>. The rule is emitted, and you can read it before anything acts on it.</p>
 
   <p>The word doing the work in that sentence is <em>emitted</em>. Mneme-ready decisions are not protected. The Audit has produced a candidate guardrail and is waiting for a person to validate and activate it, one decision at a time. A repository can have every decision in this state and still reject nothing.</p>
 
-  <h2>Requires modelling is a scoping problem, not a defect</h2>
+  <h2 id="requires-modelling-is-a-scoping-problem">Requires modelling is a scoping problem, not a defect</h2>
 
   <p>An anti-pattern recorded as <code>introduce ORM framework</code> carries three significant terms: <code>introduce</code>, <code>orm</code> and <code>framework</code>. There is no single literal that captures it. Forbidding <code>framework</code> would fire across most of the codebase. Forbidding only <code>orm</code> would silently enforce a narrower decision than the one the team agreed.</p>
 
   <p>So the Audit declines. Requires modelling says the intent is genuinely enforceable and the safe decomposition has real choices in it: which terms actually carry the prohibition, which paths it applies to, what the exceptions are. Those are architectural questions with architectural answers, and guessing at them produces rules that fire on innocent code. A guardrail that produces false positives gets switched off, and a guardrail that is switched off protects nothing.</p>
 
-  <h2>Guidance is an end state, not a backlog</h2>
+  <h2 id="guidance-is-an-end-state-not">Guidance is an end state, not a backlog</h2>
 
   <p>Some decisions should never become literal rules. &ldquo;Services should be loosely coupled&rdquo; is real architectural intent with no mechanical predicate behind it. So is a requirement like &ldquo;all new HTTP APIs are versioned under <code>/v2/</code>&rdquo;, which sounds far more concrete but records nothing a deterministic check can act on: the word &ldquo;new&rdquo; is a temporal qualifier no literal can see, and the requirement is positive rather than a prohibition.</p>
 
   <p>Both return Guidance, and that is the correct answer rather than a limitation. The Audit excludes Guidance from the protection denominator instead of counting it against you, because reporting these as unprotected gaps would imply they ought to have been rules. Most repositories should expect a meaningful share of their decisions to stay here permanently.</p>
 
-  <h2>What moves a decision between states</h2>
+  <h2 id="what-moves-a-decision-between-states">What moves a decision between states</h2>
 
   <p>For moving deterministic intent toward active protection, two transitions matter most.</p>
 
@@ -481,7 +497,7 @@
 
   <p>Guidance is deliberately absent from that list. A Guidance decision moves only if someone decides it was recording deterministic intent all along and writes that intent down explicitly. That is occasionally right and usually not, and there is no version of a healthy repository in which every Guidance decision has been converted into a rule.</p>
 
-  <h2>Three things that do not make a decision Protected</h2>
+  <h2 id="three-things-that-do-not-make">Three things that do not make a decision Protected</h2>
 
   <ul>
     <li><strong>The decision existing.</strong> A written, agreed, well-argued ADR with no typed rule on it is not Protected, however many people signed off on it.</li>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Prompt templates can nudge a model toward better output. They cannot enforce architectural invariants, resolve decision conflicts, or prevent drift across a codebase." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -336,13 +337,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-prompt-engineering-can-do">What prompt engineering can do</a></li>
+        <li><a href="#what-prompt-engineering-cannot-do">What prompt engineering cannot do</a></li>
+        <li><a href="#the-session-boundary-problem">The session-boundary problem</a></li>
+        <li><a href="#where-prompt-engineering-fits">Where prompt engineering fits</a></li>
+        <li><a href="#what-governance-actually-requires">What governance actually requires</a></li>
+      </ol>
+    </nav>
+
     <p>The shift to AI-assisted development created a new kind of problem: how do you ensure the model respects your team's architectural decisions? The intuitive answer is to put the rules in the prompt. It works — until it doesn't.</p>
 
     <p>Prompt engineering is powerful. It shapes model behavior in ways that meaningfully improve output quality. But "shaping behavior" and "enforcing decisions" are not the same thing, and treating them as equivalent creates a governance gap that only surfaces when something goes wrong.</p>
 
     <p>The gap is architectural, not a matter of prompt quality. You could write the most precise, exhaustive system prompt imaginable and it would still fail the properties that governance requires — because those properties cannot be delivered by a text instruction to a language model.</p>
 
-    <h2>What prompt engineering can do</h2>
+    <h2 id="what-prompt-engineering-can-do">What prompt engineering can do</h2>
 
     <p>Prompt engineering has genuine strengths, and it would be wrong to dismiss it. Used correctly, it is a valuable layer in any AI coding workflow. It can:</p>
 
@@ -365,7 +377,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What prompt engineering cannot do</h2>
+<h2 id="what-prompt-engineering-cannot-do">What prompt engineering cannot do</h2>
 
     <p>Each of the following failure modes is a structural property of how language models process instructions, not a deficiency that better prompt writing can fix.</p>
 
@@ -392,7 +404,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>The session-boundary problem</h2>
+    <h2 id="the-session-boundary-problem">The session-boundary problem</h2>
 
     <p>Every new session starts from zero. The model has no memory of what it decided in the last session, what violations were caught in the PR review last week, or which architectural decision was ratified in the incident postmortem last month. The model does not accumulate institutional knowledge. It begins fresh each time.</p>
 
@@ -404,7 +416,7 @@
       <p>A governance system must be durable across sessions, consistent across agents, and enforceable — not optional. Prompt engineering satisfies none of these three requirements.</p>
     </div>
 
-    <h2>Where prompt engineering fits</h2>
+    <h2 id="where-prompt-engineering-fits">Where prompt engineering fits</h2>
 
     <p>The right framing is that prompt engineering is a complement to governance, not a replacement. The two operate at different layers and serve different purposes. There are tasks prompt engineering handles well, and tasks it should never be asked to handle.</p>
 
@@ -426,7 +438,7 @@
 
     <p>The pattern that fails is using prompt engineering to handle the second category. Teams do this because it is easier than building the enforcement infrastructure — until the first significant violation, at which point the cost of the gap becomes clear.</p>
 
-    <h2>What governance actually requires</h2>
+    <h2 id="what-governance-actually-requires">What governance actually requires</h2>
 
     <div class="axis-table" aria-label="Prompt engineering vs governance, by axis">
       <div class="ax-title">Prompt engineering vs governance, by axis</div>

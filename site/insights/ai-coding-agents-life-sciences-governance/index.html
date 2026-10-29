@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="FDA computer software assurance, GxP, and validation require traceability and documented rationale. AI coding agents in life sciences cannot ship on vibes; they need decision provenance and validation histories before autonomy." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -295,7 +296,20 @@
 
   <div class="article-body">
 
-    <h2>Validated Software Cannot Be Vibe-Coded</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#validated-software-cannot-be-vibe-coded">Validated Software Cannot Be Vibe-Coded</a></li>
+        <li><a href="#what-fda-computer-software-assurance-actually">What FDA Computer Software Assurance Actually Requires</a></li>
+        <li><a href="#agents-need-validation-histories-not-just">Agents Need Validation Histories, Not Just Context Windows</a></li>
+        <li><a href="#decision-traceability-for-ai-assisted-development">Decision Traceability for AI-Assisted Development</a></li>
+        <li><a href="#you-earn-autonomy-by-proving-constraint">You Earn Autonomy by Proving Constraint First</a></li>
+        <li><a href="#turning-regulatory-decisions-into-executable-constraints">Turning Regulatory Decisions Into Executable Constraints</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="validated-software-cannot-be-vibe-coded">Validated Software Cannot Be Vibe-Coded</h2>
     <p>In most software, speed is the metric. In life sciences, evidence is. A change merged into a manufacturing execution system, a laboratory information management system, or any component of the quality management system is not done when it works. It is done when there is a documented, auditable record of why it was made, what it was checked against, and who approved it. That record is the deliverable, equal in weight to the code itself.</p>
     <p>This is the precise reason regulated teams cannot accept &ldquo;vibe coding&rdquo; &mdash; generating a plausible change and shipping it because it looks right and the tests pass. A passing test proves behavior. It does not prove the change followed an approved design, respected the validated configuration, or carried the rationale an inspector will ask for. In a GxP environment, software whose justification you cannot reconstruct is software you cannot defend.</p>
     <p>An AI coding agent is extraordinarily good at producing the first thing and indifferent to the second. It closes the generation gap and widens the evidence gap. That trade is acceptable in a marketing site. It is disqualifying in a system that touches patient safety or product quality.</p>
@@ -309,29 +323,29 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What FDA Computer Software Assurance Actually Requires</h2>
+<h2 id="what-fda-computer-software-assurance-actually">What FDA Computer Software Assurance Actually Requires</h2>
     <p>The FDA&rsquo;s posture here is not abstract. Its final <a href="https://www.fda.gov/regulatory-information/search-fda-guidance-documents/computer-software-assurance-production-and-quality-management-system-software" target="_blank" rel="noopener">Computer Software Assurance for Production and Quality Management System Software guidance</a> sets out a risk-based approach: the rigor applied to a software feature should scale with the risk that feature poses. A feature whose failure could compromise a process tied to product quality or patient safety &mdash; a high process-risk feature under 21 CFR Part 820 &mdash; demands more assurance activity and more documented evidence than a low-risk one.</p>
     <p>Read that as an instruction to anyone introducing AI into the toolchain. The question regulators ask is not &ldquo;can your tool write the code?&rdquo; That is assumed. The question is whether you can demonstrate, after the fact, that the change was developed under appropriate controls and that the assurance effort matched the risk. Computer software assurance is fundamentally about producing defensible evidence proportional to consequence.</p>
     <p>So the real problem an AI coding agent introduces in life sciences is not capability. It is provability. You have to show the agent operated inside the approved patterns and constraints, and you have to produce the evidence of that compliance long after the change shipped, when an auditor opens the record cold.</p>
 
     <div class="callout"><p><strong>The regulated question is not whether the agent can generate the change.</strong> It is whether you can prove the change followed approved constraints &mdash; and produce that evidence on demand, months later, during an inspection.</p></div>
 
-    <h2>Agents Need Validation Histories, Not Just Context Windows</h2>
+    <h2 id="agents-need-validation-histories-not-just">Agents Need Validation Histories, Not Just Context Windows</h2>
     <p>This is where the architecture of most AI coding tools falls short of what a regulated team needs. The industry has invested enormously in context: larger windows, retrieval, shared memory, so the agent knows more about the codebase at the moment it acts. That is necessary and not sufficient.</p>
     <p>A context window describes the present. It tells an agent what exists right now &mdash; the files, the conventions, the decisions it managed to retrieve this session. A <strong>validation history</strong> is something else entirely: a durable, auditable record of which decision applied to a change, which constraint was checked against it, and why the change was permitted to proceed. Context is ephemeral and informational. A validation history is persistent and evidentiary.</p>
     <p>The distinction matters because regulators audit the past, not the present. An inspector does not care what was in the model&rsquo;s context window last quarter. They care whether the change that shipped can be traced to an approved decision and a check that ran. Better recall improves what an agent knows; it does nothing to produce the record an audit consumes. We have made <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">the same point about architectural drift</a>: knowing a rule is not the same as being held to it, and only the second one leaves evidence.</p>
 
-    <h2>Decision Traceability for AI-Assisted Development</h2>
+    <h2 id="decision-traceability-for-ai-assisted-development">Decision Traceability for AI-Assisted Development</h2>
     <p>Traceability is the spine of every quality system, and AI-assisted development has to inherit it rather than route around it. Every agent-driven change should carry who/what/why provenance that survives an audit: which decision or ADR governed it, what constraint was verified, what the verdict was, and when. The provenance has to be attached to the change, not reconstructed afterward from memory or commit archaeology.</p>
     <p>This is harder with agents than with humans, and easier to get right if you build for it. Harder, because an agent can produce a high volume of changes quickly, and informal review does not scale to that rate. Easier, because an agent operates through tooling you control, so you can require that every change pass through a checkpoint that records the decision applied and the result. That checkpoint is the unit of <a href="/concepts/enforcement-provenance/">enforcement provenance</a> &mdash; the log line that says this change was checked against this constraint and either passed or was rejected.</p>
     <p>Get this right and AI accelerates a validated team instead of endangering it. Teams evaluating where to start usually scope it to a single high-risk subsystem first; the <a href="/use-cases/">use-case breakdowns</a> walk through how that pilot is framed. The point is to make traceability automatic, so the evidence accumulates as a byproduct of how the agent works rather than as a separate documentation chore.</p>
 
-    <h2>You Earn Autonomy by Proving Constraint First</h2>
+    <h2 id="you-earn-autonomy-by-proving-constraint">You Earn Autonomy by Proving Constraint First</h2>
     <p>The phrase &ldquo;governance before autonomy&rdquo; inverts the default order most teams reach for. The tempting path is to grant the agent latitude, watch it work, and add guardrails once something breaks. In a regulated environment that order is backwards. You do not earn the right to let an agent act freely by showing it usually behaves; you earn it by first proving every action it takes is constrained and traceable.</p>
     <p>Autonomy, in other words, is a privilege extended to a system you can already audit. An agent whose changes are checked against approved decisions and logged with provenance can be given progressively more scope, because the evidence trail makes its work defensible. An agent without that scaffolding cannot be trusted with autonomy at any level, because nothing it does can be proven compliant later.</p>
     <p>This is also why an agent is not a teammate you onboard and then trust on reputation. As we have argued in <a href="/insights/ai-agents-are-not-employees-governance/">why AI agents are not employees</a>, you do not extend judgment-based trust to a non-human actor; you constrain it mechanically and verify the constraint. Regulated industries simply make that requirement explicit and non-negotiable. The same discipline that satisfies an FDA inspector is what makes an <a href="/insights/ai-coding-agents-financial-services-audit-trail/">audit trail hold up in financial services</a> &mdash; the vertical changes, the underlying requirement does not.</p>
 
-    <h2>Turning Regulatory Decisions Into Executable Constraints</h2>
+    <h2 id="turning-regulatory-decisions-into-executable-constraints">Turning Regulatory Decisions Into Executable Constraints</h2>
     <p>This is the work Mneme is built for. The architectural and regulatory decisions that govern a validated system &mdash; the boundaries, the approved patterns, the configurations that may not change without revalidation &mdash; usually live in ADRs and quality documents that agents never consult and that no build step checks. Mneme turns those decisions into executable constraints: the agent retrieves them at generation time, and CI verifies them deterministically before the change merges.</p>
     <p>Deterministic verification is what makes the resulting evidence defensible. The same change checked twice against the same constraint produces the same verdict, independent of the model that wrote it. That property is exactly what <a href="/concepts/governance-propagation/">governance propagation</a> describes &mdash; one enforced decision reaching every agent action, with a logged result each time. The log is not a side effect. In a regulated context it is the validation history, the traceability record, the proof of compliance an audit demands.</p>
     <p>Life sciences makes the order of operations unavoidable, and the pattern generalizes to every audited sector &mdash; it is the through-line of <a href="/insights/ai-governance-for-regulated-industries/">AI governance for regulated industries</a>. You constrain first, you prove it, and only then do you widen what the agent is allowed to do. Governance is not the tax you pay after adopting AI coding agents. It is the thing that makes adopting them possible at all.</p>

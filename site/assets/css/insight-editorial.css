@@ -1,0 +1,63 @@
+/* insight-editorial.css: shared layout layer for insight articles.
+ *
+ * Linked from every /insights/<slug>/ page straight after base.css, so a
+ * page's own inline <style> still loads later and wins where it styles the
+ * same component. It adds no fonts and does not restyle running text.
+ *
+ * The components follow the reference layout of
+ * /insights/emerging-ai-agent-infrastructure-stack/: the "In this article"
+ * contents box, the pull quote, the axis table and the layer stack. Any
+ * article can use them without copying their CSS inline.
+ */
+
+/* The full-bleed article hero is 100vw wide, which includes the scrollbar.
+   clip (not hidden) keeps the sticky nav working. */
+body { overflow-x: clip; }
+
+/* Section anchors land below the sticky nav. */
+.article-body h2[id] { scroll-margin-top: 5.5rem; }
+
+/* ── In this article ────────────────────────────────────────────────── */
+/* Pages style the site header with a bare `nav {}` rule (flex, sticky,
+   blurred), which would also hit this <nav>; reset what it sets. */
+.toc { display: block; position: static; top: auto; z-index: auto; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.25rem; margin: 0 0 2rem; }
+.toc .toc-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.55rem; }
+.article-body .toc ol { list-style: none; counter-reset: toc; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0.25rem; }
+.article-body .toc ol li { counter-increment: toc; font-size: 0.78rem; padding-left: 1.9rem; position: relative; line-height: 1.5; margin: 0; }
+.article-body .toc ol li::before { content: counter(toc, decimal-leading-zero); position: absolute; left: 0; top: 0.05rem; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.05em; }
+/* Pages carry .article-body a/ol/li rules inline, loaded later; the
+   .article-body prefix outranks them. */
+.article-body .toc a { color: var(--text); text-decoration: none; border-bottom: 0; transition: color 0.15s; }
+.article-body .toc a:hover { color: var(--accent); }
+@media (min-width: 720px) { .article-body .toc ol { grid-template-columns: 1fr 1fr; gap: 0.3rem 1.25rem; } }
+
+/* ── Pull quote: one line lifted from the argument ──────────────────── */
+.pull-quote { font-family: 'Instrument Serif', serif; font-size: 1.5rem; line-height: 1.45; color: var(--text); border-left: 2px solid var(--accent); padding: 0.25rem 0 0.25rem 1.25rem; margin: 2.5rem 0; font-style: italic; }
+.pull-quote em { font-style: normal; color: var(--accent); }
+
+/* ── Axis table: a titled comparison ────────────────────────────────── */
+.axis-table { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.75rem; margin: 2.5rem 0; overflow-x: auto; }
+.axis-table .ax-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.axis-table table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.axis-table th, .axis-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+.axis-table th { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.axis-table td:first-child { color: var(--text); font-weight: 500; min-width: 7rem; }
+.axis-table tr:last-child td { border-bottom: none; }
+.axis-table tr.accent-row td,
+.axis-table tr.accent-row td:first-child { color: var(--accent); }
+
+/* ── Layer stack: an ordered set of layers, top to bottom ───────────── */
+.layer-stack { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 2.5rem 0; }
+.layer-row { display: flex; align-items: stretch; min-height: 52px; border-bottom: 1px solid var(--border); }
+.layer-row:last-child { border-bottom: none; }
+.layer-num { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--muted); width: 56px; padding: 0.85rem; background: var(--surface2); border-right: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.layer-content { flex: 1; padding: 0.85rem 1.1rem; display: flex; flex-direction: column; justify-content: center; }
+.layer-content strong { color: var(--text); font-weight: 600; font-size: 0.88rem; }
+.layer-content span { color: var(--muted); font-size: 0.78rem; line-height: 1.55; margin-top: 0.15rem; }
+.layer-row.highlighted .layer-num { background: rgba(181, 204, 122, 0.08); color: var(--accent); border-right-color: rgba(181, 204, 122, 0.3); }
+.layer-row.highlighted .layer-content { background: rgba(181, 204, 122, 0.05); border-left: 2px solid var(--accent); }
+.layer-row.highlighted .layer-content strong { color: var(--accent); }
+.stack-caption { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--muted); margin: -1.25rem 0 2rem; padding-left: 0.25rem; }
+
+/* ── Related panel: sit flush with its label ────────────────────────── */
+.related-panel .related-list { margin: 0; padding: 0; }

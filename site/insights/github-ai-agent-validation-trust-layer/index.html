@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="GitHub's Trust Layer validates whether an agent behaved acceptably. It cannot tell whether the diff that agent produced still conforms to your architecture. Two different axes." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -322,11 +323,23 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-trust-layer-actually-validates">What the Trust Layer actually validates</a></li>
+        <li><a href="#the-diff-is-not-nondeterministic">The diff is not nondeterministic</a></li>
+        <li><a href="#outcome-acceptable-is-not-decision-conformant">Outcome-acceptable is not decision-conformant</a></li>
+        <li><a href="#different-question-different-surface-different-time">Different question, different surface, different time</a></li>
+        <li><a href="#both-and-the-half-a-trust">Both, and the half a Trust Layer can&rsquo;t cover</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>In May 2026, GitHub engineers Gaurav Mittal and Reshabh Kumar Sharma published <a href="https://github.blog/ai-and-ml/generative-ai/validating-agentic-behavior-when-correct-isnt-deterministic/" rel="noopener">&ldquo;Validating agentic behavior when &lsquo;correct&rsquo; isn&rsquo;t deterministic.&rdquo;</a> It is one of the sharper pieces of engineering writing on agent reliability this year, and it names the problem precisely: traditional test scripts assume deterministic correctness, and autonomous agents do not behave deterministically. The same task can be completed by many valid action paths, with UI noise and timing variation along the way. A step-by-step assertion breaks on the first harmless deviation.</p>
 <p>GitHub&rsquo;s answer is what they call, in their own words, an independent &ldquo;Trust Layer.&rdquo; Rather than scripting exact steps, they learn a model of correct behavior from a handful of passing execution traces, merge those traces into a graph, and apply <strong>dominator analysis</strong> &mdash; a technique borrowed from compiler theory &mdash; to extract the &ldquo;essential states&rdquo; every successful run must pass through, while discarding optional noise like loading spinners. A new run is then graded against that learned ground truth. As they put it, this moves &ldquo;the source of truth from the agent&rsquo;s internal logic to a learned external structure,&rdquo; and reports that structural validation beats agent self-grading by a wide margin.</p>
 <p>The instinct is exactly right: <strong>the system being evaluated should not be the only source of trust.</strong> Reliability has to come from something independent of the agent. That is the same instinct that produces every governance layer worth having. The question this article is about is narrower and more useful than &ldquo;is GitHub right&rdquo; &mdash; they are. It is: <em>what, precisely, does a Trust Layer like this verify, and what does it structurally leave uncovered?</em></p>
 
-<h2>What the Trust Layer actually validates</h2>
+<h2 id="what-the-trust-layer-actually-validates">What the Trust Layer actually validates</h2>
 <p>Read the method carefully and the answer is specific. The Trust Layer validates the <strong>run&rsquo;s behavior</strong>: did this execution reach the essential outcomes a successful execution is supposed to reach? It is tolerant of many paths on purpose, because the whole premise is that there is no single correct sequence. It grades behavioral equivalence &mdash; was the end state acceptable &mdash; and its headline result is telling: an F1-score of 52.2% at distinguishing a genuine agent execution error from an actual product regression.</p>
 <p>That number is not a knock. It is the honest shape of the problem. When the environment is nondeterministic and correctness is path-tolerant, the best you can do is <em>grade</em> behavior against a learned model of what acceptable looks like. You sample, you compare, you score. You do not get a guarantee, because there is no fixed thing to check against &mdash; the run could have gone a dozen acceptable ways. Behavioral validation is approximation by necessity, and GitHub&rsquo;s contribution is making the approximation far better than self-reported success.</p>
 <div class="callout"><p><strong>The Trust Layer answers one question:</strong> did this run behave acceptably, given that many paths were valid? Because the environment is probabilistic, that answer is a graded score, not a verdict.</p></div>
@@ -340,7 +353,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The diff is not nondeterministic</h2>
+<h2 id="the-diff-is-not-nondeterministic">The diff is not nondeterministic</h2>
 <p>Here is the move the news hook makes easy to miss. Everything in GitHub&rsquo;s framing is about the <em>run</em> &mdash; the trajectory, the sequence of states, the behavior in an environment that refuses to hold still. But an agent that finishes a coding task does not only produce a run. It produces an <strong>artifact</strong>: a diff. And the diff is not nondeterministic at all. It is a fixed, finite change to the codebase.</p>
 <p>That changes the kind of question you can ask about it. &ldquo;Did the agent behave acceptably?&rdquo; is path-tolerant and probabilistic, so it must be graded. &ldquo;Does this diff still match the decisions the team already ratified?&rdquo; is neither. The diff is fixed. The decisions &mdash; the architectural decision records, the boundaries, the dependency rules &mdash; are fixed. Comparing two fixed things is not a grading problem. It is a <a href="/concepts/deterministic-enforcement/">deterministic verdict</a>: the same change, against the same constraints, yields the same pass-or-fail result, on every harness, every time.</p>
 <p>This is the inversion at the center of the whole category. Behavioral validation lives on the <strong>run axis</strong> and is probabilistic <em>because the environment is</em>. Architectural conformance lives on the <strong>artifact axis</strong> and is deterministic <em>because the decisions are</em>. They are not two rungs on one ladder. They are two different axes, and a Trust Layer can be excellent on the first while having nothing at all to say about the second. The deeper version of why probabilistic generation still needs a deterministic boundary is laid out in <a href="/insights/ai-stack-determinism-probabilistic-models/">the AI stack is rebuilding determinism around probabilistic models</a>; this is that argument made concrete on a single GitHub release.</p>
@@ -368,13 +381,13 @@
   <p class="diag-caption">Same passing run, two different questions: behaved acceptably, and conforms to your decisions</p>
 </div>
 
-<h2>Outcome-acceptable is not decision-conformant</h2>
+<h2 id="outcome-acceptable-is-not-decision-conformant">Outcome-acceptable is not decision-conformant</h2>
 <p>Make it concrete. An agent is given a task. It runs, and GitHub&rsquo;s dominator model grades the run a clean success &mdash; it reached every essential state, no anomalies, classified &ldquo;Not a Bug&rdquo; rather than a regression. By GitHub&rsquo;s measure, the agent behaved correctly. That measurement is right.</p>
 <p>And the diff that run produced adds a dependency an <a href="/concepts/architectural-drift/">architectural decision record</a> prohibits, or reaches across a service boundary the team ratified as off-limits, or re-implements a pattern that already exists somewhere the agent could not see. The behavior was acceptable. The artifact is not conformant. The Trust Layer never had an opinion about it, because it has no model of those decisions &mdash; only a model of acceptable outcomes. Behavioral grading is <em>structurally</em> blind to architectural violation, in the same way a passing test suite is: nothing in it represents the constraint that was broken.</p>
 <div class="callout"><p><strong>A run can be graded &ldquo;behaved correctly&rdquo; and still merge a change that contradicts a decision the team made on purpose.</strong> Outcome-acceptable and decision-conformant are different properties, judged on different axes. Proving one says nothing about the other.</p></div>
 <p>This is the same boundary, drawn from a different direction, that separates <a href="/insights/runtime-verification-is-not-architectural-verification/">runtime verification from architectural verification</a>: a system can be proven safe in the moment and still drift away from its own design over time. GitHub&rsquo;s Trust Layer is not a runtime-safety control &mdash; it is an evaluation control, grading whether behavior was correct. But it lands on the same far side of the line: it validates the agent, not the system the agent changed.</p>
 
-<h2>Different question, different surface, different time</h2>
+<h2 id="different-question-different-surface-different-time">Different question, different surface, different time</h2>
 <p>The two also fire at different moments, which is the practical tell that they are different layers rather than competitors.</p>
 <p>GitHub&rsquo;s grading is <strong>post-run</strong>. It looks at the traces a run left behind and decides, after the fact, whether the behavior was a real failure or an acceptable path &mdash; its job is to cut false alarms in CI so teams stop chasing phantom regressions. Architectural conformance fires <strong>at the gate</strong>: at the pre-commit hook, on the pull request, in the <a href="/integrations/github-actions/">CI</a> check &mdash; on the change itself, before it lands, returning the identical verdict no matter which agent or harness produced it. One grades the journey after arrival; the other decides whether the thing you are about to merge is allowed in.</p>
 <table class="gov-table">
@@ -390,7 +403,7 @@
 </table>
 <p>Architectural conformance is what <a href="/concepts/verification-contracts/">verification contracts</a> are for: the team&rsquo;s decisions <a href="/concepts/governance-before-generation/">compiled before generation</a> into machine-evaluable constraints that the change is checked against deterministically, with the provenance to say exactly which decision a diff violated and where it came from.</p>
 
-<h2>Both, and the half a Trust Layer can&rsquo;t cover</h2>
+<h2 id="both-and-the-half-a-trust">Both, and the half a Trust Layer can&rsquo;t cover</h2>
 <p>GitHub&rsquo;s post is the right kind of news. It is a major platform putting independent verification around agents and proving, with a real method and an honest metric, that <strong>agent validation is becoming infrastructure</strong> rather than an afterthought. That direction is correct and the engineering is good. An enterprise running coding agents wants exactly this: a way to know whether a run behaved acceptably without trusting the agent&rsquo;s own say-so.</p>
 <p>It is simply one axis of two. The other axis &mdash; whether the code that acceptable run produced still holds the line on the architecture it touched &mdash; is not something a behavioral Trust Layer was built to judge, and it does not arrive by making the grader better. A better behavioral model raises the F1-score on the run. It never starts representing the decision the diff violated. That requires a layer that evaluates the artifact against your decisions, deterministically, at the gate. Validate that the agent behaved. Then validate that what it changed still matches what you decided. They are both necessary, and proving the first has never once proven the second.</p>
 <div class="callout"><p><strong>GitHub grades whether the run behaved acceptably. Something still has to decide whether the diff conforms to your decisions.</strong> The first is a score on the agent. The second is a verdict on the architecture &mdash; and only one of them keeps the system yours.</p></div>

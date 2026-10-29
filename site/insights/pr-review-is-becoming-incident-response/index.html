@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="As agentic development pushes code throughput past human review capacity, the PR queue is turning into the place organizations detect governance failures that should have been prevented upstream. That role does not scale." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -254,7 +255,22 @@
 
   <div class="article-body">
 
-    <h2>The assumptions PR review was built on</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-assumptions-pr-review-was-built">The assumptions PR review was built on</a></li>
+        <li><a href="#the-structural-shift">The structural shift</a></li>
+        <li><a href="#pr-review-is-downstream-observability">PR review is downstream observability</a></li>
+        <li><a href="#why-this-mirrors-earlier-infrastructure-transitions">Why this mirrors earlier infrastructure transitions</a></li>
+        <li><a href="#why-review-load-explodes">Why review load explodes</a></li>
+        <li><a href="#the-scaling-response-governance-before-generation">The scaling response: governance before generation</a></li>
+        <li><a href="#what-happens-to-pr-review">What happens to PR review</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-assumptions-pr-review-was-built">The assumptions PR review was built on</h2>
     <p>Traditional PR review was designed for a world with specific properties:</p>
     <ul>
       <li>humans authored the code</li>
@@ -275,7 +291,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The structural shift</h2>
+<h2 id="the-structural-shift">The structural shift</h2>
     <p>The old model was simple: <em>Generation &rarr; Review &rarr; Merge</em>. Review served several lightweight roles at once: quality control, mentoring, correctness validation, and a thin layer of architecture enforcement that mostly worked because the volume of changes was small enough for reviewers to internalize patterns over time.</p>
     <p>The new model is heavier and reactive: <em>Autonomous Generation &rarr; Drift Detection &rarr; Containment Review &rarr; Remediation</em>. Reviewers increasingly act as:</p>
     <ul>
@@ -317,7 +333,7 @@
       <p class="diag-caption">Same queue, different job</p>
     </div>
 
-    <h2>PR review is downstream observability</h2>
+    <h2 id="pr-review-is-downstream-observability">PR review is downstream observability</h2>
     <p>The structural problem is that PR review, by definition, runs after the change exists. It can identify violations. It cannot reliably prevent them. That distinction was tolerable when generation was slow. It becomes critical at agent scale.</p>
     <p>At PR time you can observe:</p>
     <ul>
@@ -336,7 +352,7 @@
     </ul>
     <div class="callout"><p><strong>PR review identifies governance failures. It does not prevent them.</strong> That is the structural property that matters at agent velocity.</p></div>
 
-    <h2>Why this mirrors earlier infrastructure transitions</h2>
+    <h2 id="why-this-mirrors-earlier-infrastructure-transitions">Why this mirrors earlier infrastructure transitions</h2>
     <p>Software operations has been through this shape of problem before. Observability alone proved insufficient for operational reliability. Organizations needed policy enforcement on top of telemetry. Then they needed preventative controls. Then they needed automated verification layers that ran before deployment.</p>
     <p>The trajectory in each prior transition is the same: detection alone is not enough; the response shifts from observing failures to preventing them. AI development is now in the early phase of the same arc.</p>
 
@@ -351,7 +367,7 @@
     </table>
     </div>
 
-    <h2>Why review load explodes</h2>
+    <h2 id="why-review-load-explodes">Why review load explodes</h2>
     <p>AI compresses the cost of generation, not the cost of verification. Generating five thousand lines becomes trivial. Verifying architectural correctness does not. That asymmetry is what is showing up in review queues.</p>
     <p>Organizations are responding with downstream optimizations:</p>
     <ul>
@@ -363,7 +379,7 @@
     </ul>
     <p>Each of these makes review faster. None of them addresses the upstream problem. They optimize the speed at which drift is processed. They do not stop drift from being generated.</p>
 
-    <h2>The scaling response: governance before generation</h2>
+    <h2 id="the-scaling-response-governance-before-generation">The scaling response: governance before generation</h2>
     <p>The scaling answer is not infinitely smarter PR review. It is moving governance earlier in the lifecycle:</p>
     <ul>
       <li><strong>Before generation</strong> &mdash; the agent reads the constraint set before it starts emitting code</li>
@@ -407,7 +423,7 @@
       <p class="diag-caption">PR review becomes exception handling, not the primary control layer</p>
     </div>
 
-    <h2>What happens to PR review</h2>
+    <h2 id="what-happens-to-pr-review">What happens to PR review</h2>
     <p>PR review does not disappear. It changes role. The more autonomous software agents become, the less viable human-centric PR review is as the primary governance mechanism. But review remains important for:</p>
     <ul>
       <li><strong>Exception handling</strong> &mdash; the cases the automated layer cannot adjudicate</li>
@@ -417,7 +433,7 @@
     </ul>
     <p>Those are valuable functions. They are not architectural enforcement. The architectural enforcement layer moves upstream into machine-readable governance infrastructure, where it can fire deterministically at every surface where work is happening.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>AI coding tools are not just increasing development speed. They are redefining where governance has to live inside the software lifecycle. Organizations still treating PR review as the primary architectural control layer are effectively using incident response as preventative security.</p>
     <p>That model does not scale under agentic development velocity. The next generation of engineering infrastructure will not just generate code faster. It will govern generation itself.</p>
     <div class="callout"><p><strong>The future of engineering infrastructure is not faster review.</strong> It is governance that fires before generation has a chance to produce drift.</p></div>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A repository records what exists, not what was deliberate. Four structural failure modes explain why documentation has never closed that gap for engineers working in someone else's system." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -298,19 +299,33 @@
 
   <div class="article-body">
 
-    <h2>The change that looks like a cleanup</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-change-that-looks-like-a">The change that looks like a cleanup</a></li>
+        <li><a href="#what-a-codebase-cannot-tell-you">What a codebase cannot tell you</a></li>
+        <li><a href="#why-writing-it-down-has-never">Why writing it down has never been enough</a></li>
+        <li><a href="#why-the-social-mechanism-does-not">Why the social mechanism does not transfer</a></li>
+        <li><a href="#documentation-and-control-answer-different-questions">Documentation and control answer different questions</a></li>
+        <li><a href="#not-everything-should-become-a-rule">Not everything should become a rule</a></li>
+        <li><a href="#the-question-worth-asking-on-arrival">The question worth asking on arrival</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-change-that-looks-like-a">The change that looks like a cleanup</h2>
     <p>An engineer three weeks into a deployment finds two services that appear to do closely related work. One is small, barely maintained, and calls the other constantly. Merging them would remove a network hop, delete a deployment target, and simplify the integration they were sent there to build.</p>
     <p>Every local signal says this is an improvement. The tests pass. The reviewer on the vendor side, who also does not know this system, approves it.</p>
     <p>The separation existed because one of those services processes data that must remain inside a specific jurisdiction, and the boundary was the mechanism that guaranteed it. Nothing in either service says so. The decision was made in a compliance review two years earlier, recorded in a document nobody linked from the code, and enforced since then entirely by the fact that the people who knew about it reviewed the changes.</p>
     <p>Those people were not on this review.</p>
     <div class="callout"><p><strong>The change was not careless.</strong> It was correct against every piece of information available to the person making it. The information that would have made it obviously wrong was not in the system.</p></div>
 
-    <h2>What a codebase cannot tell you</h2>
+    <h2 id="what-a-codebase-cannot-tell-you">What a codebase cannot tell you</h2>
     <p>A repository is an excellent record of <em>what</em> and a poor record of <em>why</em>. It shows you the structure that exists. It does not distinguish between structure that is deliberate, structure that is vestigial, and structure that is actively being migrated away from.</p>
     <p>To an engineer with years in the system these are easy to tell apart, because they remember the arguments. To a newcomer they are indistinguishable, and a forward-deployed engineer is a newcomer with a deadline and commit access.</p>
     <p>This is worth stating carefully, because it is often diagnosed as a documentation problem and treated with a documentation remedy that does not work.</p>
 
-    <h2>Why writing it down has never been enough</h2>
+    <h2 id="why-writing-it-down-has-never">Why writing it down has never been enough</h2>
     <p>Organizations have been told to document their architecture for decades. Many have. The problem persists anyway, for four reasons that are structural rather than cultural.</p>
     <h3>1. Local optimization</h3>
     <p>Most architectural violations are not reckless. They are locally optimal changes made by someone who cannot see the constraint they are crossing. The merge above is the pattern: the improvement is real at the scale the engineer can see, and wrong at the scale they cannot. Documentation only helps here if the engineer knows there is something to look up, and the defining property of an invisible constraint is that you do not know to ask.</p>
@@ -332,19 +347,19 @@
   </div>
 </aside>
 
-    <h2>Why the social mechanism does not transfer</h2>
+    <h2 id="why-the-social-mechanism-does-not">Why the social mechanism does not transfer</h2>
     <p>It is worth being precise about what was actually holding the line before, because the answer explains why forward-deployed work breaks it.</p>
     <p>In a stable team, unwritten architecture is enforced by a review process that includes at least one person who was present when the decision was made, or who was corrected by someone who was. That person does not consult a document. They recognize the violation, because they have seen its consequences. The mechanism is pattern matching against experience, distributed across a handful of long-tenured engineers, and it works well enough that most organizations never notice they are relying on it.</p>
     <p>It has three properties that make it fragile in ways nobody plans for. It is <strong>undocumented by construction</strong>, since the whole point is that it operates without documents. It is <strong>concentrated</strong>, usually in fewer people than anyone would guess, which is why architectural quality often degrades sharply after two or three specific departures. And it is <strong>invisible until it fails</strong>, because a mechanism that silently prevents bad changes produces no evidence of having worked.</p>
     <p>A forward-deployed engineer is outside all of it. They are not in the informal review network, the people who hold the patterns are not reviewing their pull requests, and nobody has told them the mechanism exists because nobody thinks of it as a mechanism. From inside the customer organization it does not look like the FDE is missing anything. It looks like they are making strange decisions.</p>
     <p>This is also why the usual remedy fails. Asking the customer to document their architecture asks the holders of the tacit knowledge to externalize something they have never had to articulate, on a deadline, for the benefit of a contractor. What comes back is typically a description of the current implementation, which is the one thing the FDE could already read.</p>
 
-    <h2>Documentation and control answer different questions</h2>
+    <h2 id="documentation-and-control-answer-different-questions">Documentation and control answer different questions</h2>
     <p>The four failure modes share a root. Documentation is optimized to answer <em>what should I know about this system</em>. That is a retrieval question, and the whole apparatus around it, search, wikis, decision records, onboarding guides, is built to answer it well.</p>
     <p>The question an FDE actually needs answered at the moment of change is different: <em>what must remain true no matter what I am trying to accomplish right now</em>. That is not a retrieval question. It is a control question, and no improvement in how findable a document is will answer it, because the failure happens after the document has been read.</p>
     <p>This is the same separation that appears when an agent <a href="/insights/why-rag-fails-for-architectural-governance/">retrieves a constraint and then violates it</a>. Forward-deployed work simply makes it concrete faster, because the person who would normally catch the violation in review has the same context deficit as the person who made it.</p>
 
-    <h2>Not everything should become a rule</h2>
+    <h2 id="not-everything-should-become-a-rule">Not everything should become a rule</h2>
     <p>The instinct at this point is to convert the architecture into constraints wholesale. That instinct is wrong, and being precise about why matters more than the enthusiasm.</p>
     <p>Some architectural commitments reduce cleanly to something a machine can check: a dependency direction that must not reverse, a persistence technology required in a specific domain, a boundary that must not be crossed. Others carry several independent significant terms at once, so turning them directly into a literal rule would either miss part of the decision or fire constantly on unrelated code. And some are genuinely matters for human judgement and design conversation, where a mechanical check would be actively harmful.</p>
     <p>Mneme&rsquo;s Architecture Protection Audit separates these into <a href="/insights/four-architecture-protection-states/">four states</a>, and the distinctions are worth borrowing whether or not you use the tool:</p>
@@ -361,7 +376,7 @@
     </table>
     <p>Two things about this are easy to get wrong. Guidance does not mean unimportant: a Guidance decision can be the most consequential commitment a team has made, and it is excluded from the protection denominator precisely so that reporting it as a gap does not imply it should have been a rule. And installing anything does not make a decision Protected. A repository can have the tooling in place and zero Protected decisions, because activation happens one decision at a time and on purpose.</p>
 
-    <h2>The question worth asking on arrival</h2>
+    <h2 id="the-question-worth-asking-on-arrival">The question worth asking on arrival</h2>
     <p>For a forward-deployed engineer, the useful reframing is that the first-tier decisions, the ones that reduce to a mechanical check, are exactly the ones whose value does not depend on you already knowing about them. That is the entire point. A constraint that fires when you cross it is the only kind that helps someone who did not know it existed.</p>
     <p>Which suggests a different first question on arriving in a customer environment. Not &ldquo;where is the architecture documentation,&rdquo; which usually has an answer that turns out not to help. Instead:</p>
     <p><strong>Of the architectural decisions this system depends on, how many would actually stop a change that contradicted them, and how many rely on somebody happening to notice?</strong></p>

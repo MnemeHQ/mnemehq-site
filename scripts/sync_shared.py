@@ -7,6 +7,9 @@ Run before deploy or any time snippets change.
 import re
 from pathlib import Path
 
+from link_insight_editorial import stamp as stamp_insight_editorial
+from insert_insight_toc import stamp as stamp_insight_toc
+
 SITE = Path(__file__).parent.parent / "site"
 SNIPPETS = SITE / "_snippets"
 # Page templates that scaffold new site pages carry the same global chrome.
@@ -165,6 +168,11 @@ for html in sorted(SITE.rglob("*.html")) + TEMPLATE_PAGES:
             m2 = re.search(r"<style>", text)
             if m2:
                 text = text[:m2.start()] + "  " + link_tag + "\n" + text[m2.start():]
+
+    # 2h. Insight articles: link the shared layout layer and add the contents
+    #     box (both no-ops elsewhere and once present).
+    text = stamp_insight_editorial(text, rel(html).as_posix())
+    text = stamp_insight_toc(text, rel(html).as_posix())
 
     # 3. Inject hamburger JS if missing — check for any toggle handler, not just our exact block
     if "classList.toggle" not in text:

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Loop engineering makes AI coding agents persistent: plan, execute, evaluate, revise, repeat. It improves execution. It does not improve architectural decision quality. Here is the layer the loop leaves out." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -321,7 +322,20 @@
 
   <div class="article-body">
 
-    <h2>What Loop Engineering Is</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-loop-engineering-is">What Loop Engineering Is</a></li>
+        <li><a href="#why-loops-are-valuable">Why Loops Are Valuable</a></li>
+        <li><a href="#the-missing-layer-a-worked-example">The Missing Layer: A Worked Example</a></li>
+        <li><a href="#loops-optimize-execution-not-intent">Loops Optimize Execution, Not Intent</a></li>
+        <li><a href="#deeper-loops-make-the-gap-wider">Deeper Loops Make the Gap Wider</a></li>
+        <li><a href="#why-this-matters-better-loops-inside">Why This Matters: Better Loops, Inside Guardrails</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-loop-engineering-is">What Loop Engineering Is</h2>
     <p>For a while, an AI coding agent got one shot. It read the request, produced a diff, and stopped. If the diff failed a test, a human had to notice and prompt again. Loop engineering removes that ceiling. The agent runs a cycle: <strong>plan</strong> the change, <strong>execute</strong> it, <strong>evaluate</strong> the result against some signal, <strong>revise</strong> based on what it learned, and repeat until a stop condition &mdash; tests green, a target met, or a maximum number of iterations reached.</p>
     <p>Anthropic&rsquo;s engineering guide describes this shape directly: agents are &ldquo;typically just LLMs using tools based on environmental feedback in a loop,&rdquo; and it is common to include stopping conditions such as a maximum number of iterations. See <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Building Effective Agents</a> for the evaluator-optimizer pattern, where one call generates a change and another evaluates it, feeding correction back in until the result clears the bar. That feedback loop is what turns a one-shot generator into something that can carry a task to completion on its own.</p>
 
@@ -334,7 +348,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why Loops Are Valuable</h2>
+<h2 id="why-loops-are-valuable">Why Loops Are Valuable</h2>
     <p>The benefits are real and worth stating plainly, because the argument here is not that loops are a distraction:</p>
     <ul>
       <li><strong>Automatic retries.</strong> A failed test no longer stalls the workflow. The agent reads the failure and tries again without a human in the middle.</li>
@@ -344,13 +358,13 @@
     </ul>
     <p>These are genuine gains, and every serious coding stack will adopt some form of them. That is exactly why loop quality alone does not tell you whether the software an agent produces is sound &mdash; and why the interesting question is what the loop is actually optimizing.</p>
 
-    <h2>The Missing Layer: A Worked Example</h2>
+    <h2 id="the-missing-layer-a-worked-example">The Missing Layer: A Worked Example</h2>
     <p>An agent is asked to add a notification service. It plans an event-driven design and reaches for Kafka, because Kafka is a reasonable default and appears constantly in its training data. It wires up a producer, writes the tests, and runs them. The tests fail &mdash; a serialization mismatch. The loop kicks in. The agent tweaks the config, retries. Another failure, a missing topic. It adjusts, retries. On the fourth iteration the tests pass. The stop condition is met. The agent reports success.</p>
     <p>Every part of that loop worked. The retries were correct. The self-correction was real. The final code is clean and tested. And it is wrong for this system, because the project&rsquo;s ADR says RabbitMQ is the approved messaging platform &mdash; already provisioned, already monitored, already the pattern every other service follows. The loop iterated four times and never once asked whether Kafka was allowed here. It could not ask. The evaluation signal it optimized against was &ldquo;do the tests pass,&rdquo; and a Kafka integration passes its own tests perfectly.</p>
     <div class="callout"><p><strong>The loop improved the implementation. It never questioned the architectural decision.</strong> Twenty iterations converging on a well-tested Kafka service is still twenty iterations spent building the wrong thing, because the constraint that mattered &mdash; use RabbitMQ &mdash; was never expressed anywhere the loop could evaluate against it.</p></div>
     <p>This is the same gap that lets <a href="/concepts/architectural-drift/">architectural drift</a> accumulate under any autonomous agent: a locally correct result that is globally inconsistent. A green test suite confirms the code does what the code says. It says nothing about whether the code should exist in this form at all. That question lives in the recorded decisions, and the loop has no line of sight to them.</p>
 
-    <h2>Loops Optimize Execution, Not Intent</h2>
+    <h2 id="loops-optimize-execution-not-intent">Loops Optimize Execution, Not Intent</h2>
     <p>The cleanest way to see the split is to put the two next to each other. A loop is an execution engine, tuned to converge on a passing result. Architectural guardrails are a decision layer, tuned to preserve what the system already committed to. They answer different questions:</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -365,11 +379,11 @@
     </div>
     <p>Both columns are necessary. A loop with no guardrails is a fast, tireless way to build something that passes and still breaks the architecture. Guardrails with no loop are rules no agent can act on. The point is that the loop&rsquo;s own evaluation function will never contain the architectural decision, because that decision is not in the tests, the diff, or the environment feedback. It lives in the ADRs, the standards, and the conventions &mdash; and it only becomes enforceable when it is expressed as <a href="/concepts/executable-architectural-intent/">executable architectural intent</a> rather than prose in a wiki. This is why <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">context alone does not prevent drift</a>: even an agent that has read the ADR can loop right past it if nothing checks the output against it.</p>
 
-    <h2>Deeper Loops Make the Gap Wider</h2>
+    <h2 id="deeper-loops-make-the-gap-wider">Deeper Loops Make the Gap Wider</h2>
     <p>Loop engineering is not standing still. Loops are getting deeper, and single agents are giving way to recursive ones &mdash; an agent that spawns sub-agents, each running its own plan-execute-evaluate cycle on a slice of the work. Every one of those sub-loops optimizes its local objective. That is what makes them effective. It is also what makes them drift.</p>
     <p>A local optimization is, by construction, blind to system-wide intent. One sub-agent picks the convenient library. Another reaches around a service boundary because it is the shortest path to a passing test. Each is locally optimal and collectively inconsistent. As the loops multiply, so do the surfaces where a reasonable local choice diverges from a project-wide decision &mdash; the mechanism behind <a href="/concepts/multi-agent-architectural-drift/">multi-agent architectural drift</a>. The deeper the recursion, the more the architectural memory has to live outside any individual loop, because no single loop can hold the whole system&rsquo;s intent in view. Durable, machine-checkable decisions become the only thing keeping a swarm of well-run loops pointed the same way.</p>
 
-    <h2>Why This Matters: Better Loops, Inside Guardrails</h2>
+    <h2 id="why-this-matters-better-loops-inside">Why This Matters: Better Loops, Inside Guardrails</h2>
     <p>None of this is an argument against loop engineering. It is an argument for pairing it with a layer it structurally cannot supply. The goal is not fewer iterations. It is better loops operating within architectural guardrails &mdash; so that every retry, every self-correction, every autonomous stretch is spent converging on an implementation that is also allowed to exist.</p>
     <p>That is where Mneme sits. It records each architectural decision as structured data with its constraints, retrieves the ones relevant to the change the agent is making, and checks the proposed edit against them <a href="/concepts/deterministic-enforcement/">deterministically</a> &mdash; the same verdict every time, independent of which model ran the loop. A violation is rejected <a href="/concepts/governance-before-generation/">before the change lands</a>, and the violated decision is returned to the agent, so the next iteration of the loop can converge on a compliant answer instead of a merely passing one. The loop keeps doing what it is good at. The architecture stops being optional. If you want to see that on your own ADRs, the <a href="/demo/">demo</a> walks through it end to end.</p>
 

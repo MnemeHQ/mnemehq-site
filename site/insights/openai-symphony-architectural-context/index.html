@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="OpenAI says Symphony lifted landed PRs 500% on some teams. Its issue-tracker control plane still needs durable architectural context and enforcement at scale." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -328,8 +329,22 @@
   </header>
 
   <div class="article-body">
+
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-openai-symphony-changes">What OpenAI Symphony changes</a></li>
+        <li><a href="#work-context-is-not-architectural-context">Work context is not architectural context</a></li>
+        <li><a href="#symphony-s-boundary-is-explicit">Symphony's boundary is explicit</a></li>
+        <li><a href="#disposable-sessions-increase-the-cost-of">Disposable sessions increase the cost of drift</a></li>
+        <li><a href="#retrieval-helps-enforcement-is-different">Retrieval helps; enforcement is different</a></li>
+        <li><a href="#isolated-workspaces-make-propagation-visible">Isolated workspaces make propagation visible</a></li>
+        <li><a href="#what-engineering-leaders-should-separate">What engineering leaders should separate</a></li>
+        <li><a href="#disposable-agents-need-durable-architectural-authority">Disposable agents need durable architectural authority</a></li>
+      </ol>
+    </nav>
     <p>OpenAI's <a href="https://openai.com/index/open-source-codex-orchestration-symphony/" target="_blank" rel="noopener">Symphony announcement</a> reports a 500% increase in landed pull requests on some teams; the <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener">service specification</a> defines the scheduler, workspace, retry, and workflow boundaries.</p>
-    <h2>What OpenAI Symphony changes</h2>
+    <h2 id="what-openai-symphony-changes">What OpenAI Symphony changes</h2>
     <p>OpenAI describes Symphony as an agent orchestrator that turns a project-management board such as Linear into a control plane for coding agents. The motivation was practical. Engineers could comfortably manage roughly three to five interactive sessions before context switching erased the benefit.</p>
     <p>The <a href="https://github.com/openai/symphony/blob/main/SPEC.md" target="_blank" rel="noopener">Symphony specification</a> makes the model concrete. A conforming service:</p>
     <ul>
@@ -351,7 +366,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Work context is not architectural context</h2>
+<h2 id="work-context-is-not-architectural-context">Work context is not architectural context</h2>
     <p>An issue can retain what a team wants done. It may contain requirements, acceptance criteria, comments, review feedback, and links to prior work.</p>
     <p>Those are valuable forms of context. They are not the same as the architectural decisions governing the repository.</p>
     <p>Consider a ticket that says:</p>
@@ -368,7 +383,7 @@
     <p>A capable agent can produce a technically valid solution while contradicting any of those decisions.</p>
     <p>The problem is not necessarily poor ticket writing. Work intent and architectural intent are different artifacts.</p>
     <p>The issue tracker should remain authoritative for what the organization wants changed. A project decision corpus should remain authoritative for the engineering decisions that govern that change.</p>
-    <h2>Symphony's boundary is explicit</h2>
+    <h2 id="symphony-s-boundary-is-explicit">Symphony's boundary is explicit</h2>
     <p>The specification describes Symphony as principally a scheduler, runner, and tracker reader. It does not prescribe one universal sandbox, approval, or operator-confirmation policy. Implementations are expected to document their own trust posture.</p>
     <p>That is a sensible boundary for an orchestrator.</p>
     <p>It also prevents a common category error. Orchestration answers:</p>
@@ -386,13 +401,13 @@
       <li>What evidence proves the decision was evaluated?</li>
     </ul>
     <p>The existing Mneme article on <a href="/insights/ai-agent-orchestration-is-not-governance/">agent orchestration and governance</a> defines that category boundary. Symphony provides a named, concrete instance of why it matters.</p>
-    <h2>Disposable sessions increase the cost of drift</h2>
+    <h2 id="disposable-sessions-increase-the-cost-of">Disposable sessions increase the cost of drift</h2>
     <p>With one engineer supervising one agent, architectural mistakes can often be corrected conversationally. The developer notices the wrong dependency or service boundary and redirects the session.</p>
     <p>That does not scale cleanly when an orchestrator runs many isolated issues.</p>
     <p>One agent reads the current ADR. Another finds an outdated example first. A third retrieves the right decision but treats it as optional guidance. A fourth never encounters it because the issue appears unrelated based on filenames or semantic similarity.</p>
     <p>Each run may compile and pass its local tests. The repository can still accumulate architectural drift.</p>
     <p>The scaling question is therefore not only how many agents can execute concurrently. It is whether the same architectural constraints propagate reliably across those executions.</p>
-    <h2>Retrieval helps; enforcement is different</h2>
+    <h2 id="retrieval-helps-enforcement-is-different">Retrieval helps; enforcement is different</h2>
     <p>Symphony works best with agent-friendly repositories, explicit workflows, strong tests, and clear instructions. Its version-controlled <code>WORKFLOW.md</code> is an important engineering practice.</p>
     <p>But a retrieved instruction and an enforced constraint have different failure semantics.</p>
     <p>An ADR might say:</p>
@@ -408,7 +423,7 @@
       <li>Preserve human review for ambiguity and legitimate exceptions.</li>
     </ol>
     <p>The objective is not to replace agent reasoning. It is to prevent architectural authority from depending entirely on one temporary session.</p>
-    <h2>Isolated workspaces make propagation visible</h2>
+    <h2 id="isolated-workspaces-make-propagation-visible">Isolated workspaces make propagation visible</h2>
     <p>Symphony's deterministic per-issue workspaces are operationally valuable. They separate tasks, retain issue state across retries, and give the orchestrator an authoritative lifecycle surface.</p>
     <p>Isolation also creates a clear governance boundary.</p>
     <p>If a decision applies in the main repository but never reaches an isolated run, the workspace does not preserve architectural intent. The same issue appears when teams use more than one coding agent:</p>
@@ -420,7 +435,7 @@
     </ul>
     <p>The execution paths differ. The architecture should not.</p>
     <p>That is <a href="/concepts/governance-propagation/">governance propagation</a>: carrying authoritative decisions to every surface where they apply without turning copied prompts into competing sources of truth.</p>
-    <h2>What engineering leaders should separate</h2>
+    <h2 id="what-engineering-leaders-should-separate">What engineering leaders should separate</h2>
     <p>Teams evaluating Symphony-style workflows should design four distinct control surfaces:</p>
     <ol>
       <li><strong>Work persistence.</strong> The issue tracker records the requested outcome and its state.</li>
@@ -429,7 +444,7 @@
       <li><strong>Compliance evidence.</strong> A <a href="/concepts/verification-contracts/">verification contract</a> defines which properties are checked and what happens when they fail.</li>
     </ol>
     <p>Collapsing those concerns into one prompt works only while the workflow is small enough for a human to reconstruct the missing boundaries.</p>
-    <h2>Disposable agents need durable architectural authority</h2>
+    <h2 id="disposable-agents-need-durable-architectural-authority">Disposable agents need durable architectural authority</h2>
     <p>Symphony makes an important architectural principle visible: the agent does not have to be the durable object.</p>
     <p>The work can outlive the session. The workspace can be recreated. The orchestrator can retry execution. A different model can eventually perform the task.</p>
     <p>Architectural intent therefore needs to live somewhere more durable than any of them.</p>

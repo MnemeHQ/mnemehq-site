@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Harness engineering is the execution layer between an AI model and production: the runtime coordinating tool calls, retries, state, and multi-step agent work." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -322,11 +323,25 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-is-harness-engineering">What is harness engineering?</a></li>
+        <li><a href="#why-prompt-engineering-stopped-being-enough">Why prompt engineering stopped being enough</a></li>
+        <li><a href="#the-rise-of-execution-runtimes-and">The rise of execution runtimes and agent harnesses</a></li>
+        <li><a href="#harness-engineering-is-becoming-infrastructure">Harness engineering is becoming infrastructure</a></li>
+        <li><a href="#the-stack-generation-orchestration-governance">The stack: generation, orchestration, governance</a></li>
+        <li><a href="#what-harnesses-do-not-do">What harnesses do not do</a></li>
+        <li><a href="#the-next-layer-governance">The next layer: governance</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>A model, on its own, does one thing: it turns an input into an output. It does not call tools, recover from a failed step, remember what it did ten minutes ago, or carry a task across a long-running job. Everything between that single output and a system that actually works in production is built by hand.</p>
 
 <p>That &ldquo;everything between&rdquo; now has a name. <strong>Harness engineering</strong> is an emerging term in the AI engineering community, gaining traction through 2026, for the discipline of designing the systems, constraints, feedback loops, and observability that wrap around an AI model to make it reliable in production. The harness is the execution layer between a model and the system it powers.</p>
 
-<h2>What is harness engineering?</h2>
+<h2 id="what-is-harness-engineering">What is harness engineering?</h2>
 
 <p>A harness is the layer around the model that runs the agent loop. The model decides; the harness makes the decision actionable, durable, and repeatable. Where prompt engineering optimized a single call, harness engineering builds the runtime that turns that call into a working system.</p>
 
@@ -386,7 +401,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why prompt engineering stopped being enough</h2>
+<h2 id="why-prompt-engineering-stopped-being-enough">Why prompt engineering stopped being enough</h2>
 
 <p>Prompt engineering was the right discipline for a world where the model was the product and a single, well-phrased call was the whole interaction. Optimize the input, get a better output. For a chat assistant, that framing held.</p>
 
@@ -394,7 +409,7 @@
 
 <p>This is the shift from optimizing inputs to engineering systems. It is the subject of the companion piece <a href="/insights/prompt-engineering-vs-harness-engineering/">Prompt Engineering Was About Inputs. Harness Engineering Is About Systems.</a>, which traces the discipline as it moved from phrasing to architecture. The distinction also matters for governance: a prompt is guidance, not enforcement, which is why <a href="/insights/prompt-engineering-is-not-governance/">prompt engineering is not governance</a> &mdash; a well-phrased instruction cannot guarantee a constraint holds.</p>
 
-<h2>The rise of execution runtimes and agent harnesses</h2>
+<h2 id="the-rise-of-execution-runtimes-and">The rise of execution runtimes and agent harnesses</h2>
 
 <p>As the work moved into the harness, the harness stopped being something every team rebuilt from scratch. Managed agent runtimes, orchestration frameworks, and background-execution platforms now own the loop: they handle tool dispatch, state persistence, retries, routing, and long-running execution as a product surface rather than glue code.</p>
 
@@ -402,7 +417,7 @@
 
 <p>The details differ by framework, and the term is still being defined in public. But the direction is not in dispute. Orchestration is becoming a layer you adopt, not a layer you reinvent &mdash; and that is exactly what happens to a capability on its way to becoming infrastructure.</p>
 
-<h2>Harness engineering is becoming infrastructure</h2>
+<h2 id="harness-engineering-is-becoming-infrastructure">Harness engineering is becoming infrastructure</h2>
 
 <p>This trajectory is familiar, because the industry has watched it twice before.</p>
 
@@ -414,7 +429,7 @@
 
 <div class="callout"><p><strong>Capability, then scale, then governance.</strong> Every infrastructure wave runs in that order. Harnesses are deep into capability and scale. The next layer up is the one they do not provide.</p></div>
 
-<h2>The stack: generation, orchestration, governance</h2>
+<h2 id="the-stack-generation-orchestration-governance">The stack: generation, orchestration, governance</h2>
 
 <p>It helps to see harness engineering as one layer in an execution stack rather than a standalone idea. Three layers, each answering a different question, each unable to answer the one above it.</p>
 
@@ -443,7 +458,7 @@
 
 <p>Reading the stack this way makes the boundary obvious. A better model improves generation. A better harness improves orchestration. Neither, by construction, decides whether the result conforms to the decisions the system was built to preserve. That is a separate concern &mdash; logically independent of the harness, but enforced through the same execution boundary the harness already exposes: before tool calls, file writes, and commits.</p>
 
-<h2>What harnesses do not do</h2>
+<h2 id="what-harnesses-do-not-do">What harnesses do not do</h2>
 
 <p>A harness coordinates execution. It does not preserve architectural integrity. Those are different problems, and conflating them is the most common mistake in agent design.</p>
 
@@ -455,7 +470,7 @@
 
 <div class="callout"><p><strong>A harness makes an agent act reliably. It does not make an agent act within the lines.</strong> Reliable execution of the wrong change is still the wrong change.</p></div>
 
-<h2>The next layer: governance</h2>
+<h2 id="the-next-layer-governance">The next layer: governance</h2>
 
 <p>If capability and scale come before governance in every infrastructure wave, then governance is not an add-on to harness engineering. It is the inevitable layer above it &mdash; the one that becomes load-bearing precisely when harnesses succeed and autonomous work scales.</p>
 

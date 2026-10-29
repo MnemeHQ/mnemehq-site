@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic says Claude now authors more than 80% of the code merged into its codebase. As AI-generated code outpaces human review, engineering governance becomes production infrastructure, not process." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -293,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-anthropic-s-report-shows">What Anthropic&rsquo;s Report Shows</a></li>
+        <li><a href="#the-governance-gap-arrives-before-agi">The Governance Gap Arrives Before AGI</a></li>
+        <li><a href="#code-generation-is-scaling-faster-than">Code Generation Is Scaling Faster Than Engineering Judgment</a></li>
+        <li><a href="#engineering-intent-has-to-become-executable">Engineering Intent Has to Become Executable</a></li>
+        <li><a href="#the-missing-layer-in-the-ai">The Missing Layer in the AI-Native Stack</a></li>
+        <li><a href="#what-engineering-leaders-should-do">What Engineering Leaders Should Do</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Anthropic&rsquo;s Report Shows</h2>
+
+    <h2 id="what-anthropic-s-report-shows">What Anthropic&rsquo;s Report Shows</h2>
     <p><a href="https://www.anthropic.com/institute/recursive-self-improvement" target="_blank" rel="noopener">When AI builds itself</a>, published by the Anthropic Institute in June 2026, documents a feedback loop that has been forming quietly: Anthropic is increasingly using Claude to build Claude. As of May 2026, the report says, more than 80% of the code merged into Anthropic&rsquo;s codebase was authored by Claude, up from low single digits before Claude Code shipped as a research preview in early 2025. In the second quarter of 2026, the typical engineer was merging 8&times; as much code per day as in 2024.</p>
     <p>The capability curve underneath those numbers is steep. Anthropic reports that the length of tasks Claude can reliably complete on its own has been doubling roughly every four months, and that on the most open-ended engineering tasks its success rate reached 76% in May 2026, a fifty-point jump in six months. The company is careful about the framing. &ldquo;We are not there yet,&rdquo; it writes, &ldquo;and recursive self-improvement is not inevitable.&rdquo; This is the beginning of a loop, not the arrival of one.</p>
     <p>Most of the coverage read the report as a story about safety and existential risk. For engineering organizations, the nearer implication is more mundane and more immediate. If AI can generate production software this much faster, the scarce resource is no longer code. It is confidence that the code is the code you meant to ship.</p>
@@ -308,21 +322,21 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Governance Gap Arrives Before AGI</h2>
+<h2 id="the-governance-gap-arrives-before-agi">The Governance Gap Arrives Before AGI</h2>
     <p>Anthropic frames its own governance concern around frontier systems: monitoring increasingly autonomous research agents, securing model weights, keeping humans able to intervene. Those are real problems, and they are not the ones most engineering teams face. There is a second governance problem that arrives much sooner, and it lands on ordinary teams rather than frontier labs.</p>
     <p>Before any organization has autonomous research agents designing the next foundation model, it will have thousands of coding agents producing millions of lines of production software. Those agents faithfully generate code. They do not automatically preserve architecture. An agent that was never told about a service boundary, a forbidden dependency, or a deprecated pattern will cross it without hesitation, and nothing in the generation step will object.</p>
 
-    <h2>Code Generation Is Scaling Faster Than Engineering Judgment</h2>
+    <h2 id="code-generation-is-scaling-faster-than">Code Generation Is Scaling Faster Than Engineering Judgment</h2>
     <p>Every gain in coding capability changes the economics of software the same way. Producing another pull request is approaching free. Verifying that the pull request preserves architectural intent is not. That verification still costs a senior engineer&rsquo;s attention, and attention does not scale 8&times;.</p>
     <p>As generation accelerates, more architectural decisions get exercised per hour, more project context has to be remembered, and more consistency has to be held across more changes than any review process was built for. <a href="/concepts/architectural-drift/">Architectural drift</a> that used to accumulate at the pace of human sprints now accumulates at the pace of agent execution. The constraint moves from writing software to keeping software aligned with the long-lived intent of the organization that owns it.</p>
 
     <div class="callout"><p><strong>Capability is neutral.</strong> An agent that is twice as productive implements good architecture twice as fast and introduces drift twice as fast. Whether the speed improves the system or erodes it depends entirely on the constraints around generation, and recursive self-improvement turns the dial on both at once.</p></div>
 
-    <h2>Engineering Intent Has to Become Executable</h2>
+    <h2 id="engineering-intent-has-to-become-executable">Engineering Intent Has to Become Executable</h2>
     <p>Most organizations already hold the knowledge that should constrain their agents: architecture decision records, coding standards, platform conventions, the rationale behind the last three rewrites. Almost all of it exists as prose written for humans, scattered across wikis, markdown files, and tribal memory. An agent cannot reliably infer years of architectural decisions from documents it may never retrieve.</p>
     <p>The fix is not more documentation. It is converting the decisions that matter into <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>: machine-readable constraints an agent retrieves before it writes code, not after a reviewer notices the violation. That move is what turns governance from a document into infrastructure, and it is the move Anthropic&rsquo;s numbers make non-optional.</p>
 
-    <h2>The Missing Layer in the AI-Native Stack</h2>
+    <h2 id="the-missing-layer-in-the-ai">The Missing Layer in the AI-Native Stack</h2>
     <p>For two decades the software stack added layers as the work demanded them: source control, CI/CD, test automation, code review. AI-generated code at this volume demands one more, and it is the layer most teams have not built.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -340,7 +354,7 @@
 
     <p>Code review is the load-bearing control in most teams, and it is the first one to break under 8&times; throughput. A reviewer can confirm that a change works without catching that it quietly violated a decision made eighteen months ago in a meeting they never attended. We have argued before that <a href="/insights/why-code-review-cannot-scale-with-ai-output/">review cannot scale with AI output</a>; recursive self-improvement is the report that puts a number on how fast the gap widens.</p>
 
-    <h2>What Engineering Leaders Should Do</h2>
+    <h2 id="what-engineering-leaders-should-do">What Engineering Leaders Should Do</h2>
     <p>The upside in Anthropic&rsquo;s report is real. Capturing it without converting speed into drift takes three moves the report does not prescribe.</p>
     <ol>
       <li><strong>Write the decisions down as constraints, not prose.</strong> A decision that lives in a wiki cannot bind an agent. The same decision expressed as a structured, machine-readable rule can. Start with the architectural choices that hurt most when they break: service boundaries, approved dependencies, the patterns the platform team standardized on.</li>

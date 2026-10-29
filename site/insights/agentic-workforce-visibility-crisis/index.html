@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Claude Code pricing and Copilot billing changes reveal a deeper problem: engineering leaders have little visibility into an emerging agentic workforce. Governance starts with visibility." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -292,8 +293,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#costs-are-a-symptom-not-the">Costs Are a Symptom, Not the Disease</a></li>
+        <li><a href="#leaders-are-losing-visibility">Leaders Are Losing Visibility</a></li>
+        <li><a href="#why-traditional-tools-don-t-see">Why Traditional Tools Don&rsquo;t See It</a></li>
+        <li><a href="#governance-starts-with-visibility">Governance Starts With Visibility</a></li>
+        <li><a href="#what-an-execution-governance-layer-provides">What an Execution-Governance Layer Provides</a></li>
+        <li><a href="#from-visibility-to-control">From Visibility to Control</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>Costs Are a Symptom, Not the Disease</h2>
+
+    <h2 id="costs-are-a-symptom-not-the">Costs Are a Symptom, Not the Disease</h2>
     <p>The thread that keeps recurring is about money. <a href="https://docs.github.com/en/copilot/managing-copilot/managing-copilot-as-an-individual-subscriber/monitoring-your-copilot-usage-and-entitlements" target="_blank" rel="noopener">GitHub Copilot moved to usage-based premium request billing</a>, and every Claude Code pricing change sets off the same round of spreadsheets. The reaction is understandable. It is also aimed at the wrong target. The spend is a readout, not the condition behind it.</p>
     <p>Autonomous agents consume nothing like humans do. A human engineer reads a ticket, writes some code, opens a pull request. An agent plans, researches the codebase, generates a draft, reviews its own output, refactors, re-runs the build, and spawns sub-agents to handle pieces in parallel. One prompt can fan out into hundreds of model calls and long-running workflows that touch files no one asked about. Token usage and compute spend are simply the first thing that shows up on a dashboard.</p>
     <p>That is the tell. When the invoice is the earliest signal that something changed, it means nobody had a clearer one. The cost line is visible because billing systems were built to make it visible. The agent&rsquo;s actions were not. Treating the spend as the problem is treating a fever as the illness. The condition is that an agentic workforce is operating without anyone able to see what it is doing.</p>
@@ -307,24 +321,24 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Leaders Are Losing Visibility</h2>
+<h2 id="leaders-are-losing-visibility">Leaders Are Losing Visibility</h2>
     <p>Ask the questions a VP of Engineering would ask about a human team, then ask them about agents. Who made this change? Why did the agent take this approach instead of another? Which existing architecture did it ignore? Which decision that the team already settled did it quietly override? Why did it keep retrying the same failing step for twenty minutes?</p>
     <p>For a human team, those answers live in a standup, a design doc, a code review, a hallway conversation. For an agentic workforce they mostly do not exist. As agents take on more of the work &mdash; generating code, opening pull requests, reviewing each other&rsquo;s changes, running CI workflows &mdash; the volume of consequential actions climbs while the record of why those actions happened stays empty.</p>
     <p>This is the gap that matters. It is not that agents are unobservable in principle. It is that the organizations deploying them never set up the mechanism to capture intent and decisions, because for human teams that mechanism was social and implicit. Strip out the humans and the implicit record goes with them.</p>
 
     <div class="callout"><p><strong>The invoice is the symptom.</strong> When a billing change is the first time leadership notices the agentic workforce, that is evidence of a visibility gap, not a cost problem. The agents were already acting. Nobody could see the actions until they showed up as spend.</p></div>
 
-    <h2>Why Traditional Tools Don&rsquo;t See It</h2>
+    <h2 id="why-traditional-tools-don-t-see">Why Traditional Tools Don&rsquo;t See It</h2>
     <p>Engineering already has tooling that promises to show what systems do. None of it sees the thing that is now missing.</p>
     <p>Cloud spend and infrastructure have owners. Every VM, every bucket, every managed service maps to a team, a cost center, a person who answers for it. Agent actions and the decisions behind them usually do not. An agent that introduces a new dependency, restructures a module, or ships a change against a settled pattern leaves no ownership trail. The action happened; no one is attached to the reasoning.</p>
     <p>Observability tooling has the same blind spot from a different angle. Metrics, traces, and logs show how a system behaves at runtime &mdash; latency, error rates, throughput. They do not show whether an agent&rsquo;s change complied with the engineering intent of the team that built the system. A change can be fully observable and completely wrong. This is the distinction we draw in <a href="/insights/why-observability-is-not-governance/">why observability is not governance</a>: telemetry tells you what the system did, not whether what an agent decided aligned with what the organization decided. Visibility into agent decisions is a different signal than telemetry about system behavior, and no amount of the second produces the first.</p>
 
-    <h2>Governance Starts With Visibility</h2>
+    <h2 id="governance-starts-with-visibility">Governance Starts With Visibility</h2>
     <p>Everything leaders actually want from governance &mdash; spend control, risk management, compliance, architectural coherence &mdash; depends on a prior step. You cannot control, audit, or correct an action you cannot see. Before any of those downstream goals are reachable, the organization needs visibility into the actions agents take and the decisions they make.</p>
     <p>A concrete example makes the gap obvious. Suppose the team made an architectural decision, recorded in an ADR, that all billing logic routes through a single <strong>BillingService</strong> abstraction layer, and that no module talks to the payment provider directly. An agent picks up a feature task, decides the abstraction is in the way, and calls the provider SDK inline. The change works. Tests pass. The pull request merges. Telemetry stays green.</p>
     <p>Without decision traceability, nobody notices. The ADR was a slide and a wiki page; the agent never saw it, and no checkpoint compared the change against it. Months later, when the provider contract changes and the &ldquo;one place to update&rdquo; turns out to be five, someone goes archaeology-digging through commits to find when the boundary broke. The decision existed. The visibility into whether agents honored it did not.</p>
 
-    <h2>What an Execution-Governance Layer Provides</h2>
+    <h2 id="what-an-execution-governance-layer-provides">What an Execution-Governance Layer Provides</h2>
     <p>Closing the gap means treating agent execution as something that must be recorded and checked, not inferred after the fact. An execution-governance layer provides four things the current stack does not:</p>
     <ul>
       <li><strong>Architectural memory.</strong> The decisions a team has settled &mdash; patterns, boundaries, forbidden dependencies &mdash; stored as structured, machine-readable constraints rather than prose. See <a href="/concepts/decision-continuity/">decision continuity</a>.</li>
@@ -342,7 +356,7 @@
     </ol>
     <p>The output is the thing that was missing: an auditable record of what agents did and whether it matched what the organization intended. That is visibility, made structural rather than social. It is also the foundation of <a href="/concepts/runtime-governance/">runtime governance</a> &mdash; enforcement that runs where the work happens, not in a meeting afterward.</p>
 
-    <h2>From Visibility to Control</h2>
+    <h2 id="from-visibility-to-control">From Visibility to Control</h2>
     <p>Once agent actions are visible and governed, the downstream goals stop being mysteries. Cost becomes attributable, because every action is recorded against a decision and a purpose. Risk becomes manageable, because non-compliant changes are caught at generation time rather than found in an incident. Compliance becomes demonstrable, because the audit trail already exists. Architectural coherence holds, because the constraints that define it are enforced on every change.</p>
     <p>The sequence runs one direction. Visibility enables governance; governance makes cost, risk, and compliance into managed outcomes. Skip the first step and the rest stay out of reach &mdash; which is exactly why so many teams are debating pricing instead of governing an agentic workforce they cannot yet see.</p>
 

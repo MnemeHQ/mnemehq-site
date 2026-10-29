@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Teams paste their architectural rules into CLAUDE.md and call it governance. At small scale it half-works. At large scale it collapses. Here is why context injection is not governance memory." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -289,13 +290,26 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-context-injection-actually-is">What context injection actually is</a></li>
+        <li><a href="#the-four-failure-modes">The four failure modes</a></li>
+        <li><a href="#the-session-boundary-problem">The session boundary problem</a></li>
+        <li><a href="#why-large-codebases-expose-the-limits">Why large codebases expose the limits faster</a></li>
+        <li><a href="#what-governance-memory-actually-requires">What governance memory actually requires</a></li>
+        <li><a href="#the-category-framing">The category framing</a></li>
+        <li><a href="#related-reading">Related reading</a></li>
+      </ol>
+    </nav>
+
     <p>Every engineering team that adopts an AI coding assistant goes through the same evolution. The first sessions produce inconsistent output. Naming conventions get ignored. Service boundaries blur. Approved dependencies get substituted for whatever the model prefers.</p>
 
     <p>The natural response is to write it all down. A CLAUDE.md file in the repo root. A system prompt injected at session start. A context block prepended to every request. "Use PostgreSQL, not SQLite. Services must not call each other directly. All data access goes through the repository layer." The rules are all there. The AI reads them. The sessions improve.</p>
 
     <p>For a team of two, on a codebase that is six months old, this works well enough to feel like a solution. It is not.</p>
 
-    <h2>What context injection actually is</h2>
+    <h2 id="what-context-injection-actually-is">What context injection actually is</h2>
 
     <p>CLAUDE.md files and system prompt injection are forms of static context. At session start, a block of text is prepended to the model's context window, and the model is asked to respect it for the duration of the session. The rules exist as natural language instructions, and compliance depends on the model interpreting them correctly and consistently.</p>
 
@@ -325,7 +339,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The four failure modes</h2>
+<h2 id="the-four-failure-modes">The four failure modes</h2>
 
     <p>Context injection breaks down in predictable ways. Each one compounds as the codebase ages and the team grows.</p>
 
@@ -366,7 +380,7 @@
 
     </div>
 
-    <h2>The session boundary problem</h2>
+    <h2 id="the-session-boundary-problem">The session boundary problem</h2>
 
     <p>There is a fifth failure mode that affects every team eventually: context injection does not persist.</p>
 
@@ -378,7 +392,7 @@
       <p><strong>The session boundary problem amplifies with team size.</strong> Two engineers sharing a CLAUDE.md can manually coordinate. Ten engineers, three repositories, and eighteen months of accumulated decisions cannot. The file becomes a maintenance problem before it becomes a governance solution.</p>
     </div>
 
-    <h2>Why large codebases expose the limits faster</h2>
+    <h2 id="why-large-codebases-expose-the-limits">Why large codebases expose the limits faster</h2>
 
     <p>Context injection can feel adequate on a small codebase because the failure modes are invisible. The team knows the rules well enough to catch violations in review. The file is short enough to maintain. The decisions are recent enough to still be accurate.</p>
 
@@ -391,7 +405,7 @@
       <li><strong>At AI-assisted velocity,</strong> the problem compounds faster. A team generating code at 10x human pace needs governance that operates at 10x human pace. A text file maintained by engineers does not scale with AI output.</li>
     </ul>
 
-    <h2>What governance memory actually requires</h2>
+    <h2 id="what-governance-memory-actually-requires">What governance memory actually requires</h2>
 
     <p>The teams discovering these limits are correctly identifying that they have a memory problem. What they misdiagnose is the structure that memory needs to have.</p>
 
@@ -408,7 +422,7 @@
 
     <p>These are infrastructure properties. They require infrastructure to implement, not a better-maintained text file.</p>
 
-    <h2>The category framing</h2>
+    <h2 id="the-category-framing">The category framing</h2>
 
     <p>Context injection served a purpose. It was the first tool available for communicating architectural intent to an AI assistant, and it moved the problem forward. But it has a ceiling, and most teams building with AI at scale are already above it.</p>
 

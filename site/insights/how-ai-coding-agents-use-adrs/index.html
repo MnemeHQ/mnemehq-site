@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="An ADR records one architectural decision, its context, and its consequences. Here is how AI coding agents actually interact with ADRs today &mdash; ignored, advisory, or enforced &mdash; and how to make them executable." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -326,7 +327,21 @@
 
   <div class="article-body">
 
-    <h2>What an ADR Is, Briefly</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-an-adr-is-briefly">What an ADR Is, Briefly</a></li>
+        <li><a href="#why-adrs-matter-more-in-the">Why ADRs Matter More in the Agent Era</a></li>
+        <li><a href="#the-default-failure-mode">The Default Failure Mode</a></li>
+        <li><a href="#the-three-ways-agents-interact-with">The Three Ways Agents Interact With ADRs</a></li>
+        <li><a href="#making-adrs-executable">Making ADRs Executable</a></li>
+        <li><a href="#adrs-in-ci-and-at-edit">ADRs in CI and at Edit Time</a></li>
+        <li><a href="#from-documentation-to-enforcement">From Documentation to Enforcement</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-an-adr-is-briefly">What an ADR Is, Briefly</h2>
     <p>An Architecture Decision Record is a short, structured note about a single architectural decision. The format was popularized by Michael Nygard in <a href="https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions" target="_blank" rel="noopener">Documenting Architecture Decisions</a>, and it is deliberately minimal: a title, the <em>context</em> (the forces at play), the <em>decision</em> itself stated in plain active voice, and the <em>consequences</em> that follow from it. A status field tracks whether the decision is proposed, accepted, deprecated, or superseded.</p>
     <p>The point of an ADR is to preserve the reasoning that would otherwise evaporate. Six months after a decision, the code shows <em>what</em> was built but not <em>why</em>, and the person who held the why in their head has moved teams. An ADR is the answer to &ldquo;why is it done this way?&rdquo; written down at the moment the choice was made. Examples are familiar: use PostgreSQL, not a document store; all async work goes through the existing worker service; services never read each other&rsquo;s databases directly.</p>
 
@@ -339,16 +354,16 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why ADRs Matter More in the Agent Era</h2>
+<h2 id="why-adrs-matter-more-in-the">Why ADRs Matter More in the Agent Era</h2>
     <p>ADRs used to be a nicety. In a team of humans, the important decisions lived partly in the documents and partly in the shared memory of the people who made them. A new engineer absorbed the conventions by reading the code, asking questions, and getting corrected in review. That transmission was slow, but it worked because the pace of change matched the pace of a human reading and understanding.</p>
     <p>AI coding agents break that assumption. An agent can touch twenty files in a minute, open a pull request, and move to the next task before anyone reads a line. It has no shared memory of the last standup and no scar tissue from the outage that produced a given rule. The decisions humans used to carry in their heads now have to be written down &mdash; and, more importantly, written down in a form something can act on. When generation is this fast, the only conventions that survive are the ones expressed explicitly. This is exactly why <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">context alone does not prevent architectural drift</a>: an agent that produces plausible, working code at speed will produce plausible, working, <em>inconsistent</em> code just as fast unless something holds it to the recorded decisions.</p>
 
-    <h2>The Default Failure Mode</h2>
+    <h2 id="the-default-failure-mode">The Default Failure Mode</h2>
     <p>Here is how ADRs usually work in an AI-assisted codebase, and why it is not enough. The ADRs live as Markdown files in <code>docs/adr/</code>. The agent may or may not have them in context, depending on how the prompt was assembled and how much of the repository fit in the window. Suppose it does read the relevant ADR. Nothing then checks that the code it writes actually obeys the decision. The ADR is advice the model may weigh, discard, or quietly misremember, alongside everything else competing for its attention.</p>
     <p>The gap is the one teams keep rediscovering: <strong>loading an ADR into context is not the same as enforcing it.</strong> A document in the prompt shifts the odds. It does not close the door. The model can read &ldquo;all async work goes through the worker service&rdquo; and still reach for a new queue library because that pattern was more common in its training data, or because the local task felt easier that way. An ADR that only informs is a suggestion. An ADR that also verifies is a guardrail. Most teams have the first and assume it behaves like the second.</p>
     <div class="callout"><p><strong>An ADR nobody checks is a comment. An ADR a machine checks is a constraint.</strong> The difference is not how well the document is written &mdash; it is whether a deterministic check reads the decision and can stop a change that breaks it.</p></div>
 
-    <h2>The Three Ways Agents Interact With ADRs</h2>
+    <h2 id="the-three-ways-agents-interact-with">The Three Ways Agents Interact With ADRs</h2>
     <p>In practice, an ADR sits at one of three rungs on a ladder, and it is worth naming which rung your setup is on, because the jumps between them are where the value is.</p>
     <ol>
       <li><strong>Ignored.</strong> The ADR is not in the agent&rsquo;s context at all. It exists in the repository, but the prompt that produced the change never included it. The decision has zero influence on the generated code. This is the common case for large repositories where only a slice of files fits in the window.</li>
@@ -357,7 +372,7 @@
     </ol>
     <p>The move from rung two to rung three is the entire game. Advisory ADRs get better as models get better, but they never reach certainty, because a probabilistic system cannot produce a hard guarantee. An enforced ADR gives the same verdict on the same change every time, regardless of which model ran or how full the context was. That property &mdash; <a href="/concepts/governance-before-generation/">governance applied before generation is accepted</a> rather than hoped for after &mdash; is what separates a documented decision from an enforced one.</p>
 
-    <h2>Making ADRs Executable</h2>
+    <h2 id="making-adrs-executable">Making ADRs Executable</h2>
     <p>Turning an ADR into something a machine enforces has three moving parts, and none of them require the ADR to stop being human-readable.</p>
     <ul>
       <li><strong>Retrieve the relevant ADRs.</strong> For a given change, pull the decisions that actually govern it &mdash; the ones touching the files, modules, or concerns the edit affects. Not the whole catalogue; the ones that apply.</li>
@@ -374,14 +389,14 @@
       <a class="evidence-source" href="https://github.com/MnemeHQ/mneme/blob/b98b213c3a5a28cf16483fc92e9e8f573303f19b/examples/benchmarks/reports/RESULTS.md">Method and artifacts &rarr;</a>
     </div>
 
-    <h2>ADRs in CI and at Edit Time</h2>
+    <h2 id="adrs-in-ci-and-at-edit">ADRs in CI and at Edit Time</h2>
     <p>There are two moments where an ADR can be enforced, and they are complementary rather than competing.</p>
     <p><strong>In CI</strong>, the check runs against a diff. A pull request arrives, the pipeline retrieves the ADRs the diff touches, evaluates the changes, and fails the build if any decision is violated. This is batch review: it catches everything before merge, and it is the natural home for enforcement in a team that already gates on CI. The cost is timing &mdash; the agent has already produced the whole change, and the feedback arrives after the fact, so a violation means a full rework cycle.</p>
     <p><strong>At edit time</strong>, the check runs the instant the agent tries to write. Mneme&rsquo;s Claude Code integration does this through a PreToolUse hook: it intercepts the Edit, Write, or MultiEdit before it touches disk, evaluates the proposed change against the relevant ADRs, and can block a violating edit outright. The agent gets the verdict mid-task, while it still has the full context of what it was doing, and corrects course immediately. There is no rework cycle because the bad change never landed.</p>
     <p>Two how-to guides set up each checkpoint: <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">stop an AI coding agent from crossing an architectural boundary</a> for edit time, and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">fail a pull request that breaks an ADR</a> for CI.</p>
     <p>Most teams want both. Edit-time blocking keeps the agent honest as it works; CI is the backstop that guarantees nothing violating an ADR reaches the main branch regardless of how the code was produced. This layering is the substance of <a href="/insights/governance-layers-for-ai-coding-assistants/">building governance layers for AI coding assistants</a>, and it is why enforcement is not a single tool but a set of checkpoints. It is also worth being precise about what these checks verify: an ADR check confirms the code honors an architectural decision, which is a different guarantee from a test confirming the code runs, a distinction we draw out in <a href="/insights/runtime-verification-is-not-architectural-verification/">runtime verification is not architectural verification</a>.</p>
 
-    <h2>From Documentation to Enforcement</h2>
+    <h2 id="from-documentation-to-enforcement">From Documentation to Enforcement</h2>
     <p>The shift is small to describe and large in effect. An ADR is a good document either way. But a document that only records a decision depends entirely on someone &mdash; or some model &mdash; choosing to honor it. A document that a machine checks removes the choice: the decision holds because a check makes it hold. Set the two side by side and the difference is stark.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="GitHub's Agent HQ control plane and Microsoft's Build 2026 agent stack name governance as a platform layer. The layer no platform ships is architectural." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -295,8 +296,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#governance-is-now-a-named-layer">Governance Is Now a Named Layer in Microsoft&rsquo;s Stack</a></li>
+        <li><a href="#what-the-control-plane-actually-governs">What the Control Plane Actually Governs</a></li>
+        <li><a href="#the-pattern-every-infrastructure-wave-grows">The Pattern: Every Infrastructure Wave Grows a Governance Layer</a></li>
+        <li><a href="#governance-is-bigger-than-permissions">Governance Is Bigger Than Permissions</a></li>
+        <li><a href="#the-multi-platform-problem">The Multi-Platform Problem</a></li>
+        <li><a href="#what-happens-next">What Happens Next</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>Governance Is Now a Named Layer in Microsoft&rsquo;s Stack</h2>
+
+    <h2 id="governance-is-now-a-named-layer">Governance Is Now a Named Layer in Microsoft&rsquo;s Stack</h2>
     <p>GitHub COO Kyle Daigle introduced <a href="https://github.blog/news-insights/company-news/welcome-home-agents/">Agent HQ</a> on October 28, 2025 as an open ecosystem that brings coding agents from Anthropic, OpenAI, Google, Cognition, and xAI into a single platform, reachable through paid Copilot subscriptions. The announcement&rsquo;s centerpiece for developers was mission control, a command center spanning GitHub, VS Code, mobile, and the CLI. The centerpiece for enterprises sat one paragraph lower: a control plane giving administrators security policies, audit logging, the power to designate which agents are permitted, model access definitions, and org-wide usage metrics.</p>
     <p>Four months later the governance half stopped being a preview. GitHub&rsquo;s <a href="https://github.blog/changelog/2026-02-26-enterprise-ai-controls-agent-control-plane-now-generally-available/">Enterprise AI Controls and agent control plane reached general availability</a> on February 26, 2026, with a consolidated AI administration view, session-activity search filtered by agent (third-party agents included), and API support for applying enterprise-wide custom agent definitions.</p>
     <p>Then Build 2026 extended the same pattern from the repository to the whole estate. Microsoft announced the Agent 365 registry, which surfaces unmanaged agents discovered across Defender, Entra, and Intune: more than 20 agent types, including coding agents, AI desktop applications, and local and remote MCP servers. Windows 365 for Agents went generally available, running agents in isolated, policy-governed cloud PCs under Intune controls. And on June 2, 2026, Microsoft published the Agent Control Specification (ACS), an open industry specification for placing deterministic safety and security controls at checkpoints throughout agentic workflows. Each announcement names governance as its category. None of them treats it as a feature.</p>
@@ -310,15 +324,15 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What the Control Plane Actually Governs</h2>
+<h2 id="what-the-control-plane-actually-governs">What the Control Plane Actually Governs</h2>
     <p>The platform stack now covers a specific set of questions. Which agents may run: Agent HQ&rsquo;s control plane lets an administrator allowlist agents and define model access. Who an agent is: GitHub manages agent identity and access policies the way it manages a human team member&rsquo;s, and branch controls decide when CI runs for agent-generated code. What an agent did: audit logs and session activity record actions down to session detail. Where an agent executes: Windows 365 for Agents pins execution inside an Intune-governed cloud PC. What an agent may do mid-run: ACS defines five validation checkpoints across an agent&rsquo;s lifecycle (input, model call, state, tool execution, and output), where policy gets evaluated deterministically.</p>
     <p>The Foundry team&rsquo;s framing for ACS is the most candid statement of where this is heading: &ldquo;Just as Model Context Protocol (MCP) standardized how agents connect to tools and Agent2Agent (A2A) standardized how agents communicate with each other, ACS provides one open standard for safety controls that any framework can adopt.&rdquo; Tool access got a protocol. Agent communication got a protocol. Now runtime control is getting one. That is what an infrastructure layer looks like while it hardens.</p>
 
-    <h2>The Pattern: Every Infrastructure Wave Grows a Governance Layer</h2>
+    <h2 id="the-pattern-every-infrastructure-wave-grows">The Pattern: Every Infrastructure Wave Grows a Governance Layer</h2>
     <p>Cloud adoption ran ahead of control, and a security and compliance industry grew to close the gap. Kubernetes shipped, and policy engines followed. CI/CD made deployment continuous, and observability became a category. Agents are repeating the sequence on a shorter clock, and the forcing statistic is already public: Verizon&rsquo;s 2026 Data Breach Investigations Report found shadow AI activity in data loss prevention (DLP) datasets up fourfold year over year. Microsoft built Agent 365 specifically to find agents nobody registered, an admission that deployment velocity has outrun oversight inside its own customer base.</p>
     <p>The same lag shows up one layer down, in the codebase. Agent output volume has outrun the review capacity meant to check it, which is why <a href="/insights/agent-manager-control-plane-governance/">the agent manager is becoming a control plane for software development</a> and why <a href="/insights/microsoft-execution-containers-ai-agent-runtime-governance/">Microsoft now isolates agents at the operating-system boundary</a>. The platforms are converging on the same conclusion from different directions: when actors multiply and act at machine speed, control has to be engineered, not reviewed.</p>
 
-    <h2>Governance Is Bigger Than Permissions</h2>
+    <h2 id="governance-is-bigger-than-permissions">Governance Is Bigger Than Permissions</h2>
     <p>Everything the platform stack governs shares one property: it is about the agent. Which agent, whose identity, what access, which sandbox, what audit trail. Software governance has a second half that is about the work. Architectural decisions, engineering standards, repository policies, framework conventions, deployment constraints: the accumulated record of how this system is supposed to be built. An agent can be allowlisted in the control plane, authenticated through Entra, sandboxed in a cloud PC, pass every ACS checkpoint, and still bypass your service layer, duplicate an existing abstraction, or violate a dependency rule your team settled two years ago. Every platform control passed. The architecture still drifted.</p>
     <div class="callout"><p><strong>Platform governance asks: is this agent allowed to act?</strong> Architectural governance asks: is the thing it built allowed to exist? An agent fleet needs both answers, and the platform only gives you the first.</p></div>
 
@@ -335,12 +349,12 @@
     </table>
     </div>
 
-    <h2>The Multi-Platform Problem</h2>
+    <h2 id="the-multi-platform-problem">The Multi-Platform Problem</h2>
     <p>Agent HQ&rsquo;s own premise undercuts any single control plane. The product exists because teams already run agents from five different vendors; its integrations list (Slack, Linear, Microsoft Teams, Azure Boards, Jira, Raycast) concedes that work crosses platform boundaries constantly. A team running GitHub&rsquo;s coding agent today also runs Cursor, Claude Code, OpenCode, Warp, and an internal agent or two, and each of those ships its own settings, its own rules format, its own definition of a policy. Configure your architectural constraints inside one vendor&rsquo;s control plane and they stop existing the moment an agent works anywhere else.</p>
     <p>Microsoft rents out the runtime underneath, too. <a href="https://learn.microsoft.com/en-us/azure/foundry/agents/overview">Foundry Agent Service</a> runs agents as a managed service. A prompt agent is pure configuration: instructions, a model, and tools. A hosted agent is your own code, built with <a href="https://learn.microsoft.com/en-us/agent-framework/overview/">Agent Framework</a> (the successor to Semantic Kernel and AutoGen), LangGraph, the OpenAI or Anthropic agent SDKs, or any other framework, which Foundry runs as a container. Foundry supplies the endpoint, scaling, tool calls, tracing, and a dedicated Microsoft Entra identity for each hosted agent. It is one more place your agents run, and it ships no copy of the rules your team settled.</p>
     <p>Decisions about your architecture cannot live in someone else&rsquo;s platform settings. They need to be <a href="/concepts/model-independent-governance/">model-independent and platform-independent</a>: recorded once, in the repository they govern, retrievable by any agent, and verified by checks that produce the same verdict no matter which harness ran the code. The property that matters is <a href="/concepts/governance-propagation/">governance propagation</a>: the rule reaches every surface where work happens. <a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> is what makes the rule mean the same thing on each of them. ACS demonstrates that even Microsoft considers deterministic, checkpoint-based control the right shape for agent policy. The open question is who supplies the policies worth enforcing, and those are yours.</p>
 
-    <h2>What Happens Next</h2>
+    <h2 id="what-happens-next">What Happens Next</h2>
     <p>The trajectory from here is reasonably legible. Governance becomes a standard layer in every agent platform, the way audit logging became standard in every SaaS product. Policies become machine-readable and portable. ACS is the first open specification to attempt it, and it will not be the last. Enforcement becomes explainable, because two-thirds of IBM&rsquo;s surveyed tech leaders already say they are accountable for systems they don&rsquo;t fully control, and accountability without explanation does not survive an audit. And architectural governance separates from runtime governance as teams discover that the two answer different questions at different layers. The <a href="/insights/emerging-ai-agent-infrastructure-stack/">emerging agent infrastructure stack</a> already shows that separation.</p>
     <p>Most coverage of Agent HQ and Build 2026 counted agents and benchmarked models. The durable story is the diagram underneath: a platform company drew governance as a layer of its agent stack, shipped it as products, and published an open spec for part of it. That is strong evidence for <a href="/insights/ai-infrastructure-governance-category/">governance as the next AI infrastructure category</a>. The part no platform will ever ship is the layer that carries your decisions: the architecture your team chose, encoded once, enforced everywhere your agents work.</p>
 

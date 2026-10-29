@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Recursive self-improvement is usually framed as a model capability. The fastest feedback loops today are in the orchestration layer around the model, which turns recursive self-improvement into a governance problem, not an intelligence one." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -295,7 +296,22 @@
 
   <div class="article-body">
 
-    <h2>The Classic Picture Assumes the Model Improves</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-classic-picture-assumes-the-model">The Classic Picture Assumes the Model Improves</a></li>
+        <li><a href="#the-recursive-loop-already-running">The Recursive Loop Already Running</a></li>
+        <li><a href="#why-orchestration-is-outrunning-the-model">Why Orchestration Is Outrunning the Model</a></li>
+        <li><a href="#the-hidden-failure-mode-goal-drift">The Hidden Failure Mode: Goal Drift</a></li>
+        <li><a href="#the-governance-gap-in-self-improving">The Governance Gap in Self-Improving Systems</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme Fits</a></li>
+        <li><a href="#who-actually-needs-this">Who Actually Needs This</a></li>
+        <li><a href="#the-reframe">The Reframe</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-classic-picture-assumes-the-model">The Classic Picture Assumes the Model Improves</h2>
     <p>The original vision of <a href="https://en.wikipedia.org/wiki/Recursive_self-improvement" target="_blank" rel="noopener">recursive self-improvement</a> is a clean and dramatic one. A system becomes intelligent enough to improve its own design, the improved system is more capable still, and capability compounds on itself in a tightening loop. Intelligence explosion, self-improving systems, automated research, models redesigning models. In every version of that story, the thing that improves is the <strong>model</strong>.</p>
     <p>That assumption is doing a lot of work, and it is worth questioning. Improving a model is expensive and slow. It means new training runs, fresh evaluation, large amounts of compute, and a deployment cycle measured in months. The loop exists, but it turns slowly, and only a handful of organizations can turn it at all.</p>
     <p>Meanwhile, a faster loop has been running in plain sight. It does not touch the model&rsquo;s weights at all.</p>
@@ -309,24 +325,24 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Recursive Loop Already Running</h2>
+<h2 id="the-recursive-loop-already-running">The Recursive Loop Already Running</h2>
     <p>Today&rsquo;s agents get dramatically more capable without any change to the underlying model. They improve through better prompts, sharper retrieval, persistent memory, explicit planning, smarter tool selection, and tighter evaluation loops. An agent does not need a new model to perform far better next week. It needs a better system around the same model.</p>
     <p>Watch a coding agent at work and the loop is obvious. It generates a change, runs the tests, reads the failure, repairs the change, and re-runs. <strong>Generate, evaluate, repair, re-run.</strong> Each pass produces signal that shapes the next pass. The model is frozen; the surrounding system learns what works in this repository, with these conventions, against these tests. That is a recursive improvement loop, and it is already in production.</p>
     <p>The agent writes code, runs tests, reads docs, searches repositories, reviews its own output, and refactors. Each cycle improves the next one, while the model itself never moves. The system becomes smarter even though the intelligence at its core stays exactly where it was. This is orchestration-driven recursive improvement, and it is compounding faster than any training cycle can.</p>
 
     <div class="callout"><p><strong>The fast loop is not in the model.</strong> It is in the prompts, memory, retrieval, planning, and evaluation wrapped around the model &mdash; the layer that can be rewritten in an afternoon, not a quarter.</p></div>
 
-    <h2>Why Orchestration Is Outrunning the Model</h2>
+    <h2 id="why-orchestration-is-outrunning-the-model">Why Orchestration Is Outrunning the Model</h2>
     <p>The reason this matters is one of timescales. The model loop turns in months. The orchestration loop turns in hours. A team can change how an agent plans, what it retrieves, and which tools it reaches for between one task and the next. The same model, governed by a better system, behaves like a meaningfully more capable one.</p>
     <p>This is the same shift that <a href="/insights/runtime-harnesses-for-ai-agents/">runtime harnesses for AI agents</a> point at: most of an agent&rsquo;s real-world competence lives in the scaffolding around the model, not in the model alone. And as agents start running for longer and acting more autonomously &mdash; the territory covered in <a href="/insights/long-running-agents-need-governance/">why long-running agents need governance</a> &mdash; that scaffolding stops being a convenience and becomes the system&rsquo;s actual control surface.</p>
     <p>So the locus of recursive self-improvement has quietly moved. It is no longer primarily a question of how smart the model is. It is a question of how well the system around the model improves itself. And that reframes the entire problem.</p>
 
-    <h2>The Hidden Failure Mode: Goal Drift</h2>
+    <h2 id="the-hidden-failure-mode-goal-drift">The Hidden Failure Mode: Goal Drift</h2>
     <p>A self-improving system optimizes for what it can measure. That sounds fine until you list what a coding agent can actually measure: lines of code written, tasks closed, time to completion, degree of autonomy. Those are the metrics the loop can see, so those are the metrics the loop climbs.</p>
     <p>None of them is the thing you actually care about. More code, faster completion, and more closed tickets say nothing about architectural consistency, security compliance, long-term maintainability, or alignment with the intent the engineering team encoded into the system. A loop that optimizes for the measurable will happily improve on every visible axis while quietly degrading every invisible one.</p>
     <p>This is the structural risk of orchestration-driven recursive improvement: <strong>a system can improve locally while degrading globally.</strong> Each individual change looks like progress. The aggregate drifts away from the design the team agreed to. The faster the loop runs, the faster the drift accumulates &mdash; which is precisely the dynamic described in <a href="/concepts/architectural-drift/">architectural drift</a>, now driven by a system that is actively optimizing itself.</p>
 
-    <h2>The Governance Gap in Self-Improving Systems</h2>
+    <h2 id="the-governance-gap-in-self-improving">The Governance Gap in Self-Improving Systems</h2>
     <p>Here is the question the classic framing never had to ask. If agents continuously improve their own workflows, prompts, memory, and execution strategies, who ensures they keep optimizing for the correct objectives?</p>
     <p>The intelligence-explosion story assumes a better system is automatically a better-aligned one. Orchestration-driven improvement breaks that assumption cleanly. The system is getting better at something, but nothing in the loop guarantees that something is what you wanted. Improvement and alignment are independent variables, and only one of them is being optimized.</p>
     <p>This is a genuinely new requirement. We have spent a lot of effort on governing model outputs &mdash; checking that a given generation is correct, safe, and compliant. What recursive self-improvement demands is governance of system <em>evolution</em> itself. Not just &ldquo;is this change correct?&rdquo; but &ldquo;is the system, as it rewrites its own strategies over time, still pointed at the objectives we set?&rdquo; This is the same concern that runs through <a href="/insights/goal-driven-agents-architectural-governance/">goal-driven agents and architectural governance</a>: once an agent is steering toward an objective, the objective has to be the right one, and it has to stay the right one as the agent adapts.</p>
@@ -345,12 +361,12 @@
     </table>
     </div>
 
-    <h2>Where Mneme Fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme Fits</h2>
     <p>Mneme does not try to make agents smarter. There is an entire industry pushing on that axis already. Mneme makes recursive improvement <strong>safe</strong> &mdash; because without governance, recursive improvement eventually becomes recursive drift.</p>
     <p>The mechanism is specific. Mneme turns architectural decisions and ADRs into executable constraints that agents retrieve at generation time and CI verifies deterministically. That means the memory of <em>why</em> the system was designed the way it is does not live only in a senior engineer&rsquo;s head, where a self-improving loop cannot see it. It lives as an enforced constraint that every optimization has to respect. The loop can rewrite prompts, swap tools, and restructure plans as aggressively as it likes &mdash; it still cannot optimize its way past a decision the team made on purpose.</p>
     <p>That is how you keep local improvement consistent with system-level intent. The agent gets to improve. The objectives it improves toward stay anchored. This connects directly to <a href="/concepts/governance-propagation/">governance propagation</a>: a single enforced decision reaches every agent and every iteration of the loop, so improvement compounds inside the guardrails instead of around them. If this is the shape of the problem you are facing, the <a href="/use-cases/">use cases</a> page lays out where it bites first.</p>
 
-    <h2>Who Actually Needs This</h2>
+    <h2 id="who-actually-needs-this">Who Actually Needs This</h2>
     <p>Not every company does, and it is worth being honest about that. A two-engineer startup shipping with a couple of agents can govern recursive improvement through prompts and code review. The humans are still in the loop on every meaningful change. Governance of system evolution is overhead they do not yet need.</p>
     <p>The need emerges at a specific threshold: when AI-generated changes become too numerous to track by hand. That is when the loop is moving faster than human review can follow, and the failure mode stops being theoretical. The organizations crossing that line look like this:</p>
     <ul>
@@ -363,7 +379,7 @@
     <p>The proof that this is real is not speculative. Anthropic and OpenAI ship agentic coding products that thousands of teams now build on daily &mdash; that is the evidence agentic development has arrived, not a claim that those labs need this. The point is downstream: the organizations <em>using</em> those agents at scale are the ones who inherit the governance problem.</p>
     <p>So the positioning is deliberately narrow. Mneme is not for teams trying AI coding for the first time. It is for organizations where AI-generated change is becoming too fast, too distributed, and too autonomous to govern through prompts and code reviews alone.</p>
 
-    <h2>The Reframe</h2>
+    <h2 id="the-reframe">The Reframe</h2>
     <p>Recursive self-improvement was always described as the moment intelligence starts compounding on itself. The version actually arriving is quieter and more practical: systems, not models, improving themselves through orchestration &mdash; faster than any training run, in every agent team rather than a few labs. That is good news for capability. It is a new problem for control. The question is no longer only how smart the system can become. It is whether, as it rewrites itself, it stays pointed at what you meant. That is a governance question, and it is the one worth answering first.</p>
 
   </div><!-- /.article-body -->

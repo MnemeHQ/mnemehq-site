@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Google Cloud Agent Registry governs which agents run, not whether their output stays aligned with your architecture. Why agent fleet governance still leaves a gap." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -322,11 +323,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-google-cloud-agent-registry-does">What Google Cloud Agent Registry does</a></li>
+        <li><a href="#a-registry-governs-the-actor">A registry governs the actor</a></li>
+        <li><a href="#the-diff-it-cannot-see">The diff it cannot see</a></li>
+        <li><a href="#two-orthogonal-axes-not-a-ladder">Two orthogonal axes, not a ladder</a></li>
+        <li><a href="#why-the-constraints-live-in-the">Why the constraints live in the repo, not the registry</a></li>
+        <li><a href="#both-not-either">Both, not either</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>AI agents are getting easier to build. Managing them is getting harder.</p>
 <p>A year ago the hard part was making an autonomous system plan, call tools, and finish a task. That problem is mostly solved. The hard part now is that organizations are no longer running one agent. They are running a growing estate of agents, tools, MCP servers, identities, and runtimes spread across teams &mdash; and they have lost track of which ones exist, what they can touch, and who is accountable for them.</p>
 <p><a href="/insights/emerging-ai-agent-infrastructure-stack/">The emerging AI agent infrastructure stack</a> is the market formalizing an answer to that problem, layer by layer. Google Cloud&rsquo;s Agent Registry is one of the most concrete pieces of it yet: a vendor primitive that treats a fleet of agents as something to be inventoried and governed, not just deployed.</p>
 
-<h2>What Google Cloud Agent Registry does</h2>
+<h2 id="what-google-cloud-agent-registry-does">What Google Cloud Agent Registry does</h2>
 <p>Google describes Agent Registry as &ldquo;a centralized catalog that lets you store, discover, and govern Model Context Protocol (MCP) servers, tools, and AI agents within Google Cloud.&rdquo; It sits inside the Gemini Enterprise Agent Platform &mdash; formerly Vertex AI &mdash; which Google positions as a place to &ldquo;build, scale, govern and optimize agents,&rdquo; a one-stop shop for an organization&rsquo;s autonomous agents.</p>
 <p>The platform is organized into four pillars: Build, Scale, Govern, and Optimize. Agent Registry is the <strong>Govern</strong> pillar, alongside Agent Identity and Agent Gateway, and the docs call it &ldquo;the governance pillar and unified inventory of your agents, servers, and endpoints.&rdquo; Around it, Google has expanded managed connectivity: more than 50 Google-managed MCP servers are now generally available or in preview, giving agents a standardized way to reach external tools, data, and Google Cloud services.</p>
 <p>Read plainly, the product solves a real and growing operational problem. As an agent estate scales, you need to answer:</p>
@@ -347,19 +361,19 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>A registry governs the actor</h2>
+<h2 id="a-registry-governs-the-actor">A registry governs the actor</h2>
 <p>Everything a registry does is organized around the <em>agent as an identity</em>. It assigns an agent an owner, a version, a set of scoped permissions, and an authorization to run. It records who called what. It lets an admin revoke an agent, gate access to a tool, or block an unapproved MCP server. This is identity and authorization governance, and it is genuinely valuable: it shrinks the attack surface, kills shadow agents, and gives a security team a place to stand.</p>
 <p>But notice the shape of every one of those controls. They all evaluate the <strong>actor</strong>, and they all evaluate it at the <strong>gate</strong> &mdash; before the agent runs. Is this agent approved? Is it scoped correctly? Is it allowed to call this tool? Pass the gate and the agent goes to work. The registry&rsquo;s job is finished the moment execution begins.</p>
 <div class="callout"><p><strong>A registry answers one question:</strong> is this agent allowed to operate? That is a question about the actor, decided before the work happens. It is necessary. It is also only half of the problem.</p></div>
 
-<h2>The diff it cannot see</h2>
+<h2 id="the-diff-it-cannot-see">The diff it cannot see</h2>
 <p>Here is the failure a perfectly configured registry waves straight through.</p>
 <p>An agent is registered. It is owned, versioned, scoped to exactly the right repositories, and fully authorized to commit code. It does its job. In doing its job, it adds a dependency an <a href="/concepts/architectural-drift/">architectural decision record</a> prohibits, routes around an approved service boundary, or re-implements a pattern the team had already standardized somewhere else in the codebase.</p>
 <p>The registry&rsquo;s verdict: approved actor, valid action, green. Every control fired correctly. The agent was who it claimed to be, it was allowed to do what it did, and the audit log faithfully recorded all of it. The architecture&rsquo;s verdict: violated.</p>
 <p>This is the failure mode that does not look like a failure. The code compiles. The tests pass. The pull request is authored by a trusted, registered agent. Nothing in the identity layer is built to notice that a syntactically valid, fully authorized change just contradicted a decision the team made on purpose. Multiply it across a fleet &mdash; Google itself frames this as fleets of agents &mdash; and two registered agents can implement conflicting patterns in parallel, each one approved, each one green, the system drifting off its own design one locally-reasonable commit at a time.</p>
 <div class="callout"><p><strong>Operational trust is not architectural alignment.</strong> Certify that every agent in the fleet is approved, scoped, and audited, and the architecture is still completely unprotected &mdash; because nothing in the registry reads the repository&rsquo;s constraints or returns a verdict on the change.</p></div>
 
-<h2>Two orthogonal axes, not a ladder</h2>
+<h2 id="two-orthogonal-axes-not-a-ladder">Two orthogonal axes, not a ladder</h2>
 <p>The tempting way to read this is as a maturity curve: registries today, deeper governance later. That framing is wrong, and it is wrong in a way that costs you. Registry governance and architectural governance are not two points on one line. They are two different axes.</p>
 <p>One axis is about <strong>identity and authorization</strong>: which agent, owned by whom, allowed to run. It draws a perimeter around the actor, at gate time, before execution. The other axis is about <strong>intent and conformance</strong>: what the diff actually did, and whether it still matches the system the team designed. It returns a verdict on the artifact, at evaluation time, on the change itself. A registry can be fully mature on the first axis and the second axis is still at zero.</p>
 <div class="diag-wrap">
@@ -387,13 +401,13 @@
 </div>
 <p>This is the same distinction <a href="/insights/ai-agent-governance-two-markets/">two markets of agent governance</a> draws between runtime and architectural governance, and the same one <a href="/insights/agent-manager-control-plane-governance/">the agent manager as a control plane</a> draws between supervising agents and enforcing on their output. A registry is the cleanest example yet of the pattern: it is an excellent control plane for the fleet and a non-control for the codebase.</p>
 
-<h2>Why the constraints live in the repo, not the registry</h2>
+<h2 id="why-the-constraints-live-in-the">Why the constraints live in the repo, not the registry</h2>
 <p>If a registry cannot see the diff, the obvious next thought is: then attach the architectural rules to the registry. Make the central catalog enforce them. This is the wrong move, and it is worth being precise about why.</p>
 <p>A central registry is a chokepoint. An agent is authorized there once and then executes somewhere else &mdash; in an IDE, a CLI, a CI job, a local runtime, an endpoint. <a href="/insights/governance-perimeter-is-moving-to-the-endpoint/">The governance perimeter is moving to the endpoint</a> precisely because that is where the work actually happens, and a cloud catalog has no presence there. The one artifact every one of those execution surfaces reads is the repository. So that is where the constraints have to live.</p>
 <p>What architectural governance requires is the team&rsquo;s decisions <a href="/concepts/governance-before-generation/">compiled before generation</a> into <a href="/concepts/deterministic-enforcement/">deterministic, machine-evaluable constraints</a> that run at hooks and in CI and return the same verdict regardless of which registered agent produced the change. Not prose in a wiki an agent is supposed to honor. Not a human reviewer expected to catch an ADR violation buried in a green pull request. An evaluation on the artifact that <a href="/concepts/governance-propagation/">propagates to every surface</a> the fleet touches, and that can explain, through <a href="/concepts/enforcement-provenance/">enforcement provenance</a>, exactly which decision a change violated and where that decision came from.</p>
 <div class="callout"><p><strong>Register the agent in the cloud; enforce the architecture in the repo.</strong> The registry governs the fleet. The repository is where the verdict on the work has to be rendered, because that is the one place every agent and every CI surface actually reads.</p></div>
 
-<h2>Both, not either</h2>
+<h2 id="both-not-either">Both, not either</h2>
 <p>This is not an argument against agent registries. An enterprise running a fleet of autonomous agents needs to know which agents exist, who owns them, and which are allowed to run &mdash; and Google Cloud Agent Registry is a serious answer to that need. Filing it under a &ldquo;Govern&rdquo; pillar is honest: it is real governance of the fleet as a set of actors.</p>
 <p>It is simply governance on one axis. The other axis &mdash; whether the code, configs, and migrations the fleet generates still hold the line on the architecture they touch &mdash; is not something a registry was ever built to cover, and it does not arrive later as the registry matures. It is a different layer, running in a different place, answering a different question. Adopt the registry and your fleet is accountable. Add architectural governance and the systems that fleet is rewriting stay yours.</p>
 <div class="callout"><p><strong>A registry tells you the agent was allowed to act. It cannot tell you the system still matches what you decided after it did.</strong> Knowing which agents are authorized is the first half of agent fleet governance. The verdict on what they changed is the half that protects the architecture.</p></div>

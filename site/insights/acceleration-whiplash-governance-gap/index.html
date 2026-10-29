@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The Faros AI Engineering Report 2026 measured what AI adoption actually produces. Throughput is up. So are incidents, review times, and unreviewed merges. The data names the governance problem." />
   <meta name="robots" content="index, follow" />
   <meta name="mneme:content-segment" content="problem_awareness" />
@@ -281,7 +282,19 @@
 
   <div class="article-body">
 
-    <h2>What the telemetry actually shows</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-telemetry-actually-shows">What the telemetry actually shows</a></li>
+        <li><a href="#why-the-systems-did-not-scale">Why the systems did not scale</a></li>
+        <li><a href="#the-governance-gap">The governance gap</a></li>
+        <li><a href="#review-and-memory-are-insufficient-as">Review and memory are insufficient as scaling primitives</a></li>
+        <li><a href="#what-closing-the-gap-requires">What closing the gap requires</a></li>
+        <li><a href="#what-the-data-means-for-engineering">What the data means for engineering organizations now</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-the-telemetry-actually-shows">What the telemetry actually shows</h2>
 
     <p>The output numbers in the Faros report are real and worth stating plainly. Epics completed per developer are up 66.2%. Task throughput per developer is up 33.7%. PR merge rate per developer is up 16.2%. These represent genuine delivery acceleration, and dismissing them would be dishonest. AI coding tools are producing real productivity gains at the business level.</p>
 
@@ -377,7 +390,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why the systems did not scale</h2>
+<h2 id="why-the-systems-did-not-scale">Why the systems did not scale</h2>
 
     <p>Code review, incident response, and architectural validation were all designed for a world where development velocity was human-paced. A senior engineer could review the meaningful PRs in a sprint. An incident postmortem could trace a failure to a specific change and a specific decision gap. Architectural drift was visible because it moved slowly enough to catch.</p>
 
@@ -389,7 +402,7 @@
       <p><strong>The most important line in the Faros report:</strong> "the ability to push quality back to where it belongs, at the point of authorship, before the code ever reaches review." This is not a suggestion. It is the structural conclusion the telemetry points toward.</p>
     </div>
 
-    <h2>The governance gap</h2>
+    <h2 id="the-governance-gap">The governance gap</h2>
 
     <p>There is a name for the structural mismatch the Faros data is measuring: the governance gap.</p>
 
@@ -397,7 +410,7 @@
 
     <p>This is not a model quality problem. Better AI code generation does not close the governance gap. It can narrow the surface area of obvious errors, but it does not enforce architectural invariants, resolve conflicting decisions, or prevent drift from accumulating across the codebase over time. Those are not generation problems. They are structural problems that require structural solutions.</p>
 
-    <h2>Review and memory are insufficient as scaling primitives</h2>
+    <h2 id="review-and-memory-are-insufficient-as">Review and memory are insufficient as scaling primitives</h2>
 
     <p>The two most common responses to the governance gap are harder review and richer context injection. Both are real interventions. Neither is a scaling primitive for the problem the Faros data describes.</p>
 
@@ -407,7 +420,7 @@
 
     <p>The Faros data describes a system where generation velocity has outpaced governance velocity. Neither more reviewers nor longer prompts changes the structural relationship between those two rates.</p>
 
-    <h2>What closing the gap requires</h2>
+    <h2 id="what-closing-the-gap-requires">What closing the gap requires</h2>
 
     <p>The Faros report's structural conclusion points to the same place that the architectural governance argument points: quality needs to move to the point of authorship. Not downstream in review. Not in the incident postmortem. Before the code is written.</p>
 
@@ -422,7 +435,7 @@
 
     <p>This is not a review improvement. It is a different layer of the stack, operating at a different point in the workflow. The Faros data does not prescribe a specific implementation. But it does name the problem with precision: the systems that validate what AI generates are not scaling with the rate at which AI generates it. Closing that gap is the engineering problem the next phase of AI development has to solve.</p>
 
-    <h2>What the data means for engineering organizations now</h2>
+    <h2 id="what-the-data-means-for-engineering">What the data means for engineering organizations now</h2>
 
     <p>The Faros report includes a pointed observation about the DORA 2025 finding that strong engineering foundations amplify AI benefits. Two years of telemetry tell a different story. High-performing engineering organizations with mature DevOps practices are experiencing the same downstream deterioration as everyone else. The governance gap is not a maturity problem. It is a structural problem that mature practices do not automatically solve.</p>
 

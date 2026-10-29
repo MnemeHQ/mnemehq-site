@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The software factory dates to Bob Bemer in 1968. Coding agents finally make it real, but production capacity is not architectural control. The missing layer." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -348,16 +349,32 @@
   </header>
 
 <div class="article-body">
-<h2>The software factory is not a new idea</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-software-factory-is-not-a">The software factory is not a new idea</a></li>
+      <li><a href="#why-earlier-factories-stayed-constrained">Why earlier factories stayed constrained</a></li>
+      <li><a href="#production-capacity-is-not-architectural-control">Production capacity is not architectural control</a></li>
+      <li><a href="#why-more-production-creates-more-drift">Why more production creates more drift</a></li>
+      <li><a href="#a-concrete-failure">A concrete failure</a></li>
+      <li><a href="#what-the-missing-layer-has-to">What the missing layer has to do</a></li>
+      <li><a href="#six-ways-factory-output-loses-engineering">Six ways factory output loses engineering intent</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#the-same-wall-at-netflix-scale">The same wall, at Netflix scale</a></li>
+      <li><a href="#scaling-the-factory-without-losing-the">Scaling the factory without losing the architecture</a></li>
+    </ol>
+  </nav>
+<h2 id="the-software-factory-is-not-a">The software factory is not a new idea</h2>
 <p>The term dates to 1968, when computer pioneer Bob Bemer raised the software factory idea in his paper <em>The Economics of Program Production</em>. He is generally credited as its earliest proponent (<a href="https://en.wikipedia.org/wiki/Bob_Bemer" target="_blank" rel="noopener">Bob Bemer, Wikipedia</a>). The context matters. 1968 was the year the industry started calling its situation a software crisis: projects were outgrowing the methods used to build them, and the answer Bemer proposed was industrial. Treat software as a repeatable, instrumented production process instead of the isolated craft of individuals.</p>
 <p>A year later, Hitachi opened its Software Works, the first facility explicitly labelled and managed as a software factory. Michael Cusumano's research at MIT later documented how Hitachi, Toshiba, NEC, and Fujitsu ran these programs, built around standardization, reusable components, and controlled process (<a href="https://en.wikipedia.org/wiki/Software_factory" target="_blank" rel="noopener">Software factory, Wikipedia</a>).</p>
 <p>So when the term returns in 2026, it is not a marketing invention. It is an old ambition finally meeting a technology that can supply the production capacity.</p>
 
-<h2>Why earlier factories stayed constrained</h2>
+<h2 id="why-earlier-factories-stayed-constrained">Why earlier factories stayed constrained</h2>
 <p>The first software factories worked by narrowing variation. They standardized tools, languages, and components so that output could be predicted and checked. That discipline was the source of their quality gains, and also their ceiling. The production capacity was still human, so the factory could only move as fast as trained people could implement within the standards.</p>
 <p>Coding agents change that side of the equation. Addy Osmani describes the modern version as a stack of loops, harnesses, and factories: single agent tasks, the environment that runs them, and many harnessed loops operating at scale (<a href="https://addyosmani.com/blog/software-factories/" target="_blank" rel="noopener">Software Factories, Light and Dark</a>). He distinguishes "dark" factories that ship without human review from "lit" factories that keep human judgment on design and architecture. Either way, implementation capacity stops being the scarce input.</p>
 
-<h2>Production capacity is not architectural control</h2>
+<h2 id="production-capacity-is-not-architectural-control">Production capacity is not architectural control</h2>
 <p>This is where the historical comparison becomes useful rather than decorative. The factory idea was never only about output. It was about <strong>controlled</strong> production. The standards were the control. When the production capacity was human, the standards travelled through training, code review, and the people who had been in the room when a decision was made.</p>
 <p>Agents do not inherit that channel. A fleet of agents can plan, implement, test, and open pull requests in parallel, and each one begins with whatever context it was handed. The rest of the modern factory stack does not fill the gap on its own:</p>
 <table class="gov-table">
@@ -371,7 +388,7 @@
 </table>
 <p>Orchestration controls the work. The decision layer controls what the work is allowed to become. Orchestration being perfect does not stop an agent from violating an ADR, a point made in more detail in <a href="/insights/ai-agent-orchestration-is-not-governance/">AI agent orchestration is not governance</a>.</p>
 
-<h2>Why more production creates more drift</h2>
+<h2 id="why-more-production-creates-more-drift">Why more production creates more drift</h2>
 <p>Five mechanisms compound as the factory scales:</p>
 <ol>
   <li><strong>Every session starts incomplete.</strong> An agent sees the code and the prompt, not the reasoning behind the boundaries it is about to cross.</li>
@@ -382,11 +399,11 @@
 </ol>
 <p>None of this means every additional agent adds a fixed amount of drift. It means the mechanisms that used to catch drift were human, and they do not multiply with the fleet. Fred Brooks made a version of this argument about human teams in 1975, and it applies with new force to agents: see <a href="/insights/brooks-law-ai-coding-agents/">Brooks's Law after AI</a>.</p>
 
-<h2>A concrete failure</h2>
+<h2 id="a-concrete-failure">A concrete failure</h2>
 <p>An organization migrating off a legacy system has decided that migrated services reach customer data through an API, never by connecting to the legacy database directly. Several agents work on separate features. One of them adds a direct database query because it is the shortest path to a working feature. Tests pass. The feature works. The migration's target architecture has been quietly broken, and nothing in the orchestration, sandbox, or test layer was designed to notice.</p>
 <p>A factory that catches this needs the decision itself to be operational: stored as an accepted decision, scoped to the code it governs, surfaced to the agent before it writes the change, and checked deterministically when the change is proposed, with a trace back to the decision that produced the verdict.</p>
 
-<h2>What the missing layer has to do</h2>
+<h2 id="what-the-missing-layer-has-to">What the missing layer has to do</h2>
 <ul>
   <li><strong>Authority.</strong> Know which decisions are accepted and current, and which were proposed, rejected, or superseded.</li>
   <li><strong>Applicability.</strong> Determine which decisions govern this path, component, or action.</li>
@@ -396,7 +413,7 @@
 </ul>
 <p>Not every architectural decision can become a mechanical rule. Some require human judgment every time. The point of the layer is to separate the two honestly, enforce what can be enforced, and route the rest to people.</p>
 
-<h2>Six ways factory output loses engineering intent</h2>
+<h2 id="six-ways-factory-output-loses-engineering">Six ways factory output loses engineering intent</h2>
 <p>A decision layer is a position in the stack. The work it has to do is <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>: determining which decisions govern a given change, why, and with what evidence. In a software factory, the failures it has to prevent are specific:</p>
 <ul>
   <li><strong>Locally correct, globally wrong.</strong> A change passes its tests and still breaks a system-level decision that no test encodes.</li>
@@ -408,12 +425,12 @@
 </ul>
 <p>Human review used to catch these one change at a time. When production runs faster than review, each needs a mechanism instead: a status that marks replaced decisions, a scope that says which code a decision covers, a precedence rule for conflicts, one place where agents read decisions from, and a link from every check back to the decision it enforces. <a href="/insights/from-decision-records-to-decision-governance/">From Decision Records to Decision Governance</a> walks one decision through those stages.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme does not operate a software factory, and it does not replace orchestrators, execution platforms, coding agents, or review tools. Mneme is the decision and control layer for agentic software development, and architecture is its first decision domain. Today, inside the factory, it applies to one class of decision: architectural decisions in a repository. Mneme is open source. It enforces the parts of accepted architectural decisions that are written as typed rules: machine-checkable rules with exact meaning, such as a ban on one exact import line. A rule can be limited to the paths it names. Each check returns a deterministic verdict, PASS, WARN or FAIL, or INCOMPLETE when Mneme can't tell whether a path-scoped rule applies; see <a href="/docs/how-enforcement-works/">how enforcement works</a>.</p>
 <p>Its local Model Context Protocol (MCP) server, shipped in 0.9.0, lets an agent look up the decisions whose declared scope matches a path, trace a decision's lineage, and propose new decisions that only a human can accept. See the <a href="/docs/mcp/">MCP reference</a>.</p>
 <p>That is a narrower claim than "Mneme governs the factory." It is the part of factory governance that can be made deterministic today.</p>
 
-<h2>The same wall, at Netflix scale</h2>
+<h2 id="the-same-wall-at-netflix-scale">The same wall, at Netflix scale</h2>
 <p>Conductor 4.0, Netflix's workflow orchestration engine, changed one specific thing. Earlier versions loaded the complete workflow state into memory for every evaluation. Conductor 4.0 instead uses a lightweight workflow blueprint and loads only the task data the next decision needs. Netflix reports this raised the largest supported workflow from roughly 2,500 tasks to 30,000, and cut p99 evaluation latency by about 40 percent, across 200,000 workflow definitions in 150 applications executing roughly 420 million workflows a month (<a href="https://www.infoq.com/news/2026/09/netflix-conductor-4-workflow/" target="_blank" rel="noopener">InfoQ</a>).</p>
 <p>Conductor is a workflow engine, not an architectural governance system, and this is not a claim that it solves the same problem as Mneme. The relevant part is narrower. Netflix hit a real scaling limit by treating "the state needed for the next decision" as the same thing as "the entire state," and the fix was separating the two.</p>
 <p>A software factory running many coding agents hits the same wall with architectural context, usually before it hits it anywhere else. An agent does not need every accepted decision in the organization to make its next change. It needs the decisions applicable to the file, service, or boundary it is about to touch.</p>
@@ -428,7 +445,7 @@
 </table>
 <p>Mneme's <code>decision.applicable_to</code> tool, shipped in 0.9.0, already works on this principle: an agent asks which decisions apply to a set of paths and gets scoped matches back, not the full decision corpus. Conductor's numbers matter less as a template to copy than as evidence that the failure mode is real. A system that has to hydrate everything to decide anything does not stay fast as the factory scales, whether what gets loaded is workflow state or architectural context.</p>
 
-<h2>Scaling the factory without losing the architecture</h2>
+<h2 id="scaling-the-factory-without-losing-the">Scaling the factory without losing the architecture</h2>
 <p>The organizations that get value from software factories will not be the ones that run the most agents. They will be the ones that can raise autonomous output without losing architectural coherence. Before scaling agent throughput, it is worth knowing which architectural decisions are already protected, which could become enforceable, and which still live only in documents and people's heads.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="LLM wikis help agents read project knowledge, but they do not enforce architectural decisions. Documentation is context. Governance is constraint." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -268,7 +269,22 @@
 
   <div class="article-body">
 
-    <h2>The rise of the LLM-readable project wiki</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-rise-of-the-llm-readable">The rise of the LLM-readable project wiki</a></li>
+        <li><a href="#a-library-improves-recall-it-does">A library improves recall. It does not create authority.</a></li>
+        <li><a href="#the-failure-mode-the-rule-was">The failure mode: the rule was documented, but not enforced</a></li>
+        <li><a href="#documentation-is-context-governance-is-constraint">Documentation is context. Governance is constraint.</a></li>
+        <li><a href="#what-turns-project-knowledge-into-governance">What turns project knowledge into governance?</a></li>
+        <li><a href="#the-mneme-comparison-frame">The Mneme comparison frame</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+        <li><a href="#closing">Closing</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-rise-of-the-llm-readable">The rise of the LLM-readable project wiki</h2>
     <p>The pattern is now widespread. Teams are restructuring docs, ADRs, PRDs, design notes, research folders, and live planning files so AI coding agents can understand the system faster. NotebookLM-style project knowledge bases, AGENTS.md / CLAUDE.md / PLANS.md conventions, Cursor rules, and repo-native wikis are all examples of the same move.</p>
     <p>It is a useful move. An agent given a curated, retrievable library of project knowledge has a better starting point than one piecing things together from scattered chat history, tribal knowledge, or whatever happens to be open in a buffer.</p>
     <p>The result is a generation of teams who have invested in making project knowledge legible to LLMs. The question this article is about is what that legibility actually buys you, and what it does not.</p>
@@ -282,7 +298,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>A library improves recall. It does not create authority.</h2>
+<h2 id="a-library-improves-recall-it-does">A library improves recall. It does not create authority.</h2>
     <p>A wiki can tell the agent what the architecture is. It cannot guarantee the agent treats that information as a constraint.</p>
     <p>In practice, agents working against an LLM-readable wiki can still:</p>
     <ul>
@@ -296,12 +312,12 @@
 
     <p class="pull-quote">The problem is not that the agent cannot read the rule. The problem is that reading is not the same as obeying.</p>
 
-    <h2>The failure mode: the rule was documented, but not enforced</h2>
+    <h2 id="the-failure-mode-the-rule-was">The failure mode: the rule was documented, but not enforced</h2>
     <p>The most painful cases in real codebases are rarely caused by missing documentation. The decision usually exists. The architecture is written down. The PRD is clear. The ADR explains the constraint.</p>
     <p>The failure is that none of it is <em>active at the moment code is generated</em>. The agent has access to the text. The agent may even cite it. But the text has no enforcement surface, so there is nothing in the loop that can block a generation that disagrees with it.</p>
     <p>This is the structural reason that "we wrote it down, so the agent will follow it" keeps disappointing teams. Writing it down is necessary. It is not sufficient.</p>
 
-    <h2>Documentation is context. Governance is constraint.</h2>
+    <h2 id="documentation-is-context-governance-is-constraint">Documentation is context. Governance is constraint.</h2>
     <p>This is the category distinction worth keeping straight.</p>
 
     <div class="contrast-block" aria-label="LLM wiki vs architectural governance at a glance">
@@ -333,7 +349,7 @@
 
     <p>A wiki is a knowledge surface. Governance is a control surface. They are not competing layers; they sit on top of each other. The mistake is treating the knowledge surface as if it were already a control surface.</p>
 
-    <h2>What turns project knowledge into governance?</h2>
+    <h2 id="what-turns-project-knowledge-into-governance">What turns project knowledge into governance?</h2>
     <p>Most project knowledge stays in the wiki and should stay there. Reference material, design context, history, and rationale do not need to be enforced; they need to be findable. Only a subset of project knowledge is binding, and that subset has to clear a higher bar to become governance.</p>
 
     <p>Useful project knowledge becomes governance only when it is:</p>
@@ -348,7 +364,7 @@
 
     <p>Knowledge that meets all five criteria is doing a different job than knowledge that sits in a wiki. It has stopped being reference material and become an <a href="/concepts/executable-architectural-intent/">executable architectural constraint</a>.</p>
 
-    <h2>The Mneme comparison frame</h2>
+    <h2 id="the-mneme-comparison-frame">The Mneme comparison frame</h2>
     <p>It helps to name each layer by what it actually does, rather than treating them as interchangeable.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -365,7 +381,7 @@
 
     <p>None of the upper layers go away. A team that adopts governance still needs ADRs and a project wiki, just like a team that adopts CI still needs a README. What changes is that the binding parts of the knowledge stop relying on the agent&rsquo;s discretion to be honored.</p>
 
-    <h2>Where Mneme fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme fits</h2>
     <p>Mneme does not replace docs, ADRs, AGENTS.md files, or project wikis. It sits after them. It takes architectural intent from repo-native sources and makes it available as enforceable constraints for AI-assisted development &mdash; retrieved before generation, enforced at the hook and CI layers, and provenanced back to the source decision.</p>
 
     <p>The wiki remains the library. Mneme becomes the law.</p>
@@ -374,7 +390,7 @@
       <p><strong>An LLM wiki helps agents understand the system. Architectural governance determines which parts of that understanding are binding.</strong></p>
     </div>
 
-    <h2>Closing</h2>
+    <h2 id="closing">Closing</h2>
     <p>If your team already has ADRs, design notes, or project rules, the next step is not another wiki. It is deciding which parts of that knowledge should become enforceable architectural constraints &mdash; and what enforcement surface they belong on.</p>
 
     <p>The library is good work. It is not the last layer.</p>
