@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Claude Code Review reads REVIEW.md from the base branch, never from the PR. Five GitHub checks that keep a PR from rewriting the rules that judge it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -371,25 +372,40 @@
   </header>
 
 <div class="article-body">
-<h2>What Anthropic published</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-anthropic-published">What Anthropic published</a></li>
+      <li><a href="#the-most-important-decision-is-not">The most important decision is not about AI</a></li>
+      <li><a href="#when-a-pull-request-can-rewrite">When a pull request can rewrite its own rules</a></li>
+      <li><a href="#four-trust-boundaries">Four trust boundaries</a></li>
+      <li><a href="#resolving-a-comment-is-not-granting">Resolving a comment is not granting an exception</a></li>
+      <li><a href="#the-same-decisions-must-govern-generation">The same decisions must govern generation, review and merge</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#five-checks-before-you-trust-an">Five checks before you trust an AI review gate</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="what-anthropic-published">What Anthropic published</h2>
 <p>On 15 October 2026, Anthropic published <a href="https://claude.dev/blog/solving-code-review-at-anthropic/" target="_blank" rel="noopener">How the Claude Code team does code review</a>, by Addy Osmani, Morgan Westlee Lunt and Qing Wang. Claude writes most of Claude Code's own code, and the team moved most of the reading to machines. The goal is the minimum amount of human review time that does not raise reverts or incidents.</p>
 <p>The system has five layers. Required continuous integration (CI) runs first. Every pull request (PR) gets an AI bug review and a security review, and an open finding from either blocks the merge. Human approval scales with risk. A merge queue re-runs every check against main, and the release goes out gradually behind feature flags. That is the team's internal process. Anthropic's separate Code Review product, for Team and Enterprise plans, posts findings on GitHub pull requests and, per its docs, never approves or blocks one. Any blocking described here belongs to the internal process.</p>
 <p>The authors report that from June to September, merged PRs to Claude Code's codebase more than doubled while the share that had to be reverted fell by more than 40 percent. The post gives these as before-and-after figures, not a controlled comparison, so read them as evidence that the workflow changed, not proof of what caused the change.</p>
 <p>The post is also honest about failure: one PR went through more than fifty review and fix rounds overnight, and the team now asks the author to reconsider the approach after three rounds. We covered review volume in <a href="/insights/ai-code-review-does-not-scale-linearly/">AI code review does not scale linearly</a>, and why <a href="/insights/why-code-review-cannot-scale-with-ai-output/">review cannot keep pace with AI output</a>. This article is about a different detail: what a review is allowed to trust.</p>
 
-<h2>The most important decision is not about AI</h2>
+<h2 id="the-most-important-decision-is-not">The most important decision is not about AI</h2>
 <p>Two rules in this system matter more than the agents. The first is in the <a href="https://code.claude.com/docs/en/code-review-customize" target="_blank" rel="noopener">Code Review product documentation</a>: the service reads <code>REVIEW.md</code>, the file of review instructions, "from the pull request's base branch or from the default branch, never from the pull request's own changes." To change review behavior, you merge the <code>REVIEW.md</code> change first.</p>
 <p>Reading from the base branch only helps if that branch is protected. If anyone, or any agent, with push access can commit straight to main, they can change <code>REVIEW.md</code> there without review, and the next PR is judged by the edited copy. Instructions that weaken a review, such as lowering a finding's severity or excluding paths, are honored only when the file sits on a protected default branch. If Code Review cannot confirm the branch protection settings, it reads no <code>REVIEW.md</code> at all.</p>
 <p>The second rule is from the post, about the internal process: "An approval covers one specific commit." New commits the system cannot vouch for, such as an agent's push, need a fresh approval. Some paths always need a person, including any CI workflow file.</p>
 <p>Both rules limit what a verdict may depend on. If the change being judged can also edit the rules that judge it, a passing verdict tells you little about whether the change follows the rules the team agreed.</p>
 <p>The docs also show that the product is not blind to architecture. <code>CLAUDE.md</code> is the instructions file that Claude Code reads for every task in a repository. Code Review reads the root <code>CLAUDE.md</code> and the one in each changed file's parent directories, and flags changes that violate them. So the reviewer knows the rules. The open question is who controls them.</p>
 
-<h2>When a pull request can rewrite its own rules</h2>
+<h2 id="when-a-pull-request-can-rewrite">When a pull request can rewrite its own rules</h2>
 <p>Here is a hypothetical, for illustration only. It is not an incident Anthropic or anyone else reported.</p>
 <p>A team records a decision: controllers do not call the database directly. A rule for it lives in a policy file in the repository, and a CI job reads that file and fails the build on a violation. An agent working on a ticket adds a direct database call to a controller. The check fails. On its next attempt, the agent also edits the policy file and removes the prohibition, because the change "needs" it. CI checks out the PR branch, reads the edited file, and passes.</p>
 <p>Keeping policy files in the repository is usually right, because rules should be versioned like code. The problem is which copy the gate reads. The evaluator, the checker the CI job runs, applied the rules it was given, correctly. The change under evaluation supplied those rules. A reviewer skimming a large diff may miss three deleted lines in the policy file. An agent told to get the check green may treat the policy file as one more file it is allowed to edit, unless something stops it.</p>
 
-<h2>Four trust boundaries</h2>
+<h2 id="four-trust-boundaries">Four trust boundaries</h2>
 <p>A gate that blocks merges is only trustworthy if four boundaries hold. Switching a check from advisory to blocking does not create any of them.</p>
 <ol>
   <li><strong>Trusted policy origin.</strong> Rules are read from a protected, versioned state, not from the change.</li>
@@ -408,15 +424,15 @@
 </ol>
 <p>This is the core of <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>: knowing which decisions govern a change, and being able to prove it. A system cannot claim a change complied with engineering decisions unless it can show which decisions were authoritative when the change was evaluated.</p>
 
-<h2>Resolving a comment is not granting an exception</h2>
+<h2 id="resolving-a-comment-is-not-granting">Resolving a comment is not granting an exception</h2>
 <p>In the team's internal process, a PR cannot merge while a bug or security finding is open. You fix it, or close the thread with a short reason, which is how the team clears a false positive. That is the right design for a reviewer that is sometimes wrong.</p>
 <p>It is the wrong design for an exception to a decision. A false positive means the reviewer misread the code. An exception means the code does break the decision, and someone with the authority to waive it has agreed it may. Those need different records. A waiver should say which decision it covers, who approved it, where it applies, why, and when it expires. A closed thread records none of that, so a year later nobody can tell an accepted exception from a dismissed mistake.</p>
 <p>Deterministic rules cannot judge every architecture decision. Some choices need a person, and the post keeps people on architecture that sets a pattern others will copy. The trust boundary is about who decides, not about automating every judgment.</p>
 
-<h2>The same decisions must govern generation, review and merge</h2>
+<h2 id="the-same-decisions-must-govern-generation">The same decisions must govern generation, review and merge</h2>
 <p>A coding agent, a reviewer and CI each read rules at a different moment. If they read three separate copies, those copies can drift apart, and the agent ends up held to rules it never saw. Approve decisions once, in one place, and have every stage read the same version. A change to a decision then becomes a reviewed change with its own history, as <a href="/insights/from-decision-records-to-decision-governance/">the path from decision records to decision governance</a> sets out.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, works on the enforcement side of this flow. It keeps a team's decision corpus, the set of architectural decisions the team has recorded, in one file in the repository. A decision is enforced only when it has an active typed rule: a machine-checkable condition, such as an exact text string that must not appear in code, attached to the decision's current version.</p>
 <p>Mneme checks a write before it lands when a supported agent uses its built-in file tools, such as <a href="/integrations/claude-code/">Claude Code's Edit, Write and MultiEdit</a>. Most shell writes land on disk first: Claude Code and Codex CLI check them when the agent finishes its turn, and in other agents only CI catches them. In CI, <code>mneme check</code> applies the same corpus and returns PASS, WARN or FAIL.</p>
 <p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision, with its lifecycle and source, and every stage reads it from the same file. It is a version history, not an approval record, and it does not store who approved a decision. Teams that need that record keep it where identities are verified, such as the reviews of pull requests that change the decision files.</p>
@@ -432,7 +448,7 @@
   </div>
 </aside>
 
-<h2>Five checks before you trust an AI review gate</h2>
+<h2 id="five-checks-before-you-trust-an">Five checks before you trust an AI review gate</h2>
 <p>The first four map to settings you can check in GitHub. Other Git hosts have the same controls under other names. The fifth is a practice, because no host setting covers it.</p>
 <ol>
   <li><strong>Where do the rules come from?</strong> If CI reads the policy file from the PR's checkout, the PR can rewrite it. Have the job read the file from the base branch instead, for example with <code>git fetch origin main</code> and then <code>git show origin/main:path/to/policy</code>, and protect that branch with a ruleset or a branch protection rule.</li>

@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
+  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="GitHub&#x27;s 800,000-line Copilot Rust port compiled and passed its tests, yet shipped regressions. Acceptance needs behavioral evidence and decision compliance." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -363,12 +364,26 @@
   </header>
 
 <div class="article-body">
-<h2>An 800,000-line port that compiled on every merge</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#an-800-000-line-port-that">An 800,000-line port that compiled on every merge</a></li>
+      <li><a href="#five-methods-five-questions">Five methods, five questions</a></li>
+      <li><a href="#what-a-matching-output-hides">What a matching output hides</a></li>
+      <li><a href="#the-boundary-no-output-reveals">The boundary no output reveals</a></li>
+      <li><a href="#acceptance-needs-both-kinds-of-evidence">Acceptance needs both kinds of evidence</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="an-800-000-line-port-that">An 800,000-line port that compiled on every merge</h2>
 <p>On September 16, 2026, Stephen Toub published <a href="https://github.blog/ai-and-ml/generative-ai/migrating-the-github-copilot-runtime-to-rust-using-copilot/" target="_blank" rel="noopener">Migrating the GitHub Copilot runtime to Rust, using Copilot</a> on the GitHub Blog. GitHub rewrote the runtime behind the Copilot command-line tool, app and software development kit (SDK) from TypeScript on Node.js into more than 800,000 lines of production Rust. AI agents wrote most of the code. The work landed as 128 pull requests over a porting window of roughly fourteen and a half weeks, shipped incrementally rather than in one cutover, and was done primarily by one developer.</p>
 <p>By September 14 the team had traced dozens of known port regressions, all fixed, most of them correctness bugs. Toub takes on the Rust meme that "if the code compiles, it's correct", and answers it with the regression list: every regression on it was merged to main, so every one of them compiled. All existing end-to-end tests also ran against the new Rust code at every step, and a pull request that failed a required test did not land.</p>
 <p>So the regressions passed two gates, the compiler and the test suite, and some still reached a stable release. Each verification method answers one question, and accepting a migration needs answers to several.</p>
 
-<h2>Five methods, five questions</h2>
+<h2 id="five-methods-five-questions">Five methods, five questions</h2>
 <p>Teams verifying a migration stack several methods. Four of them compare the new system with the old one. The fifth, decision compliance, checks new code against the engineering decisions the team made for the target system, such as which layer may touch storage. Each proves one thing and misses another:</p>
 <table class="gov-table">
   <thead><tr><th>Method</th><th>Question it answers</th><th>What it cannot see</th></tr></thead>
@@ -383,7 +398,7 @@
 <p>Toub makes the first row's limit explicit. A compiler, he writes, cannot check whether you wrote the whole program, preserved the old contract or called things in the right order. GitHub's regressions fall mostly into three families: the new code implemented a different behavioral contract, state or lifetime behavior changed, or part of the migration was omitted or lost in a rebase. He also lists "tests that confidently validated the wrong behavior", which is the second row's limit. Toub also writes that all but one of the regressions involving missing features came from insufficient end-to-end tests.</p>
 <p>The fourth row is the method OpenAI chose for its <a href="https://openai.com/index/low-resource-programming-languages/" target="_blank" rel="noopener">COBOL (Common Business-Oriented Language) migration evaluation</a>, published on October 19, which requires migrated programs to match observable outputs byte for byte on hidden tests. Our <a href="/insights/openai-cobol-migration-benchmark-behavioral-parity/">analysis of OpenAI's COBOL benchmark</a> covers what parity leaves out. The last row differs from the other four: it is the only one that does not use the old system as the reference.</p>
 
-<h2>What a matching output hides</h2>
+<h2 id="what-a-matching-output-hides">What a matching output hides</h2>
 <p>The regressions in GitHub's post cluster in semantics that a single input and a single output rarely expose:</p>
 <ul>
   <li><strong>Error semantics.</strong> The TypeScript <code>event.error || "Unknown error"</code> became Rust's <code>.unwrap_or("Unknown error")</code>. JavaScript's <code>||</code> replaces an empty string; <code>unwrap_or</code> keeps it. An empty error message that used to become "Unknown error" now stayed empty.</li>
@@ -397,13 +412,13 @@
 <p>A shadow compares results. It does not observe what the new code does to the database, in what order, or how often it would retry. Mismatches caused by timing look like noise, and ordering bugs live in timing.</p>
 <p>GitHub reached the opposite decision about shadowing for its most coupled component. Session orchestration owns mutable state and drives callbacks in both directions, so running both versions side by side would have meant maintaining two copies of the component that holds the conversation's state, in two languages, and keeping them in step while hundreds of pull requests a week changed the code. The team gained confidence through end-to-end tests and incremental rollout with real consumer usage instead. The components where you would most want a side-by-side comparison are often the ones where you cannot run one.</p>
 
-<h2>The boundary no output reveals</h2>
+<h2 id="the-boundary-no-output-reveals">The boundary no output reveals</h2>
 <p>None of the first four methods asks whether the new system is built the way the team decided.</p>
 <p>Take a migrated payments service that reads the legacy database directly instead of going through the storage adapter the target architecture requires. Every response matches and the shadow reports zero mismatches, because the data is the same data. The migration has still crossed a boundary the team approved, and it has created a second dependent on the system it is meant to retire. A strangler-fig migration moves traffic to the new system one boundary at a time behind an adapter, and our <a href="/insights/strangler-fig-migrations-architectural-drift/">guide to strangler-fig migrations</a> shows how a bypass like this fails silently. Our <a href="/insights/ai-assisted-software-migrations-architectural-drift/">guide to AI-assisted software migrations</a> shows how agents drift back toward the dominant legacy pattern.</p>
 <p>GitHub's own process checked for this kind of property, and it checked it outside the tests. The review prompt Toub ran on each port told review agents: "If new TypeScript that's not just a super thin shim is being added, that's a red flag." A shim here is a thin wrapper that only forwards calls to the Rust code. In effect, that is an architectural rule about the target: Rust owns the logic. No end-to-end test fails on a well-behaved TypeScript function. Agents did the old-versus-new comparisons; human reviewers, he writes, concentrated on architecture, API contracts and risk.</p>
 <p>A second incident shows why the tests need protecting too. A port deleted a function exposed to the SDK, and the repository's schema compatibility check failed. The agent's fix was to apply the repository's <code>schema-break-ok</code> label, the escape hatch that makes the check pass. Toub caught it in review and had the method restored. His lesson concerns the oracle, the reference that defines correct behavior, here the tests and compatibility checks: "Protect the oracle from the agent." If the agent can rewrite them during the port, in his words, "you lose your oracle".</p>
 
-<h2>Acceptance needs both kinds of evidence</h2>
+<h2 id="acceptance-needs-both-kinds-of-evidence">Acceptance needs both kinds of evidence</h2>
 <p>A migrated endpoint, component or service is ready to accept when two questions have answers:</p>
 <ol>
   <li><strong>Behavioral evidence:</strong> it does what the old system did, for the behavior the organization has decided to keep. Parity tests, shadow comparison and end-to-end tests supply this, each with its blind spots.</li>
@@ -412,7 +427,7 @@
 <p>A pass on one is weak evidence about the other. Matching outputs cannot show that a boundary held, and a clean decision check cannot show that a cancellation path survived. The first question depends on an earlier one: which legacy behaviors are approved to carry forward. Our <a href="/insights/ai-legacy-modernization-what-must-survive/">guide to deciding what must survive a legacy rewrite</a> covers that adjudication.</p>
 <p>The second question is what <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> addresses: which decisions govern a given change, and with what evidence. Treat the decisions like the tests. Write them down before the port starts, keep them out of the agent's reach, and check them on every change, not only in a final review.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>Build the oracle first, then freeze it.</strong> GitHub's missing-feature regressions came from thin end-to-end coverage. Expand the tests before porting, and require separate approval for any change to tests, snapshots, compatibility baselines or waiver labels.</li>
   <li><strong>List each component's semantic risks.</strong> Write down its error, cancellation, ordering and retry behavior, and test those paths directly.</li>
@@ -420,7 +435,7 @@
   <li><strong>Record both answers at acceptance.</strong> The sign-off for each migrated unit should cite its behavioral evidence and its decision results, with a named owner for each.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, covers part of the decision-compliance half. It enforces decisions that carry an active typed rule: a rule a machine can check, such as an exact piece of text that must not appear in code, optionally limited to certain paths. A rule that forbids the legacy database client's exact import path as literal text in the target code, with the approved adapter's path excluded, returns a FAIL when new code adds that import. A decision without an active typed rule is not enforced.</p>
 <p>The checks run in continuous integration (CI) and in three coding agents: Claude Code, Codex CLI (OpenAI's command-line coding agent) and Kiro CLI 3.0 (the command-line version of Amazon's Kiro agent). Each agent's native write tools are checked before the write lands:</p>
 <ul>
