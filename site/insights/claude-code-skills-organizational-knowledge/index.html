@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic's Claude Code Skills post details nine internal skill categories. Skills move shared knowledge out of the prompt; that knowledge still needs governance." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-anthropic-shipped-and-what-it">What Anthropic Shipped, and What It Admits</a></li>
+        <li><a href="#skills-are-organizational-memory-made-executable">Skills Are Organizational Memory Made Executable</a></li>
+        <li><a href="#the-knowledge-lifecycle-anthropic-describes-is">The Knowledge Lifecycle Anthropic Describes Is a Governance Lifecycle</a></li>
+        <li><a href="#skills-scale-execution-governance-scales-trust">Skills Scale Execution. Governance Scales Trust.</a></li>
+        <li><a href="#the-emerging-agent-stack">The Emerging Agent Stack</a></li>
+        <li><a href="#what-comes-after-skills">What Comes After Skills</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Anthropic Shipped, and What It Admits</h2>
+
+    <h2 id="what-anthropic-shipped-and-what-it">What Anthropic Shipped, and What It Admits</h2>
     <p>Anthropic now runs much of its internal engineering knowledge through skills, and it has published the details. In <a href="https://claude.com/blog/lessons-from-building-claude-code-how-we-use-skills">Lessons from building Claude Code: How we use skills</a>, published June 3, 2026, Thariq Shihipar, a Member of Technical Staff at Anthropic, describes skills as folders containing instructions, scripts, and resources that agents discover and use &mdash; packages that can carry scripts, assets, and data structures, with configurable options and dynamic hooks. His assessment is blunt: &ldquo;Skills have become one of the most used extension points in Claude Code. They&rsquo;re flexible, easy to make, and easy to distribute.&rdquo;</p>
     <p>The post catalogs nine categories of skills Anthropic uses internally: library and API reference, product verification, data fetching and analysis, business process automation, code scaffolding, code quality and review, CI/CD and deployment, runbooks, and infrastructure operations. Read that list twice. It covers most of what an engineering organization knows how to do.</p>
     <p>Underneath the catalog sits an admission. Shihipar writes that long instructions and prompts alone stopped scaling &mdash; the company that builds the model could not pack its own organizational knowledge into one prompt. Skills are the replacement: modular, reusable, versionable knowledge packages that load when the task calls for them. Teams maintaining a <a href="/insights/why-claude-md-stops-scaling/">CLAUDE.md file that has stopped scaling</a> already know this failure mode from the other side. Anthropic has now confirmed it from the inside.</p>
@@ -310,18 +322,18 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Skills Are Organizational Memory Made Executable</h2>
+<h2 id="skills-are-organizational-memory-made-executable">Skills Are Organizational Memory Made Executable</h2>
     <p>A skill is organizational memory with an execution path attached. Each one bundles a task, the context an agent needs to perform it, and guidance on how to execute &mdash; often with pre-written scripts and utilities so the agent runs proven code instead of improvising its own. Teams have externalized this kind of knowledge for decades as runbooks, playbooks, and templates. Skills make those documents executable, and two of Anthropic&rsquo;s nine categories &mdash; runbooks and code scaffolding &mdash; are exactly that conversion.</p>
     <p>The best practices in the post confirm the memory framing. Shihipar advises authors to skip what the model already knows, to use progressive disclosure through the skill&rsquo;s filesystem structure, to avoid railroading the agent so it keeps flexibility, and to write skill descriptions for models &mdash; when to trigger &mdash; rather than for humans. Skills can even accumulate experience: storing data in logs or JSON files via the CLAUDE_PLUGIN_DATA environment variable lets a skill learn from its past executions. On-demand hooks push the model further; the post gives the example of a /careful mode that blocks dangerous commands in production contexts.</p>
     <p>One line stands above the rest: &ldquo;The highest-signal content in any skill is the Gotchas section.&rdquo; Accumulated failure knowledge &mdash; what went wrong before, and the constraints that prevent it from recurring &mdash; is worth more than any description of the happy path. That matches the finding that separates <a href="/architecture/decision-memory-vs-documentation/">decision memory from documentation</a>: what a team decided after something broke matters more than what it wrote while everything worked.</p>
 
-    <h2>The Knowledge Lifecycle Anthropic Describes Is a Governance Lifecycle</h2>
+    <h2 id="the-knowledge-lifecycle-anthropic-describes-is">The Knowledge Lifecycle Anthropic Describes Is a Governance Lifecycle</h2>
     <p>Anthropic&rsquo;s skill lifecycle is a governance lifecycle that nobody has named yet. Smaller teams check skills into ./.claude/skills/ in the repository. Larger organizations publish them to internal plugin marketplaces. At Anthropic, high-performing skills graduate from sandbox folders to an official marketplace through organic adoption rather than centralized gatekeeping, and the company logs skill usage with PreToolUse hooks to find popular and underused skills. Skills reference other skills by name, which means they form a dependency graph.</p>
     <p>Graduation criteria, usage telemetry, dependency tracking: those are the mechanics of a package registry applied to knowledge. They work at Anthropic&rsquo;s scale because the population of skill authors is small and unusually well aligned. The questions change once an organization holds hundreds of skills written by dozens of teams. Which skills are approved for production use? Which are deprecated yet still referenced by name from other skills? Which architectural assumptions does each one encode, and which recorded decisions does it depend on? When a team reverses a decision, which skills silently went stale?</p>
     <div class="callout"><p><strong>Organic adoption tells you which skills are popular. It cannot tell you which skills are correct</strong> &mdash; or which ones encode a decision your architecture review reversed last quarter.</p></div>
     <p>This is <a href="/concepts/governance-propagation/">governance propagation</a> territory: knowledge that spreads through an organization needs a mechanism that keeps it consistent with the decisions it rests on. Anthropic built the distribution half and instrumented it well. The consistency half is still open.</p>
 
-    <h2>Skills Scale Execution. Governance Scales Trust.</h2>
+    <h2 id="skills-scale-execution-governance-scales-trust">Skills Scale Execution. Governance Scales Trust.</h2>
     <p>A skill makes an agent better at doing a thing; it cannot decide whether the thing should be done that way. Take Anthropic&rsquo;s code scaffolding category. A scaffolding skill can help an agent stand up a new API with the team&rsquo;s preferred structure in minutes. It cannot determine whether that API violates the organization&rsquo;s security requirements, crosses a service ownership boundary, or contradicts an architectural decision the team recorded eight months ago. The skill answers how. Something else has to answer whether.</p>
     <p>The division holds across every one of the nine categories:</p>
 
@@ -339,12 +351,12 @@
 
     <p>The last row is the sharp one. A stale skill degrades gracefully: the agent gets slightly worse guidance and usually recovers, which is why Shihipar can recommend flexibility over railroading. A violated architectural decision must not degrade gracefully. It has to fail closed, before the change lands. <a href="/insights/memory-is-not-governance/">Memory is not governance</a> for the same reason: remembering how is a different mechanism from enforcing whether, and the two need different machinery with different failure semantics.</p>
 
-    <h2>The Emerging Agent Stack</h2>
+    <h2 id="the-emerging-agent-stack">The Emerging Agent Stack</h2>
     <p>An agent stack is taking shape with five layers: knowledge, skills, agents, governance, verification. Knowledge is what the organization knows. Skills package that knowledge into executable form. Agents execute. Governance decides what execution is allowed to produce. Verification proves the governance held. Most of the industry &mdash; Anthropic&rsquo;s post included &mdash; is building the top three layers. The bottom two are only starting to appear.</p>
     <p>Skills make those bottom layers more necessary, not less. Executable knowledge spreads architectural assumptions faster than documents ever did. A wiki page with a stale service template misleads the engineers who happen to read it; a scaffolding skill carrying the same stale template stamps that assumption into every service an agent generates, at agent speed, across every team that installed it. Anthropic&rsquo;s marketplace model accelerates exactly this dynamic &mdash; distribution is the feature. The faster knowledge propagates, the faster a wrong assumption propagates with it.</p>
     <p>That is why <a href="/concepts/verification-contracts/">verification contracts</a> sit at the base of the stack. When a skill-equipped agent produces a change, something deterministic has to check the result against the decisions that bind it &mdash; per change, per repository, regardless of which skill produced the work or how popular that skill is on the internal marketplace.</p>
 
-    <h2>What Comes After Skills</h2>
+    <h2 id="what-comes-after-skills">What Comes After Skills</h2>
     <p>Three capabilities follow from the skills model, and none of them exist in mainstream tooling yet. Decision provenance: which recorded architectural decisions does this skill encode or depend on? Skill provenance: which skills shaped this change, and at which versions? Verification contracts: what must be checked before a skill-assisted change is allowed to land? Anthropic already logs execution with PreToolUse hooks, which gives it provenance of usage. Provenance of decisions is the missing half.</p>
     <p>The need turns concrete the first time a decision changes. Suppose a team retires its event bus and moves to direct service calls. Every runbook, scaffolding, and deployment skill that encoded the old topology is now wrong, and nothing in the marketplace model flags it. Usage logs still show those skills as healthy, because popularity measures adoption, not correctness. The team needs a query that no skill system can answer today: which skills depend on decision X? The nearest analogue is a package registry&rsquo;s dependency graph, except the dependencies are architectural decisions instead of libraries.</p>
     <p>Anthropic&rsquo;s post is the strongest evidence yet that organizational knowledge is becoming infrastructure: versioned, distributed, executable. We mapped where that trajectory leads in <a href="/insights/agent-skills-vs-architectural-governance/">Agent Skills vs Architectural Governance</a>, and the skills post confirms the direction. Once organizational knowledge becomes executable, organizational governance becomes unavoidable.</p>

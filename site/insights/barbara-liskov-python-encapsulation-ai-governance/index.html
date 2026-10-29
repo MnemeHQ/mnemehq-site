@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Barbara Liskov's criticism of Python was never really about syntax purity — it was about enforceability. In the AI coding era, where autonomous agents can modify large codebases at machine speed, the lack of enforceable architectural constraints becomes an operational scaling problem. Liskov's critique reads as an early warning about governance in AI-generated software." />
   <meta name="robots" content="index, follow" />
@@ -199,6 +198,18 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-liskov-actually-meant">What Liskov actually meant</a></li>
+        <li><a href="#why-this-matters-more-with-ai">Why this matters more with AI coding</a></li>
+        <li><a href="#prompt-files-and-memory-are-not">Prompt files and memory are not enough</a></li>
+        <li><a href="#the-missing-layer-architectural-governance">The missing layer: architectural governance</a></li>
+        <li><a href="#why-this-is-bigger-than-python">Why this is bigger than Python</a></li>
+        <li><a href="#the-future-of-ai-development-is">The future of AI development is constraint-aware</a></li>
+      </ol>
+    </nav>
+
     <p>The framing for this piece comes from a recent <a href="https://www.youtube.com/watch?v=T9CGjbPZeaM" rel="noopener">interview with Barbara Liskov on data abstraction, distributed systems, and the design problems she has spent her career on</a>. A widely-shared <a href="https://www.youtube.com/shorts/KZBX0NytylM" rel="noopener">&ldquo;Downsides of Python&rdquo; clip</a> pulled from that conversation surfaces a long-standing argument: Python allows you to express architectural boundaries, but it does not strongly enforce them. That argument is not new. It is significantly more important now than when she first made it.</p>
 
     <div class="yt-facade" data-video-id="qAKrMdUycb8" data-title="Barbara Liskov’s Critique of Python Predicts the Governance Problem in AI Coding" role="button" tabindex="0" aria-label="Play video: Barbara Liskov’s Critique of Python Predicts the Governance Problem in AI Coding">
@@ -207,7 +218,7 @@
     </div>
     <p class="video-caption">Barbara Liskov&rsquo;s 2008 ACM A.M. Turing Award Lecture, &ldquo;The Power of Abstraction&rdquo; &mdash; <a href="https://www.youtube.com/watch?v=qAKrMdUycb8" rel="noopener">watch on YouTube</a></p>
 
-    <h2>What Liskov actually meant</h2>
+    <h2 id="what-liskov-actually-meant">What Liskov actually meant</h2>
     <p>The critique is precise. Liskov is not saying Python is unusable &mdash; she is distinguishing between <strong>convention</strong> and <strong>enforcement</strong>. Python has the vocabulary to express modularity: modules, classes, the <code>_private</code> single-underscore prefix, name mangling, packages. What it does not have is a runtime that prevents external code from reaching past those boundaries.</p>
     <p>Specifically:</p>
     <ul>
@@ -227,7 +238,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why this matters more with AI coding</h2>
+<h2 id="why-this-matters-more-with-ai">Why this matters more with AI coding</h2>
     <p>Human teams could partially compensate for advisory boundaries with code review, tribal knowledge, senior engineers, and architecture oversight. That is exactly the system Liskov&rsquo;s critique relied on to be merely a quibble.</p>
     <p>AI changes the scaling dynamic. An AI agent:</p>
     <ul>
@@ -239,13 +250,13 @@
     <div class="callout"><p><strong>LLMs are very good at pattern continuation.</strong> They are not naturally good at preserving invisible architectural intent.</p></div>
     <p>The encapsulation Liskov worried about was always advisory. As long as the rate of advisory violations was human-paced, code review could hold the line. At agent velocity, the same advisory boundary becomes a load-bearing assumption that the system was never designed to make.</p>
 
-    <h2>Prompt files and memory are not enough</h2>
+    <h2 id="prompt-files-and-memory-are-not">Prompt files and memory are not enough</h2>
     <p>The current ecosystem&rsquo;s answer has been to give the agent more guidance through the prompt surface: <code>CLAUDE.md</code> files, Cursor rules, sophisticated prompt engineering, RAG memory, large context windows. All of those help. None of them create enforcement.</p>
     <p>The distinction matters. Context can <em>suggest</em> behavior. Governance <em>constrains</em> behavior. Suggestions degrade across long sessions, model upgrades, and conflicting instructions; constraints do not.</p>
     <div class="callout"><p><strong>A context window is not an architectural boundary.</strong></p></div>
     <p>The mistake is the same one Liskov was identifying decades ago, applied to a new layer. Conventions in source files are advisory; the only thing that protected them was the social contract among humans reading the code. Conventions in prompt files are also advisory; the only thing protecting them is the model&rsquo;s willingness to follow them this turn.</p>
 
-    <h2>The missing layer: architectural governance</h2>
+    <h2 id="the-missing-layer-architectural-governance">The missing layer: architectural governance</h2>
     <p>The shape of the missing infrastructure is becoming visible. <a href="/concepts/architectural-governance/">Architectural governance</a> is the category that adds:</p>
     <ul>
       <li><strong>Executable architectural constraints</strong> &mdash; decisions compiled into machine-evaluable rules, not paragraphs</li>
@@ -267,13 +278,13 @@
     </div>
     <p>The full version of that argument is in <a href="/insights/ai-infrastructure-governance-category/">The Next AI Infrastructure Category Is Governance</a>. The relevant point here: Liskov was naming the gap a decade ahead of the wave that makes it operationally expensive.</p>
 
-    <h2>Why this is bigger than Python</h2>
+    <h2 id="why-this-is-bigger-than-python">Why this is bigger than Python</h2>
     <p>It is tempting to read the critique as a language argument. It is not.</p>
     <p>Even languages with stronger encapsulation &mdash; Java with proper access modifiers, Rust with module privacy and trait boundaries, Go with package-level visibility &mdash; still face architectural drift, agent coordination problems, multi-agent inconsistency, and repository-wide governance gaps. Stronger encapsulation reduces the local damage of a single bypass. It does not solve the system-wide governance question.</p>
     <p>The real problem is not which language allows the bypass. It is that <strong>AI systems can traverse abstraction layers faster than organizations can review them</strong>. Encapsulation is one local-scope answer to a problem that has become global-scope.</p>
     <div class="callout"><p><strong>The shift Liskov was pointing at gets bigger in every language.</strong> Governance moves from a style preference to an infrastructure concern.</p></div>
 
-    <h2>The future of AI development is constraint-aware</h2>
+    <h2 id="the-future-of-ai-development-is">The future of AI development is constraint-aware</h2>
     <p>The next generation of AI development systems will separate <em>exploration</em> from <em>enforcement</em>. Agents remain flexible during discovery &mdash; trying patterns, prototyping, generating options. Architectural invariants become deterministic and machine-enforced. The agent gets to be creative; the architecture gets to be a contract.</p>
     <p>Liskov&rsquo;s argument predicted that distinction long before AI coding made it operationally urgent. The encapsulation debate was, underneath, an enforceability debate. As software generation becomes autonomous, enforceability stops being a language-design quibble and starts being the load-bearing assumption of the whole system.</p>
     <p>The infrastructure that closes the gap exists now under a name Liskov would recognize the shape of: architectural governance. Same problem &mdash; modularity protected against implementation leakage. New layer.</p>

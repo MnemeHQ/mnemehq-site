@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Microsoft&#x27;s 2026 AI Decision Brief says programming is shifting from instructions to intent. For coding agents, intent must include architectural decisions." />
   <meta name="robots" content="index, follow" />
@@ -341,12 +340,25 @@
   </header>
 
 <div class="article-body">
-<h2>What Microsoft actually says</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-microsoft-actually-says">What Microsoft actually says</a></li>
+      <li><a href="#three-more-signals-from-the-same">Three more signals from the same brief</a></li>
+      <li><a href="#intent-has-to-be-written-down">Intent has to be written down somewhere</a></li>
+      <li><a href="#agent-governance-and-architectural-governance-answer">Agent governance and architectural governance answer different questions</a></li>
+      <li><a href="#what-bounded-autonomy-needs-from-architecture">What "bounded autonomy" needs from architecture</a></li>
+      <li><a href="#what-engineering-leaders-should-take-from">What engineering leaders should take from it</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+    </ol>
+  </nav>
+<h2 id="what-microsoft-actually-says">What Microsoft actually says</h2>
 <p>Microsoft's 2026 edition of <a href="https://www.microsoft.com/en-us/microsoft-cloud/blog/2026/03/31/ai-decision-brief-how-leaders-can-drive-frontier-transformation/" target="_blank" rel="noopener">The AI Decision Brief: A Guide to Frontier Transformation</a> is mostly an enterprise adoption guide. It covers learning cultures, customer engagement, Zero Trust, sustainability, and a 120-day agent roadmap. Most of it is not about software engineering at all.</p>
 <p>One page is. In his section on page 34, Microsoft CTO Kevin Scott writes that as software becomes more agentic, programming is shifting "away from writing detailed instructions and toward describing intent": the outcome being pursued, the constraints that matter, and how to tell whether the work is good. He adds that teams need to be "explicit about goals, careful about feedback and evaluation, and thoughtful about where autonomy is earned versus constrained."</p>
 <p>That is a precise description of the problem engineering leaders now face with coding agents. It is also an incomplete one, and the gap is worth naming.</p>
 
-<h2>Three more signals from the same brief</h2>
+<h2 id="three-more-signals-from-the-same">Three more signals from the same brief</h2>
 <p>Kevin Scott's page does not stand alone. Three other passages point the same direction.</p>
 <ul>
   <li><strong>Decision rights have to be redesigned.</strong> Jared Spataro, CMO of AI at Work, writes on page 22 that most AI integration failures come from management systems built for a world where humans did all the work, and that "decision rights, review cycles, accountability, and trust all need to be rethought when outputs are co-produced by people and machines."</li>
@@ -355,12 +367,12 @@
 </ul>
 <p>Read together, the brief describes a chain: intent, constraints, bounded autonomy, accountability, evidence. That chain applies to every agent an enterprise runs. It applies with particular force to coding agents, because their output persists as software that other people, and other agents, will build on for years.</p>
 
-<h2>Intent has to be written down somewhere</h2>
+<h2 id="intent-has-to-be-written-down">Intent has to be written down somewhere</h2>
 <p>If programming becomes the act of describing intent, the obvious follow-up question is where that intent lives. For a single task, the answer is the prompt or the spec. For a codebase, most of the intent that matters was expressed long before the current task started.</p>
 <p>A payments service calls the ledger through an internal client because of an incident two years ago. A domain layer does not import infrastructure adapters because the team decided to keep them swappable. Customer data stays in one region because of a contract. These are constraints in exactly Kevin Scott's sense: they define what a good outcome is allowed to look like. None of them appear in a task description, and an agent asked to "add retry logic to the payment flow" has no reason to discover them.</p>
 <p>This is where intent-driven programming meets architecture. Task intent is written fresh each time. <strong>Architectural intent is standing intent</strong>: decisions the organization already made, which every future change inherits whether or not the person or agent making it knows about them. Microsoft's framing makes the task side explicit. The standing side is the part most organizations still keep in ADR folders, wiki pages, and senior engineers' memory.</p>
 
-<h2>Agent governance and architectural governance answer different questions</h2>
+<h2 id="agent-governance-and-architectural-governance-answer">Agent governance and architectural governance answer different questions</h2>
 <p>The governance the brief recommends is real and necessary: an inventory of agents, identity, least-privilege access, observability, owners, and a way to pause or retire an agent. All of it governs the agent. None of it says whether a particular change the agent makes is consistent with the architecture.</p>
 <table class="gov-table">
   <thead><tr><th></th><th>Agent governance</th><th>Architectural governance</th></tr></thead>
@@ -373,7 +385,7 @@
 </table>
 <p>An agent can be authenticated, correctly scoped, fully observable, and owned by a named person, and still write a change that breaks a boundary the organization decided on last year. The two layers are complementary. Neither substitutes for the other, and the brief, reasonably for a document of its scope, only describes the first.</p>
 
-<h2>What "bounded autonomy" needs from architecture</h2>
+<h2 id="what-bounded-autonomy-needs-from-architecture">What "bounded autonomy" needs from architecture</h2>
 <p>Kevin Scott's line about autonomy being "earned versus constrained" is the most useful phrase in the brief for engineering leaders, because it implies a mechanism. Constraining autonomy is only possible if the constraints exist in a form the system can apply. For architectural constraints, that means four things:</p>
 <ol>
   <li><strong>Authority.</strong> Which decisions are accepted and in force, and which are drafts, superseded, or someone's opinion in a thread.</li>
@@ -383,7 +395,7 @@
 </ol>
 <p>This is our conclusion, not Microsoft's. The brief does not propose a decision index or an architectural enforcement layer, and it would overstate the document to say it does. What it does establish, from a company with an unusually wide view of enterprise adoption, is the premise: when agents execute multi-step work, explicit intent, explicit constraints, and deliberate limits on autonomy stop being good hygiene and become the engineering discipline itself.</p>
 
-<h2>What engineering leaders should take from it</h2>
+<h2 id="what-engineering-leaders-should-take-from">What engineering leaders should take from it</h2>
 <p>The brief's own action plans are written for workflows in general. Translated to software delivery, they suggest a short list:</p>
 <ul>
   <li>Separate the architectural decisions that genuinely constrain implementation from general documentation.</li>
@@ -394,7 +406,7 @@
 </ul>
 <p>Do not treat the brief's return-on-investment figures as evidence for any of this. They measure broad AI adoption, not architectural outcomes, and they come from a vendor with a stake in adoption.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme applies this approach to one class of decision: architectural decisions in a repository. It compiles accepted decisions into scoped rules, returns deterministic PASS, WARN, or FAIL verdicts against proposed changes, and, through the local Decision MCP server shipped in 0.9.0, lets an agent ask which decisions apply to the paths it is working on. It does not govern agent identity or access, which belong to the platform layer the brief describes, and not every architectural decision reduces to a mechanical rule.</p>
 <p>Microsoft is right that programming is becoming the practice of describing intent. The part that decides whether architecture survives that shift is whether the intent an organization already has is written somewhere an agent is actually bound by it.</p>
 

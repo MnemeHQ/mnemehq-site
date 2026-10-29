@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Smart routing decides which model or agent handles a request. It optimizes execution, not architecture: every correctly routed agent can still bypass your ADRs. Here is the layer routing leaves out." />
   <meta name="robots" content="index, follow" />
@@ -323,7 +322,19 @@
 
   <div class="article-body">
 
-    <h2>Why Smart Routing Is Becoming Standard</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#why-smart-routing-is-becoming-standard">Why Smart Routing Is Becoming Standard</a></li>
+        <li><a href="#what-routing-gets-you">What Routing Gets You</a></li>
+        <li><a href="#what-routing-does-not-solve">What Routing Does Not Solve</a></li>
+        <li><a href="#the-missing-layer-architectural-guardrails">The Missing Layer: Architectural Guardrails</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme Fits</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="why-smart-routing-is-becoming-standard">Why Smart Routing Is Becoming Standard</h2>
     <p>A year ago, most stacks sent every request to one model. That is ending. Coding platforms now route dynamically &mdash; a trivial rename goes to a small, fast model; a multi-file refactor goes to a frontier model; a schema question goes to a SQL tool instead of an LLM at all. Open frameworks such as <a href="https://github.com/lm-sys/RouteLLM" target="_blank" rel="noopener">RouteLLM</a> formalize the idea: learn which requests need the expensive model and send only those, cutting cost without a measurable quality drop.</p>
     <p>The drivers are straightforward. Routing improves cost, latency, and accuracy at once by matching each request to the cheapest resource that can handle it. As stacks add specialized coding, reasoning, and search agents, some component has to decide which one runs. That decision is what smart routing is.</p>
 
@@ -336,7 +347,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What Routing Gets You</h2>
+<h2 id="what-routing-gets-you">What Routing Gets You</h2>
     <p>The benefits are concrete and worth stating plainly, because the argument here is not that routing is a distraction:</p>
     <ul>
       <li><strong>Lower cost.</strong> Most requests do not need a frontier model. Routing stops you paying frontier prices for autocomplete.</li>
@@ -346,7 +357,7 @@
     </ul>
     <p>These are genuine gains, and every serious coding stack will adopt some form of them. That is exactly why routing on its own does not differentiate one AI engineering setup from another &mdash; and why the interesting question is what happens <em>after</em> the routing decision is made.</p>
 
-    <h2>What Routing Does Not Solve</h2>
+    <h2 id="what-routing-does-not-solve">What Routing Does Not Solve</h2>
     <p>Routing selects the performer. It has no opinion about whether the performer respects the system&rsquo;s existing decisions. Consider a single feature request that fans out across a modern stack:</p>
     <ul>
       <li>One agent, correctly routed to a fast model, adds a new HTTP client library because it was convenient &mdash; the repo already standardized on one.</li>
@@ -357,7 +368,7 @@
     <p>Every one of those requests was routed perfectly. Every one produced working code. None of them produced <em>consistent</em> software. The router did its job and the architecture drifted anyway, because the constraint that mattered &mdash; go through the billing service&rsquo;s API, do not add a second HTTP client, follow the ledger boundary &mdash; was never expressed anywhere the router or the selected agent could see it.</p>
     <div class="callout"><p><strong>Routing decides who acts. It does not decide what they are allowed to build.</strong> A perfectly optimized routing layer will still let every agent it selects violate the same architectural decision, one convenient shortcut at a time.</p></div>
 
-    <h2>The Missing Layer: Architectural Guardrails</h2>
+    <h2 id="the-missing-layer-architectural-guardrails">The Missing Layer: Architectural Guardrails</h2>
     <p>The two decisions are independent and should be treated that way. Which model runs is an execution decision, tuned for cost and speed. What the running model is allowed to do is an <a href="/concepts/architectural-governance/">architectural governance</a> decision, and it has to hold no matter which model was selected. Put them in a table and the separation is obvious:</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -372,7 +383,7 @@
     </div>
     <p>Every routed agent should inherit the same constraints: the recorded architectural decisions (ADRs), the engineering standards, the approved frameworks, the project conventions. Those constraints are the same whether the request went to one model or ten. When they live as <a href="/concepts/executable-architectural-intent/">executable architectural intent</a> rather than prose in a wiki, the routing layer can swap models freely and the engineering rules still hold.</p>
 
-    <h2>Where Mneme Fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme Fits</h2>
     <p>Mneme sits below the router, not beside it. The routing layer picks the performer; the guardrail layer checks what the performer proposes against the decisions that must not change. The flow is deliberately boring:</p>
     <ol>
       <li><strong>Record</strong> each architectural decision as structured data with its constraints &mdash; not a paragraph in a doc.</li>

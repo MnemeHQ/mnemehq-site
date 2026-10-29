@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="CLAUDE.md is an instruction surface, not a governance layer. It works until teams scale, decisions evolve, and agents run autonomously. Here is where the ceiling is." />
   <meta name="robots" content="index, follow" />
@@ -379,6 +378,19 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#why-claude-md-works-and-why">Why CLAUDE.md works &mdash; and why that matters</a></li>
+        <li><a href="#the-instruction-surface-ceiling">The instruction-surface ceiling</a></li>
+        <li><a href="#five-failure-modes">Five failure modes</a></li>
+        <li><a href="#the-real-category-shift">The real category shift</a></li>
+        <li><a href="#the-memory-misdiagnosis">The memory misdiagnosis</a></li>
+        <li><a href="#the-governance-stack">The governance stack</a></li>
+        <li><a href="#what-comes-next">What comes next</a></li>
+      </ol>
+    </nav>
+
     <p>Every engineering team that adopts an AI coding assistant goes through the same evolution. The first sessions are inconsistent. Naming conventions get ignored. Service boundaries blur. Approved dependencies get substituted. The team writes down the rules.</p>
 
     <p>A CLAUDE.md file in the repo root. A few coding conventions. Architecture notes. Testing expectations. The AI reads them. The sessions improve.</p>
@@ -387,7 +399,7 @@
 
     <p>Eventually something shifts. The team is no longer maintaining instructions. It is maintaining a governance system &mdash; one built on a text file, with no enforcement layer, no precedence engine, and no decision provenance. <strong>Presence of instructions is not equivalent to enforcement.</strong> That gap is invisible at small scale. It becomes structural at large scale.</p>
 
-    <h2>Why CLAUDE.md works &mdash; and why that matters</h2>
+    <h2 id="why-claude-md-works-and-why">Why CLAUDE.md works &mdash; and why that matters</h2>
 
     <p>It would be a mistake to dismiss what CLAUDE.md actually does well. The tool has genuine strengths, and the teams using it are solving a real problem correctly &mdash; for a while. Acknowledging this is not politeness. It is precision.</p>
 
@@ -406,7 +418,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The instruction-surface ceiling</h2>
+<h2 id="the-instruction-surface-ceiling">The instruction-surface ceiling</h2>
 
     <p>The ceiling is not about Claude. It is not about prompt quality or file organization. It is about what static instruction files can and cannot do, regardless of how well they are written or maintained.</p>
 
@@ -454,7 +466,7 @@
       </div>
     </div>
 
-    <h2>Five failure modes</h2>
+    <h2 id="five-failure-modes">Five failure modes</h2>
 
     <p>The failure modes are not random. They follow the structure of the tool. Each one is a structural property of static instruction files, not a deficiency fixable by better maintenance or more careful writing.</p>
 
@@ -508,7 +520,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>The real category shift</h2>
+    <h2 id="the-real-category-shift">The real category shift</h2>
 
     <p>These failure modes are not surprising once you understand the era they belong to. CLAUDE.md is a context engineering tool. It solves context engineering problems well. The problem teams are actually running into is a governance infrastructure problem &mdash; a different category with different requirements.</p>
 
@@ -537,7 +549,7 @@
 
     <p>Each era solved its problem and revealed the next one. Better prompts improved output quality but could not enforce architectural invariants. Better context improved relevance but added no precedence or provenance. Longer workflows surfaced the drift that short sessions had hidden. The current problem is not a better version of the previous one. It requires different infrastructure.</p>
 
-    <h2>The memory misdiagnosis</h2>
+    <h2 id="the-memory-misdiagnosis">The memory misdiagnosis</h2>
 
     <p>When teams hit the ceiling, the common misdiagnosis is that the model has a memory problem. The file is too long. The rules are not being retained across sessions. The context window is filling up.</p>
 
@@ -560,7 +572,7 @@
 
     <p>For most outputs, soft suggestions are fine. For architectural invariants that protect service boundaries, dependency policies, or security requirements, &#8220;usually works&#8221; is not a viable guarantee. The difference between those two categories is the governance boundary.</p>
 
-    <h2>The governance stack</h2>
+    <h2 id="the-governance-stack">The governance stack</h2>
 
     <p>The right framing is not that CLAUDE.md is obsolete. It is that CLAUDE.md is one layer in a larger stack &mdash; specifically the layer that handles behavioral steering, style, and session context. The layer it cannot be is the enforcement layer.</p>
 
@@ -600,7 +612,7 @@
 
     <p>These are infrastructure properties. They cannot be delivered by a better-maintained text file, regardless of how well it is written. They require a system that operates at a different layer of the stack.</p>
 
-    <h2>What comes next</h2>
+    <h2 id="what-comes-next">What comes next</h2>
 
     <p>Teams at the early stages of AI adoption have not hit this problem yet. CLAUDE.md works well, sessions are consistent enough, review catches the violations that slip through. The pattern feels like it is scaling.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Orchestration decides what an agent runs next. Governance decides what must remain true. Even a perfectly orchestrated multi-agent workflow can violate an ADR. Here is why the two are different layers." />
   <meta name="robots" content="index, follow" />
@@ -297,7 +296,19 @@
 
   <div class="article-body">
 
-    <h2>Everyone is adding orchestration</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#everyone-is-adding-orchestration">Everyone is adding orchestration</a></li>
+        <li><a href="#what-orchestration-actually-does">What orchestration actually does</a></li>
+        <li><a href="#what-orchestration-does-not-do">What orchestration does not do</a></li>
+        <li><a href="#a-concrete-example">A concrete example</a></li>
+        <li><a href="#orchestration-and-governance-work-together">Orchestration and governance work together</a></li>
+        <li><a href="#what-teams-should-do">What teams should do</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="everyone-is-adding-orchestration">Everyone is adding orchestration</h2>
     <p>Agent frameworks now emphasize multiple agents, planning, delegation, retries, and long-running workflows. Tools like <a href="https://langchain-ai.github.io/langgraph/" target="_blank" rel="noopener">LangGraph</a>, along with CrewAI, AutoGen, and task delegation inside coding agents, make it straightforward to sequence work across specialized agents. Orchestration has quietly become table stakes.</p>
     <p>That is a genuine advance. It is also the source of a common category error: treating the thing that coordinates agent work as if it also constrains what that work is allowed to produce.</p>
 
@@ -310,14 +321,14 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What orchestration actually does</h2>
+<h2 id="what-orchestration-actually-does">What orchestration actually does</h2>
     <p>Orchestration manages execution. It handles task sequencing and dependencies, retries and approvals, routing, and execution state. It makes a workflow efficient and resumable. A well-orchestrated system gets the right agent to the right step at the right time.</p>
     <div class="callout"><p><strong>Orchestration optimizes the flow of work. It does not evaluate whether the work is architecturally correct.</strong></p></div>
 
-    <h2>What orchestration does not do</h2>
+    <h2 id="what-orchestration-does-not-do">What orchestration does not do</h2>
     <p>Even a perfectly orchestrated workflow can violate an architecture decision record, introduce a forbidden dependency, ignore an engineering standard, bypass a service boundary, or duplicate a service that already exists. Each agent can execute its assigned task correctly while the overall system becomes less consistent. The orchestrator sees success at every step. The architecture still drifted.</p>
 
-    <h2>A concrete example</h2>
+    <h2 id="a-concrete-example">A concrete example</h2>
     <p>Consider a routine pipeline:</p>
     <div class="diag-wrap">
       <svg viewBox="0 0 700 320" role="img" aria-label="A multi-agent pipeline where the database agent violates an ADR while orchestration reports success" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
@@ -335,7 +346,7 @@
     </div>
     <p>The database agent switches from the approved store to another. The orchestrator sees a completed task. Governance blocks it because a decision record specifies otherwise. Everything worked. The architecture would have drifted without a separate layer that evaluated the change against intent.</p>
 
-    <h2>Orchestration and governance work together</h2>
+    <h2 id="orchestration-and-governance-work-together">Orchestration and governance work together</h2>
     <table class="gov-table">
       <thead><tr><th>Orchestration</th><th>Engineering governance</th></tr></thead>
       <tbody>
@@ -347,7 +358,7 @@
     </table>
     <p>The point is not that orchestration is flawed. It is that governance is a different control plane. Orchestration decides what runs next. Governance decides what must remain true no matter what runs.</p>
 
-    <h2>What teams should do</h2>
+    <h2 id="what-teams-should-do">What teams should do</h2>
     <ul>
       <li><strong>Do not buy orchestration expecting governance.</strong> Confirm whether your framework evaluates changes against architectural decisions, or only sequences them.</li>
       <li><strong>Insert a pre-generation check.</strong> Constraints should run before an agent's change is applied, not only in a downstream review step.</li>

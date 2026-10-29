@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="HBR's Agentic Convergence Trap: when every team runs the same coding agents on the same defaults, codebases converge on the same architecture. Governance is the enforced way out." />
   <meta name="robots" content="index, follow" />
@@ -356,6 +355,18 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-same-mechanism-one-layer-down">The same mechanism, one layer down</a></li>
+        <li><a href="#hbr-s-escape-route-is-a">HBR&rsquo;s escape route is a governance instruction</a></li>
+        <li><a href="#why-prompts-and-conventions-are-not">Why prompts and conventions are not enough</a></li>
+        <li><a href="#the-strategic-stakes-are-not-abstract">The strategic stakes are not abstract</a></li>
+        <li><a href="#what-this-means-for-engineering-leaders">What this means for engineering leaders</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>In May 2026, Patrick van Esch, Yuanyuan Gina Cui, and J. Stewart Black published <a href="https://hbr.org/2026/05/beware-the-agentic-convergence-trap" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Beware the Agentic Convergence Trap</a> in Harvard Business Review. The argument is sharp and, for a strategy piece, unusually mechanical. When many organizations deploy similar AI systems, point them at similar objectives, and feed them similar data, those systems independently arrive at near-identical decisions. The result is not a smarter market. It is a market where everyone moves the same way at the same time.</p>
 
     <p>The authors&rsquo; central example is RealPage. The company did not force landlords to coordinate prices. It shipped a feature: an auto-accept option for its pricing recommendations. Hundreds of competing landlords independently chose to switch it on. Each made a locally rational decision. Collectively, they produced something that looked like coordinated rent-setting across entire cities, and eventually drew regulatory scrutiny. No one in the system intended the outcome. The defaults produced it.</p>
@@ -364,7 +375,7 @@
 
     <p>That sentence is why this article belongs on a site about architectural governance. The trap HBR describes at the level of business strategy is the same trap that is quietly running at the level of code.</p>
 
-    <h2>The same mechanism, one layer down</h2>
+    <h2 id="the-same-mechanism-one-layer-down">The same mechanism, one layer down</h2>
 
     <p>Consider how AI-assisted engineering actually works in mid-2026. The frontier coding models are converging in capability and are available to everyone on roughly equal terms. Teams reach for the same two or three models. They wire them up with similar prompts. They ask them to solve problems that, across an industry, look very alike: an auth flow, a payments integration, a retrieval pipeline, a CRUD service over a familiar schema.</p>
 
@@ -385,7 +396,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>HBR&rsquo;s escape route is a governance instruction</h2>
+<h2 id="hbr-s-escape-route-is-a">HBR&rsquo;s escape route is a governance instruction</h2>
 
     <p>The most useful thing about the HBR piece is that it does not stop at the diagnosis. Its prescription, paraphrased, is a short list of governance moves: decide where humans stay accountable; define objectives that go beyond the platform&rsquo;s defaults; build unique data inputs the model cannot get elsewhere; and measure divergence as a strategic indicator rather than assuming it. The winners, the authors argue, will be the organizations that design their AI to reach conclusions their competitors&rsquo; AI will not.</p>
 
@@ -430,7 +441,7 @@
 
     <p>HBR is telling executives to stop accepting the platform default as their strategy. The engineering corollary is to stop accepting the model default as your architecture. Both are the same instruction: insert a layer of deliberate, enforced judgment between the system and its output.</p>
 
-    <h2>Why prompts and conventions are not enough</h2>
+    <h2 id="why-prompts-and-conventions-are-not">Why prompts and conventions are not enough</h2>
 
     <p>The obvious objection is that teams already do this. They have a style guide. They have a CLAUDE.md. They have conventions. Surely that is enough to keep an agent from converging.</p>
 
@@ -451,7 +462,7 @@
 
     <p>This is the difference between wanting to escape the convergence trap and building the mechanism that escapes it. RealPage&rsquo;s landlords did not lack good intentions. They lacked a deliberate override. A governance layer is that override, made deterministic, applied every time, independent of which model happens to be executing the prompt this week.</p>
 
-    <h2>The strategic stakes are not abstract</h2>
+    <h2 id="the-strategic-stakes-are-not-abstract">The strategic stakes are not abstract</h2>
 
     <p>It is tempting to treat code-level convergence as a cosmetic concern. It is not. The architecture of a system is where its hardest-won advantages live: the performance characteristics competitors cannot match, the domain modeling that took years to get right, the integration choices that make the product feel coherent. When that layer drifts toward the mean, the product drifts toward the mean with it. You end up with software that a competitor could have generated from the same prompt &mdash; because, increasingly, they could have.</p>
 
@@ -462,7 +473,7 @@
       <cite>The HBR thesis, applied to the generation layer</cite>
     </div>
 
-    <h2>What this means for engineering leaders</h2>
+    <h2 id="what-this-means-for-engineering-leaders">What this means for engineering leaders</h2>
 
     <p>The Agentic Convergence Trap is usually read as a boardroom memo. It is also a memo to anyone responsible for an AI-assisted codebase. The mechanism the authors describe &mdash; shared systems, shared defaults, emergent sameness, governance as the only real defense &mdash; is not specific to pricing or strategy. It is a general property of delegating decisions to convergent models without a layer of enforced judgment on top.</p>
 

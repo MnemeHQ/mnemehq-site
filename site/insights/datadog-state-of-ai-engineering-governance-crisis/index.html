@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Datadog surveyed 1,000+ production AI orgs and found model churn is a governance problem, context quality beats volume, and disciplined systems are the next competitive advantage." />
   <meta name="robots" content="index, follow" />
@@ -355,13 +354,27 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-report-actually-measures">What the report actually measures</a></li>
+        <li><a href="#the-sentence-that-changes-everything">The sentence that changes everything</a></li>
+        <li><a href="#context-quality-is-the-new-limiting">Context quality is the new limiting factor</a></li>
+        <li><a href="#the-observability-ceiling">The observability ceiling</a></li>
+        <li><a href="#disciplined-production-systems-as-the-next">Disciplined production systems as the next competitive surface</a></li>
+        <li><a href="#five-signals-the-report-surfaces">Five signals the report surfaces</a></li>
+        <li><a href="#what-teams-should-take-from-this">What teams should take from this</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p>Most industry reports on AI engineering measure what is easy to measure: adoption rates, token volumes, model preferences, framework usage. <a href="https://www.datadoghq.com/resources/state-of-ai-engineering" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Datadog&rsquo;s State of AI Engineering 2026</a> does all of that &mdash; and then, in a handful of sentences buried across four findings, says something the AI tooling industry has been reluctant to say directly.</p>
 
     <p>The report does not use the word &ldquo;governance&rdquo; as its organizing frame. It talks about observability, operational discipline, and the maturation of production systems. But the data it surfaces &mdash; model churn rates, context composition, error clustering, agent complexity &mdash; all point to the same structural gap. <strong>The industry has scaled AI execution faster than it has scaled AI constraint enforcement.</strong></p>
 
     <p>This is worth reading carefully because Datadog is not an advocacy organization. It is an observability company with instrumentation across a large slice of production infrastructure. When it says something is a problem, the claim is grounded in telemetry, not opinion.</p>
 
-    <h2>What the report actually measures</h2>
+    <h2 id="what-the-report-actually-measures">What the report actually measures</h2>
 
     <p>The 2026 report surveyed over 1,000 organizations and analyzed production telemetry across LLM API calls, agent frameworks, token consumption, error patterns, and model distribution. The scope is deliberately operational &mdash; not &ldquo;what are teams building&rdquo; but &ldquo;what is actually running in production, at what cost, with what failure patterns.&rdquo;</p>
 
@@ -409,7 +422,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The sentence that changes everything</h2>
+<h2 id="the-sentence-that-changes-everything">The sentence that changes everything</h2>
 
     <p>Buried in the second finding, after the model distribution charts, is the report&rsquo;s most important claim. It is not framed as a warning. It is presented as an empirical observation derived from the multi-model reality the data describes.</p>
 
@@ -424,7 +437,7 @@
 
     <p>This is not a problem you solve by picking a better model. It is a problem you solve by adding an enforcement layer that is model-agnostic by design.</p>
 
-    <h2>Context quality is the new limiting factor</h2>
+    <h2 id="context-quality-is-the-new-limiting">Context quality is the new limiting factor</h2>
 
     <p>The report&rsquo;s fifth finding is titled around context quality &mdash; and the data here is striking. Sixty-nine percent of all input tokens are already system prompts. Not user turns, not retrieved documents, not task specifications: the baseline context injected at session start.</p>
 
@@ -449,7 +462,7 @@
       </div>
     </div>
 
-    <h2>The observability ceiling</h2>
+    <h2 id="the-observability-ceiling">The observability ceiling</h2>
 
     <p>The report quotes Guillermo Rauch, CEO of Vercel, making a point that is more diagnostic than it appears at first read:</p>
 
@@ -464,7 +477,7 @@
 
     <p>Observability is necessary. It is not sufficient. A team that can observe every agent step in detail is still missing enforcement: the layer that ensures those steps cannot violate architectural constraints in the first place.</p>
 
-    <h2>Disciplined production systems as the next competitive surface</h2>
+    <h2 id="disciplined-production-systems-as-the-next">Disciplined production systems as the next competitive surface</h2>
 
     <p>The report&rsquo;s Looking Ahead section uses language that is worth reading verbatim:</p>
 
@@ -477,7 +490,7 @@
 
     <p>This is the gap the report identifies without naming directly. The introduction states it as an axiom: &ldquo;the gap between a good demo and a dependable system is closed by effective evaluation and operational discipline.&rdquo; The evaluation layer has tools. The discipline layer &mdash; the part that prevents undisciplined generation from reaching the codebase &mdash; is what most teams are still building out of CLAUDE.md files and code review processes that cannot scale.</p>
 
-    <h2>Five signals the report surfaces</h2>
+    <h2 id="five-signals-the-report-surfaces">Five signals the report surfaces</h2>
 
     <p>Reading the Datadog report as a governance document rather than an observability document, five signals emerge:</p>
 
@@ -526,7 +539,7 @@
 
     </div>
 
-    <h2>What teams should take from this</h2>
+    <h2 id="what-teams-should-take-from-this">What teams should take from this</h2>
 
     <p>The Datadog report is not a roadmap. It is a baseline. It describes where the industry is, not where it needs to go. But the direction is implied in every finding.</p>
 

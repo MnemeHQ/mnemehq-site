@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Cursor&rsquo;s Developer Habits Report shows agent changes reaching commits without manual diff review jumped 7% to 36.3% in 2026. Why AI coding needs governance." />
   <meta name="robots" content="index, follow" />
@@ -332,11 +331,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-cursor-developer-habits-report">What the Cursor Developer Habits Report Shows</a></li>
+        <li><a href="#velocity-changed-the-unit-of-risk">Velocity changed the unit of risk</a></li>
+        <li><a href="#context-is-not-governance">Context is not governance</a></li>
+        <li><a href="#automation-creates-governance-surfaces">Automation creates governance surfaces</a></li>
+        <li><a href="#the-power-user-gap-becomes-a">The power-user gap becomes a governance gap</a></li>
+        <li><a href="#the-missing-layer-architectural-governance-infrastructure">The missing layer: architectural governance infrastructure</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p><strong>The velocity curve is now measured, not anecdotal.</strong> For two years the claim that AI coding is accelerating rested mostly on vibes and vendor decks. Cursor&rsquo;s data turns it into telemetry. And read as an operations document rather than a marketing one, that telemetry describes a structural shift: software delivery is getting harder to govern, not just faster to produce.</p>
 
 <p>This is not a critique of Cursor. The report is strong validation. Cursor proves the velocity curve with numbers most of the industry only gestured at. The point of this essay is what sits on the other side of that curve.</p>
 
-<h2>What the Cursor Developer Habits Report Shows</h2>
+<h2 id="what-the-cursor-developer-habits-report">What the Cursor Developer Habits Report Shows</h2>
 
 <p>The inaugural <a href="https://cursor.com/insights" target="_blank" rel="noopener">Cursor Developer Habits Report</a> (Spring 2026 edition), published by Cursor (Anysphere, Inc.), draws on Cursor usage data rather than survey responses. It captures the transformation across five themes &mdash; developer acceleration, the economics of intelligence, the power user gap, the rise of context, and the shift to automation. The headline figures:</p>
 
@@ -382,7 +394,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Velocity changed the unit of risk</h2>
+<h2 id="velocity-changed-the-unit-of-risk">Velocity changed the unit of risk</h2>
 
 <p>When AI was autocomplete, governance could reasonably live in review. A human wrote most of the change, accepted small suggestions inline, and a reviewer read a human-sized diff before merge. The unit of risk was a line or a function, and review was a sufficient first governance surface.</p>
 
@@ -394,7 +406,7 @@
 
 <p>This is why <a href="/concepts/governance-before-generation/">governance before generation</a> stops being a slogan and becomes an operational requirement. The cheapest place to prevent an architectural violation is before the agent writes the code that contains it. Catching it in review still works, but at agent velocity, review becomes a backlog, not a gate. <a href="/concepts/verification-contracts/">Verification contracts</a> &mdash; architectural rules expressed as checks an agent&rsquo;s output must satisfy &mdash; move the assertion to where the decisions are actually being made.</p>
 
-<h2>Context is not governance</h2>
+<h2 id="context-is-not-governance">Context is not governance</h2>
 
 <p>The report&rsquo;s &ldquo;rise of context&rdquo; theme is the one most likely to be misread as a solution. Models are reading far more before they write: input now accounts for more than 90% of input-output token volume, making context the dominant part of non-cache model usage. The intuition that follows is comforting &mdash; if the model can see the whole codebase, surely it will respect the codebase.</p>
 
@@ -406,7 +418,7 @@
 
 <p>This is also the line between retrieval and governance. Feeding architecture into the prompt is retrieval; binding generation to it is governance. We have written about that distinction at length in <a href="/compare/rag-vs-governance/">RAG vs governance</a>: retrieval surfaces relevant text, governance enforces a rule deterministically regardless of what the model chose to attend to.</p>
 
-<h2>Automation creates governance surfaces</h2>
+<h2 id="automation-creates-governance-surfaces">Automation creates governance surfaces</h2>
 
 <p>The report&rsquo;s &ldquo;shift to automation&rdquo; theme is where the governance gap becomes concrete. More AI changes are being accepted automatically: agent-generated changes reaching commits without a separate manual diff acceptance step grew more than 5x in 2026, from 7% on Jan 1 to 36.3% on May 16. Cursor also notes that adoption of its Automations is growing quickly, with security review emerging as a strong use case, and that SDK runs show early demand for turning agent infrastructure into a programmable platform customized to how each company builds software.</p>
 
@@ -448,7 +460,7 @@
 
 <p>A programmable agent platform with auto-accepting commit flows needs governance wired into each of those surfaces, not bolted onto one. That is the substance of <a href="/concepts/governance-propagation/">governance propagation</a>: the same architectural constraints, enforced consistently everywhere code is generated, evaluated, and committed. And it is why <a href="/concepts/governance-before-generation/">governance before generation</a> is the anchor &mdash; the earlier in the chain a constraint is asserted, the fewer downstream surfaces have to catch the failure.</p>
 
-<h2>The power-user gap becomes a governance gap</h2>
+<h2 id="the-power-user-gap-becomes-a">The power-user gap becomes a governance gap</h2>
 
 <p>The report&rsquo;s &ldquo;power user gap&rdquo; theme is, on its face, a story about inequality of output: p99 developers produce 46x more lines than the median active user and merge 15x more PRs than the median active PR author. Activity is heavily concentrated at the tail.</p>
 
@@ -458,7 +470,7 @@
 
 <div class="callout"><p><strong>At 46x output, informal architecture stops scaling.</strong> Rules that depend on a human noticing in review cannot keep pace with a developer who reshapes the codebase faster than the team can read the diffs. Machine-enforceable intent is the only thing that scales with the tail.</p></div>
 
-<h2>The missing layer: architectural governance infrastructure</h2>
+<h2 id="the-missing-layer-architectural-governance-infrastructure">The missing layer: architectural governance infrastructure</h2>
 
 <p>Put the five themes together and the report describes a single transition: AI is becoming infrastructure for execution. Cursor, Claude Code, Copilot, and Devin all increase execution capacity &mdash; they make it cheaper to generate, edit, and ship code. That capacity is real, measured, and accelerating.</p>
 

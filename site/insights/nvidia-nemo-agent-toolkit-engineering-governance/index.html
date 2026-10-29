@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="NVIDIA's NeMo Agent Toolkit (formerly AgentIQ) connects, evaluates, and optimizes AI agent workflows across frameworks. It does not verify whether the code agents produce respects your architecture. That is engineering governance." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,20 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-nemo-agent-toolkit-does">What the NeMo Agent Toolkit Does</a></li>
+        <li><a href="#evaluation-is-not-engineering-governance">Evaluation Is Not Engineering Governance</a></li>
+        <li><a href="#instruction-is-not-enforcement">Instruction Is Not Enforcement</a></li>
+        <li><a href="#where-nemo-ends-and-governance-begins">Where NeMo Ends and Governance Begins</a></li>
+        <li><a href="#what-engineering-leaders-should-do">What Engineering Leaders Should Do</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What the NeMo Agent Toolkit Does</h2>
+
+    <h2 id="what-the-nemo-agent-toolkit-does">What the NeMo Agent Toolkit Does</h2>
     <p>The <a href="https://docs.nvidia.com/nemo/agent-toolkit/latest/index.html" target="_blank" rel="noopener">NVIDIA NeMo Agent Toolkit</a> describes itself as an open-source library for efficiently connecting and optimizing teams of AI agents. It is framework-agnostic by design: it wraps agents built with LangGraph, CrewAI, Google ADK, Microsoft Semantic Kernel, LlamaIndex, the Model Context Protocol, and Agent-to-Agent workflows, adding a common operational layer without forcing teams to replatform. Its documentation organizes the work into four pillars &mdash; build, run, observe, and improve.</p>
     <p>The observe and improve pillars are where most of its value sits. Evaluation scores workflow and output quality against repeatable datasets and execution traces. Observability and profiling expose logs, traces, token consumption, and per-agent timings, exported through OpenTelemetry into existing platforms. Optimization tunes prompts, models, and runtime parameters. The project has been through two renames on the way here &mdash; it shipped as AgentIQ, briefly became the Agent Intelligence Toolkit, and is now the NeMo Agent Toolkit, distributed as the <span class="diag-mono">nvidia-nat</span> package, with version 1.8 current as of June 2026.</p>
     <p>All of that answers one kind of question well: how did the agent workflow perform? That is a different question from whether the code an agent produced conforms to the engineering intent of the system it changed.</p>
@@ -310,7 +321,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Evaluation Is Not Engineering Governance</h2>
+<h2 id="evaluation-is-not-engineering-governance">Evaluation Is Not Engineering Governance</h2>
     <p>It helps to separate three questions that the agent stack tends to blur together.</p>
     <ul>
       <li><strong>Evaluation</strong> asks: did the workflow return a grounded, relevant, high-quality answer?</li>
@@ -319,7 +330,7 @@
     </ul>
     <p>All three are useful, and they operate on different objects. Evaluation governs quality signals. Guardrails govern agent behavior and interaction safety. Engineering governance governs the changes an agent makes to the software system. The NeMo Agent Toolkit lives squarely in the first; NeMo Guardrails lives in the second; neither was built for the third.</p>
 
-    <h2>Instruction Is Not Enforcement</h2>
+    <h2 id="instruction-is-not-enforcement">Instruction Is Not Enforcement</h2>
     <p>The most interesting recent development is that NVIDIA now ships reusable coding-agent skills for the toolkit through <span class="diag-mono">AGENTS.md</span> and <span class="diag-mono">SKILL.md</span> files, built on an open skills specification designed to work across Claude Code, Codex, and Cursor. These skills help a coding agent create, evaluate, and optimize NeMo workflows. They are a real signal: persistent, structured instructions are becoming part of agent infrastructure rather than living only in throwaway prompts.</p>
     <p>But an instruction tells an agent what it should do. It does not independently verify what the agent actually did. That gap is the whole reason engineering governance is a separate layer.</p>
 
@@ -336,11 +347,11 @@
 
     <p>We have made the same point about agent instruction files directly: <a href="/insights/agent-skills-vs-architectural-governance/">skills configure capability, not conformance</a>. A SKILL.md that teaches an agent to build a workflow is not the same as a check that proves the workflow it built respects your boundaries.</p>
 
-    <h2>Where NeMo Ends and Governance Begins</h2>
+    <h2 id="where-nemo-ends-and-governance-begins">Where NeMo Ends and Governance Begins</h2>
     <p>Picture the failure the operational layers cannot catch. A coding agent receives a valid task. It produces code that compiles and passes tests. And the change calls a database directly from a layer that must go through an internal service API, or reintroduces a migration pattern the platform team retired last quarter. NeMo&rsquo;s telemetry will faithfully record that the workflow ran, how long it took, and how many tokens it used. It will not decide that the change should be rejected, because that decision depends on an architectural rule the toolkit was never given.</p>
     <p>The questions that go unanswered are repository-specific: which dependencies are approved, which service boundaries hold, which authentication pattern is mandatory, which decisions a new change must not contradict. Those are not performance metrics. They are <a href="/concepts/executable-architectural-intent/">architectural decisions</a>, and enforcing them is a different job from observing a workflow.</p>
 
-    <h2>What Engineering Leaders Should Do</h2>
+    <h2 id="what-engineering-leaders-should-do">What Engineering Leaders Should Do</h2>
     <p>Treat the two as a selection, not a competition.</p>
     <ul>
       <li><strong>Reach for the NeMo Agent Toolkit</strong> when the problem is cross-framework integration, workflow tracing, evaluation, profiling, runtime optimization, or serving.</li>

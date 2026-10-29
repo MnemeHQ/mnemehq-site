@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="BCG's 2026 report on scaling agentic AI names agent sprawl and guardrails-as-code at machine speed. The implementation gap it leaves open is architectural intent: keeping every coding agent inside your decisions before code is written." />
   <meta name="robots" content="index, follow" />
@@ -297,7 +296,19 @@
 
   <div class="article-body">
 
-    <h2>What BCG's report shows</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-bcg-s-report-shows">What BCG's report shows</a></li>
+        <li><a href="#why-traditional-governance-starts-too-late">Why traditional governance starts too late</a></li>
+        <li><a href="#the-missing-layer-architectural-intent">The missing layer: architectural intent</a></li>
+        <li><a href="#two-complementary-layers">Two complementary layers</a></li>
+        <li><a href="#why-this-matters-at-the-scale">Why this matters at the scale BCG describes</a></li>
+        <li><a href="#what-teams-should-do">What teams should do</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-bcg-s-report-shows">What BCG's report shows</h2>
     <p>In <a href="https://www.bcg.com/publications/2026/the-four-pillars-cios-can-use-to-scale-agentic-ai" target="_blank" rel="noopener">How CIOs Can Govern Agentic AI at Scale</a>, BCG describes a shift that traditional software governance was not built for. Two dynamics drive it: business-led agent sprawl, where experiments multiply into thousands of ungoverned agents, and an engineering productivity paradox, where AI-assisted development raises output while piling on technical debt.</p>
     <p>Their projected scale is the part worth sitting with. In a 2028 scenario, a typical enterprise with 300 to 400 core processes and up to 1,300 subprocesses could see each subprocess underpinned by five to seven agents, producing over 100,000 new technology assets. BCG's answer is a new backbone on four pillars: GenAI platform services, AI graduation pathways, continuous refactoring, and ITSM adapted for an Agent Development Life Cycle (ADLC). The report's own phrase for the enforcement model is telling: guardrails-as-code with runtime enforcement, applied at machine speed.</p>
     <div class="callout"><p><strong>BCG is describing an organizational operating model.</strong> It is right about the scale and the direction. The four pillars govern how the enterprise runs agents. They do not specify how a single agent stays architecturally correct as it writes code.</p></div>
@@ -311,15 +322,15 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why traditional governance starts too late</h2>
+<h2 id="why-traditional-governance-starts-too-late">Why traditional governance starts too late</h2>
     <p>Most governance discussion still lives at deployment: identity, permissions, monitoring, observability, runtime controls. By the time those apply, the code already exists. The agent has already chosen a database, introduced a dependency, and settled a boundary. Runtime governance can observe that a decision was made. It cannot un-make it.</p>
     <p>BCG's ADLC pushes governance earlier, toward continuous checks wherever an agent acts. That is the right direction. The earliest possible point, though, is before generation, when architectural decisions become executable constraints the agent must consult first.</p>
 
-    <h2>The missing layer: architectural intent</h2>
+    <h2 id="the-missing-layer-architectural-intent">The missing layer: architectural intent</h2>
     <p>Only about 15% of companies, by BCG's count, have the enterprise backbone in place today, and the gap closes more slowly than agentic adoption grows. Closing it requires a layer the four pillars assume but do not build: architectural intent made executable.</p>
     <p>Concretely, this is the set of decisions that define how a system is meant to be built. Architecture decision records. Approved and forbidden patterns. Dependency policy. Repository boundaries. Engineering standards. Runtime governance asks whether a deployed agent behaves safely. Architectural governance asks a different question: does this change comply with how this system is designed, before it lands?</p>
 
-    <h2>Two complementary layers</h2>
+    <h2 id="two-complementary-layers">Two complementary layers</h2>
     <table class="gov-table">
       <thead><tr><th>Layer</th><th>Question it answers</th><th>When it acts</th></tr></thead>
       <tbody>
@@ -329,10 +340,10 @@
     </table>
     <p>These are not competing. BCG's platform services, graduation pathways, and ADLC give the enterprise its control fabric. Architectural intent is what makes that fabric enforce engineering decisions rather than only cataloging agents.</p>
 
-    <h2>Why this matters at the scale BCG describes</h2>
+    <h2 id="why-this-matters-at-the-scale">Why this matters at the scale BCG describes</h2>
     <p>Without executable architectural intent, every coding agent makes its own assumptions. At 100,000 assets, those assumptions do not average out. They compound. Architectural drift accumulates, code review becomes the enforcement mechanism of last resort, and teams spend their productivity gains fixing inconsistency that a constraint could have prevented. The pillars scale the organization. Architectural intent is what keeps the software it produces coherent.</p>
 
-    <h2>What teams should do</h2>
+    <h2 id="what-teams-should-do">What teams should do</h2>
     <ul>
       <li><strong>Compile decisions into constraints.</strong> Turn ADRs and standards into machine-evaluable rules that run before generation, not documents that agents may or may not read.</li>
       <li><strong>Enforce independently of the agent.</strong> The same constraints should apply across every coding tool the enterprise adopts, so governance is not tied to one vendor.</li>

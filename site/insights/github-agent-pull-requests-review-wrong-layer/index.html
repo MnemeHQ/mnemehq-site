@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="GitHub says one in five code reviews now involve an agent. Reviewers feel safer approving agent PRs that carry more debt. Governance belongs upstream." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#github-documented-a-governance-failure-mode">GitHub Documented a Governance Failure Mode</a></li>
+        <li><a href="#why-agent-prs-feel-safer-than">Why Agent PRs Feel Safer Than They Are</a></li>
+        <li><a href="#github-s-answer-train-the-reviewer">GitHub&rsquo;s Answer: Train the Reviewer Harder</a></li>
+        <li><a href="#pr-review-was-never-designed-to">PR Review Was Never Designed to Be the Governance Layer</a></li>
+        <li><a href="#move-governance-upstream-of-the-pull">Move Governance Upstream of the Pull Request</a></li>
+        <li><a href="#the-layer-github-s-data-points">The Layer GitHub&rsquo;s Data Points To</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>GitHub Documented a Governance Failure Mode</h2>
+
+    <h2 id="github-documented-a-governance-failure-mode">GitHub Documented a Governance Failure Mode</h2>
     <p>More than one in five code reviews on GitHub now involve an agent. The number comes from GitHub itself: in <a href="https://github.blog/ai-and-ml/generative-ai/agent-pull-requests-are-everywhere-heres-how-to-review-them/">Agent pull requests are everywhere. Here&rsquo;s how to review them.</a>, published May 7, 2026, Senior Developer Advocate Andrea Griffiths reports that GitHub Copilot code review has processed more than 60 million reviews, with 10x growth in less than a year. Agent-authored changes are now a routine fraction of the global review queue, and GitHub has started teaching reviewers how to handle them.</p>
     <p>The post&rsquo;s sharpest material is a paradox. A January 2026 study GitHub cites, titled &ldquo;More Code, Less Reuse,&rdquo; found that agent-generated code introduces more redundancy and more technical debt per change than human-written code. The same study found that reviewers reported feeling more confident approving agent-generated changes. Debt per change went up. Approval confidence went up with it.</p>
     <p>Read together, those two findings describe a governance failure mode, documented at scale by the platform with the best vantage point in the industry: code that measures worse on architectural quality is clearing human review more easily. The control everyone relies on &mdash; a person looking at the diff before it merges &mdash; is approving the wrong things with growing conviction. GitHub&rsquo;s response is to strengthen the reviewer. The data in its own post suggests the problem lives a layer earlier.</p>
@@ -310,17 +322,17 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why Agent PRs Feel Safer Than They Are</h2>
+<h2 id="why-agent-prs-feel-safer-than">Why Agent PRs Feel Safer Than They Are</h2>
     <p>Agent PRs look like careful work. They follow naming conventions. They arrive with tests, and the tests pass. They handle edge cases a rushed human would skip, and they come wrapped in tidy descriptions. Every surface signal reviewers learned to trust &mdash; consistent formatting, green CI, comprehensive-looking coverage &mdash; is a signal agents now produce by default.</p>
     <p>&ldquo;More Code, Less Reuse&rdquo; shows what the polish conceals. The debt is structural: duplicated utilities, parallel abstractions, redundancy that accumulates across changes without announcing itself in any single diff. A reviewer scanning one well-formatted PR has no way to see that it adds the codebase&rsquo;s fourth slightly different retry helper. The signal that says &ldquo;this author was careful&rdquo; and the defect class that says &ldquo;this codebase is decaying&rdquo; live at different altitudes, and review operates at the lower one.</p>
     <p>That asymmetry is what makes the confidence finding so uncomfortable. The reviewer is being asked to detect, inside a single diff, the architectural problems the generation process never checked for at all &mdash; while the polish of that diff actively lowers their guard. <a href="/insights/why-code-review-cannot-scale-with-ai-output/">Code review already struggles to scale with AI output</a> on volume; GitHub&rsquo;s cited research suggests accuracy degrades alongside it.</p>
 
-    <h2>GitHub&rsquo;s Answer: Train the Reviewer Harder</h2>
+    <h2 id="github-s-answer-train-the-reviewer">GitHub&rsquo;s Answer: Train the Reviewer Harder</h2>
     <p>GitHub&rsquo;s prescription is reviewer training, and judged on its own terms it is good training. Griffiths names five red flags. CI gaming: agents removing tests, skipping linting, or weakening coverage thresholds to get a failing check green. Code-reuse blindness: duplicating an existing utility instead of consolidating. Hallucinated correctness: code that compiles and passes tests while hiding subtle logic errors &mdash; off-by-one errors, missing permission checks, race conditions. Agentic ghosting: unresponsive agent PRs with no clear implementation plan. And untrusted input in workflows: the prompt-injection risk that appears when a workflow interpolates user content into prompts running with elevated permissions.</p>
     <p>The post pairs the red flags with a time-boxed, 10-minute checklist. Classify the PR&rsquo;s scope in the first one to two minutes. Examine CI changes first, at two to three. Scan for new utilities and duplicates by five. Trace one critical execution path by eight. Check security boundaries by nine. Spend the final minute requiring evidence: tests, rollback plans. Griffiths backs it with standing rules &mdash; justify any CI threshold change, consolidate duplicated logic before approval, require tests that would fail on pre-change behavior, split PRs touching more than five unrelated files.</p>
     <p>Griffiths is direct about who carries the load: &ldquo;Judgment is the bottleneck, and that&rsquo;s fine.&rdquo; The post also asks authors to meet reviewers halfway: &ldquo;Reviewing your own pull request isn&rsquo;t optional when agents are involved. It&rsquo;s basic respect for your reviewer&rsquo;s time.&rdquo; Both points are sound. Notice, though, that every safeguard in the post is a human paying closer attention. The fix assumes the layer; it never questions it.</p>
 
-    <h2>PR Review Was Never Designed to Be the Governance Layer</h2>
+    <h2 id="pr-review-was-never-designed-to">PR Review Was Never Designed to Be the Governance Layer</h2>
     <p>Pull request review was designed for a different workload. The practice grew up around human-written code arriving in small batches from an author who shared context with the reviewer and could defend every decision in the diff. Under those conditions review works as intended: a colleague reads a change she could plausibly have written herself and checks the judgment calls.</p>
     <p>Agents break each assumption at once. Volume: one in five reviews and 10x growth in under a year, by GitHub&rsquo;s own count. Size: diffs that run to thousands of generated lines. Context: design decisions that belong to no author the reviewer can interrogate. Under that load, review stops functioning as a peer conversation and becomes the last line of defense against <a href="/concepts/architectural-drift/">architectural drift</a> &mdash; a posture closer to <a href="/insights/pr-review-is-becoming-incident-response/">incident response</a> than to collaboration.</p>
     <p>Detection from that position scales badly. Every one of GitHub&rsquo;s five red flags is something a human must notice after the code exists, inside a 10-minute budget, against an author that produces reassuring polish automatically. Prevention at generation time inverts each of those properties.</p>
@@ -339,12 +351,12 @@
 
     <div class="callout"><p><strong>The checklist&rsquo;s existence is the diagnosis.</strong> When a platform has to teach reviewers to check whether the author deleted tests to get CI green, something upstream has already failed. A change like that should be impossible to generate &mdash; and no review-time procedure can make it so.</p></div>
 
-    <h2>Move Governance Upstream of the Pull Request</h2>
+    <h2 id="move-governance-upstream-of-the-pull">Move Governance Upstream of the Pull Request</h2>
     <p>The alternative to a harder-working reviewer is a generation process that cannot produce the violation. <a href="/concepts/governance-before-generation/">Governance before generation</a> moves the constraints a reviewer would hunt for &mdash; use the existing retry utility, never weaken a coverage threshold, keep permission checks on every handler &mdash; into the agent&rsquo;s context before code is written, and enforces them before the PR exists.</p>
     <p>Two mechanisms make that concrete. <a href="/concepts/verification-contracts/">Verification contracts</a> turn architectural invariants into deterministic checks that run when the agent proposes a change: a diff that weakens a CI threshold or duplicates an existing utility fails the contract before any human sees it. <a href="/insights/machine-readable-pull-requests-agentic-development/">Machine-readable pull requests</a> then carry the evidence forward &mdash; which constraints were checked, which passed &mdash; so the reviewer inherits a verified change instead of an unverified wall of generated code.</p>
     <p>Run GitHub&rsquo;s own checklist through that lens. Its first three steps &mdash; classify scope, examine CI changes, scan for duplicates &mdash; are deterministic checks a machine can execute on every change, every time, in seconds. Executing them upstream returns the 10 minutes to the work Griffiths rightly reserves for humans: tracing the critical path, weighing the security boundary, judging whether the change should exist at all. The goal is fewer governance decisions reaching reviewers, not better reviewers.</p>
 
-    <h2>The Layer GitHub&rsquo;s Data Points To</h2>
+    <h2 id="the-layer-github-s-data-points">The Layer GitHub&rsquo;s Data Points To</h2>
     <p>Each shift in how software runs has produced an infrastructure layer to govern it. Cloud computing created the security tooling industry. CI/CD created observability. Agent-generated code is creating governance infrastructure: the layer that holds architectural intent in machine-checkable form and enforces it where generation happens.</p>
     <p>GitHub&rsquo;s post is evidence the transition is underway. The largest code-hosting platform in the world, after 60 million agent reviews, has formalized a defensive procedure for humans because agent output now exceeds what informal review absorbs. That is what an ecosystem looks like in the gap between a new workload and the infrastructure that eventually governs it &mdash; the same gap where security scanners and observability platforms were once a checklist in a blog post.</p>
     <p>Griffiths is right that judgment is the bottleneck. The open question her post leaves behind is whether PR review should remain the primary governance layer for AI-generated software &mdash; or whether, on GitHub&rsquo;s own data, the workload has already outgrown the layer.</p>

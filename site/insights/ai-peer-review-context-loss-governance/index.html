@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A new AI peer review study found GPT-5.2 outperforming top human reviewers across Nature-family papers. The real lesson for enterprise AI is context loss, verification, and governance." />
   <meta name="robots" content="index, follow" />
@@ -324,7 +323,21 @@
 
   <div class="article-body">
 
-    <h2>AI peer review crossed an important threshold</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#ai-peer-review-crossed-an-important">AI peer review crossed an important threshold</a></li>
+        <li><a href="#the-result-is-impressive-but-the">The result is impressive, but the aggregate hides the risk</a></li>
+        <li><a href="#the-pm2-5-example-is-the">The PM2.5 example is the enterprise failure mode</a></li>
+        <li><a href="#this-is-not-only-a-model">This is not only a model capability problem</a></li>
+        <li><a href="#peer-review-is-a-preview-of">Peer review is a preview of AI-assisted software governance</a></li>
+        <li><a href="#governance-before-generation-not-review-after">Governance before generation, not review after damage</a></li>
+        <li><a href="#the-future-is-not-ai-judgment">The future is not AI judgment alone &mdash; it is verified AI judgment</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="ai-peer-review-crossed-an-important">AI peer review crossed an important threshold</h2>
     <p>The paper <a href="https://arxiv.org/abs/2605.20668" rel="noopener"><em>On the limits and opportunities of AI reviewers: Reviewing the reviews of Nature-family papers with 45 expert scientists</em></a> is a careful piece of evaluation. <strong>45 domain scientists spent 469 hours rating 2,960 review criticisms</strong> from human and AI reviewers across <strong>82 Nature-family papers</strong>. Each criticism was judged on three dimensions: <strong>correctness</strong>, <strong>significance</strong>, and <strong>sufficiency of evidence</strong>.</p>
     <p>The crucial design choice is that the researchers did not evaluate whether AI predicted paper acceptance or matched reviewer scores. They evaluated the actual review criticisms themselves: were they correct, significant, and supported by enough evidence?</p>
     <p>That matters because enterprise AI has the same problem. We do not only need to know whether an AI output sounds right. We need to know whether each claim is valid, grounded, and operationally useful.</p>
@@ -339,7 +352,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The result is impressive, but the aggregate hides the risk</h2>
+<h2 id="the-result-is-impressive-but-the">The result is impressive, but the aggregate hides the risk</h2>
     <p>On the composite fully-positive metric &mdash; the share of criticisms rated correct, significant, and well-evidenced &mdash; <strong>GPT-5.2 scored 60.0%</strong>, above the top-rated human reviewer at <strong>48.2%</strong>. Claude Opus 4.5 and Gemini 3.0 Pro exceeded the lowest-rated human reviewer across every dimension. Where AI criticisms were accurate, they were often more significant and better-evidenced than human ones.</p>
     <p>That is the headline number, and it is real.</p>
     <p>The aggregate hides what matters most for governance: <strong>on factual correctness specifically, AI reviewers were still less correct than the top-rated human reviewer</strong>. The weighted composite favoured the model; the per-dimension breakdown did not.</p>
@@ -357,7 +370,7 @@
     <p>The pattern is consistent: AI reviewers are useful when correct, and confidently wrong when context drops out.</p>
     <div class="callout"><p><strong>The better AI becomes at producing high-value criticism, the more expensive its grounding failures become.</strong></p></div>
 
-    <h2>The PM2.5 example is the enterprise failure mode</h2>
+    <h2 id="the-pm2-5-example-is-the">The PM2.5 example is the enterprise failure mode</h2>
     <p>The cleanest illustration in the paper: <strong>Claude Opus 4.5 criticised a paper for missing a PM2.5 calibration procedure that was already described in the methods section</strong>.</p>
     <p>That is not a dumb-model failure. The class of criticism &mdash; &ldquo;your calibration is not documented&rdquo; &mdash; is exactly the kind of thing a serious reviewer should raise. The failure was not capability. It was <strong>context management</strong>: the model produced high-confidence criticism that contradicted information already present in the source it was reviewing.</p>
     <p>That maps almost one-to-one onto enterprise AI failure modes:</p>
@@ -371,7 +384,7 @@
     </ul>
     <p>In every case, the model is capable. The workflow is not governed.</p>
 
-    <h2>This is not only a model capability problem</h2>
+    <h2 id="this-is-not-only-a-model">This is not only a model capability problem</h2>
     <p>The paper is careful to position current AI reviewers as <strong>complements</strong>, not substitutes, for human reviewers. The authors identify recurring weaknesses: limited subfield knowledge, <strong>lack of long-context management over multiple files</strong>, and overly critical treatment of minor issues.</p>
     <p>That last one is worth dwelling on. An AI reviewer that flags too many low-significance issues, with confidence, is not a neutral tool. It shifts cost onto whoever has to triage the output. The same dynamic shows up in software: an AI agent that produces twenty plausible-looking PR comments creates a queue, not a signal.</p>
     <p>Translated into enterprise language: the bottleneck is moving from <em>can the model produce useful analysis?</em> to <strong>can the system verify whether that analysis is grounded in the right context?</strong></p>
@@ -384,7 +397,7 @@
       <li><strong>Policy and decision memory</strong> that survives across tools, agents, and files</li>
     </ul>
 
-    <h2>Peer review is a preview of AI-assisted software governance</h2>
+    <h2 id="peer-review-is-a-preview-of">Peer review is a preview of AI-assisted software governance</h2>
     <p>Scientific peer review and AI-assisted development share the same structural problem.</p>
     <ul>
       <li>Both involve expert judgment over complex artifacts.</li>
@@ -396,7 +409,7 @@
     <p>The same failure mode appears in AI-assisted development. A coding agent can identify a real architectural concern, but apply it to the wrong part of the system. It can flag a missing guardrail that already exists. It can recommend a pattern that violates an ADR because the relevant decision was outside its active context. The model may be capable. The workflow is not governed.</p>
     <div class="callout"><p><strong>High-confidence output without grounded context is not a model problem.</strong> It is an infrastructure problem.</p></div>
 
-    <h2>Governance before generation, not review after damage</h2>
+    <h2 id="governance-before-generation-not-review-after">Governance before generation, not review after damage</h2>
     <p>If AI systems are going to generate, review, and coordinate technical work, they need access to the decisions that define what good looks like <a href="/concepts/governance-before-generation/">before they act</a>, not only after a human reviewer catches the mistake.</p>
     <p>In software, that looks like:</p>
     <ul>
@@ -408,7 +421,7 @@
     </ul>
     <p>This is the broader pattern the peer-review study is pointing at, restated for software. Better models do not remove the need for a verification layer. They raise the stakes of not having one.</p>
 
-    <h2>The future is not AI judgment alone &mdash; it is verified AI judgment</h2>
+    <h2 id="the-future-is-not-ai-judgment">The future is not AI judgment alone &mdash; it is verified AI judgment</h2>
     <p>The peer-review study should not be read as a simple replacement story. It is a warning that AI judgment is becoming useful enough to require infrastructure around it.</p>
     <p>The next question is not whether AI can produce expert-level criticism. Increasingly, it can. The harder question is whether organisations can verify, preserve, and enforce the context that makes that criticism trustworthy.</p>
     <div class="callout"><p><strong>As AI moves from assistance to review, approval, and autonomous execution, the governance question changes:</strong> how do you verify high-confidence outputs before they become operational decisions?</p></div>

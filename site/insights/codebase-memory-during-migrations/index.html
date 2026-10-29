@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A memory layer is most confident about the code you are removing and most out of date about the code you are moving toward, and cannot express which is which." />
   <meta name="robots" content="index, follow" />
@@ -379,29 +378,44 @@
 
 <div class="article-body">
 
-    <h2>Memory solves the session problem, not the migration problem</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#memory-solves-the-session-problem-not">Memory solves the session problem, not the migration problem</a></li>
+      <li><a href="#what-a-memory-layer-actually-holds">What a memory layer actually holds mid-migration</a></li>
+      <li><a href="#staleness-has-a-specific-shape-here">Staleness has a specific shape here</a></li>
+      <li><a href="#durability-turns-a-snapshot-into-a">Durability turns a snapshot into a commitment</a></li>
+      <li><a href="#memory-has-no-notion-of-authority">Memory has no notion of authority</a></li>
+      <li><a href="#what-memory-would-need-to-become">What memory would need to become governance</a></li>
+      <li><a href="#not-an-argument-for-forgetting">Not an argument for forgetting</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
+    <h2 id="memory-solves-the-session-problem-not">Memory solves the session problem, not the migration problem</h2>
     <p>Persistent codebase-memory tools exist to fix a real and annoying failure: an agent that starts every session knowing nothing, rediscovering the same structure, asking the same questions, drawing the same wrong conclusions it drew last week. A memory layer that carries understanding across sessions is a genuine improvement, and on a stable codebase it mostly just works.</p>
     <p>A migration breaks the assumption underneath it. Memory is valuable when what it remembers stays true. During a migration, the thing being remembered is changing underneath the memory, component by component, for months. What was an accurate description of a service in March is a description of a service that no longer exists by June.</p>
 
-    <h2>What a memory layer actually holds mid-migration</h2>
+    <h2 id="what-a-memory-layer-actually-holds">What a memory layer actually holds mid-migration</h2>
     <p>Consider what gets stored. An agent works on the orders service in the legacy tree, learns that it reaches the database directly, that its error handling follows a particular shape, that a certain helper is the conventional way to load a customer. All of that is accurate. All of it is written down.</p>
     <p>Three months later the orders service has migrated. It now reaches persistence through a repository port, its error handling follows the target pattern, and the helper is deprecated. The memory layer still holds the March description, and nothing about the migration told it otherwise, because migrating a component is not an event a memory layer observes. It is a series of commits that look, individually, like ordinary work.</p>
     <div class="callout"><p><strong>Memory is a record of what was true when it was written. A migration's entire purpose is to make that record wrong.</strong></p></div>
 
-    <h2>Staleness has a specific shape here</h2>
+    <h2 id="staleness-has-a-specific-shape-here">Staleness has a specific shape here</h2>
     <p>Ordinary memory staleness is diffuse: a few facts drift, the agent is a bit out of date, someone corrects it. Migration staleness is structured, and that makes it more dangerous.</p>
     <p>It is not random facts going stale. It is specifically the components that have already been fixed whose descriptions are wrong, while the components that have not been touched are still described perfectly. The memory is most accurate about exactly the code you least want copied, and least accurate about the code you want treated as the model.</p>
     <p>An agent drawing on that memory to decide how the system does things will weight the still-accurate legacy descriptions correctly and the stale target descriptions incorrectly, and it will do so with more confidence than a cold-start agent would have had.</p>
 
-    <h2>Durability turns a snapshot into a commitment</h2>
+    <h2 id="durability-turns-a-snapshot-into-a">Durability turns a snapshot into a commitment</h2>
     <p>The property that makes memory useful, that it persists, is the property that hurts here. A cold-start agent reading a half-migrated repository at least reads the current state, including the migrated components in their new form. An agent consulting a memory layer built up over the migration reads an accumulation, weighted toward whenever each component was last examined in depth.</p>
     <p>Re-indexing helps and does not solve it. A refreshed index tells you what the code looks like now; it still does not tell you which of the two shapes present in the repository is the one that should survive. That question was never a property of the code, so no amount of re-reading the code answers it.</p>
 
-    <h2>Memory has no notion of authority</h2>
+    <h2 id="memory-has-no-notion-of-authority">Memory has no notion of authority</h2>
     <p>The deeper limitation is not staleness, which is at least fixable by re-indexing. It is that a memory layer stores observations, and observations do not carry precedence.</p>
     <p>If a memory layer holds both "the orders service uses a repository port" and "services in this system query the database directly," it has no basis for ranking them. Both were observed. Both were true of something at some point. Nothing in the storage format expresses that one is a decision the organization intends to hold and the other is a description of what is being removed. Recall gives you both facts and leaves the ranking to the agent, which resolves it the way anything resolves an unranked set: by weight of evidence, which points at the legacy side.</p>
 
-    <h2>What memory would need to become governance</h2>
+    <h2 id="what-memory-would-need-to-become">What memory would need to become governance</h2>
     <p>The gap is specific enough to name. To be useful during a migration, a stored fact would need three properties that a memory layer does not give it:</p>
     <ul>
       <li><strong>Authority.</strong> Not "this pattern was observed here" but "this pattern is the one that governs new work," which is a claim about intent, not observation.</li>
@@ -410,11 +424,11 @@
     </ul>
     <p>Those are the properties of a recorded decision, not of a remembered observation. This is the same distinction the <a href="/insights/adrs-for-software-migrations/">migration ADR states</a> formalize, and the reason the decision has to live somewhere other than the index.</p>
 
-    <h2>Not an argument for forgetting</h2>
+    <h2 id="not-an-argument-for-forgetting">Not an argument for forgetting</h2>
     <p>None of this is an argument against codebase memory. Knowing what the legacy system actually does is often the hardest part of a migration, and it is exactly what a memory layer is good at. Writing a correct compatibility adapter requires deep, durable knowledge of the code being replaced.</p>
     <p>The argument is that this strength is being asked to cover a different job. Memory answers "what is this system." A migration also needs an answer to "which of these two systems am I supposed to be building," and that answer is a decision somebody made, recorded somewhere an agent is checked against rather than somewhere it might recall.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>A memory layer during a migration is most confident about the code you are removing and most out of date about the code you are moving toward, and it has no way to express which is which. That is not a flaw in the tooling. It is a category difference between remembering what a system is and deciding what it should become.</p>
 
   </div><!-- /.article-body -->

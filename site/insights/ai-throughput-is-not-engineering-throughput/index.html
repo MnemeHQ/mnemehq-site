@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="NBER research tracking 500,000+ GitHub developers found autonomous coding agents produce a 240% increase in coding activity, attenuating to a 30% increase in actual releases. The gap is not a measurement error." />
   <meta name="robots" content="index, follow" />
@@ -300,16 +299,30 @@
 
   <div class="article-body">
 
-    <h2>Two numbers from the same study</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#two-numbers-from-the-same-study">Two numbers from the same study</a></li>
+        <li><a href="#the-number-that-gets-quoted-and">The number that gets quoted, and the number that matters</a></li>
+        <li><a href="#throughput-was-always-the-wrong-unit">Throughput was always the wrong unit</a></li>
+        <li><a href="#why-the-paper-calls-it-complementarity">Why the paper calls it complementarity, not substitution</a></li>
+        <li><a href="#projects-attenuate-less-than-releases-and">Projects attenuate less than releases, and that's informative too</a></li>
+        <li><a href="#what-this-changes-about-how-you">What this changes about how you measure</a></li>
+        <li><a href="#what-a-higher-release-attenuation-number">What a higher release-attenuation number would take</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="two-numbers-from-the-same-study">Two numbers from the same study</h2>
     <p>NBER Working Paper 35275, published in May 2026 and revised that September, tracked more than 500,000 GitHub developers alongside their AI-tool usage. Its authors, Mert Demirer, Leon Musolff, and Liyuan Yang, isolated the effect of three tool generations on coding activity: autocomplete produced a 30% cumulative increase, interactive coding agents 180%, and autonomous coding agents 240%.</p>
     <p>Then they followed that activity downstream. The 240% gain in coding activity from autonomous agents falls to an 80% gain at the project level, and to 30% by the time it reaches an actual software release.</p>
     <p>Both numbers are real. Coding activity really did increase 240%. Releases really did increase only 30%. The interesting question isn&rsquo;t which number to believe. It&rsquo;s why anyone expected them to be the same number in the first place.</p>
 
-    <h2>The number that gets quoted, and the number that matters</h2>
+    <h2 id="the-number-that-gets-quoted-and">The number that gets quoted, and the number that matters</h2>
     <p>240% is the number that shows up in headlines, because it's the biggest and it's the one closest to what a vendor demo optimizes for. It is also the number furthest from anything a business cares about. Coding activity in this study is operationalized as commits, the raw exhaust of an agent working. An organization does not derive value from exhaust. It derives value from software that reaches users and keeps working.</p>
     <p>30% is closer to that, and it's still not quite it, because a release can ship and still be the wrong thing, or ship and quietly make the next six releases harder. But it's a much better proxy than activity, and the distance between the two numbers, 240% down to 30%, is a more honest picture of what autonomous agents currently deliver than either number alone.</p>
 
-    <h2>Throughput was always the wrong unit</h2>
+    <h2 id="throughput-was-always-the-wrong-unit">Throughput was always the wrong unit</h2>
     <p>Commits, PRs opened, and lines generated share a property that made them convenient proxies for engineering output during the era when producing code was the expensive part: they correlated reasonably well with delivered software, because a human being writing code was also, in the same act, applying judgment about whether that code belonged in the system. Slow generation and considered generation were, for most of software history, close to the same thing.</p>
     <p>Coding agents break that correlation on purpose. They are explicitly built to separate the two: generate fast, let something else decide whether the output is right. That's a legitimate design, and it's exactly why counting what an agent generates no longer tells you what the organization received. A commit an agent produced in nine seconds and a commit a senior engineer spent two hours writing are not comparable units just because a version-control system logs them the same way.</p>
     <div class="callout"><p><strong>The relevant unit of AI coding productivity was never generated code. It is production-ready change &mdash; the subset of what an agent produces that survives contact with review, integration, and operation without being rewritten.</strong> Coding activity measures the numerator. Releases measure something closer to the thing that actually matters.</p></div>
@@ -324,21 +337,21 @@
   </div>
 </aside>
 
-    <h2>Why the paper calls it complementarity, not substitution</h2>
+    <h2 id="why-the-paper-calls-it-complementarity">Why the paper calls it complementarity, not substitution</h2>
     <p>The paper estimates an elasticity of substitution of 0.23 between AI output and human effort. That figure is doing more work than it looks like it's doing. An elasticity near zero would mean AI output and human effort are strong complements: more AI-generated code does not substitute for the human work downstream of it, including review, but adding to it rather than replacing it. An elasticity near one would mean they substitute for each other more freely, AI output standing in for human effort rather than adding a new category of it.</p>
     <p>0.23 sits close to the complements end. In plain terms: agents did not make review optional, or even make it scale down. They made there be more to review, faster, than there used to be. The 240%-to-30% gap is what that complementarity looks like when the review-and-reconciliation side of the system doesn&rsquo;t scale at the same rate the generation side just did.</p>
     <p>This is worth contrasting with what a substitution story would predict, because it's the intuitive but wrong mental model many teams are still running on. If AI output substituted for human review effort, the story would be: agents write the code, humans do less checking, throughput and releases rise together because the whole pipeline sped up. That's not what a 0.23 elasticity describes. It describes a pipeline where the input got dramatically cheaper and the rest of the pipeline is now the binding constraint, which is a different problem with a different fix. You don't fix an overloaded review stage by generating more for reviewers to look at. You fix it by reducing how much of what reaches review needs a human to catch it in the first place.</p>
 
-    <h2>Projects attenuate less than releases, and that's informative too</h2>
+    <h2 id="projects-attenuate-less-than-releases-and">Projects attenuate less than releases, and that's informative too</h2>
     <p>The middle data point matters as much as the endpoints. Coding activity attenuates to 80% at the project level before it attenuates further to 30% at the release level. That two-stage drop maps onto two different failure modes. Between activity and projects, the loss looks like work that never coheres into something worth continuing, agents producing plausible-looking changes that don&rsquo;t survive a second look. Between projects and releases, the loss looks like the verification and integration tax this cluster has <a href="/insights/ai-coding-agent-verification-tax/">measured elsewhere</a>: work that is directionally right but has to be reconciled with everything around it before it&rsquo;s safe to ship.</p>
     <p>Architectural drift lives specifically in that second stage. A change can be internally correct, pass its own tests, and still be the thing a reviewer has to catch because it contradicts a decision the codebase already depends on. Multiply that reconciliation cost by however much faster generation has gotten, and the release-stage attenuation stops being surprising. It's what you'd expect from a system where the input rate tripled and the checking mechanism did not.</p>
 
-    <h2>What this changes about how you measure</h2>
+    <h2 id="what-this-changes-about-how-you">What this changes about how you measure</h2>
     <p>If throughput isn&rsquo;t the unit, the metrics built around throughput need a caveat attached to every one of them. Commits per day, tasks completed, and adoption rate are still worth tracking as leading indicators of how much an organization is using its AI tools. None of them tell you what fraction of that activity turned into something the organization kept.</p>
     <p>The number that answers that question sits at the project-to-release boundary, and it's rarely instrumented directly. It requires distinguishing generation volume from delivered volume, which is the <a href="/insights/ai-engineering-roi/">generation/delivery/governance framework</a> this cluster uses, and then asking a further, more specific question inside the delivery layer: of what didn&rsquo;t survive to release, how much failed because it was wrong, and how much failed because it was right but incompatible with a decision nobody encoded anywhere an agent could check it against.</p>
     <p>The second category is the one that's actually preventable before the fact rather than only catchable after it. Architectural incompatibility is one contributor to the gap between the 80% project-level number and the 30% release number, not the whole of it, alongside requirements churn and ordinary review capacity. For the share that is architectural, the lever is not more review capacity but fewer of the incompatible changes reaching review in the first place.</p>
 
-    <h2>What a higher release-attenuation number would take</h2>
+    <h2 id="what-a-higher-release-attenuation-number">What a higher release-attenuation number would take</h2>
     <p>Of the levers available to close the gap between 240% and 30%, two matter most for a single engineering organization deciding what to do about its own numbers, and only one of them is actually available to that organization. The first is slower, more conservative agents that generate less in the first place, which nobody buying these tools actually wants, and which would just move the industry back toward the throughput numbers the field is trying to leave behind. The second is a review-and-reconciliation layer that scales with generation instead of staying fixed at human-review speed.</p>
     <p>For the specific slice of reconciliation cost this site addresses, architectural incompatibility, that means moving part of the check earlier: evaluating a proposed change against the decisions a codebase already depends on before the change is written, rather than discovering the conflict when a reviewer happens to notice it. That doesn't touch the requirements-churn or organizational-friction share of the 240%-to-30% gap. It targets the share that is mechanical, and mechanical costs are the ones a deterministic check can remove rather than merely detect.</p>
     <p>None of that changes what the NBER numbers say happened in 2026. It changes what the same measurement would show for an organization that closed part of the gap: a smaller drop from project-level activity to shipped releases, because fewer of the changes reaching that boundary needed a human to catch what should have been caught earlier.</p>

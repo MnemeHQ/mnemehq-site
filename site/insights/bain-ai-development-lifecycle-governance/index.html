@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Bain's AI Development Lifecycle report says leaders expect 5-10x productivity gains. The AI-DLC creates governance surfaces traditional delivery never had." />
   <meta name="robots" content="index, follow" />
@@ -296,8 +295,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-bain-s-ai-development-lifecycle">What Bain&rsquo;s AI Development Lifecycle Report Found</a></li>
+        <li><a href="#the-ai-dlc-collapses-the-product">The AI-DLC Collapses the Product/Engineering Boundary</a></li>
+        <li><a href="#bain-already-says-it-risk-as">Bain Already Says It: Risk as a First-Class Constraint</a></li>
+        <li><a href="#new-governance-surfaces-across-the-lifecycle">New Governance Surfaces Across the Lifecycle</a></li>
+        <li><a href="#bain-s-measurement-shift-makes-governance">Bain&rsquo;s Measurement Shift Makes Governance a Scorecard Dimension</a></li>
+        <li><a href="#the-layer-after-the-ai-dlc">The Layer After the AI-DLC</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Bain&rsquo;s AI Development Lifecycle Report Found</h2>
+
+    <h2 id="what-bain-s-ai-development-lifecycle">What Bain&rsquo;s AI Development Lifecycle Report Found</h2>
     <p>Bain &amp; Company argues that organizations must move beyond isolated pilots and single-point optimizations: the shift underway is from AI-assisted to AI-led development. <a href="https://www.bain.com/insights/the-rise-of-the-ai-development-life-cycle/">The Rise of the AI Development Life Cycle</a> puts numbers on the gap. In 2024, companies reported 10-15% productivity gains from AI coding tools, with leaders reaching 30%. Leaders now anticipate 5-10x gains over the next several years, where previous projections topped out at 20-30%. &ldquo;The idea of the &lsquo;5 times to 10 times engineer&rsquo; is no longer theoretical, quickly becoming reality,&rdquo; the report states.</p>
     <p>Adoption is already broad: 63% of companies report higher output per engineer, and 53% report faster release cycles and shorter time to market. Yet most companies still see only single-digit efficiency gains from pilots. Bain calls this the pilot paradox. Companies that pursue end-to-end transformation expect the 5-10x trajectory; fragmented approaches stagnate.</p>
     <p>The report&rsquo;s answer is the AI Development Life Cycle, or AI-DLC. The name does real work. It signals that AI in software delivery has outgrown the tool stage and become a lifecycle question &mdash; the same kind of question DevOps once was. Lifecycle questions come with a property tool questions never had: every stage is a place where the organization&rsquo;s intent either holds or quietly fails.</p>
@@ -311,23 +323,23 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The AI-DLC Collapses the Product/Engineering Boundary</h2>
+<h2 id="the-ai-dlc-collapses-the-product">The AI-DLC Collapses the Product/Engineering Boundary</h2>
     <p>The AI-DLC&rsquo;s central move is structural. It collapses the separation between the product lifecycle &mdash; what to build &mdash; and the software development lifecycle &mdash; how to build it. In Bain&rsquo;s model, AI participates across requirements, code generation, testing, and refinement. A single workflow can run from product brief to deployed code with AI active at every step, which is why Bain treats <a href="/insights/what-is-the-ai-sdlc/">the AI SDLC</a> as one continuous loop.</p>
     <p>Developer roles change with it. Bain describes engineers becoming &ldquo;agent architects and orchestrators&rdquo;: work restructures around agent capabilities, with fresh context windows per stage and human review at critical decision points. The unit of automation becomes the workflow itself.</p>
     <p>That design has a consequence Bain&rsquo;s own principles anticipate. In an <a href="/concepts/ai-native-sdlc/">AI-native SDLC</a>, each stage hands off to the next through artifacts &mdash; a requirement, a specification, a diff, a test suite &mdash; and each handoff occurs between an agent with a fresh context window and an agent that never saw the original conversation. Fresh context per stage is sensible engineering. It also means nothing carries the organization&rsquo;s architectural intent between stages by default. Bain knows this, which is why two of its five principles address exactly that problem.</p>
 
-    <h2>Bain Already Says It: Risk as a First-Class Constraint</h2>
+    <h2 id="bain-already-says-it-risk-as">Bain Already Says It: Risk as a First-Class Constraint</h2>
     <p>One of Bain&rsquo;s five principles is named &ldquo;Risk as first-class constraint,&rdquo; and it reads like a governance specification. Risk governance is embedded from design: permissioning, policy-as-code guardrails, auditability, evaluation harnesses, secrets protection, and defined human checkpoints for high-risk changes. Most coverage of this report will repeat the 5-10x figure and skip this section. The skipped section is the operative one.</p>
     <p>A second principle, &ldquo;Context is king,&rdquo; makes the same point from the input side. Bain says success depends on end-to-end lifecycle context: product intent, architecture, code conventions, telemetry, security posture, risk policies, customer signals. Architecture and risk policies appear on that list as context agents must receive &mdash; which is precisely the argument for <a href="/insights/agent-governance-in-the-sdlc/">governance that lives inside the SDLC</a> instead of beside it.</p>
     <p>A third principle, &ldquo;Buy vs. build intentionality,&rdquo; tells companies where this layer should come from: buy commoditized tooling, build the differentiating context layers, domain ontology, guardrails, and shipping workflows. Bain is telling enterprises that their guardrails and context layer are proprietary assets worth engineering deliberately.</p>
     <div class="callout"><p><strong>Bain puts governance inside the lifecycle design.</strong> Policy-as-code guardrails, auditability, evaluation harnesses, and defined human checkpoints appear in the AI-DLC&rsquo;s architecture itself &mdash; constraints the lifecycle is built around, with no compliance review bolted on at the end.</p></div>
 
-    <h2>New Governance Surfaces Across the Lifecycle</h2>
+    <h2 id="new-governance-surfaces-across-the-lifecycle">New Governance Surfaces Across the Lifecycle</h2>
     <p>Traditional delivery concentrated governance on one surface: source code. Review the diff, run the linter, gate the merge &mdash; the architecture was defended where code changed, because code was where humans expressed decisions. The AI-DLC multiplies that surface. When AI participates across requirements, code generation, testing, and refinement, the artifacts that carry intent multiply with it: requirements, specifications, recorded decisions, generated code, tests, pull requests, deployment workflows, CI artifacts, agent memory.</p>
     <p>Each one is a place where an architectural decision can be silently violated. An agent can draft a specification that contradicts a decision the team recorded eight months ago. A test generator can encode the wrong invariant and make the violation green. A deployment workflow assembled by an agent can skip a checkpoint no human remembers defining. The fresh-context-window design Bain describes sharpens the risk: each stage starts clean, so each stage re-derives intent unless intent is delivered to it.</p>
     <p>This is the propagation problem. The constraints the organization has decided on have to reach every surface where an agent acts &mdash; the same constraints, enforced identically, at requirements time and at merge time. <a href="/concepts/governance-propagation/">Governance propagation</a> is the property the AI-DLC quietly assumes: Bain&rsquo;s &ldquo;Context is king&rdquo; principle lists what must arrive at each stage, and propagation is the mechanism that gets it there.</p>
 
-    <h2>Bain&rsquo;s Measurement Shift Makes Governance a Scorecard Dimension</h2>
+    <h2 id="bain-s-measurement-shift-makes-governance">Bain&rsquo;s Measurement Shift Makes Governance a Scorecard Dimension</h2>
     <p>Bain states that traditional DORA metrics, designed for human-written code, are insufficient for the AI-DLC. The report prescribes three changes. Measurement must segment by authorship, separating human from agent-generated work. It must track system-level metrics: end-to-end cycle time, human intervention rate, flow efficiency. And it must elevate governance &mdash; treating risk, control, and operating-model health as first-class scorecard dimensions alongside speed and quality. That third change carries the infrastructure consequences, and it matches the argument that <a href="/insights/dora-metrics-insufficient-for-agentic-development/">DORA metrics are necessary but insufficient for agentic development</a>.</p>
     <p>&ldquo;If you can&rsquo;t measure it, you can&rsquo;t scale it,&rdquo; the report says. Apply that sentence to governance and a requirement falls out: a scorecard dimension needs a data source. You cannot put control health on an engineering scorecard while controls live in wiki pages and tribal memory. Each of Bain&rsquo;s measurement shifts implies an engineering capability that has to exist before the metric can:</p>
 
@@ -344,7 +356,7 @@
 
     <p>The third row is the hard one. Speed and quality metrics fall out of existing toolchains; governance metrics require architectural constraints written in machine-checkable form, evaluated deterministically, and logged with provenance. That is new infrastructure, and Bain&rsquo;s scorecard cannot exist without it.</p>
 
-    <h2>The Layer After the AI-DLC</h2>
+    <h2 id="the-layer-after-the-ai-dlc">The Layer After the AI-DLC</h2>
     <p>Every shift in how software ships has pulled a new infrastructure layer into existence. Continuous delivery produced CI/CD. Distributed systems produced observability. Internal platform complexity produced platform engineering. AI coding tools produced the current generation of assistants and harnesses. The AI-DLC Bain describes is the next shift &mdash; and it creates the demand for the layer after it: architectural governance that operates across all of the new surfaces at once.</p>
     <p>Bain has already named the requirement. &ldquo;Risk as first-class constraint&rdquo; calls for policy-as-code guardrails, auditability, evaluation harnesses, and defined human checkpoints. For coding agents, those abstractions become concrete as <a href="/concepts/verification-contracts/">verification contracts</a>: deterministic, pre-registered checks that evaluate every agent-produced change against the decisions the organization has recorded &mdash; the same verdict for the same change, every time, with a log auditors can read. That is how a principle in a consultancy report turns into something a CI pipeline can enforce.</p>
     <p>Bain closes by redefining the goal: engineering excellence is no longer how fast teams can code but how effectively the organization learns, adapts, and delivers at AI pace. An organization cannot adapt at AI pace if its architectural decisions travel at meeting pace. The 5-10x engineer arrives with the AI-DLC. Whether the system that engineer works in still resembles its intended architecture a year later depends on the layer Bain&rsquo;s report points to &mdash; the one the market has barely begun to build.</p>

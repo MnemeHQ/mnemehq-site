@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Follow one ADR through eight stages, from record to governed decision, and see what an AI coding agent gets wrong if your decision records stop at each one." />
   <meta name="robots" content="index, follow" />
@@ -370,40 +369,58 @@
   </header>
 
 <div class="article-body">
-<h2>One decision, followed all the way</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#one-decision-followed-all-the-way">One decision, followed all the way</a></li>
+      <li><a href="#stage-0-the-record">Stage 0: the record</a></li>
+      <li><a href="#stage-1-lifecycle">Stage 1: lifecycle</a></li>
+      <li><a href="#stage-2-scope-and-applicability">Stage 2: scope and applicability</a></li>
+      <li><a href="#stage-3-authority-and-provenance">Stage 3: authority and provenance</a></li>
+      <li><a href="#stage-4-relationships-and-precedence">Stage 4: relationships and precedence</a></li>
+      <li><a href="#stage-5-retrieval-for-the-task">Stage 5: retrieval for the task</a></li>
+      <li><a href="#stage-6-enforcement">Stage 6: enforcement</a></li>
+      <li><a href="#stage-7-evidence">Stage 7: evidence</a></li>
+      <li><a href="#you-do-not-need-every-stage">You do not need every stage on day one</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="one-decision-followed-all-the-way">One decision, followed all the way</h2>
 <p>Take one architecture decision record (ADR): <strong>ADR-118: Outbound HTTP from the payments services goes through the internal client.</strong> The internal client handles retries, authentication and audit logging. A team wrote the ADR two years ago. It sits in <code>docs/adr/</code>, it is well argued, and every senior engineer knows it.</p>
 <p>A coding agent reads the same file as text. It can quote the decision. What it cannot tell from the text alone is whether the decision still holds, which code it covers, who agreed to it, or what to do when another decision points the other way.</p>
 <p>This article follows ADR-118 through the stages that turn a record into a governed decision. At each stage it asks one question: what does an agent get wrong if you stop here? The definition and the full anatomy live on the <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> concept page. This is the stage-by-stage version.</p>
 
-<h2>Stage 0: the record</h2>
+<h2 id="stage-0-the-record">Stage 0: the record</h2>
 <p>The ADR states the decision, the context and the consequences. For a human reader that is often enough, because the reader also knows the history.</p>
 <p><strong>If you stop here:</strong> the agent retrieves ADR-118 alongside an older design note that lets each service pick its own HTTP library. Both are text. Both look authoritative. The agent picks one, and you find out which in review.</p>
 
-<h2>Stage 1: lifecycle</h2>
+<h2 id="stage-1-lifecycle">Stage 1: lifecycle</h2>
 <p>The decision gets a status (proposed, accepted, superseded, deprecated) and an explicit link to what it replaced. ADR-118 supersedes ADR-074, which let each service choose its own library.</p>
 <p><strong>If you stop here:</strong> with a status recorded, the agent can tell ADR-074 is no longer in force. It still applies ADR-118 everywhere. Lifecycle tells you <em>whether</em> a decision holds, not <em>where</em>.</p>
 
-<h2>Stage 2: scope and applicability</h2>
+<h2 id="stage-2-scope-and-applicability">Stage 2: scope and applicability</h2>
 <p>The decision says which code it governs. ADR-118 covers <code>services/payments/**</code>. It deliberately excludes the sandbox tooling that calls a card network's test API directly by design.</p>
 <p><strong>If you stop here:</strong> the agent applies the right decision to the right code, but cannot tell an accepted decision from a draft someone pasted into the wiki. Every document with the right shape carries the same weight.</p>
 
-<h2>Stage 3: authority and provenance</h2>
+<h2 id="stage-3-authority-and-provenance">Stage 3: authority and provenance</h2>
 <p>The decision records its provenance, meaning where it came from, and that someone with the right to adopt it did so. A proposal from an agent, or from a single engineer, is not the same as an accepted decision.</p>
 <p><strong>If you stop here:</strong> each decision is trustworthy on its own. When two accepted decisions disagree about the same file, something still picks one silently.</p>
 
-<h2>Stage 4: relationships and precedence</h2>
+<h2 id="stage-4-relationships-and-precedence">Stage 4: relationships and precedence</h2>
 <p>Decisions relate to each other: one supersedes, one refines, one is an exception to another. When two accepted decisions both apply, a precedence rule decides which wins, and the losing decision is visibly set aside rather than quietly dropped. The <a href="/insights/why-architectural-governance-needs-precedence-semantics/">precedence semantics</a> article covers why this is harder than it looks.</p>
 <p><strong>If you stop here:</strong> the decision model is sound, but the agent may never meet the decision at the moment it matters.</p>
 
-<h2>Stage 5: retrieval for the task</h2>
+<h2 id="stage-5-retrieval-for-the-task">Stage 5: retrieval for the task</h2>
 <p>When an agent is about to change <code>services/payments/refunds.py</code>, the decisions that apply to that file reach it, and the ones that do not stay out of its way. This is selection, not search: the question is which decisions govern this change, not which documents mention HTTP.</p>
 <p><strong>If you stop here:</strong> the agent is well informed and still free to ignore what it was told. Guidance is a request.</p>
 
-<h2>Stage 6: enforcement</h2>
+<h2 id="stage-6-enforcement">Stage 6: enforcement</h2>
 <p>A decision is not a rule. One decision can produce several machine-checkable rules, and some decisions produce none. ADR-118 can yield a rule that fails any change importing a third-party HTTP library in <code>services/payments/**</code>. Its line about setting timeouts deliberately yields no rule at all; it stays guidance for people and agents.</p>
 <p><strong>If you stop here:</strong> violations are caught, but afterwards nobody can show which decision, in which version, produced a given verdict.</p>
 
-<h2>Stage 7: evidence</h2>
+<h2 id="stage-7-evidence">Stage 7: evidence</h2>
 <p>Each verdict points back to the rule that fired and the decision version that rule came from. When ADR-118 changes, you can tell which verdicts were made under the old version and which under the new one.</p>
 <p>At this point the record has become a governed decision: current, scoped, authorised, ranked against its neighbours, delivered to the right change, checked where it can be, and traceable afterwards.</p>
 
@@ -421,11 +438,11 @@
   </tbody>
 </table>
 
-<h2>You do not need every stage on day one</h2>
+<h2 id="you-do-not-need-every-stage">You do not need every stage on day one</h2>
 <p>If your ADRs stop at stage 0 or 1, that is where agent mistakes start. The stages build on each other, so the order matters. Lifecycle and scope fix the two failures that are easiest to hit: following a replaced decision, and applying a decision to the wrong code. Precedence matters once decisions start to overlap. Enforcement only pays off for the decisions that are both expensive to break and possible to check mechanically.</p>
 <p>A practical sequence: give every ADR a status and an explicit supersedes link, give each one a path scope, decide who may accept a decision, then pick the five decisions you most need agents to respect and write rules for those. For a hands-on version of the last step, see <a href="/docs/how-to/adr-to-enforceable-decision/">turn an ADR into an enforceable decision</a>.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, implements part of this today for architectural decisions in a repository:</p>
 <ul>
   <li><strong>Lifecycle and versions.</strong> Its <a href="/docs/decision-index/">Decision Index</a>, the versioned record of a repository's decisions shipped in mneme-hq 0.10.0, keeps each decision's immutable versions and lifecycle status. Supersession comes from the ADR's own frontmatter, and only active decisions are enforced.</li>

@@ -7,7 +7,6 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Intent debt is the gap between architectural decisions and the code AI agents write. See why review misses it and how architectural drift prevention closes it." />
   <meta name="robots" content="index, follow" />
@@ -309,13 +308,31 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-augment-s-state-of-ai">What Augment&rsquo;s State of AI-Native Engineering 2026 report shows</a></li>
+        <li><a href="#what-is-intent-debt">What is intent debt?</a></li>
+        <li><a href="#why-implicit-intent-used-to-work">Why implicit intent used to work</a></li>
+        <li><a href="#why-agents-make-intent-debt-visible">Why agents make intent debt visible</a></li>
+        <li><a href="#review-is-too-late">Review is too late</a></li>
+        <li><a href="#memory-and-orchestration-are-not-governance">Memory and orchestration are not governance</a></li>
+        <li><a href="#the-missing-layer-intent-governance">The missing layer: intent governance</a></li>
+        <li><a href="#what-intent-governance-looks-like-in">What intent governance looks like in practice</a></li>
+        <li><a href="#what-engineering-leaders-should-do-now">What engineering leaders should do now</a></li>
+        <li><a href="#the-future-of-ai-native-engineering">The future of AI-native engineering is intent enforcement</a></li>
+        <li><a href="#references">References</a></li>
+        <li><a href="#related-reading">Related reading</a></li>
+      </ol>
+    </nav>
+
     <p>AI-native engineering is not failing because agents cannot write code. It is straining because agents can write code faster than organizations can preserve, update, and enforce intent.</p>
 
     <p>Industry signals are starting to name the pattern. Augment's <a class="ext" href="https://www.augmentcode.com/lp/state-of-ai-native-engineering-2026-report" target="_blank" rel="noopener">State of AI-Native Engineering 2026</a> reports that nearly half of new code is now AI-generated, while confidence, comprehension, role definitions, onboarding, and process changes lag behind. The framing has shifted from "can AI write code" to "what is happening to the work around the code." The survey separates the strain into compounding debt layers — and the layer that matters most is also the least named.</p>
 
     <p>The problem is not only technical debt. It is not only cognitive debt. It is <strong>intent debt</strong> &mdash; and naming it is the precondition for fixing it.</p>
 
-    <h2>What Augment&rsquo;s State of AI-Native Engineering 2026 report shows</h2>
+    <h2 id="what-augment-s-state-of-ai">What Augment&rsquo;s State of AI-Native Engineering 2026 report shows</h2>
     <p>The report surveys engineering leaders on what is actually happening as AI-generated code becomes a majority of new code. The picture across the responses is consistent: <strong>generation velocity is rising faster than the work around the code can keep up</strong>. Shipping confidence, codebase comprehension, role definitions, onboarding, and process governance all lag behind the volume of AI-generated change. The strain shows up as compounding debt layers:</p>
     <ul>
       <li><strong>Technical debt</strong> &mdash; the code itself becomes harder to maintain</li>
@@ -333,7 +350,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What is intent debt?</h2>
+<h2 id="what-is-intent-debt">What is intent debt?</h2>
 
     <p>Intent debt is the gap between what a system is supposed to preserve and what its AI agents are actually constrained to follow.</p>
 
@@ -356,7 +373,7 @@
 
     <p class="pullquote">Technical debt lives in code. Cognitive debt lives in people. Intent debt lives in the space between decisions and execution.</p>
 
-    <h2>Why implicit intent used to work</h2>
+    <h2 id="why-implicit-intent-used-to-work">Why implicit intent used to work</h2>
 
     <p>Before agentic development, intent could survive informally. Senior engineers remembered past decisions and routed work around old landmines. Reviewers caught violations on the way in. Onboarding transmitted conventions over months of pairing and PR feedback. Architecture docs were imperfect, but humans filled the gaps in real time. Implementation speed was slow enough for review to absorb drift.</p>
 
@@ -364,7 +381,7 @@
 
     <p>Agents do not carry that context. They execute on whatever is in the prompt window — and the things humans used to fill in silently are now load-bearing absences.</p>
 
-    <h2>Why agents make intent debt visible</h2>
+    <h2 id="why-agents-make-intent-debt-visible">Why agents make intent debt visible</h2>
 
     <p>Agents do not inherit implicit judgment. They inherit whatever context happens to be in scope. So when execution accelerates without a corresponding upgrade in how intent is captured and surfaced, the gap stops being theoretical.</p>
 
@@ -383,7 +400,7 @@
 
     <p class="pullquote">AI does not create intent debt. It reveals it by executing faster than the organization can correct it.</p>
 
-    <h2>Review is too late</h2>
+    <h2 id="review-is-too-late">Review is too late</h2>
 
     <p>Most teams' first instinct is to harden review. Add a PR bot. Train reviewers on AI-generated code. Tighten the checks at the merge gate.</p>
 
@@ -407,7 +424,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>Memory and orchestration are not governance</h2>
+    <h2 id="memory-and-orchestration-are-not-governance">Memory and orchestration are not governance</h2>
 
     <p>The other instinct is to throw more context at the agent. Add a memory layer. Add retrieval. Add an orchestrator that routes tasks across tools. All of these are real, useful capabilities. None of them are governance.</p>
 
@@ -415,7 +432,7 @@
 
     <p>Memory can retrieve stale or conflicting information. Orchestration can route a task to the wrong tool with full fidelity. Observability tells you the violation happened. Review catches a fraction of what surfaces. The missing layer is not more context. It is <strong>enforceable context</strong>.</p>
 
-    <h2>The missing layer: intent governance</h2>
+    <h2 id="the-missing-layer-intent-governance">The missing layer: intent governance</h2>
 
     <p>Intent governance is the practice of turning architectural decisions, constraints, and operating rules into enforceable contracts that agents and humans must respect during software delivery.</p>
 
@@ -444,7 +461,7 @@
       </ol>
     </div>
 
-    <h2>What intent governance looks like in practice</h2>
+    <h2 id="what-intent-governance-looks-like-in">What intent governance looks like in practice</h2>
 
     <p><strong>Dependency governance.</strong> Intent: "Do not introduce a second auth library." Without governance, an agent adds one because it solves the immediate task; the violation is caught in review, if it is caught at all. With governance, the constraint is surfaced before the agent writes the import, and the alternative path — the approved library — is part of the context the agent generates against.</p>
 
@@ -452,7 +469,7 @@
 
     <p><strong>Generated artifact drift.</strong> Intent: "All public artifacts follow naming and provenance conventions." Without governance, automation emits branches, PR titles, release notes, and generated docs outside repo standards — because each of those surfaces is treated as cosmetic. With governance, those surfaces are treated as first-class governance targets: the same constraints that gate code apply to everything an agent emits on the way to shipping it.</p>
 
-    <h2>What engineering leaders should do now</h2>
+    <h2 id="what-engineering-leaders-should-do-now">What engineering leaders should do now</h2>
 
     <ol class="" style="margin: 0 0 1.5rem 1.5rem; color: var(--muted); font-size: 0.92rem; line-height: 1.85;">
       <li style="margin-bottom: 0.4rem;"><strong style="color: var(--text); font-weight: 500;">Inventory</strong> where architectural intent currently lives — ADRs, wikis, Slack threads, individual heads.</li>
@@ -466,7 +483,7 @@
       <p><strong>The reframing.</strong> Do not start by asking "which agent should we use?" Ask: "what intent must every agent preserve?"</p>
     </div>
 
-    <h2>The future of AI-native engineering is intent enforcement</h2>
+    <h2 id="the-future-of-ai-native-engineering">The future of AI-native engineering is intent enforcement</h2>
 
     <p>AI-native engineering changes the execution layer. That means governance has to move closer to execution too. The teams that adapt will not be the ones generating the most code. They will be the ones that can preserve intent while code generation accelerates.</p>
 
@@ -474,7 +491,7 @@
 
     <p>The next bottleneck in AI-native engineering is not code generation. It is intent enforcement.</p>
 
-    <h2>References</h2>
+    <h2 id="references">References</h2>
     <ul>
       <li>Augment Code. <a class="ext" href="https://www.augmentcode.com/lp/state-of-ai-native-engineering-2026-report" target="_blank" rel="noopener">State of AI-Native Engineering 2026</a>. Industry report on AI-generated code adoption, confidence, and the technical / cognitive / intent debt framing.</li>
     </ul>

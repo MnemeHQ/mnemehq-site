@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Agents do not widen the forward-deployed engineer's context deficit. They raise the rate at which it converts into committed code, which breaks the review arrangement that used to contain it." />
   <meta name="robots" content="index, follow" />
@@ -300,24 +299,40 @@
 
   <div class="article-body">
 
-    <h2>The job stops being implementation</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-job-stops-being-implementation">The job stops being implementation</a></li>
+        <li><a href="#the-leverage-is-real">The leverage is real</a></li>
+        <li><a href="#the-asymmetry-gets-wider">The asymmetry gets wider</a></li>
+        <li><a href="#the-arrangement-that-breaks-is-review">The arrangement that breaks is review</a></li>
+        <li><a href="#instructions-do-not-transfer-constraints-do">Instructions do not transfer; constraints do</a></li>
+        <li><a href="#what-this-means-for-multi-customer">What this means for multi-customer leverage</a></li>
+        <li><a href="#what-the-resequenced-engagement-looks-like">What the resequenced engagement looks like</a></li>
+        <li><a href="#the-handoff-finally-has-an-artifact">The handoff finally has an artifact</a></li>
+        <li><a href="#where-the-judgement-still-lives">Where the judgement still lives</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-job-stops-being-implementation">The job stops being implementation</h2>
     <p>The obvious thing to say about coding agents and forward-deployed engineering is that agents make the work faster. That is true and it is the least interesting part.</p>
     <p>The substantial change is to what the role is. A forward-deployed engineer used to be the person translating between a vendor&rsquo;s product and a customer&rsquo;s technical environment, and the translation was performed largely by writing code. With a capable agent, the engineer increasingly becomes the person <em>supervising another software-producing system operating inside someone else&rsquo;s environment</em>.</p>
     <p>That is a different job. It has different scarce resources, different failure modes, and a different definition of what the engineer needs to know.</p>
 
-    <h2>The leverage is real</h2>
+    <h2 id="the-leverage-is-real">The leverage is real</h2>
     <p>Start with why organizations are doing this, because the incentive is strong and dismissing it would be wrong.</p>
     <p>An agent can explore an unfamiliar repository far faster than a person reading it cold. It can produce adapters, migration scripts, data transformations, test suites and glue code at a rate that changes what is economically viable for a single customer. Work that previously could not be justified for one deployment becomes justifiable. An FDE organization that could staff ten concurrent deployments may be able to staff considerably more.</p>
     <p>For a business whose gross margin is determined by how much human engineering each customer consumes, this is not a marginal improvement. It is the difference between a services shape and a software shape.</p>
     <p>So the adoption is rational. The question is what it changes about the risk.</p>
 
-    <h2>The asymmetry gets wider</h2>
+    <h2 id="the-asymmetry-gets-wider">The asymmetry gets wider</h2>
     <p>An FDE already operated with a context deficit: less institutional knowledge than the engineers who maintain the system, under a deadline. That was the defining condition of the role before agents existed.</p>
     <p>Now add a collaborator with a much more severe version of the same deficit. The agent brings strong general knowledge of how software is usually built and no knowledge whatsoever of why this customer&rsquo;s system is built the way it is. It cannot distinguish a deliberate boundary from an accident. It cannot tell a current decision from one superseded eighteen months ago. It has no sense of which oddities are load-bearing.</p>
     <p>What it does have is throughput.</p>
     <div class="callout"><p><strong>The context deficit did not grow. The rate at which it converts into committed code did.</strong> That is the entire change, and it is enough to break the arrangement that used to contain it.</p></div>
 
-    <h2>The arrangement that breaks is review</h2>
+    <h2 id="the-arrangement-that-breaks-is-review">The arrangement that breaks is review</h2>
     <p>This is the part that deserves arithmetic rather than assertion.</p>
     <p>Before agents, the safety mechanism in forward-deployed work was that the engineer produced changes at human speed, and someone with more context reviewed a meaningful fraction of them. That someone was often a customer-side engineer who knew why the system was shaped as it was. The mechanism was slow, informal, and it mostly worked, because the volume was low enough that the scarce context could be applied to most of it.</p>
     <p>Agent-assisted work does not preserve that ratio. The volume of proposed change rises sharply. The pool of people who hold the relevant architectural context does not rise at all: it is a fixed set of long-tenured engineers at the customer, who have their own work, and who were not hired to review a vendor&rsquo;s output.</p>
@@ -339,7 +354,7 @@
   </div>
 </aside>
 
-    <h2>Instructions do not transfer; constraints do</h2>
+    <h2 id="instructions-do-not-transfer-constraints-do">Instructions do not transfer; constraints do</h2>
     <p>The common response is to give the agent better briefing: a detailed instruction file describing the customer&rsquo;s conventions, the architecture, the things not to do.</p>
     <p>This helps and it degrades in a specific way. Instructions are advisory input competing with everything else in the context window, including the immediate task, which is concrete and pressing while the constraint is abstract and was mentioned earlier. As sessions lengthen and context is compacted, the summarizer keeps what looks relevant to the current step. The task survives. The rule that governed it is frequently what gets dropped.</p>
     <p>The distinction that matters for an FDE is between two kinds of artifact:</p>
@@ -354,13 +369,13 @@
     </table>
     <p>Only the second kind survives the conditions under which forward-deployed work actually happens. And crucially, only the second kind protects against the constraint the engineer <em>did not know to write down</em>, because it fires on the change rather than depending on a briefing that was authored from incomplete knowledge.</p>
 
-    <h2>What this means for multi-customer leverage</h2>
+    <h2 id="what-this-means-for-multi-customer">What this means for multi-customer leverage</h2>
     <p>There is a second-order effect here that matters for FDE organizations specifically.</p>
     <p>If the thing that makes agent-assisted deployment safe is a set of compiled constraints derived from the customer&rsquo;s architecture, then that artifact is per-customer and reusable across the whole engagement. It is produced once, early, and every subsequent piece of agent work in that environment is evaluated against it.</p>
     <p>That changes the shape of the engagement. The expensive, judgement-heavy part moves to the front: establishing what must remain true in this environment, with the customer&rsquo;s own architects, while there is still time to ask. The implementation that follows can run at agent speed against a known boundary.</p>
     <p>It also produces something the customer keeps. Which addresses the oldest problem in the model.</p>
 
-    <h2>What the resequenced engagement looks like</h2>
+    <h2 id="what-the-resequenced-engagement-looks-like">What the resequenced engagement looks like</h2>
     <p>If the constraint set is the thing that makes agent-assisted delivery safe, then it has to be built before the agent is pointed at anything, and that reorders the first phase of an engagement.</p>
     <p>The conventional shape is discovery running in parallel with early implementation: the engineer learns the environment while starting to build in it, because both are urgent and the schedule has no room for a sequential pass. Architectural understanding accumulates as a side effect of doing the work, which is acceptable when the work proceeds at human speed and each change is an opportunity to be corrected.</p>
     <p>That shape stops being defensible when the implementation phase compresses. If an agent can produce in two weeks what previously took eight, then the eight weeks of ambient architectural learning that used to happen alongside it does not happen. The understanding has to be front-loaded or it does not exist.</p>
@@ -368,13 +383,13 @@
     <p>The second phase runs at agent speed against a known boundary. Violations surface as verdicts rather than as review comments, which means they surface to the engineer directing the agent rather than to a customer reviewer who has to explain a constraint they assumed everyone knew.</p>
     <p>The trade is real and should be stated plainly: you spend more of the engagement before writing code, in exchange for the implementation phase being both faster and less likely to produce work the customer&rsquo;s platform team rejects. Whether that trade is worth making depends on how much of the customer&rsquo;s architecture is load-bearing, which is itself a thing you can measure at the start rather than assume.</p>
 
-    <h2>The handoff finally has an artifact</h2>
+    <h2 id="the-handoff-finally-has-an-artifact">The handoff finally has an artifact</h2>
     <p>Forward-deployed engagements end and the engineer leaves. Historically what remained was a working system, a README, and reasoning that walked out of the building. The customer&rsquo;s team inherits an implementation whose deliberate choices are indistinguishable from its accidental ones, which is precisely the condition <a href="/insights/forward-deployed-engineering-architecture/">the previous piece described</a>, now inflicted on the customer by the vendor.</p>
     <p>Agents make the volume problem worse, because there is simply more code per engagement carrying unstated reasoning.</p>
     <p>But the constraints the FDE had to establish in order to direct an agent safely are exactly the handoff artifact that was always missing. They are explicit, scoped, machine-checkable, and they keep working after everyone involved has moved on. The work of making architectural intent external stops being documentation overhead nobody has time for and becomes a prerequisite for operating agents at all.</p>
     <p>That is an unusually favourable alignment of incentives. The thing that makes the engagement safe is the same thing that makes the handoff durable.</p>
 
-    <h2>Where the judgement still lives</h2>
+    <h2 id="where-the-judgement-still-lives">Where the judgement still lives</h2>
     <p>None of this eliminates the engineer, and claims in that direction should be treated with suspicion.</p>
     <p>Deciding which commitments are real, which are vestigial, which reduce to a mechanical check and which genuinely require human conversation is architectural judgement, exercised with the customer, and there is no version of this where an agent does it unsupervised. The <a href="/insights/four-architecture-protection-states/">separation between what can be enforced and what should stay a matter for review</a> is exactly the kind of call that needs a person who understands both the system and the organization.</p>
     <p>What changes is where that judgement is spent. Less of it goes into writing the integration, because the agent can do that. More of it goes into establishing the boundary the integration has to respect, early, while the customer&rsquo;s architects are still in the room.</p>

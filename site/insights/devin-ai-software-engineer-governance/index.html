@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Devin and the broader autonomous software engineer category solved generation velocity. The next scaling problem is whether architectural intent can survive autonomous execution. Review-based governance scales poorly once agents generate faster than humans can verify — architectural governance has to move upstream." />
   <meta name="robots" content="index, follow" />
@@ -281,7 +280,21 @@
 
   <div class="article-body">
 
-    <h2>The shift: from coding assistants to execution agents</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-shift-from-coding-assistants-to">The shift: from coding assistants to execution agents</a></li>
+        <li><a href="#the-new-scaling-problem">The new scaling problem</a></li>
+        <li><a href="#why-traditional-controls-break-under-autonomy">Why traditional controls break under autonomy</a></li>
+        <li><a href="#governance-must-move-left">Governance must move left</a></li>
+        <li><a href="#the-next-infrastructure-layer">The next infrastructure layer</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+        <li><a href="#long-term-prediction">Long-term prediction</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-shift-from-coding-assistants-to">The shift: from coding assistants to execution agents</h2>
     <p>The first wave of AI coding tools assumed a developer at the keyboard with an autocomplete suggestion in the editor. Copilot. Cursor. Even early Claude Code workflows. The model was an assistant; the human was the operator; the unit of work was a few lines or a function.</p>
     <p>Devin reframes the unit of work as a <strong>task</strong>. Plan, edit, test, refactor, ship &mdash; autonomously, across multiple files and sometimes multiple repos, with the human reviewing the result rather than supervising each step. That is a different category. It is also the direction the rest of the market is heading: Claude Code&rsquo;s long-running sessions, OpenAI&rsquo;s containerized execution work, Google&rsquo;s Managed Agents, Mistral Vibe&rsquo;s async agents.</p>
     <div class="callout"><p><strong>The unit of AI-assisted work is shifting from a suggestion to a delegated task.</strong> The infrastructure assumptions have to shift with it.</p></div>
@@ -295,7 +308,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The new scaling problem</h2>
+<h2 id="the-new-scaling-problem">The new scaling problem</h2>
     <p>When the unit is a suggestion, the developer is the governance layer. They read it, they accept or reject it, and they own the architecture by default. When the unit is a delegated task, the developer reviews an outcome &mdash; often hours later, often a diff they did not watch get created.</p>
     <p>The question stops being a model question and becomes a coordination question:</p>
     <ul>
@@ -308,7 +321,7 @@
     </ul>
     <p>None of these are answered by &ldquo;is the code correct.&rdquo; They are answered by &ldquo;is the architecture preserved.&rdquo; That is a different problem.</p>
 
-    <h2>Why traditional controls break under autonomy</h2>
+    <h2 id="why-traditional-controls-break-under-autonomy">Why traditional controls break under autonomy</h2>
     <p>The controls engineering teams have historically used to keep architecture coherent were designed for human-paced output. Each of them stretches and then snaps under autonomous execution:</p>
     <ul>
       <li><strong>PR review overload</strong> &mdash; an autonomous agent can open more PRs per day than any reviewer can read.</li>
@@ -319,12 +332,12 @@
       <li><strong>Undocumented invariants</strong> &mdash; the model cannot infer the rule because the rule was never written down.</li>
     </ul>
 
-    <h2>Governance must move left</h2>
+    <h2 id="governance-must-move-left">Governance must move left</h2>
     <p>The implication is straightforward and structural.</p>
     <div class="callout"><p><strong>Review-based governance scales poorly once agents can generate faster than humans can verify.</strong> Pushing all architectural enforcement into PR review turns the queue into <a href="/insights/pr-review-is-becoming-incident-response/">incident response</a>.</p></div>
     <p>What replaces it is not less review &mdash; reviewers still matter. It is governance that runs <em>before</em> review: <a href="/concepts/governance-before-generation/">pre-generation constraints</a>, machine-evaluable rules derived from ADRs, deterministic verdicts at hook and CI boundaries. Review becomes one of several governance surfaces, not the only one.</p>
 
-    <h2>The next infrastructure layer</h2>
+    <h2 id="the-next-infrastructure-layer">The next infrastructure layer</h2>
     <p>The shape the stack is settling into:</p>
     <div class="layer-stack">
       <div class="layer-row"><div class="layer-num">01</div><div class="layer-name">Generation</div><div class="layer-job">Models and autonomous agents (Devin, Claude Code, Cursor, Copilot)</div></div>
@@ -334,7 +347,7 @@
     </div>
     <p>Each layer has a job. Generation produces. Retrieval informs. Governance constrains. Verification proves. Skipping the governance layer means the agent gets information but no enforceable boundary &mdash; which is exactly where architectural drift compounds.</p>
 
-    <h2>Where Mneme fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme fits</h2>
     <p>Mneme is the open-source layer for the governance row. The design constraints map directly to the failure modes autonomous agents create:</p>
     <ul>
       <li><strong>Deterministic retrieval</strong> &mdash; same task, same state, same architectural context. No probabilistic ranking.</li>
@@ -344,7 +357,7 @@
       <li><a href="/concepts/governance-propagation/"><strong>Governance propagation</strong></a> &mdash; the same compiled constraints reach Devin, Claude Code, Cursor, Copilot, and any other agent on the codebase.</li>
     </ul>
 
-    <h2>Long-term prediction</h2>
+    <h2 id="long-term-prediction">Long-term prediction</h2>
     <p>Autonomous SDLC systems eventually require infrastructure that today reads as exotic:</p>
     <ul>
       <li><a href="/concepts/verification-contracts/"><strong>Verification contracts</strong></a> &mdash; predefined checks attached to every agent run that prove intent survived.</li>

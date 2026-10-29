@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Cloud coding agents need durable execution, environment reconstruction, and self-healing infrastructure. But once agents run unattended across repositories, the missing layer is governance: which architectural decisions survive the execution." />
   <meta name="robots" content="index, follow" />
@@ -294,8 +293,19 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#cloud-agents-are-becoming-an-operating">Cloud agents are becoming an operating layer</a></li>
+        <li><a href="#the-environment-is-now-a-governance">The environment is now a governance surface</a></li>
+        <li><a href="#once-agents-run-unattended-the-missing">Once agents run unattended, the missing layer is governance</a></li>
+        <li><a href="#governance-as-executable-infrastructure">Governance as executable infrastructure</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>Cloud agents are becoming an operating layer</h2>
+
+    <h2 id="cloud-agents-are-becoming-an-operating">Cloud agents are becoming an operating layer</h2>
     <p>The latest generation of coding agents does not sit in your editor waiting for input. It runs in the cloud, unattended, often for long stretches: reconstructing a full development environment, installing dependencies, running tests, retrying on failure, and coordinating changes across more than one repository. The vendors building these systems describe the requirements accurately &mdash; durable execution, environment reconstruction, network and secret access, and verification access so the agent can check its own work.</p>
     <p>Those are real engineering problems, and solving them is what turns a chat assistant into infrastructure. But notice what the list is about: it is about keeping the agent <em>running</em> reliably. None of it is about keeping the system the agent changes <em>coherent</em>.</p>
     <div class="callout"><p><strong>Durable execution answers &ldquo;did the agent finish its run?&rdquo;</strong> It does not answer &ldquo;was the architecture still intact when it did?&rdquo;</p></div>
@@ -309,11 +319,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The environment is now a governance surface</h2>
+<h2 id="the-environment-is-now-a-governance">The environment is now a governance surface</h2>
     <p>One claim from the cloud-agent vendors is worth taking seriously: output quality depends on the full development environment &mdash; network access, secrets, dependencies, and the ability to verify. That is true, and it has a consequence they tend not to draw out. If the environment determines what the agent can do, then the environment is a governance surface. What an agent is allowed to reach, change, and rely on is a set of decisions, and those decisions need to be enforced, not just configured.</p>
     <p>This generalizes a pattern we have written about repeatedly: as agents act on more of the system, governance has to <a href="/concepts/execution-surfaces/">follow them to the surfaces where they act</a>. The cloud environment is simply the newest and largest such surface.</p>
 
-    <h2>Once agents run unattended, the missing layer is governance</h2>
+    <h2 id="once-agents-run-unattended-the-missing">Once agents run unattended, the missing layer is governance</h2>
     <p>The defining property of a cloud agent is that no human is watching the individual steps. It can spawn subagents, touch multiple repositories, and decide for itself how to approach the work. Each of those capabilities is exactly the condition under which architectural drift enters a system: local optimization, inconsistent enforcement, and decisions that fragment across handoffs.</p>
     <p>A repository rule can govern code that an agent commits through Git. It cannot automatically govern every action the agent takes through a CLI, an API, an integration, or its own runtime. When the agent runs unattended across repositories, the question &ldquo;what architectural decisions are allowed to survive this execution?&rdquo; has to be answered by the system, because no reviewer is there to answer it in real time.</p>
 
@@ -330,7 +340,7 @@
     </table>
     </div>
 
-    <h2>Governance as executable infrastructure</h2>
+    <h2 id="governance-as-executable-infrastructure">Governance as executable infrastructure</h2>
     <p>The deeper shift the cloud-agent moment reveals is that governance is no longer an organizational process &mdash; a meeting, a review, a document. It is becoming executable infrastructure: execution runtimes, agent orchestration systems, verification layers, repository-native policy enforcement, and explainable enforcement traces, all running alongside the agents themselves.</p>
     <p>In that stack, durable execution and architectural governance are adjacent layers, not competitors. One makes the agent reliable; the other makes its output trustworthy. A cloud agent with perfect durability and no governance is a system that will run forever and drift continuously.</p>
     <div class="callout"><p><strong>Cloud agents make durable execution table stakes.</strong> The differentiator becomes the layer above it: governance that decides which architectural decisions survive the run.</p></div>

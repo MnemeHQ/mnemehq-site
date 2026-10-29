@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="RAG retrieves similar text. Architectural governance requires authoritative, precedence-aware constraint enforcement. Here's why they're fundamentally different problems." />
   <meta name="robots" content="index, follow" />
@@ -345,11 +344,27 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-rag-is-actually-good-at">What RAG is actually good at</a></li>
+        <li><a href="#what-architectural-governance-actually-requires">What architectural governance actually requires</a></li>
+        <li><a href="#failure-mode-1-semantic-similarity-decision">Failure mode 1: Semantic similarity ≠ decision authority</a></li>
+        <li><a href="#failure-mode-2-no-precedence-resolution">Failure mode 2: No precedence resolution</a></li>
+        <li><a href="#failure-mode-3-retrieval-quality-degrades">Failure mode 3: Retrieval quality degrades at scale</a></li>
+        <li><a href="#failure-mode-4-suggestion-not-enforcement">Failure mode 4: Suggestion, not enforcement</a></li>
+        <li><a href="#even-perfect-retrieval-does-not-guarantee">Even perfect retrieval does not guarantee compliance</a></li>
+        <li><a href="#what-a-proper-governance-layer-looks">What a proper governance layer looks like</a></li>
+        <li><a href="#when-rag-is-still-useful-in">When RAG is still useful in this context</a></li>
+        <li><a href="#the-underlying-principle">The underlying principle</a></li>
+      </ol>
+    </nav>
+
     <p>When teams first encounter the problem of governing AI-generated code, RAG is the intuitive answer. You have a set of architectural decisions — ADRs, style guides, internal wikis, team conventions — and you want your AI coding assistant to respect them. RAG can retrieve relevant documents and inject them into the prompt. Problem solved, apparently.</p>
 
     <p>It isn't. The mismatch between what RAG provides and what architectural governance requires is deep, and fixing it requires a different kind of system entirely.</p>
 
-    <h2>What RAG is actually good at</h2>
+    <h2 id="what-rag-is-actually-good-at">What RAG is actually good at</h2>
 
     <p>RAG excels when the task is: given a query, find the most semantically relevant passages from a corpus and surface them to the model. It works well for:</p>
 
@@ -371,7 +386,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What architectural governance actually requires</h2>
+<h2 id="what-architectural-governance-actually-requires">What architectural governance actually requires</h2>
 
     <p>Architectural governance is a different problem category. When you need to prevent an AI agent from making a decision that violates your service boundaries, your decisions need to be:</p>
 
@@ -414,7 +429,7 @@
 
     <p>RAG ranks by similarity and ends in a suggestion. Governance ranks by authority and ends in a verdict. Let's go through each failure mode.</p>
 
-    <h2>Failure mode 1: Semantic similarity ≠ decision authority</h2>
+    <h2 id="failure-mode-1-semantic-similarity-decision">Failure mode 1: Semantic similarity ≠ decision authority</h2>
 
     <p>RAG retrieves documents based on embedding similarity to the query. "Which cache library should I use?" might retrieve three documents: a blog post about Redis, an ADR mandating Valkey, and a benchmark comparing both. The ADR is authoritative. The blog post is noise. RAG has no mechanism to distinguish them.</p>
 
@@ -424,7 +439,7 @@
       <p><strong>The core issue:</strong> RAG ranks by similarity. Governance requires ranking by authority. These are orthogonal dimensions that need separate systems.</p>
     </div>
 
-    <h2>Failure mode 2: No precedence resolution</h2>
+    <h2 id="failure-mode-2-no-precedence-resolution">Failure mode 2: No precedence resolution</h2>
 
     <p>Real architectural decision sets contain conflicts. An org-level decision from 2022 says "use PostgreSQL for all relational storage." A project-level decision from 2024 says "this service uses SQLite for simplicity — approved by the platform team." Which wins?</p>
 
@@ -432,7 +447,7 @@
 
     <p>A proper governance system needs a precedence engine: an explicit, deterministic function that takes a set of retrieved decisions and produces a single authoritative answer for a given context. This is the architectural challenge RAG simply cannot address.</p>
 
-    <h2>Failure mode 3: Retrieval quality degrades at scale</h2>
+    <h2 id="failure-mode-3-retrieval-quality-degrades">Failure mode 3: Retrieval quality degrades at scale</h2>
 
     <p>RAG retrieval quality is a function of embedding model quality, corpus size, and query construction. In small corpora (&lt;100 documents), RAG works reasonably well. As your decision corpus grows to hundreds of ADRs, style guides, runbooks, and policy documents, retrieval precision drops and recall degrades.</p>
 
@@ -443,7 +458,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>Failure mode 4: Suggestion, not enforcement</h2>
+    <h2 id="failure-mode-4-suggestion-not-enforcement">Failure mode 4: Suggestion, not enforcement</h2>
 
     <p>Even when RAG retrieves the right decision, the model can ignore it. In a RAG-augmented coding workflow, the model sees the retrieved context and generates output. Whether it respects the retrieved constraint depends on prompt construction, model behavior, and context window dynamics — none of which are deterministic.</p>
 
@@ -451,7 +466,7 @@
 
     <p>Enforcement requires a layer that can inspect generated output against structured constraints and block or flag violations before they reach review. This is architecturally separate from the generation layer, and RAG has no role in it.</p>
 
-    <h2>Even perfect retrieval does not guarantee compliance</h2>
+    <h2 id="even-perfect-retrieval-does-not-guarantee">Even perfect retrieval does not guarantee compliance</h2>
 
     <p>The four failure modes above all assume retrieval is imperfect. Grant the opposite. Suppose the system surfaces exactly the right decision, ranked first, with no dilution &mdash; and the agent even restates it correctly in its own reasoning before writing code. Agents still violate decisions they have just acknowledged. That gap &mdash; between a retrieved-and-acknowledged constraint and a compliant change &mdash; is not a retrieval-quality problem at all. It is a property of how generation works.</p>
 
@@ -467,7 +482,7 @@
 
     <p>This is why retrieval and governance are different layers, not different settings of the same dial. Retrieval answers <em>what decisions exist</em>. Reasoning answers <em>how should I solve this</em>. Governance answers <em>am I allowed to do this</em>, and enforcement answers <em>does this change violate policy</em>. Most AI tooling stops at the first layer and hopes the rest follow. They do not follow reliably, because nothing makes them.</p>
 
-    <h2>What a proper governance layer looks like</h2>
+    <h2 id="what-a-proper-governance-layer-looks">What a proper governance layer looks like</h2>
 
     <p>The distinction between RAG-based context injection and governance enforcement is the difference between:</p>
 
@@ -532,7 +547,7 @@
 
     <p>When the model targets a file matching <code style="font-family:'DM Mono',monospace;font-size:0.82em;color:var(--teal)">services/payments/</code>, this decision fires. Its precedence level is checked against any conflicting org-level rules. The resolved constraint is injected authoritatively. If the model's output violates it, the enforcement layer blocks the write.</p>
 
-    <h2>When RAG is still useful in this context</h2>
+    <h2 id="when-rag-is-still-useful-in">When RAG is still useful in this context</h2>
 
     <p>This isn't an argument that RAG has no role in AI coding workflows. It does — for the right tasks.</p>
 
@@ -540,7 +555,7 @@
 
     <p>The error is conflating the two — assuming that injecting decision documents via RAG is equivalent to enforcing those decisions. It isn't. The retrieval problem and the enforcement problem require different architectures.</p>
 
-    <h2>The underlying principle</h2>
+    <h2 id="the-underlying-principle">The underlying principle</h2>
 
     <p>The distinction maps to a simple principle: <strong>suggestion systems and enforcement systems are architecturally incompatible.</strong> You cannot make a suggestion system into an enforcement system by improving retrieval quality. The enforcement guarantee requires a structural property — a deterministic check against structured constraints — that retrieval-based systems cannot provide by design.</p>
 

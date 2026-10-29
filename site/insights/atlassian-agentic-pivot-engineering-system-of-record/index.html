@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Atlassian&#x27;s Agentic Pivot report: 88% of engineering leaders need a governed system of record, 19% have one. What that gap means once agents write code." />
   <meta name="robots" content="index, follow" />
@@ -341,34 +340,46 @@
   </header>
 
 <div class="article-body">
-<h2>Code is no longer the whole SDLC</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#code-is-no-longer-the-whole">Code is no longer the whole SDLC</a></li>
+      <li><a href="#the-governance-gap-is-the-finding">The governance gap is the finding that matters</a></li>
+      <li><a href="#the-work-around-code-becomes-the">The work around code becomes the work</a></li>
+      <li><a href="#context-and-authority-are-different-things">Context and authority are different things</a></li>
+      <li><a href="#architecture-has-to-join-the-execution">Architecture has to join the execution loop</a></li>
+      <li><a href="#the-layer-now-emerging">The layer now emerging</a></li>
+    </ol>
+  </nav>
+<h2 id="code-is-no-longer-the-whole">Code is no longer the whole SDLC</h2>
 <p>Atlassian's 2026 research report, <a href="https://www.atlassian.com/whitepapers/the-agentic-pivot" target="_blank" rel="noopener">The Agentic Pivot: Engineering Leaders Share the Reality of AI in the SDLC</a>, surveyed more than 1,100 software professionals in Q2 2026: 364 engineering leaders and 750 individual contributors, fielded by Prolific. Its central finding is simple to state. AI has compressed implementation, the phase engineering spent most of its history optimizing, while everything around it has expanded.</p>
 <p>The adoption numbers make the point. 94% of engineering leaders say their teams use AI somewhere in the SDLC, and 36% already run agentic workflows with limited human intervention. But only 6% describe their AI use as formal and extensive: an official standard across most of the lifecycle. Everyone is using AI individually. Very few organizations have decided how to use it together.</p>
 <p>The report's own summary puts the consequence plainly: implementation shrunk, while planning, testing, review, and ship-and-monitor all expanded around it.</p>
 
-<h2>The governance gap is the finding that matters</h2>
+<h2 id="the-governance-gap-is-the-finding">The governance gap is the finding that matters</h2>
 <p>The number Atlassian returns to in its overview and its conclusion is not adoption. It is this: <strong>88% of engineering leaders say they need a governed system of record, and only 19% have built one.</strong> (One summary table later in the report prints the first figure as 84%; the overview and closing section both use 88%.)</p>
 <p>That gap shows up concretely in review. 74% of leaders report accelerated code generation, yet 78% still review AI-generated code through an unmodified pull request process. Automated guardrails for AI-specific failure modes are in place at 35% of leader organizations, and shift-left practices such as spec-first development and prompt libraries at 18%. About one team in five reports no formal guardrails at all. As the report puts it, when code generation accelerates without the review process accelerating too, the throughput gain "doesn't compound; it queues."</p>
 <p>This is the difference between individual productivity and organizational delivery capability. An engineer with a fast agent is more productive. An organization whose review, testing, and accountability processes were designed for human-speed authorship is not, until those processes change.</p>
 
-<h2>The work around code becomes the work</h2>
+<h2 id="the-work-around-code-becomes-the">The work around code becomes the work</h2>
 <p>Atlassian names two hurdles behind the trust gap: governance and context. Its description of the context gap is specific enough to quote at length. Acceptance criteria live in tickets agents do not read, engineering standards live in wiki pages agents do not access, and "prior architectural decisions live in Slack threads and human heads." An AI reviewer without that context, the report says, can only check syntax and code quality.</p>
 <p>The downstream cost is what Atlassian calls the reasoning gap. Only 25% of leaders and 15% of individual contributors are very confident they could reconstruct the reasoning behind an AI-assisted decision six months later. Meanwhile, judgment is concentrating where AI has moved least: 68% of leaders still rely more on human judgment than on AI for architectural decisions and system design.</p>
 <p>The report's recommendations follow from this. Make intent and context explicit before code is generated, treating "specs, architectural guardrails, and test expectations as first-class inputs to development." Govern and orchestrate the planned and unplanned loops agents now work inside, with defined autonomy boundaries and escalation. Make agent work traceable, from the initial prompt through review, deployment, and production signals. Atlassian is also shipping against this agenda: on September 10 it announced <a href="https://www.atlassian.com/blog/jira/governed-agent-loops" target="_blank" rel="noopener">Standards, AI Review, and agent loops</a> for Jira, all in private early access.</p>
 <p>It is a lifecycle argument, not an architecture argument, and it should be read that way. Planning, testing, review, observability, and accountability all carry weight in it.</p>
 
-<h2>Context and authority are different things</h2>
+<h2 id="context-and-authority-are-different-things">Context and authority are different things</h2>
 <p>There is one distinction the report points toward without drawing, and it matters for anyone building the system of record it describes.</p>
 <p>Most of what the context gap covers is information an agent should know: what shipped last quarter, what broke in an incident, what the acceptance criteria say. Some of it is different in kind. A decision that one service must never call another synchronously, or that domain code may not import infrastructure adapters, is not background. It is a constraint on which outputs are acceptable at all.</p>
 <div class="callout"><p><strong>Context tells an agent what it should know. Authority tells it what must remain true.</strong></p></div>
 <p>The distinction has practical consequences. Context can be summarized, ranked, and partially retrieved, and a model that weighs it imperfectly still produces something useful. An architectural decision that is retrieved but not honored produces a change that looks correct and violates the architecture. A system of record that treats every document as equally weighted context has no way to tell the two apart, and no way to say later whether a given change respected the decisions that governed it.</p>
 <p>So the infrastructure question underneath Atlassian's 88% is not only how to give agents better context. It is how an organization marks which of its engineering knowledge is authoritative, and how that authority follows the work to the moment an agent changes code.</p>
 
-<h2>Architecture has to join the execution loop</h2>
+<h2 id="architecture-has-to-join-the-execution">Architecture has to join the execution loop</h2>
 <p>For most of software history, architecture could live in documents and in the heads of senior engineers, because the people writing the code had absorbed it. Atlassian's data describes what happens when that stops being true: code generation accelerates, review stays the same, and the reasoning behind decisions becomes hard to reconstruct.</p>
 <p>The remedy the report proposes, explicit intent and guardrails before generation plus traceability after, implies that some architectural decisions need a machine-readable form: something an agent can retrieve at the moment of change, and something a check can apply to the result. Not every decision can be expressed that way, and the report is right that human judgment remains central to architecture. But the decisions that can be checked mechanically should not depend on every agent rediscovering them on every task.</p>
 
-<h2>The layer now emerging</h2>
+<h2 id="the-layer-now-emerging">The layer now emerging</h2>
 <p>The first phase of AI in software development was about helping engineers produce code. The phase The Agentic Pivot describes is about making the whole delivery system capable of working with agents: better planning, testing, context, observability, and accountability, exactly as Atlassian argues.</p>
 <p>It also raises a question the report leaves open. When part of that context is an architectural decision, how does an organization make it durable, authoritative, and enforceable? Mneme works on that architectural decision and enforcement layer: it turns accepted decisions into scoped rules and checks proposed changes against them. It is one piece of the system of record Atlassian describes, not the whole of it.</p>
 

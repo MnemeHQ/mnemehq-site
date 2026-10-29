@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AWS AI Labs&#x27; AECP preprint raised test pass rate 28.2% (relative) over free-form agent chat. Why multi-agent coding needs scoped, verified agreements." />
   <meta name="robots" content="index, follow" />
@@ -378,15 +377,31 @@
   </header>
 
 <div class="article-body">
-<h2>A controlled test of how coding agents should talk</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#a-controlled-test-of-how-coding">A controlled test of how coding agents should talk</a></li>
+      <li><a href="#where-multi-agent-coding-loses-its">Where multi-agent coding loses its time</a></li>
+      <li><a href="#shared-context-is-a-weak-coordination">Shared context is a weak coordination mechanism</a></li>
+      <li><a href="#what-aecp-does-instead">What AECP does instead</a></li>
+      <li><a href="#the-costs-and-limits-are-real">The costs and limits are real</a></li>
+      <li><a href="#applicability-matters-more-than-window-size">Applicability matters more than window size</a></li>
+      <li><a href="#runtime-agreements-are-not-architectural-decisions">Runtime agreements are not architectural decisions</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="a-controlled-test-of-how-coding">A controlled test of how coding agents should talk</h2>
 <p>Teams of coding agents add capacity. They also add more chances to disagree. A <a href="https://arxiv.org/abs/2610.06481" target="_blank" rel="noopener">preprint from researchers at Amazon Web Services (AWS) AI Labs</a>, posted to arXiv on 5 October 2026 and not yet peer reviewed, tests one way to keep them aligned. Its protocol, AECP (Artifact-Exclusive Communication Protocol), forbids free-form messages between agents. Agents may only communicate through structured artifacts that the execution harness, the runtime that runs the agents and their tools, reads and acts on.</p>
 <p>Across five models and three benchmarks that ask agents to build a whole repository from a specification (Doc2Repo, NL2Repo and CodeProjectEval), AECP improved the average test pass rate by 28.2% and cut average wall time by 16.5%, compared with an agent team using free-form messages. Both figures are relative changes. Against a team where one agent integrates everyone's work, AECP scored 8.5% higher and ran 24.9% faster.</p>
 
-<h2>Where multi-agent coding loses its time</h2>
+<h2 id="where-multi-agent-coding-loses-its">Where multi-agent coding loses its time</h2>
 <p>The authors also looked at where free-form teams spend their effort. In an analysis of agent traces on one benchmark, labelled with a language model, 26.8% of tokens went to repeated exploration: agents rediscovering what another agent had already found. Another 22.2% went to rework caused by incompatible decisions at module boundaries.</p>
 <p>Both are coordination failures, not coding failures. The agents could write the code. They could not keep each other's findings and agreements in force.</p>
 
-<h2>Shared context is a weak coordination mechanism</h2>
+<h2 id="shared-context-is-a-weak-coordination">Shared context is a weak coordination mechanism</h2>
 <p>The usual fix is more shared context: a bigger window, a shared scratchpad, a longer system prompt. Each step in this chain can fail on its own:</p>
 <pre tabindex="0"><code>information exists
   -> the agent sees it
@@ -395,7 +410,7 @@
   -> the system verifies it was followed</code></pre>
 <p>Shared context helps with the first step. On its own it does not make an agent follow the information, or check that it did. We made the same argument for single agents in <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">Why Context Alone Doesn't Prevent Architectural Drift</a>. AECP's results point the same way for teams.</p>
 
-<h2>What AECP does instead</h2>
+<h2 id="what-aecp-does-instead">What AECP does instead</h2>
 <p>AECP turns communication into two kinds of artifact, and makes the harness an active participant rather than a message bus:</p>
 <ul>
   <li><strong>Knowledge Artifacts</strong> record a scoped finding about the code. When another agent later accesses matching code, the harness includes the finding in what that access returns. The agent does not have to remember to look.</li>
@@ -403,7 +418,7 @@
 </ul>
 <p>The change in the model's role is the important part. The check no longer asks "did the agent remember the agreement?" It asks "does this code satisfy the agreement?", and a deterministic verifier answers it.</p>
 
-<h2>The costs and limits are real</h2>
+<h2 id="the-costs-and-limits-are-real">The costs and limits are real</h2>
 <p>AECP is not free, and the paper is candid about it:</p>
 <ul>
   <li>It used 46% more tokens on average than a single agent working alone.</li>
@@ -412,16 +427,16 @@
 </ul>
 <p>The security result needs care too. With free-form messages, a malicious instruction planted in one worker reached another worker in 19 of 20 attack cases and was adopted in 8. Under AECP it reached none. The authors attribute this to removing the free-form channel. They did not test malicious content written into artifacts or shared code, so this is one closed attack path, not general security.</p>
 
-<h2>Applicability matters more than window size</h2>
+<h2 id="applicability-matters-more-than-window-size">Applicability matters more than window size</h2>
 <p>Part of AECP's design is that its artifacts are scoped. A finding about one module reaches the agent touching that module, not every agent in the team. That is the same property that matters for engineering decisions: which component, file, operation, dependency or interface a piece of knowledge applies to, and whether it is still current.</p>
 <p>A bigger context window gives an agent more to read. Scoped, current knowledge delivered at the moment of change gives it less to read and more to act on.</p>
 
-<h2>Runtime agreements are not architectural decisions</h2>
+<h2 id="runtime-agreements-are-not-architectural-decisions">Runtime agreements are not architectural decisions</h2>
 <p>AECP coordinates agents inside one execution. Its contracts are agreements the agents reach while building: "the customer service exposes this method with this signature." They are useful, and they expire with the run.</p>
 <p>An architectural decision is a different object: "services in the payments domain communicate asynchronously, except through approved adapters." It was made by people with the authority to make it, it applies across every run, it has a lifecycle, and it can conflict with other decisions. Coordination between agents does not produce it, and should not overwrite it.</p>
 <p>That suggests a simple rule for anyone building agent harnesses: do not promote agent agreements into the organisation's recorded decisions automatically. Promotion needs authority and provenance, the same as any other decision. The broader case for this split is in <a href="/insights/coordination-governance-multi-agent-systems/">Coordination and Governance in Multi-Agent Systems</a> and <a href="/insights/ai-agent-orchestration-is-not-governance/">AI Agent Orchestration Is Not Governance</a>.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>Do not default to teams.</strong> In one model's breakdown in this study, a single agent was faster and better on easy tasks. Size the team to the task.</li>
   <li><strong>Make coordination artifacts structured and scoped.</strong> Findings and interface agreements should be data the harness acts on, not prose in a shared channel.</li>
@@ -429,7 +444,7 @@
   <li><strong>Keep two layers apart.</strong> Runtime agreements belong to one execution. Architectural decisions belong to the organisation and need an owner, a scope and a status.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme sits in the second layer. It is an open-source decision and control layer for agentic software development, and it works on decisions that hold across executions, not on coordination within one. Today that means architectural decisions in a repository, recorded with lifecycle and supersession in its <a href="/docs/decision-index/">Decision Index</a>. Decisions with typed rules are enforced deterministically, and a rule can be limited to the paths it names. Supported coding agents, including Claude Code, OpenAI's Codex command-line interface (CLI) and Kiro, check their native file writes before they land, and continuous integration (CI) checks again. Each integration page lists which write paths it covers.</p>
 <p>It works the same whether one agent or a team is making the change, and it does not orchestrate agents.</p>
 <p>A layer that captures runtime agreements and promotes the durable ones into governed decisions is a design idea, not a shipped capability.</p>

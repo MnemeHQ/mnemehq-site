@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A field guide to AI coding agent guardrails: runtime, prompt, policy, architectural and standards layers. What each catches, what it misses, and which stops drift." />
   <meta name="robots" content="index, follow" />
@@ -325,7 +324,22 @@
 
   <div class="article-body">
 
-    <h2>What a Guardrail Actually Is</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-a-guardrail-actually-is">What a Guardrail Actually Is</a></li>
+        <li><a href="#the-taxonomy-five-layers-of-guardrail">The Taxonomy: Five Layers of Guardrail</a></li>
+        <li><a href="#why-prompts-and-rule-files-are">Why Prompts and Rule Files Are Not Enough</a></li>
+        <li><a href="#why-rag-is-not-enough">Why RAG Is Not Enough</a></li>
+        <li><a href="#why-memory-is-not-enough">Why Memory Is Not Enough</a></li>
+        <li><a href="#why-review-is-not-enough">Why Review Is Not Enough</a></li>
+        <li><a href="#how-architectural-guardrails-actually-work">How Architectural Guardrails Actually Work</a></li>
+        <li><a href="#choosing-the-right-guardrail-for-the">Choosing the Right Guardrail for the Risk</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-a-guardrail-actually-is">What a Guardrail Actually Is</h2>
     <p>A guardrail is a constraint that shapes or blocks what an agent may do. That is the whole definition, and it is worth holding onto, because the word gets stretched to cover very different things. A guardrail can be a hard wall the agent cannot cross &mdash; a sandbox that refuses a network call. It can be a soft instruction the agent is asked to follow &mdash; a line in a rule file. It can be a check that runs after the agent proposes a change and either passes it or sends it back.</p>
     <p>The distinction that matters is not how strict a guardrail sounds. It is <em>where it sits</em> relative to the code the agent writes, and <em>what it can see</em> when it makes its decision. A guardrail that only sees the running process cannot reason about your service boundaries. A guardrail that only sees a paragraph of prose cannot deterministically block an unapproved dependency. Sorting guardrails by what they can see is the fastest way to tell which risks each one covers and which it leaves open.</p>
 
@@ -338,7 +352,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Taxonomy: Five Layers of Guardrail</h2>
+<h2 id="the-taxonomy-five-layers-of-guardrail">The Taxonomy: Five Layers of Guardrail</h2>
     <p>Most stacks running AI coding agents end up with some mix of five layers. They stack; they do not substitute. Here is each one, what it catches, and what it misses.</p>
 
     <h3>1. Runtime Guardrails</h3>
@@ -380,26 +394,26 @@
     </div>
     <p>Read the table top to bottom and the gap is visible. Four of the five layers are strong on safety, organization-wide policy, and surface consistency. Exactly one governs whether generated code obeys the architecture of the specific system it is being written into &mdash; and that is the layer most stacks are missing. The sections that follow explain why the other common answers do not fill it.</p>
 
-    <h2>Why Prompts and Rule Files Are Not Enough</h2>
+    <h2 id="why-prompts-and-rule-files-are">Why Prompts and Rule Files Are Not Enough</h2>
     <p>Rule files are the most common first guardrail, and the most over-trusted. A <code>CLAUDE.md</code> at the repo root feels like governance: the rules are written down, the agent reads them, the code should follow. In practice a rule file is an always-on prompt prefix, and three properties of that prefix keep it from holding.</p>
     <p><strong>Token budget.</strong> Every rule competes with the task for the model&rsquo;s attention. A short file works; a file that has grown to cover every hard-won decision the team ever made stops being reliably weighed. The rules do not get enforced less because they are wrong &mdash; they get enforced less because there are too many of them to hold in context at once.</p>
     <p><strong>Precedence.</strong> When two instructions conflict, a prompt has no defined winner. &ldquo;Prefer composition&rdquo; and &ldquo;match the surrounding code&rdquo; can point opposite ways on the same edit, and nothing decides which one governs. A check has an explicit verdict. A paragraph does not.</p>
     <p><strong>Scope.</strong> A rule file is global to the session, but architectural decisions are local to parts of the system. &ldquo;This boundary is sealed&rdquo; applies to three modules and is irrelevant to the rest, and prose has no clean way to say so. The result is a document that is either too broad to be precise or too long to be read. <a href="/insights/rule-files-vs-retrieval-memory/">Rule files, retrieval, and memory each solve a different problem</a>, and none of them is enforcement.</p>
 
-    <h2>Why RAG Is Not Enough</h2>
+    <h2 id="why-rag-is-not-enough">Why RAG Is Not Enough</h2>
     <p>The next instinct is retrieval: put the ADRs and standards in a vector store, retrieve the relevant ones for each change, feed them to the agent. This is strictly better than a static rule file &mdash; the agent now sees the decisions that actually apply to the edit in front of it. But retrieval solves the <em>seeing</em> problem, not the <em>obeying</em> problem.</p>
     <p>Retrieving a decision and placing it in context does not enforce it. The agent still gets to weigh the retrieved text against everything else in its prompt and decide what to do. Retrieval can also miss: embedding similarity is fuzzy, and the one ADR that forbids this exact change may not surface for this exact phrasing. Even when it does surface, a retrieved constraint is still a suggestion. <a href="/insights/why-rag-fails-for-architectural-governance/">Retrieving context is not the same as enforcing it</a>. RAG improves the input to a decision the agent still makes freely; a guardrail removes the freedom to land a violating change.</p>
 
-    <h2>Why Memory Is Not Enough</h2>
+    <h2 id="why-memory-is-not-enough">Why Memory Is Not Enough</h2>
     <p>Shared memory across agents and sessions is a real advance &mdash; it gives continuity, so an agent is not rediscovering the codebase from scratch every run. Teams reach for it as a governance answer: if all the agents share memory, surely they will share the architecture. They will not.</p>
     <p>Continuity is not constraint. Memory tells an agent what was decided; it does not stop the agent from doing something else. An agent can have perfect recall of &ldquo;billing goes through the billing service&rdquo; and still write a direct database read, because remembering a decision and being blocked from violating it are different mechanisms. <a href="/insights/shared-memory-is-not-shared-intent/">Shared memory is not shared intent</a>. Memory is a better input to the agent&rsquo;s reasoning. It is not a check on the agent&rsquo;s output, and only a check can reject a change.</p>
 
-    <h2>Why Review Is Not Enough</h2>
+    <h2 id="why-review-is-not-enough">Why Review Is Not Enough</h2>
     <p>Review is the guardrail most teams trust most, and it works &mdash; for human-paced output. A reviewer reads the diff, spots the boundary violation, sends it back. The problem is not that review misses things. It is two structural facts about review.</p>
     <p><strong>Review is detection after the fact.</strong> By the time a reviewer sees the change, it exists, it has been written into a branch, and reversing it costs more than never landing it would have. The violating pattern may already have been copied by the next agent that read the surrounding code. <a href="/insights/review-is-not-governance/">Review is detection, not governance</a>: it finds problems, it does not prevent them.</p>
     <p><strong>Review does not scale with agent output.</strong> When agents generate changes faster than people can read them, review becomes the slow step, and the honest failure mode is not rejection &mdash; it is approval-by-fatigue. A reviewer who cannot keep pace with the volume waves things through. <a href="/insights/why-code-review-cannot-scale-with-ai-output/">Human review cannot scale with AI output</a>. The architectural checks that <em>can</em> keep pace are the ones that run automatically at edit time and never get tired.</p>
 
-    <h2>How Architectural Guardrails Actually Work</h2>
+    <h2 id="how-architectural-guardrails-actually-work">How Architectural Guardrails Actually Work</h2>
     <p>An architectural guardrail is not a smarter prompt or a bigger memory. It is a check that runs on the proposed change and returns a verdict. The loop is deliberately boring, and boring is the point:</p>
     <ol>
       <li><strong>Record</strong> each architectural decision as structured data with its constraints &mdash; the boundary, the approved technology, the forbidden pattern &mdash; not a paragraph in a wiki.</li>
@@ -413,7 +427,7 @@
     <p>To add an architectural guardrail to Claude Code, follow the how-to guide <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">stop an AI coding agent from crossing an architectural boundary</a>. To add the CI backstop, follow <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">fail a pull request that breaks an ADR</a>.</p>
     <p>One more control matters in practice: warn versus block. Not every decision should hard-fail a change. A mature setup blocks on the sealed boundaries and the rules that must never bend, and warns on the softer conventions &mdash; surfacing the concern without stopping the work. The verdict is still deterministic; the team chooses the severity per decision.</p>
 
-    <h2>Choosing the Right Guardrail for the Risk</h2>
+    <h2 id="choosing-the-right-guardrail-for-the">Choosing the Right Guardrail for the Risk</h2>
     <p>The five layers are not competitors. A serious stack runs all of them, because each covers a risk the others cannot see. The mistake is not picking one &mdash; it is assuming the ones you already have cover a risk they were never built for.</p>
     <p>Match the layer to the failure you are actually worried about. Afraid of a destructive action or a prompt injection? That is <strong>runtime</strong>. Worried about a committed secret or a license violation? That is <strong>policy</strong>. Want the model to lean toward the house style? A <strong>rule file</strong> helps at the margin. But if the risk is that a correctly running, safe, policy-clean change quietly violates the architecture your team spent months deciding &mdash; the direct database read, the crossed boundary, the second HTTP client &mdash; none of those layers is built to catch it. That risk needs a guardrail that sees the architecture and enforces it at edit time. That is the layer to add when the others are already in place and the code is still drifting. See where it fits in a real stack in <a href="/insights/governance-layers-for-ai-coding-assistants/">governance layers for AI coding assistants</a>, or <a href="/use-cases/">walk through the use cases</a> where architectural guardrails earn their place.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI agent governance is splitting in two: runtime governance controls what agents do in the moment; architectural governance keeps what they build aligned over time." />
   <meta name="robots" content="index, follow" />
@@ -328,12 +327,24 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#runtime-governance-protecting-systems-from-agent">Runtime governance: protecting systems from agent actions</a></li>
+        <li><a href="#architectural-governance-protecting-systems-from-architectural">Architectural governance: protecting systems from architectural entropy</a></li>
+        <li><a href="#why-traditional-monitoring-fails">Why traditional monitoring fails</a></li>
+        <li><a href="#governance-becomes-infrastructure">Governance becomes infrastructure</a></li>
+        <li><a href="#why-enterprises-will-need-both">Why enterprises will need both</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <p><strong>AI agent governance</strong> is the set of controls that decide what autonomous AI agents may do and what they may change. It now covers two different jobs: runtime governance, which controls agent actions as they happen, and architectural governance, which prevents the software agents produce from drifting away from the decisions a team has made.</p>
 <p>A year ago, the race was to build agents. Frameworks, harnesses, orchestration loops, tool protocols. The question was whether an autonomous system could plan, call tools, write code, and finish a task without a human in the loop.</p>
 <p>That question is mostly settled. The race now is to build governance <em>around</em> agents. Across open-source projects and enterprise platforms, the same instinct keeps surfacing: an autonomous system that can act needs a layer that decides what it is allowed to do. The ecosystem-wide convergence on &ldquo;agent governance&rdquo; is the real signal of where the market is heading.</p>
 <p>But &ldquo;governance&rdquo; is already splitting into two markets. They share a word and almost nothing else. One governs <strong>execution</strong>. The other governs <strong>architecture</strong>. Conflating them is the most common mistake in the category right now.</p>
 
-<h2>Runtime governance: protecting systems from agent actions</h2>
+<h2 id="runtime-governance-protecting-systems-from-agent">Runtime governance: protecting systems from agent actions</h2>
 <p>Runtime governance is the execution control plane around autonomous agents: it enforces policy on each action in real time before the action reaches its target. A distinct category of runtime agent-control tooling has emerged in 2025 and 2026, and the primitives keep recurring across projects and platforms:</p>
 <ul>
 <li><strong>Approval and permission gates</strong> that require human confirmation before an agent takes a high-impact action</li>
@@ -359,7 +370,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Architectural governance: protecting systems from architectural entropy</h2>
+<h2 id="architectural-governance-protecting-systems-from-architectural">Architectural governance: protecting systems from architectural entropy</h2>
 <p>Architectural governance preserves architectural intent as autonomous systems continuously modify software, operating across time and across the codebase rather than per action.</p>
 <p>Here is what the first market does not cover. A perfectly safe agent &mdash; one that never deletes a database, never exceeds its budget, never touches production without approval &mdash; can still quietly destroy an architecture.</p>
 <p>Runtime controls operate per action and in the moment. They are built to stop the step that drops a table, sends the email, or spends the money. But not every dangerous agent action is a dangerous <em>step</em>. Many are dangerous <em>trajectories</em>. Each change can be locally reasonable and globally inconsistent. Over many iterations, that gap compounds.</p>
@@ -401,20 +412,20 @@
   <p class="diag-caption">Two markets, one word: execution governance and engineering governance</p>
 </div>
 
-<h2>Why traditional monitoring fails</h2>
+<h2 id="why-traditional-monitoring-fails">Why traditional monitoring fails</h2>
 <p>The instinct, when a new failure mode appears, is to monitor for it. But monitoring was built to catch a specific shape of failure: the outage, the latency spike, the error rate, the crash. Observability tells you when something stopped working.</p>
 <p>The dangerous agent failures are not failures by that definition. They are <strong>structurally correct, syntactically valid, and operationally dangerous over time.</strong> The code compiles. The tests pass. The endpoint returns 200. The agent technically succeeded at the task it was given. And in succeeding, it introduced a forbidden dependency, crossed an architectural boundary, or contradicted a decision the team had already made.</p>
 <p>Monitoring sees none of this, because nothing broke. The signal monitoring is built to detect &mdash; a thing that failed &mdash; never fires. The violation is invisible to a layer that only watches for outages.</p>
 <p>Observability does not create reliability by itself; it makes reliability achievable at high deployment velocity by shortening how long it takes to detect, diagnose, and recover. It is genuinely good at that. It is simply the wrong instrument for architectural violation, which produces no incident to detect. This is the distinction explored in <a href="/insights/why-observability-is-not-governance/">why observability is not governance</a>.</p>
 <div class="callout"><p><strong>An agent can satisfy every runtime check and pass every monitor while quietly violating engineering intent.</strong> That gap is precisely where architectural governance has to operate.</p></div>
 
-<h2>Governance becomes infrastructure</h2>
+<h2 id="governance-becomes-infrastructure">Governance becomes infrastructure</h2>
 <p>This pattern is not new. Governance layers emerge naturally once a platform becomes powerful enough to create risks it does not address itself.</p>
 <p>As cloud computing matured, a security and compliance layer grew up around it &mdash; not designed in from day one, but pulled into existence by the platform&rsquo;s own power. As continuous delivery accelerated how fast software shipped, observability matured alongside it as the complementary discipline that made high-velocity releases survivable. Each infrastructure wave produced a governance layer once the underlying capability outran the controls around it. That is the argument in <a href="/insights/ai-infrastructure-governance-category/">the next AI infrastructure category is governance</a>.</p>
 <p>Autonomous software systems are now at that point. The capability &mdash; agents that plan, execute, persist state, and iterate across long-running and multi-agent workflows &mdash; has outrun the controls. The result is a governance layer that has to be infrastructure, not a checklist: present in the <a href="/concepts/ai-native-sdlc/">AI-native SDLC</a>, reachable from the execution loop, and expressed as <a href="/concepts/verification-contracts/">verification contracts</a> the system can evaluate rather than prose a human is supposed to remember.</p>
 <p>This is also why the discipline of <a href="/insights/harness-engineering-still-needs-governance/">harness engineering</a> &mdash; building the execution layer between models and production &mdash; keeps arriving at the same conclusion: a harness that can do more needs a governance layer that holds intent across everything it does.</p>
 
-<h2>Why enterprises will need both</h2>
+<h2 id="why-enterprises-will-need-both">Why enterprises will need both</h2>
 <p>The two markets are not competitors. They are complements, addressing two genuinely different risks.</p>
 <p>Runtime governance prevents dangerous actions. It is the execution control plane that stops the agent from doing the irreversible thing in the moment. Architectural governance preserves system integrity over time. It is the engineering control plane that keeps a system matching its own design as autonomous iteration compounds.</p>
 <p>An enterprise running autonomous systems needs both, for the same reason it needs both an API gateway and a code architecture. One protects the request. The other protects the structure that serves every request.</p>

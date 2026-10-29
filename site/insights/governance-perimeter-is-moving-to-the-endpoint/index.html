@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="On-device agents are not just a latency story. They collapse the centralized governance perimeter toward the repository and the execution workflow. Governance has to become portable, repo-native, and deterministic." />
   <meta name="robots" content="index, follow" />
@@ -257,7 +256,24 @@
 
   <div class="article-body">
 
-    <h2>This is not really a post about Gemma</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#this-is-not-really-a-post">This is not really a post about Gemma</a></li>
+        <li><a href="#the-old-governance-assumption">The old governance assumption</a></li>
+        <li><a href="#what-changes-when-agents-go-local">What changes when agents go local</a></li>
+        <li><a href="#the-governance-implication">The governance implication</a></li>
+        <li><a href="#the-ai-pc-makes-this-concrete">The AI PC makes this concrete</a></li>
+        <li><a href="#what-portable-governance-looks-like">What portable governance looks like</a></li>
+        <li><a href="#the-expanding-governance-surface">The expanding governance surface</a></li>
+        <li><a href="#why-platform-level-governance-is-structurally">Why platform-level governance is structurally insufficient</a></li>
+        <li><a href="#what-survives-decentralization">What survives decentralization</a></li>
+        <li><a href="#the-strategic-shift">The strategic shift</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="this-is-not-really-a-post">This is not really a post about Gemma</h2>
     <p>Every few months a new local-capable model lands and the conversation rehearses the same set of talking points: lower latency, better privacy, no inference cost, sovereignty over data. Those benefits are real. They are also not the most important thing that is happening.</p>
     <p>The deeper shift is that execution itself is moving to the endpoint. A local-capable model is not interesting because it runs on a laptop. It is interesting because it lets an autonomous agent operate inside the terminal, the IDE, the simulator, the browser, the deployment tool, and increasingly the operating system &mdash; without crossing a network boundary that any centralized governance layer can intercept.</p>
     <p>For the last generation of AI tooling, governance assumptions depended on centralization. Hosted APIs. Managed copilots. Centralized policy layers. Provider-side controls. On-device agents break that model.</p>
@@ -272,7 +288,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The old governance assumption</h2>
+<h2 id="the-old-governance-assumption">The old governance assumption</h2>
     <p>Most AI governance infrastructure that exists today was designed for a world in which the model lived behind a network call. That assumption shaped everything else:</p>
     <ul>
       <li><strong>Provider moderation</strong> &mdash; the model vendor enforces policy at the API boundary</li>
@@ -283,7 +299,7 @@
     </ul>
     <p>This stack works as long as the model is the network endpoint. The moment the model is the network endpoint plus a directory full of project files plus an agent loop that can call tools without ever leaving the machine, none of these layers are in the path of execution anymore.</p>
 
-    <h2>What changes when agents go local</h2>
+    <h2 id="what-changes-when-agents-go-local">What changes when agents go local</h2>
     <p>Once autonomous agents operate locally, they fan out into the environments that humans used to mediate. The list is longer than it sounds:</p>
     <ul>
       <li>terminals and shell sessions</li>
@@ -330,19 +346,19 @@
       <p class="diag-caption">Hosted enforcement assumed the model was the network endpoint</p>
     </div>
 
-    <h2>The governance implication</h2>
+    <h2 id="the-governance-implication">The governance implication</h2>
     <p>If the model can run locally and the workflow can run locally, then any governance that depends on a centralized chokepoint is structurally optional. It can be bypassed by simply not routing through it. That is true for security tools, observability tools, and policy tools alike.</p>
     <p>This is not a hypothetical. It is already the operating reality for teams running Claude Code, Cursor, on-device coding agents, and computer-use loops on their own machines. The interesting question is no longer whether the centralized layer catches the violation. The interesting question is whether anything in the local execution workflow is structurally incapable of producing the violation in the first place.</p>
     <p>That is a different design problem. It requires constraints to travel with the workflow rather than sit upstream of it.</p>
 
     <div class="callout"><p><strong>Architectural constraints have to be portable.</strong> If governance only exists at a centralized chokepoint, it is structurally optional the moment execution can avoid that chokepoint.</p></div>
 
-    <h2>The AI PC makes this concrete</h2>
+    <h2 id="the-ai-pc-makes-this-concrete">The AI PC makes this concrete</h2>
     <p>This stopped being a roadmap argument on 31 May 2026, when <a href="https://nvidianews.nvidia.com/news/nvidia-microsoft-windows-pcs-agents-rtx-spark" rel="noopener">NVIDIA and Microsoft announced they were rebuilding Windows around personal AI</a>. The NVIDIA RTX Spark superchip puts roughly a petaflop of local AI and up to 128GB of unified memory on consumer Windows machines &mdash; enough to run autonomous coding agents on-device that never round-trip to the cloud. On that hardware, the centralized inference chokepoint is optional by default.</p>
     <p>Notably, NVIDIA shipped the runtime-governance half alongside it: NVIDIA OpenShell, a sandboxed, secure-by-design agent runtime built on new Windows containment primitives, governing what a local agent is permitted to do at execution time &mdash; file access, tool use, isolation. That is real and useful, and it is the <a href="/insights/ai-agent-governance-two-markets/">runtime-governance market</a>, not this one. OpenShell can contain what an agent is allowed to touch on the machine; it has no model of whether the diff that agent commits preserves an architectural decision the team made. The AI PC ships the containment layer and leaves the architectural one exactly where it was: in the repo, or nowhere.</p>
     <p>What the AI PC really changes for architectural governance is arithmetic. A single constraint now has to fire identically across more local surfaces at once &mdash; the on-device IDE, the local terminal agent, the OS-orchestrated loop, and cloud CI &mdash; on the same machine, often with no network call between them. A constraint enforced only in cloud CI is not <em>late</em> to those surfaces; it is <em>absent</em> from them. That raises the propagation bar inside the architectural lane rather than creating a new one.</p>
 
-    <h2>What portable governance looks like</h2>
+    <h2 id="what-portable-governance-looks-like">What portable governance looks like</h2>
     <p>Portable governance is not a vague idea. It is a small set of properties that distinguish enforcement that survives endpoint execution from enforcement that does not.</p>
     <ul>
       <li><strong>Repo-native</strong> &mdash; constraints live in the same repository as the code they govern, so any agent that reads the repo also reads the constraints</li>
@@ -353,7 +369,7 @@
     </ul>
     <p>These are infrastructure properties, not platform properties. They survive the disappearance of any specific provider because they do not depend on a provider at all.</p>
 
-    <h2>The expanding governance surface</h2>
+    <h2 id="the-expanding-governance-surface">The expanding governance surface</h2>
     <p>It is tempting to think of this as a code-generation problem. It is not. When agents move local, the surface area that needs governance expands well beyond generated source files. The execution layer itself has become agentic.</p>
 
     <div class="diag-wrap">
@@ -396,12 +412,12 @@
 
     <p>Every one of these surfaces is an execution point where an architectural intent can fail to propagate. PR metadata can be edited by an agent without anyone reviewing the diff. Deployment configurations can be mutated by an agent that has tool access to infrastructure CLIs. Operating system automation can run commands the user never sees. Governance needs to be present at each of these surfaces, not just at code generation time.</p>
 
-    <h2>Why platform-level governance is structurally insufficient</h2>
+    <h2 id="why-platform-level-governance-is-structurally">Why platform-level governance is structurally insufficient</h2>
     <p>Platform-level governance &mdash; the governance baked into a specific copilot, IDE, or hosted orchestration product &mdash; works while the user is inside that product. The moment the workflow crosses into a different harness, a different agent runtime, or a local execution environment that the platform does not control, the constraints stop firing.</p>
     <p>This is not a defect in any specific product. It is a structural property of platform-level controls: their scope ends at the product boundary. Endpoint-local agents routinely cross product boundaries within a single task. The set of constraints that fired at the start of the task is not the set of constraints that fires at the end.</p>
     <div class="callout"><p><strong>Platform-level governance has a scope problem.</strong> Endpoint workflows cross platform boundaries inside a single task. Constraints need to live with the workflow, not with any one platform.</p></div>
 
-    <h2>What survives decentralization</h2>
+    <h2 id="what-survives-decentralization">What survives decentralization</h2>
     <p>If the centralized control plane fragments and platform-level enforcement only covers slices of the workflow, what survives? Constraints that live in the artifact the workflow is acting on. That artifact is, almost always, the repository.</p>
     <p>This is why repo-native governance is becoming structural rather than optional. When the compiled constraint set lives in the repo:</p>
     <ul>
@@ -412,7 +428,7 @@
     </ul>
     <p>The constraint set becomes the one piece of governance that survives every handoff &mdash; from local agent to remote review to deployment runtime &mdash; because it is co-located with the thing being governed.</p>
 
-    <h2>The strategic shift</h2>
+    <h2 id="the-strategic-shift">The strategic shift</h2>
     <p>The future governance challenge is not model intelligence. It is governance portability across decentralized execution environments. As agents move closer to the operating system, governance has to move closer to the repository. Not because repos are sacred. Because they are the one durable artifact every execution surface agrees to read.</p>
     <p>This is the shift that on-device agents are quietly forcing. Centralized governance was a structural artifact of hosted inference. As inference and execution distribute, governance has to distribute with them &mdash; or stop existing.</p>
     <div class="callout"><p><strong>Cloud-hosted governance assumptions are breaking.</strong> The next generation of architectural governance is repo-native and surface-agnostic by design.</p></div>

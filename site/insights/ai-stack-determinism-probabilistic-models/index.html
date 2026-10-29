@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="LLMs are powerful reasoning engines, but production systems still require deterministic control layers around them. The AI stack is quietly rebuilding the same classical patterns software engineering already developed — separation of concerns, explicit contracts, validation gates, enforcement layers — and embedding probabilistic reasoning inside governed systems." />
   <meta name="robots" content="index, follow" />
@@ -282,7 +281,20 @@
 
   <div class="article-body">
 
-    <h2>The prompt layer hit its limits</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-prompt-layer-hit-its-limits">The prompt layer hit its limits</a></li>
+        <li><a href="#workflow-platforms-started-reintroducing-determinism">Workflow platforms started reintroducing determinism</a></li>
+        <li><a href="#why-this-still-isn-t-enough">Why this still isn&rsquo;t enough</a></li>
+        <li><a href="#the-next-layer-verification-contracts">The next layer: verification contracts</a></li>
+        <li><a href="#the-industry-is-quietly-rebuilding-the">The industry is quietly rebuilding the software stack</a></li>
+        <li><a href="#conclusion-from-autonomous-intelligence-to-governed">Conclusion: from autonomous intelligence to governed computation</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-prompt-layer-hit-its-limits">The prompt layer hit its limits</h2>
     <p>The early playbook was prompt-first. Stuff more into the system prompt. Add behavioral instructions. Paste the architecture into context. Ask the model nicely.</p>
     <p>That works for a single user with a single task. It breaks down the moment any of the following becomes true:</p>
     <ul>
@@ -305,7 +317,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Workflow platforms started reintroducing determinism</h2>
+<h2 id="workflow-platforms-started-reintroducing-determinism">Workflow platforms started reintroducing determinism</h2>
     <p>The next layer the industry built around models is deterministic by design. n8n made the argument bluntly in a recent post, <a href="https://www.linkedin.com/pulse/how-embed-business-logic-rules-llm-automation-hint-its-prompt-n8n-tw79f/" rel="noopener"><em>How to Embed Business Logic Rules in an LLM Automation (Hint: It&rsquo;s Not in the Prompt)</em></a>:</p>
     <div class="callout"><p><strong>&ldquo;AI workflows don&rsquo;t fail because the model is &lsquo;bad.&rsquo; They fail when business rules live inside prompts instead of deterministic systems.&rdquo;</strong> &mdash; n8n</p></div>
     <p>Their answer is the now-familiar shape: structured outputs, Code nodes, Switch nodes, and deterministic workflow logic that runs <em>after</em> the LLM response. The same pattern is showing up across the ecosystem under different names:</p>
@@ -319,7 +331,7 @@
     <p>Workflow vendors are rebuilding deterministic software infrastructure <em>around</em> probabilistic models. Control flow is re-entering AI systems. Software engineering patterns are returning through the side door.</p>
     <p>This is healthy. It is also incomplete &mdash; because business rules are not the only thing that gets pushed into prompts.</p>
 
-    <h2>Why this still isn&rsquo;t enough</h2>
+    <h2 id="why-this-still-isn-t-enough">Why this still isn&rsquo;t enough</h2>
     <p>n8n&rsquo;s argument is right and worth extending. Business rules do not belong in prompts. Neither do <strong>architectural decisions</strong>. Both share the same failure mode: a probabilistic suggestion layer is asked to carry a deterministic contract, and the contract silently drifts.</p>
     <p>Deterministic orchestration solves real problems: workflow reliability, branching logic, response shape, retries, error handling. What it does not solve is the slower, more dangerous class of failure: <a href="/concepts/architectural-drift/">architectural drift</a>, long-term consistency, repo-wide invariants, ADR compliance, governance propagation.</p>
     <p>A workflow node can validate that the JSON shape is correct while still allowing:</p>
@@ -332,7 +344,7 @@
     <p>The schema validation is downstream of the architectural problem. The output is shape-correct and architecturally wrong.</p>
     <div class="callout"><p><strong>Orchestration governs execution flow.</strong> Architectural governance governs system evolution. Both are necessary; neither replaces the other.</p></div>
 
-    <h2>The next layer: verification contracts</h2>
+    <h2 id="the-next-layer-verification-contracts">The next layer: verification contracts</h2>
     <p>The deterministic layer that completes the picture is not bigger prompts, more context, or a better model. It is bounded autonomy with deterministic verification around it:</p>
     <ul>
       <li><strong>Enforceable invariants</strong> &mdash; what must hold across every generation, every agent, every run</li>
@@ -366,7 +378,7 @@
     </div>
     <p>Neither layer is the system. The system is the interaction between them &mdash; probabilistic reasoning operating inside deterministic boundaries, with <a href="/concepts/verification-contracts/">verification contracts</a> that prove the boundaries held.</p>
 
-    <h2>The industry is quietly rebuilding the software stack</h2>
+    <h2 id="the-industry-is-quietly-rebuilding-the">The industry is quietly rebuilding the software stack</h2>
     <p>What looks like AI infrastructure is, layer by layer, the same set of primitives software engineering has used for decades.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -383,7 +395,7 @@
     </div>
     <p>The novelty is not in inventing new primitives. It is in embedding probabilistic reasoning inside governed systems &mdash; and accepting that those systems still need the boundaries software engineering has always needed.</p>
 
-    <h2>Conclusion: from autonomous intelligence to governed computation</h2>
+    <h2 id="conclusion-from-autonomous-intelligence-to-governed">Conclusion: from autonomous intelligence to governed computation</h2>
     <p>The framing has shifted quietly. The early hype said AI would replace software engineering. What is actually shipping looks more like AI being absorbed into it.</p>
     <p>LLMs changed how software is generated. They did not eliminate the need for software architecture. The next competitive layer in AI is probably not generation quality alone &mdash; it is <strong>governance quality</strong>: how reliably probabilistic systems operate inside the deterministic boundaries production work requires.</p>
     <div class="callout"><p><strong>The future of AI infrastructure may look less like autonomous intelligence</strong> and more like governed computation. The industry is learning, again, that probabilistic generation still requires deterministic boundaries.</p></div>

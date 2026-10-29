@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Enterprise AI governance is moving into the execution path. Coding agents expose a second problem: most of the policy they must obey was never written as policy." />
   <meta name="robots" content="index, follow" />
@@ -295,7 +294,21 @@
 
   <div class="article-body">
 
-    <h2>Governance is moving into the execution path</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#governance-is-moving-into-the-execution">Governance is moving into the execution path</a></li>
+        <li><a href="#architectural-rules-are-not-thresholds">Architectural rules are not thresholds</a></li>
+        <li><a href="#agents-turn-undocumented-architecture-into-an">Agents turn undocumented architecture into an operational problem</a></li>
+        <li><a href="#retrieval-gets-the-decision-into-the">Retrieval gets the decision into the room</a></li>
+        <li><a href="#decisions-need-scope-before-they-can">Decisions need scope before they can be controls</a></li>
+        <li><a href="#where-the-check-happens">Where the check happens</a></li>
+        <li><a href="#an-enforcement-record-is-the-deliverable">An enforcement record is the deliverable</a></li>
+        <li><a href="#two-layers-not-two-products">Two layers, not two products</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="governance-is-moving-into-the-execution">Governance is moving into the execution path</h2>
     <p>Enterprise AI governance spent several years as a documentation exercise. Model cards, risk registers, review boards, retrospective audit. The agentic shift has made that posture untenable, because an agent that has already executed a tool call has already changed something.</p>
     <p>Cognizant's Venkatesh Subramanian made the argument directly in August 2026 in <a href="https://www.cognizant.com/us/en/ai-lab/blog/govern-agentic-ai-systems-real-time" target="_blank" rel="noopener">How to Govern Agentic Systems in Real Time</a>. Governance, he argues, has to evaluate prompts, responses, tool calls, and agent-to-agent messages <em>"before actions take effect"</em> rather than explaining them afterwards. The piece also makes two adjacent points worth taking seriously: policy should be updatable by the people who own the risk rather than only by the people who own the code, and every governed interaction should leave an audit-ready record of which policy applied and what was decided.</p>
     <p>That is a large consultancy describing the same movement from observation to enforcement that we have been arguing for. It is useful external validation. It is also, for software engineering specifically, only half of the problem.</p>
@@ -311,7 +324,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Architectural rules are not thresholds</h2>
+<h2 id="architectural-rules-are-not-thresholds">Architectural rules are not thresholds</h2>
     <p>Consider the kind of policy that translates cleanly into a runtime control. A transfer above a set amount requires additional authorization. An agent may not send external email. Tool X is unavailable to agents operating in region Y. These are conditions over values, and turning them into code is mostly an implementation detail.</p>
     <p>Now consider the equivalent statements in a software architecture:</p>
     <ul>
@@ -323,21 +336,21 @@
     <p>Every one of these is a real decision that a team actually made, and none of them is a threshold. They require knowing what counts as the event bus in this codebase, which paths constitute the payments subtree, and which imports are infrastructure. They carry semantics and scope rather than values.</p>
     <p>Most of them are also not written down anywhere a machine could reach. They live in an architecture decision record from two years ago, in a diagram, in a convention nobody documented, or in the head of the engineer who set the pattern. You cannot make a policy programmable if it was never expressed as a policy.</p>
 
-    <h2>Agents turn undocumented architecture into an operational problem</h2>
+    <h2 id="agents-turn-undocumented-architecture-into-an">Agents turn undocumented architecture into an operational problem</h2>
     <p>Human teams absorb this gap without noticing. A new engineer writes something that violates an unwritten convention, a reviewer says we do not do it that way here, and the convention propagates socially. Slowly, but it works.</p>
     <p>That mechanism does not scale to agents, for two reasons. Agents do not accumulate institutional memory across sessions, so the correction has to be re-delivered every time. And the volume of changes rises to a point where re-delivering it manually stops being viable.</p>
     <p>The result is that architectural ambiguity, which was previously a slow tax on onboarding, becomes an operational failure mode. The question stops being whether generated code is correct. It becomes whether the implementation was permissible under the architecture governing that part of the system.</p>
 
-    <h2>Retrieval gets the decision into the room</h2>
+    <h2 id="retrieval-gets-the-decision-into-the">Retrieval gets the decision into the room</h2>
     <p>The common answer is to retrieve the relevant decision and put it in the agent's context. That is necessary and it is not the same as governing.</p>
     <p>Retrieval can surface a decision. It cannot guarantee that the right decision was selected, that it applies to the files actually being changed, that conflicting decisions were resolved in the right order, that prose was interpreted as intended, or that the prohibited construct was actually avoided. We have set out the full version of this argument in <a href="/compare/rag-vs-governance/">RAG versus governance</a>, so it is enough here to note that the two operate at different layers.</p>
 
-    <h2>Decisions need scope before they can be controls</h2>
+    <h2 id="decisions-need-scope-before-they-can">Decisions need scope before they can be controls</h2>
     <p>The missing piece between an architecture decision record and an enforceable control is applicability. A decision needs to say where it binds.</p>
     <p>Concretely, that means a decision carries three things rather than one: the choice itself, the paths or constructs it governs, and the constraint that follows. A decision that persistence services use PostgreSQL, applying to the payments and orders subtrees, prohibiting new SQLite dependencies, is evaluable. The same decision as a paragraph of prose is context.</p>
     <p>This is what the site means by <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>, and the distinction it turns on is simple. An architectural decision without applicability is documentation. An architectural decision with deterministic applicability and an explicit constraint can function as a control.</p>
 
-    <h2>Where the check happens</h2>
+    <h2 id="where-the-check-happens">Where the check happens</h2>
     <p>Real-time is doing a lot of work in the phrase real-time governance, so it is worth being exact about the surfaces available for coding agents. There are three, and they are not interchangeable.</p>
     <ul>
       <li><strong>Before generation.</strong> Applicable decisions are selected and supplied as part of the agent's working context, so the implementation starts inside the constraint rather than being corrected toward it.</li>
@@ -346,11 +359,11 @@
     </ul>
     <p>Each catches something the others miss, and none of them is a substitute for having written the decision down in an evaluable form in the first place.</p>
 
-    <h2>An enforcement record is the deliverable</h2>
+    <h2 id="an-enforcement-record-is-the-deliverable">An enforcement record is the deliverable</h2>
     <p>Subramanian's audit point translates well, and for engineering it is more useful than it first appears. Six months after the fact, the valuable artifact is not the diff. It is the answer to a specific set of questions: which agent made the change, which decision applied, which version of that decision, why it applied to that path, what constraint was evaluated, and what the verdict was.</p>
     <p>That record is what makes architectural governance reviewable rather than advisory. It is also what makes it possible to change a decision deliberately, because you can see everything that was previously enforced under the old one. Without it, an override is indistinguishable from a violation.</p>
 
-    <h2>Two layers, not two products</h2>
+    <h2 id="two-layers-not-two-products">Two layers, not two products</h2>
     <p>It would be easy to read the Cognizant piece as a competitor staking a claim. It is more accurate to read it as a description of an adjacent layer.</p>
     <p>Runtime AI governance asks whether a deployed agent is permitted to perform an action: call this tool, move this money, message this counterparty. Architectural governance asks whether a coding agent is permitted to build the system this way. Both are enforcement, both need programmable policy, both need provenance. They govern different objects, and an organization running agentic engineering at any scale will eventually need both.</p>
     <p>What software engineering adds is the harder input problem. The runtime layer inherits its policies from risk and compliance functions that are used to writing them. The architectural layer has to first turn decisions that were never written as rules into something a machine can evaluate. That translation, from decision to scope to constraint to verdict to evidence, is the actual work. Microsoft makes the same distinction from the other side in its 2026 brief; see <a href="/insights/microsoft-ai-decision-brief-architectural-intent/">Microsoft's AI Decision Brief: Where Does Architectural Intent Live?</a></p>

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="In banking, insurance, and fintech, architectural drift is a compliance risk. AI coding agents create governance debt unless every change carries an audit trail: who approved it, which decision justified it, and why it happened." />
   <meta name="robots" content="index, follow" />
@@ -297,7 +296,20 @@
 
   <div class="article-body">
 
-    <h2>In Regulated Finance, Boundaries Are Controls</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#in-regulated-finance-boundaries-are-controls">In Regulated Finance, Boundaries Are Controls</a></li>
+        <li><a href="#how-ai-coding-agents-create-governance">How AI Coding Agents Create Governance Debt</a></li>
+        <li><a href="#the-audit-trail-problem">The Audit Trail Problem</a></li>
+        <li><a href="#borrow-the-discipline-of-model-risk">Borrow the Discipline of Model Risk Management</a></li>
+        <li><a href="#decision-memory-for-regulated-engineering-teams">Decision Memory for Regulated Engineering Teams</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme Fits</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="in-regulated-finance-boundaries-are-controls">In Regulated Finance, Boundaries Are Controls</h2>
     <p>In most software, an architectural boundary is a matter of taste. You route billing through a service, or you do not. The cost of crossing it is engineering friction, paid later. In financial services, the same boundaries carry a second meaning that has nothing to do with taste. They are controls, and a control that is silently crossed is a finding waiting to be written up.</p>
     <p>Segregation of duties exists so the person who initiates a transaction cannot also approve it. Data-handling boundaries exist because customer financial data sits under specific regulatory regimes. Controlled dependency lists exist because an unreviewed library in a payments path is a supply-chain exposure. Approval gates exist so that a change to a system of record is signed off before it ships. These are not stylistic conventions an engineer can renegotiate at 2 a.m. They are the encoded form of obligations a bank, insurer, or fintech has made to regulators and customers.</p>
     <p>This is what makes <a href="/insights/ai-governance-for-regulated-industries/">architectural drift in a regulated industry</a> a different category of problem. A locally correct change that crosses one of these boundaries is not a code-review nit. It is a control failure. The code can be clean, tested, and shipped, and still represent a break in a documented control &mdash; one that nobody flagged because, viewed in isolation, the change looked fine.</p>
@@ -311,12 +323,12 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>How AI Coding Agents Create Governance Debt</h2>
+<h2 id="how-ai-coding-agents-create-governance">How AI Coding Agents Create Governance Debt</h2>
     <p>AI coding agents are very good at producing changes that look fine. That is precisely the property that makes them dangerous in a regulated codebase. An agent generates many changes quickly, each one locally plausible, each one passing the tests in front of it. None of them automatically carry the thing finance actually requires: the rationale and the approval that say <em>this change is allowed, and here is why</em>.</p>
     <p>The result is governance debt. It accrues the same way financial debt does &mdash; quietly, in small increments, until the balance is large enough to matter. Every undocumented agent-made change that touches a controlled boundary is a small liability. A direct database write that should have gone through a service of record. A new outbound dependency added to a payments module. A reconciliation step quietly relaxed because it was failing a test. Individually, each is defensible. In aggregate, they form a codebase whose current behavior no longer matches its documented design, and whose history cannot explain how it got there.</p>
     <p>This is the same dynamic that turns <a href="/insights/pr-review-is-becoming-incident-response/">pull-request review into incident response</a>: when the rate of change outpaces the rate of human scrutiny, review stops being a gate and becomes an after-the-fact investigation. In finance, the investigation is not run by your own engineers. It is run by an examiner.</p>
 
-    <h2>The Audit Trail Problem</h2>
+    <h2 id="the-audit-trail-problem">The Audit Trail Problem</h2>
     <p>Here is the scenario that should keep a head of engineering risk awake. It is not a breach. It is a Tuesday, months from now, when a model-risk team or a regulatory examiner points at a specific line in a specific system and asks three questions.</p>
     <ul>
       <li><strong>Who approved this change?</strong> Not who wrote it &mdash; who, with the authority to do so, signed off that it was allowed to ship.</li>
@@ -327,17 +339,17 @@
     <div class="callout"><p><strong>The audit-trail problem is not a logging problem.</strong> You can have every commit, every diff, and every CI run on record and still be unable to answer why a change was allowed. Logs capture what happened. An audit trail has to capture what was <em>permitted</em>, and against which decision.</p></div>
     <p>Only a durable decision record can answer those questions. The intent behind a boundary, the approval that authorized a change against it, and the link between the two have to outlive the session that produced the code. That is the difference between a system that can prove it was in control and one that merely hopes it was.</p>
 
-    <h2>Borrow the Discipline of Model Risk Management</h2>
+    <h2 id="borrow-the-discipline-of-model-risk">Borrow the Discipline of Model Risk Management</h2>
     <p>Financial services already has a mature playbook for exactly this problem, and it predates AI coding agents by more than a decade. When banks began relying on quantitative models for pricing, capital, and risk, regulators recognized that a model nobody could explain was itself a risk. The response was the <a href="https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm" target="_blank" rel="noopener">Federal Reserve and OCC model risk management guidance, SR 11-7 (Supervisory Guidance on Model Risk Management)</a>, which made documentation, independent validation, ongoing governance, and a durable audit trail table stakes for any model in production.</p>
     <p>The logic of SR 11-7 is portable, and it now has to be ported. A model and an AI coding agent are both systems that produce consequential output a human did not directly author. The guidance&rsquo;s answer was never &ldquo;trust the model.&rdquo; It was: document the intent, validate it independently, govern it continuously, and keep a record that an examiner can follow. Strip the word &ldquo;model&rdquo; and that is a specification for governing AI-generated code in a bank.</p>
     <p>The same discipline that finance demands of a pricing model now has to extend to the code an agent writes against the systems that run the business. Documentation of intent. Independent verification that the change conforms. Governance that does not depend on the person who happened to review the PR. And an audit trail that survives the people, the sessions, and the sprint in which the change was made.</p>
 
-    <h2>Decision Memory for Regulated Engineering Teams</h2>
+    <h2 id="decision-memory-for-regulated-engineering-teams">Decision Memory for Regulated Engineering Teams</h2>
     <p>The way out is not to slow the agents down. Velocity is why teams adopted them; asking finance to give it up is a non-starter. The way out is to make every change carry its own justification. That requires a durable record of architectural decisions &mdash; not a wiki, but a structured, enforceable record of what the boundaries are and why they exist &mdash; coupled with enforcement that checks each change against it.</p>
     <p>This is what lets a regulated team move fast and still prove control. When the architectural decisions are written as constraints rather than prose, an agent can retrieve them at generation time, and a verification layer can check a proposed change against them before it merges. The decision record carries the intent. The enforcement carries the approval logic. Together they produce the thing finance has always needed and AI velocity has been eroding: an explanation that survives the moment of authorship.</p>
     <p>The mechanism that makes this auditable is <a href="/concepts/enforcement-provenance/">enforcement provenance</a> &mdash; every time a constraint is checked, the verdict is recorded as evidence. A change did not merely pass review; it passed a named decision, on a specific date, against a specific rule, with the result logged. That same enforcement reaches every agent and every workflow through <a href="/concepts/governance-propagation/">governance propagation</a>, so a control written once is applied everywhere code is generated, not just where a reviewer happened to be paying attention. For teams putting this into practice, the regulated-engineering <a href="/use-cases/">use cases</a> show what the workflow looks like end to end.</p>
 
-    <h2>Where Mneme Fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme Fits</h2>
     <p>Mneme exists to make this concrete. It turns architectural decisions and ADRs into executable constraints that agents retrieve at generation time and that CI verifies deterministically. The boundaries that finance encodes as controls &mdash; segregation of duties, data handling, controlled dependencies, approval gates &mdash; become rules an agent reads before it writes and a pipeline checks before it merges. Every verdict is logged as evidence, which is what converts &ldquo;we have governance&rdquo; into &ldquo;here is the record.&rdquo;</p>
     <p>This is the same architecture that makes <a href="/insights/autonomous-code-remediation-requires-architectural-governance/">autonomous remediation safe to run</a>: an agent can be trusted to fix things at scale only when an enforcement layer is checking its work against decisions it cannot quietly override. Finance is simply the vertical where the absence of that layer is most expensive, because the entity asking &ldquo;why was this allowed?&rdquo; is not your own team. The discipline is not new. SR 11-7 wrote it down years ago. What is new is that the volume of consequential change now comes from agents, and the audit trail has to keep up.</p>
     <p>The same problem recurs across regulated verticals with different vocabulary &mdash; the <a href="/insights/ai-coding-agents-life-sciences-governance/">life-sciences version</a> swaps examiners for validation and GxP, but the structure is identical: many fast, plausible changes, and a regulator who will eventually ask you to explain them. The teams that come through that conversation cleanly are the ones whose decisions were enforced, not just remembered.</p>

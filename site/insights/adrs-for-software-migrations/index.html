@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A migration needs ADR states the classic lifecycle does not have: legacy, target, transitional, and superseded, each scoped to the paths where it is in force." />
   <meta name="robots" content="index, follow" />
@@ -387,12 +386,27 @@
 
 <div class="article-body">
 
-    <h2>The ADR model assumes a stable answer</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-adr-model-assumes-a-stable">The ADR model assumes a stable answer</a></li>
+      <li><a href="#what-a-migration-adds-to-the">What a migration adds to the lifecycle</a></li>
+      <li><a href="#states-a-migration-adr-needs">States a migration ADR needs</a></li>
+      <li><a href="#applicability-is-what-makes-the-states">Applicability is what makes the states work</a></li>
+      <li><a href="#writing-the-decision-down">Writing the decision down</a></li>
+      <li><a href="#sequencing-belongs-in-the-corpus">Sequencing belongs in the corpus</a></li>
+      <li><a href="#retiring-decisions-is-part-of-the">Retiring decisions is part of the work</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
+    <h2 id="the-adr-model-assumes-a-stable">The ADR model assumes a stable answer</h2>
     <p>An architecture decision record captures one decision, its context, and its consequences. The classic lifecycle is short: a decision is proposed, accepted, and eventually superseded by a later one. That model works well for a system with one architecture at a time, which is the situation most ADR practice was developed for.</p>
     <p>A migration violates the assumption. For years the honest answer to "how does this system handle persistence" is two answers, both correct, depending on which component you are looking at and how far the migration has reached. An ADR corpus that can only say <em>accepted</em> or <em>superseded</em> cannot express that, so teams either write rules too broad to be enforceable or leave the migration out of the corpus entirely.</p>
     <p>If you have not read it, <a href="/insights/how-ai-coding-agents-use-adrs/">how AI coding agents use ADRs</a> covers the general case: whether records are ignored, advisory, or enforced, and what it takes to make them executable. This piece is about what changes when the same corpus has to describe a system in transition.</p>
 
-    <h2>What a migration adds to the lifecycle</h2>
+    <h2 id="what-a-migration-adds-to-the">What a migration adds to the lifecycle</h2>
     <p>Three things are true during a migration that are not true the rest of the time, and each needs a representation.</p>
     <ul>
       <li><strong>Two answers are simultaneously valid.</strong> The legacy pattern is correct in components that have not migrated. The target pattern is correct in those that have.</li>
@@ -400,7 +414,7 @@
       <li><strong>Correctness is positional.</strong> Whether a given call is acceptable depends on which tree the file sits in, not on the call itself.</li>
     </ul>
 
-    <h2>States a migration ADR needs</h2>
+    <h2 id="states-a-migration-adr-needs">States a migration ADR needs</h2>
     <p>Four states are enough. They are not exotic additions to ADR practice so much as the states a migration was always in, written down.</p>
 
     <div style="overflow-x:auto;">
@@ -421,7 +435,7 @@
 
     <p>Mind the vocabulary here, because two meanings of the same word sit next to each other. The <em>pattern</em> is superseded, and the decision that forbids it is <code>status: accepted</code>, scoped to the migrated tree. An ADR whose own <code>status:</code> is <code>superseded</code> is excluded from the active set entirely, which is how you retire a record rather than how you enforce one. Marking the forbidding decision superseded would switch it off.</p>
 
-    <h2>Applicability is what makes the states work</h2>
+    <h2 id="applicability-is-what-makes-the-states">Applicability is what makes the states work</h2>
     <p>States alone do not resolve anything. A decision that says "direct persistence access is superseded" is either wrong in the legacy tree or ignored everywhere, unless it also says where it applies.</p>
     <p>Mneme compiles the <code>## Constraints</code> block of an ADR into typed rules, and those rules take explicit path selectors. <code>include_paths</code> and <code>exclude_paths</code> determine applicability only; they never loosen the matching semantics. A rule can govern the migrated tree while staying silent where migration has not reached.</p>
 
@@ -429,19 +443,19 @@
 
     <p>The practical effect is that a check reports three outcomes rather than two. A rule can pass, fail, or be skipped because it did not apply to the path in question, and the skip is reported with its reason. During a migration the skip is the informative case, because it is the machine confirming that this component has not moved yet.</p>
 
-    <h2>Writing the decision down</h2>
+    <h2 id="writing-the-decision-down">Writing the decision down</h2>
     <p>A migration ADR looks like an ordinary one. The frontmatter carries the identity and status, the prose carries the reasoning a future engineer will need, and the constraints block carries the part a machine evaluates.</p>
     <p>The reasoning section matters more here than in a typical ADR, because a migration decision is read most often by whoever is deciding whether an exception still applies. Recording why the adapter exists and what has to be true before it can be removed is what stops the exception from silently becoming the architecture.</p>
 
-    <h2>Sequencing belongs in the corpus</h2>
+    <h2 id="sequencing-belongs-in-the-corpus">Sequencing belongs in the corpus</h2>
     <p>Migrations carry ordering requirements. A downstream component cannot move until its dependency has. Those requirements normally live in a project plan, which is not something an agent is checked against.</p>
     <p>No directive expresses "has component A migrated yet." What the corpus can carry is a rule that holds the downstream tree to the legacy pattern until its dependency lands, retired as part of that dependency's migration. That keeps the ordering visible and attributable rather than machine-derived, and it gives the team one place to answer the question that comes up constantly during a long migration, which is whether a particular piece of work is allowed to start yet.</p>
 
-    <h2>Retiring decisions is part of the work</h2>
+    <h2 id="retiring-decisions-is-part-of-the">Retiring decisions is part of the work</h2>
     <p>The end state of a well-run migration corpus is small. The transitional decisions have been marked superseded as their boundaries closed. The legacy decision has been retired. What remains is the target decision plus the superseded records that keep the old patterns from returning.</p>
     <p>Reaching that state requires treating retirement as scheduled work rather than cleanup that happens if anyone remembers. A transitional decision without a termination condition is how a temporary adapter becomes a permanent layer that nobody can justify and nobody dares remove.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>Most ADR advice assumes the system has one architecture and the record's job is to say what it is. A migration needs the corpus to describe a system with two, to say which one governs which paths, and to mark the exceptions that are supposed to expire.</p>
     <p>That is a modest extension to ADR practice and a significant change in what the corpus can do. It turns the migration plan from a document agents do not read into a set of constraints they are checked against.</p>
     <p>The <a href="/demo/adr-compiler/">ADR compiler demo</a> shows a record compiling into the typed rules an enforcement layer evaluates.</p>

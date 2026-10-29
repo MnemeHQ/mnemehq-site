@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Review and CI see agent actions after they happen. Pre-action enforcement checks a proposed write before it lands. Which boundaries can block, and which cannot." />
   <meta name="robots" content="index, follow" />
@@ -378,11 +377,28 @@
   </header>
 
 <div class="article-body">
-<h2>Agents act, and most controls arrive afterwards</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#agents-act-and-most-controls-arrive">Agents act, and most controls arrive afterwards</a></li>
+      <li><a href="#what-pre-action-enforcement-means">What pre-action enforcement means</a></li>
+      <li><a href="#not-every-boundary-is-equal">Not every boundary is equal</a></li>
+      <li><a href="#guide-before-generation-govern-before-action">Guide before generation, govern before action</a></li>
+      <li><a href="#a-gate-can-only-judge-what">A gate can only judge what it can see</a></li>
+      <li><a href="#why-the-verdict-has-to-be">Why the verdict has to be deterministic</a></li>
+      <li><a href="#what-belongs-in-a-pre-action">What belongs in a pre-action policy</a></li>
+      <li><a href="#pre-action-does-not-replace-post">Pre-action does not replace post-action</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="agents-act-and-most-controls-arrive">Agents act, and most controls arrive afterwards</h2>
 <p>A coding agent does more than suggest text. It edits files, runs shell commands, installs packages and opens pull requests. Most of the controls engineering teams rely on see only the result. Code review sees a diff. Continuous integration (CI) sees a branch. Observability sees a log. By the time any of them looks, the action has already happened.</p>
 <p>That ordering was fine when a person made every change and a reviewer checked a handful a day. It holds up less well when agents make changes faster than people can read them. The question becomes where a control can take effect, not only whether one exists.</p>
 
-<h2>What pre-action enforcement means</h2>
+<h2 id="what-pre-action-enforcement-means">What pre-action enforcement means</h2>
 <p><strong>Pre-action enforcement</strong> evaluates a proposed agent action against the team's decisions before the action executes. Decisions here are the engineering choices a team has recorded, such as a banned library or a boundary between layers. The check returns a deterministic verdict: allow it, warn about it, or block it. The control sits between "the agent decided to do something" and "it happened".</p>
 <p>The term names where a control runs, not a product category. Pre-action enforcement is one of the ways <a href="/concepts/engineering-decision-governance/">engineering decision governance</a>, which determines which decisions govern a given change, gets applied to agent work. The other ways are guidance before the agent writes anything and verification after it has.</p>
 <pre tabindex="0"><code>intent -> context -> generation -> proposed action
@@ -393,7 +409,7 @@
                                        |
                               verify (CI, review)</code></pre>
 
-<h2>Not every boundary is equal</h2>
+<h2 id="not-every-boundary-is-equal">Not every boundary is equal</h2>
 <p>An agent's work passes several points where a control could run. They differ in what the control can see and what it can stop:</p>
 <table class="gov-table">
   <thead><tr><th>Boundary</th><th>What a control can do there</th><th>Limit</th></tr></thead>
@@ -406,11 +422,11 @@
 </table>
 <p>A common mistake in agent governance claims is to treat these boundaries as equivalent. Guidance before generation is useful, but it is not enforcement. A rule in a prompt or an instruction file is a request. A check at the write boundary that can refuse the change is a control.</p>
 
-<h2>Guide before generation, govern before action</h2>
+<h2 id="guide-before-generation-govern-before-action">Guide before generation, govern before action</h2>
 <p>A frequent objection: by the time a pre-write check runs, the model has already generated the violating code. That is true. The goal is not to stop a model from thinking of a bad change. It is to stop the change reaching the codebase.</p>
 <p>A useful way to hold the three stages together is: guide before generation, govern before action, verify after action. Each stage catches what the earlier one missed.</p>
 
-<h2>A gate can only judge what it can see</h2>
+<h2 id="a-gate-can-only-judge-what">A gate can only judge what it can see</h2>
 <p>Pre-action enforcement has a hard technical limit. The gate, meaning the check that runs at the boundary, has to know the action's effect in advance: which file, and what content.</p>
 <p>A structured edit tool call carries both. The gate can compute the resulting file and check it. A shell command such as <code>sed -i</code>, a chained command or a script hides the path and content inside command text. The gate cannot reliably reconstruct what it will do, so it cannot judge it reliably beforehand.</p>
 <p>That means pre-action coverage is per action path, not per agent. Any honest integration states which paths it checks before execution and which fall through to a backstop, a check at a later boundary. Two examples come from the integrations of Mneme, an open-source decision and control layer for agentic software development:</p>
@@ -419,11 +435,11 @@
   <li><strong>OpenAI Codex command-line interface (CLI).</strong> Native <code>apply_patch</code> additions and updates are checked before execution, and a violation denies the whole patch. Shell writes are not checked beforehand; a Stop hook audits every file the session changed. Validated against Codex CLI 0.149.1. See the <a href="/integrations/codex-cli/">Codex CLI integration</a>.</li>
 </ul>
 
-<h2>Why the verdict has to be deterministic</h2>
+<h2 id="why-the-verdict-has-to-be">Why the verdict has to be deterministic</h2>
 <p>A pre-action gate that asks a language model "does this change look acceptable?" will answer differently on different runs. That is a second opinion, not a control. A team cannot audit it, and an agent cannot learn a consistent boundary from it.</p>
 <p>A deterministic gate gives the same verdict for the same change and the same decisions, every time. It can record which decision fired and why, so a person can reconstruct the verdict afterwards. The <a href="/concepts/deterministic-enforcement/">deterministic enforcement</a> concept page covers the property in more detail.</p>
 
-<h2>What belongs in a pre-action policy</h2>
+<h2 id="what-belongs-in-a-pre-action">What belongs in a pre-action policy</h2>
 <p>Not every decision should block an agent. Good candidates share two traits: they are expensive to reverse, and they can be checked mechanically.</p>
 <ul>
   <li>a client library or import that is banned in a given part of the codebase</li>
@@ -434,7 +450,7 @@
 <p>Mneme's typed rules cover the first two today, with a ruled-out dependency raised as a repository-wide warning rather than a path-scoped failure. Write-path restrictions are not a shipped Mneme rule.</p>
 <p>Judgment calls stay with people. "Is this abstraction right?" is not a pre-action rule. Neither is code style, which linters already handle. <a href="/insights/package-hallucinations-pre-action-governance/">Package Hallucinations Show Why AI Coding Needs Pre-Action Governance</a> walks through one worked case: a dependency that exists, passes security checks and still breaks a team decision.</p>
 
-<h2>Pre-action does not replace post-action</h2>
+<h2 id="pre-action-does-not-replace-post">Pre-action does not replace post-action</h2>
 <p>Pre-action enforcement stops what it can see. It does not see everything, so the later boundaries stay. The working model is prevent, catch, verify:</p>
 <ul>
   <li><strong>Prevent</strong> supported actions before they execute.</li>
@@ -443,7 +459,7 @@
 </ul>
 <p>Review still matters, but it is a different control with a different job. See <a href="/insights/review-is-not-governance/">Review Is Not Governance</a>.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>List the actions your agents can take.</strong> File edits, shell commands, package installs, pull requests, and anything else their tools allow.</li>
   <li><strong>For each, find the earliest boundary that can see it.</strong> Be explicit about which actions have a pre-action check and which only have a backstop.</li>
@@ -452,7 +468,7 @@
 </ul>
 <p>A useful single question for the team: which decisions can our agents violate before any control intervenes?</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme applies pre-action enforcement to architectural decisions in a repository. It compiles the enforceable parts of accepted decisions into typed rules. The typed rule that can fail a change in specific paths is <code>FORBID_LITERAL</code>. It forbids an exact string, such as a disallowed import, in the paths a decision governs.</p>
 <p>Mneme sits mainly at the boundary between a proposed action and its execution. Pre-write hooks ship for five coding agents: Claude Code, the Claude Agent SDK, Codex CLI, Kiro and Google Antigravity, each covering the action paths its integration page lists. The Claude Agent SDK adapter also injects the relevant decisions into the model's context when a task is submitted; in Claude Code, the <code>/mneme:context</code> command retrieves them on request. A reference GitHub Actions workflow runs the same check on every pull request; set as a required status check, it blocks the merge. Extending enforcement beyond code writes, to database migrations, infrastructure changes or agent delegation, is a direction, not a shipped capability.</p>
 <p>The <a href="/audit/">Architecture Audit</a> answers part of that question for a repository. It classifies each documented decision as Protected (verified protection by an existing typed rule), Mneme-ready, Requires modelling or Guidance (no deterministic enforcement shape).</p>

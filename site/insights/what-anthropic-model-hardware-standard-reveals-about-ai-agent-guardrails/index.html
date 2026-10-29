@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Anthropic's Model Hardware Standard lets AI agents operate lab equipment and exposes device safety limits. It does not define the policy layer above them." />
   <meta name="robots" content="index, follow" />
@@ -205,7 +204,19 @@
 
   <div class="article-body">
 
-    <h2>What MHS actually is</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-mhs-actually-is">What MHS actually is</a></li>
+        <li><a href="#device-limits-are-not-the-same">Device limits are not the same thing as policy</a></li>
+        <li><a href="#the-gap-this-leaves-open">The gap this leaves open</a></li>
+        <li><a href="#software-architecture-already-has-this-exact">Software architecture already has this exact gap</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-mhs-actually-is">What MHS actually is</h2>
     <p><a href="https://www.anthropic.com/news/model-hardware-standard-research-preview" target="_blank" rel="noopener">Anthropic's Model Hardware Standard</a> introduces a standardized driver layer that translates between an operating system and a physical device using simple read/write commands. Each driver also carries the device's physical characteristics &mdash; weight, safety limits, adjustable parameters &mdash; information that today mostly exists in paper manuals or in the tacit knowledge of a specialist technician. Anthropic says the standard cuts device-integration work from weeks or months to hours or minutes, is model-agnostic, and will eventually be open-sourced so any device manufacturer can adopt it.</p>
     <p>The near-term use is narrow and credible: labs and manufacturing floors where an agent needs to run a microscope, calibrate a laser, or dispense a reagent without a human writing device-specific integration code for every instrument.</p>
 
@@ -219,7 +230,7 @@
       </div>
     </aside>
 
-    <h2>Device limits are not the same thing as policy</h2>
+    <h2 id="device-limits-are-not-the-same">Device limits are not the same thing as policy</h2>
     <p>MHS drivers encode device-local invariants: a laser's maximum power, a motor's valid operating range, which commands a piece of equipment actually supports. Those are hard physical facts. They answer &ldquo;can this device do this at all,&rdquo; not &ldquo;should this agent be allowed to ask it to.&rdquo;</p>
     <p>That second question is organizational policy, and it sits above the device layer entirely. &ldquo;Never exceed 20 mW&rdquo; is a device guardrail. &ldquo;An autonomous agent may not change production calibration without an approved engineering decision&rdquo; is not &mdash; no device driver can express it, because it isn't a fact about the hardware. It's a fact about who is allowed to decide what, and under which conditions.</p>
 
@@ -240,7 +251,7 @@
       <p class="diag-caption">Device safety and organizational policy are different layers, enforced differently</p>
     </div>
 
-    <h2>The gap this leaves open</h2>
+    <h2 id="the-gap-this-leaves-open">The gap this leaves open</h2>
     <p>MHS gives a physical-facing agent a way to know what a device can do. It does not give an organization a way to express which devices an agent may use in what sequence, when human approval is required before a step, which data may travel to which instrument, or whether a workflow is allowed to modify a process autonomously. Examples worth sitting with:</p>
     <ul>
       <li>A robotic workflow may adjust motion parameters, but must not redefine a safety zone without human sign-off.</li>
@@ -249,11 +260,11 @@
     </ul>
     <p>Each is a decision an organization made, or should make, before an agent is given authority over the equipment.</p>
 
-    <h2>Software architecture already has this exact gap</h2>
+    <h2 id="software-architecture-already-has-this-exact">Software architecture already has this exact gap</h2>
     <p>This is not a new problem for Mneme &mdash; it's the same problem restated in a physical register. In software, an agent that can technically execute a database write is not thereby authorized to write to a table an ADR designated read-only, or to introduce a dependency the architecture forbids. The compiler and the runtime will happily let it happen; nothing at that layer knows the decision exists.</p>
     <p>MHS device drivers are the physical-world equivalent of a permissive runtime: correct about what is mechanically possible, silent about what is organizationally allowed. The pattern rhymes with what pre-action architectural enforcement already does for coding agents &mdash; evaluate the compiled decision corpus against a proposed action deterministically, then pass, warn, or fail before the action crosses a consequential boundary. For architectural governance today that boundary is a file write or a shell command. As device-control standards like MHS mature, someone will have to answer the same question at <code>robot.move()</code> or <code>reactor.set_temperature()</code>.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>MHS is a genuine and useful piece of infrastructure: it solves device integration, and it does so without requiring any particular model. But solving device integration is not the same as solving authorization, and the standard does not claim to be. That second problem lands on whoever deploys the agent.</p>
     <div class="callout"><p><strong>Device standards answer what a machine can do.</strong> Governance answers what an agent is allowed to do with it. Software already needed both layers; physical AI is about to need them too.</p></div>
 

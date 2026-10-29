@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A coding agent is not a model. It is a stack: the model, the harness, the governance layer, and the intent it enforces. Here is what each layer does, and which one most tools leave out." />
   <meta name="robots" content="index, follow" />
@@ -323,7 +322,21 @@
 
   <div class="article-body">
 
-    <h2>A Coding Agent Is Not Just a Model &mdash; It Is a Stack</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#a-coding-agent-is-not-just">A Coding Agent Is Not Just a Model &mdash; It Is a Stack</a></li>
+        <li><a href="#the-layers-bottom-to-top">The Layers, Bottom to Top</a></li>
+        <li><a href="#where-most-tools-stop">Where Most Tools Stop</a></li>
+        <li><a href="#why-the-governance-and-intent-layers">Why the Governance and Intent Layers Are Usually Missing</a></li>
+        <li><a href="#how-the-layers-compose">How the Layers Compose</a></li>
+        <li><a href="#a-concrete-pass-through-the-stack">A Concrete Pass Through the Stack</a></li>
+        <li><a href="#architecture-is-what-makes-agent-output">Architecture Is What Makes Agent Output Trustworthy at Scale</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="a-coding-agent-is-not-just">A Coding Agent Is Not Just a Model &mdash; It Is a Stack</h2>
     <p>The word &ldquo;agent&rdquo; hides a lot of machinery. A model, on its own, is a function: text in, text out. It cannot read your repository, run your tests, open a pull request, or check whether the change it proposed obeys a decision your team made two years ago. Everything that turns a model into something that ships code is built <em>around</em> the model, not inside it.</p>
     <p>Anthropic&rsquo;s guidance on <a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">building effective agents</a> makes the same distinction from the model builder&rsquo;s side: the foundational block is &ldquo;an LLM enhanced with augmentations such as retrieval, tools, and memory,&rdquo; and an agent is that model &ldquo;using tools based on environmental feedback in a loop.&rdquo; The model proposes. The system around it acts, observes, and decides what to do next.</p>
     <p>Once you accept that a coding agent is a stack rather than a model, the useful question changes. It is no longer &ldquo;which model is best?&rdquo; It is &ldquo;which layers do I have, and which am I missing?&rdquo; Most teams have more of the stack than they realize, and are missing the same one or two layers as everyone else.</p>
@@ -337,7 +350,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Layers, Bottom to Top</h2>
+<h2 id="the-layers-bottom-to-top">The Layers, Bottom to Top</h2>
     <p>Read the stack from the ground up. Each layer depends on the one below it and hands a well-defined job to the one above.</p>
     <ul>
       <li><strong>The model.</strong> This is the generator. Given a task and some context, it produces candidate code: a diff, a new file, a shell command, a plan. It is remarkably good at this and remarkably indifferent to whether the result fits your system. The model has no memory of your architecture and no stake in your conventions. It generates; it does not govern.</li>
@@ -358,18 +371,18 @@
     </table>
     </div>
 
-    <h2>Where Most Tools Stop</h2>
+    <h2 id="where-most-tools-stop">Where Most Tools Stop</h2>
     <p>The industry has invested heavily in the bottom two layers, and it shows. Models are more capable every quarter. Harnesses have improved just as fast: better context assembly, better tool interfaces, tighter loops, safer sandboxes. This is real progress. A team with a strong model and a strong harness can hand an agent a genuine task and get a working result back.</p>
     <p>But almost every tool stops at the harness. The pitch is capability: this agent can do more, do it faster, do it with fewer interventions. And capability is worth having. The problem is that capability is not the same as consistency. A more capable agent produces more code, more quickly, across more of your system &mdash; which means a more capable agent produces architectural drift more quickly too, unless something above the harness is checking its output against your decisions.</p>
     <div class="callout"><p><strong>A better harness makes an agent more capable. It does not make the agent consistent with your architecture.</strong> Those are two different properties, solved by two different layers. Improving the harness cannot close the gap the governance layer exists to close.</p></div>
     <p>This is why harness work, on its own, reaches a ceiling. We have written before that <a href="/insights/harness-engineering-still-needs-governance/">harness engineering still needs governance</a> and that the shift from <a href="/insights/prompt-engineering-vs-harness-engineering/">prompt engineering to harness engineering</a> moved the frontier without closing it. The harness controls how the agent works. It does not control what the agent is allowed to build.</p>
 
-    <h2>Why the Governance and Intent Layers Are Usually Missing</h2>
+    <h2 id="why-the-governance-and-intent-layers">Why the Governance and Intent Layers Are Usually Missing</h2>
     <p>These two layers are not missing because they are unimportant. They are missing because, until recently, humans carried them implicitly.</p>
     <p>On a human team, architectural intent lived in senior engineers&rsquo; heads and surfaced in code review. Someone who knew the system would look at a pull request and say &ldquo;we don&rsquo;t add HTTP clients, use the shared one&rdquo; or &ldquo;that service can&rsquo;t read the billing tables directly.&rdquo; The governance layer was a person. The intent layer was their memory. It worked, slowly, because human throughput was low enough that a human check per change was affordable.</p>
     <p>Agents break that arrangement in one specific way: they raise the rate of change past what a human governance layer can keep up with. When an agent opens fifteen pull requests in an afternoon, the reviewer who used to hold the architecture in their head becomes the slowest part of the system, and the temptation is to wave changes through. The intent that used to be carried informally now has to be made explicit &mdash; recorded as data, retrieved automatically, and checked by machine &mdash; because the informal carrier no longer scales. This is the core argument for <a href="/concepts/governance-infrastructure/">governance infrastructure</a>: at agent velocity, the rules have to live somewhere the machine can read them.</p>
 
-    <h2>How the Layers Compose</h2>
+    <h2 id="how-the-layers-compose">How the Layers Compose</h2>
     <p>The four layers are not a pipeline you run once. They compose into a loop that runs on every proposed change. The model proposes, the harness executes, governance checks against intent, and only compliant changes land. Spelled out, the loop is deliberately boring:</p>
     <ol>
       <li><strong>Record</strong> each architectural decision as structured data with its constraints &mdash; the intent layer &mdash; not a paragraph in a doc.</li>
@@ -380,7 +393,7 @@
     </ol>
     <p>Because the check is <a href="/concepts/model-independent-governance/">independent of the model</a>, the harness can swap models, add specialists, or upgrade to next quarter&rsquo;s frontier release, and the governance verdict stays the same. The layers compose precisely because their responsibilities do not overlap: the harness never has to know the rules, and the governance layer never has to know how the code was generated.</p>
 
-    <h2>A Concrete Pass Through the Stack</h2>
+    <h2 id="a-concrete-pass-through-the-stack">A Concrete Pass Through the Stack</h2>
     <p>Take one decision your team actually made: the billing service owns the billing tables, and every other service reaches billing through its API. No direct database reads. It is written down as an ADR, and it is the kind of boundary that quietly erodes the moment someone finds it convenient to ignore.</p>
     <p>Now watch a change move through the stack. A feature request asks the reporting service to show a customer&rsquo;s recent invoices.</p>
     <ul>
@@ -392,7 +405,7 @@
     </ul>
     <p>Nothing here required a smarter model. It required a layer above the harness that knew the boundary existed and refused to let a locally reasonable change cross it. Without that layer, the direct query merges, the boundary erodes by one, and the next agent that finds the shortcut has precedent to follow.</p>
 
-    <h2>Architecture Is What Makes Agent Output Trustworthy at Scale</h2>
+    <h2 id="architecture-is-what-makes-agent-output">Architecture Is What Makes Agent Output Trustworthy at Scale</h2>
     <p>It is tempting to believe the trust problem is a model problem &mdash; that a good-enough model would simply stop making these mistakes. It will not, because the mistakes are not failures of intelligence. They are failures of information: the model was never told what your team decided, and the harness had no mechanism to enforce it even if it had been.</p>
     <p>What makes agent output trustworthy is not a bigger model. It is a complete stack &mdash; a model to generate, a harness to execute, a governance layer to check, and an intent layer that holds what &ldquo;correct for us&rdquo; means. The first two layers are arriving fast on their own. The top two are the ones teams have to build deliberately, because the humans who used to carry them cannot keep pace with the machine below. Get all four in place and agent velocity stops being a liability. That is the architecture worth building toward.</p>
 

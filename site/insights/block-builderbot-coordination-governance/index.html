@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Block's Builderbot operates across the company's codebase and workflows at scale. It shows the next AI engineering challenge is organizational coordination &mdash; and why coordination still needs governance." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,20 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-block-built">What Block Built</a></li>
+        <li><a href="#the-real-problem-is-no-longer">The Real Problem Is No Longer Code Generation</a></li>
+        <li><a href="#the-organizational-context-layer">The Organizational Context Layer</a></li>
+        <li><a href="#the-governance-gap">The Governance Gap</a></li>
+        <li><a href="#what-this-means-for-engineering-leaders">What This Means for Engineering Leaders</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Block Built</h2>
+
+    <h2 id="what-block-built">What Block Built</h2>
     <p>Builderbot is not a coding assistant. Block describes it as an AI-native suite that <a href="https://block.xyz/inside/block-rolls-out-builderbot-a-new-suite-of-ai-native-tools-that-changes-the-way-we-ship" target="_blank" rel="noopener">changes the way the company ships</a>, operating across its repositories, tickets, services, CI/CD pipelines, and operational systems rather than inside a single editor. According to Block, Builderbot runs more than 200,000 operations a day, opens roughly 1,500 pull requests a week, and now accounts for about 15% of production code changes merged across the company.</p>
     <p>The scale figures get the headlines, but the scale is not the interesting part. The interesting part is the role. Builderbot is positioned as an organizational layer, not a per-developer tool. It reaches across systems that used to be coordinated by people: the engineer who knew which service owned a behavior, the reviewer who remembered the migration plan, the lead who could say which of two valid approaches the platform team had settled on. Builderbot operates in the space between those people, at the seams of the organization.</p>
     <p>That is the shift worth paying attention to. One of the largest engineering organizations in the world is investing not in a better way to generate code, but in a way to coordinate it.</p>
@@ -310,17 +321,17 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Real Problem Is No Longer Code Generation</h2>
+<h2 id="the-real-problem-is-no-longer">The Real Problem Is No Longer Code Generation</h2>
     <p>Generating code is a local optimization. A model fills in a function, an agent drafts a pull request, a developer accepts a suggestion. Each event is bounded, fast, and increasingly solved. Running an engineering organization is a different kind of problem. It is a coordination problem, and coordination does not get easier as generation gets faster.</p>
     <p>Consider what a single change has to be consistent with at a company of Block&rsquo;s size. Multiple repositories. Shared services that other teams depend on. Security requirements and compliance obligations. Architectural standards the platform team has committed to. Existing technical debt that constrains what is safe to touch. Organizational knowledge about why a system works the way it does, and who owns the consequences if it breaks.</p>
     <p>When a human writes one change a day, that consistency is maintained informally, through review and conversation, and it mostly holds. When agents write 1,500 changes a week, the question shifts. The challenge moves from producing code to managing the consequences of code produced at machine speed. Every change is plausible in isolation. The risk lives in the aggregate: a thousand locally reasonable decisions that, together, drift away from the system anyone designed.</p>
 
-    <h2>The Organizational Context Layer</h2>
+    <h2 id="the-organizational-context-layer">The Organizational Context Layer</h2>
     <p>To coordinate work across an organization, an agent needs something a codebase cannot provide on its own. It needs context: shared memory of past decisions, organizational knowledge about constraints, orchestration across systems, and cross-system visibility into what a change actually touches.</p>
     <p>A codebase tells you how a system is implemented. It does not tell you why the decisions behind it were made, which standards are mandatory versus advisory, which constraints must hold no matter what, or which regulations apply to a given service. That knowledge does not live in the code. It lives in design docs, in Slack threads, in review comments, in tickets, and in the heads of the people who built the thing. A coordination layer that cannot reach that knowledge is coordinating blind.</p>
     <p>This is the layer Builderbot points at. Not a smarter model, but a system that gathers organizational context and makes it available at the moment work happens. <a href="/concepts/decision-continuity/">Decision continuity</a> is the precondition for coordination: an agent can only align a change with a decision it can actually retrieve.</p>
 
-    <h2>The Governance Gap</h2>
+    <h2 id="the-governance-gap">The Governance Gap</h2>
     <p>Coordination at this scale needs two complementary layers, and conflating them is where organizations get into trouble.</p>
     <p>The first is a <strong>coordination layer</strong>: context gathering, orchestration, multi-agent collaboration, and cross-system operations. Its job is to help agents act. It answers questions like what does this change touch, what does this service depend on, which team owns this surface, and what happened the last time someone changed this.</p>
     <p>The second is a <strong>governance layer</strong>: architectural compliance, policy enforcement, decision propagation, regulatory controls, and verification of changes against intent. Its job is to ensure agents act <em>correctly</em>. The first layer makes agents fast and well-informed. The second makes sure that speed does not compound into <a href="/concepts/multi-agent-architectural-drift/">architectural drift</a>.</p>
@@ -328,7 +339,7 @@
 
     <div class="callout"><p><strong>Coordination helps agents act. Governance ensures they act correctly.</strong> A coordination layer can land a thousand changes a week. Without a governance layer verifying each one against the decisions meant to constrain it, that throughput is just faster drift.</p></div>
 
-    <h2>What This Means for Engineering Leaders</h2>
+    <h2 id="what-this-means-for-engineering-leaders">What This Means for Engineering Leaders</h2>
     <p>The signal in Builderbot is not the operations-per-day figure. It is where one of the world&rsquo;s largest engineering organizations is choosing to invest: above code generation, in the layer that coordinates knowledge, workflows, architectural decisions, and agents across the whole company.</p>
     <p>Read that as a forecast. Code generation is becoming table stakes. Every team will have agents that write competent code, because the models that do it are commoditizing fast. The differentiator is everything around the generation: whether your organization&rsquo;s decisions are captured as constraints an agent can retrieve, whether those constraints reach every surface where work happens, and whether each change is verified against them before it lands. The winning systems will be the ones that coordinate knowledge, workflows, and agents while holding the architecture steady.</p>
     <p>That is the work to start now. Not picking a better model, but building the context and governance layers that let agents operate across your organization without quietly taking it apart. If you want to see what verifying agent-generated changes against architectural decisions looks like in practice, our <a href="/use-cases/">use cases</a> walk through the concrete enforcement patterns.</p>

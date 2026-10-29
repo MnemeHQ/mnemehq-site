@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="NVIDIA&#x27;s OpenShell Reference Architecture can verify agent access policy in five modeled areas. An allowed write can still break an architecture decision." />
   <meta name="robots" content="index, follow" />
@@ -373,7 +372,21 @@
   </header>
 
 <div class="article-body">
-<h2>What NVIDIA announced</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-nvidia-announced">What NVIDIA announced</a></li>
+      <li><a href="#what-openshell-policy-governs">What OpenShell policy governs</a></li>
+      <li><a href="#what-the-prover-proves">What the prover proves</a></li>
+      <li><a href="#the-gap-an-allowed-write-that">The gap: an allowed write that breaks a decision</a></li>
+      <li><a href="#where-the-two-could-meet">Where the two could meet</a></li>
+      <li><a href="#what-platform-teams-should-do">What platform teams should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="what-nvidia-announced">What NVIDIA announced</h2>
 <p>On October 21, 2026, at its GTC Berlin developer conference, NVIDIA <a href="https://nvidianews.nvidia.com/news/openshell-reference-architecture" target="_blank" rel="noopener">launched the NVIDIA OpenShell Reference Architecture</a> for running AI agents safely. It pairs the open-source OpenShell runtime, which runs an agent inside a controlled sandbox, with NVIDIA hardware, including optional BlueField data processing units (DPUs) running a security framework called NVIDIA Sentry. (NVIDIA Sentry is not Sentry.io, the error-monitoring service.)</p>
 <p>NVIDIA's <a href="https://developer.nvidia.com/blog/how-nvidia-openshell-reference-architecture-secures-and-governs-ai-agent-workloads-at-scale/" target="_blank" rel="noopener">technical walkthrough</a> describes four OpenShell components:</p>
 <ul>
@@ -386,7 +399,7 @@
 <p>The press release names organizations including Anthropic, IBM, Microsoft, OpenAI and Siemens as working with the architecture. That is NVIDIA's list of collaborators, not evidence of production adoption.</p>
 <p>The walkthrough positions OpenShell as governance placed outside the agent's reach. On October 15, NVIDIA chief technology officer (CTO) Michael Kagan told <a href="https://aimagazine.com/interviews/the-ai-interview-michael-kagan-cto-at-nvidia" target="_blank" rel="noopener">AI Magazine</a> that slowing AI down is the wrong response: "You need to accelerate AI development to make it safe." He described OpenShell as a sandbox where you specify what is and is not allowed. Take the speed argument at face value and it carries a requirement: if agents ship changes faster, the checks on those changes have to run as often as the changes do.</p>
 
-<h2>What OpenShell policy governs</h2>
+<h2 id="what-openshell-policy-governs">What OpenShell policy governs</h2>
 <p>OpenShell's <a href="https://docs.nvidia.com/openshell/latest/how-it-works/policies/overview" target="_blank" rel="noopener">sandbox policy</a> is a YAML document (<code>version: 1</code>) with five optional sections. The descriptions below are from the v0.1.5 documentation, the default version on October 22, 2026:</p>
 <table class="gov-table">
   <thead><tr><th>Section</th><th>Controls</th><th>When it applies</th></tr></thead>
@@ -402,12 +415,12 @@
 <p>Providers are connections to outside services, such as GitHub, that you attach to a sandbox with their credentials. Each can add the network rules its service needs, so the policy a sandbox enforces (its effective policy) is the base policy plus provider rules.</p>
 <p>Which policy applies is its own question. In v0.1.5, a gateway administrator can set a global policy that <em>replaces</em> every sandbox's own policy while it is active, rather than capping it. Without one, OpenShell uses the sandbox's saved policy, then a policy in the sandbox image, then a restrictive default. To see what a sandbox enforces, compare <code>openshell policy get &lt;sandbox&gt; --base</code> with <code>--full</code>, which adds provider rules. While a global policy is active, both show the global policy.</p>
 
-<h2>What the prover proves</h2>
+<h2 id="what-the-prover-proves">What the prover proves</h2>
 <p>The <a href="https://docs.nvidia.com/openshell/latest/how-it-works/policies/prover" target="_blank" rel="noopener">policy prover</a> uses a satisfiability modulo theories (SMT) solver to check that a candidate policy allows nothing beyond a boundary policy. In v0.1.5 it models five things: filesystem read and write paths, process identity, the Landlock compatibility setting, which programs can reach which hosts and ports, and REST method and path rules. Anything outside that model, such as GraphQL or Model Context Protocol (MCP) rules, comes back as unsupported rather than passing.</p>
 <p>NVIDIA's documentation is careful about the limits. A pass does not mean the policy is as narrow as it could be, that it is safe for a particular task, or that a running sandbox enforces it.</p>
 <p>That is rigorous work on a well-defined question: <em>can this workload reach more than we allowed?</em> It is a different question from <em>does this change respect what we decided?</em></p>
 
-<h2>The gap: an allowed write that breaks a decision</h2>
+<h2 id="the-gap-an-allowed-write-that">The gap: an allowed write that breaks a decision</h2>
 <p>Take a sandbox whose filesystem policy lets the agent write under <code>src/handlers/</code>. The team has an architectural decision: request handlers reach the database only through the approved storage adapter, never through a database driver directly.</p>
 <p>The agent adds a handler that imports the driver and opens its own connection. Every OpenShell control passes. The path is writable, the process identity is correct, and no network rule is involved because nothing has run yet. The violation lives in the content of the change, and OpenShell's documented policy model does not look at the content of files.</p>
 <p>A second example sits closer to OpenShell's strengths. An agent has network access to an internal deployment API so it can roll out services. It sends a request that allocates compute the team never approved. Here OpenShell has real options:</p>
@@ -418,7 +431,7 @@
 <p>Both work only for the request shapes someone wrote rules for. If the agent instead edits an infrastructure manifest in the repository that requests the same compute, the action is a file write, and the allocation happens later in a pipeline outside the sandbox. No network rule fires. The decision ("no new compute allocation without approval") is the same in both cases; only one path crosses the boundary OpenShell watches.</p>
 <p>OpenShell is doing its job in both cases. Access policy says what a workload may touch. An architectural decision says what a change must respect. An earlier piece argues that <a href="/insights/ai-agent-governance-two-markets/">runtime and architectural governance</a> answer different questions, and OpenShell gives that split a documented example. NVIDIA's prover documentation states the limit on its side: a passing policy is not necessarily safe for a particular task.</p>
 
-<h2>Where the two could meet</h2>
+<h2 id="where-the-two-could-meet">Where the two could meet</h2>
 <p>OpenShell's <a href="https://docs.nvidia.com/openshell/latest/extensibility/overview" target="_blank" rel="noopener">extension points</a> are the places where decision-aware checks could attach. Each has a specific reach:</p>
 <ul>
   <li><strong><a href="https://docs.nvidia.com/openshell/latest/extensibility/gateway-interceptors" target="_blank" rel="noopener">Gateway interceptors</a></strong> are external services the gateway calls on selected changes to OpenShell itself, such as creating a sandbox or changing its configuration. Only operations on an explicit allowlist can be intercepted. Before a change is committed, an interceptor can rewrite or reject it; afterwards it can only record it. Interceptors never see the agent's file writes.</li>
@@ -427,7 +440,7 @@
 </ul>
 <p>None of these is a universal seam for file writes. A decision about code content still needs a check where the code change happens: the agent's own write path, and continuous integration (CI). Mneme, the open-source tool made by the team that publishes this site, runs at those two points. Checks there run on each supported agent write and on every pull request, so they keep pace with the agent instead of a review queue.</p>
 
-<h2>What platform teams should do</h2>
+<h2 id="what-platform-teams-should-do">What platform teams should do</h2>
 <ul>
   <li><strong>Keep two artifacts with two owners.</strong> Access policy belongs to the platform and security teams. Architectural decisions belong to the engineers who own the system. Do not encode one as the other.</li>
   <li><strong>Map each decision to the boundary that enforces it.</strong> For every decision you care about, write down whether a sandbox rule, middleware, a code-change check or CI catches it. "The agent runs in OpenShell under a proven policy" covers the access column only.</li>
@@ -435,7 +448,7 @@
 </ul>
 <p>The <a href="/insights/zero-trust-for-ai-agents-architectural-governance/">zero trust argument for agents</a> applies here: verifying the agent is necessary, and verifying the diff is a separate job.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme describes itself as a decision and control layer for agentic software development. It works on the decision side, inside the repository, and does not enforce infrastructure policy, provision cloud resources or manage identity and access.</p>
 <p>In mneme-hq 0.10.0, the current release, decisions with an active typed rule (a machine-checkable rule attached to the decision) are enforced deterministically. For the storage-adapter decision above, a <code>FORBID_LITERAL</code> rule, which forbids an exact string, placed on the driver's import and scoped by path to <code>src/handlers/</code>, returns FAIL and names the decision.</p>
 <p>Mneme checks writes made through an agent's built-in file tools before they land: Edit, Write and MultiEdit in Claude Code (Anthropic's coding agent), apply_patch in Codex CLI (OpenAI's terminal coding agent), and file writes in Kiro CLI 3.0 (Amazon Web Services' terminal coding agent). Writes made through shell commands usually reach the disk before Mneme sees them. Claude Code and Codex CLI check those when the agent finishes its turn, and other agents rely on CI.</p>

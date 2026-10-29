@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI coding agents let each engineer ship large changes alone, cutting the talks that carried architectural decisions. How to keep coherence without meetings." />
   <meta name="robots" content="index, follow" />
@@ -378,12 +377,26 @@
   </header>
 
 <div class="article-body">
-<h2>The engineer teams spent a decade designing out</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-engineer-teams-spent-a-decade">The engineer teams spent a decade designing out</a></li>
+      <li><a href="#how-the-silo-comes-back">How the silo comes back</a></li>
+      <li><a href="#what-it-looks-like-on-a">What it looks like on a real team</a></li>
+      <li><a href="#the-same-silo-one-level-up">The same silo, one level up: decision silos</a></li>
+      <li><a href="#don-t-bring-back-the-meetings">Don't bring back the meetings</a></li>
+      <li><a href="#what-engineering-leaders-should-do">What engineering leaders should do</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="the-engineer-teams-spent-a-decade">The engineer teams spent a decade designing out</h2>
 <p>Most engineering organisations remember the silo engineer. They disappeared into one corner of the codebase for weeks and came back with something that worked and that nobody else understood. Teams spent years designing that pattern out. Code review, pairing, design documents, shared ownership and architecture forums all exist partly to stop it.</p>
 <p>Those practices were expensive. They were also how architectural knowledge moved between people. A reviewer who said "we don't call the billing database from here" was passing on a decision, not only checking a diff.</p>
 <p>AI coding agents are bringing the silo engineer back. This time it is not one person working alone for weeks. It is every engineer, working with an agent, producing large changes with little help from anyone else.</p>
 
-<h2>How the silo comes back</h2>
+<h2 id="how-the-silo-comes-back">How the silo comes back</h2>
 <p>Nobody decides to work in a silo. It follows from a sequence of reasonable steps:</p>
 <ol>
   <li><strong>More individual capacity.</strong> One engineer with a coding agent can now complete work that once needed a small team.</li>
@@ -394,22 +407,22 @@
 </ol>
 <p>None of these steps is a mistake. Higher individual output is the point of adopting agents. The cost is that a developer and an agent now form a unit that rarely needs to talk to anyone else.</p>
 
-<h2>What it looks like on a real team</h2>
+<h2 id="what-it-looks-like-on-a">What it looks like on a real team</h2>
 <p>Two illustrative cases. First, two engineers in the same week each need retries on outbound calls. One asks an agent to add a popular retry library. The other has an agent write a small wrapper around the existing HTTP client. Both changes are tested. Both pass review, because different people review them. The codebase now has two retry strategies, and the next agent to touch either service will copy whichever one it sees first.</p>
 <p>Second, an agent adds a message queue client to a service. Eight months ago the team rejected that client after an incident, and agreed to use the platform's managed queue instead. The reason lives in a chat thread and in the memory of two senior engineers. The agent never saw either. The change is clean, tested and wrong.</p>
 <p>In both cases each change is locally correct. The system is less coherent than it was. <a href="/concepts/engineering-coherence/">Engineering coherence</a>, the extent to which independently executed changes stay consistent with the decisions that govern a system, is what the silo erodes. Architectural drift, the gradual move away from those decisions, is what that loss looks like over time.</p>
 
-<h2>The same silo, one level up: decision silos</h2>
+<h2 id="the-same-silo-one-level-up">The same silo, one level up: decision silos</h2>
 <p>Engineering teams are not the only place this happens. Across a company, the decisions that should constrain a change are spread over architecture decision records (ADRs), tickets, wikis, chat threads, security policies and people's heads. Each AI tool sees the slice it is connected to. A coding agent sees the repository. A knowledge assistant sees the wiki. None of them sees what the organisation decided.</p>
 <p>Retrieval only partly closes the gap. Finding a document that mentions a database is not the same as knowing it records an approved decision, which services it covers, whether a later decision replaced it, and whether breaking it should stop the change. A person can ask a colleague in another team. An agent that starts each session fresh cannot.</p>
 <p>So the silo that matters is not data. It is decisions. The answer is not one all-knowing agent with access to everything. Specialised agents can stay specialised if they share one authoritative set of decisions and are checked against it. We made the longer case for that layer in <a href="/insights/most-valuable-ai-dataset-decisions-already-made/">Your Most Valuable AI Dataset May Be the Decisions You Already Made</a> and <a href="/insights/agent-economy-needs-decision-infrastructure/">The Agent Economy Needs a Decision Layer</a>.</p>
 
-<h2>Don't bring back the meetings</h2>
+<h2 id="don-t-bring-back-the-meetings">Don't bring back the meetings</h2>
 <p>The obvious response is to restore the old coordination: more design reviews, mandatory pairing, approval for every agent-written change. That trades the speed teams adopted agents for, and it does not scale with agent output. Review capacity grows with headcount, not with agent output.</p>
 <p>The better question is what the old coordination carried. Mostly it carried decisions: what the team agreed, why, where it applies, and which earlier choices it replaced. Keep that. Drop the cost of moving it through meetings.</p>
 <p>There is a people cost too. EY-Parthenon's <a href="/insights/ey-beyond-the-code-ai-software-development/">2026 survey of 400 European software CTOs</a> found that 13% say AI has weakened how juniors learn from seniors, through fewer trainable tasks or less senior review time. The report recommends "deliberate exposure to architectural decisions." A junior engineer working mostly with an agent gets less of that by default.</p>
 
-<h2>What engineering leaders should do</h2>
+<h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
   <li><strong>Name the decisions a solo engineer and agent are most likely to miss.</strong> Start with the ones made in a meeting or chat thread they were not part of.</li>
   <li><strong>Give each decision a scope and a status.</strong> Say which code it covers and whether it is current. A decision without scope is advice. A decision without status may already be obsolete.</li>
@@ -418,7 +431,7 @@
   <li><strong>Spend coordination time on decisions, not status.</strong> Use the conversations you keep to make and change decisions, then record the outcome where tools can use it.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Collaboration is still how a team creates and changes its architectural intent. Mneme's job is to carry those decisions into work that happens far from the conversations that produced them.</p>
 <p>Today that covers architectural decisions in a repository. Mneme, an open-source decision and control layer for agentic software development, compiles the enforceable parts of accepted decisions into typed rules: machine-checkable rules with exact meaning. It checks proposed changes against them through hooks inside supported agents, which intercept a file write before it lands, such as Claude Code and OpenAI's Codex command-line interface (CLI), and in continuous integration (CI) before merge. Agents can also query the local <a href="/docs/mcp/">Decision Index MCP server</a>, which uses the Model Context Protocol (MCP), for the decisions that apply to the files they are about to change. Decisions that live in chat tools, tickets or wikis outside the repository are not ingested today.</p>
 

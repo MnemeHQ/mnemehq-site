@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="KodeKloud's 2026 guide names guardrails, not gates as one of six takeaways, drawn from 29 practitioners. My contribution argues intent must become machine-readable." />
   <meta name="robots" content="index, follow" />
@@ -298,7 +297,19 @@
 
   <div class="article-body">
 
-    <h2>What the guide argues</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-guide-argues">What the guide argues</a></li>
+        <li><a href="#why-the-distinction-is-load-bearing">Why the distinction is load-bearing</a></li>
+        <li><a href="#the-contribution-i-made">The contribution I made</a></li>
+        <li><a href="#human-understanding-is-still-the-point">Human understanding is still the point</a></li>
+        <li><a href="#what-this-does-and-does-not">What this does and does not establish</a></li>
+        <li><a href="#reading-it">Reading it</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-the-guide-argues">What the guide argues</h2>
     <p>KodeKloud published <a href="https://kodekloud.com/definitive-guide-to-ai" target="_blank" rel="noopener">The Definitive Guide to AI for DevOps</a> in 2026, written by Jennifer Riggins and drawn from interviews with 29 practitioners across 24 organizations. The roster includes Charity Majors, Kelsey Hightower, Grady Booch, Dana Lawson, Dave Farley, Gergely Orosz, and engineers from AWS, Google, Oracle, Nvidia, and Hewlett Packard Enterprise. I contributed to it, and this is the part worth writing about.</p>
     <p>Of its six executive takeaways, the third is the one that matters here, and the guide states it plainly: intent must leave prompts and checklists and become machine-readable, executable policy inside the delivery workflow. The section it anchors, number six, is titled <strong>Guardrails, not gates</strong>.</p>
     <p>That is a category argument arriving from outside the category, in a DevOps publication, framed for platform teams rather than for anyone selling governance tooling.</p>
@@ -314,12 +325,12 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why the distinction is load-bearing</h2>
+<h2 id="why-the-distinction-is-load-bearing">Why the distinction is load-bearing</h2>
     <p>Most organizations respond to AI-generated code volume by adding gates. More required reviewers, more approval steps, more checklists at the end of the pipeline. It is the intuitive move and it fails in a specific way: every gate is paid for in human attention, and human attention is the one input that does not scale with agent output.</p>
     <p>A guardrail costs nothing per change. It does not queue. It does not care whether the contributor is a person on Tuesday afternoon or a scheduled agent at three in the morning. The section makes this point through Michael Forrester of KodeKloud, who frames it as giving agents the same constraints you would give any junior developer, then letting them move at speed inside the golden paths.</p>
     <p>The guide grounds the risk in DORA's findings on AI-assisted engineering: throughput improves while stability and security degrade for organizations that add AI without evolving their guardrails first. Speed is not the problem. Speed arriving before the constraints do is the problem.</p>
 
-    <h2>The contribution I made</h2>
+    <h2 id="the-contribution-i-made">The contribution I made</h2>
     <p>My section of the argument concerns what happens to architectural decisions specifically. The passage as published:</p>
     <blockquote class="pull-quote">
       <p>As teams move from code generation to autonomous agents, the question is no longer whether agents can write code. It's whether they can consistently make engineering decisions that remain aligned with architectural intent.</p>
@@ -332,16 +343,16 @@
     <p>Three properties in that sentence, and each is a separate engineering problem. <strong>Machine-readable</strong> means the decision has been promoted out of prose into something evaluable. <strong>Enforceable</strong> means a verdict exists, not a suggestion. <strong>Continuously available</strong> means it survives the session, the context window, and the handoff to whichever agent runs next.</p>
     <p>That set of properties is what this site calls <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>, and the gap between having a decision written down and having it hold is what <a href="/concepts/architectural-governance/">architectural governance</a> exists to close.</p>
 
-    <h2>Human understanding is still the point</h2>
+    <h2 id="human-understanding-is-still-the-point">Human understanding is still the point</h2>
     <p>Worth noting what immediately follows my passage in the guide, because it is the correct counterweight. Kelsey Hightower warns about systems that remove people's understanding, and the trap that creates: when the moment comes that you need to understand something, you no longer can.</p>
     <p>Guardrails are not a substitute for engineers knowing their system. They are what makes that knowledge durable when the volume of changes exceeds any individual's capacity to review them. The decision still has to be made by a human who understands the trade-off. Enforcement only ensures the decision keeps applying after the person who made it has moved on to something else.</p>
 
-    <h2>What this does and does not establish</h2>
+    <h2 id="what-this-does-and-does-not">What this does and does not establish</h2>
     <p>Being precise about this, because it would be easy to overstate.</p>
     <p>The guide is independent validation that the problem is real and that practitioners across DevOps, platform engineering, and observability are converging on the same answer. It is not a product endorsement. KodeKloud published a contributed expert perspective; they did not evaluate Mneme, benchmark it, or recommend it. Nothing in the guide says the mechanism works.</p>
     <p>What it does say is that intent needs to become executable policy inside the workflow. Whether any particular implementation achieves that is a separate question, and the honest answer is that it needs measurement rather than assertion.</p>
 
-    <h2>Reading it</h2>
+    <h2 id="reading-it">Reading it</h2>
     <p>The full guide is available from <a href="https://kodekloud.com/definitive-guide-to-ai" target="_blank" rel="noopener">KodeKloud</a>. It sits behind a download form, and it is their publication, so this page links to it rather than reproducing it. Section 06 is where the guardrails argument lives, and Part 3 on measurement is the part most teams skip and should not.</p>
 
   </div><!-- /.article-body -->

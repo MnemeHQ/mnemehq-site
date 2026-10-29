@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="In regulated industries the cost of architectural drift, undocumented decisions, and uncontrolled agent actions is highest. AI coding agents there need decision provenance, auditability, and validation histories, not just better context." />
   <meta name="robots" content="index, follow" />
@@ -297,7 +296,21 @@
 
   <div class="article-body">
 
-    <h2>The Sharpest Test of AI-Assisted Development</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-sharpest-test-of-ai-assisted">The Sharpest Test of AI-Assisted Development</a></li>
+        <li><a href="#the-questions-regulated-teams-actually-ask">The Questions Regulated Teams Actually Ask</a></li>
+        <li><a href="#from-preventing-drift-to-preserving-accountability">From Preventing Drift to Preserving Accountability</a></li>
+        <li><a href="#the-cross-vertical-requirement">The Cross-Vertical Requirement</a></li>
+        <li><a href="#the-verticals-and-why-they-share">The Verticals, and Why They Share a Spine</a></li>
+        <li><a href="#why-generic-ai-tools-stop-short">Why Generic AI Tools Stop Short</a></li>
+        <li><a href="#governance-as-the-prerequisite-for-adoption">Governance as the Prerequisite for Adoption</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-sharpest-test-of-ai-assisted">The Sharpest Test of AI-Assisted Development</h2>
     <p>If you want to see where AI coding agents actually break, do not look at the teams shipping fastest. Look at the teams that cannot afford to be wrong. A consumer app that ships a slightly-off pattern fixes it next sprint. A bank, a hospital, or a medical-device maker that ships a slightly-off pattern may have just created an audit finding, a regulatory exposure, or a patient-safety question. The cost of a mistake is not symmetric, and that asymmetry changes what &ldquo;good&rdquo; AI tooling has to do.</p>
     <p>Large language models are improving quickly. That is not the constraint in regulated software. The constraint is everything around the model: who is allowed to make a change, which requirement that change satisfies, what evidence proves it was reviewed, and whether you can reconstruct all of that six months later when a regulator asks. Those are governance questions. Most AI infrastructure does not answer them because most AI infrastructure was not built to.</p>
 
@@ -310,7 +323,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Questions Regulated Teams Actually Ask</h2>
+<h2 id="the-questions-regulated-teams-actually-ask">The Questions Regulated Teams Actually Ask</h2>
     <p>The AI coding market competes on a fairly narrow set of axes: better models, better agents, better orchestration, better developer productivity. Those are real improvements. They are also the wrong frame for a regulated buyer, who is not asking how to generate more code. They are asking a different list of questions entirely:</p>
     <ul>
       <li><strong>Who approved this change?</strong> Not which agent produced it &mdash; which human or policy authorized it.</li>
@@ -321,12 +334,12 @@
     </ul>
     <p>None of these are generation questions. They are questions about memory, provenance, and enforcement. A model that writes flawless code but cannot answer any of them has not solved the regulated problem &mdash; it has made the volume of unanswered questions larger and faster.</p>
 
-    <h2>From Preventing Drift to Preserving Accountability</h2>
+    <h2 id="from-preventing-drift-to-preserving-accountability">From Preventing Drift to Preserving Accountability</h2>
     <p>This is the positioning shift worth stating plainly. The first-order framing for architectural governance is &ldquo;prevent architectural drift.&rdquo; That is correct, and it is how we describe the core mechanism elsewhere. But for regulated industries the more accurate framing is broader: <strong>preserve decision provenance and engineering accountability in AI-assisted development.</strong></p>
     <p>The difference is not cosmetic. &ldquo;Prevent drift&rdquo; maps to an engineering preference. &ldquo;Preserve provenance and accountability&rdquo; maps to budgets, compliance functions, and executive risk &mdash; the people who actually sign off on adopting agents in a controlled environment. It also creates distance from generic AI coding tools, which compete on output and have nothing to say about who authorized that output or why. In regulated software, that second question is the one that gets a tool approved or rejected.</p>
     <p>Drift, in this framing, is not merely an engineering annoyance. It is a compliance risk. When an agent quietly routes around an approved boundary, the system is no longer the system that was validated. The documentation describes one architecture; the running code is becoming another. <a href="/concepts/governance-propagation/">Governance propagation</a> &mdash; making an approved decision reach and bind every agent that acts after it &mdash; is what keeps the validated system and the real system the same thing.</p>
 
-    <h2>The Cross-Vertical Requirement</h2>
+    <h2 id="the-cross-vertical-requirement">The Cross-Vertical Requirement</h2>
     <p>Regulated industries differ enormously in their rule sets, but the underlying engineering requirements rhyme. Strip away the specific regulator and the same six capabilities appear in every vertical:</p>
     <ul>
       <li><strong>Traceability</strong> &mdash; every change links to the requirement, decision, or control that motivated it.</li>
@@ -339,7 +352,7 @@
     <p>This is also where industry-level frameworks point. <a href="https://www.nist.gov/itl/ai-risk-management-framework" target="_blank" rel="noopener">NIST's AI Risk Management Framework</a> organizes responsible AI around the functions of governing, mapping, measuring, and managing AI risk &mdash; a cross-industry reference for treating AI as something to be governed and evidenced, not merely deployed. The capabilities above are how that posture lands in the specific case of AI-generated code: turning &ldquo;manage the risk&rdquo; into a record you can show an auditor.</p>
     <p>The cleanest way to think about it is <strong>decision memory versus documentation</strong>. Documentation is a description written next to the system, and it drifts the moment the system changes without it. Decision memory is the set of decisions the system is actually held to &mdash; retrieved by agents at generation time and verified deterministically in CI &mdash; so the record and the behavior cannot quietly diverge. Documentation tells you what someone intended. Decision memory enforces it.</p>
 
-    <h2>The Verticals, and Why They Share a Spine</h2>
+    <h2 id="the-verticals-and-why-they-share">The Verticals, and Why They Share a Spine</h2>
     <p>This is a pillar piece because the same underlying need shows up across regulated sectors with different vocabulary on top. Two of them are worth a dedicated treatment, and we have written each as its own deep-dive.</p>
     <p><strong>Life Sciences.</strong> FDA-regulated software, GxP environments, computer-system validation, and clinical systems put a validation and documentation burden on every change that touches a controlled system. The governance question is not whether the code works but whether you can prove it was developed, reviewed, and validated under controlled conditions. We treat that case in full in <a href="/insights/ai-coding-agents-life-sciences-governance/">AI coding agents in life sciences governance</a>.</p>
     <p><strong>Financial Services.</strong> Banks, insurers, and fintechs operate under audit trails, change-management controls, and supervisory expectations that demand a defensible record of who changed what and why. An agent that cannot produce that record is not faster &mdash; it is an unbounded liability. We cover the audit-trail requirement specifically in <a href="/insights/ai-coding-agents-financial-services-audit-trail/">AI coding agents and the financial-services audit trail</a>.</p>
@@ -351,12 +364,12 @@
     </ul>
     <p>Across all of these, the request is identical underneath the acronyms: prove that an AI-generated change followed approved patterns and constraints, and keep proving it over time. That is why governance, not generation, is the shared spine of the cluster.</p>
 
-    <h2>Why Generic AI Tools Stop Short</h2>
+    <h2 id="why-generic-ai-tools-stop-short">Why Generic AI Tools Stop Short</h2>
     <p>Most AI coding infrastructure treats the model as the product and everything else as plumbing. Better context, longer windows, more capable agents &mdash; all aimed at producing more and better code. That is exactly the work regulated industries find least scarce. They do not primarily need more code. They need to be able to stand behind the code an agent produced.</p>
     <p>An agent acting without an enforcement layer is, from a compliance standpoint, an actor with no recorded authorization. We have argued separately that <a href="/insights/ai-agents-are-not-employees-governance/">AI agents are not employees</a> and cannot be governed as if accountability travels with them the way it travels with a person; their actions have to be bound by an external control surface instead. The same logic explains why <a href="/insights/autonomous-code-remediation-requires-architectural-governance/">autonomous code remediation requires architectural governance</a>: the more autonomously an agent can change a system, the more essential it is that an independent layer records what it changed and verifies the change against approved constraints before it lands.</p>
     <p>That control surface is <a href="/concepts/enforcement-provenance/">enforcement provenance</a>: not just that a check ran, but a durable, attributable record of which decision was enforced, against which change, with which verdict. In a regulated context that record is not a nice-to-have analytic. It is the evidence. Teams evaluating this for a controlled environment usually start from the concrete adoption patterns on our <a href="/use-cases/">use-cases page</a> rather than from the abstract argument.</p>
 
-    <h2>Governance as the Prerequisite for Adoption</h2>
+    <h2 id="governance-as-the-prerequisite-for-adoption">Governance as the Prerequisite for Adoption</h2>
     <p>The conclusion is uncomfortable for a market priced on generation speed. In regulated software, the winning capability is not generating code faster. It is being able to prove that an AI-generated change followed approved patterns and constraints &mdash; traceably, repeatably, and durably. Speed without that proof is not an advantage in these environments; it is unreviewed exposure accumulating faster.</p>
     <p>Which means governance is not a feature you add after adoption. It is the precondition for adoption at all. A regulated organization will not hand an agent meaningful authority over its systems until it can answer, on demand, who approved a change, which requirement it satisfied, and how it was verified. Decision memory plus deterministic enforcement is what makes those answers exist as a byproduct of the work. That is the layer most AI tooling skips, and it is the one regulated industries cannot move without.</p>
 

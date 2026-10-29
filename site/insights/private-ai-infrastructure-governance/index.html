@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Enterprises are bringing AI inside their trust boundary. Private compute controls where AI runs, not how it acts. Governance has to move inside the boundary too." />
   <meta name="robots" content="index, follow" />
@@ -350,11 +349,25 @@
   </header>
 
 <div class="article-body">
-<h2>AI is moving inside the enterprise trust boundary</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#ai-is-moving-inside-the-enterprise">AI is moving inside the enterprise trust boundary</a></li>
+      <li><a href="#private-inference-solves-part-of-the">Private inference solves part of the problem</a></li>
+      <li><a href="#the-missing-piece-is-decision-context">The missing piece is decision context</a></li>
+      <li><a href="#retrieval-is-necessary-but-it-is">Retrieval is necessary, but it is not governance</a></li>
+      <li><a href="#governance-has-to-stay-inside-the">Governance has to stay inside the same boundary</a></li>
+      <li><a href="#from-private-ai-to-accountable-ai">From private AI to accountable AI</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#the-enterprise-ai-stack-is-becoming">The enterprise AI stack is becoming layered</a></li>
+    </ol>
+  </nav>
+<h2 id="ai-is-moving-inside-the-enterprise">AI is moving inside the enterprise trust boundary</h2>
 <p>According to Bloomberg Law, Latham decided three years ago to build its own Nvidia server infrastructure, has bought multiple H200 GPUs, houses the servers in a facility only Latham employees can access, and is experimenting with fine-tuning open-weight models developed by Nvidia. The firm also keeps using commercial AI tools (<a href="https://news.bloomberglaw.com/business-and-practice/lathams-own-ai-servers-give-firm-best-options-leaders-say" target="_blank" rel="noopener">Bloomberg Law</a>). As Legal IT Insider puts it, owning the infrastructure means the firm can potentially run certain AI workloads without sending client data to a legal AI vendor, model provider, or hyperscaler (<a href="https://legaltechnology.com/latham-builds-its-own-ai-models-with-nvidia-gpu-server-investment/" target="_blank" rel="noopener">Legal IT Insider</a>). The private stack is an additional path for sensitive work, not a replacement.</p>
 <p>This article is not about law firms. Latham is useful as evidence of a broader pattern. Organizations that handle highly sensitive information are willing to own substantial AI infrastructure to keep data inside a boundary they control. Private models, open-weight fine-tuning, and enterprise-controlled inference now sit alongside external model APIs as serious deployment options. The regional version of this trend is covered in <a href="/insights/sovereign-ai-needs-sovereign-engineering/">sovereign AI needs sovereign engineering</a>.</p>
 
-<h2>Private inference solves part of the problem</h2>
+<h2 id="private-inference-solves-part-of-the">Private inference solves part of the problem</h2>
 <p>Two different questions tend to get merged:</p>
 <ul>
   <li><strong>Data governance</strong> asks where information is allowed to go.</li>
@@ -362,7 +375,7 @@
 </ul>
 <p>Running a model inside the trust boundary answers the first question well. It addresses data residency, third-party exposure, and source-code egress. It says nothing about the second. A privately hosted model driving a coding agent can still use a framework the organization retired, ignore an architectural decision, cross a boundary the security team drew, repeat an approach that was already rejected, or make a structural change nobody approved. The model running on your hardware does not make it aware of your decisions.</p>
 
-<h2>The missing piece is decision context</h2>
+<h2 id="the-missing-piece-is-decision-context">The missing piece is decision context</h2>
 <p>Every large engineering organization holds thousands of decisions spread across ADRs, standards, security policies, tickets, repositories, and the memory of senior engineers. A private coding agent does not know them because it runs locally. It knows what it was trained on and what it was handed in context.</p>
 <p>So the private AI stack has a gap between the model and the action:</p>
 <pre tabindex="0"><code>Private model
@@ -379,11 +392,11 @@ Checked constraints      <-- usually missing
       v
 Change</code></pre>
 
-<h2>Retrieval is necessary, but it is not governance</h2>
+<h2 id="retrieval-is-necessary-but-it-is">Retrieval is necessary, but it is not governance</h2>
 <p>The first step is letting an agent ask which decisions apply to the change it is about to make. Protocols like MCP make that possible in a vendor-neutral way, so the same decision source can serve different agents and different models, hosted or private.</p>
 <p>Retrieval alone still leaves the agent free to ignore what it retrieved. Governance needs the next steps too: determine which decisions actually apply, check the change against the ones that can be checked mechanically, and record which decision produced the verdict. The limits of context-only approaches are covered in <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">why context alone doesn't prevent architectural drift</a>.</p>
 
-<h2>Governance has to stay inside the same boundary</h2>
+<h2 id="governance-has-to-stay-inside-the">Governance has to stay inside the same boundary</h2>
 <p>This is the enterprise argument. If an organization has invested heavily to keep models, prompts, and proprietary code inside infrastructure it controls, its governance layer cannot require shipping the repository to another SaaS provider for analysis. That would reopen the boundary the infrastructure was bought to close.</p>
 <p>Governance for private AI therefore needs to be able to:</p>
 <ul>
@@ -395,14 +408,14 @@ Change</code></pre>
 </ul>
 <p>The same shift toward repository-local governance shows up at the device level, as argued in <a href="/insights/governance-perimeter-is-moving-to-the-endpoint/">the governance perimeter is moving to the endpoint</a>.</p>
 
-<h2>From private AI to accountable AI</h2>
+<h2 id="from-private-ai-to-accountable-ai">From private AI to accountable AI</h2>
 <p>Regulated organizations will eventually need more than "the governance control ran." They will need to show which decision applied, which rule represented it, what change was evaluated, and what the outcome was. Deterministic verdicts are what make that possible. A model's opinion about whether it complied is not evidence. A rule evaluated against a change, traced to the decision it came from, can be.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme applies to one class of decision in this stack: architectural decisions in a repository. The open-source engine and CLI run on your own machines, and the local audit never sends your code anywhere. Accepted decisions become scoped rules that return deterministic PASS, WARN, or FAIL verdicts against proposed changes. Its MCP server, shipped in 0.9.0, runs as a local process and lets agents, whether backed by a hosted or a private model, retrieve the decisions that apply to the paths they are changing. See the <a href="/integrations/mcp/">MCP integration</a> and the <a href="/docs/mcp/">six-tool reference</a>.</p>
 <p>Mneme does not govern model behavior in general, and a complete, audit-grade enforcement evidence trail is direction rather than a shipped feature. The hosted Architecture Audit processes repositories on Mneme infrastructure, which is documented in <a href="/security/data-handling/">security and data handling</a>. Organizations that cannot send code outside their boundary can run the same analysis locally with the open-source CLI.</p>
 
-<h2>The enterprise AI stack is becoming layered</h2>
+<h2 id="the-enterprise-ai-stack-is-becoming">The enterprise AI stack is becoming layered</h2>
 <p>Enterprise-controlled compute, private and commercial models, agents, the decisions they must follow, deterministic checks, and the systems they change are separating into distinct layers. The first two get most of the attention and budget today. The decision layer is what connects them to the organization's actual architecture.</p>
 <p>Owning the model infrastructure gives an enterprise control over where AI runs. Owning the decisions gives it control over how AI acts.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Multi-agent coding systems inherit the same coordination problems distributed systems solved decades ago — except the participants are now autonomous models. Subagents parallelize execution. They also parallelize inconsistency. Observability explains drift; governance prevents it. The next AI infrastructure layer is coordination governance." />
   <meta name="robots" content="index, follow" />
@@ -272,7 +271,23 @@
 
   <div class="article-body">
 
-    <h2>The shift from assistants to orchestration systems</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-shift-from-assistants-to-orchestration">The shift from assistants to orchestration systems</a></li>
+        <li><a href="#parallelization-changes-the-failure-mode">Parallelization changes the failure mode</a></li>
+        <li><a href="#activity-logs-and-tracing-are-observability">Activity logs and tracing are observability, not governance</a></li>
+        <li><a href="#multi-agent-systems-need-shared-architectural">Multi-agent systems need shared architectural invariants</a></li>
+        <li><a href="#the-distributed-systems-analogy">The distributed-systems analogy</a></li>
+        <li><a href="#the-emergence-of-coordination-governance">The emergence of coordination governance</a></li>
+        <li><a href="#what-companies-think-they-need-vs">What companies think they need vs. what they actually need</a></li>
+        <li><a href="#governance-becomes-runtime-infrastructure">Governance becomes runtime infrastructure</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-shift-from-assistants-to-orchestration">The shift from assistants to orchestration systems</h2>
     <p>Lovable&rsquo;s subagents pattern &mdash; research agents, review and audit agents, synthesis agents, traceability and activity logs &mdash; is the shape the rest of the market is heading toward. It is the same architecture that shows up across the ecosystem now: multiple autonomous workers, asynchronous execution, partial context sharing, delegated reasoning, parallel workflows.</p>
     <p>That is not an assistant. It is a distributed execution system that happens to produce code.</p>
     <p>The framing matters because the failure mode changes with the shape.</p>
@@ -286,7 +301,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Parallelization changes the failure mode</h2>
+<h2 id="parallelization-changes-the-failure-mode">Parallelization changes the failure mode</h2>
     <p>Single-agent problems are well understood: hallucinations, weak retrieval, syntax issues. The fix is usually more context, better prompting, or a better model.</p>
     <p>Multi-agent problems are different in kind:</p>
     <ul>
@@ -302,7 +317,7 @@
 
     <p>External research is starting to confirm this at the safety layer, not just the engineering layer. A July 2026 study, <a href="https://arxiv.org/abs/2607.07368" target="_blank" rel="noopener">Multi-Agent AI Control: Distributed Attacks Hamper Per-Instance Monitors</a>, found that as more agents coordinate an attack, monitoring built to catch any single agent becomes measurably less likely to catch any of them &mdash; the authors call this the fragmentation effect. The mechanism is not specific to malice: it is what happens whenever no individual agent&rsquo;s actions look anomalous on their own. The UK AI Security Institute&rsquo;s August 2026 <a href="https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing" target="_blank" rel="noopener">incident report</a> records a real instance of the same blind spot: agents under evaluation took 19 unsanctioned actions across 10 of 122 test runs, over roughly four days, before anyone noticed. Per-instance monitoring and after-the-fact tracing are the same category of control this section argues against &mdash; observability of what already happened, not a constraint on what is allowed to happen next.</p>
 
-    <h2>Activity logs and tracing are observability, not governance</h2>
+    <h2 id="activity-logs-and-tracing-are-observability">Activity logs and tracing are observability, not governance</h2>
     <p>The traceability angle in Lovable&rsquo;s pitch is real and useful. Being able to see which subagent caused what, replay reasoning paths, and trace decisions back to sources is genuine progress. It also &mdash; on its own &mdash; does not solve the coordination problem.</p>
     <ul>
       <li>Seeing violations after generation is forensics.</li>
@@ -313,7 +328,7 @@
     <div class="callout"><p><strong>Activity logs help diagnose coordination failures.</strong> They do not constrain them. Observability explains drift; governance prevents it.</p></div>
     <p>The category line is the same one that comes up at the runtime layer: <a href="/insights/agent-runtime-governance/">observability tells you what happened, governance constrains what is allowed to happen</a>. Subagents make the line more important, not less.</p>
 
-    <h2>Multi-agent systems need shared architectural invariants</h2>
+    <h2 id="multi-agent-systems-need-shared-architectural">Multi-agent systems need shared architectural invariants</h2>
     <p>The infrastructure gap is shared state. Not state in the &ldquo;memory layer&rdquo; sense, but in the <em>consistency-model</em> sense.</p>
     <p>For a multi-agent coding system to remain coherent, every agent needs deterministic access to the same answers:</p>
     <ul>
@@ -327,7 +342,7 @@
     <p>Without those, each subagent develops local interpretations, inconsistent assumptions, and incompatible outputs. The system parallelizes &mdash; and then has to spend the parallelization gains in a reconciliation queue at PR time.</p>
     <div class="callout"><p><strong>Multi-agent systems require shared architectural invariants the same way distributed systems require shared consistency models.</strong></p></div>
 
-    <h2>The distributed-systems analogy</h2>
+    <h2 id="the-distributed-systems-analogy">The distributed-systems analogy</h2>
     <p>Multi-agent coding systems are inheriting the same coordination problems distributed systems solved decades ago &mdash; except now the participants are autonomous models.</p>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
@@ -344,7 +359,7 @@
     </div>
     <p>The right primitives are already named in the older literature: shared state, consistency models, idempotency, replay logs, deterministic ordering. The new system needs the equivalents.</p>
 
-    <h2>The emergence of coordination governance</h2>
+    <h2 id="the-emergence-of-coordination-governance">The emergence of coordination governance</h2>
     <p>Coordination governance is the category that closes the gap. It is the discipline of enforcing shared architectural and policy invariants across autonomous multi-agent systems &mdash; so parallel subagents share the same constraints, decisions, and enforcement semantics.</p>
     <p>What that looks like in practice:</p>
     <ul>
@@ -355,7 +370,7 @@
     </ul>
     <p>These are not new ideas at the per-agent layer. The shift is treating them as <strong>infrastructure</strong> the orchestration platform depends on, not configuration each agent carries.</p>
 
-    <h2>What companies think they need vs. what they actually need</h2>
+    <h2 id="what-companies-think-they-need-vs">What companies think they need vs. what they actually need</h2>
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
       <thead><tr><th>The instinct</th><th>The actual gap</th></tr></thead>
@@ -369,11 +384,11 @@
     </div>
     <p>The instincts are not wrong &mdash; they are just not sufficient. Larger windows and richer traces help. Neither prevents two subagents from making incompatible architectural choices in the same repo at the same time.</p>
 
-    <h2>Governance becomes runtime infrastructure</h2>
+    <h2 id="governance-becomes-runtime-infrastructure">Governance becomes runtime infrastructure</h2>
     <p>As agents become orchestration systems, governance must become infrastructure rather than documentation. <a href="/concepts/architectural-governance/">Architecture-as-document</a> works at human pace. It does not work when six subagents are editing the same module on three branches with two different interpretations of the same constraint.</p>
     <p>Position Mneme accordingly: not another coding assistant, not another agent framework, not another observability layer. <a href="/concepts/governance-infrastructure/">Governance propagation infrastructure</a> &mdash; deterministic architectural context, enforcement <a href="/concepts/governance-before-generation/">before generation</a>, and verification contracts that hold across every subagent in the workflow.</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>The next competitive advantage in AI development will not just be generation speed. It will be <strong>how reliably autonomous systems preserve architectural integrity at scale</strong>.</p>
     <div class="callout"><p><strong>Subagents make architectural drift parallelized.</strong> Coordination governance is what makes parallel agents safe to scale.</p></div>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Harness engineering verification is the missing layer. Harnesses optimize for successful execution, but enterprises need execution proven correct and compliant." />
   <meta name="robots" content="index, follow" />
@@ -324,12 +323,25 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#reliability-vs-verification-in-harness-engineering">Reliability vs verification in harness engineering</a></li>
+        <li><a href="#why-successful-execution-is-not-enough">Why successful execution is not enough</a></li>
+        <li><a href="#verification-contracts">Verification contracts</a></li>
+        <li><a href="#explainable-enforcement-traces-and-governance-provenance">Explainable enforcement traces and governance provenance</a></li>
+        <li><a href="#deterministic-enforcement-surfaces">Deterministic enforcement surfaces</a></li>
+        <li><a href="#toward-governed-execution-environments">Toward governed execution environments</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>Harness engineering is an emerging term in the AI engineering community, gaining traction through 2026, for the discipline of designing the systems, constraints, feedback loops, and observability that wrap around an AI agent to make it reliable in production. In practice, a harness is the layer around the model that runs the agent loop. It typically coordinates tool calls, retries failed steps, manages context and state, handles permissions and guardrails, routes between sub-agents, and drives multi-step execution. Some harnesses also support background or long-running execution. The shift that produced this discipline &mdash; from optimizing inputs to designing the system around the model &mdash; is traced in <a href="/insights/prompt-engineering-vs-harness-engineering/">prompt engineering vs harness engineering</a>.</p>
 <p>Almost all of that engineering optimizes for a single property: successful execution. Did the loop terminate? Did the tools resolve? Did the task complete without crashing? Those are real and necessary questions. They are also insufficient.</p>
 <p>Enterprises do not adopt autonomous systems because they execute. They adopt them because the output can be trusted. What they actually need is not successful execution but <em>verifiable</em> execution &mdash; a run whose correctness and compliance can be demonstrated after the fact, not assumed because nothing threw an error.</p>
 <div class="callout"><p><strong>A harness that optimizes only for successful execution is optimizing for the wrong target.</strong> The enterprise requirement is verifiable execution: a run you can prove stayed correct and compliant, not one that merely finished.</p></div>
 
-<h2>Reliability vs verification in harness engineering</h2>
+<h2 id="reliability-vs-verification-in-harness-engineering">Reliability vs verification in harness engineering</h2>
 <p>Reliability and verification are routinely conflated, and the conflation is where the missing layer hides. They answer different questions.</p>
 <p><strong>Reliability</strong> answers: did it run, and did it complete? A reliable harness recovers from transient failures, retries flaky tool calls, manages context so the loop does not stall, and gets the agent to a finished state. Reliability is about <em>completion</em>.</p>
 <p><strong>Verification</strong> answers a harder question: did the run stay correct and compliant? Did the output respect the constraints it was supposed to respect? Verification is about <em>correctness</em> against an explicit standard, not the absence of crashes.</p>
@@ -366,7 +378,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why successful execution is not enough</h2>
+<h2 id="why-successful-execution-is-not-enough">Why successful execution is not enough</h2>
 <p>The gap is structural, not incidental. A harness is built to drive and complete the agent loop, and it has rich context about <em>this run</em>: which tools fired, which retried, when it stopped. It usually has almost no model of what the system the agent is editing is supposed to look like. So even a flawless run leaves a set of questions unanswered:</p>
 <ul>
   <li><strong>Were architectural constraints violated?</strong> &mdash; the harness can confirm the code was written; it cannot confirm the code respected the boundaries the team committed to.</li>
@@ -377,24 +389,24 @@
 <p>None of these are failures of reliability. The run succeeded on every dimension the harness measures. They are failures of verification, and they are invisible to a layer that was never designed to ask them. This is the same boundary that separates <a href="/insights/runtime-verification-is-not-architectural-verification/">runtime verification from architectural verification</a>: protecting a single run is not the same as protecting the system the run modifies.</p>
 <div class="callout"><p><strong>A harness can tell you a task completed. It usually cannot tell you the task stayed correct.</strong> Completion and compliance are different signals, and only one of them is what the enterprise is buying.</p></div>
 
-<h2>Verification contracts</h2>
+<h2 id="verification-contracts">Verification contracts</h2>
 <p>The way to make execution verifiable is to make the standard explicit and machine-checkable <em>before</em> the run, rather than inferring it afterward from a trace. That is the role of a <a href="/concepts/verification-contracts/">verification contract</a>: a pre-registered, machine-checkable assertion about what an output or a run must satisfy to be considered valid.</p>
 <p>A verification contract is not a prompt and not a hope. It is a constraint stated in advance &mdash; this boundary must hold, this dependency is forbidden, this pattern is canonical &mdash; that the harness can evaluate against the actual change the agent produced. The verdict is binary and grounded: the run either satisfied the contract or it did not.</p>
 <p>This reframes verification from a review activity into an execution-time property. Instead of asking a reviewer to reconstruct intent after the agent has finished, the standard travels with the work and is checked as part of the loop. Verification stops being something humans do later and becomes something the harness does inline.</p>
 <p>The contract approach also separates clean verification from <a href="/concepts/architectural-governance/">architectural governance</a> done by another probabilistic agent. A reviewer model inherits the same nondeterminism that produced the drift in the first place. A pre-registered contract does not negotiate. It asserts, and the assertion is evaluated the same way every time.</p>
 
-<h2>Explainable enforcement traces and governance provenance</h2>
+<h2 id="explainable-enforcement-traces-and-governance-provenance">Explainable enforcement traces and governance provenance</h2>
 <p>A verdict is only useful if it is explainable. &ldquo;The run failed verification&rdquo; is operationally worthless if no one can say which constraint failed, on which change, or why that constraint exists. Verifiable execution requires that every verdict be traceable to the decision that produced it.</p>
 <p>This is the function of <a href="/concepts/enforcement-provenance/">enforcement provenance</a>: each enforcement result carries a link back to the rule that fired and the change that triggered it. A blocked run is not an opaque rejection; it is an explained one. The engineer sees the specific assertion, the specific violation, and the path to resolution.</p>
 <p>Behind the individual verdict sits <a href="/concepts/governance-provenance/">governance provenance</a>: the chain from an architecture decision record, to the constraint compiled from it, to the verdict that constraint produced. When a run is blocked, the answer to &ldquo;says who?&rdquo; is not a person&rsquo;s judgment in a pull request thread. It is a recorded decision the team already made. Provenance is what turns enforcement from an obstacle into an audit trail.</p>
 <div class="callout"><p><strong>An unexplained verdict is not verification &mdash; it is friction.</strong> Every block must trace to the decision that justifies it, or engineers will route around the harness rather than trust it.</p></div>
 
-<h2>Deterministic enforcement surfaces</h2>
+<h2 id="deterministic-enforcement-surfaces">Deterministic enforcement surfaces</h2>
 <p>Verifiable execution has one more requirement that distinguishes it from evals and probabilistic review: the verdict has to be deterministic. <a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> means the same input produces the same verdict on every run &mdash; the same change, against the same compiled constraint set, yields the same result regardless of which agent, harness, or session emitted it.</p>
 <p>Determinism is what makes verification trustworthy as infrastructure. A check that returns a different answer depending on sampling, phrasing, or model temperature is a suggestion, not a contract. Engineers learn quickly which signals they can rely on, and a flaky verdict gets ignored. A deterministic verdict can be wired into the places where it actually has to hold.</p>
 <p>Those places are the <a href="/concepts/execution-surfaces/">execution surfaces</a> the work passes through: pre-tool hooks inside the agent harness, pre-commit hooks on the developer machine, pre-PR checks in CI, runtime gates before deployment. The compiled constraint set is identical across all of them. Different surfaces, identical verdicts. That uniformity is what makes verification a property of the system rather than a property of one run on one machine.</p>
 
-<h2>Toward governed execution environments</h2>
+<h2 id="toward-governed-execution-environments">Toward governed execution environments</h2>
 <p>Harness engineering is following a path that CI/CD and observability walked before it. CI/CD turned integration and delivery into an automated, taken-for-granted feedback loop. Observability turned the ability to infer a system&rsquo;s internal state from its outputs into baseline infrastructure &mdash; a foundation for reliability rather than reliability itself. Just as those practices went from novel to assumed, harness engineering may be on a similar trajectory.</p>
 <p>But neither CI/CD nor observability verifies that a change stayed architecturally correct. They tell you the pipeline ran and the system is visible. They do not encode the decisions a team has made and prove each change respected them. That is the layer that is still missing.</p>
 <p>The next harness capability enterprises will demand is not faster loops or richer traces. It is verifiable, governed execution: runs that complete <em>and</em> carry proof they stayed within the architecture the team committed to. This builds directly on the harness engineering foundation &mdash; the pillar argument for <a href="/insights/what-is-harness-engineering/">what harness engineering is</a> &mdash; and on the recognition that <a href="/insights/runtime-verification-is-not-architectural-verification/">runtime verification is not architectural verification</a>. The harness made agents reliable. The next layer makes them verifiable.</p>

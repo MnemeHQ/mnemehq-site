@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="IBM Bob accelerates enterprise software delivery with agentic planning, subagents, and MCP extensibility. Architectural guardrails keep that speed inside your architecture: ADRs enforced before Bob writes code." />
   <meta name="robots" content="index, follow" />
@@ -297,7 +296,18 @@
 
   <div class="article-body">
 
-    <h2>What IBM Bob is built to do</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-ibm-bob-is-built-to">What IBM Bob is built to do</a></li>
+        <li><a href="#speed-does-not-preserve-architectural-intent">Speed does not preserve architectural intent</a></li>
+        <li><a href="#where-the-guardrail-layer-sits">Where the guardrail layer sits</a></li>
+        <li><a href="#a-practical-workflow">A practical workflow</a></li>
+        <li><a href="#why-enterprises-need-both">Why enterprises need both</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-ibm-bob-is-built-to">What IBM Bob is built to do</h2>
     <p><a href="https://bob.ibm.com/" target="_blank" rel="noopener">IBM Bob</a> positions itself as an AI-first development partner rather than autocomplete. It plans and implements in natural language, spawns focused subagents that each carry their own context and tools, brings the same agents to the terminal through Bob Shell, and connects to IBM's ecosystem including Red Hat and Instana. It supports the Model Context Protocol, and its Bobalytics view tracks contribution across the delivery lifecycle. Bob also ships built-in guardrails that operate in approval modes to prevent unapproved source changes.</p>
     <p>These are real enterprise capabilities, and they are strongest exactly where legacy modernization and large-scale change are hardest. They are also, by design, about executing software development.</p>
 
@@ -310,7 +320,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Speed does not preserve architectural intent</h2>
+<h2 id="speed-does-not-preserve-architectural-intent">Speed does not preserve architectural intent</h2>
     <p>An agent can generate correct code, pass every test, and still violate an architectural decision. The failure modes are familiar to anyone who has scaled a codebase:</p>
     <ul>
       <li>using a database the team explicitly ruled out</li>
@@ -321,7 +331,7 @@
     <p>Bob's approval-mode guardrails govern whether a change is applied. They are not the same as governing whether the change conforms to your architecture. That is the distinction between code correctness and architectural correctness, and it is where an independent guardrail layer fits.</p>
     <div class="callout"><p><strong>IBM Bob helps agents build software. Architectural guardrails keep those agents inside your architectural decisions while they do it.</strong> The two are complementary, not competing.</p></div>
 
-    <h2>Where the guardrail layer sits</h2>
+    <h2 id="where-the-guardrail-layer-sits">Where the guardrail layer sits</h2>
     <p>Because Bob supports MCP and external tools, architectural governance can run in the path rather than beside it. The workflow looks like this:</p>
     <div class="diag-wrap">
       <svg viewBox="0 0 700 300" role="img" aria-label="Architectural decisions feed Mneme, which constrains IBM Bob before implementation" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:520px;display:block;margin:0 auto;">
@@ -337,7 +347,7 @@
     </div>
     <p>The guardrail layer loads the applicable decisions before planning, checks the implementation plan against them, and explains why a proposed change violates a decision rather than silently allowing it. Bob remains responsible for planning and implementation. The architecture remains owned by you.</p>
 
-    <h2>A practical workflow</h2>
+    <h2 id="a-practical-workflow">A practical workflow</h2>
     <ul>
       <li>An engineer asks Bob to implement a feature.</li>
       <li>Bob retrieves project context and drafts a plan.</li>
@@ -346,7 +356,7 @@
       <li>Bob generates compliant code. Violations are blocked or explained with their originating decision.</li>
     </ul>
 
-    <h2>Why enterprises need both</h2>
+    <h2 id="why-enterprises-need-both">Why enterprises need both</h2>
     <table class="gov-table">
       <thead><tr><th>IBM Bob</th><th>Architectural guardrails</th></tr></thead>
       <tbody>

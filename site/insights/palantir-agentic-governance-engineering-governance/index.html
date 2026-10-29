@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Palantir's 2026 white paper argues model safety is insufficient and governance must move to where agents operate. It is right. But for software teams, a second governance problem remains: keeping the code coding agents write aligned with architecture." />
   <meta name="robots" content="index, follow" />
@@ -296,8 +295,20 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-palantir-s-white-paper-argues">What Palantir&rsquo;s White Paper Argues</a></li>
+        <li><a href="#what-palantir-names-but-doesn-t">What Palantir Names but Doesn&rsquo;t Solve</a></li>
+        <li><a href="#two-governance-planes">Two Governance Planes</a></li>
+        <li><a href="#why-bounded-execution-isn-t-enough">Why Bounded Execution Isn&rsquo;t Enough</a></li>
+        <li><a href="#what-engineering-leaders-should-do">What Engineering Leaders Should Do</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What Palantir&rsquo;s White Paper Argues</h2>
+
+    <h2 id="what-palantir-s-white-paper-argues">What Palantir&rsquo;s White Paper Argues</h2>
     <p><a href="https://assets.ctfassets.net/xrfr7uokpv1b/5mrqbUZiSS4sqXwJYIGlkt/8b5288fb15bd175a694c700a49c330db/Agentic_Governance_White_Paper.pdf" target="_blank" rel="noopener">Governing AI Agents</a>, published by Palantir in 2026, makes a clean argument: &ldquo;Mechanisms at the model level to ensure that AI Agents meet safety standards are insufficient.&rdquo; Lab safety testing, Palantir writes, is not a substitute for downstream evaluation in production, because in-built model safeguards fall away once domain-specific context is introduced. Governance therefore has to move to the operational layer where agents actually act.</p>
     <p>The paper organizes that layer into two halves. <strong>Governance controls</strong> cover authorization workflows, bounded execution, testing and evaluation, observability, and fail-safe modes. <strong>Governance workflows</strong> cover downstream evaluation, human and agentic collaboration, and AI lifecycle development. The spirit is captured in one line: &ldquo;Just because Agents are powerful does not mean they should by default have access to all data or be able to take any action in any system.&rdquo; And on reliability, Palantir is blunt about why the stakes differ by use case: an agent that fails 1% of the time may be fine for sales emails, but automatically shipping that code to production would be an unacceptable risk.</p>
     <p>This is operational agent governance, in the same lineage as the enterprise platforms from IBM, ServiceNow, and others. It is a strong articulation of a real category. It is also not the whole problem for software teams.</p>
@@ -311,11 +322,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What Palantir Names but Doesn&rsquo;t Solve</h2>
+<h2 id="what-palantir-names-but-doesn-t">What Palantir Names but Doesn&rsquo;t Solve</h2>
     <p>The most telling sentence in the paper, for an engineering audience, is this: &ldquo;Take AI Coding Agents. They can easily produce code which is effective and efficient, but the code is very difficult for human engineers to understand.&rdquo; Palantir identifies the problem precisely. Then its framework stops where every operational-governance framework stops: authorization, bounded execution, evaluation, observability, fail-safes.</p>
     <p>None of those controls answers the question a software organization actually has about a coding agent&rsquo;s output. Did the change violate an architecture decision record? Did it cross a service boundary? Did it introduce a prohibited dependency? Did it contradict a decision the team made eighteen months ago? An agent can be perfectly authorized, fully observed, and bounded to exactly the systems it should touch, and still write code that quietly erodes the architecture.</p>
 
-    <h2>Two Governance Planes</h2>
+    <h2 id="two-governance-planes">Two Governance Planes</h2>
     <p>It is worth being precise about the boundary, because the two planes are easy to collapse into one word.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -333,10 +344,10 @@
 
     <p>Stated plainly: agent governance controls what agents can do. Engineering governance controls what they build. Palantir&rsquo;s framework is a thorough account of the first. The second is a different control plane, and it is the one that decides whether a generated change should exist.</p>
 
-    <h2>Why Bounded Execution Isn&rsquo;t Enough</h2>
+    <h2 id="why-bounded-execution-isn-t-enough">Why Bounded Execution Isn&rsquo;t Enough</h2>
     <p>Bounded execution &mdash; one of Palantir&rsquo;s governance controls &mdash; restricts which systems and tools an agent may reach. It is necessary and it is not sufficient for software. A coding agent with flawless bounds, scoped to its own repository and a set of approved tools, can still produce an architecturally wrong change entirely inside those bounds. Permissions govern reach. They do not govern design. The question that matters for a codebase is not &ldquo;can the agent access this repository?&rdquo; but &ldquo;does the change it pushed respect the architecture of the system it is changing?&rdquo;</p>
 
-    <h2>What Engineering Leaders Should Do</h2>
+    <h2 id="what-engineering-leaders-should-do">What Engineering Leaders Should Do</h2>
     <p>Read Palantir&rsquo;s paper as validation, not competition. It is right that governance must move downstream to where agents operate. For software teams, &ldquo;where agents operate&rdquo; includes the codebase itself, which means extending the same logic one layer further.</p>
     <ol>
       <li><strong>Turn architectural decisions into executable constraints.</strong> ADRs, approved dependencies, and service boundaries become <a href="/concepts/executable-architectural-intent/">machine-readable rules</a> rather than documents an agent may never retrieve.</li>

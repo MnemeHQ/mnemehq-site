@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Agent skills teach agents how to perform tasks. Architectural governance constrains what agents are allowed to do. These are different layers, and conflating them leaves system integrity unaddressed." />
   <meta name="robots" content="index, follow" />
@@ -307,6 +306,18 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-agent-skills-solve">What agent skills solve</a></li>
+        <li><a href="#why-reusable-skills-still-drift">Why reusable skills still drift</a></li>
+        <li><a href="#skills-are-procedural-governance-is-constraint">Skills are procedural. Governance is constraint-based.</a></li>
+        <li><a href="#why-orchestration-amplifies-inconsistency">Why orchestration amplifies inconsistency</a></li>
+        <li><a href="#the-emerging-ai-development-stack">The emerging AI development stack</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
     <div class="contrast-block" aria-label="Agent Skills vs Architectural Governance at a glance">
       <div class="contrast-cell">
         <div class="cb-label">Agent Skills</div>
@@ -334,7 +345,7 @@
       </div>
     </div>
 
-    <h2>What agent skills solve</h2>
+    <h2 id="what-agent-skills-solve">What agent skills solve</h2>
     <p>Agent skills are the execution acceleration layer. They package reusable capability so agents can perform tasks consistently without requiring the same detailed instruction every session. The umbrella term covers Claude Code skills, Cursor rules, workflow packs, tool-use recipes, prompt libraries, and skill libraries of all kinds.</p>
     <p>What they share: they encode <em>how to do something</em>. A skill for writing tests describes the test pattern. A skill for API integration describes the integration procedure. A workflow pack for code review describes the review steps.</p>
     <div class="callout"><p><strong>Reusable skills are genuinely useful.</strong> They are the execution acceleration layer &mdash; and acceleration at the task level is a real and valuable improvement.</p></div>
@@ -349,13 +360,13 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why reusable skills still drift</h2>
+<h2 id="why-reusable-skills-still-drift">Why reusable skills still drift</h2>
     <p>Skills give agents better procedures. They do not give systems better constraints. When a skilled agent encounters a tradeoff between task completion and architectural consistency, the skill has no mechanism to resolve it &mdash; it encodes the procedure, not the invariant.</p>
     <div class="callout"><p><strong>A skill can tell an agent how to work; it cannot decide whether the work still fits the system.</strong></p></div>
     <p>Session boundaries reset skills. Orchestration handoffs lose them. Multi-agent systems where one agent plans and another implements have no mechanism for skill-based constraints to propagate as architectural requirements rather than as suggestions.</p>
     <p>And even a perfectly-followed skill can violate an architectural constraint &mdash; because skills are written for tasks, not for the system boundaries the task is operating inside.</p>
 
-    <h2>Skills are procedural. Governance is constraint-based.</h2>
+    <h2 id="skills-are-procedural-governance-is-constraint">Skills are procedural. Governance is constraint-based.</h2>
     <p>The distinction is not capability vs. quality. It is procedure vs. constraint. These are different types of encoded knowledge, and they fail in different ways.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -386,12 +397,12 @@
     </table>
     </div>
 
-    <h2>Why orchestration amplifies inconsistency</h2>
+    <h2 id="why-orchestration-amplifies-inconsistency">Why orchestration amplifies inconsistency</h2>
     <p>Skills were designed for single-agent, session-bounded use. As systems grow toward multi-agent coordination, the skill model creates a new gap: capability propagates across the workflow, but architectural constraints do not.</p>
     <p>One agent can follow the right procedure, pass the work to the next agent, and that agent can also follow the right procedure &mdash; while the system as a whole drifts from its architectural intent. The procedures were correct. The constraints were never enforced.</p>
     <p>Orchestration amplifies the gap because every handoff is a point where governance needs to travel with the work. Skills do not include governance as a component. They solve a different problem.</p>
 
-    <h2>The emerging AI development stack</h2>
+    <h2 id="the-emerging-ai-development-stack">The emerging AI development stack</h2>
     <p>Context engineering, agent skills, orchestration, governance, and verification are not competing approaches. They are different layers of the same stack, each solving a different reliability problem.</p>
 
     <div class="layer-stack" style="margin:2rem 0;">

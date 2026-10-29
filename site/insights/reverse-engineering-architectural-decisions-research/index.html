@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI can recover a system&#x27;s structure, but a small 2026 study finds language models miss the rationale behind architectural decisions. What it means for agents." />
   <meta name="robots" content="index, follow" />
@@ -370,11 +369,28 @@
   </header>
 
 <div class="article-body">
-<h2>The question teams are now asking</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-question-teams-are-now-asking">The question teams are now asking</a></li>
+      <li><a href="#three-things-you-might-want-to">Three things you might want to recover</a></li>
+      <li><a href="#recovering-structure-is-an-established-field">Recovering structure is an established field</a></li>
+      <li><a href="#recovering-decisions-is-the-hard-part">Recovering decisions is the hard part</a></li>
+      <li><a href="#why-the-missing-rationale-matters">Why the missing rationale matters</a></li>
+      <li><a href="#three-different-questions">Three different questions</a></li>
+      <li><a href="#what-a-useful-reconstruction-needs">What a useful reconstruction needs</a></li>
+      <li><a href="#the-open-question">The open question</a></li>
+      <li><a href="#what-engineering-leaders-should-do-now">What engineering leaders should do now</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="the-question-teams-are-now-asking">The question teams are now asking</h2>
 <p>Most of the code that coding agents will change already exists, and much of it was never fully documented. The engineers who knew why a boundary sits where it does have moved on. The architecture decision records (ADRs), if there were any, stopped being updated years ago.</p>
 <p>So teams ask a reasonable question: can an AI agent reconstruct the decisions behind a system well enough to work on it safely? The published research gives a partial answer. Recovering what a system <em>is</em> works reasonably well. Recovering <em>why</em> it is that way is the hard part.</p>
 
-<h2>Three things you might want to recover</h2>
+<h2 id="three-things-you-might-want-to">Three things you might want to recover</h2>
 <p>A useful reconstruction has three layers, and they are not equally hard:</p>
 <ol>
   <li><strong>Structure:</strong> components, dependencies, interfaces, data stores and the paths between them.</li>
@@ -383,20 +399,20 @@
 </ol>
 <p>An agent that only has the first layer can copy what it sees. It cannot tell a deliberate boundary from an accident, which is how agents end up <a href="/insights/why-ai-coding-agents-copy-legacy-architecture/">copying legacy architecture</a> during a migration.</p>
 
-<h2>Recovering structure is an established field</h2>
+<h2 id="recovering-structure-is-an-established-field">Recovering structure is an established field</h2>
 <p>Architecture recovery long predates language models. A 2022 systematic mapping study of architecture erosion by Li, Liang, Soliman and Avgeriou, published in the <em>Journal of Software: Evolution and Process</em>, reviewed <a href="https://arxiv.org/abs/2112.10934" target="_blank" rel="noopener">73 studies</a> published between January 2006 and May 2019. It catalogues tools used to detect erosion, including conformance checkers such as Lattix, Structure101, Axivion and Sonargraph, and the ARCADE recovery workbench.</p>
 <p>None of this is new, and much of it does not need an agent. Static analysis can map what exists, and conformance tools compare it with a declared intended architecture. The gap is that a dependency graph shows what the system does, not what the team meant it to do.</p>
 
-<h2>Recovering decisions is the hard part</h2>
+<h2 id="recovering-decisions-is-the-hard-part">Recovering decisions is the hard part</h2>
 <p>A September 2026 <a href="https://arxiv.org/abs/2609.03721" target="_blank" rel="noopener">preliminary exploratory study</a> by Karan, Dhar, Soliman and Vaidhyanathan tested whether language models can extract architectural design decisions from source-code commits. The authors gave four models 30 developer-written decisions from open-source projects, both with no worked examples in the prompt and with a few.</p>
 <p>By text-similarity scores the models did well: every model scored above 0.81 on BERTScore, a standard semantic-similarity measure, and examples in the prompt helped (one model's score rose from 0.828 to 0.847). One author's manual review of one model's outputs told a different story. The generated decisions were often too long and focused on implementation detail, and in the authors' words they "miss the rationale behind the decision."</p>
 <p>That is a small, early study and a preprint, so treat it as a signal rather than a verdict. It is consistent with how commits work: a commit records what changed. The reason usually lives somewhere else, or nowhere.</p>
 
-<h2>Why the missing rationale matters</h2>
+<h2 id="why-the-missing-rationale-matters">Why the missing rationale matters</h2>
 <p>The 2022 mapping study explains why rationale is the piece worth recovering. It defines architecture erosion as the implemented architecture violating the intended one, or the architecture becoming resistant to change. Among non-technical causes, the most frequently mentioned was knowledge vaporization: architectural knowledge lost through missing or incomplete documentation and through developer turnover. It was cited in 11 of the 73 studies (15.1%). The authors recommend recording and tracing architectural knowledge, such as decisions and assumptions, to source code and to architectural changes.</p>
 <p>The study predates coding agents, so it supports the problem, not any particular fix. The link to agents is direct: an agent working on a system with vaporized knowledge has to infer intent from the code, and the code records what was built, not why.</p>
 
-<h2>Three different questions</h2>
+<h2 id="three-different-questions">Three different questions</h2>
 <p>Recovering structure and checking it against decisions are separate jobs. Mixing them produces misleading results, such as a planned migration that looks like damage:</p>
 <table class="gov-table">
   <thead><tr><th>Question</th><th>What it asks</th></tr></thead>
@@ -408,7 +424,7 @@
 </table>
 <p>A single violation is not drift. A large change that follows an approved migration is not damage either. You can only tell these apart if decisions carry a lifecycle and an owner, so the system knows which intent is current. That is the same property that separates <a href="/concepts/architectural-drift/">architectural drift</a>, the gradual move away from approved decisions, from planned change.</p>
 
-<h2>What a useful reconstruction needs</h2>
+<h2 id="what-a-useful-reconstruction-needs">What a useful reconstruction needs</h2>
 <p>If teams use agents to reconstruct a system, the output should not be one confident document. Each fact should say how it is known:</p>
 <ul>
   <li><strong>Observed:</strong> read directly from code, configuration or runtime data.</li>
@@ -417,10 +433,10 @@
 </ul>
 <p>Only confirmed decisions should ever become constraints that block an agent. An inferred decision that is enforced is a guess with a veto. The record of how a decision was confirmed is what <a href="/insights/how-ai-coding-agents-use-adrs/">turns an ADR into something agents can rely on</a>.</p>
 
-<h2>The open question</h2>
+<h2 id="the-open-question">The open question</h2>
 <p>Can evidence-backed reconstruction of structure, function and decisions make agents measurably safer on undocumented systems? The literature does not answer that yet. Structure recovery is mature and decision recovery is early. We found no published controlled test of agents working with a reconstructed decision layer versus without one. Mneme is researching this question, and has no results to report yet.</p>
 
-<h2>What engineering leaders should do now</h2>
+<h2 id="what-engineering-leaders-should-do-now">What engineering leaders should do now</h2>
 <ul>
   <li><strong>Recover structure with existing tools.</strong> Dependency and architecture analysis is mature. Use it before asking an agent to guess.</li>
   <li><strong>Treat model-extracted decisions as drafts.</strong> Expect them to describe the change and miss the reason. Have the people who own the system today confirm or reject each one, even if they were not there when it was decided.</li>
@@ -428,7 +444,7 @@
   <li><strong>Separate recovery from enforcement.</strong> Never let an inferred decision block a change until a person has accepted it.</li>
 </ul>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, works on the confirmed end of this pipeline today. Its <a href="/audit/">Architecture Audit</a> discovers the decisions a repository already documents, in ADRs, agent instructions, architecture docs and configuration, and classifies whether each one is deterministically protected today. Decisions with an active typed rule are enforced deterministically in supported coding agents and in continuous integration. Agents can propose new decisions; a person accepts them on the command line, and protection is activated as a separate step.</p>
 <p>Reconstructing undocumented decisions from code and history is the research question above, not a shipped capability.</p>
 

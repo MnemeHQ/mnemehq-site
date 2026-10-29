@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI saves workers 11 hours a week and takes 6.4 back in botsitting, Glean finds. For engineering teams the bill lands as a verification tax on generated code." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#ai-has-made-code-cheap">AI Has Made Code Cheap</a></li>
+        <li><a href="#the-new-constraint-is-verification">The New Constraint Is Verification</a></li>
+        <li><a href="#passing-tests-does-not-mean-preserving">Passing Tests Does Not Mean Preserving Architecture</a></li>
+        <li><a href="#why-existing-controls-are-insufficient">Why Existing Controls Are Insufficient</a></li>
+        <li><a href="#governance-must-become-executable">Governance Must Become Executable</a></li>
+        <li><a href="#the-goal-is-not-to-block">The Goal Is Not to Block AI Agents</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>AI Has Made Code Cheap</h2>
+
+    <h2 id="ai-has-made-code-cheap">AI Has Made Code Cheap</h2>
     <p>An agent can produce 2,000 lines of working code in minutes. The tests pass. CI is green. The pull request reads plausibly. The question nobody in that loop has answered: should the change have been 200 lines? Did it reuse the abstractions the codebase already has? Did it preserve the decisions the team already made about boundaries, dependencies, and data access?</p>
     <p>Generated volume is not engineering progress. The economics of producing code have collapsed, and every other cost in the delivery pipeline &mdash; understanding the change, reviewing it, maintaining it, unwinding it when it turns out to be wrong &mdash; stayed where it was. Some of those costs grew, because there is now more code to apply them to.</p>
 
@@ -309,17 +321,17 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The New Constraint Is Verification</h2>
+<h2 id="the-new-constraint-is-verification">The New Constraint Is Verification</h2>
     <p>Glean&rsquo;s <a href="https://www.glean.com/work-ai-institute/reports/work-ai-index-report">Work AI Index</a>, a survey of 6,000 full-time digital workers across the US, UK, and Australia, gives the pattern a name: botsitting &mdash; the unbudgeted labor of making AI usable. Workers in the survey report saving around 11 hours a week with AI while spending 6.4 hours a week botsitting: 2.3 hours feeding the AI context, 2.2 hours supervising its output, and 1.7 hours debugging its mistakes. That is 37% of all AI-related time spent on supervision rather than production, and only 13% of workers say AI has made their organization perform significantly better. The numbers are self-reported and directional rather than precise &mdash; but the shape of the curve matches what engineering teams see daily.</p>
     <p>For software teams the bill itemizes differently, and we&rsquo;d call it a <strong>verification tax</strong>: reviewing more generated code, checking whether an implementation follows existing architectural decisions, spotting unnecessary complexity, finding subtle boundary violations, and debugging changes no one fully understands. That last item is not hypothetical. In Glean&rsquo;s data, 41% of workers admit they sometimes deliver AI-produced work they could not fully explain if asked. Run that behavior through a merge queue for a few quarters and the codebase fills with code whose authorship is nominal and whose rationale is nobody&rsquo;s.</p>
     <p>The report also flags where this goes next: agents can run workflows end to end without a human checking each step. Every step a human used to touch was an accidental checkpoint. Autonomy removes them faster than teams replace them with anything deliberate.</p>
 
-    <h2>Passing Tests Does Not Mean Preserving Architecture</h2>
+    <h2 id="passing-tests-does-not-mean-preserving">Passing Tests Does Not Mean Preserving Architecture</h2>
     <p>The expensive part of the verification tax is the gap between local correctness and system-level correctness. A concrete version: the billing service is supposed to reach the ledger only through its API boundary. An agent asked to improve latency adds a direct database read. The change works. The tests pass &mdash; they test behavior, and the behavior is fine. The latency goal is met. And the architecture just drifted, because the constraint that mattered was never expressed anywhere a test could see it.</p>
     <p><a href="/concepts/architectural-drift/">Architectural drift</a> compounds exactly this way: a series of individually reasonable changes, each locally valid, each approved by a reviewer who had no machine-checkable statement of the system&rsquo;s intent. Glean&rsquo;s report makes the adjacent point about polish &mdash; fluent output removes the visual cues that used to trigger scrutiny. Clean diffs with passing tests are the engineering version of fluent prose. The polish is precisely what makes the drift invisible.</p>
     <div class="callout"><p><strong>Tests answer &ldquo;does it work?&rdquo;</strong> The verification tax is mostly spent on a different question: &ldquo;is this how our system is supposed to be built?&rdquo; &mdash; and that question currently has no automated answerer in most pipelines.</p></div>
 
-    <h2>Why Existing Controls Are Insufficient</h2>
+    <h2 id="why-existing-controls-are-insufficient">Why Existing Controls Are Insufficient</h2>
     <p>Teams already operate several control layers, and each one covers a real slice of the problem. None of them was designed to check a proposed change against the team&rsquo;s recorded architectural decisions. Even policy itself bends under adoption pressure: Glean found 54% of the highest-achieving AI users work around approved tools or use them in ways that violate company policy. Documents do not hold against incentives.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -338,7 +350,7 @@
 
     <p>We have traced the individual failure modes before: <a href="/insights/rule-files-vs-retrieval-memory/">rule files stop scaling</a> past token budgets and precedence conflicts, and <a href="/insights/why-code-review-cannot-scale-with-ai-output/">code review cannot scale</a> with agent output, which is how <a href="/insights/pr-review-is-becoming-incident-response/">the PR queue turns into an incident-response layer</a>. The verification tax is what those failures cost, denominated in senior engineers&rsquo; hours.</p>
 
-    <h2>Governance Must Become Executable</h2>
+    <h2 id="governance-must-become-executable">Governance Must Become Executable</h2>
     <p>The way out is not more manual review or a longer instruction file. It is moving the most important architectural decisions out of documents and into <a href="/concepts/verification-contracts/">verification contracts</a> &mdash; checks that run when an agent proposes a change. The loop looks like this:</p>
     <ol>
       <li><strong>Record</strong> the architectural decision as structured data, with its constraints &mdash; not prose in a wiki.</li>
@@ -349,7 +361,7 @@
     </ol>
     <p>Each step refunds part of the tax. Retrieval cuts the feeding-context hours &mdash; the largest botsitting line item in Glean&rsquo;s data at 2.3 hours a week. <a href="/concepts/deterministic-enforcement/">Deterministic checks</a> cut the supervision hours, because reviewers stop re-deriving the architecture from scratch on every diff. Rejection <a href="/concepts/governance-before-generation/">before the PR</a> cuts the cleanup hours, because drift stops reaching the merge queue in the first place.</p>
 
-    <h2>The Goal Is Not to Block AI Agents</h2>
+    <h2 id="the-goal-is-not-to-block">The Goal Is Not to Block AI Agents</h2>
     <p>The goal is to make their speed sustainable. Generation is becoming abundant; verification is becoming the scarce resource, and scarce resources need infrastructure, not heroics. Teams that turn their architectural decisions into executable, retrievable, enforceable constraints get to keep the 11 hours without paying the 6.4 back &mdash; and get to scale agent autonomy without scaling the anxiety that currently accompanies it. The verification tax is not an argument against coding agents. It is the line item that tells you which layer to build next.</p>
 
 

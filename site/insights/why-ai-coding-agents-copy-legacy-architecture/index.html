@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A migration leaves two architectures in one repository, and the legacy one is better represented. Agents follow the majority, and better retrieval makes it worse." />
   <meta name="robots" content="index, follow" />
@@ -387,22 +386,36 @@
 
 <div class="article-body">
 
-    <h2>A repository is a training signal</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#a-repository-is-a-training-signal">A repository is a training signal</a></li>
+      <li><a href="#this-is-not-a-memory-failure">This is not a memory failure</a></li>
+      <li><a href="#better-retrieval-makes-it-worse">Better retrieval makes it worse</a></li>
+      <li><a href="#three-ways-the-old-pattern-gets">Three ways the old pattern gets in</a></li>
+      <li><a href="#why-review-does-not-catch-it">Why review does not catch it</a></li>
+      <li><a href="#what-actually-separates-the-two-architectures">What actually separates the two architectures</a></li>
+      <li><a href="#the-practical-consequence">The practical consequence</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
+    <h2 id="a-repository-is-a-training-signal">A repository is a training signal</h2>
     <p>Every codebase teaches. An agent asked to add a feature looks at how similar things are already done and follows that. On a healthy codebase this is the behaviour you want, and it is most of what makes coding agents useful. Consistency with the surrounding code is a reasonable proxy for correctness.</p>
     <p>A migration breaks the proxy. For the duration of the project the repository demonstrates two architectures, and it demonstrates the one you are removing far more thoroughly, because that one has been accumulating for years and the replacement has existed for months.</p>
     <div class="callout"><p><strong>The dominant pattern in a repository may be precisely the pattern you are trying to remove.</strong></p></div>
 
-    <h2>This is not a memory failure</h2>
+    <h2 id="this-is-not-a-memory-failure">This is not a memory failure</h2>
     <p>It is tempting to file this under context loss. The agent forgot the migration plan, so remind it. That diagnosis leads to the wrong fix, because the agent is not failing to recall anything. It is reasoning correctly from evidence that is genuinely present in the repository.</p>
     <p>Consider what the agent can actually observe. Two hundred call sites use direct database access. Twenty use the repository abstraction. Both compile. Both pass tests. Both were written by employees of the same company. Nothing in the code marks one as historical. The inference that the majority pattern is the house style is not a hallucination. It is a sound reading of the available evidence.</p>
     <p>The information that would change the conclusion is not in the codebase at all. It is a decision, made once, that the twenty are the future and the two hundred are debt. That fact has no representation in code, which is why no amount of code-reading recovers it.</p>
 
-    <h2>Better retrieval makes it worse</h2>
+    <h2 id="better-retrieval-makes-it-worse">Better retrieval makes it worse</h2>
     <p>The intuitive fix is to give the agent more of the codebase. Larger context windows, better indexing, more thorough semantic search. During a migration each of those improvements strengthens the wrong signal.</p>
     <p>A weak search returns a handful of examples, and the agent may happen to draw from either architecture. A thorough search returns a representative sample, and a representative sample of a mid-migration repository is mostly legacy. The retrieval system is working exactly as designed. It surfaces what is there, and what is there is the architecture you are leaving.</p>
     <p>This is the specific sense in which migration is a governance problem rather than a context problem. No improvement to recall changes the ratio.</p>
 
-    <h2>Three ways the old pattern gets in</h2>
+    <h2 id="three-ways-the-old-pattern-gets">Three ways the old pattern gets in</h2>
     <p>The failure is rarely a single dramatic mistake. It arrives through ordinary, defensible-looking moves.</p>
     <ul>
       <li><strong>Direct imitation.</strong> The agent finds the nearest similar function and mirrors its structure. This is the common case and the easiest to spot in review, though only if the reviewer knows which side of the migration the file sits on.</li>
@@ -411,17 +424,17 @@
     </ul>
     <p>The third is the most durable, because the tests keep teaching the old shape long after the source has moved on.</p>
 
-    <h2>Why review does not catch it</h2>
+    <h2 id="why-review-does-not-catch-it">Why review does not catch it</h2>
     <p>A reviewer looking at a diff sees a function that follows the conventions of the file it sits in. Nothing about it looks wrong. Determining that it is wrong requires knowing that this particular module was migrated in March, that direct persistence access was superseded for migrated modules, and that the file's remaining legacy-style neighbours are themselves scheduled for removal.</p>
     <p>That knowledge is per-path, changes over the life of the project, and is held by a small number of people. Expecting it to be applied consistently across every diff produced by agents working at machine speed is not a realistic control.</p>
     <p>The result is that migrations regain ground slowly and lose it quickly. A component gets migrated once, deliberately, by someone who understood the target. It then accumulates new code from agents that read only the local evidence.</p>
 
-    <h2>What actually separates the two architectures</h2>
+    <h2 id="what-actually-separates-the-two-architectures">What actually separates the two architectures</h2>
     <p>The difference between the legacy pattern and the target pattern is not a property of the code. Both are valid code. The difference is a decision about which one survives, and decisions have to be recorded somewhere an agent is checked against rather than somewhere it might read.</p>
     <p>That recording needs three properties to be useful during a migration. It has to be explicit, so the target is stated rather than inferred from counting. It has to be scoped, so the rule that governs migrated modules stays silent in the tree that has not moved yet. And it has to be evaluated at the moment the agent acts, because a document the agent never opens constrains nothing.</p>
     <div class="callout"><p><strong>The agent is not misreading the repository. It is reading it correctly, and the repository is a record of the past.</strong></p></div>
 
-    <h2>The practical consequence</h2>
+    <h2 id="the-practical-consequence">The practical consequence</h2>
     <p>Teams running migrations with coding agents usually discover this the same way. The migration's completion percentage stops moving, or moves backwards, while activity stays high. Individual pull requests all look fine. The aggregate effect is that migrated components are quietly reacquiring the structure they were migrated out of.</p>
     <p>The fix is not to slow the agents down or to keep them away from the migration. It is to make the distinction they cannot infer available to them as an enforceable constraint, scoped to the paths where it applies.</p>
 

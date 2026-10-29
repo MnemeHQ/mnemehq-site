@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="BCG's To Thrive in the AI Era report: flatter structures cut decision cycles 70%. The more autonomy teams and agents get, the more governance must be enforced." />
   <meta name="robots" content="index, follow" />
@@ -296,8 +295,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-bcg-s-report-argues">What BCG&rsquo;s Report Argues</a></li>
+        <li><a href="#autonomy-is-the-operating-principle">Autonomy Is the Operating Principle</a></li>
+        <li><a href="#more-autonomy-less-architectural-consistency">More Autonomy, Less Architectural Consistency</a></li>
+        <li><a href="#bcg-s-own-evidence-graduated-autonomy">BCG&rsquo;s Own Evidence: Graduated Autonomy and Design Cards</a></li>
+        <li><a href="#the-missing-layer-in-the-ai">The Missing Layer in the AI Operating Model</a></li>
+        <li><a href="#what-tech-leaders-should-take-from">What Tech Leaders Should Take From This</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What BCG&rsquo;s Report Argues</h2>
+
+    <h2 id="what-bcg-s-report-argues">What BCG&rsquo;s Report Argues</h2>
     <p>Reorganize around AI or watch competitors who did pull away &mdash; that is the core argument of <a href="https://web-assets.bcg.com/pdf-src/prod-live/to-thrive-in-the-ai-era-tech-leaders-must-reinvent-organization-and-operating-models.pdf">To Thrive in the AI Era, Tech Leaders Must Reinvent Organization and Operating Models</a>, published by BCG on June 9, 2026. The six-author team (Maria Barisano, Federico Fabbri, Adriana Dahik, Julie Bedard, Danielle Xu, and Cailin Griffith) argues that treating AI as an additive layer on the existing organization forfeits most of the value. The headline numbers: cost reductions of up to 50% in certain operational areas, execution speed that doubles or triples, and decision cycles reduced by 70% through flatter structures. Only a few leading tech companies have implemented changes at this depth.</p>
     <p>The report packages the transformation as five moves:</p>
     <ul>
@@ -318,25 +330,25 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Autonomy Is the Operating Principle</h2>
+<h2 id="autonomy-is-the-operating-principle">Autonomy Is the Operating Principle</h2>
     <p>Every structural element of BCG&rsquo;s target operating model removes a checkpoint. The report describes &ldquo;high-velocity, multifunctional teams designed to deliver business outcomes autonomously&rdquo; &mdash; teams that own a result rather than route decisions up a chain. It positions AI agents as core organizational infrastructure, a &ldquo;central nervous system&rdquo; for workflow automation. And it redefines the manager: oversight gives way to enablement, with wider spans of control because fewer people need approving.</p>
     <p>The four organizational layers BCG&rsquo;s example company eliminated were four places where work paused for review. The 20-weeks-to-5 marketing redesign works the same way; most of the recovered weeks were spent waiting for sign-offs, handoffs, and upstream confirmation of decisions a downstream team already needed. BCG&rsquo;s premise is that speed comes from deleting those approval chains and letting teams and agents execute directly.</p>
     <p>On its own terms the premise holds. Approval chains are slow, and most of what they approve is fine. The open question is what those chains were doing besides slowing things down.</p>
 
-    <h2>More Autonomy, Less Architectural Consistency</h2>
+    <h2 id="more-autonomy-less-architectural-consistency">More Autonomy, Less Architectural Consistency</h2>
     <p>Hierarchy was doing a second job. The review layers BCG wants removed were also the mechanism &mdash; informal, slow, inconsistent, but real &mdash; that kept dozens of teams building one coherent system. The senior engineer who blocked a duplicate service, the architecture review that caught a forbidden dependency, the manager who knew which pattern the platform team had standardized on: that consistency enforcement lived inside the same approval chains the new operating model deletes.</p>
     <p>Agents widen the gap. When a &ldquo;central nervous system&rdquo; of agents executes workflow steps directly, every architectural decision an agent does not know about gets re-decided &mdash; per task, per agent, per day. <a href="/concepts/architectural-drift/">Architectural drift</a> used to accumulate at the pace of human sprints; in an agent-executed workflow it accumulates at machine speed. A pipeline compressed from 20 weeks to 5 has lost three-quarters of its calendar time for a human to notice that something inconsistent slipped through.</p>
     <p>The operating-model redesign rarely includes the redesign that would compensate: a defined path for how decisions reach the teams and agents doing the work. BCG specifies who decides (leadership, with measurable outcomes) and who executes (autonomous teams, agent workflows). The connection between the two &mdash; how a decision made once becomes a constraint applied everywhere &mdash; is left to the same informal mechanisms the flattening just removed.</p>
 
     <div class="callout"><p><strong>The layers were the enforcement.</strong> BCG&rsquo;s flatter structures cut decision cycles by 70% by removing approval chains &mdash; the same chains that quietly enforced architectural decisions. Remove them without replacing that function, and autonomy converts directly into drift.</p></div>
 
-    <h2>BCG&rsquo;s Own Evidence: Graduated Autonomy and Design Cards</h2>
+    <h2 id="bcg-s-own-evidence-graduated-autonomy">BCG&rsquo;s Own Evidence: Graduated Autonomy and Design Cards</h2>
     <p>BCG has already documented why unconstrained autonomy fails. Its <a href="https://www.bcg.com/publications/2026/how-ai-is-paying-off-in-the-tech-function">companion research on AI in the tech function</a>, a survey of 1,250 companies conducted in Q2 2025, found that only 5% of companies generate measurable value from AI at scale, while 60% achieve no material value &mdash; the same gap <a href="/insights/mckinsey-ai-table-stakes-to-advantage/">McKinsey maps between table stakes and advantage</a>, and the reason <a href="/insights/ai-roi-problem-is-about-systems-not-models/">the AI ROI problem lives in systems</a> rather than in models.</p>
     <p>The survey also shows where the stakes concentrate. The tech function&rsquo;s share of total AI value almost doubled from 7% in 2024 to 13% in 2025, second only to R&amp;D at 15%. Two-thirds of surveyed companies use AI in software development, 36% are scaling or fully deployed, and they report a 25% productivity boost today with 44% expected at full scale. Agents account for roughly 17% of company-wide AI value in 2025, and BCG expects that to almost double to 29% by 2028.</p>
     <p>For scaling agents, BCG prescribes a shared agent platform plus &ldquo;governance via graduated autonomy&rdquo;: a four-tier promotion path running from Tier 1 Shadow Mode (agents observe and suggest; humans act) through Tier 2 Supervised Mode (agents act; humans approve) to Tiers 3 and 4, Guided and Full Autonomy, where agents execute within strict guardrails and humans handle exceptions. BCG also recommends &ldquo;agent design cards&rdquo; that define an agent&rsquo;s purpose, boundaries, and failure modes before any code is written, with predefined signals of agentic drift and kill switches built into the platform. An AI-first operating model, BCG writes, &ldquo;involves encoding the institution&rsquo;s proprietary knowledge &mdash; objectives, resources, and constraints &mdash; into the agent&rsquo;s logic.&rdquo;</p>
     <p>Read those prescriptions as a concession. Constraints written before code. Boundaries the platform enforces. Drift signals defined in advance. BCG&rsquo;s own agent playbook says autonomy is earned through engineered constraints &mdash; an argument the flagship operating-model report makes only in passing, in its first move&rsquo;s call for &ldquo;dedicated governance structures,&rdquo; and then leaves unbuilt.</p>
 
-    <h2>The Missing Layer in the AI Operating Model</h2>
+    <h2 id="the-missing-layer-in-the-ai">The Missing Layer in the AI Operating Model</h2>
     <p>Stack the components of BCG&rsquo;s AI-native organization and one layer is conspicuously thin. Models, agents, tools, and workflows each answer a question. None of them answers the question the deleted hierarchy used to answer.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -355,7 +367,7 @@
     <p>BCG&rsquo;s first move gestures at the gap with &ldquo;dedicated governance structures.&rdquo; In most organizations that phrase resolves to a council that meets monthly while agents merge changes hourly. A committee can decide; it cannot enforce. And with agents expected to nearly double their share of company-wide AI value to 29% by 2028, the distance between deciding and enforcing grows on a published schedule.</p>
     <p>Governance has to be a layer, not a committee: decisions stored as structured constraints, attached to the platform the way identity and access already are, and applied through <a href="/concepts/deterministic-enforcement/">deterministic enforcement</a> &mdash; same change, same verdict, regardless of which agent or model produced it. That is also what makes graduated autonomy workable. An agent earns promotion from Supervised to Guided Autonomy only if the guardrails it runs inside are checks that fire every time.</p>
 
-    <h2>What Tech Leaders Should Take From This</h2>
+    <h2 id="what-tech-leaders-should-take-from">What Tech Leaders Should Take From This</h2>
     <p>The reinvention is worth doing; BCG&rsquo;s 50% cost and 2-3x speed figures are the upside case. Capturing them without converting autonomy into drift takes three moves the report stops short of specifying.</p>
     <ol>
       <li><strong>Write decisions down as enforceable constraints.</strong> BCG&rsquo;s agent design cards already do this for an agent&rsquo;s purpose, boundaries, and failure modes. Apply the same discipline to architectural decisions: which patterns are standard, which dependencies are off-limits, which boundaries hold. A decision that exists as a slide cannot bind an agent; a decision that exists as a structured, machine-readable constraint can.</li>

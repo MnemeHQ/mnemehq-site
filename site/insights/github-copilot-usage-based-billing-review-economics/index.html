@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="GitHub Copilot moved to usage-based AI Credits on June 1, 2026, and code review now burns Actions minutes per PR. Metered billing exposes the real constraint: review economics, not generation." />
   <meta name="robots" content="index, follow" />
@@ -294,7 +293,20 @@
 
   <div class="article-body">
 
-    <h2>What Changed</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-changed">What Changed</a></li>
+        <li><a href="#the-bottleneck-changed-shape">The Bottleneck Changed Shape</a></li>
+        <li><a href="#more-code-is-not-more-progress">More Code Is Not More Progress</a></li>
+        <li><a href="#usage-based-billing-makes-waste-visible">Usage-Based Billing Makes Waste Visible</a></li>
+        <li><a href="#governance-becomes-economics">Governance Becomes Economics</a></li>
+        <li><a href="#the-next-frontier-is-restraint">The Next Frontier Is Restraint</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-changed">What Changed</h2>
     <p>GitHub Copilot transitioned all plans to usage-based billing beginning June 1, 2026, replacing the previous premium-request model with a monthly allocation of GitHub AI Credits. Usage is now metered on token consumption &mdash; input, output, and cached tokens &mdash; at per-model rates, where one AI Credit equals one cent. Code completions stay included and do not draw down credits. The line that matters most is easy to miss in the announcement: <a href="https://github.blog/news-insights/company-news/github-copilot-is-moving-to-usage-based-billing/" target="_blank" rel="noopener">Copilot code review will also consume GitHub Actions minutes</a>, billed at the same per-minute rates as any other Actions workflow, on top of AI Credits.</p>
     <p>GitHub&rsquo;s rationale is straightforward: Copilot is not the product it was a year ago. It now runs agentic, long-running sessions with far higher compute demands, and flat pricing did not survive contact with that cost curve. Reaction was sharp &mdash; the <a href="https://github.com/orgs/community/discussions/192948" target="_blank" rel="noopener">announcement thread</a> drew hundreds of comments and downvotes, with developers reporting that a single agent request consumed more than half of a monthly credit allowance, and that a handful of code-agent requests in one day burned through half of a higher-tier plan. Whatever the merits of the pricing, it made one thing legible that had been invisible.</p>
 
@@ -307,21 +319,21 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Bottleneck Changed Shape</h2>
+<h2 id="the-bottleneck-changed-shape">The Bottleneck Changed Shape</h2>
     <p>For most of software&rsquo;s history, developer time was the binding constraint. Writing code was expensive, so reviews were scarce and output was naturally limited. AI inverted that. Generation is now abundant: a single engineer, driving agents, produces a multiple of their previous output. The review system &mdash; human attention, CI, validation &mdash; did not scale with it. The scarce, expensive resource is no longer writing the code. It is everything that has to happen to the code afterward.</p>
 
-    <h2>More Code Is Not More Progress</h2>
+    <h2 id="more-code-is-not-more-progress">More Code Is Not More Progress</h2>
     <p>The pattern engineers keep describing is an agent generating two thousand lines where two hundred would have solved the problem. The output is locally correct and the tests pass. The organization still inherits the cost of all two thousand: more to review, more to test, more to maintain, more surface area for the architecture to drift. Generated volume was always a hidden tax on the rest of the pipeline. Metered billing just printed the receipt.</p>
 
-    <h2>Usage-Based Billing Makes Waste Visible</h2>
+    <h2 id="usage-based-billing-makes-waste-visible">Usage-Based Billing Makes Waste Visible</h2>
     <p>Previously, excess generated code was an engineering problem &mdash; real, but diffuse and easy to defer. Now it is also a financial one. When generation, review, testing, and execution are each metered, every unnecessary artifact carries a measurable, recurring cost that lands on a budget someone owns. That changes who asks the questions. Finance starts asking what engineering used to only mutter: do we need this code? Why did the agent generate this much? Could this rework have been prevented?</p>
     <div class="callout"><p><strong>The cheapest code review is the one you never needed to perform.</strong> Once review is metered, the value of not generating unnecessary, non-compliant code stops being a quality argument and becomes a cost-avoidance argument.</p></div>
 
-    <h2>Governance Becomes Economics</h2>
+    <h2 id="governance-becomes-economics">Governance Becomes Economics</h2>
     <p>This is the part that outlasts the pricing change. The first wave of AI coding was about generation. The second was about review. The third is about controlling the cost of both &mdash; and the lever for that is governance. The next challenge is not generating more code; it is ensuring the code that gets generated stays aligned with the team&rsquo;s architectural decisions, so it does not have to be reviewed, reworked, and re-reviewed at metered rates.</p>
     <p>Framed that way, <a href="/concepts/governance-before-generation/">governance before generation</a> becomes an efficiency mechanism, not a compliance one. Catching a boundary violation before the agent commits it avoids the review cycle, the rework cycle, and the incident it might have caused &mdash; each of which now has a number attached. The teams that adopt this will not do it because a compliance officer asked. They will do it because finance eventually will.</p>
 
-    <h2>The Next Frontier Is Restraint</h2>
+    <h2 id="the-next-frontier-is-restraint">The Next Frontier Is Restraint</h2>
     <p>The lesson of usage-based billing is not really about price. It is about incentives. As AI-generated software scales, organizations will optimize less for raw generation speed and more for controlling the downstream cost of what gets generated. The metric quietly shifts from how much code an agent can produce to how little unnecessary code it produces while still doing the work. The next frontier of AI-assisted development is not more output. It is AI-assisted restraint &mdash; and governance is how you buy it.</p>
 
   </div><!-- /.article-body -->

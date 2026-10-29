@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI products adapt to the customer instead of the reverse. That moves the burden of adaptation onto the vendor, and creates an engineering role that lives inside the customer's environment." />
   <meta name="robots" content="index, follow" />
@@ -300,19 +299,36 @@
 
   <div class="article-body">
 
-    <h2>The product works. The deployment does not.</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-product-works-the-deployment-does">The product works. The deployment does not.</a></li>
+        <li><a href="#product-market-fit-is-not-product">Product-market fit is not product-environment fit</a></li>
+        <li><a href="#why-ai-increases-implementation-variability">Why AI increases implementation variability</a></li>
+        <li><a href="#how-the-role-differs-from-the">How the role differs from the ones next to it</a></li>
+        <li><a href="#the-economics-that-make-the-role">The economics that make the role worth funding</a></li>
+        <li><a href="#unusually-close-to-the-business">Unusually close to the business</a></li>
+        <li><a href="#where-the-model-breaks-down">Where the model breaks down</a></li>
+        <li><a href="#the-strange-engineering-environment">The strange engineering environment</a></li>
+        <li><a href="#from-forward-deployed-to-frontier-deployed">From forward deployed to frontier deployed</a></li>
+        <li><a href="#what-this-sets-up">What this sets up</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-product-works-the-deployment-does">The product works. The deployment does not.</h2>
     <p>A well-funded AI company has a document-processing product that performs impressively on every benchmark it publishes. It signs a large industrial manufacturer. Six weeks into the implementation the deployment is in trouble, and not one of the reasons is about model quality.</p>
     <p>The customer&rsquo;s document store is three systems, one of which is a file share nobody has owned since 2021. Half the documents are scans whose quality varies by which regional office produced them. The approval workflow the product is meant to accelerate has a legal review step that cannot be automated for regulatory reasons. The team that owns the target system has a change freeze until the quarter ends. And the business process the customer described during the sales cycle is not the process the operators actually follow, which the vendor discovers by watching one of them work.</p>
     <p>This is the ordinary condition of enterprise AI deployment. The product is fine. The environment is the problem, and the environment is where the value is.</p>
     <p>The role that emerged to handle this is the forward-deployed engineer.</p>
 
-    <h2>Product-market fit is not product-environment fit</h2>
+    <h2 id="product-market-fit-is-not-product">Product-market fit is not product-environment fit</h2>
     <p>A product achieves market fit when enough organizations want what it does. It achieves environment fit, for any given customer, when it works against that customer&rsquo;s actual systems, data, permissions, processes and constraints.</p>
     <p>For most of enterprise software history the distance between those two was manageable, because the product asked the customer to conform. You bought the system and adopted its data model, its workflow and its assumptions. Implementation was mostly configuration, and a solutions engineer plus documentation could carry it.</p>
     <p>AI products have a different shape. Their value proposition is frequently that they adapt to how the customer already works rather than requiring the customer to change. That is attractive commercially and expensive operationally, because it moves the burden of adaptation from the customer onto the vendor, and the vendor now has to understand an environment they have never seen.</p>
     <div class="callout"><p><strong>The more a product promises to fit the customer&rsquo;s reality, the more engineering has to happen inside that reality.</strong> Forward-deployed engineering is the organizational answer to that arithmetic.</p></div>
 
-    <h2>Why AI increases implementation variability</h2>
+    <h2 id="why-ai-increases-implementation-variability">Why AI increases implementation variability</h2>
     <p>Three properties of AI products make each deployment less like the last.</p>
     <p><strong>They consume messy inputs.</strong> Traditional integrations move structured records between systems, and structured records either conform to a schema or fail loudly. AI products ingest documents, transcripts, tickets, images and free text, where the variation between two customers is unbounded and mostly invisible until you are inside it.</p>
     <p><strong>They sit inside judgement, not just process.</strong> An AI product frequently replaces or augments a decision a person was making. The implementation therefore has to encode what a good decision looks like <em>at this company</em>, which is knowledge held by operators rather than written in a requirements document.</p>
@@ -329,7 +345,7 @@
   </div>
 </aside>
 
-    <h2>How the role differs from the ones next to it</h2>
+    <h2 id="how-the-role-differs-from-the">How the role differs from the ones next to it</h2>
     <p>The comparison people reach for is consulting, which is close enough to be misleading. A more useful separation is by what each role optimizes for and what it is allowed to change.</p>
     <table class="gov-table">
       <thead>
@@ -345,18 +361,18 @@
     <p>The last row is what makes the role distinctive and difficult. An FDE ships code into the vendor&rsquo;s product <em>and</em> into or against the customer&rsquo;s systems. They are accountable for an outcome that depends on two codebases, only one of which they know well.</p>
     <p>It also creates a real tension inside the role. Every customer-specific accommodation an FDE builds is either a signal about what the product should do generally, or debt the vendor will carry indefinitely. Deciding which is a product judgement, made under delivery pressure, by the person least incentivized to say no.</p>
 
-    <h2>The economics that make the role worth funding</h2>
+    <h2 id="the-economics-that-make-the-role">The economics that make the role worth funding</h2>
     <p>Forward-deployed engineering is expensive. The people are senior, the work does not parallelize well, and every hour is attributable to one customer. Finance departments notice this, and the pressure to reduce it is permanent.</p>
     <p>It gets funded anyway, for a reason worth naming. In enterprise AI the gap between a signed contract and a deployment producing value is where most churn originates. A product that never reaches production renews at approximately zero regardless of how good the model is. Forward-deployed engineering is the mechanism that converts contracts into references, and references are what let the next deal close without a proof of concept.</p>
     <p>That makes the role a revenue function wearing an engineering badge, which explains two things that otherwise look irrational. It explains why vendors staff it with strong engineers rather than cheaper implementers: the work is genuinely hard and the cost of a failed deployment is a lost account plus a negative reference. And it explains why the role persists through cost-cutting cycles that eliminate comparable-looking functions.</p>
     <p>It also sets up the tension that defines the model. The economics improve if each deployment consumes fewer engineering hours. There are only two ways to achieve that: move work into the product so it stops being bespoke, or make each engineer able to carry more deployments. The first is slow and depends on patterns recurring across customers. The second is what coding agents suddenly made available, which is why adoption in this segment has been fast and why the risk profile of the role is changing at the same time.</p>
 
-    <h2>Unusually close to the business</h2>
+    <h2 id="unusually-close-to-the-business">Unusually close to the business</h2>
     <p>Most engineers are insulated from the operational detail of the business they serve by at least one layer of product management. Forward-deployed engineers are not. They sit with claims handlers, traders, dispatchers, analysts, nurses and underwriters, and watch what actually happens.</p>
     <p>This is where the requirements that never reached anyone&rsquo;s backlog surface. The exception that applies to one product line. The step everyone skips because the system asks for information nobody has at that point in the process. The spreadsheet that turns out to be load-bearing. The handoff that works only because two people speak every morning.</p>
     <p>Discovering this is most of the value the role produces, and it is also why the work does not compress. You cannot read your way to it.</p>
 
-    <h2>Where the model breaks down</h2>
+    <h2 id="where-the-model-breaks-down">Where the model breaks down</h2>
     <p>Forward-deployed engineering is not a solved operating model, and the ways it fails are consistent enough to name.</p>
     <p><strong>Customization debt.</strong> Every customer-specific accommodation is carried by someone. If it stays in the customer&rsquo;s deployment it becomes a fork that has to be reconciled with every product update. If it moves into the product it becomes a conditional path serving one account. Vendors routinely underestimate how much of this accumulates, because each individual decision is defensible and the cost only appears in aggregate two years later.</p>
     <p><strong>Key-person concentration.</strong> The engineer who did the deployment holds knowledge that exists nowhere else: which parts of the customer&rsquo;s environment are fragile, which integration is held together by an assumption, why a particular thing was done the way it was. That concentration is uncomfortable while they are there and expensive when they leave.</p>
@@ -364,7 +380,7 @@
     <p><strong>Margin erosion.</strong> If deployments consistently take longer than they were priced for, forward-deployed engineering quietly converts a software business into a services business with software margins expected of it. This is the failure that ends the model, and it usually happens gradually enough that nobody identifies a moment when it went wrong.</p>
     <p>Notice that three of the four are information problems rather than engineering-capacity problems. They are about knowledge that was never made explicit: what the accommodation was for, why the integration is fragile, which choices were deliberate. That is the thread connecting the commercial shape of the role to the technical problem underneath it.</p>
 
-    <h2>The strange engineering environment</h2>
+    <h2 id="the-strange-engineering-environment">The strange engineering environment</h2>
     <p>Pull the conditions together and the result is unlike ordinary product engineering in a specific way.</p>
     <ul>
       <li>The delivery deadline is external and commercially significant.</li>
@@ -376,12 +392,12 @@
     <p>An internal engineer joining the same team would meet the fifth condition rarely, and the second and third gradually, absorbing context over months of code review, incident response and corridor conversation. The FDE gets the same environment with none of the ramp.</p>
     <p>That is not a complaint about the role. It is the job. But it defines what good infrastructure for the role would have to provide, and it explains why the hardest part of forward-deployed work has never been writing the integration.</p>
 
-    <h2>From forward deployed to frontier deployed</h2>
+    <h2 id="from-forward-deployed-to-frontier-deployed">From forward deployed to frontier deployed</h2>
     <p>In October 2026 Anthropic launched a training programme for a related role, which it calls the Frontier Deployed Engineer. Its <a href="/insights/claude-frontier-academy-frontier-deployed-engineers/">Claude Frontier Academy</a> aims to train 10,000 of them by the end of 2027: engineers who, in the words of Steve Corfield, Anthropic&rsquo;s Global Head of Business Development and Partnerships, can &ldquo;take Claude from an idea to a system in production.&rdquo;</p>
     <p>The difference is who employs the engineer. A forward-deployed engineer works for the vendor and is sent into a customer. A Frontier Deployed Engineer is trained by Anthropic, the model provider, but works for a customer or a partner firm, and leads a Claude project inside their own organization. The first cohorts mix consultancies, such as Accenture and Deloitte, with enterprises, such as Morgan Stanley and Novo Nordisk.</p>
     <p>The handoff failure described above still applies. Moving the role inside the customer shortens the handoff: an engineer from the customer&rsquo;s own staff stays in the organization after the project ships. It does not remove it: the engineer still moves on to the next project, and whoever maintains the system next inherits decisions they did not make.</p>
 
-    <h2>What this sets up</h2>
+    <h2 id="what-this-sets-up">What this sets up</h2>
     <p>The market logic is straightforward. As AI products take on more of the customer&rsquo;s operational reality, more engineering has to happen inside that reality, and a role exists to do it. That trend is not reversing.</p>
     <p>The engineering problem underneath it is less straightforward, and it is the interesting one. An FDE has to make consequential changes to a system whose design reasoning was never written down, and increasingly they are doing it alongside a coding agent that has even less access to that reasoning than they do.</p>
     <p>That problem is the subject of <a href="/insights/forward-deployed-engineering-architecture/">the next piece in this series</a>: what exactly is missing when you inherit a codebase without inheriting its architecture, and why more documentation has never closed the gap.</p>

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="OpenAI reports 97.9% on a COBOL migration evaluation requiring byte-for-byte output parity. Passing it does not settle which decisions must survive the rewrite." />
   <meta name="robots" content="index, follow" />
@@ -373,18 +372,32 @@
   </header>
 
 <div class="article-body">
-<h2>What OpenAI announced</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#what-openai-announced">What OpenAI announced</a></li>
+      <li><a href="#why-exact-parity-is-the-right">Why exact parity is the right test</a></li>
+      <li><a href="#what-the-evaluation-does-not-ask">What the evaluation does not ask</a></li>
+      <li><a href="#observed-is-not-authoritative">Observed is not authoritative</a></li>
+      <li><a href="#extraction-is-not-the-scarce-part">Extraction is not the scarce part</a></li>
+      <li><a href="#what-to-do-before-the-migration">What to do before the migration starts</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+<h2 id="what-openai-announced">What OpenAI announced</h2>
 <p>On October 19, 2026, OpenAI published <a href="https://openai.com/index/low-resource-programming-languages/" target="_blank" rel="noopener">Advancing coding in low-resource programming languages</a>. Low-resource languages are those with far less public code and documentation for models to learn from than Python or JavaScript, such as COBOL (Common Business-Oriented Language), Fortran and Visual Basic. The note introduces two evaluations and reports results for several OpenAI models, including two different ones, GPT-6.1 Sol and GPT-6 Astra.</p>
 <p>OpenAI reports each score at a stated reasoning effort: a setting that controls how much computation the model spends working through a task before it answers.</p>
 <p>One evaluation is a COBOL migration test. A model migrates COBOL programs to C++, Java, Kotlin, Python or Rust, and hidden tests require byte-for-byte parity on observable outputs. A migration counts as a success only if every test passes. At low reasoning effort, GPT-6.1 Sol scores 86.6%, against 5.4% for the older GPT-5.6 Sol at the same low setting. At higher reasoning effort, GPT-6.1 Sol reaches 97.9%. OpenAI describes that as close to saturating the evaluation, meaning the test has little headroom left to show further gains.</p>
 <p>The other is MultiLangBench, which asks a model to build a SQLite-compatible database engine in a given language. At maximum reasoning effort, GPT-6 Astra averages an 87.4% test pass rate across 20 languages, up from 26.8% for GPT-5.6 Sol. COBOL is still the hardest language, at 72.1%. OpenAI released the setup and test suite <a href="https://github.com/openai/MultiLangBench" target="_blank" rel="noopener">on GitHub</a> under the Apache License 2.0.</p>
 <p>These are the vendor's own benchmarks, run on the vendor's own models. The jump from 5.4% to 86.6% at the same low setting is still a real signal.</p>
 
-<h2>Why exact parity is the right test</h2>
+<h2 id="why-exact-parity-is-the-right">Why exact parity is the right test</h2>
 <p>OpenAI picked a strict bar, and it is the correct one for this kind of code. Its own example is COBOL's fixed-point arithmetic, which drops extra decimal digits unless rounding is explicitly requested. A Java rewrite that rounds instead will compile, run without errors and produce different balances. In a banking system, a one-cent difference repeated across millions of transactions is a reconciliation incident.</p>
 <p>A test that compares every output byte catches that class of error. Behavioral parity is how a team proves that a rewrite still does what the old system did.</p>
 
-<h2>What the evaluation does not ask</h2>
+<h2 id="what-the-evaluation-does-not-ask">What the evaluation does not ask</h2>
 <p>A parity test asks whether the new program produces the same observable outputs as the old one on these inputs. Four different claims tend to get merged with it:</p>
 <ul>
   <li><strong>Benchmark success:</strong> the migrated program passed the hidden tests. That is what 97.9% measures.</li>
@@ -394,7 +407,7 @@
 </ul>
 <p>The third claim is the easiest to assume without noticing. If the old code truncates where the business meant to round, a perfect migration preserves that bug exactly.</p>
 
-<h2>Observed is not authoritative</h2>
+<h2 id="observed-is-not-authoritative">Observed is not authoritative</h2>
 <p>Take a legacy banking application being moved off the mainframe. Analysis tools and models that read the old code will surface many facts about it, and they are not the same kind of fact. (Mneme, named in the table, is the open-source tool this site describes; its scope is at the end.)</p>
 <table class="gov-table">
   <thead><tr><th>Recovered information</th><th>What it is</th><th>Treatment</th></tr></thead>
@@ -409,11 +422,11 @@
 <p>Parity testing covers the first row well. It says nothing useful about the other four. A direct database read produces the same outputs whether or not the team meant it. The storage adapter has no legacy output to compare against, because it is a decision about the target system. Data residency is not visible in program output at all. And if a team derives its parity tests from the legacy system's behavior, the workaround passes every one of them, because that system still contains it.</p>
 <p>Observed does not automatically mean authoritative. Someone has to decide which of these facts survive the rewrite, and that decision needs an owner. <a href="/insights/ai-legacy-modernization-what-must-survive/">AI legacy modernization: what must survive the rewrite</a> works through that process in full.</p>
 
-<h2>Extraction is not the scarce part</h2>
+<h2 id="extraction-is-not-the-scarce-part">Extraction is not the scarce part</h2>
 <p>Vendor tools already recover these facts. AWS (Amazon Web Services) documents <a href="https://docs.aws.amazon.com/transform/latest/userguide/transform-app-mainframe.html" target="_blank" rel="noopener">AWS Transform</a> as orchestrating analysis of mainframe codebases, generating documentation, extracting business logic and decomposing monoliths. IBM describes <a href="https://www.ibm.com/products/watsonx-code-assistant-z" target="_blank" rel="noopener">watsonx Code Assistant for Z</a> as mapping application relationships and dependencies, refactoring COBOL into modular business services, and generating unit tests that compare the semantic equivalence of new Java services with the original COBOL.</p>
 <p>So extraction and equivalence testing are becoming standard parts of a modernization toolchain. The part that stays hard is adjudication: which recovered rules are approved to carry forward, which are bugs, and which belong to an architecture the organization is leaving. A small September 2026 preliminary study by Karan, Dhar, Soliman and Vaidhyanathan tested language models on extracting architectural decisions from commits; a manual review of one model's outputs found they often described the change but missed the rationale. See <a href="/insights/reverse-engineering-architectural-decisions-research/">what the research shows about reverse-engineering decisions</a>.</p>
 
-<h2>What to do before the migration starts</h2>
+<h2 id="what-to-do-before-the-migration">What to do before the migration starts</h2>
 <ul>
   <li><strong>Use parity tests as the behavior gate.</strong> Byte-for-byte output comparison is the right acceptance test for preserved behavior.</li>
   <li><strong>Classify every recovered fact.</strong> Mark it observed, inferred or approved, and keep the evidence with it.</li>
@@ -423,7 +436,7 @@
 </ul>
 <p>This is the question <a href="/concepts/engineering-decision-governance/">engineering decision governance</a> addresses: which decisions govern a given change, and with what evidence. Behavioral parity supplies one kind of evidence. It does not supply the decisions.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme is an open-source decision and control layer for agentic software development. Today it covers one step above. Once a team has recorded an engineering decision, Mneme enforces it on code changes. The mechanism is a typed rule, a machine-checkable form of the decision such as an exact import statement that must not appear in code, optionally limited to certain paths. Mneme checks typed rules deterministically in supported coding agents, such as Claude Code, Codex CLI and Kiro, and in continuous integration (CI), and returns a PASS, WARN or FAIL verdict. A decision without an active typed rule is not enforced.</p>
 <p>Its <a href="/docs/decision-index/">Decision Index</a>, the persisted and versioned record of a repository's decisions, keeps each decision's version history, its source and its lifecycle status (active, superseded or deprecated).</p>
 <p>Deciding what is approved stays with your team. Mneme does not record who approved a decision, and it does not extract business logic, parse COBOL, enforce financial rules or check data residency. Tagging each decision as observed, inferred or approved, with its provenance, is design direction, not a shipped feature. For migration-time patterns, see <a href="/use-cases/ai-assisted-software-migrations/">AI-assisted software migrations</a>.</p>

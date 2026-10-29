@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="IBM's 2026 Tech Leader Study finds 77% of organizations say AI adoption is outpacing governance. Why coding agents need enforcement built into the workflow." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-the-ibm-2026-tech-leader">What the IBM 2026 Tech Leader Study Found</a></li>
+        <li><a href="#governance-by-design-is-now-an">Governance by Design Is Now an IBM Pillar</a></li>
+        <li><a href="#code-generation-is-on-ibm-s">Code Generation Is on IBM&rsquo;s High-Risk List</a></li>
+        <li><a href="#why-rule-files-and-policy-documents">Why Rule Files and Policy Documents Are Not Controls</a></li>
+        <li><a href="#from-committee-oversight-to-executable-code">From Committee Oversight to Executable Code</a></li>
+        <li><a href="#the-scaling-math-tech-leaders-face">The Scaling Math Tech Leaders Face</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>What the IBM 2026 Tech Leader Study Found</h2>
+
+    <h2 id="what-the-ibm-2026-tech-leader">What the IBM 2026 Tech Leader Study Found</h2>
     <p>77% of organizations report that AI adoption is outpacing their current governance capabilities. That is the central finding of the <a href="https://www.ibm.com/thought-leadership/institute-business-value/en-us/c-suite-study/cxo">2026 Tech Leader Study</a>, published in June 2026 by the IBM Institute for Business Value under the title &ldquo;Redefining the tech leader&rsquo;s mandate: Building the IT foundation for agentic AI at scale.&rdquo; IBM, working with Oxford Economics, surveyed 2,000 CIOs, CTOs, and other C-suite technology leaders across 33 geographies and 19 industries in the first quarter of 2026. The average surveyed organization generates USD 14.4 billion in revenue. These are the enterprises with the most governance machinery already in place, and more than three-quarters of them say adoption has pulled ahead of it.</p>
     <p>The scale projections explain why. By 2027, enterprises expect to deploy an average of 1,661 AI agents, a 38% increase from today, and each agent makes hundreds or thousands of decisions per day. Preparedness has kept no such pace. Only 11% of CIOs and CTOs say they feel completely prepared for the scale of AI agent deployment expected in the next 12 months, while 80% report transformation mandates coming directly from the CEO. The pressure to deploy arrives from the top; the capacity to govern lags underneath it.</p>
     <p>The incident data shows what that gap already costs. Organizations experienced an average of 54 AI agent incidents in the past year, and 17% of those were high severity, taking more than four hours to contain. IBM breaks down the business impact: 37% of organizations saw data exposure or security breaches, 33% saw cascading system failures, 17% hit compliance issues, and 13% reported eroded stakeholder trust. The governance gap is producing operational damage today, at agent counts far below what the same leaders project for next year.</p>
@@ -310,24 +322,24 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Governance by Design Is Now an IBM Pillar</h2>
+<h2 id="governance-by-design-is-now-an">Governance by Design Is Now an IBM Pillar</h2>
     <p>IBM organizes the entire report around three pillars: infrastructure adaptability, governance by design, and portfolio discipline. Part 2 carries the title &ldquo;Governance by design makes AI control possible.&rdquo; Governance has been promoted from a compliance appendix to one-third of the tech leader&rsquo;s mandate, and the report&rsquo;s sharpest sentence explains the promotion: control &ldquo;stops being a permission problem. It becomes a design problem.&rdquo; Governance, IBM writes, must shift &ldquo;from reviewing what happened to engineering what&rsquo;s possible &mdash; before systems go live.&rdquo;</p>
     <p>Practitioners in the study describe the same turn. Dena Almansoori, Group Chief Technology and Innovation Officer at ADNOC, puts it in one line: &ldquo;Control has shifted from approving inputs to continuously supervising outputs and outcomes &mdash; from gates to guardrails.&rdquo;</p>
     <p>IBM attaches an economic argument to the pillar. Organizations it classifies as having &ldquo;orchestrated control&rdquo; deploy 16x more agents than those relying on manual governance, spend 4x less of their AI budget while doing it, and deliver 18% higher operating margins. Organizations with all three pillars in place reported 38% higher expected revenue growth and 7% higher expected operating margin for 2026, and they already deploy 2.6x more AI agents than their peers. Both cohorts point the same direction: engineered control is what makes scale affordable.</p>
     <div class="callout"><p><strong>In IBM&rsquo;s data, control precedes scale.</strong> The orchestrated-control cohort runs 16x more agents on 4x less relative AI spend, with 18% higher operating margins. Manual governance is the expensive option.</p></div>
     <p>The phrase itself has a trajectory. Security by design took a decade to travel from white papers into build pipelines; <a href="/insights/beyond-security-by-design-governance-by-design/">governance by design is repeating that arc</a> on a compressed schedule, and IBM putting the words in a section title for 2,000 C-suite respondents marks how far the language has already moved.</p>
 
-    <h2>Code Generation Is on IBM&rsquo;s High-Risk List</h2>
+    <h2 id="code-generation-is-on-ibm-s">Code Generation Is on IBM&rsquo;s High-Risk List</h2>
     <p>IBM&rsquo;s recommended actions include redesigning governance end-to-end for one high-risk domain, and the report names three candidates: claims, customer service, or code generation. Engineering leaders should read that list twice. IBM places the output of coding agents in the same risk class as insurance claims processing, a domain wrapped in decades of regulatory machinery.</p>
     <p>The codebase earns that classification through accumulation. A customer-service agent&rsquo;s bad answer ends with the conversation; a coding agent&rsquo;s bad decision merges, ships, and becomes the foundation that other code &mdash; and other agents &mdash; build on. Across a fleet trending toward 1,661 agents, every unreviewed structural choice compounds. <a href="/concepts/architectural-drift/">Architectural drift</a> works exactly this way: no single diff looks alarming, and the architecture erodes silently underneath green builds. IBM&rsquo;s incident taxonomy hints at the endpoint. 33% of organizations reported cascading system failures, and cascades start where dependencies concentrate &mdash; which is the code.</p>
     <p>The accountability findings land hardest here. Two-thirds of surveyed leaders say they are accountable for outcomes in systems they don&rsquo;t fully control, and nearly 60% cite security and compliance concerns as a top barrier to scaling agents at all. For a CTO whose teams run coding agents, the system you don&rsquo;t fully control is the repository itself: the place where thousands of autonomous decisions per day quietly become permanent.</p>
 
-    <h2>Why Rule Files and Policy Documents Are Not Controls</h2>
+    <h2 id="why-rule-files-and-policy-documents">Why Rule Files and Policy Documents Are Not Controls</h2>
     <p>&ldquo;Stop treating policy documents as if they&rsquo;re active controls.&rdquo; That is the first of IBM&rsquo;s recommended actions, quoted verbatim, and it has a precise translation for engineering teams. The CLAUDE.md file, the Cursor rules, the architecture wiki, the coding-standards page &mdash; these are policy documents. They describe intent. They enforce nothing. A rule file gets read at the start of a session; whether it still shapes the agent&rsquo;s four-hundredth decision of the day is a matter of context-window luck. We traced the mechanics of that failure in <a href="/insights/rule-files-vs-retrieval-memory/">rule files vs retrieval memory</a>.</p>
     <p>The study documents why paper governance breaks at enterprise scale. 70% of leaders report teams deploying technology faster than IT can track it, and more than two-thirds say business units bypass IT entirely to adopt AI. A document governs the people who happen to read it. Static instructions cannot reach 1,661 agents spread across teams that never open the wiki &mdash; <a href="/concepts/governance-propagation/">governance propagation</a> at that scale is an infrastructure property, and no amount of prose acquires it.</p>
     <p>IBM&rsquo;s replacement is a minimum production standard: if an agent isn&rsquo;t registered, owned, observable, and stoppable, it doesn&rsquo;t deploy. The maturity analysis goes further, treating agent governance as a latent capability measured across seven design features &mdash; ownership, access controls, activity monitoring, override mechanisms, pre-deployment risk assessment, rollback procedures, and formal governance frameworks. All seven are properties of running systems. A wiki page has none of them.</p>
 
-    <h2>From Committee Oversight to Executable Code</h2>
+    <h2 id="from-committee-oversight-to-executable-code">From Committee Oversight to Executable Code</h2>
     <p>IBM&rsquo;s most concrete instruction reads like an engineering ticket: &ldquo;Engineer one manual control into the platform. Move access boundaries, drift detection, escalation thresholds, or kill switches from committee oversight to executable code.&rdquo; Drift detection sits on IBM&rsquo;s own shortlist of controls worth automating first &mdash; the control coding-agent teams need most and codify least.</p>
     <p>The speed mismatch makes the move unavoidable. Architecture review boards meet weekly or monthly; 17% of agent incidents already run past four hours to contain. Committees were designed for a world where change arrived at human pace, and agents removed that assumption. For teams running coding agents, the translation from traditional to agent-era governance looks like this:</p>
 
@@ -345,7 +357,7 @@
 
     <p>The right column is what &ldquo;executable&rdquo; means in practice. <a href="/concepts/deterministic-enforcement/">Deterministic enforcement</a> gives the same change the same verdict every time, independent of model mood or context-window contents. Decision memory turns the architectural choices a team has already made into structured records an agent can retrieve and a pipeline can enforce &mdash; the difference between knowledge that lives in senior engineers&rsquo; heads and knowledge that survives them. Every row of the left column fails the same way at scale: it depends on a human being present, attentive, and faster than the agent.</p>
 
-    <h2>The Scaling Math Tech Leaders Face</h2>
+    <h2 id="the-scaling-math-tech-leaders-face">The Scaling Math Tech Leaders Face</h2>
     <p>Run the multiplication IBM&rsquo;s respondents are implicitly running. An average of 1,661 agents, each making hundreds or thousands of decisions per day, puts a single enterprise on the order of hundreds of thousands of autonomous decisions daily. No review board reads that volume. No quarterly audit reconstructs it. The budget line moves in the same direction: AI spend is projected to grow from 14.5% of IT budgets in 2025 to 24.9% by 2027, a 71% increase, which means the surface area at stake is expanding on two axes at once &mdash; agent count and capital committed.</p>
     <p>The study&rsquo;s most useful planning finding separates two futures. With strong governance, incident rates stay relatively flat as agent deployment accelerates. With weak governance, incidents rise in lockstep with adoption. Governance maturity is the variable that decouples those two curves, which makes it the cheapest insurance available before the fleet grows another 38%.</p>
     <p>For coding agents specifically, the layer that produces the flat curve has five requirements. Decision capture: architectural decisions recorded as structured data, with rationale and constraints, at the moment they are made. Retrieval: the right constraints reaching the agent at generation time, every session, without depending on a context window. Enforcement: violations blocked before merge, deterministically. Verification: <a href="/concepts/verification-contracts/">proof that the checks actually ran</a>, so a passing pipeline means what it claims. Auditability: a reconstructable trail of which decision governed which change &mdash; the thing that makes accountability for systems you don&rsquo;t fully control survivable. IBM&rsquo;s 77% measures the gap. That stack is what closes it.</p>

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Google&rsquo;s Gemini Deep Research Agent runs agent execution in a managed runtime. That removes orchestration work but moves AI agent governance closer to runtime." />
   <meta name="robots" content="index, follow" />
@@ -338,10 +337,25 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-is-the-google-gemini-deep">What is the Google Gemini Deep Research Agent?</a></li>
+        <li><a href="#more-than-a-research-tool">More than a research tool</a></li>
+        <li><a href="#managed-agent-runtimes-reduce-boilerplate">Managed agent runtimes reduce boilerplate</a></li>
+        <li><a href="#but-governance-does-not-disappear">But governance does not disappear</a></li>
+        <li><a href="#the-governance-surface-expands">The governance surface expands</a></li>
+        <li><a href="#why-rag-is-not-enough">Why RAG is not enough</a></li>
+        <li><a href="#what-this-means-for-engineering-teams">What this means for engineering teams</a></li>
+        <li><a href="#the-bigger-shift">The bigger shift</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>Google has released the <a href="https://ai.google.dev/gemini-api/docs/deep-research" target="_blank" rel="noopener">Gemini Deep Research Agent</a>, an autonomous agent that plans, executes, and synthesizes multi-step research tasks and returns detailed, cited reports. It is reached through the new <a href="https://ai.google.dev/gemini-api/docs/interactions" target="_blank" rel="noopener">Gemini Interactions API</a>, available in Google AI Studio and the Gemini API. The agent is currently in preview, and the Interactions API is in beta.</p>
 <p>The signal is bigger than the feature. This is a major platform provider shipping a multi-step agent workflow as a managed runtime component, not a model endpoint. That reduces the orchestration work engineering teams have to do. It also moves the governance problem closer to runtime, where most teams are least equipped to enforce it.</p>
 
-<h2>What is the Google Gemini Deep Research Agent?</h2>
+<h2 id="what-is-the-google-gemini-deep">What is the Google Gemini Deep Research Agent?</h2>
 <p>The Gemini Deep Research Agent is, in Google&rsquo;s words, an agent that &ldquo;autonomously plans, executes, and synthesizes multi-step research tasks&rdquo; and &ldquo;navigates complex information landscapes to produce detailed, cited reports.&rdquo; It searches and reads iteratively, and it can also work from user-provided data: documents can be passed directly as multimodal input so the agent grounds its research in their content, and it can reach external tools through MCP servers.</p>
 <p>Because that cycle of planning, searching, reading, and writing &ldquo;typically exceeds the standard timeout limits of synchronous API calls,&rdquo; the agent runs asynchronously. Tasks can take several minutes, so you set <em>background=true</em> and either poll for results or stream updates. The agent is reached exclusively through the Interactions API; it cannot be called through the older <em>generate_content</em> path.</p>
 <p>The <a href="https://ai.google.dev/gemini-api/docs/interactions" target="_blank" rel="noopener">Interactions API</a> is, per Google, the new way to use the Gemini API. It works across both Gemini models and agents &mdash; its supported-entity table tags each entry as either a Model or an Agent. It offers server-side history management for simplified multi-turn state, native support for multi-step tool use and orchestration, and long-running background tasks. Deep Research is the first agent surfaced this way, accessible in Google AI Studio and through the Gemini API.</p>
@@ -355,7 +369,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>More than a research tool</h2>
+<h2 id="more-than-a-research-tool">More than a research tool</h2>
 <p>The capability is useful. The architectural change underneath it is the part worth watching.</p>
 <p>The old pattern was simple. An application called a model: one request, one response, with all the planning, retrieval, and control flow written and owned by the application. The model was a function; everything around it was your code.</p>
 <p>The new pattern is different. An application calls a <strong>managed agent process</strong>. The planning loop, the search and retrieval, the document reading, the synthesis, and the state across steps all live inside a runtime the provider operates. Your application hands off intent and waits on a long-running job.</p>
@@ -386,7 +400,7 @@
 </div>
 <p>This is the shift toward <strong>managed AI agents</strong>: agent capability packaged as a callable component rather than assembled in-house. It brings <strong>long-running AI agents</strong> and <strong>asynchronous agent workflows</strong> into the standard API surface, with an <strong>agent runtime</strong> that owns execution end to end. The unit of integration is no longer a token stream. It is a process. A <strong>managed agent runtime</strong> is provider-operated infrastructure that owns the agent&rsquo;s planning loop, tool calls, retrieval, state, and synthesis end to end, exposed to your application as a single long-running callable process.</p>
 
-<h2>Managed agent runtimes reduce boilerplate</h2>
+<h2 id="managed-agent-runtimes-reduce-boilerplate">Managed agent runtimes reduce boilerplate</h2>
 <p>This is exactly what platform providers should do. A large amount of what teams have been building around agents is undifferentiated plumbing, and common orchestration belongs in infrastructure.</p>
 <p>A managed runtime like this one absorbs a long list of work teams used to write and maintain themselves:</p>
 <ul>
@@ -400,7 +414,7 @@
 </ul>
 <p>Removing that boilerplate is a real gain. It is the same move that turned hand-rolled servers into managed platforms and bespoke pipelines into managed CI. When a capability becomes <a href="/concepts/runtime-governance/">runtime</a> infrastructure, teams stop reinventing it and start <a href="/concepts/reliable-delegation/">delegating</a> it. That is progress, and it is the right direction for the ecosystem.</p>
 
-<h2>But governance does not disappear</h2>
+<h2 id="but-governance-does-not-disappear">But governance does not disappear</h2>
 <p>Here is the part the release does not solve. When the execution runtime is managed externally, the governance layer is still yours to build. Outsourcing how the work runs does not outsource what your organization is allowed to do with the result.</p>
 <p>Teams adopting a managed research agent still have to answer questions the runtime has no opinion about:</p>
 <ul>
@@ -415,7 +429,7 @@
 <div class="callout"><p><strong>Managed execution solves orchestration. It does not solve organizational intent.</strong> The runtime decides how the agent runs; it cannot decide what your organization has already decided.</p></div>
 <p>This is why the governance question survives the abstraction. The cleaner the runtime, the more visible the gap, because everything except your own rules has now been handled for you. <a href="/concepts/governance-before-generation/">Governance before generation</a> is the discipline of binding those rules to the work before the agent acts, not after the report lands.</p>
 
-<h2>The governance surface expands</h2>
+<h2 id="the-governance-surface-expands">The governance surface expands</h2>
 <p>Once agents are long-running callable processes, governance has to cover far more than the prompt. The thing being governed is no longer a single request and response. It is a process with inputs, tools, sources, and outputs that flow into other systems.</p>
 <p>The surface that needs governing now includes:</p>
 <ul>
@@ -457,12 +471,12 @@
 <p>The useful move is to separate execution from governance. Execution decides <em>how</em> the work gets done &mdash; and Google now handles that well. Governance decides <em>what</em> the system is allowed to do, what it must respect, and how violations are detected before they become production artifacts. Those are different layers with different owners, and a managed runtime only ships the first one.</p>
 <p>That governed layer is what categories like <a href="/concepts/verification-contracts/">verification contracts</a>, <a href="/concepts/governance-propagation/">governance propagation</a>, and <a href="/concepts/architectural-governance/">architectural governance</a> exist to name. As agent capability becomes a platform primitive, the layer that enforces organizational intent has to become <a href="/concepts/governance-infrastructure/">governance infrastructure</a> in its own right &mdash; deterministic, owned by the team, and present wherever the agent&rsquo;s output touches the system.</p>
 
-<h2>Why RAG is not enough</h2>
+<h2 id="why-rag-is-not-enough">Why RAG is not enough</h2>
 <p>The obvious reflex is to reach for retrieval. Retrieval-augmented generation helps the agent find relevant documents, and Deep Research already does its own searching and reading. But retrieval answers a different question than governance.</p>
 <p>Retrieval cannot enforce which architectural decision wins when two conflict. It cannot tell whether an output violates a repository-specific invariant. It cannot detect that a generated change contradicts a decision made three quarters ago. Finding the right context is not the same as enforcing the right constraint &mdash; a point worked through in <a href="/compare/rag-vs-governance/">RAG vs governance</a> and in <a href="/insights/why-rag-fails-for-architectural-governance/">why RAG fails for architectural governance</a>.</p>
 <p>Better retrieval makes an agent better informed. It does not make it governed.</p>
 
-<h2>What this means for engineering teams</h2>
+<h2 id="what-this-means-for-engineering-teams">What this means for engineering teams</h2>
 <p>For teams adopting managed agents, the practical work is to define the governance layer the runtime does not provide. Five things are worth specifying explicitly:</p>
 <ol>
   <li><strong>Source policy</strong> &mdash; which sources are allowed, which are forbidden, and how user-provided data is scoped.</li>
@@ -473,7 +487,7 @@
 </ol>
 <p>None of these depend on which provider runs the agent. They are properties of your system, and they remain your responsibility no matter how good the managed runtime becomes.</p>
 
-<h2>The bigger shift</h2>
+<h2 id="the-bigger-shift">The bigger shift</h2>
 <p>Agent capabilities are becoming managed infrastructure. That is the through-line from this release, and it is a healthy direction for the ecosystem. As it continues, the strategic question moves.</p>
 <p>The old question was about capability: can the model do the task? That question is increasingly answered yes by default. The new question is about control: can the organization govern the task once an agent can do it autonomously, at runtime, in the background, at a pace no reviewer can keep up with?</p>
 <div class="callout"><p><strong>Google is making agent execution easier. The harder enterprise problem is making agent execution governable.</strong> Managed runtimes move the governance problem closer to runtime. They do not remove it.</p></div>

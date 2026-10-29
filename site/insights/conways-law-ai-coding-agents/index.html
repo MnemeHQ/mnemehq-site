@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Conway&#x27;s Law still holds when AI writes the code. But agents never attended the architecture meeting, so the path from org intent to implementation breaks." />
   <meta name="robots" content="index, follow" />
@@ -350,11 +349,26 @@
   </header>
 
 <div class="article-body">
-<h2>Conway's Law was never about org charts</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#conway-s-law-was-never-about">Conway's Law was never about org charts</a></li>
+      <li><a href="#ai-adds-a-participant-who-was">AI adds a participant who was not in the room</a></li>
+      <li><a href="#the-architecture-is-richer-than-the">The architecture is richer than the repository</a></li>
+      <li><a href="#the-inverse-conway-maneuver-meets-ai">The Inverse Conway Maneuver meets AI</a></li>
+      <li><a href="#architecture-has-to-become-machine-readable">Architecture has to become machine-readable</a></li>
+      <li><a href="#decisions-become-an-engineering-artifact">Decisions become an engineering artifact</a></li>
+      <li><a href="#what-engineering-organizations-should-do-now">What engineering organizations should do now</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#conway-s-law-still-holds">Conway's Law still holds</a></li>
+    </ol>
+  </nav>
+<h2 id="conway-s-law-was-never-about">Conway's Law was never about org charts</h2>
 <p>Conway's original formulation, published in Datamation in April 1968, reads: "organizations which design systems are constrained to produce designs which are copies of the communication structures of these organizations" (<a href="https://www.melconway.com/Home/Committees_Paper.html" target="_blank" rel="noopener">Melvin Conway, How Do Committees Invent?</a>). The usual shorthand is that four teams produce four components. The deeper point is about coordination. Architecture emerges partly because people who need to agree on an interface have to communicate across a boundary, and the boundary ends up in the code.</p>
 <p>That mechanism depended on something easy to overlook. The people writing the code were the same people who took part in the communication. They had been in the design review, heard why a boundary existed, and absorbed the exceptions nobody wrote down.</p>
 
-<h2>AI adds a participant who was not in the room</h2>
+<h2 id="ai-adds-a-participant-who-was">AI adds a participant who was not in the room</h2>
 <p>A coding agent can modify several modules, cross team boundaries, generate new interfaces, and refactor structure faster than any review cycle. What it cannot do by default is participate in the communication structure Conway described. It was not in the architecture meeting. It did not hear why one dependency was deliberately prohibited. It does not know which of two similar services exists for regulatory isolation and which is simply legacy.</p>
 <p>The old chain looked like this:</p>
 <pre tabindex="0"><code>Organization structure
@@ -380,15 +394,15 @@ Agent context   <-- whatever the agent was handed
 Generated code</code></pre>
 <p>If the decisions never reach the agent's context, the agent reconstructs intent from the code it can see. That reconstruction is sometimes right. When it is wrong, the result is locally correct code that breaks the architecture.</p>
 
-<h2>The architecture is richer than the repository</h2>
+<h2 id="the-architecture-is-richer-than-the">The architecture is richer than the repository</h2>
 <p>Architectural intent lives in ADRs, RFCs, design review threads, platform standards, security requirements, post-incident reviews, and the memory of people who were there. The repository contains the result of many of those decisions, but rarely their rationale or their constraints. An agent inferring architecture from code alone is reading the output of a process and guessing its rules.</p>
 <p>A simple example. Two services have nearly identical data models. They are separate because one handles regulated customer data and must stay isolated. An agent asked to reduce duplication sees two similar modules and consolidates them. The change is clean, tested, and technically sensible. It is architecturally wrong, and nothing in the code explained why.</p>
 
-<h2>The Inverse Conway Maneuver meets AI</h2>
+<h2 id="the-inverse-conway-maneuver-meets-ai">The Inverse Conway Maneuver meets AI</h2>
 <p>Teams that understand Conway's Law sometimes use it deliberately. The Inverse Conway Maneuver shapes team boundaries around the architecture the organization wants, so the communication structure pushes the system in the intended direction.</p>
 <p>That strategy assumes the people writing code sit inside the team structure. Once agents write a meaningful share of the implementation, shaping human communication is no longer sufficient on its own. The architectural intent those team structures were designed to produce also has to reach the agents, in a form they can use at the moment they change code.</p>
 
-<h2>Architecture has to become machine-readable</h2>
+<h2 id="architecture-has-to-become-machine-readable">Architecture has to become machine-readable</h2>
 <p>This does not mean putting every architecture document into a model's context. Three different capabilities tend to get conflated:</p>
 <ul>
   <li><strong>Retrieval</strong> gives the agent relevant architectural context.</li>
@@ -397,10 +411,10 @@ Generated code</code></pre>
 </ul>
 <p>Retrieval alone still leaves the agent free to ignore what it retrieved. The failure modes of context-only approaches are covered in <a href="/insights/why-context-alone-doesnt-prevent-architectural-drift/">why context alone doesn't prevent architectural drift</a>.</p>
 
-<h2>Decisions become an engineering artifact</h2>
+<h2 id="decisions-become-an-engineering-artifact">Decisions become an engineering artifact</h2>
 <p>Code, tests, schemas, dependencies, and policies already have identity, versions, and review. Architectural decisions usually do not. In an SDLC where agents implement, decisions need the same treatment: a stable identity, provenance, a lifecycle from proposal to acceptance to supersession, a scope that says what they govern, and where possible a rule that can be checked. That is the difference between an ADR folder and a decision corpus. See <a href="/insights/are-your-adrs-enforceable/">are your ADRs enforceable?</a></p>
 
-<h2>What engineering organizations should do now</h2>
+<h2 id="what-engineering-organizations-should-do-now">What engineering organizations should do now</h2>
 <ol>
   <li>Identify the architectural decisions that genuinely constrain implementation, not every preference.</li>
   <li>Separate prescriptive decisions from advisory documentation.</li>
@@ -411,10 +425,10 @@ Generated code</code></pre>
 </ol>
 <p>None of these steps require a particular tool. They require treating architectural intent as something the organization transmits deliberately, instead of something that leaks through meetings.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme is one implementation of this approach for architectural decisions in a repository. It turns accepted decisions into scoped rules, returns deterministic verdicts against proposed changes, and, through its local MCP server shipped in 0.9.0, lets an agent retrieve the decisions that apply to the paths it is working on. It does not claim to capture every kind of organizational intent, and not every architectural decision can be reduced to a mechanical rule.</p>
 
-<h2>Conway's Law still holds</h2>
+<h2 id="conway-s-law-still-holds">Conway's Law still holds</h2>
 <p>Conway explains where architecture comes from. Brooks explains why coordination gets expensive as contributors multiply, and agents intensify both; the companion piece is <a href="/insights/brooks-law-ai-coding-agents/">Brooks's Law after AI</a>.</p>
 <p>Conway's Law says software reflects how organizations communicate. In an SDLC where AI writes a growing share of the code, that communication needs a machine-readable form. Otherwise the agents writing the code sit outside the very structure that was supposed to shape it.</p>
 

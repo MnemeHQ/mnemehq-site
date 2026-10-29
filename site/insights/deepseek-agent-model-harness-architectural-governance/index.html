@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="DeepSeek Harness frames agents as Model + Harness and exposes a real pre-execute policy seam. It does not supply the architecture to enforce through it." />
   <meta name="robots" content="index, follow" />
@@ -201,7 +200,20 @@
 
   <div class="article-body">
 
-    <h2>Agent = Model + Harness</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#agent-model-harness">Agent = Model + Harness</a></li>
+        <li><a href="#the-seam-that-matters-tools-pre">The seam that matters: tools/pre-execute</a></li>
+        <li><a href="#what-a-policy-seam-does-not">What a policy seam does not give you</a></li>
+        <li><a href="#what-a-decision-corpus-at-that">What a decision corpus at that seam would actually look like</a></li>
+        <li><a href="#why-the-decisions-need-to-be">Why the decisions need to be portable</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="agent-model-harness">Agent = Model + Harness</h2>
     <p>The formulation is not new, but DeepSeek Harness states it unusually cleanly: a raw model is not an agent. Everything that turns a model into something that can act reliably in a real environment &mdash; tools, skills, sessions, sandboxes, memory, the execution loop &mdash; is harness, and DeepSeek treats every one of those as a composable plugin rather than a fixed core.</p>
     <p>It also explains something real about where the industry is heading: models are becoming more interchangeable, and the harness that wraps them is becoming the more durable layer.</p>
 
@@ -215,11 +227,11 @@
       </div>
     </aside>
 
-    <h2>The seam that matters: <code>tools/pre-execute</code></h2>
+    <h2 id="the-seam-that-matters-tools-pre">The seam that matters: <code>tools/pre-execute</code></h2>
     <p>DeepSeek Harness's <a href="https://deepseek-harness.github.io/deepseek-harness/en/reference/tool-execution-pipeline" target="_blank" rel="noopener">tool execution pipeline</a> documents a <code>tools/pre-execute</code> waterfall for extensible allow/deny/ask policy, followed by a monotonic <code>tools.guard()</code> whose denial cannot be overridden by a later listener in the chain, with <code>tools/execute</code> and <code>tools/post-execute</code> waterfalls handling dispatch, retries, and metrics afterward.</p>
     <p>That is a legitimate, well-designed extension point &mdash; a place where a policy plugin can inspect a proposed tool call before it runs and stop it deterministically. It's also exactly the seam that matters for architectural governance: the moment before an action executes, not after.</p>
 
-    <h2>What a policy seam does not give you</h2>
+    <h2 id="what-a-policy-seam-does-not">What a policy seam does not give you</h2>
     <p>A pre-execute hook can only enforce what it is told to enforce. DeepSeek Harness's own plugin ecosystem shows this clearly &mdash; community plugins like dangerous-command guards and deny-by-default tool-name policies attach to <code>tools/pre-execute</code> to classify shell, SQL, and file-write calls against fixed rules. That is command-shape safety: useful, but generic. It has no way to know that a repository has an architectural decision forbidding Postgres in this service, or that a particular service boundary must not be crossed, or that a dependency was explicitly forbidden six months ago for reasons a new agent session has no memory of.</p>
     <p>That gap is not a DeepSeek Harness shortcoming. It is the correct division of labor: a harness exposes the seam. It should not be in the business of knowing your architecture.</p>
 
@@ -245,7 +257,7 @@
       <p class="diag-caption">The corpus feeds the seam &mdash; the seam is the harness's, the decisions are not</p>
     </div>
 
-    <h2>What a decision corpus at that seam would actually look like</h2>
+    <h2 id="what-a-decision-corpus-at-that">What a decision corpus at that seam would actually look like</h2>
     <p>The abstract version of this argument is easy to nod along to and hard to act on, so it is worth being concrete about what a governance plugin on <code>tools/pre-execute</code> would do differently from the dangerous-command guards already in the ecosystem.</p>
     <p>A command-shape guard receives a proposed tool call and pattern-matches its arguments: is this <code>rm -rf</code>, does this SQL contain a bare <code>DROP</code>, is this write targeting a protected path. It is a fixed ruleset, identical across every repository it is installed in, and that is precisely why it ships as a generic plugin.</p>
     <p>An architectural guard receives the same tool call and asks a different question: given the decisions <em>this</em> repository has recorded, is this specific change allowed? That requires three things the harness does not have on hand:</p>
@@ -256,12 +268,12 @@
     </ul>
     <p>Read that way, DeepSeek Harness has not created a new problem for governance. It has published a well-specified socket &mdash; one shaped much like the seams Mneme already plugs into for Claude Code's <code>PreToolUse</code> hook and Kiro's write hook. No DeepSeek Harness adapter exists today, and the harness itself is still a developer preview, so this is an integration opportunity rather than a shipped path. What makes it worth naming is that the socket is open-source and vendor-neutral, so the same corpus could reach it without anyone negotiating a partnership.</p>
 
-    <h2>Why the decisions need to be portable</h2>
+    <h2 id="why-the-decisions-need-to-be">Why the decisions need to be portable</h2>
     <p>DeepSeek Harness is one runtime among several an organization's agents will pass through &mdash; alongside Claude Code, Codex CLI, Kiro, and others, each with its own hook or middleware seam for the same class of pre-action check. If the architectural decisions live only inside one harness's plugin configuration, they don't survive a harness swap, a model swap, or a session reset. They have to be defined once, outside any single harness, and evaluated identically wherever an agent is about to act.</p>
     <p>That is the argument this site has made about <a href="/insights/what-is-harness-engineering/">harness engineering</a> and <a href="/insights/runtime-harnesses-for-ai-agents/">runtime harnesses</a> more broadly: harnesses coordinate execution well, and that is a real, growing discipline. But coordinating execution reliably is not the same question as whether a given execution should have been allowed at all. DeepSeek Harness's own equation implies the next line rather than contradicting it:</p>
     <div class="callout"><p><strong>Models change. Harnesses change. Your architecture shouldn&rsquo;t &mdash; and it needs a layer of its own to survive both.</strong></p></div>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>DeepSeek Harness is a credible, well-built addition to the harness layer, and its pre-execute/guard design is a genuinely good extension point for policy enforcement. The gap it leaves open isn't a flaw in the harness. It's the reminder that a harness was never supposed to own the organization's architectural decisions in the first place &mdash; something has to sit above it, portable across every harness an agent might run in.</p>
 
   </div><!-- /.article-body -->

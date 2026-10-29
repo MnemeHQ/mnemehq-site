@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI code generation scales nearly infinitely. Reviewer attention does not. The governance bottleneck this creates requires architectural enforcement at generation time, not more reviewers." />
   <meta name="robots" content="index, follow" />
@@ -294,7 +293,22 @@
 
   <div class="article-body">
 
-    <h2>AI massively increases code generation throughput</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#ai-massively-increases-code-generation-throughput">AI massively increases code generation throughput</a></li>
+        <li><a href="#pr-workflows-were-designed-for-human">PR workflows were designed for human coding velocity</a></li>
+        <li><a href="#review-quality-degrades-as-ai-output">Review quality degrades as AI output scales</a></li>
+        <li><a href="#architectural-drift-becomes-probabilistic-and-cumulative">Architectural drift becomes probabilistic and cumulative</a></li>
+        <li><a href="#manual-review-cannot-be-the-sole">Manual review cannot be the sole governance layer</a></li>
+        <li><a href="#governance-must-shift-left-into-generation">Governance must shift left into generation workflows</a></li>
+        <li><a href="#the-future-stack-generation-time-pr">The future stack: generation-time + PR-time + CI-time governance</a></li>
+        <li><a href="#architectural-governance-is-becoming-infrastructure">Architectural governance is becoming infrastructure</a></li>
+        <li><a href="#related-reading">Related reading</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="ai-massively-increases-code-generation-throughput">AI massively increases code generation throughput</h2>
 
     <p>The throughput gains from AI coding assistants are not incremental. They are structural. A single engineer using Claude Code, Cursor, or Copilot can produce multi-file changesets in minutes that would take half a day to write manually. Devin and similar autonomous agents push this further — generating entire feature implementations from a task description while the engineer works on something else.</p>
 
@@ -324,7 +338,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>PR workflows were designed for human coding velocity</h2>
+<h2 id="pr-workflows-were-designed-for-human">PR workflows were designed for human coding velocity</h2>
 
     <p>Pull request review is a process designed around an implicit assumption: code arrives at roughly the pace a human can write it. One developer opens a PR. One or two reviewers read it. They leave comments. The author addresses them. The cycle takes hours to days, and the volume is manageable because human writing speed is the rate-limiting factor.</p>
 
@@ -332,7 +346,7 @@
 
     <p>AI breaks this calibration entirely. The same team of ten engineers, each using an AI coding assistant, can produce 60–120 PRs per week. The code still needs review. The reviewers haven't multiplied.</p>
 
-    <h2>Review quality degrades as AI output scales</h2>
+    <h2 id="review-quality-degrades-as-ai-output">Review quality degrades as AI output scales</h2>
 
     <p>Volume alone would be a problem. But the degradation is worse than linear, because AI-generated code is harder to review than human-written code in specific, compounding ways.</p>
 
@@ -352,7 +366,7 @@
 
     <p>The cost surfaces at individual scale too. A <a href="https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/" target="_blank" rel="noopener">2025 randomized controlled trial by METR</a> found that experienced open-source developers working on their own repositories took 19% longer to complete tasks when using early-2025 AI tools — despite expecting to be faster. METR's <a href="https://metr.org/blog/2026-05-11-ai-usage-survey/" target="_blank" rel="noopener">2026 follow-up survey</a> found self-reported speed gains of around 3x, but the same paper flags that prior research shows people overestimate AI's time savings by roughly 40 percentage points. The perception is "much faster." The measurement is "slower or roughly the same." The gap is what governance has to close: time saved on generation gets reabsorbed into validation, review, and architectural correction. At team scale, with reviewers as the bottleneck, this effect compounds.</p>
 
-    <h2>Architectural drift becomes probabilistic and cumulative</h2>
+    <h2 id="architectural-drift-becomes-probabilistic-and-cumulative">Architectural drift becomes probabilistic and cumulative</h2>
 
     <p>When review quality degrades, violations don't stop at the PR boundary. They merge. And once a violation is in the codebase, it becomes a pattern that the AI assistant will replicate — because it reads the codebase for context, and now the violation <em>is</em> the context.</p>
 
@@ -368,7 +382,7 @@
 
     <p>Drift under these conditions is not a risk to monitor. It is a statistical certainty that compounds with velocity. The faster you ship, the faster you drift — unless something intervenes before the code is written.</p>
 
-    <h2>Manual review cannot be the sole governance layer</h2>
+    <h2 id="manual-review-cannot-be-the-sole">Manual review cannot be the sole governance layer</h2>
 
     <p>The intuitive response to this problem is to tighten review: require two approvals, mandate architect sign-off on structural changes, add checklists. Every engineering leader considers this first.</p>
 
@@ -405,7 +419,7 @@
       </div>
     </div>
 
-    <h2>Governance must shift left into generation workflows</h2>
+    <h2 id="governance-must-shift-left-into-generation">Governance must shift left into generation workflows</h2>
 
     <p>Security engineering faced a structurally identical problem a decade ago. When application development accelerated, security reviews at the end of the pipeline couldn't keep up with the volume of vulnerabilities reaching production. The response — shift-left security — moved checks earlier in the development lifecycle, catching issues before they accumulated.</p>
 
@@ -415,7 +429,7 @@
 
     <p>The economics are straightforward: preventing a violation costs zero reviewer time. Catching one in review costs one or more review cycles. Fixing one after it has merged and been replicated costs a refactor.</p>
 
-    <h2>The future stack: generation-time + PR-time + CI-time governance</h2>
+    <h2 id="the-future-stack-generation-time-pr">The future stack: generation-time + PR-time + CI-time governance</h2>
 
     <p>The mature governance architecture for AI-assisted development is not a single layer. It is three layers operating in sequence, each catching what the previous layer missed:</p>
 
@@ -438,7 +452,7 @@
 
     <p>The key insight is that generation-time enforcement transforms review from an exhaustive governance process into a focused validation step. Reviewers stop policing architectural compliance and start evaluating design intent. The work becomes more interesting, less tedious, and dramatically more sustainable at AI-output volumes.</p>
 
-    <h2>Architectural governance is becoming infrastructure</h2>
+    <h2 id="architectural-governance-is-becoming-infrastructure">Architectural governance is becoming infrastructure</h2>
 
     <p>Logging was once a developer responsibility. Then it became infrastructure. Testing was once manual. Then it became automated. Security was once end-of-pipeline. Then it shifted left and became embedded in the development process.</p>
 

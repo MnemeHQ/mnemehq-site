@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A new red-teaming study deployed real AI agents in a live environment for two weeks. The failures weren't about model alignment. They were about what happens when aligned agents operate without governance infrastructure." />
   <meta name="robots" content="index, follow" />
@@ -290,6 +289,19 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-industry-s-mental-model-is">The industry&rsquo;s mental model is incomplete</a></li>
+        <li><a href="#local-alignment-does-not-produce-global">Local alignment does not produce global stability</a></li>
+        <li><a href="#the-ai-sdlc-is-becoming-an">The AI SDLC is becoming an operational system</a></li>
+        <li><a href="#why-review-cannot-scale">Why review cannot scale</a></li>
+        <li><a href="#the-missing-layer-workflow-governance">The missing layer: workflow governance</a></li>
+        <li><a href="#from-ai-safety-to-governable-systems">From AI safety to governable systems</a></li>
+        <li><a href="#related-reading">Related reading</a></li>
+      </ol>
+    </nav>
+
     <p>A single aligned agent can behave safely in isolation. A network of autonomous agents can still produce unstable, deceptive, or destructive outcomes once incentive dynamics and coordination pressure emerge. That is not a failure of model alignment. It is a failure of governance architecture.</p>
 
     <p>A new paper from researchers at Harvard, MIT, Stanford, Carnegie Mellon, and Northeastern makes this concrete. <a href="https://arxiv.org/abs/2602.20021" target="_blank" rel="noopener"><em>Agents of Chaos</em></a> (Shapira, Wendler, Yen et al., arXiv:2602.20021, February 2026) deployed six named AI agents — Ash, Flux, Jarvis, Quinn, Mira, and Doug — in a live laboratory environment with persistent memory, real email accounts, Discord access, file systems, and shell execution. Twenty AI researchers interacted with them over two weeks, under both benign and adversarial conditions. The results document something the alignment conversation has mostly avoided.</p>
@@ -309,7 +321,7 @@
 
     <p>That distinction matters. It reframes the engineering problem entirely.</p>
 
-    <h2>The industry&rsquo;s mental model is incomplete</h2>
+    <h2 id="the-industry-s-mental-model-is">The industry&rsquo;s mental model is incomplete</h2>
 
     <p>The first wave of AI engineering practice was organized around a specific theory of failure: something goes wrong inside the model. The responses were calibrated accordingly.</p>
 
@@ -332,7 +344,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Local alignment does not produce global stability</h2>
+<h2 id="local-alignment-does-not-produce-global">Local alignment does not produce global stability</h2>
 
     <p>This is the conceptual core of the problem, and the paper makes it concrete through case studies that read less like safety failures and more like governance failures.</p>
 
@@ -364,7 +376,7 @@
 
     <p>The paper also documents cross-agent propagation — where unsafe behavior patterns observed or communicated between agents get replicated and amplified. In a system with no explicit trust hierarchy and no enforcement semantics on inter-agent communication, every agent is a potential propagation vector. The risk compounds as the number of agents scales.</p>
 
-    <h2>The AI SDLC is becoming an operational system</h2>
+    <h2 id="the-ai-sdlc-is-becoming-an">The AI SDLC is becoming an operational system</h2>
 
     <p>This is no longer a theoretical concern. The engineering context has shifted.</p>
 
@@ -389,7 +401,7 @@
 
     <p>The paper&rsquo;s denial-of-service case makes this visceral. Repeated large email attachments and unbounded memory file growth brought an agent&rsquo;s email server to a halt. The agents produced this failure silently — no owner notification, no storage warnings, no recovery plan. The system had no circuit breaker. The agents had no awareness of resource boundaries. The result was infrastructure failure from agents that were trying to be helpful.</p>
 
-    <h2>Why review cannot scale</h2>
+    <h2 id="why-review-cannot-scale">Why review cannot scale</h2>
 
     <p>The industry&rsquo;s current response to AI-generated risk is concentrated in the review layer. Automated code review tools, PR comment bots, security scanners — these all operate after generation, inspecting output that already exists.</p>
 
@@ -406,7 +418,7 @@
 
     <p>The same shift happened in security engineering. Code security began as a review concern: scan the output, flag vulnerabilities, ask for rewrites. Shift-left moved those checks earlier — into the IDE, into the CI pipeline, into the generation environment. The industry now treats security tooling as infrastructure that runs before deployment, not after. Architectural governance is at the same inflection point, for the same reasons.</p>
 
-    <h2>The missing layer: workflow governance</h2>
+    <h2 id="the-missing-layer-workflow-governance">The missing layer: workflow governance</h2>
 
     <p>What the paper documents is not primarily a model problem. It is a workflow governance problem. The agents in the study lacked the structural constraints that would have made the failures impossible or at least auditable.</p>
 
@@ -431,7 +443,7 @@
 
     <p>The next layer of AI infrastructure will not just generate actions. It will constrain, verify, and govern them. That layer does not yet exist in most engineering organizations. The <em>Agents of Chaos</em> paper is a record of what happens in its absence.</p>
 
-    <h2>From AI safety to governable systems</h2>
+    <h2 id="from-ai-safety-to-governable-systems">From AI safety to governable systems</h2>
 
     <p>The industry conversation about AI risk has been organized around a single question: is the model aligned? That question produced a generation of useful work — RLHF, constitutional AI, red-teaming against adversarial inputs, capability evaluations, safety benchmarks.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Models change. Agents change. IDEs change. Architectural intent should not. The case for keeping AI governance outside the model — and the second kind of lock-in most teams miss." />
   <meta name="robots" content="index, follow" />
@@ -252,7 +251,22 @@
 
   <div class="article-body">
 
-    <h2>The turnover assumption</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-turnover-assumption">The turnover assumption</a></li>
+        <li><a href="#five-roles-one-system-of-record">Five roles, one system of record</a></li>
+        <li><a href="#the-second-kind-of-lock-in">The second kind of lock-in</a></li>
+        <li><a href="#the-wrong-place-to-put-governance">The wrong place to put governance is inside the model</a></li>
+        <li><a href="#what-model-independent-governance-looks-like">What model-independent governance looks like</a></li>
+        <li><a href="#why-this-matters-now-not-later">Why this matters now, not later</a></li>
+        <li><a href="#how-to-test-whether-your-governance">How to test whether your governance is model-independent</a></li>
+        <li><a href="#closing">Closing</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-turnover-assumption">The turnover assumption</h2>
     <p>The conversation about AI coding usually assumes the model is the constant. The team picks a model, learns how to prompt it, encodes the team&rsquo;s preferences into a CLAUDE.md or an AGENTS.md, builds workflows on top of the runtime, and treats the surrounding scaffolding as the variable part.</p>
     <p>The history of software infrastructure suggests the opposite. The model, the runtime, and the IDE are the things that turn over fastest. The repo, the architecture, and the policies the team committed to are the things that last.</p>
 
@@ -267,7 +281,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Five roles, one system of record</h2>
+<h2 id="five-roles-one-system-of-record">Five roles, one system of record</h2>
     <p>An AI-assisted development workflow has five distinguishable roles. Four are designed to be swappable on different cycles. One is the system of record.</p>
 
     <div class="roles-block" aria-label="Five roles in an AI-assisted development workflow">
@@ -280,7 +294,7 @@
 
     <p>Architectural intent only stays consistent if it lives in the role that does not turn over. Encoded in any of the other four, it has to be rewritten on every migration and accept inconsistency in the meantime.</p>
 
-    <h2>The second kind of lock-in</h2>
+    <h2 id="the-second-kind-of-lock-in">The second kind of lock-in</h2>
     <p>Most "lock-in" conversations focus on the API. Multi-provider routing, vendor diversification, fallback chains. That is the visible cost. There is a second kind that is less visible and more expensive to discover late.</p>
 
     <div class="lockin-block" aria-label="Provider lock-in vs governance lock-in">
@@ -312,7 +326,7 @@
       <p><strong>Provider lock-in is the rate you pay for an API.</strong> Governance lock-in is the price you pay when your architectural rules do not survive your next tool change.</p>
     </div>
 
-    <h2>The wrong place to put governance is inside the model</h2>
+    <h2 id="the-wrong-place-to-put-governance">The wrong place to put governance is inside the model</h2>
     <p>The most common shapes of governance lock-in in AI coding workflows:</p>
 
     <ul>
@@ -325,7 +339,7 @@
 
     <p>None of these surfaces was designed to act as the team&rsquo;s long-lived architectural rulebook. They were designed to make a specific runtime more useful in a specific session. Using them as the place where the rules live is the source of governance lock-in.</p>
 
-    <h2>What model-independent governance looks like</h2>
+    <h2 id="what-model-independent-governance-looks-like">What model-independent governance looks like</h2>
     <p>The alternative is to put the rules in the role that does not turn over. <a href="/concepts/model-independent-governance/">Model-independent governance</a> has four properties:</p>
 
     <ul>
@@ -344,7 +358,7 @@
 
     <p>A change that violates ADR-007 at the pre-tool-use hook in Claude Code violates ADR-007 at the CI gate when GPT-driven CI tries to merge the same diff. The model swapped. The verdict did not. That is the testable property.</p>
 
-    <h2>Why this matters now, not later</h2>
+    <h2 id="why-this-matters-now-not-later">Why this matters now, not later</h2>
     <p>Three things are happening at once in the ecosystem that make this argument concrete instead of abstract:</p>
 
     <ul>
@@ -355,7 +369,7 @@
 
     <p>The teams that take this seriously now are not predicting a specific future model. They are betting that they will not be using the current one in nine months and want their architecture to outlive that.</p>
 
-    <h2>How to test whether your governance is model-independent</h2>
+    <h2 id="how-to-test-whether-your-governance">How to test whether your governance is model-independent</h2>
     <p>Three questions. If the answer to any of them is "depends on the model" or "depends on the IDE," the governance is model-coupled in practice.</p>
 
     <ul>
@@ -366,7 +380,7 @@
 
     <p>The teams whose answers are all "same verdict, same surface, same enforcement" have model-independent governance whether or not they call it that. The teams whose answers include "depends on which" have governance lock-in waiting to surface on the next migration.</p>
 
-    <h2>Closing</h2>
+    <h2 id="closing">Closing</h2>
     <p>The strategic claim is small and durable. Models, agents, IDEs, and providers are categories that change. Architecture, ADRs, dependency rules, and security policies are categories that compound. Governance only compounds with them if it lives where they live, not where the runtime of the moment lives.</p>
 
     <p>Models are temporary. Architectural intent is not. Treat them accordingly.</p>

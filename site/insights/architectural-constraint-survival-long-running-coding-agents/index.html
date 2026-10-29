@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Coding agents lose fidelity to earlier decisions as trajectories lengthen. 2026 benchmarks now measure the decay, and repository state alone does not survive a handoff." />
   <meta name="robots" content="index, follow" />
@@ -295,7 +294,20 @@
 
   <div class="article-body">
 
-    <h2>We have been benchmarking the easy case</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#we-have-been-benchmarking-the-easy">We have been benchmarking the easy case</a></li>
+        <li><a href="#performance-degrades-across-persistent-rounds">Performance degrades across persistent rounds</a></li>
+        <li><a href="#working-code-can-still-be-deteriorating">Working code can still be deteriorating code</a></li>
+        <li><a href="#the-repository-is-not-the-whole">The repository is not the whole handoff</a></li>
+        <li><a href="#three-failures-that-look-identical-from">Three failures that look identical from outside</a></li>
+        <li><a href="#what-this-evidence-does-not-show">What this evidence does not show</a></li>
+        <li><a href="#the-measurement-that-would-settle-it">The measurement that would settle it</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="we-have-been-benchmarking-the-easy">We have been benchmarking the easy case</h2>
     <p>Most coding-agent evaluation looks the same. Give the agent an issue, let it produce a patch, run the tests, score it. That shape has driven real progress, and on that shape the agents have become genuinely good.</p>
     <p>It is also the case that almost never occurs in production. Real development is a trajectory. A requirement arrives, then another that partially contradicts it, then a refactor, then a decision made four weeks ago that nobody restates, then a handoff to a different engineer or a different agent. The question that matters is not whether an agent can satisfy one instruction. It is whether an architectural decision made in round one still governs behaviour in round ten.</p>
     <p>Three 2026 benchmarks now measure something close to that question, and the results converge.</p>
@@ -311,23 +323,23 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Performance degrades across persistent rounds</h2>
+<h2 id="performance-degrades-across-persistent-rounds">Performance degrades across persistent rounds</h2>
     <p><a href="https://arxiv.org/abs/2605.24110" target="_blank" rel="noopener">EvoCode-Bench</a> is the closest available proxy. It evaluates coding agents across 26 tasks spanning 227 sequential rounds, five to fifteen rounds each, in five domains including build systems, data engineering, and cloud and security work.</p>
     <p>Three design choices make it relevant. The workspace persists, so code and decisions from round one are still present at round fifteen. Specifications evolve, and some new instructions deliberately conflict with earlier assumptions. Testing is cumulative, so every round is scored against all accumulated requirements rather than only the newest one.</p>
     <p>Only two of the evaluated agents exceed half of the available multi-round credit. The failure profile is the more useful result. Weaker agents drop early requirements. Stronger agents get further and then fail on conflict resolution, self-correction, and regression management in later turns. Capability does not remove the problem. It relocates it.</p>
 
-    <h2>Working code can still be deteriorating code</h2>
+    <h2 id="working-code-can-still-be-deteriorating">Working code can still be deteriorating code</h2>
     <p><a href="https://arxiv.org/abs/2603.24755" target="_blank" rel="noopener">SlopCodeBench</a> asks a different question: what happens to the codebase itself when an agent repeatedly extends its own prior output under evolving requirements.</p>
     <p>Structural erosion increased across 80% of trajectories, and verbosity across 89.8%. The finding worth sitting with is the one about prompting. Asking for cleaner code improved the starting state and did not prevent the subsequent decline. Better instructions moved the intercept. They did not change the slope.</p>
     <p>This is the empirical shape of a claim that is otherwise easy to dismiss as vendor talk. Functional correctness and architectural health are separate properties, and an agent can satisfy the first while steadily degrading the second.</p>
 
-    <h2>The repository is not the whole handoff</h2>
+    <h2 id="the-repository-is-not-the-whole">The repository is not the whole handoff</h2>
     <p>There is a reasonable objection to all of this. If context is lost, the next agent can simply read the code. The repository is the source of truth.</p>
     <p><a href="https://arxiv.org/abs/2606.02875" target="_blank" rel="noopener">Handoff Debt</a> tests that assumption directly. It interrupts an agent at deterministic handoff points, freezes the repository, and hands the work to a successor under four conditions: repository state only, raw trace, summary notes, and structured notes. From 75 source tasks it generates 181 handoff-point tasks and 724 takeover runs per successor model, across three successor models.</p>
     <p>Handoffs that carry context reduce median agent events by 20% to 59% and cumulative prompt tokens by 42% to 63% compared with repository-only takeover. The successor can read the code either way. Reading it is expensive, and some of what the predecessor knew is not recoverable from the files at all.</p>
     <p>State that matters to the next contributor exists outside the artifact. That is worth stating plainly because so much agent tooling assumes the opposite.</p>
 
-    <h2>Three failures that look identical from outside</h2>
+    <h2 id="three-failures-that-look-identical-from">Three failures that look identical from outside</h2>
     <p>When an agent violates an architectural decision, the post-mortem usually stops at "it lost context." That description covers three distinct failures with three distinct fixes.</p>
     <ul>
       <li><strong>Availability.</strong> The decision is not recorded anywhere the agent could reach. Fixed by writing it down.</li>
@@ -336,13 +348,13 @@
     </ul>
     <p>The first two are context problems and the industry is solving them quickly. The third is a different property, and it is the one that determines whether a decision is binding. We have argued the general form of this elsewhere in <a href="/insights/memory-is-not-governance/">memory is not governance</a>, and the density-based version in <a href="/insights/constraint-decay-coding-agents-architectural-governance/">constraint decay</a>. What the long-horizon benchmarks add is the time axis.</p>
 
-    <h2>What this evidence does not show</h2>
+    <h2 id="what-this-evidence-does-not-show">What this evidence does not show</h2>
     <p>Being exact here is worth more than being persuasive.</p>
     <p>The studies establish that agent performance degrades over persistent trajectories, that accumulated requirements become harder to preserve, that code structure erodes as agents extend their own work, and that context-bearing handoffs materially outperform repository-only handoffs. That is a well-supported failure class.</p>
     <p>They do not show that switching between model families specifically causes architectural decisions to be dropped. They do not show that any particular governance mechanism prevents the degradation. No study here evaluates deterministic architectural <a href="/concepts/deterministic-enforcement/">enforcement</a> as a treatment.</p>
     <p>The research identifies the problem. It does not validate the cure, and anyone selling you the cure should say so.</p>
 
-    <h2>The measurement that would settle it</h2>
+    <h2 id="the-measurement-that-would-settle-it">The measurement that would settle it</h2>
     <p>The useful experiment is not another one-shot compliance score. It is a survival curve.</p>
     <p>Introduce an architectural decision early. Run a series of unrelated or evolving tasks. Include at least one later task where violating the decision is the locally convenient move. Then plot the percentage of runs still compliant against trajectory length, at rounds one, three, five, and ten.</p>
     <p>Run that across conditions: repository only, repository plus an instruction file, repository plus the explicit decision in context, and persistent retrieved decision state with deterministic enforcement. Add handoffs between model families as a second axis.</p>

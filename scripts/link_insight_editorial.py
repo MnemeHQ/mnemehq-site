@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
-Link the editorial reading layer (site/assets/css/insight-editorial.css) and
-preload its body font on every insight article page.
+Link the shared insight layout layer (site/assets/css/insight-editorial.css)
+on every insight article page.
 
 An insight article is site/insights/<slug>/index.html carrying
 class="article-wrap"; the index, /all/ and /topics/ listings are not articles.
-The tags go straight after the base.css link so the per-page inline <style>
-still loads later; insight-editorial.css wins on selector specificity, not
-on order.
+The tag goes straight after the base.css link, so a page's own inline
+<style> still loads later and wins where it styles the same component.
 
 Idempotent. sync_shared.py calls stamp() as a safety net for new pages.
 
@@ -24,7 +23,6 @@ INSIGHTS = REPO_ROOT / "site" / "insights"
 
 MARKER = "/assets/css/insight-editorial.css"
 TAGS = (
-    '<link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>',
     '<link rel="stylesheet" href="/assets/css/insight-editorial.css">',
 )
 BASE_LINK = re.compile(r'<link rel="stylesheet" href="/assets/css/base\.css(\?v=\d+)?">')

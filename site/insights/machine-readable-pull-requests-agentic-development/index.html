@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Pull requests were built for human review. Agentic development needs them to become dual-format: human-readable enough to explain, machine-readable enough to verify architectural intent, provenance, scope, and policy before review begins." />
   <meta name="robots" content="index, follow" />
@@ -325,7 +324,24 @@
 
   <div class="article-body">
 
-    <h2>PRs were designed for a different era</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#prs-were-designed-for-a-different">PRs were designed for a different era</a></li>
+        <li><a href="#human-readable-prs-are-necessary-but">Human-readable PRs are necessary but insufficient</a></li>
+        <li><a href="#what-a-machine-readable-pr-would">What a machine-readable PR would include</a></li>
+        <li><a href="#prs-become-verification-surfaces">PRs become verification surfaces</a></li>
+        <li><a href="#why-comments-and-checklists-are-not">Why comments and checklists are not enough</a></li>
+        <li><a href="#the-provenance-problem">The provenance problem</a></li>
+        <li><a href="#the-risk-of-agentic-pr-spam">The risk of agentic PR spam</a></li>
+        <li><a href="#what-good-looks-like">What good looks like</a></li>
+        <li><a href="#how-this-relates-to-mneme">How this relates to Mneme</a></li>
+        <li><a href="#conclusion-human-readable-and-machine-verifiable">Conclusion: human-readable and machine-verifiable</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="prs-were-designed-for-a-different">PRs were designed for a different era</h2>
     <p>Pull requests became the standard collaboration surface for modern software teams because they gave humans a place to inspect change before it merged. They answer human questions well:</p>
     <ul>
       <li>What changed?</li>
@@ -353,12 +369,12 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Human-readable PRs are necessary but insufficient</h2>
+<h2 id="human-readable-prs-are-necessary-but">Human-readable PRs are necessary but insufficient</h2>
     <p>The answer is not to replace the PR description with JSON. Human-readable summaries still matter. Reviewers need narrative, trade-offs, and intent &mdash; the parts of a change that resist structured fields.</p>
     <p>But narrative alone does not scale when autonomous systems are generating, editing, and submitting changes at agent velocity.</p>
     <div class="callout"><p><strong>Human-readable PRs explain. Machine-readable PRs allow verification.</strong></p></div>
 
-    <h2>What a machine-readable PR would include</h2>
+    <h2 id="what-a-machine-readable-pr-would">What a machine-readable PR would include</h2>
     <p>A machine-readable PR does not need to be complex. It exposes a small set of structured fields:</p>
     <ul>
       <li><strong>Change intent</strong> &mdash; a one-line statement of purpose</li>
@@ -379,12 +395,12 @@
     <div class="callout"><p>This PR modifies <code>auth/session</code> boundaries, touches ADR-004, is allowed under policy <code>AUTH-002</code>, must not bypass token rotation, and passed the relevant invariant checks.</p></div>
     <p>Both descriptions are correct. They are written for different readers.</p>
 
-    <h2>PRs become verification surfaces</h2>
+    <h2 id="prs-become-verification-surfaces">PRs become verification surfaces</h2>
     <p>In traditional development, a PR is mostly a review document. In agentic development, the PR becomes a <strong>verification surface</strong>.</p>
     <p>A verification surface is a place where intent, policy, provenance, and system behavior can be checked before change is accepted. CI already treats PRs as execution surfaces &mdash; tests run, linters execute, security scans trigger. The missing layer is architectural and governance verification.</p>
     <div class="callout"><p><strong>We have machine-readable test results, security findings, and dependency alerts.</strong> We do not yet have a standard machine-readable contract for architectural intent.</p></div>
 
-    <h2>Why comments and checklists are not enough</h2>
+    <h2 id="why-comments-and-checklists-are-not">Why comments and checklists are not enough</h2>
     <p>Most teams try to solve this with PR templates. Link the ticket, describe the change, add screenshots, confirm tests, note risks.</p>
     <p>Templates are weak governance:</p>
     <ul>
@@ -396,7 +412,7 @@
     </ul>
     <div class="callout"><p><strong>A checklist asks the author to remember the rule.</strong> A machine-readable governance contract lets the system verify whether the rule was applied.</p></div>
 
-    <h2>The provenance problem</h2>
+    <h2 id="the-provenance-problem">The provenance problem</h2>
     <p>As agents become more autonomous, the question is not only <em>what changed?</em> It is <em>where did the change come from?</em></p>
     <ul>
       <li>Was the change generated from an issue?</li>
@@ -408,12 +424,12 @@
     </ul>
     <p>Without provenance, reviewers can inspect the output but cannot easily inspect the reasoning trail or policy context that produced it. <a href="/concepts/enforcement-provenance/">Machine-readable PR metadata gives governance systems a place to attach decision provenance, policy provenance, and enforcement provenance</a> &mdash; so the chain from architectural intent to merged code is durable, not just remembered.</p>
 
-    <h2>The risk of agentic PR spam</h2>
+    <h2 id="the-risk-of-agentic-pr-spam">The risk of agentic PR spam</h2>
     <p>As agents get better at producing plausible code and plausible PR descriptions, review queues risk filling with changes that look complete but are structurally under-specified.</p>
     <p>The problem will not be that agents cannot write summaries. They will write very convincing summaries.</p>
     <div class="callout"><p><strong>The problem is that summaries are not contracts.</strong></p></div>
 
-    <h2>What good looks like</h2>
+    <h2 id="what-good-looks-like">What good looks like</h2>
     <p>An ideal future workflow runs in seven steps:</p>
     <ol>
       <li>Agent starts work.</li>
@@ -452,11 +468,11 @@
 </code></pre>
     <p>The human still reviews the code. But the system has already made the architectural contract visible &mdash; what was supposed to be true, what was checked, what came back as a warning, and what reasoning trail produced the change.</p>
 
-    <h2>How this relates to Mneme</h2>
+    <h2 id="how-this-relates-to-mneme">How this relates to Mneme</h2>
     <p>This is the direction Mneme is built around: <a href="/concepts/architectural-governance/">architectural governance before and during generation</a>, with repo-native decisions that can be retrieved, enforced, and surfaced in CI.</p>
     <p>The point is not to make developers write more process documents. The point is to make architectural intent available to the systems now producing and reviewing code. Mneme treats ADRs, constraints, and architectural decisions as <a href="/concepts/executable-architectural-intent/">enforceable context</a> rather than passive documentation. Machine-readable PRs are one natural surface where that governance can be propagated.</p>
 
-    <h2>Conclusion: human-readable and machine-verifiable</h2>
+    <h2 id="conclusion-human-readable-and-machine-verifiable">Conclusion: human-readable and machine-verifiable</h2>
     <p>The future PR is not less human. It is human-readable <em>and</em> machine-verifiable.</p>
     <p>Humans still need the story: why the change matters, what trade-offs were made, what risk remains.</p>
     <p>Machines need the contract: which decisions apply, which invariants were checked, what provenance exists, and whether the change is allowed.</p>

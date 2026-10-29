@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="The agent stack is building identity, authorization and observability. None of them answers whether an agent's proposed action contradicts what the organization already decided." />
   <meta name="robots" content="index, follow" />
@@ -300,19 +299,34 @@
 
   <div class="article-body">
 
-    <h2>The agent economy is being built from the outside in</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-agent-economy-is-being-built">The agent economy is being built from the outside in</a></li>
+        <li><a href="#three-questions-the-current-stack-answers">Three questions the current stack answers</a></li>
+        <li><a href="#permission-is-not-correctness">Permission is not correctness</a></li>
+        <li><a href="#the-missing-primitive-is-decision-authority">The missing primitive is decision authority</a></li>
+        <li><a href="#why-this-cannot-live-inside-the">Why this cannot live inside the agent</a></li>
+        <li><a href="#what-a-decision-layer-actually-has">What a decision layer actually has to do</a></li>
+        <li><a href="#software-engineering-is-the-proving-ground">Software engineering is the proving ground</a></li>
+        <li><a href="#where-we-sit">Where we sit</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-agent-economy-is-being-built">The agent economy is being built from the outside in</h2>
     <p>There is a genuine infrastructure buildout happening around autonomous agents, and it is worth being specific about what it currently contains. MIT Sloan&rsquo;s survey of the emerging agent economy, <a href="https://mitsloan.mit.edu/ideas-made-to-matter/who-will-own-ai-agent-economy" rel="nofollow">drawing on work from the MIT Media Lab</a>, describes a market forming around agent identity and discovery, dispute resolution and repair services for agents that fail, and micropayment rails for transactions between them. The framing shift it identifies is the useful part: the move from &ldquo;let us build agents for X&rdquo; to &ldquo;let us build X for agents.&rdquo;</p>
     <p>The forecasts attached to this, billions or trillions of agents, are projections rather than observations, and nothing below depends on them being right. The argument holds at a thousand agents inside one company.</p>
     <p>What is notable about the emerging stack is not what it contains. It is what it assumes.</p>
 
-    <h2>Three questions the current stack answers</h2>
+    <h2 id="three-questions-the-current-stack-answers">Three questions the current stack answers</h2>
     <p>Take the infrastructure categories that already have credible products and standards behind them, and reduce each to the question it answers about an agent.</p>
     <p><strong>Identity</strong> answers: who is this agent, and on whose behalf does it act? <strong>Authorization</strong> answers: is this agent permitted to call that tool, touch that repository, spend that budget? <strong>Observability</strong> answers: what did it actually do, and can we reconstruct the sequence afterwards?</p>
     <p>These are real problems and the work on them is serious. Together they give an organization an agent that is known, scoped, and auditable.</p>
     <p>None of the three answers the question that determines whether the agent&rsquo;s work is any good.</p>
     <div class="callout"><p><strong>An agent can be correctly identified, fully authorized, and completely observable, and still produce a change that contradicts a decision the organization made two years ago and still relies on.</strong></p></div>
 
-    <h2>Permission is not correctness</h2>
+    <h2 id="permission-is-not-correctness">Permission is not correctness</h2>
     <p>Authorization is a statement about capability: this agent may write to this repository. It is not a statement about the content of what gets written.</p>
     <p>Consider an agent with entirely legitimate write access to a payments service. It is authorized. Every action it takes will be logged. Its identity is attested. It adds a feature that reaches around the service boundary and queries another domain&rsquo;s database directly, because that was the shortest path to a working implementation.</p>
     <p>Nothing in the identity layer objected, because the agent was who it claimed to be. Nothing in the authorization layer objected, because the agent was permitted to modify those files. Observability recorded the change faithfully, which is how somebody will eventually find it. The decision that was violated, that this domain does not reach into that one, was real, deliberate, and load-bearing. It simply was not represented anywhere the agent&rsquo;s action passed through.</p>
@@ -328,7 +342,7 @@
   </div>
 </aside>
 
-    <h2>The missing primitive is decision authority</h2>
+    <h2 id="the-missing-primitive-is-decision-authority">The missing primitive is decision authority</h2>
     <p>Add a fourth row to the stack and the omission becomes obvious.</p>
     <table class="gov-table">
       <thead>
@@ -344,23 +358,23 @@
     <p>The first two rows are about the actor. The third is about the record. Only the fourth is about the <em>content of the proposed change</em>, evaluated against commitments the organization made earlier and has not withdrawn.</p>
     <p>Note the timing column. Observability is the only layer in the current stack whose answer arrives after the fact, and it is the only one that speaks to what was actually built. That is an uncomfortable arrangement. It means the stack&rsquo;s substantive judgement about work quality is, by construction, retrospective.</p>
 
-    <h2>Why this cannot live inside the agent</h2>
+    <h2 id="why-this-cannot-live-inside-the">Why this cannot live inside the agent</h2>
     <p>The intuitive response is to put the decisions in the agent: system prompts, instruction files, a project memory, a fine-tune. This fails for a structural reason rather than a quality-of-implementation reason.</p>
     <p>Everything inside the agent is mutable by the agent&rsquo;s operator, and increasingly by the agent. Models are swapped. Harnesses are rewritten. Instruction files are edited by the same automated workflows they are meant to constrain. Context is compacted, and compaction drops whatever the summarizer judged least relevant to the immediate task, which is frequently the constraint rather than the task.</p>
     <p>A constraint that lives in the thing being constrained is not a constraint. It is a default. Defaults are useful and they are not the same as guarantees, which is why we keep returning to the distinction between an agent <a href="/insights/memory-is-not-governance/">recalling a decision and being bound by it</a>.</p>
     <p>For the decision layer to mean anything it has to be external to the agent, durable across model and harness changes, and evaluated at a point the agent does not control. That is an architectural requirement, and it is the same requirement that makes <a href="/concepts/architectural-governance/">architectural governance</a> a separate layer rather than an agent feature.</p>
 
-    <h2>What a decision layer actually has to do</h2>
+    <h2 id="what-a-decision-layer-actually-has">What a decision layer actually has to do</h2>
     <p>Four things, in order.</p>
     <p><strong>Represent</strong> a decision in a form that survives being read by a machine: what was decided, why, what it applies to, what it replaced, and whether it is still in force. <strong>Resolve</strong> which decisions apply to a specific proposed action, because a decision that applies to everything gets enforced nowhere. <strong>Evaluate</strong> the proposed action against the applicable subset, deterministically, so that the same change against the same decision set produces the same verdict every time. <strong>Record</strong> the verdict, so the organization can demonstrate afterwards what was checked and what was permitted.</p>
     <p>The determinism in the third step is not a stylistic preference. A governance layer that asks a model whether a change is acceptable has reintroduced the variance it was deployed to remove. Some decisions genuinely require human judgement and cannot be compiled into a mechanical check. Those should be labelled as guidance and left to review rather than dressed up as enforcement.</p>
 
-    <h2>Software engineering is the proving ground</h2>
+    <h2 id="software-engineering-is-the-proving-ground">Software engineering is the proving ground</h2>
     <p>Of all the domains where agents are being given autonomy, software engineering is the one where this layer can be built first, for three reasons.</p>
     <p>The decisions are unusually well-formed. Architecture decision records already encode a decision, its rationale, and its consequences, which is most of the representation problem solved by convention rather than by new tooling. The actions are inspectable: a proposed code change can be parsed and reasoned about mechanically in a way that a proposed business action usually cannot. And the verdict has somewhere to land, because the change has to pass through a commit, a review, or a pipeline before it becomes real.</p>
     <p>That combination does not exist yet in most other agent domains. It means the software case is not a narrow corner of the agent economy. It is the place where the decision layer gets specified, tested against real systems, and shown to work before anyone attempts it for procurement, finance, or operations.</p>
 
-    <h2>Where we sit</h2>
+    <h2 id="where-we-sit">Where we sit</h2>
     <p>Mneme HQ implements this for one class of decision: architectural decisions in a codebase. It compiles the ones that can be expressed mechanically into constraints, enforces them deterministically against proposed changes, and keeps the result. The scope is deliberately narrow and it is <a href="/docs/">shipped and runnable today</a>.</p>
     <p>The broader claim in this piece, that autonomous systems across an organization will need an independent source of decision authority, is a thesis about direction rather than a description of what we have built. We think the architecture generalizes. We have not demonstrated that it does, and it would be premature to say otherwise.</p>
     <p>What we would push back on is the assumption that identity, permissions, and traces are sufficient. They give an organization an agent it can name, contain, and audit. They do not give it an agent whose work is consistent with what the organization already decided. That is a different question, it is answered before the action rather than after, and at the moment very little in the emerging stack is built to answer it.</p>

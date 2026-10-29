@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Autonomous remediation loops cannot stabilise without deterministic architectural constraints. Faster generation accelerates drift. Governance must become infrastructure." />
   <meta name="robots" content="index, follow" />
@@ -279,7 +278,20 @@
 
   <div class="article-body">
 
-    <h2>The software lifecycle is already partially autonomous</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-software-lifecycle-is-already-partially">The software lifecycle is already partially autonomous</a></li>
+        <li><a href="#the-industry-is-optimising-the-wrong">The industry is optimising the wrong layer</a></li>
+        <li><a href="#autonomous-remediation-has-a-stability-problem">Autonomous remediation has a stability problem</a></li>
+        <li><a href="#why-review-cannot-govern-autonomous-loops">Why review cannot govern autonomous loops</a></li>
+        <li><a href="#what-machine-readable-governance-actually-requires">What machine-readable governance actually requires</a></li>
+        <li><a href="#the-four-layer-delivery-stack">The four-layer delivery stack</a></li>
+        <li><a href="#governance-is-infrastructure">Governance is infrastructure</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-software-lifecycle-is-already-partially">The software lifecycle is already partially autonomous</h2>
 
     <p>This is not a future direction. It is the current operational state for engineering teams that moved early.</p>
 
@@ -296,7 +308,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The industry is optimising the wrong layer</h2>
+<h2 id="the-industry-is-optimising-the-wrong">The industry is optimising the wrong layer</h2>
 
     <p>Current ecosystem investment concentrates on three layers:</p>
 
@@ -314,7 +326,7 @@
 
     <p>Conflating them is a structural mistake that most current tooling makes. Better code-generating models do not produce more architecturally consistent code unless the constraints are machine-readable and enforced at generation time.</p>
 
-    <h2>Autonomous remediation has a stability problem</h2>
+    <h2 id="autonomous-remediation-has-a-stability-problem">Autonomous remediation has a stability problem</h2>
 
     <p>Here is the loop that is becoming common in teams operating agentic CI:</p>
 
@@ -340,7 +352,7 @@
       <span class="yt-facade__play" aria-hidden="true"></span>
     </div>
 
-    <h2>Why review cannot govern autonomous loops</h2>
+    <h2 id="why-review-cannot-govern-autonomous-loops">Why review cannot govern autonomous loops</h2>
 
     <p>Traditional code review works because it assumes bounded conditions that agentic workflows break:</p>
 
@@ -357,7 +369,7 @@
 
     <p>Governance must move earlier in the loop — before generation, not after. Not as advisory text in a prompt. As deterministic, machine-readable constraints that agents consume, validate against, and are blocked by when they would violate architectural invariants.</p>
 
-    <h2>What machine-readable governance actually requires</h2>
+    <h2 id="what-machine-readable-governance-actually-requires">What machine-readable governance actually requires</h2>
 
     <p>Governance that can operate inside an autonomous loop needs specific properties that free-form documentation, system prompts, and RAG pipelines do not provide.</p>
 
@@ -385,7 +397,7 @@
 
     <p>Free-form guidelines in a CLAUDE.md file are advisory. A system prompt containing your ADR documents is advisory. A RAG pipeline retrieving them is advisory. None of these properties hold under adversarial input, context rotation, or multi-agent boundaries. Structured enforcement rules with the four properties above are not advisory.</p>
 
-    <h2>The four-layer delivery stack</h2>
+    <h2 id="the-four-layer-delivery-stack">The four-layer delivery stack</h2>
 
     <p>The software delivery stack in an autonomous environment has four layers, not three. The industry has built substantial tooling for the first three. The fourth is largely absent from production-ready infrastructure.</p>
 
@@ -427,7 +439,7 @@
 
     <p>Teams building on the first three layers without the fourth are building systems that generate and repair code at machine speed while accumulating architectural drift at the same rate. The debt is invisible in the short term and expensive when it surfaces: a compliance audit, a production incident, a major refactor that consumes a quarter.</p>
 
-    <h2>Governance is infrastructure</h2>
+    <h2 id="governance-is-infrastructure">Governance is infrastructure</h2>
 
     <p>The problem is no longer whether AI can write software. It is whether autonomous systems can preserve architectural integrity while doing so.</p>
 

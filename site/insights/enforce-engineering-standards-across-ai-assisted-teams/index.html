@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A practical method for enforcing architectural decisions and coding standards on every pull request an AI agent opens, before review rather than during it." />
   <meta name="robots" content="index, follow" />
@@ -294,8 +293,21 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-shift-from-individual-developers-to">The Shift From Individual Developers to Human-Agent Teams</a></li>
+        <li><a href="#why-existing-governance-processes-break-down">Why Existing Governance Processes Break Down</a></li>
+        <li><a href="#the-hidden-cost-architectural-drift">The Hidden Cost: Architectural Drift</a></li>
+        <li><a href="#what-high-performing-teams-move-toward">What High-Performing Teams Move Toward</a></li>
+        <li><a href="#a-practical-governance-model-four-layers">A Practical Governance Model (Four Layers)</a></li>
+        <li><a href="#the-manager-s-perspective">The Manager&rsquo;s Perspective</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>The Shift From Individual Developers to Human-Agent Teams</h2>
+
+    <h2 id="the-shift-from-individual-developers-to">The Shift From Individual Developers to Human-Agent Teams</h2>
     <p>For most of software&rsquo;s history, engineering standards were enforced by people. Experience told a senior engineer that a pattern was wrong. Culture made a team care about consistency. Mentorship passed conventions from one developer to the next. Code review caught the deviations that slipped through. Architectural leadership set direction and held the line. All of it ran at human speed, and at human speed it mostly worked.</p>
     <p>That model assumed a roughly fixed ratio between the volume of code produced and the number of people available to reason about it. AI-assisted development breaks the assumption. A single engineer now generates features, refactors entire modules, scaffolds new services, provisions infrastructure, writes tests, and produces documentation in the time it once took to hand-write one function. Output rises by an order of magnitude. The capacity for oversight does not.</p>
     <p>The result is an enforcement gap. The decisions that define how your systems are built still live where they always did, in the heads of senior engineers, in architecture documents, in the conventions a team absorbed over years. The work that has to honor those decisions is now produced faster than any of those mechanisms can inspect it. The constraint is no longer typing speed. It is consistency.</p>
@@ -309,7 +321,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why Existing Governance Processes Break Down</h2>
+<h2 id="why-existing-governance-processes-break-down">Why Existing Governance Processes Break Down</h2>
     <p>The processes most teams rely on were designed for human-paced output. Three of them fail in specific, predictable ways once AI agents are doing the work.</p>
 
     <h3>Problem 1: Architectural decisions become invisible</h3>
@@ -321,7 +333,7 @@
     <h3>Problem 3: Standards are team-specific</h3>
     <p>There is no single correct architecture across an organization. Team A built its services on the repository pattern and domain-driven design. Team B runs event-driven services with CQRS. Team C maintains a legacy monolith with conventions all its own, and changing them is out of scope for any given ticket. A general-purpose agent, asked to write code in any of these repositories, drifts toward the generic patterns most common in its training data. Those patterns are frequently incompatible with the local standard. The agent is not wrong in the abstract. It is wrong for this codebase, and it has no way to know the difference.</p>
 
-    <h2>The Hidden Cost: Architectural Drift</h2>
+    <h2 id="the-hidden-cost-architectural-drift">The Hidden Cost: Architectural Drift</h2>
     <p>When standards are not enforced at the point of generation, the cost does not show up as a single broken build. It accumulates as <a href="/concepts/architectural-drift/">architectural drift</a>, the slow divergence of a system from its intended design. Drift takes four recognizable forms.</p>
     <ul>
       <li><strong>Pattern drift.</strong> Approved patterns erode as agents introduce locally reasonable alternatives that do not match the codebase standard.</li>
@@ -346,13 +358,13 @@
 
     <p>Both columns matter. The point is that passing everything on the left tells you nothing about the right. A change can be secure, formatted, dependency-clean, and well-tested, and still violate every architectural decision your team has ever made.</p>
 
-    <h2>What High-Performing Teams Move Toward</h2>
+    <h2 id="what-high-performing-teams-move-toward">What High-Performing Teams Move Toward</h2>
     <p>The teams that keep consistency under AI-assisted load are not the ones that review harder. They are the ones that change where governance sits in the workflow. The default flow runs Generate, then Review, then Correct, with the standard applied after the fact, if at all. The flow that scales runs Context, then Govern, then Generate, then Verify.</p>
     <p>The difference is that governance shifts left, to the moment of generation. Constraints reach the agent before it writes, so the relevant patterns, ADRs, and conventions are part of the prompt context rather than something a reviewer has to reconstruct afterward. Violations are prevented rather than discovered. The reviewer stops being the policy engine and goes back to reasoning about design.</p>
 
     <div class="callout"><p><strong>Discovery does not scale; prevention does.</strong> Reviewing for standards after generation asks a fixed number of humans to inspect machine-scale output. Applying standards before generation moves the check to the one place in an AI-assisted workflow that keeps pace with the agents.</p></div>
 
-    <h2>A Practical Governance Model (Four Layers)</h2>
+    <h2 id="a-practical-governance-model-four-layers">A Practical Governance Model (Four Layers)</h2>
     <p>Enforcing engineering standards across AI-assisted teams is a layered problem. Each layer answers a question the others cannot.</p>
     <ul>
       <li><strong>Layer 1: Architectural Decisions.</strong> The ADRs, platform decisions, service boundaries, and integration rules that define how systems are built. These are the constraints that the BillingService example violated.</li>
@@ -371,7 +383,7 @@
     <p>This is also where <a href="/concepts/spec-driven-development/">spec-driven development</a> connects: a spec describes what to build, and these four layers describe the constraints any implementation of that spec has to satisfy.</p>
     <p>Four how-to guides walk through this loop on one decision, ADR-012: <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a>, <a href="/docs/how-to/give-agents-applicable-decisions/">give coding agents the decisions that apply to a task</a>, <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">stop an AI coding agent from crossing an architectural boundary</a>, and <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">fail a pull request that breaks an ADR</a>.</p>
 
-    <h2>The Manager&rsquo;s Perspective</h2>
+    <h2 id="the-manager-s-perspective">The Manager&rsquo;s Perspective</h2>
     <p>For an engineering leader, the strategic reframing is uncomfortable but clarifying. Productivity gains from AI, captured without governance, do not produce more good software. They produce more inconsistency, faster. The output goes up; the coherence of the system goes down; and the cost of that incoherence is paid later, in incidents, in rework, and in the slow tax of a codebase no one fully understands.</p>
     <p>The strongest organizations in an AI-assisted era are not the ones generating the most code. They are the ones maintaining the highest consistency across thousands of AI-assisted decisions. Consistency is the asset that compounds. It is also the asset that traditional tooling and human review cannot defend at machine scale. Defending it is what an enforced governance layer is for. If you want to see what enforcement at generation time looks like against your own decisions, <a href="/demo/">walk through the live demo</a>.</p>
 

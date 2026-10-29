@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="My O&#x27;Reilly Radar article explains why AI-generated code needs enforceable architectural intent. Here is the reasoning, design test, and what to audit." />
   <meta name="robots" content="index, follow" />
@@ -348,6 +347,17 @@
   </header>
 
 <div class="article-body">
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#why-i-wrote-the-o-reilly">Why I wrote the O&rsquo;Reilly article</a></li>
+      <li><a href="#agentic-development-changes-the-control-problem">Agentic development changes the control problem</a></li>
+      <li><a href="#what-an-architectural-guardrail-needs-to">What an architectural guardrail needs to do</a></li>
+      <li><a href="#context-is-necessary-but-context-is">Context is necessary, but context is not enforcement</a></li>
+      <li><a href="#a-practical-test-for-engineering-leaders">A practical test for engineering leaders</a></li>
+    </ol>
+  </nav>
     <p>On August 31, O&rsquo;Reilly Radar published my article, <a href="https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/" target="_blank" rel="noopener">Architectural Guardrails for AI-Generated Code</a>. The article names a failure mode that is becoming more common as teams move from occasional AI assistance to agentic software delivery: generated code can be correct in isolation and still violate a decision the system depends on.</p>
 
     <p>This follow-up explains why I wrote the piece, what I mean by an architectural guardrail, and how an engineering leader can test whether their current controls preserve intent or only review output after the fact. My other O&rsquo;Reilly work will be collected on my <a href="https://www.oreilly.com/people/theo-valmis/" target="_blank" rel="noopener">O&rsquo;Reilly author page</a>.</p>
@@ -356,7 +366,7 @@
       <p><strong>Read the original:</strong> The full argument and example are in <a href="https://www.oreilly.com/radar/architectural-guardrails-for-ai-generated-code/" target="_blank" rel="noopener">Architectural Guardrails for AI-Generated Code on O&rsquo;Reilly Radar</a>.</p>
     </div>
 
-    <h2>Why I wrote the O&rsquo;Reilly article</h2>
+    <h2 id="why-i-wrote-the-o-reilly">Why I wrote the O&rsquo;Reilly article</h2>
 
     <p>The dominant conversation about AI-generated code still treats model capability as the main variable. If generated code is weak, the proposed answer is a better model, a longer prompt, or a second model reviewing the first. Those improvements can raise local code quality. They do not solve the problem of a decision the model was never given.</p>
 
@@ -364,7 +374,7 @@
 
     <p>The important distinction is between <strong>code correctness</strong> and <strong>system conformance</strong>. Tests and review can establish useful facts about a change. Architectural guardrails establish whether the change remains inside the constraints the team already approved.</p>
 
-    <h2>Agentic development changes the control problem</h2>
+    <h2 id="agentic-development-changes-the-control-problem">Agentic development changes the control problem</h2>
 
     <p>With human-paced development, experienced reviewers often carried architectural history in their heads. That was fragile, but it could appear to work while output remained limited. Agentic development changes the ratio. Agents can propose several implementations, revise them, and open changes faster than architectural attention can be applied manually.</p>
 
@@ -372,7 +382,7 @@
 
     <p>An architectural guardrail moves that responsibility into the delivery system. It makes the approved decision available before generation and produces a traceable verdict when proposed code conflicts with it.</p>
 
-    <h2>What an architectural guardrail needs to do</h2>
+    <h2 id="what-an-architectural-guardrail-needs-to">What an architectural guardrail needs to do</h2>
 
     <p>A useful guardrail is not another broad instruction in a prompt. It needs four properties:</p>
 
@@ -385,13 +395,13 @@
 
     <p>The enforcement path should remain deterministic. AI can help retrieve or explain a decision, but the final warning or block should be reproducible from the artifacts the team owns. Otherwise the control becomes another probabilistic opinion that engineers cannot reliably audit.</p>
 
-    <h2>Context is necessary, but context is not enforcement</h2>
+    <h2 id="context-is-necessary-but-context-is">Context is necessary, but context is not enforcement</h2>
 
     <p>Repository instructions, context files, and retrieval systems are useful. They improve the chance that an agent sees relevant information. They do not prove that a decision was applied, and they do not identify when generated code violates it.</p>
 
     <p>This is why the distinction between context and governance matters. Context helps an agent understand. Governance establishes authority, resolves which rule applies, and records the result. Teams need both, but they should not mistake the presence of documentation in a context window for an enforceable architectural control.</p>
 
-    <h2>A practical test for engineering leaders</h2>
+    <h2 id="a-practical-test-for-engineering-leaders">A practical test for engineering leaders</h2>
 
     <p>Start with one boundary that already matters to the business. Choose a decision that has a real owner and a known consequence when violated. Then ask three questions:</p>
 

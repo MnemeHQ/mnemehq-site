@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="AI guardrails is an umbrella term. IBM maps four layers &mdash; data, model, application, infrastructure. AI-assisted software delivery needs a fifth: architectural guardrails." />
   <meta name="robots" content="index, follow" />
@@ -363,7 +362,20 @@
 
   <div class="article-body">
 
-    <h2>What IBM&rsquo;s Guardrail Framework Shows</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#what-ibm-s-guardrail-framework-shows">What IBM&rsquo;s Guardrail Framework Shows</a></li>
+        <li><a href="#the-layer-the-framework-does-not">The Layer the Framework Does Not Reach</a></li>
+        <li><a href="#each-layer-answers-a-different-question">Each Layer Answers a Different Question</a></li>
+        <li><a href="#why-coding-agents-change-the-picture">Why Coding Agents Change the Picture</a></li>
+        <li><a href="#guardrails-become-layered-infrastructure">Guardrails Become Layered Infrastructure</a></li>
+        <li><a href="#guardrails-need-a-traceable-path-to">Guardrails need a traceable path to business objectives</a></li>
+        <li><a href="#where-mneme-fits">Where Mneme Fits</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="what-ibm-s-guardrail-framework-shows">What IBM&rsquo;s Guardrail Framework Shows</h2>
     <p>IBM frames <a href="https://www.ibm.com/think/topics/ai-guardrails" target="_blank" rel="noopener">AI guardrails</a> as safeguards that span the entire AI lifecycle, not just model outputs. It groups them into four categories, with AI governance sitting on top as an overarching coordination layer:</p>
     <ul>
       <li><strong>Data guardrails</strong> protect the training and retrieval data &mdash; PII removal, data quality, provenance.</li>
@@ -382,7 +394,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The Layer the Framework Does Not Reach</h2>
+<h2 id="the-layer-the-framework-does-not">The Layer the Framework Does Not Reach</h2>
     <p>There is one class of risk those four categories were not built to catch. A team adopting AI coding agents has to answer a different question: how do you keep every code change consistent with the architecture you already committed to? That is not a data problem, a model problem, or an infrastructure problem. It is an engineering problem, and it lives one layer over from everything IBM&rsquo;s framework governs.</p>
     <p>Call it the fifth layer: <a href="/concepts/architectural-governance/">architectural guardrails</a>. Where the other four protect data, model behavior, application I/O, and the runtime, this one protects <strong>AI-assisted software delivery</strong> &mdash; the ADRs, engineering standards, and approved frameworks that a codebase is supposed to hold to. Slot it into the stack and the picture completes:</p>
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -398,7 +410,7 @@
     </table>
     </div>
 
-    <h2>Each Layer Answers a Different Question</h2>
+    <h2 id="each-layer-answers-a-different-question">Each Layer Answers a Different Question</h2>
     <p>The layers are not competing; they are answering different questions about the same system.</p>
     <ul>
       <li><strong>Model guardrails:</strong> can this model safely answer?</li>
@@ -409,7 +421,7 @@
     <p>That last question is the one runtime guardrail frameworks rarely address, because it is not about safety in the moment &mdash; it is about conformance to decisions made earlier. A change can be perfectly safe to execute and still be the wrong change for this system.</p>
     <div class="callout"><p><strong>Runtime guardrails keep AI behaving safely. Architectural guardrails keep AI-assisted development consistent with the engineering decisions already made.</strong> Both matter. Only one of them reads an ADR.</p></div>
 
-    <h2>Why Coding Agents Change the Picture</h2>
+    <h2 id="why-coding-agents-change-the-picture">Why Coding Agents Change the Picture</h2>
     <p>An AI coding agent can produce code that is valid, secure, syntactically correct, and fully tested &mdash; and still violate an architectural decision. The failure is invisible to the other four layers because none of them is looking at architecture. Concretely, an agent can:</p>
     <ul>
       <li>Introduce a second message broker when the project already standardized on one.</li>
@@ -420,7 +432,7 @@
     <p>Data, model, application, and infrastructure guardrails all pass this change. It leaked no PII, said nothing toxic, tripped no application policy, and ran in a secure environment. What it did was quietly diverge from the system&rsquo;s design &mdash; the kind of <a href="/concepts/architectural-drift/">architectural drift</a> that only an architectural guardrail is positioned to catch. This is the same gap we mapped in detail for the coding stack in the <a href="/insights/ai-coding-agent-guardrails/">field guide to AI coding-agent guardrails</a>: runtime, prompt, policy, and review layers each miss whether generated code obeys the architecture.</p>
     <p>Catching it means treating architectural decisions the way the other layers treat their rules &mdash; as checks, not prose. The decision is recorded as <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>, retrieved for the change in front of the agent, and checked <a href="/concepts/deterministic-enforcement/">deterministically</a> before the change lands. Same change, same verdict, with the violated decision named.</p>
 
-    <h2>Guardrails Become Layered Infrastructure</h2>
+    <h2 id="guardrails-become-layered-infrastructure">Guardrails Become Layered Infrastructure</h2>
     <p>None of this argues against IBM&rsquo;s four layers. The point is the opposite: as organizations mature, they will run several guardrail technologies together, each reducing a different class of risk. A realistic enterprise stack looks less like a single product and more like a layered infrastructure:</p>
     <ul>
       <li><strong>Architectural guardrails</strong> &mdash; engineering delivery stays consistent with recorded decisions.</li>
@@ -431,7 +443,7 @@
     </ul>
     <p>Together they make enterprise AI trustworthy. Separately, each is necessary and none is sufficient. The mistake is not picking the wrong layer; it is assuming one layer covers the others. A team that has invested heavily in model and application guardrails can still ship an agent that reorganizes its architecture one reasonable-looking commit at a time, because <a href="/insights/why-observability-is-not-governance/">watching behavior is not the same as governing decisions</a>.</p>
 
-    <h2>Guardrails need a traceable path to business objectives</h2>
+    <h2 id="guardrails-need-a-traceable-path-to">Guardrails need a traceable path to business objectives</h2>
     <p>The five-layer model explains what different guardrails protect. It does not mean every control should start from a generic AI-risk checklist.</p>
     <p>For engineering organizations, the stronger design begins with the business outcome and translates it downward:</p>
     <div class="callout"><p><strong>business objective -&gt; engineering outcome -&gt; architectural decision -&gt; AI guardrail -&gt; implementation evidence -&gt; business feedback</strong></p></div>
@@ -503,7 +515,7 @@
     <p>Mneme operates lower in the chain. It helps teams preserve accepted engineering decisions as AI coding agents plan and modify software, including deterministic enforcement where a decision can be expressed reliably.</p>
     <p>The business connection is indirect but concrete: Mneme helps preserve the engineering decisions through which the organization chose to pursue the outcome.</p>
 
-    <h2>Where Mneme Fits</h2>
+    <h2 id="where-mneme-fits">Where Mneme Fits</h2>
     <p>Mneme is the architectural layer of that stack, and only that layer. It does not filter prompts, score toxicity, or secure the runtime; those are solved by the other four. It turns a team&rsquo;s architectural decisions into constraints that AI coding agents retrieve at generation time and CI verifies before a change merges. When someone asks whether you need AI guardrails, the honest answer is that you need several, at different layers. If AI is writing production code, the architectural layer is the one most stacks are still missing.</p>
 
   </div><!-- /.article-body -->

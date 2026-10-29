@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Operating systems coordinate hardware. Cloud platforms coordinate infrastructure. AI is becoming the coordination layer for execution itself &mdash; and once that happens, governance becomes infrastructure." />
   <meta name="robots" content="index, follow" />
@@ -292,7 +291,23 @@
 
   <div class="article-body">
 
-    <h2>The wrong mental model</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-wrong-mental-model">The wrong mental model</a></li>
+        <li><a href="#the-evolution-of-computing-layers">The evolution of computing layers</a></li>
+        <li><a href="#from-interaction-to-delegation">From interaction to delegation</a></li>
+        <li><a href="#why-memory-and-orchestration-are-not">Why memory and orchestration are not enough</a></li>
+        <li><a href="#the-emerging-ai-execution-stack">The emerging AI execution stack</a></li>
+        <li><a href="#the-missing-layer-drawn-explicitly">The missing layer, drawn explicitly</a></li>
+        <li><a href="#operating-systems-eventually-become-governance-systems">Operating systems eventually become governance systems</a></li>
+        <li><a href="#the-strategic-consequence">The strategic consequence</a></li>
+        <li><a href="#closing">Closing</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-wrong-mental-model">The wrong mental model</h2>
     <p>The dominant framing for AI in 2026 is still "AI replaces apps." Better search, better assistants, better interfaces sitting in front of the same software. The frame is incomplete because it inherits a mistake from the consumer era: it treats the operating system as a UI layer.</p>
     <p>Operating systems were never fundamentally about interfaces. They were coordination systems. What they actually governed:</p>
     <ul>
@@ -324,7 +339,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>The evolution of computing layers</h2>
+<h2 id="the-evolution-of-computing-layers">The evolution of computing layers</h2>
     <p>The progression is visible if you line up which resources each generation of platform actually coordinated.</p>
 
     <div class="era-stack" aria-label="Evolution of computing layers">
@@ -355,7 +370,7 @@
 
     <p>Each layer abstracts the one beneath it. Each layer also eventually has to grow the same kinds of controls the layer below it grew: scheduling, permissions, isolation, audit. The AI operating layer is in the early-OS era of that pattern &mdash; the coordination capabilities exist, the discipline does not yet.</p>
 
-    <h2>From interaction to delegation</h2>
+    <h2 id="from-interaction-to-delegation">From interaction to delegation</h2>
     <p>The other shift this layer makes is what the human is doing on top of it.</p>
     <p>In the previous model, humans operated software directly. They navigated UIs, ran commands, wrote prompts. The system did exactly what they typed, then waited.</p>
     <p>In the emerging model, humans delegate outcomes. They state an intent, a constraint, and a definition of done. The AI layer decides the sequencing, the tool calls, the retrievals, the implementation path, and the recovery strategy when something fails along the way.</p>
@@ -381,7 +396,7 @@
 
     <p class="pull-quote">AI is not just becoming an interface layer. It is becoming an execution coordination layer.</p>
 
-    <h2>Why memory and orchestration are not enough</h2>
+    <h2 id="why-memory-and-orchestration-are-not">Why memory and orchestration are not enough</h2>
     <p>Most of the visible investment in AI infrastructure today is in four areas: memory, orchestration, tool calling, and observability. Those are real and useful. They are also the same four capabilities early operating systems had before they grew up.</p>
     <p>Operating systems eventually had to add permissions, policy enforcement, execution boundaries, verification, and invariant preservation &mdash; not because the early systems were bad, but because as more workloads ran on shared infrastructure, "do what the program asked" stopped being a sufficient guarantee.</p>
     <p>The AI operating layer is missing the equivalent set of controls. Specifically, it is missing the layer that handles:</p>
@@ -396,7 +411,7 @@
       <p><strong>As AI becomes an operating layer, governance becomes operating infrastructure.</strong> Not a policy doc. Not a review process. Infrastructure &mdash; in the same sense that schedulers, permissions, and audit logs are infrastructure.</p>
     </div>
 
-    <h2>The emerging AI execution stack</h2>
+    <h2 id="the-emerging-ai-execution-stack">The emerging AI execution stack</h2>
     <p>The clearest way to see what is and is not in place is to enumerate the layers of the stack and ask which of them have first-class infrastructure today.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
@@ -418,7 +433,7 @@
 
     <p>Most companies are racing to build the top half: intelligence, memory, orchestration, automation. Very few are building the bottom half: execution governance, architectural verification, intent preservation. That gap is not stylistic. It is the same gap that early operating systems had before scheduling and permissions became non-negotiable.</p>
 
-    <h2>The missing layer, drawn explicitly</h2>
+    <h2 id="the-missing-layer-drawn-explicitly">The missing layer, drawn explicitly</h2>
     <p>The shape of the gap is easier to see in two stacks side by side.</p>
 
     <div class="stack-compare" aria-label="Most AI stacks vs emerging reliable stacks">
@@ -452,7 +467,7 @@
 
     <p>The right-hand path is not slower. It is the path that survives autonomy. Without governance and verification in the loop, autonomous execution degrades into architectural drift at exactly the rate the agents are getting faster.</p>
 
-    <h2>Operating systems eventually become governance systems</h2>
+    <h2 id="operating-systems-eventually-become-governance-systems">Operating systems eventually become governance systems</h2>
     <p>This is the historical pattern worth taking seriously. Early operating systems were thin coordination layers over hardware. They evolved &mdash; under pressure from real failure modes &mdash; toward access control, sandboxing, process isolation, scheduling guarantees, and audit trails. Not because the original designers wanted more bureaucracy, but because shared, long-running, autonomous workloads forced it.</p>
     <p>AI operating layers will follow the same arc. The forcing functions already exist:</p>
 
@@ -466,7 +481,7 @@
 
     <p>These are not abstract risks; they are the failure modes teams are already filing tickets about. The more autonomous the system becomes, the more governance has to be structural rather than aspirational. The concepts that come next have names: <a href="/concepts/verification-contracts/">verification contracts</a>, <a href="/concepts/governance-propagation/">governance propagation</a>, <a href="/concepts/execution-surfaces/">execution surfaces</a>, <a href="/concepts/reliable-delegation/">reliable delegation</a>.</p>
 
-    <h2>The strategic consequence</h2>
+    <h2 id="the-strategic-consequence">The strategic consequence</h2>
     <p>If AI is becoming an operating layer rather than an interface layer, the competitive question is not who builds the best chatbot or the most fluent assistant. It is who builds the systems that best manage delegation, execution, reliability, governance, continuity, and verification on top of any sufficiently capable model.</p>
 
     <p>Models will get better. Agents will get faster. Orchestration will get cheaper. The thing that decides whether a stack is fit for production work over years is the layer that is hardest to bolt on after the fact: the operating infrastructure for autonomous execution.</p>
@@ -475,7 +490,7 @@
       <p><strong>The next operating system is an execution system.</strong> And every execution system, eventually, becomes a governance system.</p>
     </div>
 
-    <h2>Closing</h2>
+    <h2 id="closing">Closing</h2>
     <p>Treating AI as the new operating layer is not a metaphor. It is a re-statement of what an operating system actually does &mdash; coordination, isolation, permissioning, audit &mdash; applied to the new set of resources AI systems coordinate. The implication is not that this layer is optional. It is that the layer is forming whether or not anyone designs it deliberately, and the teams that take governance seriously now will be building on infrastructure rather than retrofitting it.</p>
 
     <p>AI became an execution layer. Governance is the part that turns it into infrastructure.</p>

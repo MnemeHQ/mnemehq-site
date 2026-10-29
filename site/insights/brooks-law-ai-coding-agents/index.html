@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Brooks&#x27;s Law was about coordination cost, not headcount. AI coding agents remove ramp-up time but multiply contributors. Coordination has to move into decisions." />
   <meta name="robots" content="index, follow" />
@@ -350,26 +349,40 @@
   </header>
 
 <div class="article-body">
-<h2>Brooks's Law was never about headcount</h2>
+
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#brooks-s-law-was-never-about">Brooks's Law was never about headcount</a></li>
+      <li><a href="#ai-changes-one-side-of-the">AI changes one side of the equation</a></li>
+      <li><a href="#the-arithmetic-brooks-was-pointing-at">The arithmetic Brooks was pointing at</a></li>
+      <li><a href="#parallelism-makes-the-gap-visible">Parallelism makes the gap visible</a></li>
+      <li><a href="#from-pairwise-communication-to-shared-decisions">From pairwise communication to shared decisions</a></li>
+      <li><a href="#implementation-speed-and-decision-reach-are">Implementation speed and decision reach are different measures</a></li>
+      <li><a href="#where-mneme-fits">Where Mneme fits</a></li>
+      <li><a href="#brooks-s-law-did-not-disappear">Brooks's Law did not disappear</a></li>
+    </ol>
+  </nav>
+<h2 id="brooks-s-law-was-never-about">Brooks's Law was never about headcount</h2>
 <p>Brooks's Law comes from <em>The Mythical Man-Month</em>, published in 1975: "adding manpower to a late software project makes it later" (<a href="https://en.wikipedia.org/wiki/Brooks%27s_law" target="_blank" rel="noopener">Brooks's law, Wikipedia</a>). Brooks gave three reasons. New people need time to ramp up, and experienced people lose time teaching them. Communication overhead grows as the team grows. And some work cannot be divided usefully among more people.</p>
 <p>The durable insight is that software delivery capacity is not the sum of individual implementation capacity. There is a coordination system around the code, and it has its own costs.</p>
 
-<h2>AI changes one side of the equation</h2>
+<h2 id="ai-changes-one-side-of-the">AI changes one side of the equation</h2>
 <p>Coding agents remove much of what Brooks described as ramp-up. They do not need hiring or onboarding. They explore unfamiliar APIs, write boilerplate, generate tests, and run in parallel. A team of ten engineers can now run dozens of simultaneous agent sessions.</p>
 <p>It is tempting to conclude that Brooks's Law no longer applies. That conclusion is only half right. The ramp-up cost has fallen sharply. The coordination cost has not, and the number of contributors that need coordinating has gone up.</p>
 <p>This is the second half of a pair. <a href="/insights/conways-law-ai-coding-agents/">Conway's Law in the age of AI coding agents</a> covers where architecture comes from when agents write code; this piece covers what happens to coordination as agents multiply.</p>
 <p>To be clear about scope: Brooks was writing about human teams and schedule compression. His law does not predict how AI agents fail. It is useful as a starting point for a narrower question. What happens to coordination when the marginal contributor is an agent?</p>
 
-<h2>The arithmetic Brooks was pointing at</h2>
+<h2 id="the-arithmetic-brooks-was-pointing-at">The arithmetic Brooks was pointing at</h2>
 <p>Brooks's communication argument has a simple shape. Among n contributors who all need to coordinate with each other, there are n(n&minus;1)/2 possible pairs. Five people have ten pairs. Twenty have 190. The work grows linearly while the coordination paths grow roughly with the square.</p>
 <p>Human teams manage this with structure: team boundaries, interfaces, design reviews, tech leads, and shared conventions. Those mechanisms mostly work through people talking to people.</p>
 <p>Agents break that assumption in a specific way. An agent does not attend the design review, ask the tech lead, or remember last quarter's decision. Each session is a contributor that starts without the shared context the human coordination system was built to spread. Adding agents therefore adds contributors to the coordination problem without adding participants to the coordination mechanism.</p>
 
-<h2>Parallelism makes the gap visible</h2>
+<h2 id="parallelism-makes-the-gap-visible">Parallelism makes the gap visible</h2>
 <p>Consider one team running five agents at once: one on the API, one on a schema change, one on infrastructure, one on authentication, one on the frontend. Each finishes its own task successfully. Together they introduce two retry abstractions, a second way of reading configuration, a service call that crosses a boundary the team agreed to keep, and a new dependency the platform group had ruled out.</p>
 <p>Every individual output looks reasonable. The system still drifts. The individual agents were not wrong. What failed was coordination: no shared, authoritative answer to what had already been decided. The same pattern is analyzed from the distributed-systems side in <a href="/insights/coordination-governance-multi-agent-systems/">the next AI infrastructure layer is coordination governance</a>.</p>
 
-<h2>From pairwise communication to shared decisions</h2>
+<h2 id="from-pairwise-communication-to-shared-decisions">From pairwise communication to shared decisions</h2>
 <p>This is where the Brooks framing becomes practical. Pairwise communication is what grows with the square of contributors. A shared decision corpus does not. If every contributor, human or agent, reads the same authoritative decisions at the moment it changes code, coordination stops depending on who talked to whom. Each new agent adds one reader of the decisions, not n new conversations.</p>
 <p>That only works if the decisions are:</p>
 <ul>
@@ -379,13 +392,13 @@
   <li><strong>Traceable.</strong> When a change is blocked, the team needs to see which decision blocked it and why.</li>
 </ul>
 
-<h2>Implementation speed and decision reach are different measures</h2>
+<h2 id="implementation-speed-and-decision-reach-are">Implementation speed and decision reach are different measures</h2>
 <p>Most discussion of AI productivity measures implementation: lines, pull requests, tasks closed. Research tracking hundreds of thousands of developers has already found that more coding activity does not translate one-for-one into shipped releases, as covered in <a href="/insights/ai-throughput-is-not-engineering-throughput/">AI throughput is not engineering throughput</a>. The Brooks lens suggests one reason. Implementation capacity scaled. The reach of architectural decisions across contributors did not.</p>
 
-<h2>Where Mneme fits</h2>
+<h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme applies this idea to architectural decisions in a repository. Accepted decisions become scoped rules that return deterministic PASS, WARN, or FAIL verdicts against proposed changes, whichever agent or person proposed them. Its local MCP server, shipped in 0.9.0, lets an agent retrieve the decisions that apply to the paths it is working on and trace a decision's lineage. It is not a general coordination system, and it does not make every architectural judgment mechanical. It makes the decisions that can be shared and checked available to every contributor at once.</p>
 
-<h2>Brooks's Law did not disappear</h2>
+<h2 id="brooks-s-law-did-not-disappear">Brooks's Law did not disappear</h2>
 <p>Brooks identified a constraint on software development: coordination does not scale as easily as production. AI made production dramatically cheaper. That does not invalidate Brooks. It makes the coordination side of his argument the part that decides outcomes.</p>
 <p>The organizations that scale agentic development successfully may not be the ones with the most coding agents. They may be the ones that make architectural decisions easiest for every agent to discover, interpret, and obey.</p>
 

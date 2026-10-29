@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Supabase's State of Startups 2026 finds 61% of startups have more than half their codebase written by AI, and 40% sit at 76-100%. Review budgets do not scale with that." />
   <meta name="robots" content="index, follow" />
@@ -295,7 +294,19 @@
 
   <div class="article-body">
 
-    <h2>The number</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#the-number">The number</a></li>
+        <li><a href="#what-that-does-to-the-review">What that does to the review budget</a></li>
+        <li><a href="#the-correlation-worth-reading-carefully">The correlation worth reading carefully</a></li>
+        <li><a href="#the-transition-nobody-schedules">The transition nobody schedules</a></li>
+        <li><a href="#what-to-do-before-the-prototype">What to do before the prototype becomes production</a></li>
+        <li><a href="#the-question-the-data-actually-raises">The question the data actually raises</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="the-number">The number</h2>
     <p>Supabase's <a href="https://supabase.com/state-of-startups" target="_blank" rel="noopener">State of Startups 2026</a>, drawn from roughly 2,000 startup builders, reports that <strong>61% of startups now have more than half their codebase written by AI</strong>. Forty per cent put the figure at 76 to 100%. Only 2% report none at all.</p>
     <p>Read the distribution rather than the headline. The interesting group is not the 61%. It is the 40% for whom human-written code is now the minority case, the exception inside a codebase whose default author is a model.</p>
     <p>The broader developer population is moving the same way from a different starting point. JetBrains' <a href="https://devecosystem-2025.jetbrains.com/" target="_blank" rel="noopener">State of Developer Ecosystem 2025</a>, across 24,534 respondents, found 92% using at least one AI coding assistant, agent, or editor, and 85% using AI tools regularly. The same survey found 92% expressing some concern about AI in software development. Adoption and unease are running at identical rates.</p>
@@ -311,22 +322,22 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>What that does to the review budget</h2>
+<h2 id="what-that-does-to-the-review">What that does to the review budget</h2>
     <p>Every governance mechanism most teams rely on assumes a particular ratio: a human wrote it, another human checks it. Code review, architectural review, pairing, the informal correction where a reviewer says we do not do it that way here. All of them are priced in human attention per change.</p>
     <p>That pricing survives a 20% AI-written codebase. It does not survive 76%. The volume of changes rises while the number of people available to read them does not, and the gap does not close by trying harder. It is arithmetic.</p>
     <p>What gets dropped first is not correctness. Tests still run, CI still gates, obvious defects still get caught. What gets dropped is the slower judgement: does this belong here, does it match how we decided this system works, is this the third time someone has introduced this pattern. That judgement was never encoded anywhere. It lived in the reviewer.</p>
 
-    <h2>The correlation worth reading carefully</h2>
+    <h2 id="the-correlation-worth-reading-carefully">The correlation worth reading carefully</h2>
     <p>The report includes a finding that is easy to misuse. The more AI-generated a startup's codebase, the less likely it is to be monetising yet, and the more likely it is to name customer acquisition as its biggest challenge.</p>
     <p>That is a correlation, and the obvious causal reading is almost certainly wrong. Pre-revenue startups build prototypes fast because they are pre-revenue, not the other way around. A team validating an idea should generate aggressively and worry about structure later. The report itself notes that non-technical founders sit at the heavy end of the distribution, which fits the prototype explanation rather than a story about AI harming businesses.</p>
     <p>The useful version of the finding is narrower. A large share of majority-AI codebases are early, unvalidated, and were built to answer a market question rather than to be maintained. Some of those companies will find product-market fit. At that point the prototype becomes the production system, and nobody planned for it to be one.</p>
 
-    <h2>The transition nobody schedules</h2>
+    <h2 id="the-transition-nobody-schedules">The transition nobody schedules</h2>
     <p>There is no moment where a team decides the throwaway codebase is now permanent. It happens when a customer depends on it, and it is recognised months later.</p>
     <p>By then the architecture is whatever accumulated. Not chosen, not reviewed, not documented, and not obviously wrong, because every individual change worked. This is <a href="/concepts/architectural-drift/">drift</a> arriving without anyone having drifted from anything, because there was never an explicit decision to depart from.</p>
     <p>Gartner's framing of the consequence is the enterprise-scale version of the same problem: architectural technical debt is <a href="/insights/gartner-architectural-technical-debt-ai-coding-agents/">expected to reach 80% of all technical debt by 2027</a>. Startups get there faster because they had less structure to begin with and generated more of the codebase per engineer.</p>
 
-    <h2>What to do before the prototype becomes production</h2>
+    <h2 id="what-to-do-before-the-prototype">What to do before the prototype becomes production</h2>
     <p>Not much, and early. The failure mode is a seed-stage team adopting enterprise governance, which is its own kind of waste.</p>
     <ul>
       <li><strong>Write down the handful of decisions that would be expensive to reverse.</strong> Not the whole architecture. The three or four choices about persistence, boundaries and integration that a rewrite would be needed to undo.</li>
@@ -335,7 +346,7 @@
       <li><strong>Leave everything else alone.</strong> Most of a young codebase should stay negotiable. The point is to protect the decisions you would have to pay to unwind, not to constrain the ones you are still exploring.</li>
     </ul>
 
-    <h2>The question the data actually raises</h2>
+    <h2 id="the-question-the-data-actually-raises">The question the data actually raises</h2>
     <p>Not whether startups should generate most of their code with AI. That question is settled by the distribution: they already do, and it is working well enough that only 2% abstain.</p>
     <p>The question is what happens to the 40% when the thing they built quickly turns out to matter. Generation is no longer the constraint on how fast a startup can build. Whether anyone can still say why the system looks the way it does is becoming the one that binds.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="As tools like Google Antigravity introduce manager views for supervising many agents across workspaces, the agent manager becomes a control plane for software development. But a control plane without policy enforcement is only visibility." />
   <meta name="robots" content="index, follow" />
@@ -183,7 +182,19 @@
 
   <div class="article-body">
 
-    <h2>Developer tools are becoming orchestration systems</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#developer-tools-are-becoming-orchestration-systems">Developer tools are becoming orchestration systems</a></li>
+        <li><a href="#manager-views-create-a-new-operating">Manager views create a new operating model</a></li>
+        <li><a href="#multi-agent-work-needs-policy-not">Multi-agent work needs policy, not just visibility</a></li>
+        <li><a href="#governance-must-travel-across-workspaces">Governance must travel across workspaces</a></li>
+        <li><a href="#architectural-decisions-need-to-become-executable">Architectural decisions need to become executable controls</a></li>
+        <li><a href="#mneme-framing">Mneme framing</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="developer-tools-are-becoming-orchestration-systems">Developer tools are becoming orchestration systems</h2>
     <p>For most of software engineering history, the developer tool was a text editor with helpers around it &mdash; intellisense, debuggers, linters, source control. The unit of attention was the line, the file, the buffer.</p>
     <p>Agent-first IDEs change that. Antigravity&rsquo;s Agent Manager / Mission Control puts the developer one level up: looking at a roster of agents, each working on its own task in its own workspace, each producing its own plan and artifact trail. The unit of attention is the agent, not the file.</p>
     <p>That is an orchestration system. The label has not caught up, but the shape has.</p>
@@ -197,11 +208,11 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Manager views create a new operating model</h2>
+<h2 id="manager-views-create-a-new-operating">Manager views create a new operating model</h2>
     <p>When the dashboard shows ten agents working on five tasks in four workspaces, the developer&rsquo;s job is closer to a team lead than to a typist. Decisions look like: which agent to escalate, which artifact to inspect, which task to redirect, which workspace to merge.</p>
     <p>That is genuinely useful. It is also new infrastructure that has not yet absorbed the lessons of every other operations dashboard humanity has built &mdash; namely, that visibility without policy is incomplete.</p>
 
-    <h2>Multi-agent work needs policy, not just visibility</h2>
+    <h2 id="multi-agent-work-needs-policy-not">Multi-agent work needs policy, not just visibility</h2>
     <p>A control plane that only shows what is happening is observability. A control plane that constrains what is allowed to happen is policy. The two are not the same thing.</p>
     <ul>
       <li><strong>Observability</strong> &mdash; you can see Agent #3 is about to merge a change that introduces a forbidden dependency.</li>
@@ -210,15 +221,15 @@
     <p>Both are valuable. Only one is sufficient for autonomous execution at scale.</p>
     <div class="callout"><p><strong>A control plane without policy is a dashboard.</strong> A dashboard can show you a problem. It cannot prevent the problem.</p></div>
 
-    <h2>Governance must travel across workspaces</h2>
+    <h2 id="governance-must-travel-across-workspaces">Governance must travel across workspaces</h2>
     <p>The manager view in Antigravity shows agents working across multiple workspaces. That distribution is the point &mdash; parallelism. But it is also the failure mode: each workspace is a potential surface where an architectural decision in one place is not enforced in another.</p>
     <p>The governance layer underneath the manager view has to be the same across all of them. <a href="/concepts/governance-propagation/">Governance propagation</a> is what makes that possible &mdash; the same compiled constraints fan out to every agent in every workspace, so the manager view is showing work that was already evaluated against the same rule set.</p>
 
-    <h2>Architectural decisions need to become executable controls</h2>
+    <h2 id="architectural-decisions-need-to-become-executable">Architectural decisions need to become executable controls</h2>
     <p>The Agent Manager surfaces what agents are doing. The governance layer underneath should surface, alongside each task, the architectural decisions that apply &mdash; and the verdict from checking the agent&rsquo;s work against them.</p>
     <p>That turns the manager view into a real control plane: not just &ldquo;here is what the agents did,&rdquo; but &ldquo;here is what they did, and here is whether the system approves of what they did.&rdquo;</p>
 
-    <h2>Mneme framing</h2>
+    <h2 id="mneme-framing">Mneme framing</h2>
     <p>Mneme is not trying to be the agent manager. It is the governance layer that agent managers should call before and during execution. The Agent Manager orchestrates; Mneme constrains; together they form a control plane that does both jobs.</p>
     <div class="callout"><p><strong>Manager views without policy are dashboards.</strong> Manager views with policy are control planes. The shift from one to the other is where the next generation of developer tools wins.</p></div>
 

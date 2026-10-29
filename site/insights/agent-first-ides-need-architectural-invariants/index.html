@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Agent-first IDEs increase development throughput by letting autonomous agents act across the repo. That makes architectural invariants more important, not less. Delegated tasks need shared constraints — invariants need to be encoded, retrieved, and enforced." />
   <meta name="robots" content="index, follow" />
@@ -183,7 +182,20 @@
 
   <div class="article-body">
 
-    <h2>Agent-first IDEs change the unit of work</h2>
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#agent-first-ides-change-the-unit">Agent-first IDEs change the unit of work</a></li>
+        <li><a href="#delegated-tasks-need-shared-constraints">Delegated tasks need shared constraints</a></li>
+        <li><a href="#natural-language-instructions-decay-across-long">Natural language instructions decay across long-running workflows</a></li>
+        <li><a href="#review-catches-symptoms-after-generation">Review catches symptoms after generation</a></li>
+        <li><a href="#invariants-need-to-be-encoded-retrieved">Invariants need to be encoded, retrieved, and enforced</a></li>
+        <li><a href="#mneme-turns-adrs-into-executable-governance">Mneme turns ADRs into executable governance context</a></li>
+        <li><a href="#what-this-looks-like-in-practice">What this looks like in practice</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="agent-first-ides-change-the-unit">Agent-first IDEs change the unit of work</h2>
     <p>The classic IDE assumed the unit of work was a line, a function, a file. Tooling helped the developer write each one faster. Agent-first IDEs &mdash; Google Antigravity, Cursor&rsquo;s agent modes, Claude Code in autonomous mode &mdash; assume the unit of work is a <em>task</em>. The developer specifies an outcome; the agent does the multi-step work to achieve it.</p>
     <p>That is a categorical shift in what the human is doing inside the editor. Less typing, more delegating.</p>
 
@@ -196,20 +208,20 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Delegated tasks need shared constraints</h2>
+<h2 id="delegated-tasks-need-shared-constraints">Delegated tasks need shared constraints</h2>
     <p>When a human writes the code, the architecture lives in their head. They remember the ADR, they know which dependency was deprecated, they recognize the pattern as a copy of one the team has explicitly retired. The architecture is enforced by human judgment, applied per line.</p>
     <p>When an agent does the work, the architecture has to live somewhere the agent can access it &mdash; and somewhere the system can enforce it without depending on the human watching each step. Delegation needs an external constraint substrate.</p>
     <div class="callout"><p><strong>The agent does not need to be told the rule.</strong> The agent needs to be unable to act outside it.</p></div>
 
-    <h2>Natural language instructions decay across long-running workflows</h2>
+    <h2 id="natural-language-instructions-decay-across-long">Natural language instructions decay across long-running workflows</h2>
     <p>Rules embedded in system prompts are probabilistic. They work for the first turn, often work for the next few, and decay as the context grows. Long-running agent workflows in agent-first IDEs &mdash; multi-hour tasks, multi-file edits, multi-tool sessions &mdash; are exactly the regime where natural-language instructions stop being reliable.</p>
     <p>The architecture cannot be a paragraph the agent might or might not remember. It has to be a contract the system enforces.</p>
 
-    <h2>Review catches symptoms after generation</h2>
+    <h2 id="review-catches-symptoms-after-generation">Review catches symptoms after generation</h2>
     <p>PR review catches what slipped through. It does not prevent the agent from making the choice. At human pace, that asymmetry was tolerable &mdash; reviewers had time to read carefully and push back. At agent pace, review queues fill faster than they can be processed, and reviewers shift from quality gates to triage queues.</p>
     <p>Catching architectural violations downstream of execution is incident response, not infrastructure.</p>
 
-    <h2>Invariants need to be encoded, retrieved, and enforced</h2>
+    <h2 id="invariants-need-to-be-encoded-retrieved">Invariants need to be encoded, retrieved, and enforced</h2>
     <p>The right shape is three composing pieces:</p>
     <ul>
       <li><strong>Encoded</strong> &mdash; the rule exists as a machine-evaluable artifact, not a paragraph. ADRs compiled into constraint records.</li>
@@ -218,12 +230,12 @@
     </ul>
     <p>That is what makes an invariant an invariant: it holds. Not most of the time. Not when the agent remembers. Always.</p>
 
-    <h2>Mneme turns ADRs into executable governance context</h2>
+    <h2 id="mneme-turns-adrs-into-executable-governance">Mneme turns ADRs into executable governance context</h2>
     <p>Mneme is built around exactly this three-step pattern. The ADR corpus is compiled into a deterministic governance layer. Retrieval is rule-based and reproducible. Enforcement runs at hook, pre-commit, and CI &mdash; same compiled constraints across whichever agent or IDE produced the change.</p>
     <p>For agent-first IDEs specifically, this matters because the agent is no longer a tool inside the editor &mdash; it is the active participant. The architecture has to be a thing the agent operates inside, not a thing the developer holds in their head.</p>
     <div class="callout"><p><strong>Agent-first IDEs increase autonomous execution.</strong> Architectural governance keeps that execution aligned.</p></div>
 
-    <h2>What this looks like in practice</h2>
+    <h2 id="what-this-looks-like-in-practice">What this looks like in practice</h2>
     <p>Concretely, with invariants in place:</p>
     <ul>
       <li>The agent receives the task, plus the architectural decisions that apply to the surfaces it&rsquo;s touching.</li>

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Prompt engineering vs harness engineering: how AI systems engineering moved from optimizing inputs to designing the agent runtime systems that wrap the model." />
   <meta name="robots" content="index, follow" />
@@ -323,13 +322,25 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#why-prompt-engineering-exploded">Why prompt engineering exploded</a></li>
+        <li><a href="#why-it-became-insufficient">Why it became insufficient</a></li>
+        <li><a href="#prompt-engineering-vs-harness-engineering-from">Prompt engineering vs harness engineering: from inputs to systems</a></li>
+        <li><a href="#systems-reliability-is-not-architectural-reliability">Systems reliability is not architectural reliability</a></li>
+        <li><a href="#the-governance-implication">The governance implication</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
+
 <p>For a few years, the most valuable skill in applied AI was knowing how to phrase a request. Teams competed on prompt templates. The model was the product, and the input was the surface you tuned.</p>
 
 <p>That framing has quietly stopped describing what people build. Production AI is no longer a single interaction. It is a loop: the model proposes, a tool runs, state changes, the model proposes again, something retries, a sub-agent takes over, the run continues across hours and sessions. Once that is the shape of the work, the input is no longer the thing you engineer. The system is.</p>
 
 <p><strong>Harness engineering</strong> is the emerging name for that system. It is an emerging term in the AI engineering community, gaining traction through 2026, for the discipline of designing the systems, constraints, feedback loops, and observability that wrap around an AI agent to make it reliable in production. The vocabulary is real and converging across independent sources, but it is not yet canonical &mdash; different frameworks still draw the boundaries differently. What is clear is the direction: the center of gravity moved from the input to the runtime. In short: prompt engineering optimizes a single input to the model; harness engineering designs the agent runtime system that wraps the model.</p>
 
-<h2>Why prompt engineering exploded</h2>
+<h2 id="why-prompt-engineering-exploded">Why prompt engineering exploded</h2>
 
 <p>Prompt engineering exploded because it worked. When the entire interaction was one call &mdash; one input, one output &mdash; the input was the only lever you had, and pulling it produced real, measurable gains.</p>
 
@@ -353,7 +364,7 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why it became insufficient</h2>
+<h2 id="why-it-became-insufficient">Why it became insufficient</h2>
 
 <p>The limit is structural, not a matter of prompt quality. Prompt engineering optimizes one input to one call. Production AI is no longer one call.</p>
 
@@ -365,7 +376,7 @@
   <p><strong>The unit of engineering changed.</strong> Prompt engineering optimizes an input to a call. Harness engineering designs the system the calls run inside. When production AI stopped being a single interaction, the second became the discipline that determines whether the first even matters.</p>
 </div>
 
-<h2>Prompt engineering vs harness engineering: from inputs to systems</h2>
+<h2 id="prompt-engineering-vs-harness-engineering-from">Prompt engineering vs harness engineering: from inputs to systems</h2>
 
 <p>The new surface is not a longer prompt. It is a set of system concerns the input never touched. A harness is the layer around the model that runs the agent loop, and in practice it typically coordinates several of these:</p>
 
@@ -410,7 +421,7 @@
 
 <p>This is why harness engineering reads as a structural evolution rather than a trend. It follows a path the industry has walked before. Just as continuous integration and delivery went from a novel practice to taken-for-granted infrastructure &mdash; an automated integration-and-delivery feedback loop &mdash; and just as observability went from optional to expected as the way teams infer a system&rsquo;s internal state from its external outputs, harness engineering could become infrastructure on a similar trajectory. The parallel is one the AI community itself draws. It is not yet an accomplished fact; adoption is early. But the shape is familiar.</p>
 
-<h2>Systems reliability is not architectural reliability</h2>
+<h2 id="systems-reliability-is-not-architectural-reliability">Systems reliability is not architectural reliability</h2>
 
 <p>Here is where the analogy needs a sharp edge. Observability is a <em>foundation for</em> reliability, not reliability itself &mdash; it gives teams the visibility to preempt and resolve failures, but seeing a system is not the same as constraining it. The harness inherits the same boundary.</p>
 
@@ -424,7 +435,7 @@
 
 <p>This is the seam where the harness ends and another layer begins. For the full case that the harness is the runtime and not the rulebook, see the pillar, <a href="/insights/what-is-harness-engineering/">What Is Harness Engineering</a>. For why a reliable run still needs an independent check on its output, see the companion piece, <a href="/insights/harness-engineering-verification-layer/">Harness Engineering Needs a Verification Layer</a>.</p>
 
-<h2>The governance implication</h2>
+<h2 id="the-governance-implication">The governance implication</h2>
 
 <p>Pull the two reliabilities apart and the missing layer comes into focus. A system that is reliable but not governed still lacks the thing that decides what the agent is <em>allowed</em> to build &mdash; not what it can do, but what it must not.</p>
 

@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="A strangler migration works because only the adapter depends on the legacy system. Here is why agents break that guarantee, and how to stop them." />
   <meta name="robots" content="index, follow" />
@@ -379,20 +378,34 @@
 
 <div class="article-body">
 
-    <h2>The strangler pattern was designed for humans</h2>
+  <nav class="toc" aria-label="Table of contents">
+    <div class="toc-title">In this article</div>
+    <ol>
+      <li><a href="#the-strangler-pattern-was-designed-for">The strangler pattern was designed for humans</a></li>
+      <li><a href="#what-the-adapter-is-actually-protecting">What the adapter is actually protecting</a></li>
+      <li><a href="#why-this-fails-silently">Why this fails silently</a></li>
+      <li><a href="#what-has-to-be-encoded">What has to be encoded</a></li>
+      <li><a href="#enforcing-a-direction-not-a-location">Enforcing a direction, not a location</a></li>
+      <li><a href="#when-the-boundary-moves">When the boundary moves</a></li>
+      <li><a href="#conclusion">Conclusion</a></li>
+      <li><a href="#faq-heading">Frequently asked questions</a></li>
+    </ol>
+  </nav>
+
+    <h2 id="the-strangler-pattern-was-designed-for">The strangler pattern was designed for humans</h2>
     <p>A strangler-fig migration moves traffic from an old system to a new one gradually, one boundary at a time, so the whole system never has to stop working while it changes. A compatibility adapter sits at each boundary, translating between the two sides until the old side can be removed. It is a well-understood, low-risk pattern, and it was designed on the assumption that a person decides where the boundary sits and a person respects it.</p>
     <p>An AI coding agent does not automatically respect a boundary it cannot see. It sees files. If the adapter is well written, the files on the new side call it correctly. Nothing stops an agent from also reaching past it, straight into the legacy internals the adapter exists to shield, because from the agent's point of view that is just another function it can call.</p>
 
-    <h2>What the adapter is actually protecting</h2>
+    <h2 id="what-the-adapter-is-actually-protecting">What the adapter is actually protecting</h2>
     <p>The value of a strangler adapter is not the translation logic. It is the guarantee that only one thing depends on the legacy system: the adapter itself. That guarantee is what makes the eventual removal of the legacy system a bounded, predictable change. Remove the adapter, remove the legacy code behind it, done.</p>
     <p>Every additional path into the legacy internals breaks that guarantee. It does not break anything visible today. The build passes. The new feature works. But the legacy system now has two dependents instead of one, and the day someone tries to retire it, they find a call site nobody remembers adding.</p>
     <div class="callout"><p><strong>An agent has to be allowed to touch legacy code without creating a new dependency back into it.</strong> Those are different permissions, and most migrations only encode the first one.</p></div>
 
-    <h2>Why this fails silently</h2>
+    <h2 id="why-this-fails-silently">Why this fails silently</h2>
     <p>The failure mode here is not a crash or a test failure. It is an import. An agent adding a new feature to the modern side notices that the legacy module already has a function that does almost what it needs, and calls it directly instead of going through the adapter or extending it properly. Types check. Tests, if they exist for the new path, pass. Nothing in CI distinguishes this from a normal, healthy dependency.</p>
     <p>It compounds the way any unenforced convention compounds under AI-generated volume: the first bypass is not obviously wrong, so nothing stops it from becoming the example the next agent copies. A few migrations later, the "one adapter, one dependent" guarantee is fiction, and the team discovers this exactly when they try to delete the legacy system and cannot.</p>
 
-    <h2>What has to be encoded</h2>
+    <h2 id="what-has-to-be-encoded">What has to be encoded</h2>
     <p>Three rules, encoded as scoped decisions, cover most of what a strangler boundary needs:</p>
     <ul>
       <li><strong>New code does not import legacy internals directly.</strong> Only the adapter module is permitted to depend on the legacy package.</li>
@@ -414,15 +427,15 @@
     </table>
     </div>
 
-    <h2>Enforcing a direction, not a location</h2>
+    <h2 id="enforcing-a-direction-not-a-location">Enforcing a direction, not a location</h2>
     <p>What makes this different from an ordinary module boundary is that the constraint is about the direction of dependency, not just which files exist where. Legacy code calling new code, or new code being called by the adapter, is fine. New code reaching backward into legacy internals is the specific thing being prevented. A symmetric boundary rule, one that simply forbids the two trees from referring to each other at all, either blocks legitimate adapter traffic or misses the bypass it exists to catch.</p>
     <p>What resolves it is that the direction is already encoded in the literal being forbidden. An import statement naming the legacy package only ever appears on the calling side, so a rule that forbids that literal, scoped to the new-code tree with the adapter excluded, catches exactly the backward dependency and nothing else. No dependency-graph model is required, because the text of the import is the direction.</p>
 
-    <h2>When the boundary moves</h2>
+    <h2 id="when-the-boundary-moves">When the boundary moves</h2>
     <p>A strangler migration is not one boundary, it is a sequence of them, moving through the system over months. Each time a component finishes moving, the boundary shifts, and a decision that was correct yesterday can become the thing that should now be forbidden.</p>
     <p>This is where the migration states from the pillar article apply directly: the adapter's permission is transitional, not permanent, and it should be recorded with the condition under which it retires. A strangler adapter without a stated retirement condition is exactly the mechanism by which "temporary" becomes "load-bearing indefinitely."</p>
 
-    <h2>Conclusion</h2>
+    <h2 id="conclusion">Conclusion</h2>
     <p>A strangler-fig migration works because exactly one thing depends on the legacy system at any boundary. That guarantee is a dependency-direction rule, not a code-quality preference, and it is exactly the kind of rule an agent cannot infer from reading the files around it. Naming the adapter explicitly, forbidding new dependencies past it, and recording the exception as transitional is what keeps the pattern's core promise, that removal stays bounded, true for the length of the migration.</p>
 
   </div><!-- /.article-body -->

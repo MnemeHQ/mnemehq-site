@@ -8,7 +8,6 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="preload" href="/assets/fonts/Newsreader-400-600.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/insight-editorial.css">
   <meta name="description" content="Microsoft Execution Containers bring OS-enforced isolation and policy controls to AI agents on Windows. Runtime isolation is a real and necessary layer &mdash; and exactly why architectural governance becomes the layer above it." />
   <meta name="robots" content="index, follow" />
@@ -295,8 +294,20 @@
 
   <div class="article-body">
 
+    <nav class="toc" aria-label="Table of contents">
+      <div class="toc-title">In this article</div>
+      <ol>
+        <li><a href="#agents-are-becoming-a-first-class">Agents are becoming a first-class OS workload</a></li>
+        <li><a href="#why-agents-need-stronger-execution-boundaries">Why agents need stronger execution boundaries</a></li>
+        <li><a href="#what-execution-containers-actually-control">What execution containers actually control</a></li>
+        <li><a href="#runtime-isolation-is-not-architectural-governance">Runtime isolation is not architectural governance</a></li>
+        <li><a href="#where-architectural-governance-fits">Where architectural governance fits</a></li>
+        <li><a href="#faq-heading">Frequently asked questions</a></li>
+      </ol>
+    </nav>
 
-    <h2>Agents are becoming a first-class OS workload</h2>
+
+    <h2 id="agents-are-becoming-a-first-class">Agents are becoming a first-class OS workload</h2>
     <p>For most of the last two years, AI agents lived inside chat interfaces and IDE extensions. Microsoft Execution Containers, announced at Build 2026, signal a different phase: agents treated as workloads the operating system has to identify, isolate, and govern, the same way it treats processes and containers. <a href="https://blogs.windows.com/windowsdeveloper/2026/06/02/windows-platform-security-for-ai-agents/">Microsoft describes MXC</a> as an early-preview, policy-driven execution layer for agents across Windows and WSL, where developers declare what an agent may access and the OS enforces those boundaries at runtime &mdash; built on AppContainer isolation, capability-based access control, and integrity levels. GitHub Copilot CLI has already adopted its process isolation.</p>
     <p>The framing matters. When an operating-system vendor builds containment primitives specifically for agents, it is conceding that agents are now persistent actors on real machines &mdash; not transient assistants generating text for a human to paste.</p>
     <div class="callout"><p><strong>This is a strong signal, not a product you need to chase.</strong> The lasting point is structural: governing what an agent can touch has moved into the runtime, because the agent now acts in the runtime.</p></div>
@@ -310,15 +321,15 @@
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
   </div>
 </aside>
-<h2>Why agents need stronger execution boundaries</h2>
+<h2 id="why-agents-need-stronger-execution-boundaries">Why agents need stronger execution boundaries</h2>
     <p>The shift from assistant to actor changes the risk surface. A traditional copilot suggests code or answers a question; a human decides what to do with it. An autonomous agent executes commands, modifies files, uses tools, accesses networks, and operates continuously. The danger is no longer a bad suggestion &mdash; it is an action taken inside a real environment before anyone reviews it.</p>
     <p>OS-enforced containment is the right response to that specific danger. If an agent should not touch the network, the system can guarantee it cannot, regardless of what the model decides. That is a genuine advance over hoping a prompt holds.</p>
 
-    <h2>What execution containers actually control</h2>
+    <h2 id="what-execution-containers-actually-control">What execution containers actually control</h2>
     <p>Runtime isolation governs the <em>blast radius</em> of an agent: which files it can read or write, which networks it can reach, which resources it can consume. These are containment questions, and they are answered at the operating-system boundary. Declare the permissions; the OS enforces them.</p>
     <p>Containment answers &ldquo;what is this agent physically able to touch?&rdquo; It is a vital question. But it is a different question from &ldquo;is what this agent is building consistent with how this system is supposed to be built?&rdquo;</p>
 
-    <h2>Runtime isolation is not architectural governance</h2>
+    <h2 id="runtime-isolation-is-not-architectural-governance">Runtime isolation is not architectural governance</h2>
     <p>An agent can operate entirely within its permitted blast radius and still introduce a duplicate abstraction, bypass the repository pattern, violate a dependency policy, or break an architectural invariant. The container allowed the file write &mdash; correctly, it was an allowed file. What the container cannot evaluate is whether the <em>content</em> of that change respects the architecture.</p>
     <p>This is the distinction between <a href="/insights/runtime-verification-is-not-architectural-verification/">runtime verification and architectural verification</a>. Runtime isolation protects a single agent run from doing forbidden things to the machine. Architectural governance protects the system, over many runs, from drifting away from its intended design.</p>
     <p>Microsoft is candid that MXC is early: it cautions that current profiles should not yet be treated as security boundaries, with some policies still permissive and stronger isolation modes on the roadmap. That caveat cuts both ways. Even once the containment hardens, it will answer the blast-radius question, not the architectural one &mdash; so a team that leans on runtime isolation alone is under-governed twice over.</p>
@@ -336,7 +347,7 @@
     </table>
     </div>
 
-    <h2>Where architectural governance fits</h2>
+    <h2 id="where-architectural-governance-fits">Where architectural governance fits</h2>
     <p>The two layers compose. Runtime containment decides whether an action is physically permitted; architectural governance decides whether the change is consistent with the decisions the team has made. A complete agent stack needs both: the operating system enforcing the blast radius, and a governance layer enforcing the architecture &mdash; before commit, before pull request, and in CI.</p>
     <p>Microsoft building MXC is the clearest possible evidence that governing agents at the moment they act is now mainstream. The next layer up &mdash; governing <em>what they build</em>, not just <em>what they can reach</em> &mdash; is the part the operating system was never going to provide.</p>
     <div class="callout"><p><strong>OS-enforced containment makes agents safe to run.</strong> Architectural governance makes what they produce safe to keep.</p></div>
