@@ -1,0 +1,191 @@
+/* insight-editorial.css: editorial reading layer for insight articles.
+ *
+ * Linked from every /insights/<slug>/ page after base.css. Rules target
+ * only the running text (direct children of .article-body) so the custom
+ * components inside articles (callouts, tables, diagrams, CTA bands) keep
+ * their own styles. Selectors start with .article-wrap so they outrank the
+ * per-page inline <style> without !important.
+ *
+ * Type roles: Newsreader carries the reading text, Instrument Serif the
+ * headline and section heads, Inter the furniture (components, FAQ, CTAs),
+ * DM Mono the metadata.
+ */
+
+/* Newsreader (SIL OFL, licenses/Newsreader-OFL.txt), Latin subset. Declared
+   here rather than in fonts.css because only insight articles use it. */
+@font-face {
+  font-family: 'Newsreader';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/assets/fonts/Newsreader-400-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Newsreader';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/Newsreader-400-italic.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --read: #d6d6de;
+  --read-soft: #b4b4c2;
+  --read-size: 1.1875rem;
+  --read-leading: 1.62;
+}
+
+/* Full-bleed article hero uses 100vw, which includes the scrollbar.
+   clip (not hidden) keeps the sticky nav working. */
+body { overflow-x: clip; }
+
+/* ── Headline: the one loud element on the page ─────────────────────── */
+.article-wrap .article-header h1 {
+  font-size: clamp(2.3rem, 5.6vw, 3.75rem);
+  line-height: 1.04;
+  letter-spacing: -0.022em;
+  margin-bottom: 1.6rem;
+  text-wrap: balance;
+}
+
+/* ── Standfirst ─────────────────────────────────────────────────────── */
+.article-wrap .article-lede {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.375rem;
+  line-height: 1.5;
+  color: var(--read-soft);
+  border-left: 0;
+  padding-left: 0;
+  max-width: 36em;
+}
+
+/* ── Running text ───────────────────────────────────────────────────── */
+.article-wrap .article-body > p:not([class]),
+.article-wrap .article-body > ul:not([class]),
+.article-wrap .article-body > ol:not([class]) {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: var(--read-size);
+  line-height: var(--read-leading);
+  color: var(--read);
+}
+.article-wrap .article-body > p:not([class]) { margin: 0 0 1.35rem; }
+.article-wrap .article-body > p:not([class]) strong,
+.article-wrap .article-body > ul:not([class]) strong,
+.article-wrap .article-body > ol:not([class]) strong { color: var(--text); font-weight: 600; }
+
+.article-wrap .article-body > p:not([class]) a,
+.article-wrap .article-body > ul:not([class]) a,
+.article-wrap .article-body > ol:not([class]) a {
+  color: var(--text);
+  border-bottom: 0;
+  text-decoration: underline;
+  text-decoration-color: rgba(139, 224, 200, 0.55);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 0.15s, color 0.15s;
+}
+.article-wrap .article-body > p:not([class]) a:hover,
+.article-wrap .article-body > ul:not([class]) a:hover,
+.article-wrap .article-body > ol:not([class]) a:hover { color: #8be0c8; text-decoration-color: #8be0c8; }
+
+.article-wrap .article-body > p:not([class]) code,
+.article-wrap .article-body > ul:not([class]) code,
+.article-wrap .article-body > ol:not([class]) code { font-size: 0.82em; }
+
+/* ── Section heads ──────────────────────────────────────────────────── */
+.article-wrap .article-body > h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.75rem, 3.4vw, 2.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  color: var(--text);
+  margin: 3.75rem 0 1.1rem;
+}
+.article-wrap .article-body > h2:first-child { margin-top: 0; }
+.article-wrap .article-body > h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+  margin: 2.4rem 0 0.6rem;
+}
+
+/* ── Lists ──────────────────────────────────────────────────────────── */
+.article-wrap .article-body > ul:not([class]),
+.article-wrap .article-body > ol:not([class]) { margin: 0 0 1.5rem; padding-left: 1.6em; }
+.article-wrap .article-body > ul:not([class]) > li,
+.article-wrap .article-body > ol:not([class]) > li { margin-bottom: 0.65rem; padding-left: 0.35em; }
+.article-wrap .article-body > ul:not([class]) { list-style-type: '\2013'; }
+.article-wrap .article-body > ul:not([class]) > li::marker { color: var(--quiet); }
+.article-wrap .article-body > ol:not([class]) > li::marker {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.15em;
+  color: var(--quiet);
+}
+
+/* ── Pull quotes: display italic, for a line lifted from the article ── */
+.article-wrap .article-body > .pull-quote,
+.article-wrap .article-body > .pullquote {
+  margin: 2.75rem 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.45rem, 2.8vw, 1.7rem);
+  line-height: 1.22;
+  letter-spacing: -0.008em;
+  color: var(--text);
+  max-width: 30em;
+}
+.article-wrap .article-body > .pull-quote::before,
+.article-wrap .article-body > .pullquote::before {
+  content: '';
+  display: block;
+  width: 2.5rem;
+  height: 1px;
+  margin-bottom: 1.1rem;
+  background: var(--quiet);
+}
+.article-wrap .article-body > .pull-quote :is(p, em, strong),
+.article-wrap .article-body > .pullquote :is(p, em, strong) { margin: 0; color: inherit; font: inherit; }
+
+/* ── Quotations: a passage from a source, set at reading scale ──────── */
+.article-wrap .article-body > blockquote:not([class]) {
+  margin: 2.25rem 0;
+  padding: 0 0 0 1.4rem;
+  border: 0;
+  border-left: 1px solid var(--border2);
+  border-radius: 0;
+  background: none;
+  font-family: 'Newsreader', Georgia, serif;
+  font-style: italic;
+  font-size: 1.25rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.article-wrap .article-body > blockquote:not([class]) :is(p, em) { margin: 0 0 0.9rem; color: inherit; font: inherit; }
+.article-wrap .article-body > blockquote:not([class]) :is(p, em):last-child { margin-bottom: 0; }
+.article-wrap .article-body > blockquote :is(cite, footer) {
+  display: block;
+  margin-top: 0.75rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-style: normal;
+  color: var(--quiet);
+}
+
+/* ── Related panel: sit flush with its label ────────────────────────── */
+.related-panel .related-list { margin: 0; padding: 0; }
+
+@media (max-width: 640px) {
+  :root { --read-size: 1.0625rem; --read-leading: 1.6; }
+  .article-wrap .article-body > blockquote:not([class]) { font-size: 1.125rem; padding-left: 1.1rem; }
+  .article-wrap .article-lede { font-size: 1.2rem; }
+  .article-wrap .article-body > h2 { margin-top: 3rem; }
+}
