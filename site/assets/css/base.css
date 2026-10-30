@@ -543,3 +543,18 @@ body .section h2, body .cta-footer h2, body .cta-text h2 {
   body .article-body h2, body .prose h2, body .prose-section h2,
   body .doc-body h2, body .body h2, body .wrap h2, body .for-section h2 { font-size: 1.55rem; line-height: 1.18; }
 }
+
+/* -- Subheads: Inter semibold, one clear step above body text -------- */
+/* Direct children only, so headings inside CTA boxes and cards keep
+   their own style. A divider rule (how-to steps) is dropped when the H3
+   opens its section straight under the H2. */
+body .article-body > h3, body .prose > h3, body .prose-section > h3,
+body .doc-body > h3, body .body > h3, body .wrap > h3 {
+  font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.1rem;
+  line-height: 1.35; letter-spacing: -0.01em; text-transform: none;
+  margin-top: 2.25rem; margin-bottom: 0.5rem;
+}
+body .article-body > h2 + h3, body .prose > h2 + h3, body .prose-section > h2 + h3,
+body .doc-body > h2 + h3, body .body > h2 + h3, body .wrap > h2 + h3 {
+  margin-top: 1.1rem; padding-top: 0; border-top: 0;
+}
