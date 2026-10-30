@@ -42,6 +42,7 @@ from app.services.p12_adapter import (
 )
 from app.services.markdown_discovery import discover_architecture_statements
 from app.services.audit_service import audit_service
+from app.models.protection_audit import UnclassifiedADRFile
 from app.services.mneme_adapter import MnemeAdapter
 from app.services.loose_adr_parser import find_loose_adrs
 from app.services.safe_extract import (
@@ -257,7 +258,16 @@ class AuditPersistenceService:
             
             # Find loose ADRs
             loose_adrs = find_loose_adrs(repo_path)
-            
+
+            # ADR files core could not import are unclassified unless the
+            # loose-ADR channel picked them up (e.g. Nygard or MADR files).
+            loose_paths = {a.source_path.replace("\\", "/") for a in loose_adrs}
+            unclassified_adr_files = [
+                UnclassifiedADRFile(path=s.path, reason=s.reason, detail=s.detail)
+                for s in mneme_adapter.skipped_adrs
+                if s.path not in loose_paths
+            ]
+
             # Find agent instructions and config files
             agent_instructions = []
             config_files = []
@@ -315,6 +325,7 @@ class AuditPersistenceService:
                 mneme_version=version("mneme-hq"),
                 decisions_inputs=p12_inputs,
                 source_files=source_file_paths,
+                unclassified_adr_files=unclassified_adr_files,
             )
         finally:
             # Cleanup temp directory if we created one

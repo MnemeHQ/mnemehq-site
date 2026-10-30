@@ -160,6 +160,25 @@ async def test_zip_contract_has_honest_provenance(workspace):
 
 
 @pytest.mark.asyncio
+async def test_unparseable_adr_does_not_fail_the_http_audit(workspace):
+    client, _, _ = workspace
+    archive = io.BytesIO()
+    with zipfile.ZipFile(archive, "w") as zipped:
+        zipped.writestr("docs/adr/ADR-001-database.md",
+                        "# ADR-001: Database\n\n## Decision\nWe will use PostgreSQL.\n")
+        zipped.writestr("docs/adr/ADR-002-broken.md",
+                        "---\nid: ADR-002\nstatus: [accepted\n---\n\n## Decision\nUse Redis.\n")
+    response = await client.post("/api/v1/audit", files={"zip_file": ("adrs.zip", archive.getvalue(), "application/zip")})
+    assert response.status_code == 201, response.text
+    result = response.json()
+    assert result["schema"] == "mneme.audit/v1"
+    assert any(d["source"]["file"] == "docs/adr/ADR-001-database.md" for d in result["decisions"])
+    assert [(f["path"], f["reason"]) for f in result["unclassified_adr_files"]] == [
+        ("docs/adr/ADR-002-broken.md", "malformed_yaml"),
+    ]
+
+
+@pytest.mark.asyncio
 async def test_real_zip_pipeline_provides_a_concrete_ready_guardrail(workspace):
     client, _, _ = workspace
     fixture = Path(__file__).parents[3] / "tests/fixtures/guardrail-ready/AGENTS.md"
