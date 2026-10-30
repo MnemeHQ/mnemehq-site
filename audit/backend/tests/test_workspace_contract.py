@@ -133,9 +133,11 @@ async def test_exact_workspace_http_journey(workspace):
 
 
 @pytest.mark.asyncio
-async def test_json_project_contract_and_rejected_server_paths(workspace):
+async def test_json_project_contract_and_rejected_server_paths(workspace, monkeypatch):
     client, _, _ = workspace
-    response = await client.post("/api/v1/projects", json={
+    # Creating a project directly is an operator action.
+    monkeypatch.setenv("MNEME_AUDIT_OPERATOR_TOKEN", "test-operator-token")
+    response = await client.post("/api/v1/projects", headers={"Authorization": "Bearer test-operator-token"}, json={
         "name": "Contract test", "slug": "contract", "source_type": "github",
         "source_locator": "https://github.com/example/contract-fixture", "default_ref": None})
     assert response.status_code == 201, response.text

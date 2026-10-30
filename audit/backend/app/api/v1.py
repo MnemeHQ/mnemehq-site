@@ -34,6 +34,7 @@ from app.services.audit_persistence import AuditPersistenceService
 from app.services.comparison import comparison_engine, AuditComparison
 from app.core.lifecycle import LifecycleTransitionError
 from app.core.config import settings
+from app.core.operator_auth import require_operator
 from app.models.workspace import ProjectCreate, ProjectAuditRequest
 from app.api.audit import validate_github_url
 
@@ -64,7 +65,7 @@ def get_persistence_service(session: AsyncSession = Depends(get_db)) -> AuditPer
 
 # --- Projects ---
 
-@router.post("/projects", status_code=status.HTTP_201_CREATED)
+@router.post("/projects", status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_operator)])
 async def create_project(
     request: ProjectCreate,
     service: AuditPersistenceService = Depends(get_persistence_service),
@@ -134,7 +135,7 @@ async def get_project(
     }
 
 
-@router.get("/projects")
+@router.get("/projects", dependencies=[Depends(require_operator)])
 async def list_projects(
     lifecycle: Optional[str] = None,
     limit: int = 50,
@@ -158,7 +159,7 @@ async def list_projects(
     ]
 
 
-@router.patch("/projects/{project_id}")
+@router.patch("/projects/{project_id}", dependencies=[Depends(require_operator)])
 async def update_project(
     project_id: UUID,
     name: Optional[str] = None,
@@ -280,7 +281,7 @@ async def get_audit(
     }
 
 
-@router.get("/projects/{project_id}/audits")
+@router.get("/projects/{project_id}/audits", dependencies=[Depends(require_operator)])
 async def list_project_audits(
     project_id: UUID,
     limit: int = 50,
@@ -359,7 +360,7 @@ async def compare_audits(
 
 # --- Contacts (CRM-lite) ---
 
-@router.post("/contacts", status_code=status.HTTP_201_CREATED)
+@router.post("/contacts", status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_operator)])
 async def create_contact(
     email: Optional[str] = None,
     name: Optional[str] = None,
@@ -374,7 +375,7 @@ async def create_contact(
     return {"id": str(contact.id), "email": contact.email, "name": contact.name}
 
 
-@router.post("/projects/{project_id}/contacts", status_code=status.HTTP_201_CREATED)
+@router.post("/projects/{project_id}/contacts", status_code=status.HTTP_201_CREATED, dependencies=[Depends(require_operator)])
 async def add_contact_to_project(
     project_id: UUID,
     contact_id: UUID,
@@ -400,7 +401,7 @@ async def add_contact_to_project(
     return {"project_id": str(pc.project_id), "contact_id": str(pc.contact_id), "relationship": pc.relationship.value}
 
 
-@router.get("/projects/{project_id}/contacts")
+@router.get("/projects/{project_id}/contacts", dependencies=[Depends(require_operator)])
 async def list_project_contacts(
     project_id: UUID,
     service: AuditPersistenceService = Depends(get_persistence_service),
