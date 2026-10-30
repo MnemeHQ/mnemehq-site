@@ -426,7 +426,7 @@
   <div class="page-tag">Trust</div>
   <h1>How Mneme handles your repository data</h1>
   <p class="page-sub">The Mneme Architecture Audit analyses repository material to identify which documented architectural decisions are currently protected, potentially protectable, require additional modelling, or remain guidance. This page explains what data the Audit receives, where it goes, what is retained, and how it is deleted.</p>
-  <p class="last-updated">Version 1 &middot; Last updated: 10 September 2026 &middot; Describes the hosted Audit at mnemehq.com</p>
+  <p class="last-updated">Version 2 &middot; Last updated: 30 October 2026 &middot; Describes the hosted Audit and the ADR checker at mnemehq.com</p>
 
   <div class="prose">
 
@@ -498,6 +498,17 @@
     <p>This is a code-inspection statement, not a runtime audit. The logging framework writes exception traces, and those traces can contain repository paths or filenames when processing fails. A runtime log audit and, where needed, log sanitisation are P0 engineering tasks on the trust track; until they are complete, treat this section as pending verification.</p>
     <p>If you identify a case where repository content reaches Mneme's logs, report it — we treat that as a security defect.</p>
 
+    <h2 id="checker-tools">Checker tools</h2>
+    <p>The <a href="/tools/adr-checker/">ADR checker</a> runs one pasted architecture decision record through the Audit's classification engine on the same Cloud Run service. It differs from the Audit in what it keeps:</p>
+    <ul>
+      <li><strong>Input:</strong> the pasted text only, up to 64&nbsp;KB. No file name, repository URL or archive is accepted.</li>
+      <li><strong>Processing:</strong> the server writes the text to a temporary directory, classifies it, and deletes the directory when the check finishes, pass or fail.</li>
+      <li><strong>Retention:</strong> none. The checker creates no project or audit record and writes nothing to the database. The endpoint has no route that lists or returns earlier checks.</li>
+      <li><strong>Logs:</strong> the application's log line for a check records its size range, status and duration. When a check fails, only the error type is logged, without a trace. Cloud Run's standard request logs (including time, URL, status, latency, IP address and user agent) apply as for every request. This is a code-inspection statement: see the status table below.</li>
+      <li><strong>Rate limit:</strong> checks are limited per client and in total, in memory on each instance, to limit bursts on the service the Audit shares.</li>
+      <li><strong>Analytics:</strong> the page sends aggregate counts to Google Analytics, never the pasted text, a statement or a rule.</li>
+    </ul>
+
     <h2 id="credentials-and-tokens">Credentials and tokens</h2>
     <p>The hosted Audit does not collect, store, or process any repository credentials. There is nothing to leak because there is nothing accepted. See <a href="#what-the-audit-receives">What the Audit receives</a>.</p>
 
@@ -552,6 +563,7 @@
         <tr><td>"Original repository files are deleted after each audit completes."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
         <tr><td>"Repository credentials are never stored — none are accepted."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
         <tr><td>"Repository file contents do not appear in application logs."</td><td><span class="status status-op">Code-inspected</span> — runtime logging audit pending (P0)</td></tr>
+        <tr><td>"Text pasted into the ADR checker is not stored and does not appear in application logs."</td><td><span class="status status-op">Code-inspected</span>: covered by contract tests; runtime log check on the first deployed revision pending</td></tr>
         <tr><td>"Audit records are deleted on request from the live system."</td><td><span class="status status-op">Code-inspected</span> — manual process; in-app deletion path and tested runbook pending</td></tr>
         <tr><td>"Source content is automatically deleted after a fixed retention window."</td><td><span class="status status-notyet">Not yet — no automated expiry exists</span></td></tr>
         <tr><td>"Independent penetration testing has validated this page."</td><td><span class="status status-notyet">Not yet — on the enterprise roadmap</span></td></tr>

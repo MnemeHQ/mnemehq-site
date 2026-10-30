@@ -304,7 +304,7 @@
   <div class="page-tag">Legal</div>
   <h1>Privacy Policy</h1>
   <p class="page-sub">Mneme HQ is an open-source developer tool. This policy covers the mnemehq.com website, direct contact, and the hosted Architecture Protection Audit. We keep data collection minimal, we never sell personal data, and repository material submitted to the Audit is handled as described in our <a href="/security/data-handling/">Security &amp; data handling</a> page.</p>
-  <p class="last-updated">Version 3 &middot; Last updated: 25 September 2026 &middot; Clarified Claude Code plugin data handling and the Anthropic service boundary.</p>
+  <p class="last-updated">Version 4 &middot; Last updated: 30 October 2026 &middot; Added the ADR checker: what it collects and what it does not keep.</p>
 
   <div class="prose">
 
@@ -323,6 +323,7 @@
       <li><strong>Website analytics (mnemehq.com):</strong> pages visited and time on page, referring URL, general geographic region (country/city level), browser type and device category &mdash; collected via Google Tag Manager and Google Analytics.</li>
       <li><strong>Contact and pilot requests:</strong> when you email us or submit the pilot request form, we process the details you provide (name, email, company, role, team context, and anything you choose to tell us).</li>
       <li><strong>Audit-related identifiers:</strong> when you run the hosted Architecture Audit, the repository URL you submit (public GitHub URL, or an anonymised "upload" marker for ZIP submissions) and the resulting audit record. See <a href="/security/data-handling/">Security &amp; data handling</a> for exactly what an audit record contains.</li>
+      <li><strong>ADR checker usage:</strong> when you use the <a href="/tools/adr-checker/">ADR checker</a>, usage counts sent to Google Analytics without your text: that a check ran, its size range, how long it took, how many statements fell in each result, how many lines were not read, whether a rule was reported as Mneme-ready instead of Protected, or an error code. See <a href="#checker-tools">Checker tools</a>.</li>
       <li><strong>Support communications:</strong> email correspondence with us.</li>
     </ul>
     <p>We do not collect payment or billing information.</p>
@@ -342,6 +343,9 @@
 
     <h2>Repository material and the hosted Audit</h2>
     <p>Repository material submitted to the hosted Audit (source files, ADRs, agent instructions, configuration) is classified and processed separately from ordinary personal data: it is not used for marketing, profiling, or advertising, and it is not shared with third parties except the infrastructure providers listed below. Original repository files are transient &mdash; extracted to a temporary working directory for analysis and deleted when the audit completes. The audit result (discovered decisions, classifications, proposed guardrails) is retained as described on the data-handling page.</p>
+
+    <h2 id="checker-tools">Checker tools</h2>
+    <p>The <a href="/tools/adr-checker/">ADR checker</a> sends the text you paste to the Audit's server, classifies it with the same deterministic engine and deletes it when the check finishes. Mneme saves neither the text nor the result, so there is nothing to retain, export or delete. The server's own log line for a check records its size range, status and duration, not the text. Google Cloud Run keeps standard request logs (including time, URL, status, latency, IP address and browser user agent) for every request, as it does for the Audit. Mneme sends the text to no AI model and never uses it for marketing, profiling or advertising. Details are on the <a href="/security/data-handling/#checker-tools">data-handling page</a>.</p>
 
     <h2>AI and model processing</h2>
     <p><strong>Mneme does not use customer source code to train models. Mneme's own processing does not send repository material to external AI model providers.</strong> The hosted Audit analysis is deterministic (no machine learning, no inference calls), and the local CLI and plugin enforcement path makes no Mneme-initiated model calls. Claude Code itself is a separate Anthropic service and may process repository context according to the user's Claude configuration and Anthropic's terms. There is no training pipeline in Mneme. If Mneme's own processing changes, this policy and the data-handling page will be updated first, and the change will be stated explicitly.</p>
@@ -384,6 +388,7 @@
       <li><strong>Website analytics:</strong> 14 months in Google Analytics (the platform default)</li>
       <li><strong>Email correspondence:</strong> for as long as relevant to the conversation</li>
       <li><strong>Pilot request submissions:</strong> for as long as relevant to evaluating and running the pilot</li>
+      <li><strong>ADR checker text and results:</strong> not retained; deleted when each check finishes</li>
       <li><strong>Audit records:</strong> retained until deletion is requested &mdash; see <a href="/security/data-handling/#retention-and-deletion">retention and deletion</a></li>
     </ul>
 
