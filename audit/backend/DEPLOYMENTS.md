@@ -8,6 +8,58 @@ production cutover; a merge or a started deploy is not a deployment.
 Deployment is currently manual (`gcloud`), not repo-automated. Each entry
 records how that deployment was produced so it can be reproduced.
 
+## 2026-10-30: `154878aa` (operator auth on cross-project routes; ADR import resilience)
+
+| | |
+|---|---|
+| Source commit | `154878aa4209890ea7ff95e4fe84693402b9f94f` (`main`); backend changes from PR #278 (`ea2c6fa2`) and PR #282 (`792b31d0`) |
+| Cloud Run revision | `mneme-audit-api-154878aa4209` |
+| Image | `gcr.io/mneme-hq-prod/mneme-audit-api@sha256:5e15f8b6d7897db9713e83ca8de7acfd1d9f6cf121d94c17f3f8fc16d83121d1` (tag = full commit SHA) |
+| Mneme engine | `mneme-hq` 0.9.2 (lock unchanged) |
+| Python dependencies | exactly `audit/backend/requirements.lock` (50 distributions; `pip freeze` in the image verified identical) |
+| `APP_VERSION` | `154878aa4209` |
+| Traffic | 100% since 2026-10-30 11:15Z |
+| Previous revision | `mneme-audit-api-a2aa74f4856d`, retained at 0% for rollback |
+| Outcome | Production cutover successful; no rollback |
+
+Why: an anonymous `GET /api/v1/projects` returned every audited project (found 2026-10-30 by `scripts/audit_health_report.py`). The project-create, PATCH, per-project audit list and contact routes had no auth either. That contradicted `site/security/data-handling/`, which says only Mneme HQ operators can access the audit database.
+
+How it was produced:
+
+1. New Secret Manager secret `mneme-audit-operator-token`, version 1, generated locally and piped in without being printed or stored on disk. `roles/secretmanager.secretAccessor` granted to `mneme-audit-run`.
+2. Image built with Docker from a clean `git archive` of the source commit: `docker build -f audit/backend/Dockerfile --build-arg GIT_SHA=<sha> .`. Then pushed.
+3. Deployed as a no-traffic revision:
+   `gcloud run deploy mneme-audit-api --image <digest> --no-traffic --tag candidate --revision-suffix 154878aa4209 --update-env-vars APP_VERSION=154878aa4209 --update-secrets MNEME_AUDIT_OPERATOR_TOKEN=mneme-audit-operator-token:latest`.
+4. Candidate verified, then traffic shifted with `gcloud run services update-traffic mneme-audit-api --to-revisions mneme-audit-api-154878aa4209=100`.
+
+Configuration: identical to the previous revision (service account, Cloud SQL, VPC connector, max instances, CPU and memory, timeout, concurrency, `DATABASE_URL` secret). Only two values differ: `APP_VERSION`, and the new `MNEME_AUDIT_OPERATOR_TOKEN` secret reference. No migration: this deployment introduces none.
+
+Validation evidence:
+
+- Candidate, at 0% traffic:
+  - `/health` 200.
+  - Anonymous and wrong-token calls to the project list, project create, PATCH, contacts list and contact create all return 401. The operator token lists all projects.
+  - A ZIP audit of `tests/fixtures/audit-repo` returned 201 with `mneme_version` 0.9.2 and 11 decisions. Read-back, project, export and save-baseline all returned 200. Compare returned 400, as expected for a single audit.
+  - CORS allows `https://mnemehq.com`. No error-level logs.
+- After cutover, via `api.mnemehq.com`:
+  - `/health` 200. Anonymous list, contacts and PATCH return 401. CORS is unchanged.
+  - Request logs show the new revision serving.
+  - The live workspace demo audit ran end to end in a browser with no console errors.
+  - `scripts/audit_health_report.py` reports Exposure PASS, exit 0. No error-level logs.
+- Exposure assessment: with the token, no project has any linked contact (40 projects, 0 contact links). The API has no route that lists contacts on their own. So no contact data was reachable through the open routes. The project list exposed repository locators: public GitHub URLs and `upload:` markers.
+- CI: the "Audit contracts on the locked production resolution" job passed on both merge commits.
+
+Left in place after this deployment:
+
+- Test records in the production database: audit `572e42d3-c529-4ab4-bad6-1494ee64920b` (ZIP fixture, project `38eaba1d-d9ba-4358-b2a8-778e03a39a90`), and audit `68862beb-982d-44ad-9f61-dae0826dca9a` (workspace demo run).
+- The `candidate` traffic tag, pointing at the new revision.
+
+Operator access: read the token with `gcloud secrets versions access latest --secret mneme-audit-operator-token --project mneme-hq-prod` into `MNEME_AUDIT_OPERATOR_TOKEN`, and never print it. Send it as `Authorization: Bearer`.
+
+Rollback:
+`gcloud run services update-traffic mneme-audit-api --project mneme-hq-prod --region us-central1 --to-revisions mneme-audit-api-a2aa74f4856d=100`.
+Rolling back reopens the exposure.
+
 ## 2026-10-01: `a2aa74f4` (first locked-resolution deployment)
 
 | | |
