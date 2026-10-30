@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Link the shared insight layout layer (site/assets/css/insight-editorial.css)
+Link the shared insight layout layer (site/assets/css/insight-editorial-v2.css)
 on every insight article page.
 
 An insight article is site/insights/<slug>/index.html carrying
@@ -21,9 +21,9 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSIGHTS = REPO_ROOT / "site" / "insights"
 
-MARKER = "/assets/css/insight-editorial.css"
+MARKER = "/assets/css/insight-editorial-v2.css"
 TAGS = (
-    '<link rel="stylesheet" href="/assets/css/insight-editorial.css">',
+    '<link rel="stylesheet" href="/assets/css/insight-editorial-v2.css">',
 )
 BASE_LINK = re.compile(r'<link rel="stylesheet" href="/assets/css/base\.css(\?v=\d+)?">')
 

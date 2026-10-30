@@ -523,3 +523,23 @@ footer a:hover { color: var(--text); }
   html { scroll-behavior: auto !important; }
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* ── Section heads: Instrument Serif, as in the pull quote ─────────── */
+/* Long-form section heads across page types. The body prefix outranks the
+   pages' inline single-class rules; id-styled label heads (related
+   reading, further reading) keep their own style. H3 stays Inter. */
+body .article-body h2, body .prose h2, body .prose-section h2,
+body .doc-body h2, body .body h2, body .wrap h2, body .for-section h2 {
+  font-family: 'Instrument Serif', serif; font-weight: 400; font-style: normal;
+  font-size: 1.9rem; line-height: 1.2; letter-spacing: -0.005em;
+  text-transform: none; text-wrap: balance;
+}
+/* Family only: these keep their own sizes (landing .section heads are
+   already serif). */
+body .section h2, body .cta-footer h2, body .cta-text h2 {
+  font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -0.005em;
+}
+@media (max-width: 640px) {
+  body .article-body h2, body .prose h2, body .prose-section h2,
+  body .doc-body h2, body .body h2, body .wrap h2, body .for-section h2 { font-size: 1.55rem; line-height: 1.18; }
+}

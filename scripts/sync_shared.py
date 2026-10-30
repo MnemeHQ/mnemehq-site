@@ -161,7 +161,7 @@ for html in sorted(SITE.rglob("*.html")) + TEMPLATE_PAGES:
         and rel(html).as_posix() != "index.html"
     ):
         anchor_link = '<link rel="stylesheet" href="/assets/css/fonts.css">'
-        link_tag = '<link rel="stylesheet" href="/assets/css/base.css?v=20261025">'
+        link_tag = '<link rel="stylesheet" href="/assets/css/base.css?v=20261030">'
         if anchor_link in text:
             text = text.replace(anchor_link, anchor_link + "\n  " + link_tag, 1)
         else:

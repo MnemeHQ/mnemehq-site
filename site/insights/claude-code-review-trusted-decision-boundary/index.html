@@ -7,8 +7,8 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20261030">
+  <link rel="stylesheet" href="/assets/css/insight-editorial-v2.css">
   <meta name="description" content="Claude Code Review reads REVIEW.md from the base branch, never from the PR. Five GitHub checks that keep a PR from rewriting the rules that judge it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -403,7 +403,11 @@
 <h2 id="when-a-pull-request-can-rewrite">When a pull request can rewrite its own rules</h2>
 <p>Here is a hypothetical, for illustration only. It is not an incident Anthropic or anyone else reported.</p>
 <p>A team records a decision: controllers do not call the database directly. A rule for it lives in a policy file in the repository, and a CI job reads that file and fails the build on a violation. An agent working on a ticket adds a direct database call to a controller. The check fails. On its next attempt, the agent also edits the policy file and removes the prohibition, because the change "needs" it. CI checks out the PR branch, reads the edited file, and passes.</p>
-<p>Keeping policy files in the repository is usually right, because rules should be versioned like code. The problem is which copy the gate reads. The evaluator, the checker the CI job runs, applied the rules it was given, correctly. The change under evaluation supplied those rules. A reviewer skimming a large diff may miss three deleted lines in the policy file. An agent told to get the check green may treat the policy file as one more file it is allowed to edit, unless something stops it.</p>
+<p>Keeping policy files in the repository is usually right, because rules should be versioned like code. The problem is which copy the gate reads.</p>
+
+<p class="pull-quote"><em>The evaluator, the checker the CI job runs, applied the rules it was given.</em> The change under evaluation supplied those rules.</p>
+
+<p>A reviewer skimming a large diff may miss three deleted lines in the policy file. An agent told to get the check green may treat the policy file as one more file it is allowed to edit, unless something stops it.</p>
 
 <h2 id="four-trust-boundaries">Four trust boundaries</h2>
 <p>A gate that blocks merges is only trustworthy if four boundaries hold. Switching a check from advisory to blocking does not create any of them.</p>
@@ -435,7 +439,46 @@
 <h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, works on the enforcement side of this flow. It keeps a team's decision corpus, the set of architectural decisions the team has recorded, in one file in the repository. A decision is enforced only when it has an active typed rule: a machine-checkable condition, such as an exact text string that must not appear in code, attached to the decision's current version.</p>
 <p>Mneme checks a write before it lands when a supported agent uses its built-in file tools, such as <a href="/integrations/claude-code/">Claude Code's Edit, Write and MultiEdit</a>. Most shell writes land on disk first: Claude Code and Codex CLI check them when the agent finishes its turn, and in other agents only CI catches them. In CI, <code>mneme check</code> applies the same corpus and returns PASS, WARN or FAIL.</p>
-<p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision, with its lifecycle and source, and every stage reads it from the same file. It is a version history, not an approval record, and it does not store who approved a decision. Teams that need that record keep it where identities are verified, such as the reviews of pull requests that change the decision files.</p>
+
+<div class="layer-stack" role="img" aria-label="The five stages a change passes through, with Mneme acting at generation and CI">
+  <div class="layer-row highlighted">
+    <div class="layer-num">1</div>
+    <div class="layer-content">
+      <strong>Generation &middot; Mneme</strong>
+      <span>The agent writes code. Mneme checks Edit, Write and MultiEdit against the corpus before the write lands. Most shell writes are checked after they land.</span>
+    </div>
+  </div>
+  <div class="layer-row">
+    <div class="layer-num">2</div>
+    <div class="layer-content">
+      <strong>AI review &middot; Code Review</strong>
+      <span>Reads REVIEW.md and CLAUDE.md from the base branch and flags changes that break them.</span>
+    </div>
+  </div>
+  <div class="layer-row highlighted">
+    <div class="layer-num">3</div>
+    <div class="layer-content">
+      <strong>CI &middot; Mneme</strong>
+      <span>mneme check applies the same corpus and returns PASS, WARN or FAIL. Today it reads the corpus from the PR's checkout.</span>
+    </div>
+  </div>
+  <div class="layer-row">
+    <div class="layer-num">4</div>
+    <div class="layer-content">
+      <strong>Human approval &middot; your Git host</strong>
+      <span>Approval tied to one commit. A code-owner rule can require an owner to review any change to .mneme/.</span>
+    </div>
+  </div>
+  <div class="layer-row">
+    <div class="layer-num">5</div>
+    <div class="layer-content">
+      <strong>Merge &middot; merge queue</strong>
+      <span>Every required check runs again against main before the change lands.</span>
+    </div>
+  </div>
+</div>
+<p class="stack-caption">Where Mneme acts in the path of a change. Highlighted rows are Mneme; the rest are your reviewer and Git host.</p>
+<p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision in the corpus, with its lifecycle and source. Mneme's checks at generation and in CI both read it from the same file. It is a version history, not an approval record, and it does not store who approved a decision. Teams that need that record keep it where identities are verified, such as the reviews of pull requests that change the decision files.</p>
 <p>Mneme has the gap this article describes, too. Its documented <a href="/use-cases/ci-governance-for-ai-generated-code/">CI recipe</a> reads the decision corpus from the PR's own checkout, so a PR that edits the corpus is checked against its own edit. Resolving decisions from a protected state, independent of the change, is not shipped. Neither are governed waivers, meaning recorded exceptions that name the approver, scope and expiry. Until both ship, teams can use their Git host's code-owner rules to require an owner's approval for any change to the <code>.mneme/</code> directory.</p>
 
 <aside class="cta-band" aria-label="Set up Mneme with Claude Code">

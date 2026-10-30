@@ -18,7 +18,7 @@ For each eligible article, this script:
 Sections are the <h2> elements between the start of .article-body and the
 first of the FAQ, the contextual CTA, the related panel or </article>, the
 same prose boundary sweep_context_cta_placement.py uses. Styles live in
-site/assets/css/insight-editorial.css.
+site/assets/css/insight-editorial-v2.css.
 
 Idempotent and CRLF-preserving. sync_shared.py calls stamp() as a safety
 net for new pages.
