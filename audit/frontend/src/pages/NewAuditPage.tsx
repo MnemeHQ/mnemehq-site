@@ -27,6 +27,11 @@ export function NewAuditPage() {
     }
   }, []);
 
+  // Run stays disabled until there is something to audit, so a click can no
+  // longer end in a missing_input validation error.
+  const canRunRepository = !loading && repositoryUrl.trim() !== '' && !urlError;
+  const canRunZip = !loading && zipFile !== null;
+
   const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setRepositoryUrl(value);
@@ -141,9 +146,15 @@ export function NewAuditPage() {
                   value={repositoryUrl}
                   onChange={handleUrlChange}
                   disabled={loading}
-                  aria-describedby={urlError ? 'url-error' : undefined}
+                  aria-describedby={urlError ? 'url-error' : 'url-hint'}
                 />
-                {urlError && <p id="url-error" className="input-error" role="alert"><AlertCircle size={12} className="inline" /> {urlError}</p>}
+                {urlError ? (
+                  <p id="url-error" className="input-error" role="alert"><AlertCircle size={12} className="inline" /> {urlError}</p>
+                ) : !repositoryUrl.trim() && (
+                  <p id="url-hint" className="input-hint">
+                    Paste a public GitHub repository URL to run the Audit, or try the demo repository in one click.
+                  </p>
+                )}
               </div>
 
               {repositorySubmitError && (
@@ -162,7 +173,7 @@ export function NewAuditPage() {
                 <button
                   type="submit"
                   className="btn btn-primary flex-1 sm:flex-none"
-                  disabled={loading}
+                  disabled={!canRunRepository}
                   data-cta-intent="run_audit"
                   data-cta-position="new_audit"
                 >
@@ -265,8 +276,18 @@ export function NewAuditPage() {
                     <p className="text-muted" style={{ marginTop: '0.35rem', fontSize: '0.8rem' }}>
                       Full data-handling model: <a href="/security/data-handling/" target="_blank" rel="noopener noreferrer">Security &amp; data handling</a>
                     </p>
+                    {!zipFile && (
+                      <p id="zip-hint" className="input-hint" style={{ marginTop: '1rem' }}>
+                        Choose a .zip file above to run the private repository Audit.
+                      </p>
+                    )}
                     <div className="cta-group mt-2">
-                      <button type="submit" className="btn btn-primary" disabled={loading}>
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={!canRunZip}
+                        aria-describedby={zipFile ? undefined : 'zip-hint'}
+                      >
                         {loading ? (
                           <><Loader2 className="loading-spinner w-5 h-5" />Analyzing repository...</>
                         ) : 'Run Private Repository Audit'}

@@ -246,3 +246,81 @@ describe('NewAuditPage demo repository', () => {
     );
   });
 });
+
+describe('NewAuditPage input gating', () => {
+  const createAudit = vi.fn();
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    createAudit.mockResolvedValue({ success: true, data: { audit_id: 'gated-audit-123' } });
+    mockedUseAuditApi.mockReturnValue({
+      createAudit,
+      createSetupReference: vi.fn(),
+      getAudit: vi.fn(),
+      exportAudit: vi.fn(),
+      getProject: vi.fn(),
+      getProjectAudit: vi.fn(),
+      saveBaseline: vi.fn(),
+      runProjectAudit: vi.fn(),
+      compareAudits: vi.fn(),
+      loading: false,
+      error: null,
+    });
+  });
+
+  const renderPage = () => render(
+    <MemoryRouter>
+      <NewAuditPage />
+    </MemoryRouter>,
+  );
+
+  it('disables Run until a repository URL is entered and says what is needed', () => {
+    renderPage();
+
+    const run = screen.getByRole('button', { name: 'Run Architecture Audit' });
+    expect(run).toBeDisabled();
+    expect(screen.getByText(/Paste a public GitHub repository URL to run the Audit/)).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('GitHub Repository URL'), {
+      target: { value: 'https://github.com/example/repository' },
+    });
+    expect(run).toBeEnabled();
+    expect(screen.queryByText(/Paste a public GitHub repository URL to run the Audit/)).not.toBeInTheDocument();
+  });
+
+  it('keeps Run disabled for an invalid repository URL', () => {
+    renderPage();
+
+    fireEvent.change(screen.getByLabelText('GitHub Repository URL'), {
+      target: { value: 'not a url' },
+    });
+    expect(screen.getByRole('button', { name: 'Run Architecture Audit' })).toBeDisabled();
+    expect(screen.getByText(/Please enter a valid URL/)).toBeInTheDocument();
+  });
+
+  it('keeps the demo repository one click away with no input', async () => {
+    renderPage();
+
+    const demo = screen.getByRole('button', { name: 'Try Demo Repository' });
+    expect(demo).toBeEnabled();
+    fireEvent.click(demo);
+
+    await waitFor(() => expect(createAudit).toHaveBeenCalledTimes(1));
+    expect(createAudit).toHaveBeenCalledWith(
+      { repositoryUrl: 'https://github.com/MnemeHQ/architecture-protection-demo' },
+      'demo',
+    );
+  });
+
+  it('disables the private repository Run until a ZIP is chosen', () => {
+    renderPage();
+
+    const run = screen.getByRole('button', { name: 'Run Private Repository Audit' });
+    expect(run).toBeDisabled();
+    expect(screen.getByText('Choose a .zip file above to run the private repository Audit.')).toBeInTheDocument();
+
+    const archive = new File(['repository'], 'private-repository.zip', { type: 'application/zip' });
+    fireEvent.change(screen.getByLabelText('Choose repository ZIP'), { target: { files: [archive] } });
+    expect(run).toBeEnabled();
+  });
+});
