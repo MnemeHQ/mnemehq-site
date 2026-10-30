@@ -65,7 +65,16 @@ SHORT_RULE_ADR = """# ADR-009: Databases
 Never use mongodb.
 """
 
-ALL_ADRS = [MNEME_ADR, NYGARD_ADR, VAGUE_ADR, FRONTMATTERLESS_ADR, SHORT_RULE_ADR]
+MADR_ADR = """# Use PostgreSQL for persistent data
+
+## Context and Problem Statement
+Services need one durable store that the platform team can operate.
+
+## Decision Outcome
+Chosen option: PostgreSQL. Services must not use sqlite for persistent data.
+"""
+
+ALL_ADRS = [MNEME_ADR, NYGARD_ADR, VAGUE_ADR, FRONTMATTERLESS_ADR, SHORT_RULE_ADR, MADR_ADR]
 
 # File names and folders that change the repository Audit's channels.
 FILENAMES = [
@@ -140,6 +149,33 @@ def test_protected_never_appears_for_any_input():
         result = check_adr(text).to_dict()
         assert "Protected" not in {r["classification"] for r in result["rows"]}
         assert "protected_count" not in result["summary"]
+
+
+def test_madr_decision_outcome_is_read():
+    result = check_adr(MADR_ADR).to_dict()
+    assert result["format"] == "prose"
+    rule = [r for r in result["rows"] if "must not use sqlite" in r["statement"]]
+    assert rule and rule[0]["heading"] == "Decision Outcome"
+    assert rule[0]["classification"] == "Requires modelling"
+
+
+def test_temp_files_are_removed_when_the_check_fails(monkeypatch):
+    created = []
+    real = tempfile.mkdtemp
+
+    def recording(*args, **kwargs):
+        path = real(*args, **kwargs)
+        created.append(Path(path))
+        return path
+
+    def explode(root):
+        raise RuntimeError("discovery failed")
+
+    monkeypatch.setattr(adr_check.tempfile, "mkdtemp", recording)
+    monkeypatch.setattr(adr_check, "discover_architecture_statements", explode)
+    with pytest.raises(RuntimeError):
+        check_adr(NYGARD_ADR)
+    assert created and not any(p.exists() for p in created)
 
 
 def test_frontmatterless_adr_does_not_crash():
@@ -262,9 +298,10 @@ async def test_parser_failure_becomes_422_without_logging_text(client, monkeypat
 
 
 @pytest.mark.asyncio
-async def test_request_body_is_never_logged(client, caplog):
+@pytest.mark.parametrize("base", [NYGARD_ADR, MNEME_ADR], ids=["prose", "mneme-format"])
+async def test_request_body_is_never_logged(client, caplog, base):
     marker = "SECRET-ADR-MARKER-41ab"
-    text = NYGARD_ADR + f"\nThe service must not call {marker} directly.\n"
+    text = base + f"\nThe service must not call {marker} directly.\n"
     with caplog.at_level(logging.DEBUG):
         response = await client.post("/api/v1/check", json={"text": text})
     assert response.status_code == 200
