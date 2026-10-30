@@ -36,9 +36,9 @@ and page views remain funnel signals rather than GA4 key events.
 ```js
 {
   event: 'cta_click',
-  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit|compare|docs|use_case|concept|integration',
+  cta_intent: 'install|demo|pilot|github|quickstart|first_check|setup|evidence|benchmark|contribute|audit|start_audit|compare|docs|use_case|concept|integration|adr_check',
   cta_position: 'nav|hero|mid|end',
-  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card|context',
+  cta_component: 'hero_cluster|install_module|cta_band|end_block|nav|concept_link|pricing_card|context|inline_link',
   cta_destination: '<href>',
   link_text: '<visible label, trimmed to 100 chars>',
   source_page: '<pathname of the page the click came from>',
@@ -351,6 +351,13 @@ sequence itself still requires a production GA4 session.
       Wave 1 links keep `cta_position=mid` unchanged. The values pass through
       `DLV - cta_intent` as strings; any report that groups intents by a
       fixed list needs the four new values added
+- [x] 2026-10-30 — ADR checker interest test: `cta_intent=adr_check` and
+      `cta_component=inline_link` added. Six ADR pages carry one inline link,
+      "Is your ADR enforceable as written?", pointing at `/audit/` and marked
+      `data-experiment="adr-check-interest"` for removal. Read clicks per
+      session over three weeks; the decision rule and the plan live in
+      `mneme-growth-ops/docs/plans/2026-10-29-adr-and-instructions-checker-tools.md`.
+      The pages' contextual CTAs (including the 48 Wave 1 links) are unchanged
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 
