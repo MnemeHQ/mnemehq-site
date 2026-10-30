@@ -358,6 +358,13 @@ sequence itself still requires a production GA4 session.
       session over three weeks; the decision rule and the plan live in
       `mneme-growth-ops/docs/plans/2026-10-29-adr-and-instructions-checker-tools.md`.
       The pages' contextual CTAs (including the 48 Wave 1 links) are unchanged
+- [x] 2026-10-30 — scroll depth: container version 9 adds 25% and 75% to
+      `scroll_depth`. Trigger `Scroll - 50%` is renamed `Scroll - 25/50/75%`
+      and fires at 25, 50 and 75; `Scroll - 90%` is unchanged; tag
+      `GA4 - scroll_depth` is unchanged, and `percent` stays
+      `{{Scroll Depth Threshold}}`. Verified in the live `gtm.js`. Before this
+      date only 50 and 90 exist, so compare reading depth at 25 and 75 only
+      from 2026-10-31 on.
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 
