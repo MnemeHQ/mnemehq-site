@@ -9,6 +9,7 @@ from app.api import audit
 from app.api import v1 as api_v1
 from app.api import workspace
 from app.api import setup
+from app.api import check
 
 app = FastAPI(
     title="Mneme Architecture Audit API",
@@ -42,6 +43,7 @@ app.include_router(audit.router, prefix="/api")
 app.include_router(api_v1.router, prefix="")
 app.include_router(workspace.router)
 app.include_router(setup.router)
+app.include_router(check.router)
 
 # Health check
 @app.get("/health")
