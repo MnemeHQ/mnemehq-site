@@ -30,6 +30,7 @@ from app.models.protection_audit import (
     ProtectionSummary,
     ProtectionAuditResponse,
     ProtectionClassification,
+    UnclassifiedADRFile,
 )
 from app.services.p12_classifier import classify_protection, extract_proposed_rule
 from app.services.markdown_discovery import (
@@ -140,6 +141,7 @@ def build_protection_audit_response(
     mneme_version: str,
     decisions_inputs: List[P12DecisionInput],
     source_files: List[str],
+    unclassified_adr_files: Optional[List[UnclassifiedADRFile]] = None,
 ) -> ProtectionAuditResponse:
     """
     Build complete mneme.audit/v1 response from Mneme decisions.
@@ -210,6 +212,7 @@ def build_protection_audit_response(
         timestamp=datetime.now(timezone.utc),
         summary=summary,
         decisions=protection_decisions,
+        unclassified_adr_files=unclassified_adr_files or [],
     )
 
 

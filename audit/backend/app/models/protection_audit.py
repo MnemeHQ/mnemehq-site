@@ -126,6 +126,20 @@ class ProtectionSummary(BaseModel):
             assert self.identified_mneme_potential == 0.0
 
 
+class UnclassifiedADRFile(BaseModel):
+    """
+    An ``ADR-*.md`` file that neither Mneme's ADR import nor the loose-ADR
+    parser could read as an ADR. Markdown discovery may still surface single
+    statements from it, but the file was not classified as a decision record.
+
+    Additive to mneme.audit/v1: payloads stored before this field existed omit
+    it and read back as an empty list.
+    """
+    path: str
+    reason: str
+    detail: str
+
+
 class ProtectionAuditResponse(BaseModel):
     """
     Complete mneme.audit/v1 response.
@@ -142,6 +156,7 @@ class ProtectionAuditResponse(BaseModel):
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     summary: ProtectionSummary
     decisions: List[ProtectionDecision]
+    unclassified_adr_files: List[UnclassifiedADRFile] = Field(default_factory=list)
     model_config = ConfigDict(extra="allow")
 
 
