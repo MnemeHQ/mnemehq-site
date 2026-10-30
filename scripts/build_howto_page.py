@@ -324,7 +324,7 @@ def build(slug: str) -> Path:
         + '  <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>\n'
         + '  <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>\n'
         + '  <link rel="stylesheet" href="/assets/css/fonts.css">\n'
-        + '  <link rel="stylesheet" href="/assets/css/base.css?v=20261030">\n'
+        + '  <link rel="stylesheet" href="/assets/css/base.css?v=20261031">\n'
         + f'  <meta name="description" content="{e(meta["description"])}" />\n'
         + '  <meta name="robots" content="index, follow" />\n'
         + '  <meta name="theme-color" content="#0c0c0d" />\n'
