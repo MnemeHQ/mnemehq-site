@@ -25,6 +25,12 @@ registration, validators, the pre-merge Opus audit, and close-out in
 `docs/site/insights-scope-ledger.md`. `scripts/new_article.py` writes the page only;
 registration is manual.
 
+## Checking the hosted Audit
+
+Follow `.claude/skills/audit-health-check/SKILL.md`. It runs `scripts/audit_health_report.py`
+(GA4 funnel, errors, entry sources, backend records, API exposure, ADR checker pilot
+baseline) and covers shipping a fix through to a verified live deploy.
+
 ## OG images are generated, not hand-made
 
 Every page's OG card is produced from a manifest, not a hand-built template:
