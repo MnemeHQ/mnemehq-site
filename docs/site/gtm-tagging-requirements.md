@@ -365,6 +365,12 @@ sequence itself still requires a production GA4 session.
       `{{Scroll Depth Threshold}}`. Verified in the live `gtm.js`. Before this
       date only 50 and 90 exist, so compare reading depth at 25 and 75 only
       from 2026-10-31 on.
+- [ ] 2026-10-30 — ADR checker (`/tools/adr-checker/`): `tool_check_start`,
+      `tool_check_complete` and `tool_check_error` added to the contract
+      (section 11). Pending: the container change below and the checker's
+      production deploy. The result view's link to `/audit/` sends
+      `cta_click` with `cta_intent=audit`, `cta_position=mid`,
+      `cta_component=context`, which is the pilot's result-to-Audit metric
 - [x] 2026-08-30 — six low-cardinality GA4 dimensions created
 - [ ] date — pilot success verified and legacy tags paused
 
@@ -493,3 +499,51 @@ baseline, and decision CTA intents.
    `VITE_AUDIT_GTM_ENABLED=false`) and roll back the application deployment as
    appropriate. Confirm the next BigQuery daily export before deleting any
    paused legacy configuration.
+
+## 11. ADR checker events — contract added, container change pending
+
+`/tools/adr-checker/` is a static page that posts one pasted ADR to the
+stateless `POST /api/v1/check` endpoint on the Audit API. It pushes three
+events of its own, with the same dev-host suppression as `cta-analytics.js`.
+Every parameter is a category, a count or a duration. The pasted text, any
+statement, rule pattern, heading or file name, and any hash of the content
+are never sent.
+
+| Event | Meaning | Parameters beyond `page_type`/`source_page` |
+|---|---|---|
+| `tool_check_start` | A check request was sent | `tool`, `input_size_bucket` |
+| `tool_check_complete` | A response passed the page's shape check and rendered | `tool`, `duration_ms`, `mneme_ready_count`, `requires_modelling_count`, `guidance_count`, `unclassified_count`, `protected_capped` |
+| `tool_check_error` | Local validation, the network or the API failed | `tool`, `error_code` |
+
+Allowed values:
+
+```
+tool:               adr_checker
+input_size_bucket:  lt_1kb|1_4kb|4_16kb|16_64kb
+error_code:         http_<status>|network_error|invalid_response|missing_input|too_large
+protected_capped:   true|false   (a pasted Mneme-format ADR that the Audit would call
+                                  Protected; the checker reports it as Mneme-ready)
+```
+
+`page_type` is `other`: `pageType()` in `cta-analytics.js` has no `/tools`
+entry, and `source_page` (`/tools/adr-checker`) identifies the page.
+
+The counts belong in the **Evaluation** bucket (section 6) next to
+`audit_start`/`audit_complete`, but report them separately: a checker
+completion is one pasted file, not a repository audit.
+
+Container work before the page ships:
+
+1. Add `tool_check_start|tool_check_complete|tool_check_error` to the
+   `Custom Event - Canonical Analytics` regex.
+2. Add version-2 Data Layer Variables for `tool`, `input_size_bucket`,
+   `mneme_ready_count`, `requires_modelling_count`, `guidance_count`,
+   `unclassified_count` and `protected_capped` (`duration_ms` and
+   `error_code` exist from section 10) and map them on
+   `GA4 - Canonical dataLayer event`.
+3. Publish, record the version here, and verify in Tag Assistant on the
+   live page.
+
+Pilot thresholds (30 days, from `scripts/audit_health_report.py`): 30
+`tool_check_start`, 20 `tool_check_complete`, 4 result-to-Audit
+`cta_click` events, 1 qualified pilot inquiry.
