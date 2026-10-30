@@ -17,8 +17,10 @@ Writes a Markdown report with five sections:
   4. Backend. API exposure probe first. An anonymous GET of the project list
      must be refused (401/403). A 200 means the data-handling page's
      operator-only access claim is false, and the report says FAIL. Then it
-     lists stored projects and audits, splitting internal repositories
-     (MnemeHQ, test fixtures) from outside users.
+     lists stored projects and audits in three groups: outside GitHub
+     repositories, ZIP uploads (origin unknown: an upload carries no
+     identity) and internal (MnemeHQ repositories, test fixtures, and the
+     deploy-verification audits recorded in audit/backend/DEPLOYMENTS.md).
   5. Pilot thresholds. The 30-day ADR checker thresholds agreed on
      2026-10-29, compared with the trailing 30 days of the full Audit.
 
@@ -53,6 +55,12 @@ API = "https://api.mnemehq.com"
 GA4_START = "20260830"
 INTERNAL_OWNERS = {"MnemeHQ"}
 INTERNAL_LOCATORS = {"test/repo"}
+# Verification audits left in production by deploys (audit/backend/DEPLOYMENTS.md).
+INTERNAL_AUDIT_IDS = {
+    "554e0e16-d221-418c-b48c-e683c5d50938",  # 2026-10-01 cutover
+    "572e42d3-c529-4ab4-bad6-1494ee64920b",  # 2026-10-30 candidate (ZIP fixture)
+    "68862beb-982d-44ad-9f61-dae0826dca9a",  # 2026-10-30 cutover (workspace demo)
+}
 # ADR checker pilot, agreed 2026-10-29 (30-day thresholds).
 THRESHOLDS = {"started": 30, "completed": 20, "cta_to_audit": 4}
 
@@ -179,11 +187,14 @@ def get(path: str, token: str | None) -> tuple[int, object]:
         return e.code, None
 
 
-def is_internal(locator: str) -> bool:
-    if locator in INTERNAL_LOCATORS:
-        return True
-    parts = locator.replace("https://github.com/", "").split("/")
-    return "github.com" in locator and parts[0] in INTERNAL_OWNERS
+def origin(locator: str, audit_id: str) -> str:
+    """internal, upload or outside."""
+    if audit_id in INTERNAL_AUDIT_IDS or locator in INTERNAL_LOCATORS:
+        return "internal"
+    if locator.startswith("upload:"):
+        return "upload"
+    owner = locator.replace("https://github.com/", "").split("/")[0]
+    return "internal" if "github.com" in locator and owner in INTERNAL_OWNERS else "outside"
 
 
 def backend(since: str) -> tuple[str, str]:
@@ -219,16 +230,23 @@ def backend(since: str) -> tuple[str, str]:
 
     cutoff = f"{since[:4]}-{since[4:6]}-{since[6:]}"
     rows = [(pr, a) for pr, a in rows if (a.get("created_at") or "") >= cutoff]
-    external = [(pr, a) for pr, a in rows if not is_internal(pr.get("source_locator") or "")]
+    groups: dict[str, list] = {"outside": [], "upload": [], "internal": []}
+    for pr, a in rows:
+        groups[origin(pr.get("source_locator") or "", str(a.get("id")))].append((pr, a))
+    external, uploads = groups["outside"], groups["upload"]
     status = Counter(a.get("status") for _, a in rows)
     months = Counter((a.get("created_at") or "")[:7] for _, a in rows)
     repos = Counter(pr.get("source_locator") for pr, _ in external)
     last = max((a.get("created_at") or "" for _, a in external), default="none")
+    last_upload = max((a.get("created_at") or "" for _, a in uploads), default="none")
 
     md += (f"Audits stored since {cutoff}: **{len(rows)}** "
-           f"({len(external)} outside, {len(rows) - len(external)} internal), "
+           f"({len(external)} outside, {len(uploads)} ZIP upload{'' if len(uploads) == 1 else 's'}, "
+           f"{len(groups['internal'])} internal), "
            f"status {dict(status)}, by month {dict(sorted(months.items()))}.\n\n"
-           f"Last outside audit: **{last[:10]}**. Outside repositories, with audit counts "
+           f"Last outside GitHub audit: **{last[:10]}**. Last ZIP upload: {last_upload[:10]} "
+           "(an upload carries no identity, so it may be internal).\n\n"
+           "Outside GitHub repositories, with audit counts "
            "(a count above 1 is a returning user or a re-audit):\n\n")
     md += table([{"repository": k, "audits": v} for k, v in repos.most_common()], ["repository", "audits"])
     md += ("\nA batch of well-known public repositories on one day is usually internal "
