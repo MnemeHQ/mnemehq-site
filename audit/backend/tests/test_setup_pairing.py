@@ -310,7 +310,7 @@ async def test_setup_never_activates_or_starts_pilot(pairing):
     assert project["lifecycle"] == "saved"
 
 
-async def test_pilot_handoff_is_explicit_and_recorded(pairing):
+async def test_pilot_handoff_is_explicit_and_recorded(pairing, monkeypatch):
     """M1.3d: the pilot is entered only by an explicit lifecycle action after
     setup, and that handoff is recorded — while the Mneme activation state
     stays `setup` (activation is a separate, future decision)."""
@@ -322,9 +322,12 @@ async def test_pilot_handoff_is_explicit_and_recorded(pairing):
         json={"repository": None, "mneme_version": "0.6.0"})
     setup_completed_at = completed.json()["setup_completed_at"]
 
+    # The pilot handoff is an operator action.
+    monkeypatch.setenv("MNEME_AUDIT_OPERATOR_TOKEN", "test-operator-token")
     handoff = await client.patch(
         f"/api/v1/projects/{result['project_id']}",
-        params={"lifecycle": "pilot"})
+        params={"lifecycle": "pilot"},
+        headers={"Authorization": "Bearer test-operator-token"})
     assert handoff.status_code == 200, handoff.text
     project = handoff.json()
     assert project["lifecycle"] == "pilot"
