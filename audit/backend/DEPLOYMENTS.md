@@ -8,6 +8,48 @@ production cutover; a merge or a started deploy is not a deployment.
 Deployment is currently manual (`gcloud`), not repo-automated. Each entry
 records how that deployment was produced so it can be reproduced.
 
+## 2026-10-30: `91faec36` (ADR checker endpoint)
+
+| | |
+|---|---|
+| Source commit | `91faec36675238c20200bacc0908e762974bb3aa` (`main`, PR #285) |
+| Cloud Run revision | `mneme-audit-api-91faec366752` |
+| Image | `gcr.io/mneme-hq-prod/mneme-audit-api@sha256:9f62abf5331253fcd03470161ba17486536005efb07f33c71da95cb12fc5cab5` (tag = full commit SHA) |
+| Mneme engine | `mneme-hq` 0.9.2 (lock unchanged) |
+| `APP_VERSION` | `91faec366752` |
+| Traffic | 100% since 2026-10-30 13:12Z |
+| Previous revision | `mneme-audit-api-154878aa4209`, retained at 0% for rollback |
+| Outcome | Production cutover successful; no rollback |
+
+Adds `POST /api/v1/check`, a stateless single-ADR check used by `/tools/adr-checker/`. It has no listing or lookup route, writes nothing to the database, and caps Protected at Mneme-ready (`protected_capped`).
+
+How it was produced: the same steps as the `154878aa` entry below. Image built with Docker from a clean `git archive` of the source commit. CI's "Audit contracts on the locked production resolution" job passed on the merge commit before the deploy. Then deployed with `--no-traffic --tag candidate --revision-suffix 91faec366752 --update-env-vars APP_VERSION=91faec366752 --update-secrets MNEME_AUDIT_OPERATOR_TOKEN=mneme-audit-operator-token:latest`, and traffic shifted with `update-traffic --to-revisions mneme-audit-api-91faec366752=100`.
+
+Configuration: identical to the previous revision except `APP_VERSION`.
+
+Validation evidence:
+
+- Candidate:
+  - `/health` 200. The anonymous project list still returns 401.
+  - `GET /api/v1/check` returns 405. Empty text returns 422.
+  - The CORS preflight from `https://mnemehq.com` is allowed.
+  - A prose ADR returned 200 with `format=prose`, reading as Requires modelling and Guidance. A Mneme-format ADR with frontmatter and a `FORBID_LITERAL` constraint returned 200 with `format=mneme`: Mneme-ready, `protected_capped: true`.
+- No-storage runtime check:
+  - Each check carried a unique marker string. That string appeared in no Cloud Run log entry.
+  - The project count stayed at 40, so no record was created.
+  - Logs show only the standard request lines (method, path, status).
+  - The `app.check` INFO line is not emitted, because the app does not configure that logger. The privacy and data-handling pages were corrected to match.
+- After cutover:
+  - `/health` 200 on the service URL and on `api.mnemehq.com`. The anonymous list returns 401.
+  - `/tools/adr-checker/` ran its built-in example end to end in a browser: results rendered, with no console errors.
+  - No error-level logs.
+
+Left in place: no test records; checks store nothing. The `candidate` tag points at the new revision.
+
+Rollback:
+`gcloud run services update-traffic mneme-audit-api --project mneme-hq-prod --region us-central1 --to-revisions mneme-audit-api-154878aa4209=100`.
+That revision keeps the operator auth but has no `/api/v1/check`, so the checker page would fail.
+
 ## 2026-10-30: `154878aa` (operator auth on cross-project routes; ADR import resilience)
 
 | | |
