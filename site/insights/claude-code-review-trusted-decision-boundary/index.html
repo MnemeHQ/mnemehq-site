@@ -445,7 +445,7 @@
     <div class="layer-num">1</div>
     <div class="layer-content">
       <strong>Generation &middot; Mneme</strong>
-      <span>The agent writes code. Mneme checks Edit, Write and MultiEdit against the corpus before the write lands.</span>
+      <span>The agent writes code. Mneme checks Edit, Write and MultiEdit against the corpus before the write lands. Most shell writes are checked after they land.</span>
     </div>
   </div>
   <div class="layer-row">
@@ -478,7 +478,7 @@
   </div>
 </div>
 <p class="stack-caption">Where Mneme acts in the path of a change. Highlighted rows are Mneme; the rest are your reviewer and Git host.</p>
-<p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision, with its lifecycle and source, and every stage reads it from the same file. It is a version history, not an approval record, and it does not store who approved a decision. Teams that need that record keep it where identities are verified, such as the reviews of pull requests that change the decision files.</p>
+<p>The <a href="/docs/decision-index/">Decision Index</a> is the versioned record of each decision in the corpus, with its lifecycle and source. Mneme's checks at generation and in CI both read it from the same file. It is a version history, not an approval record, and it does not store who approved a decision. Teams that need that record keep it where identities are verified, such as the reviews of pull requests that change the decision files.</p>
 <p>Mneme has the gap this article describes, too. Its documented <a href="/use-cases/ci-governance-for-ai-generated-code/">CI recipe</a> reads the decision corpus from the PR's own checkout, so a PR that edits the corpus is checked against its own edit. Resolving decisions from a protected state, independent of the change, is not shipped. Neither are governed waivers, meaning recorded exceptions that name the approver, scope and expiry. Until both ship, teams can use their Git host's code-owner rules to require an owner's approval for any change to the <code>.mneme/</code> directory.</p>
 
 <aside class="cta-band" aria-label="Set up Mneme with Claude Code">
