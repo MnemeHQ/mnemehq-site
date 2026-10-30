@@ -504,7 +504,7 @@
       <li><strong>Input:</strong> the pasted text only, up to 64&nbsp;KB. No file name, repository URL or archive is accepted.</li>
       <li><strong>Processing:</strong> the server writes the text to a temporary directory, classifies it, and deletes the directory when the check finishes, pass or fail.</li>
       <li><strong>Retention:</strong> none. The checker creates no project or audit record and writes nothing to the database. The endpoint has no route that lists or returns earlier checks.</li>
-      <li><strong>Logs:</strong> the application's log line for a check records its size range, status and duration. When a check fails, only the error type is logged, without a trace. Cloud Run's standard request logs (including time, URL, status, latency, IP address and user agent) apply as for every request. This is a code-inspection statement: see the status table below.</li>
+      <li><strong>Logs:</strong> the application writes no log line of its own for a successful check. When a check fails, it can log a warning that names only the error type, without the text or a trace. Cloud Run's standard request logs (including time, URL, status, latency, IP address and user agent) apply as for every request. On the first deployed revision, a check carrying a unique marker string left that string in no log entry: see the status table below.</li>
       <li><strong>Rate limit:</strong> checks are limited per client and in total, in memory on each instance, to limit bursts on the service the Audit shares.</li>
       <li><strong>Analytics:</strong> the page sends aggregate counts to Google Analytics, never the pasted text, a statement or a rule.</li>
     </ul>
@@ -563,7 +563,7 @@
         <tr><td>"Original repository files are deleted after each audit completes."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
         <tr><td>"Repository credentials are never stored — none are accepted."</td><td><span class="status status-verified">Verified — technical</span></td></tr>
         <tr><td>"Repository file contents do not appear in application logs."</td><td><span class="status status-op">Code-inspected</span> — runtime logging audit pending (P0)</td></tr>
-        <tr><td>"Text pasted into the ADR checker is not stored and does not appear in application logs."</td><td><span class="status status-op">Code-inspected</span>: covered by contract tests; runtime log check on the first deployed revision pending</td></tr>
+        <tr><td>"Text pasted into the ADR checker is not stored and does not appear in application logs."</td><td><span class="status status-verified">Verified — technical</span>: contract tests, plus a runtime check on revision <code>mneme-audit-api-91faec366752</code> (30 October 2026): a marker string sent in a check appeared in no log entry, and the check created no record</td></tr>
         <tr><td>"Audit records are deleted on request from the live system."</td><td><span class="status status-op">Code-inspected</span> — manual process; in-app deletion path and tested runbook pending</td></tr>
         <tr><td>"Source content is automatically deleted after a fixed retention window."</td><td><span class="status status-notyet">Not yet — no automated expiry exists</span></td></tr>
         <tr><td>"Independent penetration testing has validated this page."</td><td><span class="status status-notyet">Not yet — on the enterprise roadmap</span></td></tr>
