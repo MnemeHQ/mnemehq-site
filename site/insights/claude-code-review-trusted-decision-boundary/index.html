@@ -7,8 +7,8 @@
   <link rel="preload" href="/assets/fonts/InstrumentSerif-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
-  <link rel="stylesheet" href="/assets/css/base.css?v=20261025">
-  <link rel="stylesheet" href="/assets/css/insight-editorial.css">
+  <link rel="stylesheet" href="/assets/css/base.css?v=20261030">
+  <link rel="stylesheet" href="/assets/css/insight-editorial-v2.css">
   <meta name="description" content="Claude Code Review reads REVIEW.md from the base branch, never from the PR. Five GitHub checks that keep a PR from rewriting the rules that judge it." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -398,9 +398,7 @@
 <p>Reading from the base branch only helps if that branch is protected. If anyone, or any agent, with push access can commit straight to main, they can change <code>REVIEW.md</code> there without review, and the next PR is judged by the edited copy. Instructions that weaken a review, such as lowering a finding's severity or excluding paths, are honored only when the file sits on a protected default branch. If Code Review cannot confirm the branch protection settings, it reads no <code>REVIEW.md</code> at all.</p>
 <p>The second rule is from the post, about the internal process: "An approval covers one specific commit." New commits the system cannot vouch for, such as an agent's push, need a fresh approval. Some paths always need a person, including any CI workflow file.</p>
 <p>Both rules limit what a verdict may depend on. If the change being judged can also edit the rules that judge it, a passing verdict tells you little about whether the change follows the rules the team agreed.</p>
-<p>The docs also show that the product is not blind to architecture. <code>CLAUDE.md</code> is the instructions file that Claude Code reads for every task in a repository. Code Review reads the root <code>CLAUDE.md</code> and the one in each changed file's parent directories, and flags changes that violate them.</p>
-
-<p class="pull-quote"><em>The reviewer knows the rules.</em> The open question is who controls them.</p>
+<p>The docs also show that the product is not blind to architecture. <code>CLAUDE.md</code> is the instructions file that Claude Code reads for every task in a repository. Code Review reads the root <code>CLAUDE.md</code> and the one in each changed file's parent directories, and flags changes that violate them. So the reviewer knows the rules. The open question is who controls them.</p>
 
 <h2 id="when-a-pull-request-can-rewrite">When a pull request can rewrite its own rules</h2>
 <p>Here is a hypothetical, for illustration only. It is not an incident Anthropic or anyone else reported.</p>
@@ -436,11 +434,7 @@
 <p>Deterministic rules cannot judge every architecture decision. Some choices need a person, and the post keeps people on architecture that sets a pattern others will copy. The trust boundary is about who decides, not about automating every judgment.</p>
 
 <h2 id="the-same-decisions-must-govern-generation">The same decisions must govern generation, review and merge</h2>
-<p>A coding agent, a reviewer and CI each read rules at a different moment. If they read three separate copies, those copies can drift apart, and the agent ends up held to rules it never saw.</p>
-
-<p class="pull-quote"><em>Approve decisions once, in one place,</em> and have every stage read the same version.</p>
-
-<p>A change to a decision then becomes a reviewed change with its own history, as <a href="/insights/from-decision-records-to-decision-governance/">the path from decision records to decision governance</a> sets out.</p>
+<p>A coding agent, a reviewer and CI each read rules at a different moment. If they read three separate copies, those copies can drift apart, and the agent ends up held to rules it never saw. Approve decisions once, in one place, and have every stage read the same version. A change to a decision then becomes a reviewed change with its own history, as <a href="/insights/from-decision-records-to-decision-governance/">the path from decision records to decision governance</a> sets out.</p>
 
 <h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, works on the enforcement side of this flow. It keeps a team's decision corpus, the set of architectural decisions the team has recorded, in one file in the repository. A decision is enforced only when it has an active typed rule: a machine-checkable condition, such as an exact text string that must not appear in code, attached to the decision's current version.</p>
