@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
-  <meta name="description" content="Install and operate the Mneme 0.10.0 local stdio MCP server, which reads the persisted Decision Index. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
+  <meta name="description" content="Install and operate the Mneme 0.11.0 local stdio MCP server, which reads the persisted Decision Index. Reference the six decision tools, inputs, results, errors, storage, and authority boundary." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="author" content="Theo Valmis" />
@@ -19,7 +19,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Mneme MCP Server Reference" />
-  <meta property="og:description" content="Install and operate the local stdio Decision Index MCP server in mneme-hq 0.10.0." />
+  <meta property="og:description" content="Install and operate the local stdio Decision Index MCP server in mneme-hq 0.11.0." />
   <meta property="og:url" content="https://mnemehq.com/docs/mcp/" />
   <meta property="og:image" content="https://mnemehq.com/docs/mcp/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -27,7 +27,7 @@
 <meta property="og:image:alt" content="Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with human decision authority kept outside MCP." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Mneme MCP Server Reference" />
-  <meta name="twitter:description" content="The six-tool local stdio MCP surface in mneme-hq 0.10.0." />
+  <meta name="twitter:description" content="The six-tool local stdio MCP surface in mneme-hq 0.11.0." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/mcp/og-v2.png" />
 <meta name="twitter:image:alt" content="Demo: Local MCP server. Six decision tools. Install, configure, retrieve, propose, and trace—with human decision authority kept outside MCP." />
 
@@ -52,7 +52,7 @@
       {
         "@type": "TechArticle",
         "headline": "Mneme MCP Server Reference",
-        "description": "Install and operate the local stdio Decision Index MCP server in mneme-hq 0.10.0, which reads authoritative decisions from the persisted Decision Index.",
+        "description": "Install and operate the local stdio Decision Index MCP server in mneme-hq 0.11.0, which reads authoritative decisions from the persisted Decision Index.",
         "url": "https://mnemehq.com/docs/mcp/",
         "datePublished": "2026-09-15",
         "dateModified": "2026-10-12",
@@ -61,7 +61,7 @@
         "image": "https://mnemehq.com/docs/mcp/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/docs/mcp/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "mneme-hq 0.10.0 with the mcp extra"
+        "dependencies": "mneme-hq 0.11.0 with the mcp extra"
       }
     ]
   }
@@ -200,9 +200,9 @@
     </li><!-- mneme:page-switcher:end -->
     </ol>
   </nav>
-  <div class="answer-capsule"><strong>Current release, mneme-hq 0.10.0:</strong> a local stdio MCP server with exactly six Decision Index tools, introduced in 0.9.0. It reads authoritative decisions from the persisted Decision Index in project memory and records non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>
+  <div class="answer-capsule"><strong>Current release, mneme-hq 0.11.0:</strong> a local stdio MCP server with exactly six Decision Index tools, introduced in 0.9.0. It reads authoritative decisions from the persisted Decision Index in project memory and records non-authoritative proposals. Human decision authority and deterministic protection remain separate surfaces.</div>
   <header class="hero">
-    <div class="eyebrow">Operator reference &middot; mneme-hq 0.10.0</div>
+    <div class="eyebrow">Operator reference &middot; mneme-hq 0.11.0</div>
     <h1>Decision context over MCP, with authority kept outside the protocol.</h1>
     <p class="lede">Use <code>mneme decision-mcp</code> to let an MCP host query Mneme's Decision Index or submit candidate architectural decisions. The server is local and stdio-only.</p>
   </header>
@@ -225,20 +225,20 @@
     <section class="section" id="install">
       <h2>Install and run</h2>
       <p>The MCP SDK is an optional dependency. Install the released package with the extra, then start the server from the repository whose decision state you want to expose.</p>
-<pre tabindex="0"><code>pipx install "mneme-hq[mcp]==0.10.0"
+<pre tabindex="0"><code>pipx install "mneme-hq[mcp]==0.11.0"
 mneme decision-mcp</code></pre>
-      <div class="callout"><p><strong>Before you start:</strong> the server reads decisions from project memory and will not start unless that file has an authoritative <code>decision_index</code> section. Projects created with <code>mneme init</code> or <code>mneme setup</code> on 0.10.0 already have one. For memory written by 0.9.x, preview the migration, review what it reports, then apply it:</p></div>
+      <div class="callout"><p><strong>Before you start:</strong> the server reads decisions from project memory and will not start unless that file has an authoritative <code>decision_index</code> section. Projects created with <code>mneme init</code> or <code>mneme setup</code> on 0.10.0 or later already have one. For memory written by 0.9.x, preview the migration, review what it reports, then apply it:</p></div>
 <pre tabindex="0"><code>mneme decision-index migrate --memory .mneme/project_memory.json
 mneme decision-index migrate --memory .mneme/project_memory.json --apply</code></pre>
-      <p>Upgrade every process that writes this file to 0.10.0 before you apply, including CI jobs, hooks, and teammates&rsquo; installs. Migrated memory must not be written by 0.9.2 or earlier; see <a href="#limitations">version compatibility</a> and the <a href="/docs/cli/#decision-index-migrate">migrate reference</a>.</p>
+      <p>Upgrade every process that writes this file to 0.11.0 before you apply, including CI jobs, hooks, and teammates&rsquo; installs. Migrated memory must not be written by 0.9.2 or earlier; see <a href="#limitations">version compatibility</a> and the <a href="/docs/cli/#decision-index-migrate">migrate reference</a>.</p>
       <p>The process communicates over standard input and standard output. It does not expose HTTP, SSE, a hosted endpoint, authentication, RBAC, or multi-tenant infrastructure.</p>
       <div class="table-scroll">
         <table class="matrix">
-          <thead><tr><th>Option</th><th>Behavior in 0.10.0</th></tr></thead>
+          <thead><tr><th>Option</th><th>Behavior in 0.11.0</th></tr></thead>
           <tbody>
             <tr><td>--proposals &lt;path&gt;</td><td>Use a specific decision-proposals JSON file. When omitted, the durable default is <code>.mneme/decision_proposals.json</code>. Passing an empty string explicitly selects an in-memory proposal store.</td></tr>
             <tr><td>--memory &lt;path&gt;</td><td>The project memory file whose <code>decision_index</code> section the server reads. Defaults to <code>.mneme/project_memory.json</code>. Every canonical read comes from this file.</td></tr>
-            <tr><td>--adr-dir &lt;path&gt;</td><td>Optional. Validate that ADR directory before startup: it must pass parse, corpus validation, and precedence resolution. There is no default. ADRs stay validation and import sources; the server never reads decisions from them.</td></tr>
+            <tr><td>--adr-dir &lt;path&gt;</td><td>Optional. Validate that ADR directory before startup: it must pass parse, corpus validation, and precedence resolution. Since 0.11.0, two accepted ADRs in the same exact scope with the same priority and no explicit <code>supersedes</code> link fail precedence resolution; their <code>date</code> no longer breaks the tie. There is no default. ADRs stay validation and import sources; the server never reads decisions from them.</td></tr>
           </tbody>
         </table>
       </div>
@@ -276,8 +276,8 @@ mneme decision-index migrate --memory .mneme/project_memory.json --apply</code><
 
     <section class="section" id="tools">
       <h2>The frozen six-tool surface</h2>
-      <p>The tool inventory is part of the authority boundary. Version 0.9.0 introduced exactly these six names and no aliases, and 0.10.0 keeps them with unchanged input schemas. The current released 0.10.0 runtime publishes parameter descriptions and JSON Schema through MCP <code>tools/list</code>.</p>
-      <div class="callout"><p><strong>Machine-readable contract:</strong> <a href="/.well-known/mcp/decision-tools.json">decision-tools.json</a> is generated from the exact released <code>mneme-hq[mcp]==0.10.0</code> runtime. It includes each tool's description, input and output schema, MCP annotations, and request examples that CI validates by actually calling the released tools. It is drift-checked against <code>tools/list</code>, not maintained as a second hand-authored API specification.</p></div>
+      <p>The tool inventory is part of the authority boundary. Version 0.9.0 introduced exactly these six names and no aliases, and 0.10.0 and 0.11.0 keep them with unchanged input schemas. The current released 0.11.0 runtime publishes parameter descriptions and JSON Schema through MCP <code>tools/list</code>.</p>
+      <div class="callout"><p><strong>Machine-readable contract:</strong> <a href="/.well-known/mcp/decision-tools.json">decision-tools.json</a> is generated from the exact released <code>mneme-hq[mcp]==0.11.0</code> runtime. It includes each tool's description, input and output schema, MCP annotations, and request examples that CI validates by actually calling the released tools. It is drift-checked against <code>tools/list</code>, not maintained as a second hand-authored API specification.</p></div>
       <div class="tool-grid">
         <article class="tool-card">
           <div class="tool-head"><span class="tool-name">decision.propose</span><span class="tool-mode">Write &middot; proposal only</span></div>
@@ -384,7 +384,7 @@ prioritization, or workflow routing</code></pre>
 
     <section class="section" id="limitations">
       <h2>Version compatibility</h2>
-      <div class="callout warning"><p><strong>Mixed versions:</strong> once memory is migrated, every process that writes it must run 0.10.0 or later. A 0.9.2 or earlier writer, such as <code>add_decision</code> in an old CI image, succeeds without an error. The next 0.10.0 <code>mneme check</code> or <code>test_query</code> on that file then fails with <code>DecisionIndexPersistenceError</code>, because the <code>decisions[]</code> compatibility snapshot no longer matches the Decision Index. The MCP server then refuses to start, and <code>decision-index migrate</code> won&rsquo;t repair the file: restore it from version control and redo the change with 0.10.0.</p></div>
+      <div class="callout warning"><p><strong>Mixed versions:</strong> once memory is migrated, every process that writes it must run 0.10.0 or later. A 0.9.2 or earlier writer, such as <code>add_decision</code> in an old CI image, succeeds without an error. The next 0.10.0-or-later <code>mneme check</code> or <code>test_query</code> on that file then fails with <code>DecisionIndexPersistenceError</code>, because the <code>decisions[]</code> compatibility snapshot no longer matches the Decision Index. The MCP server then refuses to start, and <code>decision-index migrate</code> won&rsquo;t repair the file: restore it from version control and redo the change with 0.11.0. Separately, 0.11.0 stores decision applicability and <code>FORBID_NUMERIC_ABOVE</code> rules only under <code>mneme.decision-index/v2</code>, which 0.10.x and earlier refuse to load: upgrade every reader and writer to 0.11.0 before any of them writes v2 memory.</p></div>
       <div class="callout"><p><strong>Memory that can&rsquo;t migrate:</strong> migration is lossless or it refuses, and it writes nothing when it refuses. A decision whose <code>source</code> is a free-text note, or points at something other than an ADR file (such as an EventCatalog import), has no representation in the index. Memory that contains one stays unmigrated, and the MCP server can&rsquo;t start on it. To keep the decision, write it as an ADR file, remove its row from <code>decisions[]</code>, migrate, then import the ADR; <code>adr import --apply</code> itself needs migrated memory.</p></div>
       <p>The server does not watch files. It re-reads the Decision Index and the proposal file when a tool reads them.</p>
       <p>For the wider protocol boundary, see Mneme's <a href="/standards/">standards landscape</a>. MCP provides interoperability; it does not define Mneme's governance semantics.</p>

@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
-  <meta name="description" content="Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
+  <meta name="description" content="Install mneme-hq 0.11.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -17,7 +17,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Install Mneme and Activate Your First Protection · Mneme how-to — Mneme HQ" />
-  <meta property="og:description" content="Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
+  <meta property="og:description" content="Install mneme-hq 0.11.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
   <meta property="og:url" content="https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/" />
   <meta property="og:image" content="https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="How to install Mneme and activate your first protection: set up, import an ADR, audit, validate, activate, check." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Install Mneme and Activate Your First Protection · Mneme how-to — Mneme HQ" />
-  <meta name="twitter:description" content="Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
+  <meta name="twitter:description" content="Install mneme-hq 0.11.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails." />
   <meta name="twitter:image" content="https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/og-v2.png" />
 <meta name="twitter:image:alt" content="How to install Mneme and activate your first protection: set up, import an ADR, audit, validate, activate, check." />
   <!-- Consent defaults -->
@@ -74,7 +74,7 @@
       ],
       "@id": "https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/#article",
       "headline": "Install Mneme and activate your first protection",
-      "description": "Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails.",
+      "description": "Install mneme-hq 0.11.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails.",
       "url": "https://mnemehq.com/docs/how-to/install-mneme-and-activate-protection/",
       "mainEntityOfPage": {
         "@type": "WebPage",
@@ -285,7 +285,7 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Install Mneme and activate your first protection</h1>
   <p class="lede">Install the Mneme command-line tool with pipx and run <code>mneme setup</code>. Import an architecture decision record (ADR), and the audit tells you whether Mneme can protect it. Then validate and activate that one rule, and <code>mneme check</code> starts failing code that breaks the decision.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; CLI only</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; CLI only</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> Mneme installed in a repository, one ADR turned into an active <code>FORBID_LITERAL</code> rule, an audit that reports the decision as Protected, and a <code>mneme check</code> that fails when code reintroduces the banned library.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -326,7 +326,7 @@
     <h3>1. Install the command-line tool</h3>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.10.0"</pre>
+  <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.11.0"</pre>
 </div>
 
     <h3>2. Write an ADR Mneme can protect</h3>
@@ -596,10 +596,10 @@ publisher = pubsub_v1.PublisherClient()</pre>
   <section class="prose-section" id="troubleshooting">
     <h2>Troubleshooting</h2>
     <h3>The import stops with <code>missing required field 'priority'</code></h3>
-    <p>The import crashes with a Python traceback. The last line names the file and the missing field:</p>
+    <p>The import stops with exit code 2 and one line that names the file and the missing field:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:no-priority">mneme.adr_schema.ADRValidationError: ADR validation failed with 1 error(s): troubleshooting/no-priority/ADR-001-no-celery.md: missing required field 'priority'</pre>
+  <pre class="term-block" data-fixture="out:no-priority">ERROR: ADR validation failed with 1 error(s): troubleshooting/no-priority/ADR-001-no-celery.md: missing required field 'priority'</pre>
 </div>
     <p>Add <code>priority: foundational</code> (or another priority) to the ADR's frontmatter and import again.</p>
 

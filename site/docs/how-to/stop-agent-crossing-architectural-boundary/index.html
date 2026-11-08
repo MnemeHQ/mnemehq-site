@@ -338,7 +338,7 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Stop an AI coding agent from crossing an architectural boundary</h1>
   <p class="lede">Load the Mneme plugin in Claude Code. Its hook, a command Claude Code runs before the agent edits a file, checks each change against your recorded decisions and blocks a violation, so the file doesn&rsquo;t change and the agent sees why. Shell writes it can&rsquo;t check in advance are caught when the agent finishes its turn.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Claude Code</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Claude Code</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> Claude Code refusing to write a direct database import under <code>app/handlers/</code>, with the broken decision named in the feedback the agent receives.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -384,11 +384,11 @@ and tenancy handling that lives in app/repositories.
 </div>
     <ul class="plain">
       <li>Import it with <code>mneme adr import docs/adr --memory .mneme/project_memory.json --apply</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> explains the file line by line; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> covers installing Mneme.</li>
-      <li>Mneme 0.10.0 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
+      <li>Mneme 0.11.0 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
     </ul>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+  <pre class="term-block">pipx install "mneme-hq==0.11.0"</pre>
 </div>
     <ul class="plain">
       <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
@@ -400,7 +400,7 @@ and tenancy handling that lives in app/repositories.
     <h3>1. Get the plugin at the release tag</h3>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block" data-fixture="manual">git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+  <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
 </div>
     <h3>2. Start Claude Code with the plugin, from your repository root</h3>
     <div class="howto-code howto-code--command">
@@ -510,7 +510,7 @@ mneme-hook &lt; events/stop.json</pre>
 </div>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:json-verdict">{"schema": "mneme.check/v1", "verdict": "FAIL", "mode": "strict", "evaluation_complete": true, "applicability": [{"decision_id": "ADR-012", "rule_type": "FORBID_LITERAL", "rule_value": "from app.db.client import", "rule_index": 0, "path_scoped": true, "input_path": "app/handlers/invoices.py", "outcome": "APPLIED", "selector": "app/handlers/**", "reason": "an include selector matched"}], "violations": [{"decision_id": "ADR-012", "decision_text": "Request handlers do not import the database client", "severity": "FAIL", "rule": "from app.db.client import", "trigger": "from app.db.client import", "kind": "typed_rule", "rule_type": "FORBID_LITERAL", "input_path": "app/handlers/invoices.py", "selector": "app/handlers/**"}], "freshness": []}</pre>
+  <pre class="term-block" data-fixture="out:json-verdict">{"schema": "mneme.check/v1", "verdict": "FAIL", "mode": "strict", "evaluation_complete": true, "applicability": [{"decision_id": "ADR-012", "rule_type": "FORBID_LITERAL", "rule_value": "from app.db.client import", "rule_index": 0, "path_scoped": true, "input_path": "app/handlers/invoices.py", "outcome": "APPLIED", "selector": "app/handlers/**", "reason": "an include selector matched", "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f", "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"}], "violations": [{"decision_id": "ADR-012", "decision_text": "Request handlers do not import the database client", "severity": "FAIL", "rule": "from app.db.client import", "trigger": "from app.db.client import", "kind": "typed_rule", "rule_type": "FORBID_LITERAL", "input_path": "app/handlers/invoices.py", "selector": "app/handlers/**", "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f", "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"}], "freshness": []}</pre>
 </div>
   </section>
 
