@@ -338,7 +338,7 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Fail a pull request that breaks an ADR</h1>
   <p class="lede">Add a GitHub Actions workflow that runs <code>mneme check</code> on every added or modified text file in a pull request. A file that breaks an architecture decision record (ADR) makes the check fail, and a required status check then blocks the merge. The workflow also fails if someone edited an ADR without re-importing it.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a pull request check that fails when a change adds a direct database import under <code>app/handlers/</code>, plus a JSON verdict for each changed file.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -519,7 +519,9 @@ skip    app/static/logo.png (binary)</pre>
             "input_path": "app/handlers/invoices.py",
             "outcome": "APPLIED",
             "selector": "app/handlers/**",
-            "reason": "an include selector matched"
+            "reason": "an include selector matched",
+            "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f",
+            "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"
         }
     ],
     "violations": [
@@ -532,7 +534,9 @@ skip    app/static/logo.png (binary)</pre>
             "kind": "typed_rule",
             "rule_type": "FORBID_LITERAL",
             "input_path": "app/handlers/invoices.py",
-            "selector": "app/handlers/**"
+            "selector": "app/handlers/**",
+            "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f",
+            "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"
         }
     ],
     "freshness": []

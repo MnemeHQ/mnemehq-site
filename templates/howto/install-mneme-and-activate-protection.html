@@ -1,7 +1,7 @@
 <!--meta
 {
   "title": "Install Mneme and Activate Your First Protection · Mneme how-to — Mneme HQ",
-  "description": "Install mneme-hq 0.10.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails.",
+  "description": "Install mneme-hq 0.11.0, run mneme setup, import an ADR, let the audit find a Mneme-ready decision, then validate and activate its rule so mneme check fails.",
   "og_alt": "How to install Mneme and activate your first protection: set up, import an ADR, audit, validate, activate, check.",
   "eyebrow": "How-to guide",
   "h1": "Install Mneme and activate your first protection",
@@ -40,7 +40,7 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <h3>1. Install the command-line tool</h3>
-    <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.10.0"</pre>
+    <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.11.0"</pre>
 
     <h3>2. Write an ADR Mneme can protect</h3>
     <p>Save this as <code>docs/adr/ADR-001-no-celery.md</code>:</p>
@@ -122,7 +122,7 @@
   <section class="prose-section" id="troubleshooting">
     <h2>Troubleshooting</h2>
     <h3>The import stops with <code>missing required field 'priority'</code></h3>
-    <p>The import crashes with a Python traceback. The last line names the file and the missing field:</p>
+    <p>The import stops with exit code 2 and one line that names the file and the missing field:</p>
     <pre class="term-block" data-fixture="out:no-priority"></pre>
     <p>Add <code>priority: foundational</code> (or another priority) to the ADR's frontmatter and import again.</p>
 

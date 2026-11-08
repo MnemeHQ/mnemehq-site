@@ -338,7 +338,7 @@
   <div class="section-eyebrow">How-to guide</div>
   <h1>Turn an ADR into an enforceable decision</h1>
   <p class="lede">Add a <code>## Constraints</code> section to an architecture decision record (ADR) with a <code>FORBID_LITERAL</code> rule: the exact text it forbids and the paths it covers. Import the ADR, and <code>mneme check</code> fails any file under those paths that contains the text. The example is ADR-012: request handlers never import the database client.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.10.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; CLI only</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-10-15">Oct 15, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; CLI only</p>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> an ADR that makes <code>mneme check</code> fail when a file under <code>app/handlers/</code> imports the database client, plus a JSON verdict that records why.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -362,11 +362,11 @@
     <h2>Prerequisites</h2>
     <ul class="plain">
       <li>Python 3.11 or newer.</li>
-      <li>Mneme 0.10.0, installed with <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a> (new to Mneme? start with <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a>):</li>
+      <li>Mneme 0.11.0, installed with <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a> (new to Mneme? start with <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a>):</li>
     </ul>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+  <pre class="term-block">pipx install "mneme-hq==0.11.0"</pre>
 </div>
     <ul class="plain">
       <li>A repository with a <code>docs/adr/</code> directory. The example talks about <code>app/handlers/</code> (request handlers), <code>app/repositories/</code> (data access) and <code>app/db/client.py</code> (the database client). Those paths don't need to exist: <code>mneme check</code> reads the file you pass and treats <code>--target-path</code> as the path that content would have.</li>
@@ -548,7 +548,9 @@ python -m json.tool verdict.json</pre>
             "input_path": "app/handlers/invoices.py",
             "outcome": "APPLIED",
             "selector": "app/handlers/**",
-            "reason": "an include selector matched"
+            "reason": "an include selector matched",
+            "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f",
+            "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"
         }
     ],
     "violations": [
@@ -561,7 +563,9 @@ python -m json.tool verdict.json</pre>
             "kind": "typed_rule",
             "rule_type": "FORBID_LITERAL",
             "input_path": "app/handlers/invoices.py",
-            "selector": "app/handlers/**"
+            "selector": "app/handlers/**",
+            "rule_id": "ADR-012:FORBID_LITERAL:e7f58cdee4107aea2503f458432cbf7f",
+            "decision_version_id": "dver-07b2d935ba6c357186624774df0c2845"
         }
     ],
     "freshness": []
@@ -611,8 +615,8 @@ Result: PASS</pre>
 </div>
     <p>Pass the repository path the content belongs to.</p>
 
-    <h3>An ADR is missing from the active set</h3>
-    <p>Two accepted ADRs share a scope. The import keeps the one with the higher priority, or the newer date, and drops the other without a warning. Here ADR-013 also uses <code>scope: handlers</code>:</p>
+    <h3>The import reports an active-active contradiction</h3>
+    <p>Two accepted ADRs share a scope and a priority, and neither lists the other under <code>supersedes</code>. Since 0.11.0 the import treats that as a contradiction instead of picking one: the preview exits 1, and <code>--apply</code> refuses unless you pass <code>--approve-conflicts</code>, which imports the rest of the corpus and skips that scope. The ADR <code>date</code> never breaks the tie. Here ADR-013 also uses <code>scope: handlers</code>:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>troubleshooting/same-scope/ADR-013-handlers-no-http.md</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:troubleshooting/same-scope/ADR-013-handlers-no-http.md">---
@@ -631,15 +635,16 @@ Handlers call service clients in app/clients.
     include_paths:
       - "app/handlers/**"</pre>
 </div>
-    <p>Import both, and ADR-012 disappears from the active set:</p>
+    <p>Import both, and the preview names the contradiction:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:same-scope">Active set (1 ADRs):
-  [ADR-013] status=active
-      rule: FORBID_LITERAL import requests
-        include_paths: app/handlers/**</pre>
+  <pre class="term-block" data-fixture="out:same-scope">Active set (0 ADRs):
+  (none -- see diagnostics below)
+
+Active-active contradiction diagnostics:
+  - Active-active contradiction at scope 'handlers' between: ADR-012, ADR-013. Resolve by editing the ADRs (mark one superseded or give one a higher priority; ADR date never breaks a tie) or pass --approve-conflicts to import the rest of the corpus and skip this scope.</pre>
 </div>
-    <p>Give each ADR its own scope. A dotted scope such as <code>handlers.http</code> keeps them apart, and both stay active. Dotted scopes change how the Model Context Protocol (MCP) lookup finds an ADR; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> explains.</p>
+    <p>If one decision replaces the other, list the older ADR under <code>supersedes</code> in the newer one, or give one of them a higher priority. If both should apply, give each ADR its own scope. A dotted scope such as <code>handlers.http</code> keeps them apart, and both stay active. Dotted scopes change how the Model Context Protocol (MCP) lookup finds an ADR; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> explains.</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:distinct-scope">Active set (2 ADRs):
@@ -652,10 +657,10 @@ Handlers call service clients in app/clients.
 </div>
 
     <h3>The import stops with <code>missing YAML frontmatter</code></h3>
-    <p>The import crashes with a Python traceback and exit code 1. The last line names the file and the problem:</p>
+    <p>The import stops with exit code 2 and one line that names the file and the problem:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:nygard">mneme.adr_schema.ADRParseError: troubleshooting/nygard/ADR-012.md: missing YAML frontmatter (expected file to start with '---')</pre>
+  <pre class="term-block" data-fixture="out:nygard">ERROR: troubleshooting/nygard/ADR-012.md: missing YAML frontmatter (expected file to start with '---')</pre>
 </div>
     <p>The ADR uses a Nygard-style <code>**Status:** Accepted</code> line instead of YAML frontmatter:</p>
     <div class="howto-code howto-code--file">
@@ -669,10 +674,10 @@ Handlers call repositories.</pre>
     <p>Mneme doesn't parse those. Add the frontmatter block from step 2 to the top of the file.</p>
 
     <h3>The import stops with <code>unknown constraint directive</code></h3>
-    <p>Same traceback, different last line:</p>
+    <p>The import crashes with a Python traceback and exit code 1. The last line names the directive:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:typo">mneme.adr_constraints.ConstraintParseError: unknown constraint directive 'FORBID_LITERALS' (expected one of ['FORBID_DEPENDENCY', 'FORBID_LITERAL', 'FORBID_PATH', 'REQUIRE_PATH'])</pre>
+  <pre class="term-block" data-fixture="out:typo">mneme.adr_constraints.ConstraintParseError: unknown constraint directive 'FORBID_LITERALS' (expected one of ['FORBID_DEPENDENCY', 'FORBID_LITERAL', 'FORBID_NUMERIC_ABOVE', 'FORBID_PATH', 'REQUIRE_PATH'])</pre>
 </div>
     <p>A directive name has a typo. Mneme stops the import instead of skipping the rule, so a misspelling can't switch enforcement off without anyone noticing.</p>
 
@@ -738,7 +743,6 @@ Result: WARN</pre>
 
   <section class="prose-section" id="next">
     <h2>Next</h2>
-    <p><a href="/audit/" data-cta-intent="adr_check" data-cta-position="mid" data-cta-component="inline_link" data-experiment="adr-check-interest">Is your ADR enforceable as written?</a> To check the decisions in a repository before converting them one at a time, run the Architecture Audit.</p>
     <div class="cross-links">
       <a class="cross-card" href="/docs/how-to/stop-agent-crossing-architectural-boundary/">
         <span class="cl-label">How-to</span>

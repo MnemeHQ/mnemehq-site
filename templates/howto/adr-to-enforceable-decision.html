@@ -25,9 +25,9 @@
     <h2>Prerequisites</h2>
     <ul class="plain">
       <li>Python 3.11 or newer.</li>
-      <li>Mneme 0.10.0, installed with <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a> (new to Mneme? start with <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a>):</li>
+      <li>Mneme 0.11.0, installed with <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a> (new to Mneme? start with <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a>):</li>
     </ul>
-    <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+    <pre class="term-block">pipx install "mneme-hq==0.11.0"</pre>
     <ul class="plain">
       <li>A repository with a <code>docs/adr/</code> directory. The example talks about <code>app/handlers/</code> (request handlers), <code>app/repositories/</code> (data access) and <code>app/db/client.py</code> (the database client). Those paths don't need to exist: <code>mneme check</code> reads the file you pass and treats <code>--target-path</code> as the path that content would have.</li>
       <li>No coding agent. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">The next guide</a> adds one.</li>
@@ -122,23 +122,23 @@ python -m json.tool verdict.json</pre>
     <pre class="term-block" data-fixture="out:no-target-path"></pre>
     <p>Pass the repository path the content belongs to.</p>
 
-    <h3>An ADR is missing from the active set</h3>
-    <p>Two accepted ADRs share a scope. The import keeps the one with the higher priority, or the newer date, and drops the other without a warning. Here ADR-013 also uses <code>scope: handlers</code>:</p>
+    <h3>The import reports an active-active contradiction</h3>
+    <p>Two accepted ADRs share a scope and a priority, and neither lists the other under <code>supersedes</code>. Since 0.11.0 the import treats that as a contradiction instead of picking one: the preview exits 1, and <code>--apply</code> refuses unless you pass <code>--approve-conflicts</code>, which imports the rest of the corpus and skips that scope. The ADR <code>date</code> never breaks the tie. Here ADR-013 also uses <code>scope: handlers</code>:</p>
     <pre class="term-block" data-fixture="file:troubleshooting/same-scope/ADR-013-handlers-no-http.md"></pre>
-    <p>Import both, and ADR-012 disappears from the active set:</p>
-    <pre class="term-block" data-fixture="out:same-scope" data-lines="4-7"></pre>
-    <p>Give each ADR its own scope. A dotted scope such as <code>handlers.http</code> keeps them apart, and both stay active. Dotted scopes change how the Model Context Protocol (MCP) lookup finds an ADR; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> explains.</p>
+    <p>Import both, and the preview names the contradiction:</p>
+    <pre class="term-block" data-fixture="out:same-scope" data-lines="4-8"></pre>
+    <p>If one decision replaces the other, list the older ADR under <code>supersedes</code> in the newer one, or give one of them a higher priority. If both should apply, give each ADR its own scope. A dotted scope such as <code>handlers.http</code> keeps them apart, and both stay active. Dotted scopes change how the Model Context Protocol (MCP) lookup finds an ADR; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> explains.</p>
     <pre class="term-block" data-fixture="out:distinct-scope" data-lines="4-10"></pre>
 
     <h3>The import stops with <code>missing YAML frontmatter</code></h3>
-    <p>The import crashes with a Python traceback and exit code 1. The last line names the file and the problem:</p>
+    <p>The import stops with exit code 2 and one line that names the file and the problem:</p>
     <pre class="term-block" data-fixture="out:nygard"></pre>
     <p>The ADR uses a Nygard-style <code>**Status:** Accepted</code> line instead of YAML frontmatter:</p>
     <pre class="term-block" data-fixture="file:troubleshooting/nygard/ADR-012.md"></pre>
     <p>Mneme doesn't parse those. Add the frontmatter block from step 2 to the top of the file.</p>
 
     <h3>The import stops with <code>unknown constraint directive</code></h3>
-    <p>Same traceback, different last line:</p>
+    <p>The import crashes with a Python traceback and exit code 1. The last line names the directive:</p>
     <pre class="term-block" data-fixture="out:typo"></pre>
     <p>A directive name has a typo. Mneme stops the import instead of skipping the rule, so a misspelling can't switch enforcement off without anyone noticing.</p>
 

@@ -29,9 +29,9 @@
     <pre class="term-block" data-fixture="file:docs/adr/ADR-012-handlers-use-repositories.md"></pre>
     <ul class="plain">
       <li>Import it with <code>mneme adr import docs/adr --memory .mneme/project_memory.json --apply</code>. <a href="/docs/how-to/adr-to-enforceable-decision/">Turn an ADR into an enforceable decision</a> explains the file line by line; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> covers installing Mneme.</li>
-      <li>Mneme 0.10.0 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
+      <li>Mneme 0.11.0 installed with pipx, so the <code>mneme-hook</code> command is on the PATH Claude Code uses:</li>
     </ul>
-    <pre class="term-block">pipx install "mneme-hq==0.10.0"</pre>
+    <pre class="term-block">pipx install "mneme-hq==0.11.0"</pre>
     <ul class="plain">
       <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
     </ul>
@@ -40,7 +40,7 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <h3>1. Get the plugin at the release tag</h3>
-    <pre class="term-block" data-fixture="manual">git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+    <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
     <h3>2. Start Claude Code with the plugin, from your repository root</h3>
     <pre class="term-block" data-fixture="manual">claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
     <p>Keep the default strict mode. Warn mode (<code>MNEME_HOOK_MODE=warn</code>) stops the hook from blocking edits, and Claude Code then shows neither you nor the agent why an edit broke a decision. See Troubleshooting.</p>
