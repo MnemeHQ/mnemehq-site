@@ -1,6 +1,6 @@
 # Scope brief: Post-Openai vulnerability fixes Assess research findings
 
-Status: **gathered, not built**
+Status: **built, queued for 2026-11-15** (`openai-a-thousand-fewer-paths-to-root-agent-verification`; article PR on its own `site/` branch)
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,11 @@ Status: **gathered, not built**
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | errors: 0; warnings fixed or justified: |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 41 |
+| `lint_prose.py` | errors: 0 on the built page; 1 acronym warning (GPT, a model product name) |
+| Cold read: thesis as restated | "checking the result is not enough; verify the path the agent took" (matches the brief) |
+| Cold read: unclear terms, and how resolved | 0-day, root shell, scout agents, 10-day scan, GPT-5.5/5.6 Cyber, shell-write handling: defined; the $1,279 unit was corrected to total / 948 |
+| Pre-merge Opus claim audit | blockers and should-fix items applied; see the article PR |
 
 ## Agreed scope
 

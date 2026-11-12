@@ -1,6 +1,6 @@
 # Scope brief: Post-Angular Framework Recommendation
 
-Status: **gathered, not built**
+Status: **built, queued for 2026-11-17** (`angularjs-to-angular-migration-ai`; article PR on its own `site/` branch)
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,11 @@ Status: **gathered, not built**
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | errors: 0; warnings fixed or justified: |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 39 |
+| `lint_prose.py` | errors: 0 on the built page; 0 warnings |
+| Cold read: thesis as restated | "agents carried the migration, silent failures were caught by tests not diffs; record decisions and check architecture separately" (matches the brief) |
+| Cold read: unclear terms, and how resolved | Nx, esbuild, test tools, AGENTS.md, zoneless, standalone, signals: glossed; zoneless vs change-detection strategy disambiguated; heading changed to 233 commits in 25 days |
+| Pre-merge Opus claim audit | blockers and should-fix items applied; see the article PR |
 
 ## Agreed scope
 
@@ -50,7 +51,7 @@ Article C: a small Angular app with a legacy module and a target architecture; f
 | time cockpit approach: dissolved a hybrid AngularJS/Angular app (run via `@angular/upgrade` since 2018), not a screen-by-screen rewrite; customers define their own models and forms so screens could not be enumerated; 95 named, separately reviewable streams; Angular 21.2 to 22.1.2; Nx dropped, webpack to esbuild, Karma/Jasmine and Jest to Vitest | same URL | verified (approach and sequencing sections, 2026-11-12) |
 | time cockpit outcomes: build 373 s (+72 s separate AngularJS toolchain) to 45 s; initial gzipped download 2.17 MB to 1.34 MB (-38%); tests 542 to 1,331 (unit 123 to 626, e2e 419 to 705); decorator inputs/outputs 266 to 7, signal-based 145 to 485; API-equivalent cost about EUR 4,250 (roughly EUR 18 per commit, list-price equivalent, not an invoice) | same URL | verified (results table, 2026-11-12) |
 | time cockpit: the Angular 22 upgrade shipped as a pure version change with components pinned to the old change-detection behavior; modernization followed in about eleven batched steps, last pins removed 14 Aug; "Angular 22 changes the default change-detection strategy, a silent, sweeping behavioral change" if accepted as-is | same URL | verified (change-detection section) |
-| time cockpit problems caught by tests, not by reading the diff: Excel export in list view silently unwired; start-page redirect lost when the AngularJS redirect was removed; ESLint silently broken so a violation backlog built up. Open work left: 16 legacy NgModules, lint backlog, zone-based change detection | same URL | verified (problems and open-work sections) |
+| time cockpit problems caught by tests, not by reading the diff: Excel export in list view silently unwired; start-page redirect lost when the AngularJS redirect was removed. Separately, ESLint had been silently broken before the migration began (pre-existing state, not a migration failure; corrected at the pre-merge audit). Open work left: 16 legacy NgModules, lint backlog, zone-based change detection | same URL | verified (problems and open-work sections) |
 | time cockpit human role: "The gap between those two numbers is why the human review step is not optional." Humans chose sequencing, scope and the pin-then-modernize policy; `AGENTS.md` split exploration/planning/review from implementation; "Having the rules written down for agents beforehand was the precondition for 233 commits in a month." 34 of the 233 commits were feature work | same URL | verified (review and rules sections) |
 | Angular tooling supports incremental migration to standalone components and signal APIs; v21+ makes zoneless change detection default | https://angular.dev/reference/migrations/standalone ; https://angular.dev/reference/migrations ; https://angular.dev/guide/zoneless | verified. Standalone: `ng generate @angular/core:standalone`, three ordered modes, apps "can optionally and incrementally adopt the new standalone style without any breaking changes"; `path` option migrates sections incrementally. Signals: migrations list input(), output() and signal queries conversions. Zoneless: "Zoneless is the default in Angular v21+ so you do not need to do anything to enable it." (v20 needs `provideZonelessChangeDetection()`) |
 | Current Angular major as of Nov 2026 is v22 (Baseline date 2026-05-07; v22 announcement changelog link dated 2026-06-03, inferred from URL) | https://angular.dev/reference/versions | verified: v22 is first in "Actively supported versions" (footer v22.2.6). The release date itself is not stated on the page; do not print a v22 release date |

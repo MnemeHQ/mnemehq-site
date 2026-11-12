@@ -1,6 +1,6 @@
 # Scope brief: Post-EnvOpt assessment
 
-Status: **gathered, not built**
+Status: **built, queued for 2026-11-14** (`self-evolving-agent-harness-governance`; article PR on its own `site/` branch)
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,11 @@ Status: **gathered, not built**
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | errors: 0; warnings fixed or justified: |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 39 |
+| `lint_prose.py` | errors: 0 on the built page; 2 acronym warnings (SWE in SWE-bench Verified, a benchmark name; EMNLP, expanded but the linter misses the expansion because of the lowercase "in") |
+| Cold read: thesis as restated | "an optimizer scored on benchmarks will delete safeguards a team added on purpose; humans must own what cannot change" (matches the brief) |
+| Cold read: unclear terms, and how resolved | Self-Harness, Evo-Harness, EnvOpt, ParetoSaddler, SWE-bench, mid-tier models, code-owner rules, Mneme in the mid CTA: defined or reworded |
+| Pre-merge Opus claim audit | blockers and should-fix items applied; see the article PR |
 
 ## Agreed scope
 

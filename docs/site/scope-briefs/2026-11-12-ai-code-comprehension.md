@@ -1,6 +1,6 @@
 # Scope brief: Post- AI code comprehension
 
-Status: **gathered, not built**
+Status: **built, queued for 2026-11-16** (`ai-code-comprehension-gap`; article PR on its own `site/` branch)
 
 | Field | Value |
 |---|---|
@@ -29,10 +29,11 @@ Status: **gathered, not built**
 
 | Check | Result |
 |---|---|
-| stop-slop score (/50, pass >= 35) | |
-| `lint_prose.py` | errors: 0; warnings fixed or justified: |
-| Cold read: thesis as restated | |
-| Cold read: unclear terms, and how resolved | |
+| stop-slop score (/50, pass >= 35) | 38 |
+| `lint_prose.py` | errors: 0 on the built page; 0 warnings |
+| Cold read: thesis as restated | "AI doubled output but nobody checks the team still understands why the system looks as it does" (matches the brief) |
+| Cold read: unclear terms, and how resolved | overlapping review shares explained; table wording and section heading corrected; 85% figure given its meaning; typed rule removed from the mid CTA |
+| Pre-merge Opus claim audit | blockers and should-fix items applied; see the article PR |
 
 ## Agreed scope
 
