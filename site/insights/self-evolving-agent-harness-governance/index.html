@@ -107,7 +107,7 @@
           "name": "What is a self-improving agent harness?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A harness is everything around a model that turns it into a working agent: prompts, context rules, workflows, skills, tools, memory and middleware. A self-improving harness reads its own execution traces and evaluation results, then proposes or makes changes to those parts. Thoughtworks placed the technique in the Trial ring of its Technology Radar on November 4, 2026."
+            "text": "A harness is everything around a model that turns it into a working agent: prompts, context rules, workflows, skills, tools, memory and middleware (code that runs between the model and its tools). A self-improving harness reads its own execution traces and evaluation results, then proposes or makes changes to those parts. Thoughtworks placed the technique in the Trial ring of its Technology Radar on November 4, 2026."
           }
         },
         {
@@ -364,9 +364,9 @@
   </header>
 
 <h2 id="the-radar-moved-self-improving-harnesses-into-trial">The Radar moved self-improving harnesses into Trial</h2>
-<p>On November 4, 2026, Thoughtworks placed <a href="https://www.thoughtworks.com/radar/techniques/self-improving-harness" target="_blank" rel="noopener">self-improving harness</a> in the Trial ring of its Technology Radar. Trial means teams should try the technique on projects that can absorb some risk. A harness is everything around the model that turns a model call into a working agent: the prompts, context rules, workflows, skills, tools, memory and middleware. A self-improving harness reads its own execution traces and evaluation feedback, then proposes or makes changes to those parts.</p>
+<p>On November 4, 2026, Thoughtworks placed <a href="https://www.thoughtworks.com/radar/techniques/self-improving-harness" target="_blank" rel="noopener">self-improving harness</a> in the Trial ring of its Technology Radar. Trial means teams should try the technique on projects that can absorb some risk. A harness is everything around the model that turns a model call into a working agent: the prompts, context rules, workflows, skills, tools, memory and middleware (code that runs between the model and its tools). A self-improving harness reads its own execution traces and evaluation feedback, then proposes or makes changes to those parts.</p>
 <p>The Radar entry attaches two conditions. Teams should run bounded experiments with regression testing, and humans should set the objectives and the modification boundaries, then judge whether an improvement generalizes to new tasks.</p>
-<p>The research leaves that second condition to you. The research behind the technique is precise about how an edit gets accepted. It says much less about who decides which parts of a harness an optimizer may change at all.</p>
+<p>The research behind the technique is precise about how an edit gets accepted. It says much less about who decides which parts of a harness an optimizer may change at all.</p>
 
 <h2 id="what-the-research-optimizes">What the research optimizes</h2>
 <p>Five pieces of 2026 work show where the field is. Each one changes something, and each one accepts a change through a gate.</p>
@@ -374,7 +374,7 @@
   <thead><tr><th>Work</th><th>What it changes</th><th>How a change is accepted</th></tr></thead>
   <tbody>
     <tr><td><a href="https://arxiv.org/abs/2606.09498" target="_blank" rel="noopener">Self-Harness</a> (preprint, June 2026)</td><td>The agent's own harness, through small edits mined from failure patterns</td><td>An edit is kept only after it passes regression testing</td></tr>
-    <tr><td><a href="https://aclanthology.org/2026.emnlp-main.969/" target="_blank" rel="noopener">Evo-Harness</a> (Empirical Methods in Natural Language Processing (EMNLP) 2026)</td><td>Reusable harness skills compiled from the agent's working context</td><td>Not stated in the abstract</td></tr>
+    <tr><td><a href="https://aclanthology.org/2026.emnlp-main.969/" target="_blank" rel="noopener">Evo-Harness</a> (Empirical Methods in Natural Language Processing (EMNLP) 2026)</td><td>Reusable harness skills compiled from the agent's working context</td><td>Not described in the paper's abstract</td></tr>
     <tr><td><a href="https://arxiv.org/abs/2611.07372" target="_blank" rel="noopener">EnvOpt</a> (preprint, November 2026)</td><td>The shared environment the agent works in: workspaces and data sources</td><td>Optimizes without graders; the authors evaluate it on cost and pass rate</td></tr>
     <tr><td><a href="https://arxiv.org/abs/2611.02079" target="_blank" rel="noopener">ParetoSaddler</a> (preprint, November 2026)</td><td>The harness, against more than one objective at once</td><td>Quality and cost per task together</td></tr>
     <tr><td><a href="https://aclanthology.org/2026.emnlp-main.2326/" target="_blank" rel="noopener">Harness Updating Is Not Harness Benefit</a> (EMNLP 2026)</td><td>Nothing; it measures whether models benefit from their own updates</td><td>Not applicable</td></tr>
@@ -426,15 +426,15 @@
   <li><strong>Inventory what your harnesses control before you let them evolve.</strong> List the validation steps, tool permissions and standing instructions, and mark which ones exist because of a past decision or incident.</li>
   <li><strong>Start where the Radar says to: bounded experiments.</strong> Let an optimizer edit prompts and context rules first. Keep tool permissions and validation steps out of its write scope until you have a review path for them.</li>
   <li><strong>Score proposals on two axes.</strong> Benchmark benefit is one. Whether the edit touches a recorded constraint is the other, and it should route the edit to a reviewer, whatever the score.</li>
-  <li><strong>Watch the model tier.</strong> The EMNLP finding that benefit varies with model capability means a loop that helped one model can help another one less. Re-run held-out tests when you change models.</li>
+  <li><strong>Re-test when you change models.</strong> The EMNLP finding that benefit varies with model capability means a loop that helped one model can help another one less. Re-run held-out tests when you change models.</li>
 </ul>
 
 <h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, covers the constraint-checking part of this, for harness files kept in a repository. It does not optimize harnesses, approve edits or decide promotion.</p>
 <p>Mneme enforces decisions that carry an active typed rule: a rule a machine can check, such as an exact piece of text that must not appear, optionally limited to certain paths. A team that forbids the option that disables its validation step, as literal text in its harness configuration, gets a FAIL when a proposed edit adds that option. A decision without an active typed rule is not enforced.</p>
 <p>Mneme cannot require a step to stay. The edit in the worked example above deletes the validation step outright, which adds no forbidden text, so Mneme does not catch it. That case needs a test that fails when the step is missing, or a code-owner review on the file.</p>
-<p>The checks run in CI and in coding agents including Claude Code, and the command-line interface (CLI) agents Codex CLI and Kiro CLI 3.0, where each agent's native write tools are checked before the write lands. In CI, strict mode fails the job on a violation, and each violation names the decision it broke. Decisions live in the <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted, versioned record of a repository's decisions, with each decision's lifecycle status and, where known, its source. It does not record who approved a decision.</p>
-<p>Gating a harness optimizer's promotion step on Mneme's results is not a shipped integration. Teams would wire it through their own pipeline: the optimizer opens a pull request, and the CI check runs on it like any other change. Mneme's CI check reads the decision file from the pull request's own checkout, so protect that file with code-owner rules, or an optimizer's pull request could edit the rule it is judged by.</p>
+<p>The checks run in CI and in coding agents including Claude Code, and the command-line interface (CLI) agents Codex CLI and Kiro CLI 3.0, where each agent's native write tools are checked before the write lands. In CI, strict mode fails the job on a violation (warn mode reports without failing), and each violation names the decision it broke. Decisions live in the <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted, versioned record of a repository's decisions, with each decision's lifecycle status and, where known, its source. It does not record who approved a decision.</p>
+<p>Gating a harness optimizer's promotion step on Mneme's results is not a shipped integration. Teams would wire it through their own pipeline: the optimizer opens a pull request, and the CI check runs on it like any other change. Mneme does not yet follow the base-branch practice above: its CI check reads the decision file from the pull request's own checkout. Until reading rules from a protected state ships, protect that file with code-owner rules, or an optimizer's pull request could edit the rule it is judged by.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
     <div class="context-cta-eyebrow">Architecture Audit</div>
@@ -449,7 +449,7 @@
   <h2 id="faq-heading" style="margin-bottom:1.5rem;">Frequently asked questions</h2>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
     <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">What is a self-improving agent harness?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">A harness is everything around a model that turns it into a working agent: prompts, context rules, workflows, skills, tools, memory and middleware. A self-improving harness reads its own execution traces and evaluation results, then proposes or makes changes to those parts. Thoughtworks placed the technique in the Trial ring of its Technology Radar on November 4, 2026.</div>
+    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">A harness is everything around a model that turns it into a working agent: prompts, context rules, workflows, skills, tools, memory and middleware (code that runs between the model and its tools). A self-improving harness reads its own execution traces and evaluation results, then proposes or makes changes to those parts. Thoughtworks placed the technique in the Trial ring of its Technology Radar on November 4, 2026.</div>
   </details>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
     <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Are regression tests enough to accept a harness edit?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
