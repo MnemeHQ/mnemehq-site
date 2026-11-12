@@ -6,6 +6,12 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [AI code comprehension](2026-11-12-ai-code-comprehension.md) | 2026-11-12 | insight (re-angled); concept page held | gathered, not built |
+| [EnvOpt assessment (self-evolving harnesses)](2026-11-06-envopt-self-evolving-harness.md) | 2026-11-06 | insight | gathered, not built |
+| [Angular Framework Recommendation](2026-11-05-angular-framework-recommendation.md) | 2026-11-05 | insight cluster (A now, B after A, C evidence-gated) | gathered, not built |
+| [OpenAI vulnerability fixes research](2026-11-05-openai-paths-to-root.md) | 2026-11-05 | insight (re-angled to report-anchored) | gathered, not built |
+| [GR00T 2 Relevance - Robotics](2026-11-10-groot-2-robotics.md) | 2026-11-10 | strategy only | dropped |
+| [Architecture Driven Development Positioning](2026-10-24-architecture-driven-development.md) | 2026-10-24 | strategy; flagship merges into spec-driven pages | dropped as scoped |
 | [OpenShell Assess NVIDIA Interview](2026-10-21-openshell-assess-nvidia-interview.md) | 2026-10-21 | insight (re-angled); AI factory piece dropped; integration pages in #232/#233 | published 2026-10-22 (#238) |
 | [Agent orchestrators and factories](2026-10-20-agent-orchestrators-and-factories.md) | 2026-10-20 | site edit (integrations, use case, how-tos; #231) | gathered, not built |
 | [Assess OpenAI Modernization Announcement](2026-10-20-assess-openai-modernization-announcement.md) | 2026-10-20 | insight cluster (2 now, 1 phase 2, 2 evidence-gated) | A queued 10-26 (#242), B 10-27 (#243), C 10-29 (#249); D, E evidence-gated |
