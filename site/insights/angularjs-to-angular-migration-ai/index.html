@@ -364,7 +364,7 @@
   </header>
 
 <h2 id="233-commits-in-25-days">233 commits in 25 days</h2>
-<p>On September 3, 2026, Karin Huber, founder and CEO of software architects, the company behind the time-tracking product time cockpit, published <a href="https://www.timecockpit.com/blog/angularjs-to-angular-migration-claude-code/" target="_blank" rel="noopener">AngularJS to Angular Migration in a Month with Claude Code</a>. Since 2018 the product had run as a hybrid app, with AngularJS and Angular side by side, joined through Angular's <code>@angular/upgrade</code> package. The team used Claude Code to dissolve that hybrid.</p>
+<p>On September 3, 2026, Karin Huber, founder and CEO of software architects gmbh, which makes the time-tracking product time cockpit, published <a href="https://www.timecockpit.com/blog/angularjs-to-angular-migration-claude-code/" target="_blank" rel="noopener">AngularJS to Angular Migration in a Month with Claude Code</a>. Since 2018 the product had run as a hybrid app, with AngularJS and Angular side by side, joined through Angular's <code>@angular/upgrade</code> package. The team used Claude Code to remove the AngularJS half and that bridge.</p>
 <p>The numbers describe a large change done quickly:</p>
 <ul>
   <li><strong>233 commits across 25 days of work</strong>, weekends included. 218 of them were co-authored by Claude, and 34 were feature work rather than migration.</li>
@@ -384,11 +384,11 @@
 <p>The time cockpit account separates the two kinds of work. The agent carried the repetitive conversion and the test runs, under rules written in advance. People made the decisions about order and scope.</p>
 <p>The risks came from changes that compiled and looked correct:</p>
 <ul>
-  <li><strong>Change detection.</strong> According to the post, Angular 22 changes the default strategy components use to decide when to re-render, which the post calls "a silent, sweeping behavioral change." The team pinned components to the old strategy for the version bump, then removed the pins in about eleven batches. The last came off on August 14.</li>
+  <li><strong>Change detection.</strong> According to the post, Angular 22 changes which change-detection strategy components get by default, the setting that decides when a component re-renders. The post calls it "a silent, sweeping behavioral change." The team pinned each component to its previous setting for the version bump, then removed the pins in about eleven batches. The last came off on August 14.</li>
   <li><strong>A lost export.</strong> The Excel export was silently disconnected.</li>
   <li><strong>A lost redirect.</strong> The start-page redirect disappeared.</li>
 </ul>
-<p>Tests caught the export and the redirect. Reading the diffs did not. The post also found that ESLint had been silently broken before the work began. It lists open work as well: 16 legacy NgModules (Angular's original module system, which standalone components replace), a lint backlog and zone-based change detection.</p>
+<p>Tests caught the export and the redirect. Reading the diffs did not. Separately, the post reports that ESLint, the project's linter, had stopped running without reporting any error well before the migration began. It lists open work as well: 16 legacy NgModules (Angular's original module system, which standalone components replace), a lint backlog and zone-based change detection.</p>
 <p>The lesson is not that the agent was careless. The migration produced a great deal of correct code fast, and the defects that got through were ones no single diff revealed.</p>
 
 <aside class="cta-band" aria-label="Run the Architecture Audit">
@@ -408,7 +408,7 @@
   <li><strong>Shared services.</strong> During a hybrid phase, some services are upgraded for use in both frameworks. Decide which side owns each one. Two copies of a service with diverging logic produce bugs that look like data errors.</li>
   <li><strong>Routing.</strong> Two routers can coexist in a hybrid app. Redirects, guards and deep links are easy to lose when routes move, as time cockpit's start page showed.</li>
   <li><strong>State ownership.</strong> State that lived in AngularJS scopes or services must have one owner in the target. An agent asked to make a screen work will often read state from wherever it currently sits.</li>
-  <li><strong>Temporary adapters.</strong> Upgraded and downgraded components are scaffolding. Without a recorded exit condition, they outlive the migration, and later changes start depending on them.</li>
+  <li><strong>Temporary adapters.</strong> Upgraded and downgraded components (AngularJS pieces wrapped to run inside Angular, and the reverse) are scaffolding. Without a recorded exit condition, they outlive the migration, and later changes start depending on them.</li>
 </ol>
 
 <h2 id="record-three-kinds-of-decisions">Record three kinds of decisions</h2>
@@ -444,7 +444,7 @@
 <h2 id="where-mneme-fits">Where Mneme fits</h2>
 <p>Mneme, an open-source decision and control layer for agentic software development, covers the literal-text checks in the CI step of the checklist, and keeps a record of the decisions you write down. It does not migrate code, run tests or compare behavior.</p>
 <p>Mneme enforces decisions that carry an active typed rule: a rule a machine can check, such as an exact piece of text that must not appear in code, optionally limited to certain paths. A rule that forbids the legacy module's import path as literal text in the migrated directories returns a FAIL when an agent's change adds that import, and the violation names the decision it broke. The same works for a removed adapter's name. Direct HTTP client use in components is checkable only if your component files can be told apart by path. A decision without an active typed rule is not enforced, and a boundary a literal rule cannot express needs its own test.</p>
-<p>The checks run in continuous integration (CI) and in coding agents including Claude Code, where each agent's native write tools are checked before the write lands. Decisions live in the <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted, versioned record of a repository's decisions, with each decision's lifecycle status. It has no field for an exit condition, so write that into the decision's text. A decision that leaves active status also stops being enforced, so the rule that keeps a removed bridge removed belongs on a separate, active decision.</p>
+<p>The checks run in continuous integration (CI) and in coding agents including Claude Code, where each agent's native write tools are checked before the write lands. Decisions live in the <a href="/docs/decision-index/">Decision Index</a>, Mneme's persisted, versioned record of a repository's decisions, with each decision's lifecycle status. Write a transitional decision's exit condition into its text, since there is no separate field for it. When you retire that decision, its rule stops being checked, so keep the removed bridge out with a second decision that stays active.</p>
 
   <aside class="context-cta" data-mneme-cta="context" aria-label="Run the Architecture Audit">
     <div class="context-cta-eyebrow">Architecture Audit</div>
