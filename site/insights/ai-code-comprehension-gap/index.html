@@ -115,7 +115,7 @@
           "name": "Is the comprehension gap the same as a review backlog?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Review mostly answers whether a change behaves correctly. Comprehension asks whether the organization knows why the change exists and what it must preserve. A change can pass tests and review and still leave nobody on the team able to explain the decision behind it."
+            "text": "No. A review backlog counts changes waiting for review. The comprehension gap counts changes nobody can explain, including ones that passed review."
           }
         },
         {
@@ -359,14 +359,14 @@
       <span class="eyebrow-meta">8 min read</span>
     </div>
     <h1>When AI Builds Faster Than Engineers Can Understand</h1>
-    <p class="article-lede">A study of 802 developers found AI doubled the pull requests each engineer wrote, while the share getting a human review fell from 89% to 68%. Teams can now build and verify changes faster than they can understand them. That gap is a decision problem, and teams can measure it.</p>
+    <p class="article-lede">A study of 802 developers found AI doubled the pull requests written by those active three months or more, while the share getting a human review fell from 89% to 68%. Code now changes faster than teams can explain why it changed. That gap can be measured through the decisions behind each change.</p>
     <p class="byline">By <a href="/founder/">Theo Valmis</a><span class="sep">&middot;</span><time datetime="2026-11-16">November 2026</time></p>
   </header>
 
 <h2 id="output-doubled-review-did-not">Output doubled. Review did not.</h2>
 <p>In July 2026, a team of six researchers posted <a href="https://arxiv.org/abs/2607.01904" target="_blank" rel="noopener">AI Writes Faster Than Humans Can Review</a>, a study of one company that told its engineers to double their output with AI. They followed 802 developers and 196,212 pull requests from January 2024 to April 2026.</p>
 <p>The mandate worked on its own terms. By the tenth month, among developers active for at least three months, the mean number of pull requests each one authored had risen from 21.2 to 44.3 a month, 2.09 times the baseline. On the company's own measure, merged pull requests per engineer, the rise was 2.31 times.</p>
-<p>The review side moved differently. Pull request volume grew 3.1 times while the pool of reviewers grew 1.5 times, so each reviewer's load roughly doubled. The share of pull requests that got a human review fell from 89% to 68%. The share with an automated review rose from about 19% to about 84%. A pull request can get both kinds, so the two shares overlap.</p>
+<p>The review side moved differently. Total pull request volume, which counts every author, grew 3.1 times while the pool of reviewers grew 1.5 times, so each reviewer's load roughly doubled. The share of pull requests that got a human review fell from 89% to 68%. The share with an automated review rose from about 19% to about 84%. A pull request can get both kinds, so the two shares overlap.</p>
 <p>The study covers one company, it is not randomized, and the authors call their estimates an upper bound. It is still a detailed record of what happens when implementation scales and human attention does not.</p>
 
 <h2 id="three-questions-every-change-has-to-answer">Three questions every change has to answer</h2>
@@ -407,18 +407,18 @@
 
 <h2 id="measuring-the-gap">Measuring the gap</h2>
 <p>No study yet measures a fall in human comprehension directly. The evidence shows rising output and rising review pressure, and the comprehension gap is our reading of what those two together imply. It is a hypothesis that teams can test, not a proven law.</p>
-<p>One way to frame it: count the architectural changes a team makes over a period, and count how many of them the team can connect to an accepted decision and explain. The difference is the comprehension backlog. Turning that into a metric needs consistent definitions of a change and of understanding, which no team has standardized. These candidate indicators come closer:</p>
+<p>One way to frame it: count the architectural changes a team makes over a period, and count how many of them the team can connect to an accepted decision and explain. The difference, the changes nobody can yet explain, is the comprehension backlog. Turning that into a metric needs consistent definitions of a change and of understanding, which no team has standardized. These candidate indicators come closer:</p>
 <table class="gov-table">
   <thead><tr><th>Indicator</th><th>What it reveals</th></tr></thead>
   <tbody>
     <tr><td>Decision coverage</td><td>How much of the architecture that matters has an explicit, recorded decision behind it</td></tr>
     <tr><td>Decision-to-change traceability</td><td>Whether an architectural change can be linked to the decision that allows it</td></tr>
-    <tr><td>Unresolved exceptions</td><td>How many changes conflict with a recorded decision and were never reconciled</td></tr>
+    <tr><td>Unresolved conflicts</td><td>How many changes conflict with a recorded decision and were never reconciled</td></tr>
     <tr><td>Architectural rework rate</td><td>How often later changes reverse earlier design choices</td></tr>
     <tr><td>Decision recovery time</td><td>How long an engineer needs to explain why a component is built the way it is</td></tr>
   </tbody>
 </table>
-<p>None of these is a validated benchmark. Each one is cheap to sample, and each one moves in the wrong direction long before an incident makes the gap visible.</p>
+<p>None of these is a validated benchmark. Each one is cheap to sample, and each one can show the gap before an incident does.</p>
 
 <h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
 <ul>
@@ -450,7 +450,7 @@
   </details>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
     <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Is the comprehension gap the same as a review backlog?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. Review mostly answers whether a change behaves correctly. Comprehension asks whether the organization knows why the change exists and what it must preserve. A change can pass tests and review and still leave nobody on the team able to explain the decision behind it.</div>
+    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">No. A review backlog counts changes waiting for review. The comprehension gap counts changes nobody can explain, including ones that passed review.</div>
   </details>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
     <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How can engineering leaders tell whether implementation is outpacing understanding?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
