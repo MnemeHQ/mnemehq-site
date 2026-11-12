@@ -123,7 +123,7 @@
           "name": "Does the report show that AI can fix kernel vulnerabilities at scale?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Not yet. The 948 figure counts distinct patches the agents wrote, not fixes merged upstream, and the report gives no count of OpenAI's merged patches. Model-written patches were occasionally bloated, off-convention or missing variants, and OpenAI expects expert-guided iteration to be needed to make them sound. The report shows that exploit discovery scales; safe remediation is not shown to scale the same way."
+            "text": "Not yet. The 948 figure counts distinct patches the agents wrote, not fixes merged upstream, and the report gives no count of OpenAI's merged patches. Model-written patches were occasionally bloated, off-convention or missing variants, and OpenAI believes expert-guided iteration can make them sound. The report shows that exploit discovery scales; safe remediation is not shown to scale the same way."
           }
         }
       ]
@@ -409,13 +409,13 @@
 <ul>
   <li><strong>948 is a count of distinct patches, not of fixes merged upstream.</strong> The report gives no count of OpenAI's own merged patches. It says that after the 10-day scan, 61 of the LPEs had already been patched upstream and 43 had patches in staging, a figure that includes fixes from other contributors.</li>
   <li><strong>Remediation still involves people.</strong> Model-written patches were functionally correct but occasionally bloated, off-convention or missing variants of the same bug. OpenAI writes that extra instructions and iteration improved them, and that it believes expert-guided iteration can make them sound.</li>
-  <li><strong>The dollar value is hypothetical.</strong> OpenAI applies past payouts from the Pwn2Own and TyphoonPWN hacking contests ($20,000 and $70,000 per exploit) to the 948 exploits, for a valuation of $18.9 million to $66.3 million. That is a comparison, not money anyone paid.</li>
+  <li><strong>The dollar value is hypothetical.</strong> OpenAI applies past payouts from the Pwn2Own and TyphoonPWN hacking contests ($20,000 and $70,000 per exploit) to the 948 unique vulnerabilities, for a valuation of $18.9 million to $66.3 million. That is a comparison, not money anyone paid.</li>
   <li><strong>The results are OpenAI's own.</strong> The pipeline ran in a controlled research environment, and the report presents no independent reproduction.</li>
 </ul>
 <p>So the research shows that exploit discovery now scales with compute. It does not yet show that safe remediation scales the same way, and the wrong-path finding is one reason why.</p>
 
 <h2 id="scaffolding-is-shrinking-verification-is-not">Scaffolding is shrinking. Verification is not.</h2>
-<p>A second finding shows which kind of effort keeps its value. With an earlier OpenAI model, GPT-5.5 Cyber, giving the agent 103 exploitation techniques to draw on raised its success rate on 63 candidates from 76.2% to 88.9%. With the newer GPT-5.6 Cyber, a light workflow outperformed that heavily scaffolded setup, and adding the techniques back gained only 1.5 points.</p>
+<p>A second finding concerns scaffolding: the instructions and workflow a team builds around a model to help it succeed. It shows which kind of effort keeps its value. With an earlier OpenAI model, GPT-5.5 Cyber, giving the agent 103 exploitation techniques to draw on raised its success rate on 63 candidates from 76.2% to 88.9%. With the newer GPT-5.6 Cyber, a light workflow outperformed that heavily scaffolded setup, and adding the techniques back gained only 1.5 points.</p>
 <p>So the procedural help that once made agents work is losing value as models improve. The independent path check is the opposite case. OpenAI added it because the agent was capable enough to find another route to root, and nothing about a more capable model makes such routes less likely. Teams deciding where to spend effort should weigh that: checks outside the agent keep paying off as models change, while orchestration built around one model's weaknesses may not.</p>
 
 <h2 id="what-engineering-leaders-should-do">What engineering leaders should do</h2>
@@ -452,7 +452,7 @@
   </details>
   <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
     <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Does the report show that AI can fix kernel vulnerabilities at scale?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Not yet. The 948 figure counts distinct patches the agents wrote, not fixes merged upstream, and the report gives no count of OpenAI's merged patches. Model-written patches were occasionally bloated, off-convention or missing variants, and OpenAI expects expert-guided iteration to be needed to make them sound. The report shows that exploit discovery scales; safe remediation is not shown to scale the same way.</div>
+    <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Not yet. The 948 figure counts distinct patches the agents wrote, not fixes merged upstream, and the report gives no count of OpenAI's merged patches. Model-written patches were occasionally bloated, off-convention or missing variants, and OpenAI believes expert-guided iteration can make them sound. The report shows that exploit discovery scales; safe remediation is not shown to scale the same way.</div>
   </details>
 </section>
 
