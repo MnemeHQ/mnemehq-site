@@ -14,7 +14,7 @@ Status: **gathered, not built**
 | Field | Value |
 |---|---|
 | Kind | insight, re-angled to report-anchored |
-| Title | OpenAI "A thousand fewer paths to root": A Successful Agent Run Is Not an Authorized One (confirm the post's verbatim title at verification) |
+| Title | OpenAI "A thousand fewer paths to root": A Successful Agent Run Is Not an Authorized One (post's verbatim title confirmed 2026-11-12: "A thousand fewer paths to root", published 4 Nov 2026) |
 | Slug | `openai-a-thousand-fewer-paths-to-root-agent-verification` |
 | Report-anchored (ADR-015) | yes: entity = "A thousand fewer paths to root" (OpenAI Research, 4 Nov 2026); verbatim first in all six title fields, with source and figure in the meta description |
 | Topic hub | ai-coding-agents |
@@ -44,12 +44,15 @@ The chat's limits on the research, to carry into the article: 948 is distinct pa
 
 | Claim | Source URL (no `?utm_source`) | Verified? |
 |---|---|---|
-| 2,308 candidate findings; 1,724 reproduced (74.7%); 948 distinct local privilege escalation vulnerabilities | unverified: OpenAI Research, "A thousand fewer paths to root" | unverified |
-| 1,169 of 1,238 LPE candidates became working exploits (94.4%) before deduplication | same | unverified |
-| About $1.21 million in API credits; about $1,279 per distinct LPE | same | unverified |
-| In an earlier run, 20 of 200 successful escalations used a different vulnerability than assigned; independent checks were added | same | unverified |
-| Stronger models needed less technique-specific scaffolding | same | unverified |
-| A critique noting the gap between generated patches and merged changes ("SXZ.io") | unverified: chat gives no URL; cut if not found | unverified |
+| 2,308 candidate findings; 1,724 reproduced (74.7%); 948 distinct local privilege escalation vulnerabilities | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified (Summary; Vulnerability validation: "Within 30 hours, our system reproduced 1724 vulnerabilities, ~74.7% of the 2,308 candidate findings"). 948 is counted by patches, not by exploits: "We performed variant analysis and developed 948 distinct patches for the vulnerabilities behind those exploits. We use that number to determine the overall number of unique LPEs" (Exploitability assessment). The 2,308 is "after deduplication" (Analyst agents). |
+| 1,169 of 1,238 LPE candidates became working exploits (94.4%) before deduplication | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified (Exploitability assessment): screening narrowed to 313 information leak and 1,238 LPE candidates; ExploitDev produced "1,169 working local privilege escalation exploits" and 291 information leak PoCs. The 94.4% and "before deduplication" are our arithmetic and reading, not the post's words. |
+| About $1.21 million in API credits; about $1,279 per distinct LPE | https://openai.com/index/a-thousand-fewer-paths-to-root/ | differs: post says "$1,213,430 in API credits, or $1,279 per LPE exploit" (Findings; the headline says "$1.2 million"). Say "per LPE exploit", not "per distinct LPE". Average cost of a successful exploit-development attempt is a separate figure: $359 (Exploitability assessment). |
+| In an earlier run, 20 of 200 successful escalations used a different vulnerability than assigned; independent checks were added | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified ("Using the wrong 0-day"): in an early run the exploitation stage reported 200 successful LPE exploits; after human review 20 "had achieved root privileges through a different 0-day vulnerability than the one assigned". Fix: "tightened the task constraints and added an independent check confirming that each final exploit used its assigned vulnerability". Takeaway: "verify the path to a result in addition to verifying the result itself". |
+| Stronger models needed less technique-specific scaffolding | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified ("More capable models can require lighter orchestration"): GPT-5.5 Cyber with 103 techniques added went from 76.2% to 88.9% success across 63 candidates; GPT-5.6 Cyber with the layer removed outperformed the scaffolded 5.5 workflow, and adding it back gave +1.5 points. |
+| About 7% of Linux kernel code examined | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified (Scout agents): 5,034 audit targets, about 2.8 million lines, "roughly 7% of the whole Linux kernel code base"; chosen for reachability by low-privileged users and security relevance. |
+| Hypothetical bounty value $18.9M to $66.3M | https://openai.com/index/a-thousand-fewer-paths-to-root/ | verified (Findings; "What defenders can learn from exploit costs"): historic Pwn2Own $20,000 and TyphoonPWN $70,000 per Linux kernel LPE applied to 948 exploits gives "a hypothetical valuation of $18.9M-$66.3M, approximately 16x to 55x our pipeline's cost". |
+| Patches merged upstream | https://openai.com/index/a-thousand-fewer-paths-to-root/ | NOT STATED as a count of OpenAI's patches - cut any such claim. The post says only that when the 10-day scan finished "61 LPEs had already been patched upstream, 43 had staging patches, and 299 were being reported and discussed publicly" (Findings; "Maintainers are moving quickly"), and that this counts fixes from other contributors too (Reflections: "patched or had staging patches from other contributors"). It also says "hundreds of reports and patches" were sent (Patch generation), not how many were merged. |
+| A critique noting the gap between generated patches and merged changes ("SXZ.io") | none found | NOT FOUND - cut. Searches for sxz.io returned nothing; secondary coverage makes the same point, but none was verified as the critique the chat meant. |
 
 Render any chart or table figure from the page, not text extraction alone.
 
