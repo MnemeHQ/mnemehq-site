@@ -20,7 +20,7 @@ not every chat in the project.
 | ***Post-FDE ICP Content Cluster | 2026-09-15 | `most-valuable-ai-dataset-decisions-already-made`, `agent-economy-needs-decision-infrastructure`, + FDE cluster pages | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129) | 2026-09-15 |
 | ***Post-Mneme Decision Data | 2026-09-15 | folded into #129 (decision-dataset article) — **not independently verified, confirm before trusting** | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129)? | 2026-09-15 |
 | ***Post-Positioning strategy analysis | 2026-09-15 | not independently verified — likely folded into #129's "decision-layer thesis" | unknown | unknown |
-| Post-Writing ROI Content — **no `***` yet; all three backlog pieces published 2026-11-13, rename pending owner confirmation** | 2026-09-08/10 | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` (#135); scorecard update (#255); `hidden-cost-ai-generated-rework` (#258), `what-ctos-measure-before-renewing-ai-coding-tools` (#259), `ai-time-savings-senior-engineer-workload` (#260) | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135), [#258](https://github.com/MnemeHQ/mnemehq-site/pull/258)-[#260](https://github.com/MnemeHQ/mnemehq-site/pull/260) | 2026-09-15 / 2026-11-13 |
+| ***Post-Writing ROI Content (marked 2026-11-13, verified by re-listing the project) | 2026-09-08/10 | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` (#135); scorecard update (#255); `hidden-cost-ai-generated-rework` (#258), `what-ctos-measure-before-renewing-ai-coding-tools` (#259), `ai-time-savings-senior-engineer-workload` (#260) | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135), [#258](https://github.com/MnemeHQ/mnemehq-site/pull/258)-[#260](https://github.com/MnemeHQ/mnemehq-site/pull/260) | 2026-09-15 / 2026-11-13 |
 | ***Post-software factories + ***Post-Scope software factories | 2026-09-19 | `software-factory-governance-layer` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Conway's Law Relevance | 2026-09-18 | `conways-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Brooks Law Relevance | 2026-09-18 | `brooks-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
@@ -99,7 +99,7 @@ None currently.
 | AI Can Write 3x More Code ("Include stats" turn) | Dropped: same finding as `ai-throughput-is-not-engineering-throughput` |
 | 240% / 30% NBER ("Include stats" turn) | Already shipped (#135) |
 
-Close-out: #258 to #260 published 2026-11-13 (catch-up, below). Remaining: rename the chat with `***` to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
+Close-out: #258 to #260 published 2026-11-13 (catch-up, below), and the chat was renamed with `***` the same day to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
 
 
 **Last insight-article PR before this ledger was created:** [#136](https://github.com/MnemeHQ/mnemehq-site/pull/136),
