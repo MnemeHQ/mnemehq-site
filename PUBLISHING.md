@@ -463,8 +463,10 @@ are **reused, not redrawn**; new pages embed the existing primitive. Shared visu
 colour tokens (`--accent` active, `--teal` secondary, `--border2` neutral), glyph ordering (outcomes
 top, primitives bottom), and label typography (DM Mono for metadata, Inter for nodes). Diagrams must
 parse as valid SVG and be mobile-readable. No ornamental illustrations: if a claim reads better in
-prose, the prose wins and the diagram is removed. (Which canonical primitive lives on which page is
-defined in the private knowledge-graph roadmap.)
+prose, the prose wins and the diagram is removed. On insight pages the rule is enforced:
+`scripts/check_insights.py` fails on an inline diagram `<svg>` that is not a documented exception in
+`docs/site/insight-diagram-exceptions.json` (insight publishing contract, check 11). (Which canonical
+primitive lives on which page is defined in the private knowledge-graph roadmap.)
 
 **[ED] Flagship concept pages.** The four highest-authority concepts (Governance Infrastructure,
 Verification Contracts, Governance Before Generation, Architectural Governance) are flagship
