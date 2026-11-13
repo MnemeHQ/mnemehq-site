@@ -99,7 +99,7 @@ None currently.
 | AI Can Write 3x More Code ("Include stats" turn) | Dropped: same finding as `ai-throughput-is-not-engineering-throughput` |
 | 240% / 30% NBER ("Include stats" turn) | Already shipped (#135) |
 
-Close-out: #258 to #260 published 2026-11-13 (catch-up, below), and the chat was renamed with `***` the same day to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
+Close-out: #258 to #260 published 2026-11-13 (catch-up, below), and the chat was renamed with `***` the same day (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
 
 
 **Last insight-article PR before this ledger was created:** [#136](https://github.com/MnemeHQ/mnemehq-site/pull/136),
