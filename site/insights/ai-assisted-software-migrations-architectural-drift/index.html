@@ -408,6 +408,16 @@
     <p>This is not a temporary annoyance. It is the defining condition of the work. A migration that took two years to schedule will take at least as long to execute, and for all of that time the agent's most reliable heuristic, follow the surrounding code, points in exactly the wrong direction.</p>
     <div class="callout"><p><strong>The dominant pattern in a repository may be precisely the pattern you are paying to remove.</strong></p></div>
 
+    <aside class="cta-band" aria-label="Try Mneme">
+      <div class="cta-band-eyebrow">Runnable in five minutes</div>
+      <h3>See this enforced on your own repository</h3>
+      <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+      <div class="cta-row">
+        <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+        <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+      </div>
+    </aside>
+
     <h2 id="legacy-code-is-misleading-context">Legacy code is misleading context</h2>
     <p>Retrieval and context engineering have made agents much better at finding what exists in a codebase. During a migration that improvement cuts against you. A more thorough search returns more examples of the legacy structure, because there are more of them. The better the retrieval, the more confidently the agent reproduces the architecture you are leaving.</p>
     <p>Suppose the system you are moving away from is organized as <code>Controller &rarr; Service &rarr; Repository &rarr; Database</code>, and the target is <code>API &rarr; Domain &rarr; Port &rarr; Adapter</code>. Both are present. Both compile. Both pass their tests. Nothing in the repository marks one as historical and the other as intended, because that distinction does not live in code. It lives in a decision that was made in a meeting and recorded, at best, in a document nobody compiles.</p>

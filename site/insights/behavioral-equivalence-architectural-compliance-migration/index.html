@@ -383,6 +383,16 @@
 <p>By September 14 the team had traced dozens of known port regressions, all fixed, most of them correctness bugs. Toub takes on the Rust meme that "if the code compiles, it's correct", and answers it with the regression list: every regression on it was merged to main, so every one of them compiled. All existing end-to-end tests also ran against the new Rust code at every step, and a pull request that failed a required test did not land.</p>
 <p>So the regressions passed two gates, the compiler and the test suite, and some still reached a stable release. Each verification method answers one question, and accepting a migration needs answers to several.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="five-methods-five-questions">Five methods, five questions</h2>
 <p>Teams verifying a migration stack several methods. Four of them compare the new system with the old one. The fifth, decision compliance, checks new code against the engineering decisions the team made for the target system, such as which layer may touch storage. Each proves one thing and misses another:</p>
 <table class="gov-table">

@@ -355,6 +355,16 @@
 <h2>A PR is not an architectural decision</h2>
 <p>Triage's own framing is honest about its object: it governs the change, not the architecture the change has to fit inside. CodeRabbit says explicitly that architectural judgment, including whether an abstraction makes sense for the application, remains human. That is the right boundary, and it is also the gap. A pull request is a transient artifact: opened, scored, merged, closed. An architectural decision is not. It survives the PR that prompted it, the next thousand PRs, a framework migration, a team rewrite, and every agent that touches the codebase afterward. A system that scores PRs needs a durable, separate answer to what decisions apply to this PR before it can meaningfully judge whether the PR is safe to advance.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2>Change evidence and decision authority are different things</h2>
 <p>Triage can explain why a PR is P0 instead of P3: it shows the evidence behind the score. That is change evidence. It is a different kind of evidence from decision authority: why an architectural decision governs this action, who approved it, what constraint follows from it, and whether it is still in force. Change evidence answers whether a change is good. Decision authority answers what the change is bound by. Conflating the two produces tools that can explain their own risk model but cannot say whether the code violates an architecture the organization already agreed on.</p>
 

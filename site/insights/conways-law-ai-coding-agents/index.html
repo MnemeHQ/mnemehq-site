@@ -379,6 +379,16 @@ Agent context   <-- whatever the agent was handed
 Generated code</code></pre>
 <p>If the decisions never reach the agent's context, the agent reconstructs intent from the code it can see. That reconstruction is sometimes right. When it is wrong, the result is locally correct code that breaks the architecture.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2>The architecture is richer than the repository</h2>
 <p>Architectural intent lives in ADRs, RFCs, design review threads, platform standards, security requirements, post-incident reviews, and the memory of people who were there. The repository contains the result of many of those decisions, but rarely their rationale or their constraints. An agent inferring architecture from code alone is reading the output of a process and guessing its rules.</p>
 <p>A simple example. Two services have nearly identical data models. They are separate because one handles regulated customer data and must stay isolated. An agent asked to reduce duplication sees two similar modules and consolidates them. The change is clean, tested, and technically sensible. It is architecturally wrong, and nothing in the code explained why.</p>

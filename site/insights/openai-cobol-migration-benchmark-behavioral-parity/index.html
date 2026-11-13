@@ -393,6 +393,16 @@
 <p>The other is MultiLangBench, which asks a model to build a SQLite-compatible database engine in a given language. At maximum reasoning effort, GPT-6 Astra averages an 87.4% test pass rate across 20 languages, up from 26.8% for GPT-5.6 Sol. COBOL is still the hardest language, at 72.1%. OpenAI released the setup and test suite <a href="https://github.com/openai/MultiLangBench" target="_blank" rel="noopener">on GitHub</a> under the Apache License 2.0.</p>
 <p>These are the vendor's own benchmarks, run on the vendor's own models. The jump from 5.4% to 86.6% at the same low setting is still a real signal.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="why-exact-parity-is-the-right">Why exact parity is the right test</h2>
 <p>OpenAI picked a strict bar, and it is the correct one for this kind of code. Its own example is COBOL's fixed-point arithmetic, which drops extra decimal digits unless rounding is explicitly requested. A Java rewrite that rounds instead will compile, run without errors and produce different balances. In a banking system, a one-cent difference repeated across millions of transactions is a reconciliation incident.</p>
 <p>A test that compares every output byte catches that class of error. Behavioral parity is how a team proves that a rewrite still does what the old system did.</p>

@@ -497,6 +497,14 @@ def check_slug(
     #     carries data-cta-intent so cta_click can report it.
     errors.extend(check_context_cta(slug, html))
 
+    # 11. mid-article CTA band (templates/cta-components.html, component 4).
+    #     new_article.py stamps it; this catches pages built any other way.
+    if 'class="cta-band"' not in html:
+        errors.append(
+            f"No mid-article CTA band in {slug}: "
+            f"run python scripts/insert_mid_cta_band.py --write"
+        )
+
     return errors
 
 

@@ -393,6 +393,16 @@
 <p>Nothing in that story is a Kubernetes defect or a PostgreSQL defect. The autoscaler scaled. The database protected itself by enforcing its limit. Each layer passed its own checks. The failure lives in a number nobody owns: how many connections the whole deployment can open, against how many the database will accept.</p>
 <p>Site reliability engineers (SREs) and platform engineers know this failure well. Two current changes add new ways to trigger it. Autoscaling changes replica counts without a person in the loop, and coding agents can now edit Deployment manifests, HPA objects and pool settings in the same change as application code, without anyone re-running the arithmetic.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="what-each-layer-guarantees">What each layer guarantees</h2>
 <p>Kubernetes documents the HPA as a control loop. By default the controller runs <a href="https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/" target="_blank" rel="noopener">every 15 seconds</a>, compares the current metric with the target, and computes the desired replica count from their ratio. It never goes above the maximum you configure. Scaling up has no stabilization window by default: the controller may add 4 pods or double the running count every 15 seconds, whichever is more. Its inputs are CPU, memory, custom and external metrics. The database's connection limit is not one of them unless you build that metric yourself.</p>
 <p>A rolling update adds a second multiplier. A Deployment's <code>maxSurge</code> setting allows extra pods above the desired count during a rollout, and its <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank" rel="noopener">default is 25%</a>, rounded up.</p>

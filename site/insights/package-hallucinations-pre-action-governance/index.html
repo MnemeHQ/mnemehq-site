@@ -361,6 +361,16 @@
 <p>The name fits the ecosystem. The import statements look idiomatic. The package does not exist. (<code>fastqueue-pro</code> is an illustrative name, unregistered on PyPI at the time of writing.)</p>
 <p>This is a <strong>package hallucination</strong>: a model recommending a dependency that was never published. The security concern built on it is <strong>slopsquatting</strong>. If models invent the same plausible names repeatedly, an attacker can register those names on a public registry and wait for the next developer, or the next agent, to install them.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="how-common-it-is">How common it is</h2>
 <p>The phenomenon is well measured. <a href="https://www.usenix.org/conference/usenixsecurity25/presentation/spracklen" target="_blank" rel="noopener">"We Have a Package for You!"</a> by Spracklen et al., a Distinguished Paper at USENIX Security 2025, tested 16 code-generating models across 576,000 samples in two languages. It found hallucination rates of at least 5.2% for commercial models and 21.7% for open-source models, and 205,474 unique invented package names.</p>
 <p>Newer models are better but not clean. A <a href="https://arxiv.org/abs/2605.17062" target="_blank" rel="noopener">May 2026 replication</a> on five frontier models, including Claude Sonnet 4.6, GPT-5.4-mini, and Gemini 2.5 Pro, measured rates between 4.62% and 6.10% across 199,845 responses. It found 127 names that all five models invented, 53 of which were still available to register. The paper is from an independent researcher and has not been peer reviewed, but the direction is consistent: the range has narrowed, and the attack surface has not closed.</p>

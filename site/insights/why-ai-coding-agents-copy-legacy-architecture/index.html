@@ -396,6 +396,16 @@
     <p>Consider what the agent can actually observe. Two hundred call sites use direct database access. Twenty use the repository abstraction. Both compile. Both pass tests. Both were written by employees of the same company. Nothing in the code marks one as historical. The inference that the majority pattern is the house style is not a hallucination. It is a sound reading of the available evidence.</p>
     <p>The information that would change the conclusion is not in the codebase at all. It is a decision, made once, that the twenty are the future and the two hundred are debt. That fact has no representation in code, which is why no amount of code-reading recovers it.</p>
 
+    <aside class="cta-band" aria-label="Try Mneme">
+      <div class="cta-band-eyebrow">Runnable in five minutes</div>
+      <h3>See this enforced on your own repository</h3>
+      <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+      <div class="cta-row">
+        <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+        <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+      </div>
+    </aside>
+
     <h2>Better retrieval makes it worse</h2>
     <p>The intuitive fix is to give the agent more of the codebase. Larger context windows, better indexing, more thorough semantic search. During a migration each of those improvements strengthens the wrong signal.</p>
     <p>A weak search returns a handful of examples, and the agent may happen to draw from either architecture. A thorough search returns a representative sample, and a representative sample of a mid-migration repository is mostly legacy. The retrieval system is working exactly as designed. It surfaces what is there, and what is there is the architecture you are leaving.</p>

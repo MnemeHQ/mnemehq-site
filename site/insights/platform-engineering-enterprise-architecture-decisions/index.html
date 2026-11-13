@@ -393,6 +393,16 @@
 <p>Read together, the three split the work. The platform team runs the controls. Someone else defines the rules and standards the controls apply. Where an organization has an enterprise architecture function, that someone is the architects, whether they sit on a review board, in a principal engineer group or in an advice forum.</p>
 <p>The CNCF paper's phrase "defined by the organization" is where the handoff lives, and it is where the handoff usually goes unrecorded.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="one-decision-three-groups">One decision, three groups</h2>
 <p>Take the example from <a href="/insights/kubernetes-scaling-database-connection-budget/">When Kubernetes Works but the Application Still Fails</a>. The orders service must reach PostgreSQL only through its data adapter (the one module that opens database connections and owns the connection pool), and the deployment must stay inside a database connection budget. That article works through the arithmetic. The database accepts 100 connections, 3 of them reserved connections (slots PostgreSQL holds back for superusers), which leaves 97. Each pod opens a pool of 12, so 8 pods fit (96 connections).</p>
 <p>A rolling update adds surge pods, the extra pods a Deployment runs above its desired count during the update, and the default 25% surge turns 6 pods into 8. So the Horizontal Pod Autoscaler (HPA) for the service must not scale past 6 replicas: 6 plus 2 surge pods is 8, and 8 &times; 12 = 96.</p>
