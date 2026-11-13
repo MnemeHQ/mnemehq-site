@@ -36,6 +36,10 @@ on:
         description: 'Compose and validate only; do not push, merge or deploy'
         type: boolean
         default: false
+      catch_up:
+        description: 'Ignore the one-per-day limit (publish the next overdue article even if one went out today)'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -71,6 +75,8 @@ jobs:
 
       - name: Pick the next due article
         id: pick
+        env:
+          PUBLISH_CATCH_UP: ${{ inputs.catch_up == true && '1' || '0' }}
         run: python scripts/publish_queue.py pick >> "$GITHUB_OUTPUT"
 
       - name: Nothing due
@@ -79,7 +85,26 @@ jobs:
 
       - name: Require green checks on the PR
         if: steps.pick.outputs.pr != ''
-        run: gh pr checks "${{ steps.pick.outputs.pr }}"
+        env:
+          PR: ${{ steps.pick.outputs.pr }}
+        run: |
+          if gh pr checks "$PR"; then exit 0; fi
+          # A queued PR goes conflicting each time another article publishes (the archive,
+          # hubs and sitemap change on main), and GitHub runs no checks on a conflicting
+          # head, so "no checks reported" blocked the whole queue from 2026-10-30. The
+          # Compose and Validate steps below rebuild the article on main and run the
+          # content validators, so a conflict alone is not a reason to stop. A check that
+          # actually failed still is.
+          state=$(gh pr view "$PR" --json mergeStateStatus --jq .mergeStateStatus)
+          failing=$(gh pr checks "$PR" --json bucket --jq '[.[] | select(.bucket == "fail")] | length' 2>/dev/null || echo 0)
+          if [ "$state" = "DIRTY" ] && [ "$failing" = "0" ]; then
+            echo "::notice::PR #$PR conflicts with main and has no failing checks; validating the composed result and the PR's provenance instead."
+            gh pr view "$PR" --json body --jq '{pull_request: {body: .body}}' > "$RUNNER_TEMP/event.json"
+            GITHUB_EVENT_PATH="$RUNNER_TEMP/event.json" python scripts/check_pr_provenance.py
+            exit 0
+          fi
+          echo "PR #$PR has failing or pending checks (merge state $state)."
+          exit 1
 
       - name: Compose on main
         if: steps.pick.outputs.pr != ''

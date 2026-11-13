@@ -12,7 +12,9 @@ Commands:
          is due: pr, head, slug, title, date
 
 ``pick`` returns at most one PR per run, and nothing if a ``scheduled-publish``
-PR was already merged today (UTC). The workflow can therefore run in several
+PR was already merged today (UTC), unless ``PUBLISH_CATCH_UP=1`` is set (the
+workflow's ``catch_up`` dispatch input), which lifts the daily limit so overdue
+articles can be drained by repeated dispatches. The workflow can therefore run in several
 fallback slots and still publish at most one article per day; a backlog drains
 one day at a time.
 
@@ -22,6 +24,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
 import subprocess
 import sys
 
@@ -70,8 +73,11 @@ def main() -> int:
         return 0
     if cmd == "pick":
         # The workflow has several fallback cron slots; publish at most one article per UTC day.
-        done_today = json.loads(run("gh", "pr", "list", "--label", LABEL, "--state", "merged",
-                                    "--search", f"merged:>={today}", "--json", "number"))
+        # PUBLISH_CATCH_UP=1 (a manual dispatch) lifts that limit to drain overdue articles.
+        catch_up = os.environ.get("PUBLISH_CATCH_UP") == "1"
+        done_today = [] if catch_up else json.loads(run(
+            "gh", "pr", "list", "--label", LABEL, "--state", "merged",
+            "--search", f"merged:>={today}", "--json", "number"))
         if done_today:
             print(f"Already published today: #{done_today[0]['number']}", file=sys.stderr)
             return 0

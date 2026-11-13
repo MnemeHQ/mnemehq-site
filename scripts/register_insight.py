@@ -9,7 +9,8 @@ in one idempotent pass:
 2. adds the sitemap ``<url>`` block;
 3. adds the archive card (inside the primary topic's ``cards-section``) and
    its ``CollectionPage.hasPart`` entry;
-4. adds the topic-hub card and ``hasPart`` entry;
+4. adds the topic-hub card and ``hasPart`` entry (and, for Research and Report Response
+   articles, the /insights/research/ card, ``hasPart`` entry and section count);
 5. adds the OG record to ``site/og/cards.yaml`` (headline + alt) in key order;
 6. adds reciprocal links from the related articles listed in the manifest;
 7. bumps the archive ``dateModified`` and the /insights/all/ sitemap
@@ -184,6 +185,46 @@ def register_hub(m: dict) -> None:
     write(path, insert_after(s, '<div class="cards-grid">\n', card, section))
 
 
+RESEARCH_SECTIONS = {"Report Response": ("report-response", "Report responses"), "Research": ("research", "Research")}
+
+
+def register_research(m: dict, date: str) -> None:
+    """Card Research and Report Response articles on /insights/research/ (check_insight_types requires it)."""
+    if m["type"] not in RESEARCH_SECTIONS:
+        return
+    path = SITE / "insights" / "research" / "index.html"
+    s = read(path)
+    href = f"/insights/{m['slug']}/"
+    if f'href="{href}"' in s:
+        return
+    section_id, label = RESEARCH_SECTIONS[m["type"]]
+    s = insert_after(s, '"hasPart": [\n', has_part(m, "        "))
+    section = s.index(f'<div class="cards-section" id="{section_id}">')
+    human = dt.date.fromisoformat(date).strftime("%b %-d, %Y") if sys.platform != "win32" \
+        else dt.date.fromisoformat(date).strftime("%b %#d, %Y")
+    card = f'''      <a href="{href}" class="insight-card-link" data-published="{date}">
+        <div class="insight-card">
+          <div class="card-meta">
+            <span class="card-tag">{m["type"]}</span>
+            <span class="card-dot"></span>
+            <time class="card-date" datetime="{date}">{human}</time>
+            <span class="card-dot"></span>
+            <span class="card-read-time">{m["read_time"]}</span>
+          </div>
+          <h2>{esc(m["title"])}</h2>
+          <p>{esc(m["description"])}</p>
+          <div class="card-footer">
+            <span class="read-pill">Read insight</span>
+          </div>
+        </div>
+      </a>
+'''
+    s = insert_after(s, '<div class="cards-grid">\n', card, section)
+    s = re.sub(rf'(<span class="section-label">{label} \()(\d+)(\)</span>)',
+               lambda mt: f"{mt.group(1)}{int(mt.group(2)) + 1}{mt.group(3)}", s, count=1)
+    write(path, s)
+
+
 def register_og(m: dict) -> None:
     path = SITE / "og" / "cards.yaml"
     s = read(path)
@@ -276,6 +317,7 @@ def main() -> int:
     register_sitemap(m, date)
     register_archive(m, date)
     register_hub(m)
+    register_research(m, date)
     register_og(m)
     register_reciprocal(m)
     settle_all_links(args.slug)
