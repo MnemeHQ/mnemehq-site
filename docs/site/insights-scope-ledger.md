@@ -20,7 +20,7 @@ not every chat in the project.
 | ***Post-FDE ICP Content Cluster | 2026-09-15 | `most-valuable-ai-dataset-decisions-already-made`, `agent-economy-needs-decision-infrastructure`, + FDE cluster pages | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129) | 2026-09-15 |
 | ***Post-Mneme Decision Data | 2026-09-15 | folded into #129 (decision-dataset article) — **not independently verified, confirm before trusting** | [#129](https://github.com/MnemeHQ/mnemehq-site/pull/129)? | 2026-09-15 |
 | ***Post-Positioning strategy analysis | 2026-09-15 | not independently verified — likely folded into #129's "decision-layer thesis" | unknown | unknown |
-| Post-Writing ROI Content — **no `***` yet; backlog resolved, last piece queued for 2026-11-05 (see "Partially processed")** | 2026-09-08/10 | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` (#135); scorecard update (#255); three pieces queued (#258 to #260) | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135) | 2026-09-15 |
+| Post-Writing ROI Content — **no `***` yet; all three backlog pieces published 2026-11-13, rename pending owner confirmation** | 2026-09-08/10 | `ai-engineering-roi`, `ai-throughput-is-not-engineering-throughput` (#135); scorecard update (#255); `hidden-cost-ai-generated-rework` (#258), `what-ctos-measure-before-renewing-ai-coding-tools` (#259), `ai-time-savings-senior-engineer-workload` (#260) | [#135](https://github.com/MnemeHQ/mnemehq-site/pull/135), [#258](https://github.com/MnemeHQ/mnemehq-site/pull/258)-[#260](https://github.com/MnemeHQ/mnemehq-site/pull/260) | 2026-09-15 / 2026-11-13 |
 | ***Post-software factories + ***Post-Scope software factories | 2026-09-19 | `software-factory-governance-layer` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Conway's Law Relevance | 2026-09-18 | `conways-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
 | ***Post-Brooks Law Relevance | 2026-09-18 | `brooks-law-ai-coding-agents` | [#139](https://github.com/MnemeHQ/mnemehq-site/pull/139) | 2026-09-19 |
@@ -60,6 +60,9 @@ All three chats were renamed with the `***` marker on 2026-09-25 after #150 depl
 
 **Other unmarked `Post-` chats found 2026-09-25, not yet assessed:** Post-AI Silo Breakdown Content (09-13), Post-Scope pre action governance (09-08), Post-Competing with CodeRabbit (09-08), Post-OKF architecture article scope (09-01), plus ~119 unmarked `Post-` chats from 2026-08-11 to 08-29 that predate this ledger.
 
+
+Notes for the 2026-11-13 catch-up: the scheduled publisher merged nothing from 2026-10-30 to 11-12. Each publish edits the archive, hubs and sitemap, so the queued PRs went conflicting, GitHub ran no checks on them, and the "Require green checks" step labelled all seven `publish-blocked`. #298 fixed the gate (a conflicting PR with no failing checks is validated on the composed result plus its provenance block), added a `catch_up` dispatch input, and made `register_insight.py` card Research and Report Response articles on `/insights/research/`. The seven branches were rebuilt on main (contextual CTA swept per #274, shared nav and footer re-synced, no prose changed) and published by seven catch-up dispatches on 2026-11-13: #250 (`platform-engineering-enterprise-architecture-decisions`), #251 (`strangler-vs-big-bang-migration`), #252 (`ai-code-translation-go-source-language-patterns`), #253 (`when-not-to-rewrite-migration-economics`), #258, #259, #260. Deploy verified: every deploy run succeeded and `site-deployed` = `main` = `e1c0ca0c`; all seven URLs return 200. Batch 6 (#293 to #296, briefs in #297) is queued 2026-11-14 to 11-17.
+
 ## In review (drafted, not merged, not yet marked `***`)
 
 None currently.
@@ -96,7 +99,7 @@ None currently.
 | AI Can Write 3x More Code ("Include stats" turn) | Dropped: same finding as `ai-throughput-is-not-engineering-throughput` |
 | 240% / 30% NBER ("Include stats" turn) | Already shipped (#135) |
 
-Close-out: when #260 deploys (2026-11-05), add the shipped rows to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
+Close-out: #258 to #260 published 2026-11-13 (catch-up, below). Remaining: rename the chat with `***` to the Published table and rename the chat with `***` (owner decision 2026-10-22: mark once the batch ships; confirm the exact rename first). The cluster is written at about 80% neutral economics, with one governance paragraph per piece and no Mneme ROI figures.
 
 
 **Last insight-article PR before this ledger was created:** [#136](https://github.com/MnemeHQ/mnemehq-site/pull/136),
