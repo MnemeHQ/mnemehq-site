@@ -390,6 +390,16 @@
 <p>Twitch went the other way. Its <a href="https://blog.twitch.tv/en/2022/04/12/breaking-the-monolith-at-twitch-part-2" target="_blank" rel="noopener">account of breaking up its Ruby on Rails monolith</a> describes a company-wide campaign, begun in 2015, "to move all of Twitch's backend code into Go microservices." A reverse proxy built on NGINX (an open-source web server) sent a share of traffic to a new application programming interface (API) edge written in Go, endpoint by endpoint. The work engaged backend engineers from 2016 to 2018. By the end of 2018 all traffic had left the monolith, and the post adds: "It would still take another year to fully clean up the account of dependencies and access roles."</p>
 <p>Both teams finished. Neither account is a controlled comparison, and neither proves its strategy is better. Read together, they help explain each choice.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="fowler-s-warning-is-about-rewrites">Fowler's warning is about rewrites</h2>
 <p>The incremental pattern takes its name from Martin Fowler's <a href="https://martinfowler.com/bliki/StranglerFigApplication.html" target="_blank" rel="noopener">Strangler Fig Application</a> entry, first published as "Strangler Application." The new system grows around the old one and takes over its behavior piece by piece. Fowler's case against the alternative is blunt. Teams plan to build a new system that does exactly what the old one does, "But we've seen this simple-sounding plan go down in flames most of the time."</p>
 <p>That warning targets a rewrite: people re-implementing behavior nobody has fully specified, while users wait for features. Stripe did not rewrite anything. A codemod, a program that rewrites source code mechanically, translated the Flow code to TypeScript. Stripe spent several months extending a codemod Airtable had published until it handled the Dashboard's edge cases. It had also read accounts from Airtable and Zapier, which had each run a converter over their whole codebase and "merged the output as a single commit." The big-bang step was a machine translation, checked by tests and manual QA.</p>

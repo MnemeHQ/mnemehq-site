@@ -387,6 +387,16 @@
     <p>Three months later the orders service has migrated. It now reaches persistence through a repository port, its error handling follows the target pattern, and the helper is deprecated. The memory layer still holds the March description, and nothing about the migration told it otherwise, because migrating a component is not an event a memory layer observes. It is a series of commits that look, individually, like ordinary work.</p>
     <div class="callout"><p><strong>Memory is a record of what was true when it was written. A migration's entire purpose is to make that record wrong.</strong></p></div>
 
+    <aside class="cta-band" aria-label="Try Mneme">
+      <div class="cta-band-eyebrow">Runnable in five minutes</div>
+      <h3>See this enforced on your own repository</h3>
+      <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+      <div class="cta-row">
+        <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+        <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+      </div>
+    </aside>
+
     <h2>Staleness has a specific shape here</h2>
     <p>Ordinary memory staleness is diffuse: a few facts drift, the agent is a bit out of date, someone corrects it. Migration staleness is structured, and that makes it more dangerous.</p>
     <p>It is not random facts going stale. It is specifically the components that have already been fixed whose descriptions are wrong, while the components that have not been touched are still described perfectly. The memory is most accurate about exactly the code you least want copied, and least accurate about the code you want treated as the model.</p>

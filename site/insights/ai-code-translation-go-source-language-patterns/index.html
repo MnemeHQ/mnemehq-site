@@ -391,6 +391,16 @@
 <p>The open-text answers add detail. The Go team writes: "Respondents who were most frustrated by writing idiomatic Go were often looking for more official guidance, as well as tooling support to help enforce this guidance in their codebase." The second-largest frustration (28%) was "A feature I value from another language isn't part of Go", and those comments centred on error handling, enums and nil safety.</p>
 <p>The survey asked Go developers about their own work. It did not study translation, and it does not show that agents carry habits from one language into another. It does show three things: idiomatic Go is hard for people, those people want help enforcing it, and 30% of those describing a problem with AI tools said that even working code was of poor quality.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="the-hypothesis">The hypothesis</h2>
 <p>Mneme is an open-source tool that checks the code coding agents write against a team's recorded engineering decisions. Our hypothesis, which we have not tested, is this: Go code that an agent translates from Python or Java, and that passes parity tests, will often keep source-language patterns that fail under cancellation, concurrency or partial failure.</p>
 <p>Parity tests run the same inputs through the old service and the new one and compare the outputs. They check what the code returns on the paths they exercise. They rarely check what happens when a client disconnects, where a transaction starts and ends, or whether a caller can inspect an error. A translation can be correct on every tested path and still not be Go.</p>

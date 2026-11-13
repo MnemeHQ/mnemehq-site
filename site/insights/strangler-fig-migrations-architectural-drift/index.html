@@ -387,6 +387,16 @@
     <p>Every additional path into the legacy internals breaks that guarantee. It does not break anything visible today. The build passes. The new feature works. But the legacy system now has two dependents instead of one, and the day someone tries to retire it, they find a call site nobody remembers adding.</p>
     <div class="callout"><p><strong>An agent has to be allowed to touch legacy code without creating a new dependency back into it.</strong> Those are different permissions, and most migrations only encode the first one.</p></div>
 
+    <aside class="cta-band" aria-label="Try Mneme">
+      <div class="cta-band-eyebrow">Runnable in five minutes</div>
+      <h3>See this enforced on your own repository</h3>
+      <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+      <div class="cta-row">
+        <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+        <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+      </div>
+    </aside>
+
     <h2>Why this fails silently</h2>
     <p>The failure mode here is not a crash or a test failure. It is an import. An agent adding a new feature to the modern side notices that the legacy module already has a function that does almost what it needs, and calls it directly instead of going through the adapter or extending it properly. Types check. Tests, if they exist for the new path, pass. Nothing in CI distinguishes this from a normal, healthy dependency.</p>
     <p>It compounds the way any unenforced convention compounds under AI-generated volume: the first bypass is not obviously wrong, so nothing stops it from becoming the example the next agent copies. A few migrations later, the "one adapter, one dependent" guarantee is fiction, and the team discovers this exactly when they try to delete the legacy system and cannot.</p>

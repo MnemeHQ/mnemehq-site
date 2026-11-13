@@ -45,6 +45,7 @@ import sys
 from pathlib import Path
 
 from check_insight_types import CANONICAL_TYPES, type_href
+from insert_mid_cta_band import stamp as stamp_mid_cta_band
 
 REPO = Path(__file__).resolve().parent.parent
 SITE = REPO / "site"
@@ -204,6 +205,13 @@ def main(argv: list[str]) -> int:
     if leftover:
         print(f"FATAL: unresolved tokens after render: {leftover}", file=sys.stderr)
         return 1
+
+    # The template carries no mid-article band; place it at the end of the
+    # first full section, as every other insight has it.
+    html_text = stamp_mid_cta_band(html_text)
+    if 'class="cta-band"' not in html_text:
+        print("WARN: no section boundary after 150 words; add the mid-article "
+              "band by hand (check_insights.py will fail without it)", file=sys.stderr)
 
     out_dir.mkdir(parents=True, exist_ok=True)
     out_file.write_bytes(html_text.encode("utf-8"))

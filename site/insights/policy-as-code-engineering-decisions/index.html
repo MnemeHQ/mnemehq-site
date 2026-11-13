@@ -396,6 +396,16 @@
 </ul>
 <p>Scoping, exceptions, graded enforcement, permissioned overrides and result reporting all exist. The engines evaluate well. The trouble sits upstream, in the decisions they encode.</p>
 
+<aside class="cta-band" aria-label="Try Mneme">
+  <div class="cta-band-eyebrow">Runnable in five minutes</div>
+  <h3>See this enforced on your own repository</h3>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <div class="cta-row">
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
+    <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
+  </div>
+</aside>
+
 <h2 id="a-rule-that-outlived-its-decision">A rule that outlived its decision</h2>
 <p>Take one example, shared with a companion article on Kubernetes scaling. A team decides that the orders service has a PostgreSQL connection budget. The database accepts 100 connections with 3 reserved for superusers, and each pod opens a pool of 12. Eight pods fit (96 connections), but a rolling update can briefly add 25% more pods, so the Horizontal Pod Autoscaler (HPA) for the service must not scale past 6 replicas. The platform team encodes that as a Kyverno policy: reject any HPA in the orders namespace whose maximum replica count exceeds 6. It works. The full arithmetic is in <a href="/insights/kubernetes-scaling-database-connection-budget/">When Kubernetes Works but the Application Still Fails</a>.</p>
 <p>Six months later the team puts a connection pooler in front of the database. The architecture review accepts a new decision: the budget is now enforced at the pooler, and application pods may scale on load alone. The old decision is superseded. Nobody changes the Kyverno policy, because nobody connects it to the review.</p>
