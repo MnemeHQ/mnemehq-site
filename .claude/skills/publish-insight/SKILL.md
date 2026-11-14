@@ -128,7 +128,12 @@ batch compete too; settle them together under the terminology lock before buildi
       should they do; which terms were unclear. Pass only if the thesis matches the brief's, the
       action is concrete, and every unclear term gets defined at first use. Internal names (ADR
       numbers, O1, DG1, codenames) must be defined or removed. "Decision Index" is a product term with its own docs page; define it at first use.
-5. Create the page:
+5. **Diagrams reuse a primitive.** If the article needs a diagram, use one of the canonical
+   primitives in `site/assets/css/diagrams.css` and link that stylesheet. A new inline `<svg>` is
+   allowed only as a documented exception in `docs/site/insight-diagram-exceptions.json` (contract
+   check 11); `check_insights.py` fails on anything else. The publisher takes only the article
+   directory from the queued PR, so an exception lands on `main` in its own docs PR first.
+6. Create the page:
    ```bash
    python scripts/new_article.py --slug <slug> --title "<title>" \
      --description "<150-160 chars>" --date <YYYY-MM-DD> --lede "<standfirst>" \

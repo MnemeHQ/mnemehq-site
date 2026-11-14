@@ -1,0 +1,317 @@
+{
+  "about": "Documented exceptions to the insight diagram rule (docs/site/insight-publishing-contract.md, check 11). An inline <svg> diagram in an insight article body must reuse a primitive from site/assets/css/diagrams.css or be listed here, keyed by the page slug and the diagram's exact aria-label. Baseline of 45 recorded on 2026-11-13 (Phase 3b, MnemeHQ/mnemehq-site#302). Patterns carry their consolidation priority; delete an entry when its diagram moves to a primitive.",
+  "patterns": {
+    "checkpoints": {
+      "reuse": "existing-primitive",
+      "primitive": "mneme-diagram--checkpoints",
+      "priority": 1,
+      "note": "Redraws the canonical enforcement checkpoints diagram: governance firing at successive points from session start to CI. The primitive is fixed at five steps under a two and three split, and two of these pages list six. Migrate once its row takes a variable number of steps."
+    },
+    "linear-flow": {
+      "reuse": "shared-pattern",
+      "priority": 2,
+      "note": "Three to five labelled boxes joined by arrows and read in order. This is the checkpoints row without its brackets or gate, so one variable-step row could serve both. Decide between generalising that row and adding a neutral flow primitive."
+    },
+    "layer-stack": {
+      "reuse": "shared-pattern",
+      "priority": 3,
+      "note": "Bands stacked vertically, one per layer, placing governance or verification relative to the rest. No primitive yet. Two pages draw nearly the same six-layer AI stack (html-is-not-the-point-structure-is and why-context-alone-doesnt-prevent-architectural-drift)."
+    },
+    "two-panel": {
+      "reuse": "shared-pattern",
+      "priority": 4,
+      "note": "Two panels side by side, each a heading over a short list, contrasting two things or drawing an analogy. The most uniform cluster; one two-column primitive would cover it."
+    },
+    "before-after": {
+      "reuse": "shared-pattern",
+      "priority": 5,
+      "note": "Two lanes, an old model against a new one, each a short flow. The strategic diagram kept on /concepts/governance-before-generation/ in Phase 3 has the same shape, so a primitive would serve concept pages too."
+    },
+    "hub-spoke": {
+      "reuse": "shared-pattern",
+      "priority": 6,
+      "note": "A central node with surfaces or functions around it. Two instances; keep as exceptions unless it recurs."
+    },
+    "diverging-curves": {
+      "reuse": "shared-pattern",
+      "priority": 7,
+      "note": "Two schematic curves that separate as AI use grows, with the gap labelled. Two instances; keep as exceptions unless it recurs."
+    },
+    "bespoke": {
+      "reuse": "bespoke",
+      "note": "Specific to one article's argument or data. No canonical primitive covers it and no other page draws it; each rationale says why."
+    }
+  },
+  "exceptions": [
+    {
+      "page": "acceleration-whiplash-governance-gap",
+      "label": "Two diverging curves: AI generation throughput rises steeply while control capacity stays nearly flat. The shaded region between them is the governance gap.",
+      "pattern": "diverging-curves",
+      "rationale": "Schematic curves for generation throughput and control capacity with the gap shaded. No primitive draws curves."
+    },
+    {
+      "page": "ai-accelerating-cybersecurity-migration-problem",
+      "label": "Audit, encode, enforce, verify migration control loop",
+      "pattern": "linear-flow",
+      "rationale": "Four-step migration control loop: audit, encode, enforce, verify. Waits on a flow primitive."
+    },
+    {
+      "page": "ai-agent-governance-two-markets",
+      "label": "Two markets: runtime governance protects systems from agent actions; architectural governance protects systems from architectural entropy",
+      "pattern": "two-panel",
+      "rationale": "Runtime governance and architectural governance as two lists side by side. Waits on a two-panel primitive."
+    },
+    {
+      "page": "ai-agent-governance-two-markets",
+      "label": "Enterprises need both: architectural governance over time and runtime governance per action, around autonomous systems",
+      "pattern": "layer-stack",
+      "rationale": "Architectural governance above, runtime governance below, autonomous agents between. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "ai-agent-orchestration-is-not-governance",
+      "label": "A multi-agent pipeline where the database agent violates an ADR while orchestration reports success",
+      "pattern": "linear-flow",
+      "rationale": "Four-agent pipeline where the database agent breaks an ADR while orchestration reports success. Needs a flow primitive that can mark a failed step."
+    },
+    {
+      "page": "ai-assisted-software-migrations-architectural-drift",
+      "label": "The four migration states and how enforcement resolves between them",
+      "pattern": "bespoke",
+      "rationale": "The four migration states and how path applicability resolves a rule per path. Specific to the migration argument."
+    },
+    {
+      "page": "ai-makes-software-more-ambitious",
+      "label": "More developers required more management; more agents require more governance",
+      "pattern": "two-panel",
+      "rationale": "Developers needing management set beside agents needing governance, as an analogy. Waits on a two-panel primitive."
+    },
+    {
+      "page": "ai-roi-problem-is-about-systems-not-models",
+      "label": "Productivity gains absorbed by verification overhead",
+      "pattern": "linear-flow",
+      "rationale": "Causal chain from faster generation through review and drift to a muted P&L impact. Waits on a flow primitive."
+    },
+    {
+      "page": "anthropic-research-system-coordination-infrastructure",
+      "label": "The coordination layer sits between orchestration and execution",
+      "pattern": "layer-stack",
+      "rationale": "Coordination infrastructure placed between orchestration and execution, with observability below. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "architectural-governance-across-heterogeneous-ai-coding-agents",
+      "label": "Diagram showing five AI coding tools each with their own memory format, all writing into one shared codebase",
+      "pattern": "bespoke",
+      "rationale": "A table of five AI coding tools, each with its own memory format, all writing to one codebase. Tabular content no primitive renders."
+    },
+    {
+      "page": "architectural-governance-across-heterogeneous-ai-coding-agents",
+      "label": "Timeline showing four categories — containers, tracing, IDE language servers, AI coding agents — moving through phases of fragmentation, convergence, standard, and adoption",
+      "pattern": "bespoke",
+      "rationale": "Timeline of containers, tracing, language servers and AI coding agents moving from fragmentation to adoption. Historical data specific to the article."
+    },
+    {
+      "page": "architecture-cannot-be-a-prompt-context-compaction",
+      "label": "Without persistent governance, a decision passes through agent context and compaction before being lost, producing a violation",
+      "pattern": "linear-flow",
+      "rationale": "A decision lost through agent context and compaction, ending in a violation. First of a before/after pair of flows."
+    },
+    {
+      "page": "architecture-cannot-be-a-prompt-context-compaction",
+      "label": "With governance, decisions persist in a store, are retrieved per change, and proposed actions are checked deterministically",
+      "pattern": "linear-flow",
+      "rationale": "The same decision kept in a store, retrieved per change and checked. Second of the pair; waits on a flow primitive."
+    },
+    {
+      "page": "cursor-developer-habits-report-governance-infrastructure",
+      "label": "Agent changes reaching commits without a manual diff acceptance step rose from 7 percent in January 2026 to 36.3 percent in May 2026",
+      "pattern": "bespoke",
+      "rationale": "Plots the report's figures, 7 percent in January 2026 to 36.3 percent in May 2026. A schematic primitive would drop the data."
+    },
+    {
+      "page": "cursor-developer-habits-report-governance-infrastructure",
+      "label": "Governance must apply across six automated surfaces: before generation, before tool execution, before commit, before the PR, in CI, and across generated artifacts",
+      "pattern": "checkpoints",
+      "rationale": "Six governance surfaces from before generation to generated artifacts. Six steps; the checkpoints primitive takes five."
+    },
+    {
+      "page": "deepseek-agent-model-harness-architectural-governance",
+      "label": "Tool call evaluated against an external decision corpus at the pre-execute seam, then a verdict, then execution",
+      "pattern": "linear-flow",
+      "rationale": "A tool call checked against the decision corpus at the pre-execute seam, then a verdict, then execution. Waits on a flow primitive."
+    },
+    {
+      "page": "dora-metrics-insufficient-for-agentic-development",
+      "label": "Delivery metrics stay green while ungoverned architectural integrity declines as agent velocity rises",
+      "pattern": "diverging-curves",
+      "rationale": "Delivery metrics stay healthy while ungoverned architectural integrity declines. Schematic curves; no primitive draws curves."
+    },
+    {
+      "page": "dora-metrics-insufficient-for-agentic-development",
+      "label": "The three-layer model of AI software engineering metrics: activity, delivery, governance",
+      "pattern": "layer-stack",
+      "rationale": "Activity, delivery and governance metrics as three layers. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "four-architecture-protection-states",
+      "label": "Two questions determine the four protection states: how much of the decision can be represented deterministically, and whether that rule already exists",
+      "pattern": "bespoke",
+      "rationale": "Two questions that cross into four protection states. A decision diagram unique to this article."
+    },
+    {
+      "page": "github-ai-agent-validation-trust-layer",
+      "label": "Two axes: GitHub's Trust Layer grades the run's behavior probabilistically; architectural conformance decides the diff against ratified decisions deterministically",
+      "pattern": "two-panel",
+      "rationale": "GitHub's Trust Layer grading the run set beside architectural conformance deciding the diff. Waits on a two-panel primitive."
+    },
+    {
+      "page": "google-cloud-agent-registry-agent-fleet-governance",
+      "label": "Two orthogonal axes: a registry governs the actor by identity and authorization; architectural governance returns a verdict on the artifact by intent and conformance",
+      "pattern": "two-panel",
+      "rationale": "A registry governing the actor set beside architectural governance judging the artifact. Waits on a two-panel primitive."
+    },
+    {
+      "page": "google-gemini-deep-research-agent-governance",
+      "label": "The shift from calling a model to calling a managed agent runtime",
+      "pattern": "before-after",
+      "rationale": "A model call, the old pattern, against a managed agent runtime, the new one. Waits on a before/after primitive."
+    },
+    {
+      "page": "google-gemini-deep-research-agent-governance",
+      "label": "Execution is provider-operated; governance is owned by you",
+      "pattern": "two-panel",
+      "rationale": "Provider-operated execution set beside governance the customer owns. Waits on a two-panel primitive."
+    },
+    {
+      "page": "governance-perimeter-is-moving-to-the-endpoint",
+      "label": "Old vs new governance perimeter",
+      "pattern": "before-after",
+      "rationale": "The centralized governance perimeter against the new endpoint perimeter. Waits on a before/after primitive."
+    },
+    {
+      "page": "governance-perimeter-is-moving-to-the-endpoint",
+      "label": "The expanding agent execution surface",
+      "pattern": "hub-spoke",
+      "rationale": "The agent execution surface at the centre with seven surfaces around it. One of two hub-and-spoke diagrams."
+    },
+    {
+      "page": "harness-engineering-verification-layer",
+      "label": "Reliability asks whether a run completed; verification asks whether it stayed correct and compliant",
+      "pattern": "two-panel",
+      "rationale": "Reliability, whether a run completed, set beside verification, whether it stayed correct. Waits on a two-panel primitive."
+    },
+    {
+      "page": "html-is-not-the-point-structure-is",
+      "label": "From documents to executable environments",
+      "pattern": "linear-flow",
+      "rationale": "Progression from raw text to executable environments. Waits on a flow primitive."
+    },
+    {
+      "page": "html-is-not-the-point-structure-is",
+      "label": "The AI stack and where governance engineering sits",
+      "pattern": "layer-stack",
+      "rationale": "Six-layer AI stack with governance engineering placed in it. Nearly the same stack as why-context-alone-doesnt-prevent-architectural-drift; consolidate the two."
+    },
+    {
+      "page": "long-running-agents-need-governance",
+      "label": "Diagram showing a long-running agent session flow with both continuity infrastructure and governance checkpoints",
+      "pattern": "bespoke",
+      "rationale": "A long agent session drawn as two tracks, continuity artifacts and governance checkpoints. Specific to this article."
+    },
+    {
+      "page": "long-running-agents-need-governance",
+      "label": "Diagram showing five governance checkpoint positions in the agent workflow",
+      "pattern": "checkpoints",
+      "rationale": "Five checkpoints, each with an enforcement mode and what it catches. Fits the five-step row, but each step carries a line more detail than the primitive holds."
+    },
+    {
+      "page": "memory-is-not-governance",
+      "label": "Diagram comparing the optimization target of memory systems (recall) against governance systems (constraint enforcement)",
+      "pattern": "bespoke",
+      "rationale": "One query through a memory system and a governance system, contrasting recall with enforcement. A three-column comparison specific to the argument."
+    },
+    {
+      "page": "memory-is-not-governance",
+      "label": "Stack diagram showing memory, context, and retrieval as inputs that flow into a governance layer that produces a single enforced constraint",
+      "pattern": "bespoke",
+      "rationale": "Memory, retrieval, context and scope signals feeding a governance layer that emits one constraint. A fan-in specific to the argument."
+    },
+    {
+      "page": "pr-review-is-becoming-incident-response",
+      "label": "Old vs new PR review model",
+      "pattern": "before-after",
+      "rationale": "Collaborative PR review, the old model, against containment review under agent velocity. Waits on a before/after primitive."
+    },
+    {
+      "page": "pr-review-is-becoming-incident-response",
+      "label": "Moving governance upstream of PR review",
+      "pattern": "checkpoints",
+      "rationale": "Five steps that move enforcement upstream of PR review. Fits the five-step row; its closing line would move into the caption."
+    },
+    {
+      "page": "prompt-engineering-vs-harness-engineering",
+      "label": "Prompt engineering optimizes a single input to the model; harness engineering designs the runtime system loop around the model",
+      "pattern": "before-after",
+      "rationale": "A single prompt-to-output path against the harness loop around the model. Waits on a before/after primitive."
+    },
+    {
+      "page": "runtime-verification-is-not-architectural-verification",
+      "label": "The six-layer agent infrastructure stack",
+      "pattern": "layer-stack",
+      "rationale": "Six-layer agent infrastructure stack, L1 to L6. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "using-ibm-bob-with-architectural-guardrails",
+      "label": "Architectural decisions feed Mneme, which constrains IBM Bob before implementation",
+      "pattern": "linear-flow",
+      "rationale": "ADRs through guardrails to IBM Bob to a compliant implementation. Waits on a flow primitive."
+    },
+    {
+      "page": "what-anthropic-model-hardware-standard-reveals-about-ai-agent-guardrails",
+      "label": "Three layers of physical agent guardrails",
+      "pattern": "layer-stack",
+      "rationale": "Three layers of physical agent guardrails, from human policy to device limits. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "what-is-harness-engineering",
+      "label": "An agent harness is the execution layer around the model, coordinating tool calls, retries, context and state, routing, and multi-step execution",
+      "pattern": "hub-spoke",
+      "rationale": "The harness around the model, coordinating tool calls, retries, context, routing and multi-step runs. One of two hub-and-spoke diagrams."
+    },
+    {
+      "page": "what-is-harness-engineering",
+      "label": "The execution stack: generation produces, orchestration (the harness) executes, governance decides what is allowed",
+      "pattern": "layer-stack",
+      "rationale": "Generation, orchestration and governance as a three-layer execution stack. Waits on a layer-stack primitive."
+    },
+    {
+      "page": "why-architectural-governance-needs-precedence-semantics",
+      "label": "Diagram showing two overlapping ADRs producing non-deterministic resolution across prompt rules, RAG, and PR review, versus deterministic resolution via a precedence engine",
+      "pattern": "bespoke",
+      "rationale": "Two overlapping ADRs resolved inconsistently by prompt rules, RAG and review, against a precedence engine. Specific to the precedence argument."
+    },
+    {
+      "page": "why-architectural-governance-needs-precedence-semantics",
+      "label": "Pipeline showing five stages from raw ADRs to enforcement and audit, with precedence resolution as the central stage",
+      "pattern": "linear-flow",
+      "rationale": "Five numbered stages from raw ADRs to enforcement and audit, with precedence at the centre. Waits on a flow primitive with step numbers."
+    },
+    {
+      "page": "why-context-alone-doesnt-prevent-architectural-drift",
+      "label": "Layer progression from prompting to verification",
+      "pattern": "layer-stack",
+      "rationale": "Six layers from prompting to verification. Nearly the same stack as html-is-not-the-point-structure-is; consolidate the two."
+    },
+    {
+      "page": "why-context-alone-doesnt-prevent-architectural-drift",
+      "label": "How drift emerges through agent execution",
+      "pattern": "linear-flow",
+      "rationale": "How drift enters: retrieved context, execution, local optimization, deviation, then review. Waits on a flow primitive."
+    },
+    {
+      "page": "why-context-alone-doesnt-prevent-architectural-drift",
+      "label": "Governance insertion points across the development workflow",
+      "pattern": "checkpoints",
+      "rationale": "Six governance insertion points from session start to runtime verification. Six steps; the checkpoints primitive takes five. Overlaps cursor-developer-habits-report-governance-infrastructure."
+    }
+  ]
+}
