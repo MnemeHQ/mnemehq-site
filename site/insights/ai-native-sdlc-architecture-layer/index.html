@@ -378,12 +378,12 @@
       <li><strong>Maintain.</strong> An incident produces an incident record, and a breached control band opens a new <code>intent.md</code>, which restarts the loop.</li>
     </ol>
 
-    <p>This is the right model, and it is worth saying plainly: a major lab publishing an enterprise playbook that treats governance-as-artifacts and enforcement-in-the-loop as the default posture is validation of the category, not competition for it. The interesting question is what the model still needs.</p>
+    <p>This is the right model, and it is worth saying plainly: a major lab publishing an enterprise playbook that treats governance-as-artifacts and enforcement-in-the-loop as the default posture is validation of architectural governance tooling, not competition for it. The interesting question is what the model still needs.</p>
 
     <aside class="cta-band" aria-label="Try Mneme">
   <div class="cta-band-eyebrow">Runnable in five minutes</div>
   <h3>See this enforced on your own repository</h3>
-  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry. MIT licensed.</p>
   <div class="cta-row">
     <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
@@ -458,7 +458,7 @@
 
     <ul>
       <li><strong>Persistence across sessions and escalations.</strong> Architectural authority must outlive individual sessions. A rule encoded in a prompt dies when the context window closes. Relying on conversational history during agent handoffs creates the opposite failure: AWS research on multi-agent software engineering (<a class="ext" href="https://arxiv.org/abs/2608.24358">arXiv:2608.24358</a>) shows that transferring full conversational trajectories during model escalation degrades performance because receiving models inherit and anchor on earlier mistakes. Stripping the trajectory while preserving repository state dramatically improves escalation. Yet repository state alone contains no record of governing architectural constraints. Durable architectural intent must exist outside the conversational transcript so receiving agents inherit clean constraints rather than failed reasoning trajectories.</li>
-      <li><strong>Harness and model independence.</strong> Teams do not run one agent or one model forever. Today Claude Code, tomorrow a mix that includes other agents and models. If the architectural policy model is coupled to one harness's hook format or prompt conventions, every migration or escalation path silently orphans your decisions. The policy layer should sit above the harness and feed verdicts down, whatever the harness is.</li>
+      <li><strong>Harness and model independence.</strong> Teams do not run one agent or one model forever. Today Claude Code, tomorrow a mix that includes other agents and models. If the architectural policy model is coupled to one agent harness (the tool that runs the agent, such as Claude Code) and its hook format or prompt conventions, every migration or escalation path silently orphans your decisions. The policy layer should sit above the harness and feed verdicts down, whatever the harness is.</li>
       <li><strong>Governance semantics.</strong> Supersession, scoping, exceptions with expiry, and a queryable record of which decision produced which verdict are governance concerns. They deserve a real model, not string matching in a shell script or prompt summarizer.</li>
     </ul>
 
@@ -466,7 +466,7 @@
 
     <h2 id="control-plane">The architecture control plane</h2>
 
-    <p>Assemble the pieces and the AI-native SDLC acquires its fourth control surface:</p>
+    <p>A control plane is the set of controls that decide what an agent may do, kept separate from the agent doing the work. Assemble the pieces and the AI-native SDLC has four kinds of control:</p>
 
     <ul>
       <li><strong>Intent</strong> controls what should be built (<code>intent.md</code>, <code>spec.md</code>, plans).</li>
@@ -499,7 +499,7 @@
         </div>
       </div>
       <div class="flow-step"><span class="flow-num">06</span><span class="flow-label">Implementation, evidence, audit</span></div>
-      <div class="flow-agents">Runs identically for: <span>Claude Code</span> &middot; Codex &middot; Antigravity &middot; other agents</div>
+      <div class="flow-agents">Runs identically for: <span>Claude Code</span> &middot; Codex &middot; Google Antigravity &middot; other agents</div>
     </div>
 
     <p>The strategic point sits in the last line of the diagram. The architectural decision is compiled once and enforced everywhere. Agents change; the architecture survives the change.</p>
