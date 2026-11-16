@@ -2,7 +2,7 @@
 """Regression tests for the insight diagram guardrail in check_insights.py.
 
 An inline <svg> diagram in an article body must reuse a canonical primitive
-(site/assets/css/diagrams.css) or be a documented exception in
+(site/assets/css/diagrams-v2.css) or be a documented exception in
 docs/site/insight-diagram-exceptions.json.
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ import check_insights as ci
 NAV_ICON = '<nav><svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16"><path d="M0 0"/></svg></nav>'
 # Labelled and not aria-hidden: only its position outside the article excludes it.
 FOOTER_ICON = '<footer style="padding:0"><svg viewBox="0 0 24 24" aria-label="GitHub"></svg></footer>'
-DIAGRAMS_LINK = '<link rel="stylesheet" href="/assets/css/diagrams.css">'
+DIAGRAMS_LINK = '<link rel="stylesheet" href="/assets/css/diagrams-v2.css">'
 PRIMITIVE = '<div class="mneme-diagram mneme-diagram--checkpoints" role="img"></div>'
 
 
@@ -84,6 +84,10 @@ class TestCheckDiagrams(unittest.TestCase):
 
     def test_versioned_stylesheet_link_counts(self):
         head = '<link rel="stylesheet" href="/assets/css/diagrams.css?v=20261113">'
+        self.assertEqual(ci.check_diagrams("a", page(PRIMITIVE, head=head), []), [])
+
+    def test_legacy_unversioned_stylesheet_still_counts(self):
+        head = '<link rel="stylesheet" href="/assets/css/diagrams.css">'
         self.assertEqual(ci.check_diagrams("a", page(PRIMITIVE, head=head), []), [])
 
     def test_primitive_without_its_stylesheet_fails(self):

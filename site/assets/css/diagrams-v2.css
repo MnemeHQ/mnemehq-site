@@ -315,9 +315,11 @@
 }
 
 @media (max-width: 640px) {
+  /* The bracket row cannot sit over its steps once they stack, so it is
+     hidden and each step that opens a group (data-group) prints that
+     group's label above itself. */
   .mneme-diagram--checkpoints .brackets {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    display: none;
   }
   .mneme-diagram--checkpoints .row {
     grid-template-columns: 1fr;
@@ -328,6 +330,35 @@
     left: 50%;
     top: -10px;
     transform: translateX(-50%);
+  }
+  .mneme-diagram--checkpoints .step[data-group] {
+    margin-top: 2rem;
+  }
+  .mneme-diagram--checkpoints .step[data-group]:first-child {
+    margin-top: 1.6rem;
+  }
+  .mneme-diagram--checkpoints .step[data-group]::before {
+    content: none;
+  }
+  .mneme-diagram--checkpoints .step[data-group]::after {
+    content: attr(data-group);
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 0.45rem);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.64rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: left;
+    color: var(--muted);
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border2);
+  }
+  .mneme-diagram--checkpoints .step--active[data-group]::after {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
   }
 }
 
