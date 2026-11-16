@@ -44,6 +44,10 @@ Every page's OG card is produced from a manifest, not a hand-built template:
 3. Per `PUBLISHING.md:105`, a changed static asset ships under a **new**
    filename, never overwritten in place — this is why the card file is
    `og-v2.png` and not a rewritten `og.png`.
+   When a card's content changes, set `card: og-v3.png` (the next free
+   version) on its record, render it, and run `python scripts/sync_og_meta.py`
+   to point the page's `og:image`/`twitter:image` at it; also update the
+   JSON-LD `image`. Revert any unrelated pages the sync touches.
 
 Copy budgets (enforced by the manifest resolver and the voice lint):
 
