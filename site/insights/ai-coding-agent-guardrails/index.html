@@ -346,7 +346,7 @@
     <aside class="cta-band" aria-label="Try Mneme">
   <div class="cta-band-eyebrow">Runnable in five minutes</div>
   <h3>See this enforced on your own repository</h3>
-  <p>Install the CLI, add one decision, run one check. No signup, no telemetry &mdash; MIT licensed.</p>
+  <p>Install the CLI, add one decision, run one check. No signup, no telemetry. MIT licensed.</p>
   <div class="cta-row">
     <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="install" data-cta-position="mid" data-cta-component="cta_band">Install Mneme</a>
     <a href="/demo/" class="cta-btn-outline" data-cta-intent="demo" data-cta-position="mid" data-cta-component="cta_band">Run the 2-minute demo</a>
@@ -362,7 +362,7 @@
 
     <h3>2. Prompt and Rule-File Guardrails</h3>
     <p><strong>What it is.</strong> Instructions given to the model in language: the system prompt, a <code>CLAUDE.md</code> or <code>.cursorrules</code> file, project rule files loaded into context. &ldquo;Use our logging library.&rdquo; &ldquo;Do not add new dependencies without approval.&rdquo; &ldquo;Follow the existing error-handling pattern.&rdquo;</p>
-    <p><strong>What it catches.</strong> Broad tendencies. A well-written rule file nudges the model toward the house style and away from obvious mistakes, most of the time. For small, well-scoped work it raises the hit rate noticeably.</p>
+    <p><strong>What it catches.</strong> Broad tendencies. A well-written rule file nudges the model toward the house style and away from obvious mistakes, most of the time. For small, well-scoped work it raises how often the model gets things right.</p>
     <p><strong>What it misses.</strong> Anything the model does not attend to. Rule files are an always-on prompt prefix, and a prompt is a suggestion, not a control. They compete for the same token budget as the task, they have no precedence when two rules conflict, and they do not scale as the ruleset grows past what the model reliably weighs. <a href="#why-prompts-and-rule-files-are">Why prompts and rule files are not enough</a>, below, covers this in detail.</p>
 
     <h3>3. Policy Guardrails</h3>
@@ -371,7 +371,7 @@
     <p><strong>What it misses.</strong> Project-specific architecture. Policy engines are built for uniform, org-wide constraints, not for the decision that <em>this</em> service owns the ledger and <em>that</em> one must call it through an API. The architectural intent of a single codebase is too specific and too local for a policy layer to carry.</p>
 
     <h3>4. Architectural Guardrails</h3>
-    <p><strong>What it is.</strong> The recorded architectural decisions of a specific system (architecture decision records, or ADRs, plus service boundaries and approved patterns) turned into checks that run at edit time, before a change lands. This is <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>: the decision is stored as structured data with its constraints, retrieved for the change in front of the agent, and checked deterministically.</p>
+    <p><strong>What it is.</strong> The recorded architectural decisions of a specific system (architecture decision records, or ADRs, plus service boundaries and approved patterns) turned into checks that run while the agent edits, before a change lands. This is <a href="/concepts/executable-architectural-intent/">executable architectural intent</a>: the decision is stored as structured data with its constraints, retrieved for the change in front of the agent, and checked deterministically.</p>
     <p><strong>What it catches.</strong> Drift from the system&rsquo;s own decisions. An agent reaching around a service boundary, adding a second HTTP client, putting business logic in a layer that is supposed to stay thin, introducing a dependency the ADRs ruled out. The specific violations that runtime, prompt, and policy layers all miss.</p>
     <p><strong>What it misses.</strong> It is not a safety sandbox and not an org policy engine. It will not stop a destructive shell command or catch a committed secret. It governs one thing well: conformance to the architecture. Nothing else in the stack governs that.</p>
 
