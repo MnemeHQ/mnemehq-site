@@ -2,15 +2,17 @@ name: check insight publishing invariants
 
 # Validates that every site/insights/<slug>/index.html is fully registered:
 # sitemap entry, hub card, local og.png, working og:image / twitter:image
-# meta tags, and at least one incoming internal link from another site page.
+# meta tags, and at least one incoming internal link from another site page;
+# and that every inline diagram in an article body reuses a primitive or is a
+# documented exception in docs/site/insight-diagram-exceptions.json.
 #
-# Contract: https://github.com/MnemeHQ/mneme/blob/main/docs/site/insight-publishing-contract.md
+# Contract: docs/site/insight-publishing-contract.md
 # Validator: scripts/check_insights.py
 #
 # Path filter: only runs on PRs that touch the surfaces where registration
-# can drift out of sync — article files, the hub, the sitemap, and the
-# publishing scripts. Other PRs (mneme package code, ADRs, etc.) are skipped
-# so this stays a lightweight check.
+# can drift out of sync — article files, the hub, the sitemap, the diagram
+# exceptions registry, and the publishing scripts. Other PRs (mneme package
+# code, ADRs, etc.) are skipped so this stays a lightweight check.
 
 on:
   pull_request:
@@ -20,6 +22,7 @@ on:
       - 'site/insights/index.html'   # redundant under site/insights/** but listed for clarity
       - 'site/sitemap.xml'
       - 'site/assets/js/insights-catalog-*.js'
+      - 'docs/site/insight-diagram-exceptions.json'
       - 'scripts/**'
 
 permissions:
@@ -54,6 +57,9 @@ jobs:
 
       - name: Test OG card override handling
         run: python scripts/test_check_insights_card.py
+
+      - name: Test diagram guardrail
+        run: python scripts/test_check_insights_diagrams.py
 
       - name: Check archive and homepage catalogue metadata
         run: python scripts/sync_insights_catalog.py --check

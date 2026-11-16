@@ -60,6 +60,10 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
     Research and Report Response articles are also carded on `/insights/research/` (and nothing else is). `scripts/check_insight_types.py` (CI) enforces **consistency only**: one canonical label, identical in all four places. It cannot judge whether the label fits the article. That is a manual editorial review at publication and whenever an article's framing changes.
 
+**Diagrams**
+
+11. **A diagram reuses a primitive or is a documented exception** — an inline `<svg>` in the article body is a diagram unless it is a decorative icon marked `aria-hidden="true"`. A diagram either uses one of the canonical primitives in [`site/assets/css/diagrams.css`](../../site/assets/css/diagrams.css), which are HTML and CSS and contain no `<svg>`, or has an entry in [`docs/site/insight-diagram-exceptions.json`](insight-diagram-exceptions.json) keyed by the page slug and the diagram's exact `aria-label`, with a pattern and a rationale. `scripts/check_insights.py` (CI) fails on an unregistered or unlabelled diagram, on two diagrams sharing a label, on an exception that matches no diagram on its page, and on primitive markup without the stylesheet. The registry holds the 45 diagrams published before the rule (2026-11-13), each classified by reuse potential and ranked for consolidation. Shrink it as diagrams move to primitives; add to it only when no primitive fits.
+
 ## How to register a new insight
 
 After writing `site/insights/<slug>/index.html`, do the following before opening the PR:
@@ -124,6 +128,27 @@ The existing article template under any recent `site/insights/<slug>/index.html`
 
 The hub card from step 3 already satisfies the "at least one incoming internal link" requirement. For SEO depth, also add reciprocal cross-links from thematically related insights (the article's own `related-essays` panel links outward; the reciprocal inward links are the high-value pairing).
 
+### 6. Diagrams
+
+Reuse a canonical primitive before drawing a new diagram. The four primitives (governance propagation, enforcement checkpoints, provenance chain, architectural drift cascade) live in `site/assets/css/diagrams.css`. Each is embedded on its concept page (`/concepts/governance-propagation/`, `/concepts/governance-before-generation/`, `/concepts/enforcement-provenance/`, `/concepts/architectural-drift/`), and the markup contract is in [`docs/contributing/diagram-conventions.md`](https://github.com/MnemeHQ/mneme/blob/main/docs/contributing/diagram-conventions.md) in the core repo. A page that uses one links the stylesheet in its `<head>`:
+
+```html
+<link rel="stylesheet" href="/assets/css/diagrams.css">
+```
+
+When no primitive fits, draw an inline `<svg role="img" aria-label="...">` and add an entry to `docs/site/insight-diagram-exceptions.json`:
+
+```json
+{
+  "page": "<slug>",
+  "label": "<the svg's aria-label, exactly>",
+  "pattern": "<a key under the registry's patterns, such as bespoke>",
+  "rationale": "<what it shows, and why no primitive fits>"
+}
+```
+
+If the drawing repeats one of the registry's patterns, use that pattern: its cluster is queued for a shared primitive. A scheduled article is composed on `main` from its own directory only (the `publish-insight` skill, Stage 5), so its exception must reach `main` in a separate docs PR before the publish date. A decorative icon in the body needs `aria-hidden="true"` and no entry.
+
 ## When to publish (editorial rules)
 
 The archive is large. Growth now comes from authority and consolidation, not raw card count. Publish a new article only when it does **at least one** of:
@@ -166,6 +191,7 @@ Exit code is `0` if every article is fully registered, `1` if any check fails. E
     - TechArticle/Article JSON-LD missing from my-new-article: add a schema.org TechArticle entry with url and headline
     - Missing hub CollectionPage hasPart entry for my-new-article: add {"@type": "Article", "name": "<title>", "url": "https://mnemehq.com/insights/my-new-article/"} to the hasPart array in site/insights/index.html
     - No incoming internal links found for my-new-article
+    - Unregistered inline diagram in my-new-article: 'Old review model against the new one'. Reuse a primitive from site/assets/css/diagrams.css, or document the exception in docs/site/insight-diagram-exceptions.json (docs/site/insight-publishing-contract.md, check 11)
 ```
 
 ## CI behavior
@@ -176,6 +202,7 @@ Exit code is `0` if every article is fully registered, `1` if any check fails. E
 - `site/insights/index.html`
 - `site/sitemap.xml`
 - `scripts/**`
+- `docs/site/insight-diagram-exceptions.json`
 
 A failing check blocks the PR.
 

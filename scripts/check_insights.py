@@ -31,6 +31,12 @@ Checks (all hard errors):
     ERROR  -- TechArticle headline missing or empty
   Hub schema:
     ERROR  -- slug missing from CollectionPage.hasPart on the hub
+  Diagrams (docs/site/insight-diagram-exceptions.json):
+    ERROR  -- an inline <svg> diagram in the article body is not a documented exception
+    ERROR  -- an inline diagram has no aria-label, or shares one with another diagram
+    ERROR  -- an exception matches no diagram on its page (stale)
+    ERROR  -- primitive markup (.mneme-diagram) without /assets/css/diagrams.css
+    ERROR  -- the exceptions registry is missing, malformed or has an invalid entry
 
 Exit codes:  0 = clean   1 = errors found
 """
@@ -40,6 +46,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from html import unescape
 from pathlib import Path
 
 import og_manifest
@@ -51,6 +58,7 @@ HUB = INSIGHTS_DIR / "index.html"
 ARCHIVE = INSIGHTS_DIR / "all" / "index.html"
 TOPICS_DIR = INSIGHTS_DIR / "topics"
 SITEMAP = SITE_DIR / "sitemap.xml"
+DIAGRAM_EXCEPTIONS = REPO_ROOT / "docs" / "site" / "insight-diagram-exceptions.json"
 
 SITE_BASE = "https://mnemehq.com"
 
@@ -618,6 +626,135 @@ def check_toc(slug: str, html: str) -> list[str]:
     ]
 
 
+# Diagrams (docs/site/insight-publishing-contract.md, check 11). An inline <svg>
+# in the article body is a diagram unless it is a decorative icon marked
+# aria-hidden="true". A diagram either reuses a canonical primitive from
+# site/assets/css/diagrams.css (HTML and CSS, so no <svg>) or is a documented
+# exception in DIAGRAM_EXCEPTIONS, keyed by page and aria-label.
+
+DIAGRAM_REUSE = ("existing-primitive", "shared-pattern", "bespoke")
+MIN_RATIONALE = 20
+SVG_OPEN_RE = re.compile(r"<svg\b([^>]*)>", re.IGNORECASE)
+PRIMITIVE_RE = re.compile(r'class="[^"]*\bmneme-diagram\b')
+DIAGRAMS_CSS_RE = re.compile(r'<link\b[^>]*href="/assets/css/diagrams\.css(?:\?[^"]*)?"')
+
+
+def _norm_label(label: str) -> str:
+    return re.sub(r"\s+", " ", unescape(label)).strip()
+
+
+def article_diagrams(html: str) -> list[str | None]:
+    """The normalized aria-label of each inline diagram <svg> in the article body,
+    in page order; None for a diagram without one."""
+    labels: list[str | None] = []
+    for m in SVG_OPEN_RE.finditer(article_region(html)):
+        attrs = m.group(1)
+        if re.search(r'\baria-hidden\s*=\s*"true"', attrs):
+            continue
+        label = re.search(r'\baria-label\s*=\s*"([^"]*)"', attrs)
+        labels.append((_norm_label(label.group(1)) if label else "") or None)
+    return labels
+
+
+def check_diagrams(slug: str, html: str, registered: list[str]) -> list[str]:
+    """Each inline diagram is a documented exception and each exception for this
+    page still matches a diagram; primitive markup needs the primitives stylesheet."""
+    errors: list[str] = []
+    expected = {_norm_label(label) for label in registered}
+    seen: set[str] = set()
+    for label in article_diagrams(html):
+        if label is None:
+            errors.append(
+                f'Inline diagram <svg> in {slug} has no aria-label: give it role="img" and an '
+                f'aria-label, or mark a decorative icon aria-hidden="true"'
+            )
+        elif label in seen:
+            errors.append(f"Two inline diagrams in {slug} share the aria-label {label!r}; give each its own")
+        else:
+            seen.add(label)
+            if label not in expected:
+                errors.append(
+                    f"Unregistered inline diagram in {slug}: {label!r}. Reuse a primitive from "
+                    f"site/assets/css/diagrams.css, or document the exception in "
+                    f"docs/site/insight-diagram-exceptions.json "
+                    f"(docs/site/insight-publishing-contract.md, check 11)"
+                )
+    for label in sorted(expected - seen):
+        errors.append(
+            f"Stale diagram exception for {slug}: no inline diagram is labelled {label!r}; "
+            f"remove the entry or update its label"
+        )
+    if PRIMITIVE_RE.search(article_region(html)) and not DIAGRAMS_CSS_RE.search(html):
+        errors.append(f"{slug} uses diagram primitive markup but does not link /assets/css/diagrams.css")
+    return errors
+
+
+def load_diagram_exceptions(path: Path = DIAGRAM_EXCEPTIONS) -> object:
+    """Parse the exceptions registry; ValueError if it is missing or not JSON."""
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except FileNotFoundError:
+        raise ValueError(f"{path.name} is missing; it lists the documented inline-diagram exceptions") from None
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"{path.name} is not valid JSON: {exc}") from None
+
+
+def check_diagram_registry(registry: object, slugs: set[str]) -> list[str]:
+    """Schema errors in the exceptions registry, and entries for pages that are not
+    insight articles. Whether an entry still matches a diagram is check_diagrams'."""
+    if not (
+        isinstance(registry, dict)
+        and isinstance(registry.get("patterns"), dict)
+        and isinstance(registry.get("exceptions"), list)
+    ):
+        return ['expected a JSON object with a "patterns" object and an "exceptions" list']
+    errors: list[str] = []
+    patterns = registry["patterns"]
+    for name, pattern in patterns.items():
+        if not isinstance(pattern, dict) or pattern.get("reuse") not in DIAGRAM_REUSE:
+            errors.append(f'pattern {name!r}: "reuse" must be one of {", ".join(DIAGRAM_REUSE)}')
+            continue
+        if not str(pattern.get("note") or "").strip():
+            errors.append(f'pattern {name!r}: "note" is empty')
+        primitive = str(pattern.get("primitive") or "")
+        if pattern["reuse"] == "existing-primitive" and not primitive.startswith("mneme-diagram--"):
+            errors.append(f'pattern {name!r}: name the primitive it redraws in "primitive" (mneme-diagram--...)')
+    seen: set[tuple[str, str]] = set()
+    for n, entry in enumerate(registry["exceptions"], 1):
+        if not isinstance(entry, dict):
+            errors.append(f"exception {n}: expected a JSON object")
+            continue
+        page, label, pattern = entry.get("page"), entry.get("label"), entry.get("pattern")
+        where = f"exception {n} ({page}: {str(label)[:50]!r})"
+        if not isinstance(page, str) or page not in slugs:
+            errors.append(f"{where}: {page!r} is not an insight article")
+        if not isinstance(label, str) or not label.strip():
+            errors.append(f'{where}: "label" must be the diagram\'s aria-label')
+        elif isinstance(page, str):
+            key = (page, _norm_label(label))
+            if key in seen:
+                errors.append(f"{where}: duplicates an earlier entry")
+            seen.add(key)
+        if not isinstance(pattern, str) or pattern not in patterns:
+            errors.append(f"{where}: unknown pattern {pattern!r}")
+        if len(str(entry.get("rationale") or "").strip()) < MIN_RATIONALE:
+            errors.append(
+                f'{where}: "rationale" must say why no primitive fits (at least {MIN_RATIONALE} characters)'
+            )
+    return errors
+
+
+def registered_diagram_labels(registry: object) -> dict[str, list[str]]:
+    """Exception labels grouped by page, skipping malformed entries (which
+    check_diagram_registry reports) so a bad registry cannot crash the run."""
+    out: dict[str, list[str]] = {}
+    entries = registry.get("exceptions") if isinstance(registry, dict) else None
+    for entry in entries if isinstance(entries, list) else []:
+        if isinstance(entry, dict) and isinstance(entry.get("page"), str) and isinstance(entry.get("label"), str):
+            out.setdefault(entry["page"], []).append(entry["label"])
+    return out
+
+
 def main() -> int:
     if not HUB.exists():
         print(f"ERROR  Hub not found: {HUB}", file=sys.stderr)
@@ -631,12 +768,21 @@ def main() -> int:
     hub_card_set = hub_card_slugs()
     hub_haspart_set = hub_haspart_slugs()
 
+    try:
+        diagram_registry = load_diagram_exceptions()
+        registry_errors = check_diagram_registry(diagram_registry, set(slugs))
+    except ValueError as exc:
+        diagram_registry, registry_errors = {}, [str(exc)]
+    diagram_labels = registered_diagram_labels(diagram_registry)
+
     all_errors: dict[str, list[str]] = {}
     for slug in slugs:
         errs = check_slug(slug, sitemap_set, hub_card_set, hub_haspart_set)
         page = INSIGHTS_DIR / slug / "index.html"
         if page.exists():
-            errs += check_toc(slug, page.read_text(encoding="utf-8"))
+            page_html = page.read_text(encoding="utf-8")
+            errs += check_toc(slug, page_html)
+            errs += check_diagrams(slug, page_html, diagram_labels.get(slug, []))
         if errs:
             all_errors[slug] = errs
 
@@ -666,6 +812,16 @@ def main() -> int:
                 print(f"    - {msg}")
         print()
 
+    if registry_errors:
+        print(
+            f"FAIL  docs/site/insight-diagram-exceptions.json has {len(registry_errors)} "
+            f"error(s); see docs/site/insight-publishing-contract.md, check 11.",
+            file=sys.stderr,
+        )
+        for msg in registry_errors:
+            print(f"    - {msg}", file=sys.stderr)
+        print(file=sys.stderr)
+
     if total_errors:
         print(
             f"FAIL  {len(all_errors)}/{len(slugs)} insight articles failed publishing "
@@ -678,9 +834,16 @@ def main() -> int:
             print(f"  {slug}/", file=sys.stderr)
             for msg in all_errors[slug]:
                 print(f"    - {msg}", file=sys.stderr)
+
+    if total_errors or registry_errors:
         return 1
 
+    n_diagrams = sum(len(v) for v in diagram_labels.values())
     print(f"OK  {len(slugs)} insight articles fully registered.")
+    print(
+        f"OK  {n_diagrams} inline diagrams in article bodies, each a documented exception "
+        f"in docs/site/insight-diagram-exceptions.json."
+    )
     return 0
 
 
