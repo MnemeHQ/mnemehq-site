@@ -8,6 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
+  <link rel="stylesheet" href="/assets/css/diagrams.css">
   <link rel="stylesheet" href="/assets/css/insight-editorial-v2.css">
   <meta name="description" content="The AI SDLC is the software lifecycle with AI agents in every phase. The six phases, AI-assisted vs AI-native, and frameworks like AI-DLC, BMAD and Spec Kit." />
   <meta name="robots" content="index, follow" />
@@ -80,21 +81,6 @@
     .callout p { margin: 0; color: var(--muted); font-size: 0.88rem; line-height: 1.75; }
     .callout p strong { color: var(--accent); }
 
-    .lifecycle { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem 1.5rem 1.25rem; margin: 2.5rem 0; }
-    .lifecycle .lc-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.1rem; }
-    .lc-flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
-    .lc-phase { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.55rem; text-align: center; }
-    .lc-phase .lp-name { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem; }
-    .lc-phase .lp-ai { font-family: 'DM Mono', monospace; font-size: 0.66rem; color: var(--muted); letter-spacing: 0.04em; line-height: 1.35; }
-    .lc-overlay { margin-top: 10px; background: linear-gradient(90deg, rgba(181, 204, 122,0.1), rgba(181, 204, 122,0.18), rgba(181, 204, 122,0.1)); border: 1px solid rgba(181, 204, 122,0.35); border-radius: 6px; padding: 0.7rem 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
-    .lc-overlay .lo-label { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
-    .lc-overlay .lo-text { font-size: 0.78rem; color: var(--text); line-height: 1.5; text-align: right; }
-    .lc-caption { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.04em; color: var(--muted); margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border); line-height: 1.55; }
-    @media (max-width: 720px) {
-      .lc-flow { grid-template-columns: repeat(3, 1fr); }
-      .lc-overlay { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
-      .lc-overlay .lo-text { text-align: left; }
-    }
 
     .governance-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: 12px; overflow: hidden; margin: 1.75rem 0; }
     .gov-row { background: var(--surface); padding: 1rem 1.25rem; display: flex; gap: 1rem; align-items: flex-start; }
@@ -119,6 +105,9 @@
       .gov-table td:first-child { white-space: normal; font-size: 0.95rem; padding-bottom: 0.4rem; }
       .gov-table td:first-child::before { display: none; }
     }
+    .sdlc-figure { margin: 2.25rem 0; }
+    .diagram-caption { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.06em; color: var(--muted); text-transform: uppercase; margin-top: 1rem; padding-top: 0.9rem; border-top: 1px solid var(--border); line-height: 1.7; }
+    .diagram-caption strong { color: var(--accent); font-weight: 500; }
     .closing-statement { margin: 3rem 0 0; padding: 1.75rem 2rem; background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; }
     .closing-statement p { font-family: 'Instrument Serif', serif; font-size: 1.15rem; line-height: 1.65; color: var(--text); font-style: italic; margin: 0; }
 
@@ -406,6 +395,43 @@
         <li><strong>Keep people where judgment matters.</strong> Scope, exceptions and releases need a named person; routine conformance does not.</li>
         <li><strong>Measure outcomes, not output.</strong> Track rework, defects found after release and review time alongside throughput, so speed in one phase does not hide cost in another.</li>
       </ol>
+
+      <figure class="sdlc-figure">
+      <div class="mneme-diagram mneme-diagram--checkpoints" role="img"
+           aria-labelledby="ec-diag-title ec-diag-desc">
+        <p id="ec-diag-title" class="mneme-diagram__title">Five enforcement checkpoints &middot; two fire before generation</p>
+        <p id="ec-diag-desc" class="mneme-diagram__sr-desc">Five lifecycle checkpoints. Pre-generation governance: IDE corpus as context, and pre-tool-use hook that blocks before the agent writes. Post-generation checks: CI check (the hard gate that blocks before merge), Merge gated on the verdict, and post-hoc Audit review.</p>
+
+        <div class="brackets">
+          <div class="bracket-label pre">Pre-generation governance</div>
+          <div class="bracket-label post">Post-generation checks</div>
+        </div>
+
+        <div class="row">
+          <div class="step step--active">
+            <div class="s-title">IDE</div>
+            <div class="s-sub">corpus as context</div>
+          </div>
+          <div class="step step--active">
+            <div class="s-title">Pre-tool hook</div>
+            <div class="s-sub">block before generation</div>
+          </div>
+          <div class="step step--gate">
+            <div class="s-title">CI check</div>
+            <div class="s-sub">block before merge</div>
+          </div>
+          <div class="step">
+            <div class="s-title">Merge</div>
+            <div class="s-sub">gated on verdict</div>
+          </div>
+          <div class="step step--muted">
+            <div class="s-title">Audit</div>
+            <div class="s-sub">post-hoc review</div>
+          </div>
+        </div>
+      </div>
+      <figcaption class="diagram-caption"><strong>Where step 3 puts each check.</strong> Context guides the agent; the hook and the CI check can block a change; an audit only finds what slipped through.</figcaption>
+      </figure>
 
       <h2 id="where-mneme-fits">Where Mneme fits</h2>
 
