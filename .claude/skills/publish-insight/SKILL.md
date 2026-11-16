@@ -129,7 +129,7 @@ batch compete too; settle them together under the terminology lock before buildi
       action is concrete, and every unclear term gets defined at first use. Internal names (ADR
       numbers, O1, DG1, codenames) must be defined or removed. "Decision Index" is a product term with its own docs page; define it at first use.
 5. **Diagrams reuse a primitive.** If the article needs a diagram, use one of the canonical
-   primitives in `site/assets/css/diagrams.css` and link that stylesheet. A new inline `<svg>` is
+   primitives in `site/assets/css/diagrams-v2.css` and link that stylesheet. A new inline `<svg>` is
    allowed only as a documented exception in `docs/site/insight-diagram-exceptions.json` (contract
    check 11); `check_insights.py` fails on anything else. The publisher takes only the article
    directory from the queued PR, so an exception lands on `main` in its own docs PR first.

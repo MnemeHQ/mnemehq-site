@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Idempotent backfill of click-to-load YouTube facades on insight/concept pages.
 
-Mirrors the shared-asset pattern of ``site/assets/css/diagrams.css``: each page
+Mirrors the shared-asset pattern of ``site/assets/css/diagrams-v2.css``: each page
 gets a ``<link>`` to ``/assets/css/video.css``, a ``<script>`` to
 ``/assets/js/video.js``, and a facade ``<div>`` inserted mid-``.article-body``.
 VideoObject JSON-LD is intentionally reserved for dedicated video-first demo
@@ -40,13 +40,14 @@ THUMB_URL = "https://i.ytimg.com/vi/%s/maxresdefault.jpg"
 # Head / body asset references
 # --------------------------------------------------------------------------- #
 def insert_head_link(head_html: str) -> str:
-    """Insert the video.css <link> after the diagrams.css link if present,
+    """Insert the video.css <link> after the diagrams stylesheet link if present,
     else immediately before </head>. No-op if already present."""
     if CSS_HREF in head_html:
         return head_html
-    diagrams = '<link rel="stylesheet" href="/assets/css/diagrams.css">'
-    if diagrams in head_html:
-        return head_html.replace(diagrams, diagrams + "\n  " + CSS_LINK, 1)
+    for diagrams in ('<link rel="stylesheet" href="/assets/css/diagrams-v2.css">',
+                     '<link rel="stylesheet" href="/assets/css/diagrams.css">'):
+        if diagrams in head_html:
+            return head_html.replace(diagrams, diagrams + "\n  " + CSS_LINK, 1)
     if "</head>" in head_html:
         return head_html.replace("</head>", "  " + CSS_LINK + "\n</head>", 1)
     return head_html + "\n" + CSS_LINK

@@ -35,7 +35,7 @@ Checks (all hard errors):
     ERROR  -- an inline <svg> diagram in the article body is not a documented exception
     ERROR  -- an inline diagram has no aria-label, or shares one with another diagram
     ERROR  -- an exception matches no diagram on its page (stale)
-    ERROR  -- primitive markup (.mneme-diagram) without /assets/css/diagrams.css
+    ERROR  -- primitive markup (.mneme-diagram) without /assets/css/diagrams-v2.css
     ERROR  -- the exceptions registry is missing, malformed or has an invalid entry
 
 Exit codes:  0 = clean   1 = errors found
@@ -505,7 +505,7 @@ def check_slug(
     #     carries data-cta-intent so cta_click can report it.
     errors.extend(check_context_cta(slug, html))
 
-    # 11. mid-article CTA band (templates/cta-components.html, component 4).
+    # 12. mid-article CTA band (templates/cta-components.html, component 4).
     #     new_article.py stamps it; this catches pages built any other way.
     if 'class="cta-band"' not in html:
         errors.append(
@@ -629,14 +629,14 @@ def check_toc(slug: str, html: str) -> list[str]:
 # Diagrams (docs/site/insight-publishing-contract.md, check 11). An inline <svg>
 # in the article body is a diagram unless it is a decorative icon marked
 # aria-hidden="true". A diagram either reuses a canonical primitive from
-# site/assets/css/diagrams.css (HTML and CSS, so no <svg>) or is a documented
+# site/assets/css/diagrams-v2.css (HTML and CSS, so no <svg>) or is a documented
 # exception in DIAGRAM_EXCEPTIONS, keyed by page and aria-label.
 
 DIAGRAM_REUSE = ("existing-primitive", "shared-pattern", "bespoke")
 MIN_RATIONALE = 20
 SVG_OPEN_RE = re.compile(r"<svg\b([^>]*)>", re.IGNORECASE)
 PRIMITIVE_RE = re.compile(r'class="[^"]*\bmneme-diagram\b')
-DIAGRAMS_CSS_RE = re.compile(r'<link\b[^>]*href="/assets/css/diagrams\.css(?:\?[^"]*)?"')
+DIAGRAMS_CSS_RE = re.compile(r'<link\b[^>]*href="/assets/css/diagrams(?:-v\d+)?\.css(?:\?[^"]*)?"')
 
 
 def _norm_label(label: str) -> str:
@@ -675,7 +675,7 @@ def check_diagrams(slug: str, html: str, registered: list[str]) -> list[str]:
             if label not in expected:
                 errors.append(
                     f"Unregistered inline diagram in {slug}: {label!r}. Reuse a primitive from "
-                    f"site/assets/css/diagrams.css, or document the exception in "
+                    f"site/assets/css/diagrams-v2.css, or document the exception in "
                     f"docs/site/insight-diagram-exceptions.json "
                     f"(docs/site/insight-publishing-contract.md, check 11)"
                 )
@@ -685,7 +685,7 @@ def check_diagrams(slug: str, html: str, registered: list[str]) -> list[str]:
             f"remove the entry or update its label"
         )
     if PRIMITIVE_RE.search(article_region(html)) and not DIAGRAMS_CSS_RE.search(html):
-        errors.append(f"{slug} uses diagram primitive markup but does not link /assets/css/diagrams.css")
+        errors.append(f"{slug} uses diagram primitive markup but does not link /assets/css/diagrams-v2.css")
     return errors
 
 

@@ -62,7 +62,7 @@ For every `site/insights/<slug>/index.html`, the following must all be true:
 
 **Diagrams**
 
-11. **A diagram reuses a primitive or is a documented exception** — an inline `<svg>` in the article body is a diagram unless it is a decorative icon marked `aria-hidden="true"`. A diagram either uses one of the canonical primitives in [`site/assets/css/diagrams.css`](../../site/assets/css/diagrams.css), which are HTML and CSS and contain no `<svg>`, or has an entry in [`docs/site/insight-diagram-exceptions.json`](insight-diagram-exceptions.json) keyed by the page slug and the diagram's exact `aria-label`, with a pattern and a rationale. `scripts/check_insights.py` (CI) fails on an unregistered or unlabelled diagram, on two diagrams sharing a label, on an exception that matches no diagram on its page, and on primitive markup without the stylesheet. The registry holds the 45 diagrams published before the rule (2026-11-13), each classified by reuse potential and ranked for consolidation. Shrink it as diagrams move to primitives; add to it only when no primitive fits.
+11. **A diagram reuses a primitive or is a documented exception** — an inline `<svg>` in the article body is a diagram unless it is a decorative icon marked `aria-hidden="true"`. A diagram either uses one of the canonical primitives in [`site/assets/css/diagrams-v2.css`](../../site/assets/css/diagrams-v2.css), which are HTML and CSS and contain no `<svg>`, or has an entry in [`docs/site/insight-diagram-exceptions.json`](insight-diagram-exceptions.json) keyed by the page slug and the diagram's exact `aria-label`, with a pattern and a rationale. `scripts/check_insights.py` (CI) fails on an unregistered or unlabelled diagram, on two diagrams sharing a label, on an exception that matches no diagram on its page, and on primitive markup without the stylesheet. The registry holds the 45 diagrams published before the rule (2026-11-13), each classified by reuse potential and ranked for consolidation. Shrink it as diagrams move to primitives; add to it only when no primitive fits.
 
 ## How to register a new insight
 
@@ -130,10 +130,10 @@ The hub card from step 3 already satisfies the "at least one incoming internal l
 
 ### 6. Diagrams
 
-Reuse a canonical primitive before drawing a new diagram. The four primitives (governance propagation, enforcement checkpoints, provenance chain, architectural drift cascade) live in `site/assets/css/diagrams.css`. Each is embedded on its concept page (`/concepts/governance-propagation/`, `/concepts/governance-before-generation/`, `/concepts/enforcement-provenance/`, `/concepts/architectural-drift/`), and the markup contract is in [`docs/contributing/diagram-conventions.md`](https://github.com/MnemeHQ/mneme/blob/main/docs/contributing/diagram-conventions.md) in the core repo. A page that uses one links the stylesheet in its `<head>`:
+Reuse a canonical primitive before drawing a new diagram. The four primitives (governance propagation, enforcement checkpoints, provenance chain, architectural drift cascade) live in `site/assets/css/diagrams-v2.css`. Each is embedded on its concept page (`/concepts/governance-propagation/`, `/concepts/governance-before-generation/`, `/concepts/enforcement-provenance/`, `/concepts/architectural-drift/`), and the markup contract is in [`docs/contributing/diagram-conventions.md`](https://github.com/MnemeHQ/mneme/blob/main/docs/contributing/diagram-conventions.md) in the core repo. A page that uses one links the stylesheet in its `<head>`:
 
 ```html
-<link rel="stylesheet" href="/assets/css/diagrams.css">
+<link rel="stylesheet" href="/assets/css/diagrams-v2.css">
 ```
 
 When no primitive fits, draw an inline `<svg role="img" aria-label="...">` and add an entry to `docs/site/insight-diagram-exceptions.json`:
@@ -191,7 +191,7 @@ Exit code is `0` if every article is fully registered, `1` if any check fails. E
     - TechArticle/Article JSON-LD missing from my-new-article: add a schema.org TechArticle entry with url and headline
     - Missing hub CollectionPage hasPart entry for my-new-article: add {"@type": "Article", "name": "<title>", "url": "https://mnemehq.com/insights/my-new-article/"} to the hasPart array in site/insights/index.html
     - No incoming internal links found for my-new-article
-    - Unregistered inline diagram in my-new-article: 'Old review model against the new one'. Reuse a primitive from site/assets/css/diagrams.css, or document the exception in docs/site/insight-diagram-exceptions.json (docs/site/insight-publishing-contract.md, check 11)
+    - Unregistered inline diagram in my-new-article: 'Old review model against the new one'. Reuse a primitive from site/assets/css/diagrams-v2.css, or document the exception in docs/site/insight-diagram-exceptions.json (docs/site/insight-publishing-contract.md, check 11)
 ```
 
 ## CI behavior
