@@ -491,7 +491,7 @@
     <ul>
       <li><strong>Pre-generation hooks:</strong> The governance system intercepts the agent's tool-use intent before execution. In Claude Code, this is the pre-tool-use hook. In Cursor, this is rules injection before generation. The hook surfaces the relevant decision records to the agent's context before it writes.</li>
       <li><strong>CI gates:</strong> The governance system runs as a CI step, evaluating generated code against encoded constraints before merge. This is post-generation enforcement, but it is pre-production — a merge gate rather than a review proxy.</li>
-      <li><strong>Decision memory:</strong> The governance layer requires a persistent, structured record of architectural decisions — not documentation, not ADRs as prose, but machine-readable decision records that the retrieval system can score and inject. The memory is the source of truth for constraints.</li>
+      <li><strong>Decision memory:</strong> The governance layer requires a persistent, structured record of architectural decisions — not documentation, not <a href="/insights/how-ai-coding-agents-use-adrs/">ADRs as prose</a>, but machine-readable decision records that the retrieval system can score and inject. The memory is the source of truth for constraints.</li>
     </ul>
 
     <p>What governance does not do: it does not evaluate correctness, performance, or product logic. It evaluates architectural coherence — whether the code is consistent with the decisions the team has made. Correctness and logic remain in the review layer, where human judgment is appropriate and irreplaceable.</p>
