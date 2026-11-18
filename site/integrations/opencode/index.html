@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
-  <meta name="description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
+  <meta name="description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published mneme-hq 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <link rel="canonical" href="https://mnemehq.com/integrations/opencode/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="OpenCode Governance (Experimental)" />
-  <meta property="og:description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
+  <meta property="og:description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published mneme-hq 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
   <meta property="og:url" content="https://mnemehq.com/integrations/opencode/" />
   <meta property="og:image" content="https://mnemehq.com/integrations/opencode/og-v3.png" />
 <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
 <meta property="og:image:alt" content="Integration: Architectural Governance for OpenCode. Experimental terminal-CLI adapter that checks Python file writes and edits against recorded decisions." />
     <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="OpenCode Governance (Experimental)" />
-  <meta name="twitter:description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
+  <meta name="twitter:description" content="Mneme's experimental OpenCode adapter is merged on main but is not in the published mneme-hq 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim." />
   <meta name="twitter:image" content="https://mnemehq.com/integrations/opencode/og-v3.png" />
 <meta name="twitter:image:alt" content="Integration: Architectural Governance for OpenCode. Experimental terminal-CLI adapter that checks Python file writes and edits against recorded decisions." />
     <meta name="author" content="Theo Valmis" />
@@ -56,7 +56,7 @@
       {
         "@type": "TechArticle",
         "headline": "OpenCode Governance (Experimental)",
-        "description": "Mneme's experimental OpenCode adapter is merged on main but is not in the published 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim.",
+        "description": "Mneme's experimental OpenCode adapter is merged on main but is not in the published mneme-hq 0.11.0 package. It checks Python file writes and edits before they land, through the terminal CLI tool hook. One host surface, documented bypasses, no support-level claim.",
         "url": "https://mnemehq.com/integrations/opencode/",
         "datePublished": "2026-06-05",
         "dateModified": "2026-11-18",
@@ -67,7 +67,7 @@
         "@type": "FAQPage",
         "mainEntity": [
           {"@type": "Question", "name": "What is OpenCode?", "acceptedAnswer": {"@type": "Answer", "text": "OpenCode is an open-source coding agent that runs in the terminal, as an IDE extension, and as a desktop app. It supports parallel agent sessions on the same project, works with a large number of model providers, and exposes a plugin system with hooks for tool execution and session lifecycle events."}},
-          {"@type": "Question", "name": "How does Mneme integrate with OpenCode?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme's OpenCode adapter registers on the tool execute.before hook in the terminal CLI. It gates two Python surfaces before they land: writing a new file, and editing an existing one. The check runs the canonical mneme check against recorded FORBID_LITERAL rules (rules that forbid a specific string). It is experimental and limited to .py files."}},
+          {"@type": "Question", "name": "How does Mneme integrate with OpenCode?", "acceptedAnswer": {"@type": "Answer", "text": "Mneme's OpenCode adapter registers on the tool execute.before hook in the terminal CLI. It gates two Python surfaces before they land: writing a new file, and editing an existing one. The check runs the canonical mneme check against FORBID_LITERAL rules (rules that forbid a specific string); that is the only rule type covered. It is experimental and limited to .py files."}},
           {"@type": "Question", "name": "Would this be advisory or blocking?", "acceptedAnswer": {"@type": "Answer", "text": "strict blocks a trusted literal violation by throwing, so the host refuses the write or edit. warn allows the change and prints a visible Mneme WARN: warn_mode_violation diagnostic. Non-.py targets, patch payloads, shell and other tools are not covered."}},
           {"@type": "Question", "name": "Why govern OpenCode if it already runs the agent well?", "acceptedAnswer": {"@type": "Answer", "text": "Running the agent well is execution; keeping the architecture coherent is governance. Mneme applies recorded decisions to the surfaces it covers. Today that is the OpenCode terminal CLI for Python file writes and edits; other OpenCode surfaces are not validated."}}
         ]
@@ -354,7 +354,7 @@
       <span class="eyebrow-meta">7 min read</span>
     </div>
     <h1>OpenCode Governance</h1>
-    <p class="article-lede">OpenCode runs an open-source coding agent across the terminal, an IDE extension, and a desktop app. Mneme has merged an <strong>experimental</strong> adapter on <code>main</code> for the terminal command-line interface (CLI): it checks Python file writes and edits against recorded architectural decisions (the decision records kept in the repository) before they land. It covers one surface and two Python operations. It is not race-resistant, and it is not a supported integration. This page describes what is merged, what is not, and what a published release does not yet include.</p>
+    <p class="article-lede">OpenCode runs an open-source coding agent across the terminal, an IDE extension, and a desktop app. Mneme has merged an <strong>experimental</strong> adapter on <code>main</code> for the terminal command-line interface (CLI): it checks Python file writes and edits against recorded architectural decisions (the decision records kept in the repository) before they land. If you run OpenCode in a terminal on a Python codebase and want those decisions enforced before a change lands, this page is for you. The adapter covers one surface and two Python operations. Race resistance has not been established, and it is not a supported integration. It is merged on <code>main</code>; no published release includes it yet.</p>
   </header>
 
   <div class="article-body">
@@ -366,14 +366,14 @@
     <div class="callout"><p><strong>OpenCode coordinates execution across surfaces.</strong> Mneme&rsquo;s adapter attaches to the terminal CLI only. Coverage there does not imply coverage in the IDE extension or the desktop app.</p></div>
 
     <h2>The integration surface: OpenCode's tool hook</h2>
-    <p>OpenCode exposes a plugin system with an <code>execute.before</code> hook at the point where a tool is about to mutate files. The Mneme adapter registers there, runs <code>mneme check</code> against the team&rsquo;s recorded decisions, and throws on a trusted literal violation so the host refuses the change. What ships is narrower than the hook surface: two Python operations on the terminal CLI.</p>
+    <p>OpenCode&rsquo;s plugin system exposes an <code>execute.before</code> hook that fires before a tool mutates files. This adapter registers on that hook in the terminal CLI only; it is not wired into the IDE extension or the desktop app. It runs <code>mneme check</code> against the team&rsquo;s recorded decisions, and a confirmed literal-rule violation makes the host refuse the change. What is merged is narrower than the hook surface: two Python operations on the terminal CLI.</p>
 
     <div style="overflow-x:auto;margin:2rem 0;">
     <table class="gov-table">
       <thead><tr><th>Hook / operation</th><th>Mneme action</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><code>write</code> &mdash; new <code>.py</code> file</td><td>Pre-mutation check; a block throws and the host refuses the write</td><td>Merged (S1, new files)</td></tr>
-        <tr><td><code>edit</code> &mdash; existing <code>.py</code> file</td><td>Introduced-delta check; a block throws and the host refuses the edit</td><td>Merged (E1, edits)</td></tr>
+        <tr><td><code>write</code> &mdash; new <code>.py</code> file</td><td>Checked before the write; a block makes the host refuse it</td><td>Merged: new-file write</td></tr>
+        <tr><td><code>edit</code> &mdash; existing <code>.py</code> file</td><td>Checks only the lines the edit adds; a block makes the host refuse it</td><td>Merged: existing-file edit</td></tr>
         <tr><td>after-execution and session-idle hooks</td><td>No advisory pass is wired</td><td>Not implemented</td></tr>
         <tr class="accent-row"><td>session compaction</td><td>Evaluated and closed &mdash; the completed experiment returned a NULL verdict (no measurable effect)</td><td>Closed (NULL verdict)</td></tr>
       </tbody>
@@ -383,14 +383,14 @@
     <p><strong>Source versus release.</strong> The adapter is merged on <code>main</code>. It is not part of the published <code>mneme-hq 0.11.0</code> package, so installing that release does not provide OpenCode coverage. Until a release includes it, treat this as source-level capability, not a shipped package feature.</p>
 
     <h2>Modes: strict and warn</h2>
-    <p>In <strong>strict</strong> mode a trusted literal violation blocks: the plugin throws and the host refuses the write or edit. In <strong>warn</strong> mode the same evaluation proceeds and the plugin prints <code>Mneme WARN: warn_mode_violation</code>. The warning is a diagnostic, not protection. There is no advisory check after a change lands, and no Stop or session-boundary pass.</p>
+    <p>In <strong>strict</strong> mode a confirmed literal-rule violation blocks: the plugin throws and the host refuses the write or edit. In <strong>warn</strong> mode the same evaluation proceeds and the plugin prints <code>Mneme WARN: warn_mode_violation</code>. The warning is a diagnostic, not protection. There is no advisory check after a change lands, and no end-of-turn or session-boundary pass.</p>
 
     <h2>Compaction: evaluated, closed as NULL</h2>
     <p>OpenCode documents compaction hooks designed to preserve task state, decisions, modified files, and multi-agent dependencies across longer sessions. We ran a controlled experiment injecting governance summaries through compaction; it completed with a <strong>NULL verdict</strong> (no measurable effect on outcomes) and was closed evidence-only, without adoption. The distinction at the heart of Mneme still stands: the difference between <em>remembering</em> a decision and <em>enforcing</em> it. But we will not claim a compaction-based context capability that validation did not support.</p>
 
     <h2>Where this sits in the stack</h2>
     <p>OpenCode is the harness; Mneme is the decision and control layer that runs alongside it. They are different layers of the runtime stack and they compose: OpenCode decides how the agent executes, and Mneme decides whether the resulting change respects the architecture. That composition is validated on other surfaces (Claude Code, Claude Agent SDK, Google Antigravity) and implemented here for the terminal CLI, where it remains experimental. The full argument for why a capable harness still needs this layer is in <a href="/insights/harness-engineering-still-needs-governance/">Harness Engineering Still Needs Governance</a>.</p>
-    <div class="callout"><p><strong>Status: experimental.</strong> The adapter is merged on <code>main</code> but is not in the published <code>0.11.0</code> package, and it is not a supported integration. Race resistance is <code>NOT_ESTABLISHED</code>: a file substituted between the check and the write is a documented bypass. The host supplies no call identifier (<code>callID</code>), so the adapter records no evidence claim (<code>none</code>). If you need enforcement now, use a supported native integration or a CI gate.</p></div>
+    <div class="callout"><p><strong>Status: experimental.</strong> The adapter is merged on <code>main</code> but is not in the published <code>mneme-hq 0.11.0</code> package, and it is not a supported integration. Race resistance has not been established: a file swapped between the check and the write is a known bypass. The host does not supply the call identifier the evidence format requires, so the adapter records no evidence claim. If you need enforcement now, use a supported native integration or a CI gate.</p></div>
 
 
   </div><!-- /.article-body -->
@@ -403,7 +403,7 @@
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">How does Mneme integrate with OpenCode?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
-      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Mneme's OpenCode adapter registers on the <code>execute.before</code> tool hook in the terminal CLI and gates two Python operations: writing a new file and editing an existing one. It runs the canonical mneme check against recorded FORBID_LITERAL rules (rules that forbid a specific string) and throws on a trusted violation in strict mode. It is experimental; other tools and file types are not covered.</div>
+      <div style="padding:0 1.25rem 1.25rem;color:var(--muted);font-size:0.88rem;line-height:1.8;">Mneme's OpenCode adapter registers on the <code>execute.before</code> tool hook in the terminal CLI and gates two Python operations: writing a new file and editing an existing one. It runs the canonical mneme check against FORBID_LITERAL rules (rules that forbid a specific string); that is the only rule type covered. A confirmed violation makes the host refuse the change in strict mode. It is experimental; other tools and file types are not covered.</div>
     </details>
     <details style="border:1px solid var(--border);border-radius:8px;margin-bottom:0.75rem;overflow:hidden;">
       <summary style="padding:1rem 1.25rem;cursor:pointer;font-weight:500;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;">Would this be advisory or blocking?<span style="color:var(--accent);font-size:1.2rem;flex-shrink:0;margin-left:1rem;">+</span></summary>
@@ -439,8 +439,8 @@
     <a href="/integrations/" class="back-link">&larr; Back to Integrations</a>
     <div class="cta-block integration-end-cta">
   <span class="integration-end-cta__eyebrow">Continue</span>
-  <h2>Ready to govern OpenCode?</h2>
-  <p>Complete the quickstart to install Mneme. The OpenCode adapter itself is available from source on <code>main</code> and is not yet in a published package.</p>
+  <h2>Evaluating OpenCode governance?</h2>
+  <p>Install Mneme with the quickstart, then take the adapter from source on <code>main</code>. Its plugin path and configuration are documented in the Core repository: <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/integrations/opencode.md">OpenCode adapter record</a>. It is not yet in a published package.</p>
   <div class="integration-end-cta__actions">
     <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
     <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
