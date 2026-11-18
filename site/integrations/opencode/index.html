@@ -386,21 +386,21 @@
 
     <h2>Trying it from source</h2>
     <ol>
-      <li>Install Mneme (Python 3.11 or newer) from the repository.</li>
-      <li>Register the adapter&rsquo;s plugin directory in your project&rsquo;s <code>opencode.json</code> <code>plugins</code> array, with an <code>authorityPath</code> for your authority pin.</li>
+      <li>Install Mneme (Python 3.11 or newer) from the repository. The adapter is validated on OpenCode 2.3.0 with the V2 plugin API.</li>
+      <li>Register <code>integrations/opencode-plugin</code> from the Mneme repository in your project&rsquo;s <code>opencode.json</code> <code>plugins</code> array. Set its <code>authorityPath</code> option to an <code>authority.json</code> file, which pins the exact decision, version and rule you expect.</li>
       <li>Make sure the repository has recorded decisions. Only <code>FORBID_LITERAL</code> rules are evaluated.</li>
     </ol>
     <p>There is no packaged install for the adapter yet.</p>
 
     <h2>Modes: strict and warn</h2>
-    <p>In <strong>strict</strong> mode a confirmed literal-rule violation blocks: the plugin throws and OpenCode refuses the write or edit. In <strong>warn</strong> mode the same evaluation proceeds and the plugin prints <code>Mneme WARN: warn_mode_violation</code>. The warning is a diagnostic, not protection. There is no advisory check after a change lands, and no end-of-turn or session-boundary pass.</p>
+    <p>In <strong>strict</strong> mode, the default, a confirmed literal-rule violation blocks: the plugin throws and OpenCode refuses the write or edit. In <strong>warn</strong> mode the same evaluation proceeds and the plugin prints <code>Mneme WARN: warn_mode_violation</code>. The warning is a diagnostic, not protection. There is no advisory check after a change lands, and no end-of-turn or session-boundary pass.</p>
 
     <h2>Compaction: evaluated, closed as NULL</h2>
     <p>OpenCode documents compaction hooks designed to preserve task state, decisions, modified files, and multi-agent dependencies across longer sessions. We ran a controlled experiment injecting governance summaries through compaction; it completed with a <strong>NULL verdict</strong> (no measurable effect on outcomes) and was closed evidence-only, without adoption. The distinction at the heart of Mneme still stands: the difference between <em>remembering</em> a decision and <em>enforcing</em> it. But we will not claim a compaction-based context capability that validation did not support.</p>
 
     <h2>Where this sits in the stack</h2>
-    <p>OpenCode is the harness; Mneme is the decision and control layer that runs alongside it. They are different layers of the runtime stack and they compose: OpenCode decides how the agent executes, and Mneme decides whether the resulting change respects the architecture. That composition is implemented for other surfaces (Claude Code, Claude Agent SDK, Google Antigravity) and for the terminal CLI here, where it remains experimental. The full argument for why a capable harness still needs this layer is in <a href="/insights/harness-engineering-still-needs-governance/">Harness Engineering Still Needs Governance</a>.</p>
-    <div class="callout"><p><strong>Status: experimental.</strong> The adapter is merged on <code>main</code> but is not in the published <code>mneme-hq 0.11.0</code> package, and it is not a supported integration. Race resistance has not been established: a file swapped between the check and the write is a known bypass. The host does not supply the call identifier the evidence format requires, so the adapter records no evidence claim. If you need enforcement now, use a supported native integration or a CI gate.</p></div>
+    <p>OpenCode is the harness; Mneme is the decision and control layer that runs alongside it. They are different layers of the runtime stack and they compose: OpenCode decides how the agent executes, and Mneme decides whether the resulting change respects the architecture. That composition is implemented for other agents (Claude Code, Claude Agent SDK, Google Antigravity) and for the terminal CLI here, where it remains experimental. The full argument for why a capable harness still needs this layer is in <a href="/insights/harness-engineering-still-needs-governance/">Harness Engineering Still Needs Governance</a>.</p>
+    <div class="callout"><p><strong>Status: experimental.</strong> The adapter is merged on <code>main</code> but is not in the published <code>mneme-hq 0.11.0</code> package, and it is not a supported integration. Race resistance has not been established: a file swapped between the check and the write is a known bypass. The host does not supply the call identifier the evidence format requires, so the adapter records no evidence claim (its audit record stays incomplete by design). If you need enforcement now, use a supported integration or a CI gate.</p></div>
 
 
   </div><!-- /.article-body -->
@@ -429,7 +429,7 @@
     <div class="related-panel-label" id="related-concepts-label">Related governance concepts</div>
     <ul class="related-list">
       <li><a href="/concepts/execution-surfaces/"><div class="rel-title">Execution Surfaces</div><p class="rel-desc">Terminal, IDE, and desktop are three surfaces where the same decisions must hold.</p></a></li>
-      <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance Propagation</div><p class="rel-desc">One compiled set of constraints, enforced identically across every surface and session.</p></a></li>
+      <li><a href="/concepts/governance-propagation/"><div class="rel-title">Governance Propagation</div><p class="rel-desc">One compiled set of constraints, applied wherever an adapter is installed and validated.</p></a></li>
       <li><a href="/concepts/runtime-governance/"><div class="rel-title">Runtime Governance</div><p class="rel-desc">Enforcement across long-running, parallel agent sessions.</p></a></li>
       <li><a href="/concepts/governance-before-generation/"><div class="rel-title">Governance Before Generation</div><p class="rel-desc">Check the change before it lands, not after it ships.</p></a></li>
     </ul>
@@ -440,7 +440,7 @@
     <ul class="related-list">
       <li><a href="/insights/harness-engineering-still-needs-governance/"><div class="rel-title">Harness Engineering Still Needs Governance</div><p class="rel-desc">A capable execution layer is not a governed one.</p></a></li>
       <li><a href="/insights/architectural-governance-across-heterogeneous-ai-coding-agents/"><div class="rel-title">Governance Across Heterogeneous Coding Agents</div><p class="rel-desc">One decision corpus, enforced across every agent and tool.</p></a></li>
-      <li><a href="/integrations/claude-code/"><div class="rel-title">Claude Code Governance</div><p class="rel-desc">The same hook-level enforcement, wired into Claude Code.</p></a></li>
+      <li><a href="/integrations/claude-code/"><div class="rel-title">Claude Code Governance</div><p class="rel-desc">Hook-level enforcement at the mature integration, for comparison.</p></a></li>
       <li><a href="/integrations/"><div class="rel-title">All integrations</div><p class="rel-desc">Where Mneme plugs into your coding-agent stack.</p></a></li>
     </ul>
   </aside>
@@ -452,7 +452,7 @@
   <h2>Evaluating OpenCode governance?</h2>
   <p>Install Mneme with the quickstart, then take the adapter from source on <code>main</code>. Its plugin path and configuration are documented in the Core repository: <a href="https://github.com/MnemeHQ/mneme/blob/main/docs/integrations/opencode.md">OpenCode adapter record</a>. It is not yet in a published package.</p>
   <div class="integration-end-cta__actions">
-    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
+    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Install Mneme (quickstart)</a>
     <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
