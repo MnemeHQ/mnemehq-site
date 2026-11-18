@@ -354,7 +354,7 @@
       <span class="eyebrow-meta">7 min read</span>
     </div>
     <h1>OpenCode Governance</h1>
-    <p class="article-lede">OpenCode runs an open-source coding agent across the terminal, an IDE extension, and a desktop app. Mneme ships an <strong>experimental</strong> adapter for the terminal CLI: it checks Python file writes and edits against recorded architectural decisions before they land. It covers one surface and two Python operations, it is not race-resistant, and it is not a supported integration. This page describes what ships and what does not.</p>
+    <p class="article-lede">OpenCode runs an open-source coding agent across the terminal, an IDE extension, and a desktop app. Mneme has merged an <strong>experimental</strong> adapter on <code>main</code> for the terminal CLI: it checks Python file writes and edits against recorded architectural decisions before they land. It covers one surface and two Python operations, it is not race-resistant, and it is not a supported integration. This page describes what is merged, what is not, and what a published release does not yet include.</p>
   </header>
 
   <div class="article-body">
@@ -374,12 +374,13 @@
       <tbody>
         <tr><td><code>write</code> &mdash; new <code>.py</code> file</td><td>Pre-mutation check; a block throws and the host refuses the write</td><td>Shipped (S1)</td></tr>
         <tr><td><code>edit</code> &mdash; existing <code>.py</code> file</td><td>Introduced-delta check; a block throws and the host refuses the edit</td><td>Shipped (E1)</td></tr>
-        <tr><td><code>edit</code> after a guarded <code>write</code></td><td>Not intercepted; a <code>NOT_COVERED</code> diagnostic only</td><td>Not covered</td></tr>
         <tr><td>tool.execute.after / file.edited, session.idle</td><td>No advisory pass is wired</td><td>Not implemented</td></tr>
         <tr class="accent-row"><td>session compaction</td><td>Evaluated and closed &mdash; the completed experiment returned a NULL verdict (no measurable effect)</td><td>Not shipped</td></tr>
       </tbody>
     </table>
     </div>
+
+    <p><strong>Source versus release.</strong> The adapter is merged on <code>main</code>. It is not part of the published <code>mneme-hq 0.11.0</code> package, so installing that release does not provide OpenCode coverage. Until a release includes it, treat this as source-level capability, not a shipped package feature.</p>
 
     <h2>Modes: strict and warn</h2>
     <p>In <strong>strict</strong> mode a trusted literal violation blocks: the plugin throws and the host refuses the write or edit. In <strong>warn</strong> mode the same evaluation proceeds and the plugin prints <code>Mneme WARN: warn_mode_violation</code>. The warning is a diagnostic, not protection. There is no advisory check after a change lands, and no Stop or session-boundary pass.</p>
@@ -389,7 +390,7 @@
 
     <h2>Where this sits in the stack</h2>
     <p>OpenCode is the harness; Mneme is the decision and control layer that runs alongside it. They are different layers of the runtime stack and they compose: OpenCode decides how the agent executes, and Mneme decides whether the resulting change respects the architecture. That composition is validated on other surfaces (Claude Code, Claude Agent SDK, Google Antigravity) and implemented here for the terminal CLI, where it remains experimental. The full argument for why a capable harness still needs this layer is in <a href="/insights/harness-engineering-still-needs-governance/">Harness Engineering Still Needs Governance</a>.</p>
-    <div class="callout"><p><strong>Status: experimental.</strong> The adapter ships on <code>main</code> but is not a supported integration. Race resistance is <code>NOT_ESTABLISHED</code>: a target substituted between evaluation and the host write is a documented bypass. The host supplies no <code>callID</code>, so the evidence claim is <code>none</code>. If you need enforcement now, use a supported native integration or a CI gate.</p></div>
+    <div class="callout"><p><strong>Status: experimental.</strong> The adapter is merged on <code>main</code> but is not in the published <code>0.11.0</code> package, and it is not a supported integration. Race resistance is <code>NOT_ESTABLISHED</code>: a target substituted between evaluation and the host write is a documented bypass. The host supplies no <code>callID</code>, so the evidence claim is <code>none</code>. If you need enforcement now, use a supported native integration or a CI gate.</p></div>
 
 
   </div><!-- /.article-body -->
