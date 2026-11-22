@@ -12,6 +12,57 @@ operations and points back to them. If this file and those disagree, those win; 
 Insights only. Concept pages, landing pages, pricing, roadmap and other page edits follow
 `docs/site/concept-publication.md` or their own contracts and go in separate PRs.
 
+## Agent orchestration (default for "draft insights")
+
+The main session is the **orchestrator**: it dispatches subagents with the Agent tool, owns every
+user confirmation, and never delegates a write to ChatGPT, the `scheduled-publish` label, or a
+merge. Mechanical work goes to Sonnet; judgment and prose go to Opus; every gate is checked by an
+agent that did not produce the thing it checks.
+
+| Step | Agent (`model`, `effort`) | Stages | Input → output |
+|------|---------------------------|--------|----------------|
+| A. Capture | `sonnet`, `medium`, one agent | 1.1–1.5 | ChatGPT project → `transcript.md` per chat + candidate list |
+| — | orchestrator | 1.7 | confirm the chat list with the user |
+| B. Sources | `sonnet`, `medium`, one agent | 3.1 (fetch) | transcripts → `sources/` (excerpts, PDFs, rendered chart pages, final URLs) |
+| C. Brief + draft | `opus`, `medium`, one per chat, in parallel | 2, 3.1 (verify) –3.4.2 | transcript + sources → brief, `body.html`, `faq.json`, slop score, lint result |
+| D. Cold read | `sonnet`, `low`, fresh, one per draft | 3.4.3 | `body.html` only → `coldread.md` |
+| E. Claim audit | `opus`, `medium`, fresh, one per draft | 5.1–5.2 | `body.html` + brief + `sources/` → `audit.md` (every Mneme claim classified, every figure re-checked) |
+| — | orchestrator | — | loop C ← D/E findings until both pass; confirm titles, count and dates with the user |
+| F. Publish | `sonnet`, `medium`, one agent, articles in sequence | 3.5–4, 5.4 (no label) | approved drafts → page, manifest, registration, OG, validators, one PR per article + the docs PR |
+| — | orchestrator | 5.4 | add `scheduled-publish` labels after the user's go-ahead |
+| G. Close out | `sonnet`, `medium` | 5.5–5.6 | after verified deploys and the user's confirmation of the exact chats → ledger, `***` marks, verification |
+
+Why this split, beyond "cheap model for cheap work":
+
+- **Capture and sources are separate from drafting** so the Opus drafters never touch the browser.
+  The browser is the user's single real Chrome: only one agent drives it at a time (A, then B, then
+  G), never parallel agents. Drafters work from files and run in parallel.
+- **Analysis stays with the drafter.** The editorial gate, cannibalisation verdict and citation
+  verification decide what gets written, so the Opus agent that writes the article also writes
+  its brief. Sonnet fetches the evidence; Opus judges it.
+- **The audit is a second Opus, not the drafter re-reading itself.** The capability-claim errors
+  CI missed in past batches were caught by an independent audit. Give E the brief and sources but
+  not C's reasoning. D gets only the draft, per the cold-read rule.
+- **Publishing runs in sequence** in one agent: `publish_on` dates are consecutive and branch
+  switches in a shared worktree have put commits on the wrong branch before.
+
+**Handoff directory.** Everything between agents lives in the session scratchpad at
+`<scratchpad>/insights-<yyyy-mm-dd>/<chat-slug>/` (`transcript.md`, `sources/`, `body.html`,
+`faq.json`, `coldread.md`, `audit.md`). Transcripts and source dumps never enter the repo: it is
+public, and only the privacy-filtered brief is committed (see Stage 1). Pass absolute paths in
+every prompt.
+
+**Briefing subagents.** Each prompt names its stage numbers in this file and tells the agent to
+read this file and the rules it points to; the agent has no other context. Every prompt also says:
+do not ask the user anything, do not rename, message or delete ChatGPT chats, do not add labels,
+merge or push to `main`; stop and report instead. A and G must state the truncation check and the
+exact chats to mark, respectively. If a subagent has no `mcp__claude-in-chrome__*` tools, the
+orchestrator runs that step itself.
+
+**Single article or a resumed batch.** Skip steps whose outputs already exist (a brief marked
+ready, a draft with a passing audit). The orchestrator may run a step inline when it is a handful
+of tool calls; the gates (D, E) are always separate agents.
+
 ## Stage 1: Intake (read-only)
 
 1. Read `docs/site/insights-scope-ledger.md` and `docs/site/scope-briefs/README.md`.
