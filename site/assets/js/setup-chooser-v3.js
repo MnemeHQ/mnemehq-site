@@ -122,7 +122,7 @@
     if (goal === 'ci' || o.group === 'ci') {
       var ci = o.group === 'ci' ? 'A required ' + o.name + ' check' : 'A required CI check';
       var by = o.group === 'ci' || o.id === 'other' ? 'whoever wrote it' : 'whether ' + o.name + ' or a person wrote it';
-      return ci + ' fails any pull request that breaks an active rule, ' + by + '.';
+      return ci + ' fails a pull request that adds or modifies a file breaking an active rule, ' + by + '.';
     }
     if (hooked(o)) return 'The agent hook refuses a bad edit while the agent works. The required CI check fails a bad pull request that gets past it.';
     if (o.hook === 'experimental') return o.name + '’s hook is experimental. Rely on the required CI check to fail a bad pull request.';

@@ -314,11 +314,11 @@
       <li>Claude Code, the command-line agent. The Claude web, desktop and mobile apps don&rsquo;t run plugin hooks.</li>
       <li>A git repository on GitHub or GitLab, with permission to add a CI workflow and make it a required check.</li>
     </ul>
-    <p>Tested versions: the Mneme commands and hook replays below ran against mneme-hq 0.11.0 on Windows, with the recorded output shown. Installing the plugin from Claude&rsquo;s plugin directory and running Claude Code itself were not part of that run; the plugin calls the same <code>mneme-hook</code> command shown here.</p>
   </section>
 
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
+    <div class="setup-callout"><strong>What we tested.</strong> The Mneme commands and hook replays below ran against mneme-hq 0.11.0 on Windows, with the recorded output shown. Installing the plugin from Claude&rsquo;s plugin directory (step 8) and running Claude Code itself were not part of that run; the plugin calls the same <code>mneme-hook</code> command shown here.</div>
 
     <h3>1. Install the command-line tool</h3>
     <div class="howto-code howto-code--command">
@@ -365,7 +365,7 @@ no longer operates.</pre>
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
 </div>
-    <p>Reports ADR-001 as Mneme-ready: Mneme found a rule it could install, <code>FORBID_LITERAL: celery</code>, a ban on the exact word <code>celery</code>.</p>
+    <p>Reports ADR-001 as <strong>Mneme-ready</strong>: Mneme found a rule it could install, <code>FORBID_LITERAL: celery</code>, a ban on the exact word <code>celery</code>, but the rule is not switched on yet. After step 7 the audit reports it as <strong>Protected</strong>, meaning the rule is active.</p>
 
     <h3>6. Validate the rule</h3>
     <div class="howto-code howto-code--command">
@@ -432,7 +432,7 @@ claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-celery.json</pre>
 </div>
-    <p>Then the allowed version, the same worker on Pub/Sub, saved as <code>events/write-pubsub.json</code>:</p>
+    <p>Then the allowed version, the same worker on Pub/Sub, the message queue the ADR says background jobs use, saved as <code>events/write-pubsub.json</code>:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>events/write-pubsub.json</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:events/write-pubsub.json">{

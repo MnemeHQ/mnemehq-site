@@ -14,7 +14,7 @@ window.MNEME_SETUP_CHOOSER = {
   "release": "0.11.0",
   "popular": ["claude-code", "codex-cli", "github-actions", "gitlab-ci", "cursor", "opencode"],
   "groups": [
-    {"id": "agents", "label": "Coding agents and harnesses", "catalogue": "coding-agents"},
+    {"id": "agents", "label": "Coding agents", "catalogue": "coding-agents"},
     {"id": "editors", "label": "Editors and hosts without a Mneme hook", "catalogue": "coding-agents"},
     {"id": "orchestrators", "label": "Agent orchestrators", "catalogue": "agent-orchestrators"},
     {"id": "factories", "label": "Software factories", "catalogue": "software-factories"},
@@ -69,7 +69,7 @@ window.MNEME_SETUP_CHOOSER = {
      "page": "/integrations/cursor/", "guide": "",
      "hook": "none",
      "hook_text": "No Mneme hook. Optionally, mneme cursor generate writes a Cursor Rules file from your decisions, which Cursor passes to its model as context.",
-     "limit": "The rules file only informs Cursor's model; it blocks nothing. The CI check is the only point that can block a Cursor change."},
+     "limit": "The rules file only informs Cursor's model; it blocks nothing. Without a Mneme hook, a Cursor change is checked in CI, after it is written."},
     {"id": "copilot", "group": "editors", "name": "GitHub Copilot", "status": "No adapter · CI check (shipped)",
      "page": "/integrations/copilot/", "guide": "",
      "hook": "none",
@@ -184,6 +184,6 @@ window.MNEME_SETUP_CHOOSER = {
      "page": "/integrations/", "guide": "/setup/ci/",
      "hook": "none",
      "hook_text": "If your agent is not in the catalogue, assume it has no Mneme hook.",
-     "limit": "Nothing checks a change until it reaches a pull request. Then CI checks the files it adds or modifies, whoever wrote them."}
+     "limit": "Without a Mneme hook, a change is checked when it reaches a pull request: CI checks the files it adds or modifies, whoever wrote them."}
   ]
 };

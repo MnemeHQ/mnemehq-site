@@ -7,7 +7,7 @@
   "h1_plain": "Set up Mneme",
   "date": "2026-11-22",
   "modified": "2026-11-23",
-  "lede": "Mneme checks code changes against the architecture decisions your team has recorded, and blocks a change that breaks an active rule. It can run in three places: a hook inside your coding agent that refuses a bad edit, a required CI check that fails a bad pull request, and an optional Model Context Protocol (MCP) lookup server that shows agents the decisions before they write."
+  "lede": "Mneme checks code changes against the architecture decisions your team has written down. Once you turn a decision into a rule, Mneme can block a change that breaks it. It can run in three places: a hook inside your coding agent that refuses a bad edit, a required CI check that fails a bad pull request, and an optional Model Context Protocol (MCP) lookup server that shows agents the decisions before they write."
 }
 -->
 <p class="setup-quick">Using Claude Code? Open the <a href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="hero" data-cta-component="context">Claude Code + CI guide</a>, the most complete setup. Otherwise, answer the two questions below.</p>
@@ -74,7 +74,7 @@
 
 <section class="setup-section" id="layers">
   <h2>The three places Mneme runs</h2>
-  <p>Mneme <strong>checks</strong> a change by comparing it with your active rules. It <strong>blocks</strong> a change by refusing the edit or failing the pull request. The hook and the CI check can block; the lookup server never does. Start with any one, and the guides add the others.</p>
+  <p>An <strong>active rule</strong> is a check you have switched on for a decision, such as &ldquo;the word celery must not appear in code&rdquo;. Mneme <strong>checks</strong> a change by comparing it with your active rules, and <strong>blocks</strong> it by refusing the edit or failing the pull request. The hook and the CI check can block; the lookup server never does. Start with any one, and the guides add the others.</p>
   <ul class="layers-explainer">
     <li>
       <div class="le-role"><strong>Agent hook</strong><span class="le-tag">Core</span></div>
@@ -97,7 +97,7 @@
 <section class="setup-section" id="install">
   <h2>What you install</h2>
   <p>Your decisions are architecture decision records (ADRs): short Markdown files in <code>docs/adr/</code>. Mneme compiles them into one <strong>memory file</strong>, <code>.mneme/project_memory.json</code>, which the hook, the CI check and the lookup server all read.</p>
-  <p>A decision blocks nothing until it has an <strong>active rule</strong>. The guides take one decision through four commands: <code>mneme setup</code> creates the memory file, <code>mneme adr import</code> adds your ADRs, <code>mneme protect validate</code> tests the rule Mneme proposes without changing anything, and <code>mneme protect activate</code> switches it on. You can also write the rule yourself, as a directive such as <code>FORBID_LITERAL</code> under <code>## Constraints</code> in the ADR; it is active as soon as you import it.</p>
+  <p>A decision blocks nothing until it has an <strong>active rule</strong>. The guides take one decision through four commands: <code>mneme setup</code> creates the memory file, <code>mneme adr import</code> adds your ADRs, <code>mneme protect validate</code> tests the rule Mneme proposes without changing anything, and <code>mneme protect activate</code> switches it on. You can also write the rule yourself in the ADR, under a <code>## Constraints</code> heading, for example <code>FORBID_LITERAL: celery</code>, which bans that exact word; a rule written this way is active as soon as you import it.</p>
   <div class="setup-table">
     <table>
       <thead><tr><th>Component</th><th>Needed</th><th>How</th></tr></thead>
@@ -123,8 +123,8 @@
     <a class="guide-card" href="/setup/codex-cli/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Codex CLI + CI</strong><span>Register Mneme&rsquo;s Codex hook in your repository, trust it in Codex, then add the same required check.</span><span class="guide-layers">Agent hook + CI check, MCP optional</span></a>
     <a class="guide-card" href="/setup/ci/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>CI only</strong><span>A GitHub Actions workflow or GitLab CI job. Works whichever agent or person wrote the change.</span><span class="guide-layers">CI check</span></a>
     <a class="guide-card" href="/setup/mcp/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>MCP lookup server</strong><span>Let agents search decisions, ask which apply to a file, see which decision replaced which, and propose new ones.</span><span class="guide-layers">MCP lookup server, blocks nothing</span></a>
-    <a class="guide-card" href="/setup/opencode/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>OpenCode + CI</strong><span>The CI check blocks OpenCode&rsquo;s changes. The OpenCode adapter is experimental and not in the 0.11.0 release.</span><span class="guide-layers">CI check, agent hook experimental</span></a>
-    <a class="guide-card" href="/setup/software-factory/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Software factory</strong><span>Where Mneme&rsquo;s checks sit when a queue and an orchestrator hand work to several agents.</span><span class="guide-layers">Each agent&rsquo;s hook + CI check</span></a>
+    <a class="guide-card" href="/setup/opencode/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>OpenCode + CI</strong><span>The CI check fails an OpenCode pull request that breaks an active rule. The OpenCode adapter is experimental and not in the 0.11.0 release.</span><span class="guide-layers">CI check, agent hook experimental</span></a>
+    <a class="guide-card" href="/setup/software-factory/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Software factory</strong><span>A software factory is a pipeline in which a work queue and an orchestrator program hand tasks to several coding agents. This guide shows where Mneme&rsquo;s checks sit in it.</span><span class="guide-layers">Each agent&rsquo;s hook + CI check</span></a>
   </div>
 </section>
 
@@ -132,7 +132,7 @@
   <h2>What no setup guarantees</h2>
   <p>Before you rely on any of it, test one blocked and one allowed change in your own repository. Every guide shows both. Three limits apply everywhere:</p>
   <ul class="setup-limits">
-    <li>Hooks fail open by default: when a check can&rsquo;t run, the change goes through. If a check crashes or times out, the Claude Code hook allows the edit, and the Codex CLI hook lets it through with an unevaluated note. Claude Code has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run; turning it on takes a reviewed change on your default branch.</li>
+    <li>Hooks fail open by default: if the check itself can&rsquo;t run, the hook lets the change through instead of blocking it. If a check crashes or times out, the Claude Code hook allows the edit, and the Codex CLI hook lets it through with an unevaluated note. Claude Code has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run; turning it on takes a reviewed change on your default branch.</li>
     <li>Some writes are not stopped before they land. Most shell commands and scripts reach disk first. Claude Code and Codex CLI check them when the agent ends its turn; with other agents, only CI sees them.</li>
     <li>CI covers only what your pipeline runs on: the files a change adds or modifies, in the repositories and branches where the job is required.</li>
   </ul>

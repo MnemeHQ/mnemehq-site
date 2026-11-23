@@ -112,7 +112,7 @@ def main() -> int:
 
     if HUB.exists():
         hub = HUB.read_text(encoding="utf-8")
-        m = re.search(r'<div class="chooser-fallback" data-chooser-fallback>(.*?)\n</div>', hub, re.S)
+        m = re.search(r'<details class="chooser-fallback-wrap" data-chooser-fallback>(.*?)\n</details>', hub, re.S)
         fallback = text(m.group(1)) if m else ""
         for o in data["options"]:
             if o["name"] not in fallback:

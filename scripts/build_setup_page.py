@@ -46,7 +46,13 @@ def chooser_data() -> dict:
 def fallback_html(data: dict) -> str:
     """Grouped list of links: the chooser as plain HTML for readers without JS."""
     e = lambda s: html.escape(s, quote=True)
-    out = ['<div class="chooser-fallback" data-chooser-fallback>']
+    out = [
+        '<details class="chooser-fallback-wrap" data-chooser-fallback>',
+        f'<summary>Show all {len(data["options"])} tools and their integration status</summary>',
+        '<p class="chooser-fallback-note">Pick a setup guide further down this page, or open a tool here. '
+        'Each status comes from the <a href="/integrations/">integration catalogue</a>.</p>',
+        '<div class="chooser-fallback">',
+    ]
     for group in data["groups"]:
         opts = [o for o in data["options"] if o["group"] == group["id"]]
         if not opts:
@@ -62,6 +68,7 @@ def fallback_html(data: dict) -> str:
             )
         out.append("    </ul>\n  </div>")
     out.append("</div>")
+    out.append("</details>")
     return "\n".join(out)
 
 

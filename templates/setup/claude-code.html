@@ -37,11 +37,11 @@
       <li>Claude Code, the command-line agent. The Claude web, desktop and mobile apps don&rsquo;t run plugin hooks.</li>
       <li>A git repository on GitHub or GitLab, with permission to add a CI workflow and make it a required check.</li>
     </ul>
-    <p>Tested versions: the Mneme commands and hook replays below ran against mneme-hq 0.11.0 on Windows, with the recorded output shown. Installing the plugin from Claude&rsquo;s plugin directory and running Claude Code itself were not part of that run; the plugin calls the same <code>mneme-hook</code> command shown here.</p>
   </section>
 
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
+    <div class="setup-callout"><strong>What we tested.</strong> The Mneme commands and hook replays below ran against mneme-hq 0.11.0 on Windows, with the recorded output shown. Installing the plugin from Claude&rsquo;s plugin directory (step 8) and running Claude Code itself were not part of that run; the plugin calls the same <code>mneme-hook</code> command shown here.</div>
 
     <h3>1. Install the command-line tool</h3>
     <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.11.0"</pre>
@@ -63,7 +63,7 @@
 
     <h3>5. Audit the decisions</h3>
     <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
-    <p>Reports ADR-001 as Mneme-ready: Mneme found a rule it could install, <code>FORBID_LITERAL: celery</code>, a ban on the exact word <code>celery</code>.</p>
+    <p>Reports ADR-001 as <strong>Mneme-ready</strong>: Mneme found a rule it could install, <code>FORBID_LITERAL: celery</code>, a ban on the exact word <code>celery</code>, but the rule is not switched on yet. After step 7 the audit reports it as <strong>Protected</strong>, meaning the rule is active.</p>
 
     <h3>6. Validate the rule</h3>
     <pre class="term-block" data-fixture="cmd">mneme protect validate ADR-001 --memory .mneme/project_memory.json</pre>
@@ -97,7 +97,7 @@ claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
     <p>Ask Claude Code for a change that breaks ADR-001, for example: &ldquo;Add a worker in workers/jobs.py that uses Celery.&rdquo; When the agent goes to write the file, Claude Code sends the hook a JSON description of the call. To see the hook&rsquo;s answer without running an agent, save that event as <code>events/write-celery.json</code>:</p>
     <pre class="term-block" data-fixture="file:events/write-celery.json"></pre>
     <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-celery.json</pre>
-    <p>Then the allowed version, the same worker on Pub/Sub, saved as <code>events/write-pubsub.json</code>:</p>
+    <p>Then the allowed version, the same worker on Pub/Sub, the message queue the ADR says background jobs use, saved as <code>events/write-pubsub.json</code>:</p>
     <pre class="term-block" data-fixture="file:events/write-pubsub.json"></pre>
     <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-pubsub.json</pre>
     <p>Finally, open a pull request that adds both workers as <code>workers/jobs.py</code> and <code>workers/publish.py</code>, so the CI check has one file of each kind.</p>
