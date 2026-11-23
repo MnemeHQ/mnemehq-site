@@ -89,6 +89,9 @@
     .section-eyebrow { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--quiet, #88889a); margin-bottom: 0.75rem; font-family: 'DM Mono', monospace; }
     .hero h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 400; letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 1.25rem; }
     .hero-sub { font-size: 0.95rem; color: var(--muted); max-width: 620px; margin: 0 auto; }
+    .hero-setup { margin-top: 1.1rem; color: var(--text); }
+    .hero-setup a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(181, 204, 122, 0.4); }
+    .hero-setup a:hover { border-bottom-color: var(--accent); }
 
     .entry { max-width: 940px; margin: 0 auto; padding: 0 2rem 3.25rem; }
     .entry-head { border-top: 1px solid var(--border); padding-top: 2.5rem; margin-bottom: 1.4rem; }
@@ -246,6 +249,7 @@
     <a href="/audit/" data-cta-intent="audit" data-cta-position="nav" data-cta-component="nav">Architecture Audit</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
+    <a href="/setup/">Setup</a>
     <a href="/pricing/">Pricing</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
     <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
@@ -258,6 +262,7 @@
   <div class="section-eyebrow">Integrate Mneme</div>
   <h1>Choose the interface, then wire Mneme into your stack</h1>
   <p class="hero-sub">Mneme is an open-source tool that stores your team&rsquo;s architectural decisions in the repository, such as &ldquo;request handlers use the storage adapter, never the database driver&rdquo;, and checks code changes against them. A check runs in a supported coding agent before its native file-write tool runs, or in CI on a pull request. Most writes made through shell commands reach disk before any check. This page groups every integration by the job it does, and gives each one a status.</p>
+  <p class="hero-sub hero-setup">Not sure which to use? <a href="/setup/#chooser" data-cta-intent="setup" data-cta-position="hero" data-cta-component="context">Choose your setup</a></p>
 </div>
 
 <section class="entry" aria-labelledby="status-key">

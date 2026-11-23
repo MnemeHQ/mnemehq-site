@@ -1,0 +1,57 @@
+{
+  "canonical_decision_id": "ADR-001",
+  "canonical_record": {
+    "anti_patterns": [],
+    "constraints": [],
+    "content_digest": "4d977f5541eb467cf182797d8948f8b929956297c8de947edc90bcc9051987ef",
+    "context_scope": [
+      "workers"
+    ],
+    "decided_at": "2026-10-01",
+    "decision_class": "architecture",
+    "decision_id": "ADR-001",
+    "decision_version_id": "dver-a1bfce306d1af69b5ff3deecdc6f5a6a",
+    "derived_rule_ids": [
+      "ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7"
+    ],
+    "lifecycle_status": "active",
+    "owner": "",
+    "rationale": "Background jobs run on the managed Pub/Sub queue. Celery was retired after\nthe 2026 queue incident, and reintroducing it brings back a broker the team\nno longer operates.\n",
+    "relationships": [],
+    "source_evidence": [
+      {
+        "observed_at": "",
+        "source_locator": "../docs/adr/ADR-001-no-celery.md",
+        "source_revision": "029bf3c8d702a381a7d4e7a34a3ccf43c9553bf789e619e2ac3618f458ddcf3d",
+        "source_type": "adr"
+      }
+    ],
+    "statement": "No Celery",
+    "targets": [],
+    "test_evidence": [],
+    "updated_at": "2026-10-01",
+    "version": "1",
+    "version_id": "dver-a1bfce306d1af69b5ff3deecdc6f5a6a"
+  },
+  "declared_test_evidence": [],
+  "derived_rules": [
+    {
+      "applicability": {},
+      "decision_id": "ADR-001",
+      "decision_version": "1",
+      "decision_version_id": "dver-a1bfce306d1af69b5ff3deecdc6f5a6a",
+      "lifecycle_status": "active",
+      "rule_id": "ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7",
+      "rule_payload": {
+        "value": "celery"
+      },
+      "rule_type": "FORBID_LITERAL",
+      "sequence": 0
+    }
+  ],
+  "missing_links": [
+    "declared_test_evidence: none declared for canonical decision",
+    "enforcement_links: absent (enforcement points are not modelled in the current canonical kernel)"
+  ],
+  "result_type": "canonical_trace"
+}

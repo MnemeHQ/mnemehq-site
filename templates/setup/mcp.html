@@ -1,0 +1,119 @@
+<!--meta
+{
+  "order": 4,
+  "title": "Set Up the Mneme Decision MCP Server | Mneme HQ",
+  "description": "Run mneme decision-mcp locally so an MCP-capable coding agent can search your recorded decisions, ask which apply to a file, trace them and propose new ones for people to review.",
+  "og_alt": "Set up the Mneme decision MCP server: register a local stdio server so agents can look up which architectural decisions apply before they write.",
+  "eyebrow": "Setup guide",
+  "h1": "Set up the decision MCP server",
+  "h1_plain": "Set up the decision MCP server",
+  "crumb": "Decision MCP",
+  "surface": "Any MCP host that starts local stdio servers",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Discover: decision MCP server"], ["off", "Enforce: not included"], ["off", "Verify: not included"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What it does not do"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "a local server your agent can ask which recorded decisions apply to the file it is about to edit, before it writes anything.",
+  "answer": "Install mneme-hq with the <code>[mcp]</code> extra and register <code>mneme decision-mcp</code> with your agent as a local server. The agent can then search your decisions, ask which ones apply to a file, trace a decision&rsquo;s history and propose new ones for people to review. The server informs the agent; it blocks nothing."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s decision server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
+    <p>This layer is optional in a complete setup and enforces nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>A memory file, <code>.mneme/project_memory.json</code>, with at least one imported decision. Steps 1 to 4 of the <a href="/setup/claude-code/#configure">Claude Code setup</a> create one for ADR-001, the example architecture decision record (ADR) that bans Celery. An imported decision is enough here; it doesn&rsquo;t need an active rule.</li>
+      <li>An agent or MCP host that can start a local server over standard input and output (stdio), meaning the host launches <code>mneme</code> as a process on your machine and talks to it through its input and output streams. Mneme ships the server command, not a configuration for each host, and we have not tested every host.</li>
+    </ul>
+    <p>Tested versions: mneme-hq 0.11.0 with the <code>[mcp]</code> extra. We started the server from a Python MCP client, as a host does, and called its tools. Registering it inside a named agent was not part of that run.</p>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Install with the MCP extra</h3>
+    <pre class="term-block" data-fixture="manual">pipx install "mneme-hq[mcp]==0.11.0"</pre>
+    <p>If Mneme is already installed without the extra, add <code>--force</code> to reinstall it.</p>
+
+    <h3>2. Register the server with your agent</h3>
+    <p>Claude Code reads servers from a <code>.mcp.json</code> file in the repository root. Other hosts take the same command and arguments in their own format:</p>
+    <pre class="term-block" data-block="config">{
+  "mcpServers": {
+    "mneme": {
+      "command": "mneme",
+      "args": ["decision-mcp", "--proposals", ".mneme/decision_proposals.json", "--memory", ".mneme/project_memory.json"]
+    }
+  }
+}</pre>
+    <ul class="plain">
+      <li><code>--memory</code> is the file the server reads decisions from. It re-reads the file on every request, so an ADR you re-import shows up without a restart.</li>
+      <li><code>--proposals</code> is where proposed decisions wait for review. The server never writes them into the memory file.</li>
+      <li>Paths resolve against the folder the host starts the server in. Use absolute paths if your host doesn&rsquo;t start in the repository root.</li>
+    </ul>
+    <p><a href="/docs/mcp/">The MCP server reference</a> lists every option, including <code>--adr-dir</code>, which validates your ADR folder at startup.</p>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Restart your agent so it picks up the server, then ask it which decisions apply to <code>workers/jobs.py</code>. To check the server without an agent, this small client starts it the way a host does and calls one tool. It imports the <code>mcp</code> package, and pipx keeps that package inside Mneme&rsquo;s own isolated environment, where your Python can&rsquo;t import it. So for this one check, make a throwaway virtual environment with pip. Your pipx install stays what the agent uses:</p>
+    <pre class="term-block" data-fixture="manual">python -m venv .probe-venv
+.probe-venv/bin/python -m pip install "mneme-hq[mcp]==0.11.0"</pre>
+    <p>On Windows, use <code>.probe-venv\Scripts\python</code>. Save the client as <code>mcp_probe.py</code>:</p>
+    <pre class="term-block" data-fixture="file:mcp_probe.py"></pre>
+    <pre class="term-block" data-fixture="manual">.probe-venv/bin/python mcp_probe.py list
+.probe-venv/bin/python mcp_probe.py decision.applicable_to '{"paths": ["workers/jobs.py"]}'</pre>
+    <p>The client passes <code>--proposals ""</code>, which keeps proposals in memory, so it writes no file.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The server lists six tools:</p>
+    <pre class="term-block" data-fixture="out:mcp-list"></pre>
+    <p>For <code>workers/jobs.py</code>, it returns ADR-001, because the decision&rsquo;s scope, <code>workers</code>, overlaps the path:</p>
+    <pre class="term-block" data-fixture="out:mcp-applicable"></pre>
+    <p>A path that no decision&rsquo;s scope matches, such as <code>app/handlers/invoices.py</code> here, returns empty lists, so the agent learns that nothing applies:</p>
+    <pre class="term-block" data-fixture="out:mcp-applicable-none"></pre>
+    <p>This layer has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
+    <p>Matching uses the scope word. Give each decision a scope that appears in the paths it governs; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> shows how scopes match and which words fail.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What it does not do</h2>
+    <ul class="plain">
+      <li><strong>No enforcement.</strong> The server can&rsquo;t block an edit, install a rule or change what CI checks.</li>
+      <li><strong>No authority.</strong> It can submit a proposed decision but can&rsquo;t accept, reject, activate or supersede one. People do that with <code>mneme decision accept</code> or <code>reject</code>; see <a href="/docs/decision-proposals/">decision proposals</a>.</li>
+      <li><strong>Scope overlap, not rule applicability.</strong> <code>decision.applicable_to</code> compares scopes with paths. It doesn&rsquo;t evaluate a rule&rsquo;s path patterns, and its answer says nothing about whether a check would pass.</li>
+      <li><strong>Local only.</strong> The server talks over stdio on your machine. There is no hosted endpoint and no authentication layer.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The server exits as soon as it starts</h3>
+    <p>It refuses to start without a valid memory file, and exits with code 2:</p>
+    <pre class="term-block" data-fixture="out:mcp-missing-memory"></pre>
+    <p>Point <code>--memory</code> at the file, or run <code>mneme setup</code> first. A memory file written by 0.9.x has to be migrated with <code>mneme decision-index migrate</code>; the <a href="/docs/mcp/">reference</a> gives both commands.</p>
+    <h3>The agent says it has no Mneme tools</h3>
+    <p>The host couldn&rsquo;t start <code>mneme</code>. Check that the command is on the <code>PATH</code> the host uses, or put its full path in <code>command</code>. With pipx, run <code>pipx list</code> to see where it installed Mneme.</p>
+    <h3>A decision you expected isn&rsquo;t returned</h3>
+    <p>Its scope doesn&rsquo;t overlap the path you asked about, or it was never imported. <code>decision.search</code> with a word from the decision tells the two apart: it finds an imported decision whatever its scope, and returns nothing for one that was never imported.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Block an edit that breaks a decision before it reaches disk.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">A required check that works with any agent.</span></a>
+      <a class="cross-card" href="/integrations/mcp/"><span class="cl-label">Integration</span><span class="cl-title">MCP integration</span><span class="cl-sub">How retrieval, authority and enforcement stay separate.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Read the server&rsquo;s source</h3>
+      <p>The decision server ships in the open-source mneme-hq package.</p>
+      <div class="cta-row">
+        <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block">View source on GitHub</a>
+      </div>
+    </div>
+  </section>

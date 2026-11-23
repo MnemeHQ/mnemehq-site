@@ -1,0 +1,104 @@
+<!--meta
+{
+  "order": 6,
+  "title": "Set Up Mneme in a Software Factory | Mneme HQ",
+  "description": "Where Mneme's shipped checks sit in a software factory: decisions in each repository, each agent's own hook, and a required CI check on every pull request.",
+  "og_alt": "Set up Mneme in a software factory: decisions in the repository, each agent's hook, a required CI check and human review, with no factory-level adapter.",
+  "eyebrow": "Setup guide",
+  "h1": "Set up Mneme in a software factory",
+  "h1_plain": "Set up Mneme in a software factory",
+  "crumb": "Software factory",
+  "surface": "Any work queue and orchestrator, supported agents, GitHub Actions or GitLab CI",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Verify: CI check on every pull request"], ["req", "Enforce: each agent's hook, where it has one"], ["opt", "Discover: MCP, optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "a factory pipeline in which every pull request, whichever agent opened it, passes a required check against the same recorded decisions, and agents with a Mneme hook are stopped earlier.",
+  "answer": "Mneme has no adapter for a software factory as a whole. You set it up per repository and per agent: commit the decisions and the memory file, give each agent its own Mneme hook where one exists, and require the CI check on every pull request the factory opens. Keep changes to the decisions themselves behind human review."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>A software factory combines a work queue, an orchestrator (the program that hands tasks to coding agents, runs them and retries failures), the agents themselves, CI and human review. Mneme is not a factory platform, and nothing in it knows about your queue or orchestrator. It reaches the factory&rsquo;s output at two points it already ships: an agent&rsquo;s hook, and the CI check on the pull request.</p>
+    <p>This guide places those two points in the pipeline, using only shipped checks. For the argument behind it, read <a href="/insights/software-factory-governance-layer/">the software factory&rsquo;s missing decision layer</a>.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>A factory whose agents commit to git repositories and open pull requests or merge requests.</li>
+      <li>At least one decision with an activated rule in each repository: steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, run once per repository.</li>
+      <li>Control over branch rules, so the CI check can be required and decision files can need a human approval.</li>
+    </ul>
+    <p>Tested versions: the checks named here ran against mneme-hq 0.11.0 in the other setup guides. We have not tested a complete factory. The catalogue lists the smallest version of this, a <a href="/integrations/#software-factories">one-issue factory</a>, as a proposed workflow.</p>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Put the decisions in each repository</h3>
+    <p>Commit the decision records in <code>docs/adr/</code> and the memory file, <code>.mneme/project_memory.json</code>. Every agent and the CI check read that one file, so they all apply the same decisions, whichever agent picks up the task.</p>
+
+    <h3>2. Give each agent its own hook, where one exists</h3>
+    <p>The factory&rsquo;s orchestrator doesn&rsquo;t run Mneme; the agents it launches do. Set up each agent as if a person were running it:</p>
+    <ul class="plain">
+      <li>Claude Code: the <a href="/setup/claude-code/">plugin hook</a>. <a href="/integrations/paperclip/">Paperclip</a>, which launches Claude Code in your workspace, keeps that hook (validated on paperclipai 2026.817.0). Other orchestrators that launch Claude Code are untested; check that they load your Claude Code plugins.</li>
+      <li>Codex CLI: the <a href="/setup/codex-cli/">hook bundle</a>.</li>
+      <li>Claude Agent SDK, LangChain agents, Kiro CLI 3.0 and Google Antigravity: the adapter on each <a href="/integrations/#coding-agents">integration page</a>.</li>
+      <li>Hermes Agent and OpenCode: experimental adapters with narrow coverage (OpenCode&rsquo;s is not in mneme-hq 0.11.0); see each <a href="/integrations/#coding-agents">integration page</a> and treat CI as their check.</li>
+      <li>Every other agent: no Mneme hook. That includes the Copilot, Claude and Codex sessions GitHub Agent HQ runs, because Mneme has no hook inside them. CI is their check.</li>
+    </ul>
+    <p>Make sure each agent process starts in the repository root, or can find the memory file, and that its hook is in strict mode. An agent launched from another directory with no memory file in reach runs with no checks at all.</p>
+
+    <h3>3. Require the CI check on every factory pull request</h3>
+    <p>Add the <a href="/setup/ci/#github-actions">GitHub Actions workflow</a> or <a href="/setup/ci/#gitlab-ci">GitLab CI job</a> and require it on every branch the factory merges into. This is the one point every change passes, so it is where agents without a hook, and any write a hook missed, get checked.</p>
+
+    <h3>4. Keep the decisions under human control</h3>
+    <p>An agent that can edit an architecture decision record (ADR), the memory file or the CI workflow can change what the check enforces. Put those files behind code owners and a required human review, restrict who can bypass the required check, and don&rsquo;t let the factory approve its own changes to them. <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Fail a pull request that breaks an ADR</a> lists the branch settings.</p>
+
+    <h3>5. Optional: let agents look decisions up</h3>
+    <p>Agents that can start a local Model Context Protocol (MCP) server can ask Mneme&rsquo;s decision server which decisions apply to the files in their task, and propose new ones for review. <a href="/setup/mcp/">The decision MCP setup</a> covers it. Proposals stay proposals until a person accepts them.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>For the example decision, ADR-001, which bans the Celery library, a factory pull request that adds a Celery worker fails the required check, whichever agent wrote it:</p>
+    <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
+    <p>The Celery file exits 2 and fails the job; the Pub/Sub file passes. If the agent was Claude Code or Codex CLI with its hook in strict mode, a native file edit adding Celery was refused earlier, while the agent was working. A shell write, a check that failed open, or warn mode still lets the file reach the pull request, where this check fails it. The <a href="/setup/claude-code/#expected-result">Claude Code</a> and <a href="/setup/codex-cli/#expected-result">Codex CLI</a> guides show those refusals.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What is and isn&rsquo;t enforced</h2>
+    <ul class="plain">
+      <li><strong>Enforced:</strong> the required CI check, on every file a factory pull request adds or modifies; and each agent&rsquo;s hook, with that hook&rsquo;s own coverage.</li>
+      <li><strong>Not enforced by Mneme:</strong> the queue, the orchestrator&rsquo;s scheduling, sandbox permissions and network access. Mneme checks code against architectural decisions, not infrastructure policy.</li>
+      <li><strong>Coverage is per agent.</strong> Shell writes, custom tools and agents without a hook reach Mneme only at CI. Each agent&rsquo;s limits are on its integration page.</li>
+      <li><strong>Hooks fail open by default:</strong> when a check can&rsquo;t run, the change goes through instead of being blocked. Claude Code also has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run, enabled by a reviewed change on your default branch. A crashed or slow check lets the agent continue, so CI stays required even for agents with a hook.</li>
+      <li><strong>Not tested as a whole:</strong> parallel agents on one repository, subagents and agent teams. Each part is tested on its own.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>An agent with a hook still opens pull requests that fail the check</h3>
+    <p>The hook isn&rsquo;t reaching the memory file, is in warn mode, or the write went through a path it doesn&rsquo;t intercept, such as a shell command. Check the agent&rsquo;s working directory and mode, then its setup guide&rsquo;s troubleshooting section.</p>
+    <h3>Factory pull requests merge despite a failed check</h3>
+    <p>The check isn&rsquo;t required on that branch, or the factory&rsquo;s account can bypass it. Fix the branch rule; CI is only a gate where it is required.</p>
+    <h3>The check stops failing after an agent&rsquo;s change</h3>
+    <p>The change may have edited a decision, the memory file or the workflow. Review the diff of those files; step 4 keeps them behind a human approval.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">The workflow and job files the factory&rsquo;s pull requests run.</span></a>
+      <a class="cross-card" href="/integrations/#agent-orchestrators"><span class="cl-label">Catalogue</span><span class="cl-title">Agent orchestrators</span><span class="cl-sub">What each orchestrator&rsquo;s status means for coverage.</span></a>
+      <a class="cross-card" href="/insights/software-factory-governance-layer/"><span class="cl-label">Insight</span><span class="cl-title">The software factory&rsquo;s missing decision layer</span><span class="cl-sub">Why production capacity is not architectural control.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Running agents at factory scale?</h3>
+      <p>We work with design partners to put these checks on a real factory pipeline.</p>
+      <div class="cta-row">
+        <a href="/pilot/" class="cta-btn-outline" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Request a pilot</a>
+      </div>
+    </div>
+  </section>

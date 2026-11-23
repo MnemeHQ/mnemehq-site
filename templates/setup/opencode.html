@@ -1,0 +1,107 @@
+<!--meta
+{
+  "order": 5,
+  "title": "Set Up Mneme with OpenCode and CI (Experimental) | Mneme HQ",
+  "description": "Protect an OpenCode repository with a required Mneme CI check, and optionally try the experimental OpenCode adapter from source. It is not in mneme-hq 0.11.0 and covers two Python operations.",
+  "og_alt": "Set up Mneme with OpenCode and CI: the CI check is the dependable layer; the OpenCode adapter is experimental, source-only and narrow.",
+  "eyebrow": "Setup guide &middot; experimental",
+  "h1": "Set up Mneme with OpenCode and CI",
+  "h1_plain": "Set up Mneme with OpenCode and CI",
+  "crumb": "OpenCode + CI",
+  "surface": "OpenCode terminal CLI (experimental), GitHub Actions or GitLab CI",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Verify: CI check"], ["exp", "Enforce: OpenCode adapter, experimental"], ["opt", "Discover: MCP, optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["adapter", "Experimental adapter"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "a required CI check that fails any pull request where OpenCode, or anyone else, adds a file that breaks a decision with an activated rule.",
+  "answer": "Use the CI check as your enforcement layer: it works on OpenCode&rsquo;s changes today with the released mneme-hq 0.11.0. Mneme&rsquo;s OpenCode adapter is experimental, merged on the main branch after that release, and checks only Python file writes and edits in the terminal CLI. Try it from source if you want to evaluate it, not to rely on it."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>OpenCode is an open-source coding agent that runs in a terminal, an editor extension and a desktop app. Mneme has no released hook for it. What exists is an experimental adapter for the terminal CLI, which is not in any published mneme-hq release. So this setup puts the weight on CI and treats the adapter as optional and unproven.</p>
+    <p>The example decision is ADR-001, an architecture decision record (ADR) that bans the Celery library.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>A git repository with ADR-001&rsquo;s rule activated: steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, which need no agent.</li>
+      <li>Permission to add a CI workflow and make it a required check.</li>
+      <li>For the adapter only: OpenCode 2.3.0, the version the adapter was validated on, and a Python codebase.</li>
+    </ul>
+    <p>Tested versions: the CI check ran against mneme-hq 0.11.0, on a local copy of a pull request. We did not run OpenCode or the adapter for this guide.</p>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Add the required CI check</h3>
+    <p>Copy the <a href="/setup/ci/#github-actions">GitHub Actions workflow</a> or <a href="/setup/ci/#gitlab-ci">GitLab CI job</a>, commit it with the ADR and the memory file, and make it a required check. This is the layer that enforces ADR-001 on OpenCode&rsquo;s changes.</p>
+    <h3>2. Optional: give OpenCode the decisions</h3>
+    <p>If your OpenCode setup can start local Model Context Protocol (MCP) servers, register Mneme&rsquo;s decision server so the agent can look decisions up before it writes. <a href="/setup/mcp/">The decision MCP setup</a> has the command and arguments. We have not tested it inside OpenCode.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>A pull request in which OpenCode added a Celery worker as <code>workers/jobs.py</code> and a Pub/Sub one as <code>workers/publish.py</code> fails the check:</p>
+    <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
+    <p>The first file exits 2 and fails the job; the second passes. The <a href="/setup/ci/#expected-result">CI-only setup</a> shows the JSON verdict.</p>
+  </section>
+
+  <section class="prose-section" id="adapter">
+    <h2>Experimental adapter</h2>
+    <div class="setup-callout"><strong>Experimental.</strong> Merged on Mneme&rsquo;s main branch on November 18, 2026, after the 0.11.0 release, and not a supported integration. Installing mneme-hq 0.11.0 does not include it.</div>
+    <p>The adapter is a plugin for OpenCode&rsquo;s tool hook, the point where a plugin can inspect a tool call before it runs, in the terminal CLI. In strict mode it makes OpenCode refuse two operations when they break a <code>FORBID_LITERAL</code> rule: writing a new <code>.py</code> file, and editing an existing one, where only the added text is checked.</p>
+    <p>To evaluate it, you need Mneme&rsquo;s source at the main branch, both for the plugin in <code>integrations/opencode-plugin</code> and for the Python code it calls. The plugin&rsquo;s <code>README.md</code> configures it in <code>opencode.json</code> with an absolute <code>authorityPath</code>:</p>
+    <pre class="term-block" data-block="config">{
+  "plugins": [
+    {
+      "package": "/path/to/mneme/integrations/opencode-plugin",
+      "options": {
+        "authorityPath": "/path/to/authority.json",
+        "timeoutMs": 60000
+      }
+    }
+  ]
+}</pre>
+    <p><code>authorityPath</code> is the absolute path to a file you write, <code>authority.json</code>. It names the one decision, decision version and rule you expect the adapter to enforce, so the adapter can tell when the memory file no longer matches what you approved. It is a check on the adapter, not a place to define rules.</p>
+    <p>To create it, run <code>mneme check --json</code> on a file that breaks the rule and copy five fields from the verdict, like the one in the <a href="/setup/ci/#expected-result">CI-only setup</a>: <code>decision_id</code>, <code>decision_version_id</code>, <code>rule_id</code>, <code>rule_value</code>, and the path pattern the rule applies to as <code>rule_scope</code>. The plugin README shows the file&rsquo;s shape with a path-scoped rule; we have not tested it with a rule like ADR-001&rsquo;s that has no path pattern. The <a href="https://github.com/MnemeHQ/mneme/blob/main/integrations/opencode-plugin/README.md" target="_blank" rel="noopener">plugin&rsquo;s README file</a> describes every field; follow it rather than this summary, because main moves.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What is and isn&rsquo;t enforced</h2>
+    <ul class="plain">
+      <li><strong>Enforced, with the released package:</strong> the CI check, on every file a pull request adds or modifies.</li>
+      <li><strong>Experimental adapter, when installed from source:</strong> new <code>.py</code> file writes and existing <code>.py</code> file edits in the terminal CLI, for <code>FORBID_LITERAL</code> rules only.</li>
+      <li><strong>Not intercepted by the adapter:</strong> overwriting an existing file, non-Python files, multi-edit and patch payloads, shell commands, MCP and custom tools, deletion and rename. It has no end-of-turn check.</li>
+      <li><strong>Fails open:</strong> when the adapter can&rsquo;t evaluate a change, it lets the change through instead of blocking it.</li>
+      <li><strong>Not race-resistant:</strong> a file created or swapped between the check and the write is a known bypass.</li>
+      <li><strong>Not covered:</strong> the OpenCode editor extension and desktop app.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The adapter prints <code>Mneme NOT_PROTECTED</code></h3>
+    <p>Its setup is invalid, most often the <code>authorityPath</code> or the pinned identifiers, and it lets the change through. Check the file against the plugin&rsquo;s <code>README.md</code>.</p>
+    <h3>The adapter prints <code>Mneme WARN: warn_mode_violation</code></h3>
+    <p>It is in warn mode, which reports and never blocks. The warning is a diagnostic, not protection.</p>
+    <h3>CI fails at the memory check</h3>
+    <p>An ADR changed without a re-import. <a href="/setup/ci/#troubleshooting">The CI-only setup</a> covers it.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/integrations/opencode/"><span class="cl-label">Integration</span><span class="cl-title">OpenCode integration</span><span class="cl-sub">What the adapter covers, and the compaction experiment that returned no effect.</span></a>
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">The agent with Mneme&rsquo;s most complete released hook.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let the agent find decisions before it writes.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Follow the adapter&rsquo;s progress</h3>
+      <p>The OpenCode adapter is developed in the open-source repository.</p>
+      <div class="cta-row">
+        <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block">View source on GitHub</a>
+      </div>
+    </div>
+  </section>

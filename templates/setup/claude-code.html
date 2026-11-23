@@ -1,0 +1,158 @@
+<!--meta
+{
+  "order": 1,
+  "title": "Set Up Mneme with Claude Code and CI | Mneme HQ",
+  "description": "The reference Mneme setup: install mneme-hq 0.11.0, activate one decision, load the Claude Code plugin, add a required CI check, then confirm one blocked and one allowed change.",
+  "og_alt": "Set up Mneme with Claude Code and CI: install, activate one decision, load the plugin, require the CI check, test a blocked and an allowed change.",
+  "eyebrow": "Setup guide",
+  "h1": "Set up Mneme with Claude Code and CI",
+  "h1_plain": "Set up Mneme with Claude Code and CI",
+  "crumb": "Claude Code + CI",
+  "surface": "Claude Code, GitHub Actions or GitLab CI",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Enforce: CLI + Claude Code hook"], ["req", "Verify: CI check"], ["opt", "Discover: MCP, optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "one architecture decision enforced in two places: Claude Code refuses an edit that breaks it, and a required CI check fails a pull request that breaks it.",
+  "answer": "Install the Mneme command-line tool, activate one rule from an architecture decision record (ADR), and install the Mneme plugin in Claude Code. The plugin&rsquo;s hook then blocks an edit that breaks the rule. Add a required CI check for the changes the hook can&rsquo;t see, and confirm one blocked and one allowed change."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>This is the reference setup: the one we recommend first, because Claude Code is the agent with Mneme&rsquo;s most complete hook. The example decision bans Celery, a task-queue library, from the codebase. By the end, the same rule stops Claude Code from writing it and fails any pull request that adds it.</p>
+    <p>Two layers are required here. The <strong>hook</strong> is a command Claude Code runs before it edits a file; Mneme&rsquo;s blocks an edit that breaks an active rule. The <strong>CI check</strong> runs in your pipeline and catches what the hook can&rsquo;t see. A third layer, the decision lookup server, is optional, and step 11 covers it.</p>
+    <p>Four terms come up throughout:</p>
+    <ul class="plain">
+      <li><strong>Memory file:</strong> <code>.mneme/project_memory.json</code>, the file Mneme compiles your decisions into. The hook and the CI check both read it.</li>
+      <li><strong>Active rule:</strong> a check attached to a decision. A decision without one blocks nothing. An ADR can carry its rule under a <code>## Constraints</code> heading, active as soon as it is imported; here Mneme proposes the rule from the ADR&rsquo;s title, so the order is setup, import, validate, then activate. Steps 3 to 7 follow it.</li>
+      <li><strong>Strict and warn mode:</strong> in strict mode, the default, the hook blocks an edit that breaks an active rule. In warn mode it lets the edit through, and Claude Code doesn&rsquo;t show the finding; run <code>mneme check --mode warn</code> to see findings without blocking.</li>
+      <li><strong>Fail open:</strong> when the check itself can&rsquo;t run, for example because it crashed, the hook lets the edit through rather than blocking it. That is the default.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>Python 3.11 or newer, and <a href="https://pipx.pypa.io/" target="_blank" rel="noopener">pipx</a>.</li>
+      <li>Claude Code, the command-line agent. The Claude web, desktop and mobile apps don&rsquo;t run plugin hooks.</li>
+      <li>A git repository on GitHub or GitLab, with permission to add a CI workflow and make it a required check.</li>
+    </ul>
+    <p>Tested versions: the Mneme commands and hook replays below ran against mneme-hq 0.11.0 on Windows, with the recorded output shown. Installing the plugin from Claude&rsquo;s plugin directory and running Claude Code itself were not part of that run; the plugin calls the same <code>mneme-hook</code> command shown here.</p>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+
+    <h3>1. Install the command-line tool</h3>
+    <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.11.0"</pre>
+    <p>This installs <code>mneme</code> and <code>mneme-hook</code>, the command the plugin runs. pipx puts both on your <code>PATH</code>, where Claude Code can find them.</p>
+
+    <h3>2. Write one ADR</h3>
+    <p>Save this as <code>docs/adr/ADR-001-no-celery.md</code>. Its title, <strong>No Celery</strong>, names one banned term, which is what lets Mneme propose a rule for it.</p>
+    <pre class="term-block" data-fixture="file:docs/adr/ADR-001-no-celery.md"></pre>
+
+    <p>Run steps 3 to 7 from the repository root. <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> shows the full output of each.</p>
+
+    <h3>3. Create the memory file</h3>
+    <pre class="term-block" data-fixture="cmd">mneme setup</pre>
+    <p>Creates <code>.mneme/project_memory.json</code> and reports what it found. It blocks nothing.</p>
+
+    <h3>4. Import the ADR</h3>
+    <pre class="term-block" data-fixture="cmd">mneme adr import docs/adr --memory .mneme/project_memory.json --apply</pre>
+    <p>Copies ADR-001 into the memory file. It has no active rule yet.</p>
+
+    <h3>5. Audit the decisions</h3>
+    <pre class="term-block" data-fixture="cmd">mneme audit --memory .mneme/project_memory.json --repo-root .</pre>
+    <p>Reports ADR-001 as Mneme-ready: Mneme found a rule it could install, <code>FORBID_LITERAL: celery</code>, a ban on the exact word <code>celery</code>.</p>
+
+    <h3>6. Validate the rule</h3>
+    <pre class="term-block" data-fixture="cmd">mneme protect validate ADR-001 --memory .mneme/project_memory.json</pre>
+    <p>Tests the proposed rule against sample inputs and changes nothing.</p>
+
+    <h3>7. Activate the rule</h3>
+    <pre class="term-block" data-fixture="cmd">mneme protect activate ADR-001 --memory .mneme/project_memory.json</pre>
+    <p>Switches the rule on and confirms it is in force:</p>
+    <pre class="term-block" data-fixture="out:activate"></pre>
+    <p>Commit the ADR and <code>.mneme/project_memory.json</code>. The active rule lives in the memory file, and the hook and the CI check both read it.</p>
+
+    <h3>8. Install the Claude Code plugin</h3>
+    <pre class="term-block" data-fixture="manual">claude plugin install mneme@anthropic-plugin-directory</pre>
+    <p>The plugin adds the hook and four slash commands, including <code>/mneme:context</code>, which looks up the decisions for a task. It starts in strict mode. The plugin does not install the command-line tool, so step 1 is still needed: without it the plugin installs cleanly and checks nothing.</p>
+    <p>Install from the directory as above unless you need the plugin files fixed at the 0.11.0 release, for example to review them first. In that case, load it from a checkout instead:</p>
+    <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src
+claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+
+    <h3>9. Start Claude Code from the repository root</h3>
+    <p>The hook looks for <code>.mneme/project_memory.json</code> in the session&rsquo;s working directory and its parents. Start Claude Code inside the git repository, too: the end-of-turn check compares against git.</p>
+
+    <h3>10. Add the required CI check</h3>
+    <p>Copy the workflow for <a href="/setup/ci/#github-actions">GitHub Actions</a> or the job for <a href="/setup/ci/#gitlab-ci">GitLab CI</a> from the CI-only setup, then make it required: a branch ruleset with &ldquo;Require status checks to pass&rdquo; on GitHub, or &ldquo;Pipelines must succeed&rdquo; on GitLab. Without that setting, a failing check is only a red mark on the pull request.</p>
+
+    <h3>11. Optional: add the decision lookup server</h3>
+    <p><code>/mneme:context</code> already gives Claude Code the decisions for a task. The Model Context Protocol (MCP) server adds lookup by file path, tracing which decision replaced which, and proposals for people to review. <a href="/setup/mcp/">The decision MCP setup</a> shows the <code>.mcp.json</code> entry Claude Code reads.</p>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Ask Claude Code for a change that breaks ADR-001, for example: &ldquo;Add a worker in workers/jobs.py that uses Celery.&rdquo; When the agent goes to write the file, Claude Code sends the hook a JSON description of the call. To see the hook&rsquo;s answer without running an agent, save that event as <code>events/write-celery.json</code>:</p>
+    <pre class="term-block" data-fixture="file:events/write-celery.json"></pre>
+    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-celery.json</pre>
+    <p>Then the allowed version, the same worker on Pub/Sub, saved as <code>events/write-pubsub.json</code>:</p>
+    <pre class="term-block" data-fixture="file:events/write-pubsub.json"></pre>
+    <pre class="term-block" data-fixture="cmd">mneme-hook &lt; events/write-pubsub.json</pre>
+    <p>Finally, open a pull request that adds both workers as <code>workers/jobs.py</code> and <code>workers/publish.py</code>, so the CI check has one file of each kind.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>The Celery write exits with code 2, which Claude Code treats as &ldquo;block this change&rdquo;. The file isn&rsquo;t written, and the agent receives this text:</p>
+    <pre class="term-block" data-fixture="out:hook-blocked"></pre>
+    <p>The Pub/Sub write exits 0 with no output, so the agent carries on.</p>
+    <p>In CI, the check prints one line per changed file with the exit code <code>mneme check</code> returned, and the job fails with exit code 2:</p>
+    <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
+    <p>We ran the workflow&rsquo;s check loop against a local copy of that pull request, not on GitHub&rsquo;s runners.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What is and isn&rsquo;t enforced</h2>
+    <ul class="plain">
+      <li><strong>Blocked before the file changes:</strong> Edit, Write and MultiEdit calls, and one shell form, a single <code>cat &gt; file &lt;&lt;'EOF'</code> command with a quoted delimiter.</li>
+      <li><strong>Checked only when the agent ends its turn:</strong> other shell writes, such as <code>echo &gt;</code>, <code>sed -i</code> or a script. The file already exists by then; the hook sends the agent back to fix it and doesn&rsquo;t undo the write. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Stop an AI coding agent from crossing an architectural boundary</a> replays this end-of-turn check.</li>
+      <li><strong>Fails open by default:</strong> if <code>mneme</code> isn&rsquo;t found, a check crashes, or a check takes longer than 10 seconds, the hook allows the edit. Its notes go only to Claude Code&rsquo;s debug log. A repository can <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt in</a> to refusing Edit, Write and MultiEdit calls when the check can&rsquo;t run, through a reviewed change on its default branch; this guide doesn&rsquo;t set that up.</li>
+      <li><strong>Not covered by the hook:</strong> changes made outside Claude Code, by people or other tools. The CI check covers those, for the files a pull request adds or modifies.</li>
+      <li><strong>The rule matches exact text.</strong> <code>celery</code> as a whole, case-sensitive token, in any file except the ADR and the memory file. It doesn&rsquo;t match <code>Celery</code> on its own, and a comment that mentions celery fails too.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>Nothing is blocked, and the hook prints nothing</h3>
+    <p>The hook didn&rsquo;t find a memory file, and with none it allows every change silently:</p>
+    <pre class="term-block" data-fixture="cmd">MNEME_MEMORY=missing.json mneme-hook &lt; events/write-celery.json</pre>
+    <pre class="term-block" data-fixture="out:hook-no-memory"></pre>
+    <p>The output is empty and the exit code is 0. Start Claude Code from the repository root, or set <code>MNEME_MEMORY</code> to the memory file&rsquo;s path.</p>
+    <h3>The edit goes through, and nothing explains why</h3>
+    <p>Warn mode is on, through <code>MNEME_HOOK_MODE=warn</code> or the plugin&rsquo;s <code>mode</code> option. The hook then defers to Claude Code&rsquo;s normal permission flow, and Claude Code doesn&rsquo;t show the reason it attaches:</p>
+    <pre class="term-block" data-fixture="out:hook-warn"></pre>
+    <p>Unset the variable or set the option back to <code>strict</code>.</p>
+    <h3>The hook isn&rsquo;t firing at all</h3>
+    <p>Check that <code>mneme-hook</code> is on your <code>PATH</code> (<code>which mneme-hook</code>, or <code>where mneme-hook</code> on Windows) and that <code>claude plugin list</code> shows <code>mneme@anthropic-plugin-directory</code>. If the audit still says Mneme-ready rather than Protected, the rule isn&rsquo;t active yet: repeat steps 6 and 7.</p>
+    <h3>CI fails on every pull request at the memory check</h3>
+    <p>An ADR changed without a re-import, or ADR line endings differ between machines. <a href="/setup/ci/#troubleshooting">The CI-only setup</a> covers both.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let Claude Code look decisions up by file path before it writes.</span></a>
+      <a class="cross-card" href="/docs/how-to/adr-to-enforceable-decision/"><span class="cl-label">How-to</span><span class="cl-title">Turn an ADR into an enforceable decision</span><span class="cl-sub">Write a rule yourself, limited to the paths it governs.</span></a>
+      <a class="cross-card" href="/integrations/claude-code/"><span class="cl-label">Integration</span><span class="cl-title">Claude Code integration</span><span class="cl-sub">The hook&rsquo;s events, modes and retrieval in detail.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Rolling this out across a team?</h3>
+      <p>We work with design partners to set up enforcement on a real repository.</p>
+      <div class="cta-row">
+        <a href="/pilot/" class="cta-btn-outline" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Request a pilot</a>
+      </div>
+    </div>
+  </section>

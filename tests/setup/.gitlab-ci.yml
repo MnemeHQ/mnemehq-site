@@ -1,0 +1,35 @@
+# .gitlab-ci.yml
+mneme-decisions:
+  stage: test
+  image: python:3.12   # includes git; the slim image doesn't
+  variables:
+    GIT_DEPTH: "0"     # full history, so the merge request base is available
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  script:
+    - python -m pip install "mneme-hq==0.11.0"
+    # Fail if an edited ADR wasn't re-imported into the memory file
+    - mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing
+    - git diff --exit-code -- .mneme/project_memory.json
+    # Check each added or modified text file against its repository path
+    - |
+      worst=0
+      mkdir -p mneme-results
+      git diff --numstat --no-renames --diff-filter=AM "$CI_MERGE_REQUEST_DIFF_BASE_SHA...HEAD" > changes.txt || exit 2
+      tab=$(printf '\t')
+      while IFS="$tab" read -r added _ f; do
+        [ -n "$f" ] || continue
+        if [ "$added" = "-" ]; then echo "skip $f (binary)"; continue; fi
+        out="mneme-results/$(printf '%s' "$f" | tr '/' '_').json"
+        rc=0
+        mneme check --memory .mneme/project_memory.json \
+          --input "$f" --target-path "$f" \
+          --query "MR change: $f" --json > "$out" || rc=$?
+        echo "exit=$rc $f"
+        if [ "$rc" -gt "$worst" ]; then worst=$rc; fi
+      done < changes.txt
+      exit "$worst"
+  artifacts:
+    when: always
+    paths:
+      - mneme-results/
