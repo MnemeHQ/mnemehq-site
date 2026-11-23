@@ -10,16 +10,16 @@
   "crumb": "CI only",
   "surface": "GitHub Actions or GitLab CI, any agent",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Verify: CI check"], ["off", "Enforce: no agent hook"], ["off", "Discover: not included"]],
-  "toc": [["prerequisites", "Prerequisites"], ["github-actions", "GitHub Actions"], ["gitlab-ci", "GitLab CI"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "CI check: required"], ["off", "Agent hook: not included"], ["off", "MCP lookup server: not included"]],
+  "toc": [["prerequisites", "Prerequisites"], ["github-actions", "GitHub Actions"], ["gitlab-ci", "GitLab CI"], ["expected-result", "Expected result"], ["boundaries", "What gets blocked"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "a required check that fails any pull request or merge request adding a file that breaks a decision with an activated rule, whichever tool wrote it.",
   "answer": "Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks a decision with an activated rule can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it."
 }
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>CI is the one layer that works for every agent. It doesn&rsquo;t need a hook inside the tool, so it covers agents and editors that have none, such as GitHub Copilot, Cursor and JetBrains IDEs, and changes people make by hand. The cost is timing: it finds a violation after the file is written, when the pull request runs.</p>
+    <p>The CI check is the one part of Mneme that works for every agent. It doesn&rsquo;t need a hook inside the tool, so it covers agents and editors that have none, such as GitHub Copilot, Cursor and JetBrains IDEs, and changes people make by hand. The cost is timing: it finds a violation after the file is written, when the pull request runs.</p>
     <p>The example decision is ADR-001, an architecture decision record (ADR) that bans the Celery library. Each guide in this section uses it.</p>
   </section>
 
@@ -60,7 +60,7 @@
   </section>
 
   <section class="prose-section" id="boundaries">
-    <h2>What is and isn&rsquo;t enforced</h2>
+    <h2>What gets blocked, and what doesn&rsquo;t</h2>
     <ul class="plain">
       <li><strong>Covered:</strong> every text file a pull request adds or modifies, checked whole, in the repositories and branches where you require the job.</li>
       <li><strong>After the fact:</strong> the file is already written and committed. Nothing stops an agent while it works; an agent hook does that, where the agent has one.</li>
@@ -87,11 +87,11 @@
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Stop the violation while the agent works, before CI sees it.</span></a>
-      <a class="cross-card" href="/setup/codex-cli/"><span class="cl-label">Enforce</span><span class="cl-title">Codex CLI + CI</span><span class="cl-sub">The Codex hook bundle, with this check behind it.</span></a>
-      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let agents find the decisions before they write.</span></a>
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Agent hook</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Stop the violation while the agent works, before CI sees it.</span></a>
+      <a class="cross-card" href="/setup/codex-cli/"><span class="cl-label">Agent hook</span><span class="cl-title">Codex CLI + CI</span><span class="cl-sub">The Codex CLI hook, with this check behind it.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">MCP lookup server</span><span class="cl-title">MCP lookup server guide</span><span class="cl-sub">Let agents find the decisions before they write.</span></a>
     </div>
     <div class="cta-block-end">
       <h3>Which of your decisions can CI enforce?</h3>

@@ -5,22 +5,22 @@
   "description": "Run mneme decision-mcp locally so an MCP-capable coding agent can search your recorded decisions, ask which apply to a file, trace them and propose new ones for people to review.",
   "og_alt": "Set up the Mneme decision MCP server: register a local stdio server so agents can look up which architectural decisions apply before they write.",
   "eyebrow": "Setup guide",
-  "h1": "Set up the decision MCP server",
-  "h1_plain": "Set up the decision MCP server",
-  "crumb": "Decision MCP",
+  "h1": "Set up the MCP lookup server",
+  "h1_plain": "Set up the MCP lookup server",
+  "crumb": "MCP lookup server",
   "surface": "Any MCP host that starts local stdio servers",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Discover: decision MCP server"], ["off", "Enforce: not included"], ["off", "Verify: not included"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "MCP lookup server: included"], ["off", "Agent hook: not included"], ["off", "CI check: not included"]],
   "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What it does not do"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "a local server your agent can ask which recorded decisions apply to the file it is about to edit, before it writes anything.",
-  "answer": "Install mneme-hq with the <code>[mcp]</code> extra and register <code>mneme decision-mcp</code> with your agent as a local server. The agent can then search your decisions, ask which ones apply to a file, trace a decision&rsquo;s history and propose new ones for people to review. The server informs the agent; it blocks nothing."
+  "answer": "Install mneme-hq with the <code>[mcp]</code> extra and register the MCP lookup server, <code>mneme decision-mcp</code>, with your agent as a local server. The agent can then search your decisions, ask which ones apply to a file, trace a decision&rsquo;s history and propose new ones for people to review. The server informs the agent; it blocks nothing."
 }
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s decision server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
-    <p>This layer is optional in a complete setup and enforces nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
+    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s MCP lookup server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
+    <p>The server is optional in a full setup and blocks nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
@@ -76,7 +76,7 @@
     <pre class="term-block" data-fixture="out:mcp-applicable"></pre>
     <p>A path that no decision&rsquo;s scope matches, such as <code>app/handlers/invoices.py</code> here, returns empty lists, so the agent learns that nothing applies:</p>
     <pre class="term-block" data-fixture="out:mcp-applicable-none"></pre>
-    <p>This layer has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
+    <p>The server has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
     <p>Matching uses the scope word. Give each decision a scope that appears in the paths it governs; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> shows how scopes match and which words fail.</p>
   </section>
 
@@ -103,15 +103,15 @@
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Block an edit that breaks a decision before it reaches disk.</span></a>
-      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">A required check that works with any agent.</span></a>
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Agent hook</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Block an edit that breaks a decision before it reaches disk.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">CI check</span><span class="cl-title">CI-only guide</span><span class="cl-sub">A required check that works with any agent.</span></a>
       <a class="cross-card" href="/integrations/mcp/"><span class="cl-label">Integration</span><span class="cl-title">MCP integration</span><span class="cl-sub">How retrieval, authority and enforcement stay separate.</span></a>
     </div>
     <div class="cta-block-end">
       <h3>Read the server&rsquo;s source</h3>
-      <p>The decision server ships in the open-source mneme-hq package.</p>
+      <p>The MCP lookup server ships in the open-source mneme-hq package.</p>
       <div class="cta-row">
         <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block">View source on GitHub</a>
       </div>

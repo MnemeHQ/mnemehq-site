@@ -62,7 +62,7 @@ and page views remain funnel signals rather than GA4 key events.
 
 ### `setup_choice`
 
-Sent by `site/assets/js/setup-chooser-v2.js` through the `mneme:track` DOM event,
+Sent by `site/assets/js/setup-chooser-v3.js` through the `mneme:track` DOM event,
 which `cta-analytics.js` forwards (so the dev-host guard and shared parameters
 apply). One event per distinct user selection; the initial default and
 URL-hash restores are not sent.

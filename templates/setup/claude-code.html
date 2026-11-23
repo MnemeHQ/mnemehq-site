@@ -10,17 +10,17 @@
   "crumb": "Claude Code + CI",
   "surface": "Claude Code, GitHub Actions or GitLab CI",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Enforce: CLI + Claude Code hook"], ["req", "Verify: CI check"], ["opt", "Discover: MCP, optional"]],
-  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "Agent hook: Claude Code plugin"], ["req", "CI check: required"], ["opt", "MCP lookup server: optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What gets blocked"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "one architecture decision enforced in two places: Claude Code refuses an edit that breaks it, and a required CI check fails a pull request that breaks it.",
-  "answer": "Install the Mneme command-line tool, activate one rule from an architecture decision record (ADR), and install the Mneme plugin in Claude Code. The plugin&rsquo;s hook then blocks an edit that breaks the rule. Add a required CI check for the changes the hook can&rsquo;t see, and confirm one blocked and one allowed change."
+  "answer": "Install the Mneme command-line tool, turn one architecture decision record (ADR) into an active rule, and install the Mneme plugin in Claude Code. The plugin&rsquo;s hook then refuses an edit that breaks the rule. A required CI check fails a pull request that breaks it, which covers the writes the hook can&rsquo;t see. You finish by testing one blocked and one allowed change."
 }
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
     <p>This is the reference setup: the one we recommend first, because Claude Code is the agent with Mneme&rsquo;s most complete hook. The example decision bans Celery, a task-queue library, from the codebase. By the end, the same rule stops Claude Code from writing it and fails any pull request that adds it.</p>
-    <p>Two layers are required here. The <strong>hook</strong> is a command Claude Code runs before it edits a file; Mneme&rsquo;s blocks an edit that breaks an active rule. The <strong>CI check</strong> runs in your pipeline and catches what the hook can&rsquo;t see. A third layer, the decision lookup server, is optional, and step 11 covers it.</p>
+    <p>You set up two parts. The <strong>agent hook</strong> is a command Claude Code runs before it edits a file; Mneme&rsquo;s hook refuses an edit that breaks an active rule. The <strong>CI check</strong> runs in your pipeline and fails a pull request that breaks one, which catches what the hook can&rsquo;t see. A third part, the Model Context Protocol (MCP) lookup server, is optional; step 11 covers it.</p>
     <p>Four terms come up throughout:</p>
     <ul class="plain">
       <li><strong>Memory file:</strong> <code>.mneme/project_memory.json</code>, the file Mneme compiles your decisions into. The hook and the CI check both read it.</li>
@@ -88,8 +88,8 @@ claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
     <h3>10. Add the required CI check</h3>
     <p>Copy the workflow for <a href="/setup/ci/#github-actions">GitHub Actions</a> or the job for <a href="/setup/ci/#gitlab-ci">GitLab CI</a> from the CI-only setup, then make it required: a branch ruleset with &ldquo;Require status checks to pass&rdquo; on GitHub, or &ldquo;Pipelines must succeed&rdquo; on GitLab. Without that setting, a failing check is only a red mark on the pull request.</p>
 
-    <h3>11. Optional: add the decision lookup server</h3>
-    <p><code>/mneme:context</code> already gives Claude Code the decisions for a task. The Model Context Protocol (MCP) server adds lookup by file path, tracing which decision replaced which, and proposals for people to review. <a href="/setup/mcp/">The decision MCP setup</a> shows the <code>.mcp.json</code> entry Claude Code reads.</p>
+    <h3>11. Optional: add the MCP lookup server</h3>
+    <p><code>/mneme:context</code> already gives Claude Code the decisions for a task. The MCP lookup server adds lookup by file path, tracing which decision replaced which, and proposals for people to review. <a href="/setup/mcp/">The MCP lookup server guide</a> shows the <code>.mcp.json</code> entry Claude Code reads.</p>
   </section>
 
   <section class="prose-section" id="run">
@@ -114,7 +114,7 @@ claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
   </section>
 
   <section class="prose-section" id="boundaries">
-    <h2>What is and isn&rsquo;t enforced</h2>
+    <h2>What gets blocked, and what doesn&rsquo;t</h2>
     <ul class="plain">
       <li><strong>Blocked before the file changes:</strong> Edit, Write and MultiEdit calls, and one shell form, a single <code>cat &gt; file &lt;&lt;'EOF'</code> command with a quoted delimiter.</li>
       <li><strong>Checked only when the agent ends its turn:</strong> other shell writes, such as <code>echo &gt;</code>, <code>sed -i</code> or a script. The file already exists by then; the hook sends the agent back to fix it and doesn&rsquo;t undo the write. <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">Stop an AI coding agent from crossing an architectural boundary</a> replays this end-of-turn check.</li>
@@ -142,9 +142,9 @@ claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let Claude Code look decisions up by file path before it writes.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">MCP lookup server</span><span class="cl-title">MCP lookup server guide</span><span class="cl-sub">Let Claude Code look decisions up by file path before it writes.</span></a>
       <a class="cross-card" href="/docs/how-to/adr-to-enforceable-decision/"><span class="cl-label">How-to</span><span class="cl-title">Turn an ADR into an enforceable decision</span><span class="cl-sub">Write a rule yourself, limited to the paths it governs.</span></a>
       <a class="cross-card" href="/integrations/claude-code/"><span class="cl-label">Integration</span><span class="cl-title">Claude Code integration</span><span class="cl-sub">The hook&rsquo;s events, modes and retrieval in detail.</span></a>
     </div>

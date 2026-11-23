@@ -3,7 +3,7 @@
 
 The catalogue, site/integrations/index.html, is the source of truth for which
 integrations exist, how they are grouped and what status each has. The chooser
-data, site/assets/js/setup-chooser-data-v1.js, copies that. This check makes
+data, site/assets/js/setup-chooser-data-v2.js, copies that. This check makes
 sure the copy stays exact:
 
 1. Every integration card in the catalogue's coding-agent, editor, orchestrator,
@@ -27,7 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOGUE = ROOT / "site" / "integrations" / "index.html"
-DATA_JS = ROOT / "site" / "assets" / "js" / "setup-chooser-data-v1.js"
+DATA_JS = ROOT / "site" / "assets" / "js" / "setup-chooser-data-v2.js"
 HUB = ROOT / "site" / "setup" / "index.html"
 
 # catalogue section id -> chooser group id. The coding-agents section holds two

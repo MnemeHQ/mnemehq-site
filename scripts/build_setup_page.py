@@ -9,7 +9,7 @@ every empty ``<pre data-fixture="out:STEP">`` or ``<pre data-fixture="file:PATH"
 from tests/setup/, the outputs recorded from mneme-hq (scripts/core_version.json).
 
 The hub's no-JavaScript chooser fallback (``<!-- setup:fallback -->``) is
-rendered from site/assets/js/setup-chooser-data-v1.js, the same data the
+rendered from site/assets/js/setup-chooser-data-v2.js, the same data the
 interactive chooser reads, so the two cannot disagree.
 
 After building, run:
@@ -32,8 +32,8 @@ import build_howto_page as howto  # noqa: E402
 W = Path(__file__).resolve().parents[1]
 SRC = W / "templates" / "setup"
 FIXTURE = W / "tests" / "setup"
-DATA_JS = W / "site" / "assets" / "js" / "setup-chooser-data-v1.js"
-SETUP_CSS = '  <link rel="stylesheet" href="/assets/css/setup-v2.css">\n'
+DATA_JS = W / "site" / "assets" / "js" / "setup-chooser-data-v2.js"
+SETUP_CSS = '  <link rel="stylesheet" href="/assets/css/setup-v3.css">\n'
 HUB_URL = "https://mnemehq.com/setup/"
 
 
@@ -176,8 +176,8 @@ def build(slug: str) -> Path:
             "</section>\n\n"
         )
         main = hero + '<div class="setup-wrap">\n\n' + body + "\n\n</div>\n\n"
-        scripts = ('<script src="/assets/js/setup-chooser-data-v1.js"></script>\n'
-                   '<script src="/assets/js/setup-chooser-v2.js"></script>\n')
+        scripts = ('<script src="/assets/js/setup-chooser-data-v2.js"></script>\n'
+                   '<script src="/assets/js/setup-chooser-v3.js"></script>\n')
         page_tail = tail.replace("</body>", howto.COPY_SCRIPT + scripts + "\n</body>")
     else:
         version = json.loads((W / "scripts" / "core_version.json").read_text())["minimum_version"]
@@ -198,7 +198,7 @@ def build(slug: str) -> Path:
             f'  <h1>{meta["h1"]}</h1>\n'
             f'  <p class="lede">{meta["answer"]}</p>\n'
             f'  <p class="howto-meta byline">{" &middot; ".join(strip)}</p>\n'
-            f'  <div class="layer-strip" aria-label="Layers this guide sets up">{chips}</div>\n'
+            f'  <div class="layer-strip" aria-label="What this guide sets up">{chips}</div>\n'
             f'  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> {meta["end_up"]}</p>\n'
             '  <nav class="howto-toc" aria-label="On this page">\n'
             '    <span class="howto-toc-label">On this page</span>\n'

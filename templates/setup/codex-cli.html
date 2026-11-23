@@ -2,7 +2,7 @@
 {
   "order": 2,
   "title": "Set Up Mneme with Codex CLI and CI | Mneme HQ",
-  "description": "Register Mneme's Codex CLI hook bundle from mneme-hq 0.11.0 so apply_patch changes that break a decision are denied, audit the turn at Stop, and add a required CI check.",
+  "description": "Register Mneme's Codex CLI hook from mneme-hq 0.11.0 so apply_patch changes that break a decision are denied, audit the turn at Stop, and add a required CI check.",
   "og_alt": "Set up Mneme with Codex CLI and CI: register the hook bundle, trust it, deny an apply_patch change that breaks a decision, require the CI check.",
   "eyebrow": "Setup guide",
   "h1": "Set up Mneme with Codex CLI and CI",
@@ -10,9 +10,9 @@
   "crumb": "Codex CLI + CI",
   "surface": "Codex CLI, GitHub Actions or GitLab CI",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Enforce: CLI + Codex hook"], ["req", "Verify: CI check"], ["opt", "Discover: MCP, optional"]],
-  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "Agent hook: Codex CLI hook"], ["req", "CI check: required"], ["opt", "MCP lookup server: optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What gets blocked"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "Codex CLI denying an apply_patch change that breaks a decision with an activated rule before it runs, an end-of-turn audit of every file the session changed, and a required CI check behind both.",
   "answer": "Install mneme-hq 0.11.0 into a Python environment you control, activate one decision, and register its Codex hook in your repository&rsquo;s <code>.codex/hooks.json</code>. Trust the hooks in Codex with <code>/hooks</code>. Codex then denies <code>apply_patch</code> changes that break the decision and audits the turn when it ends. Add the CI check for everything else."
 }
@@ -91,7 +91,7 @@
   </section>
 
   <section class="prose-section" id="boundaries">
-    <h2>What is and isn&rsquo;t enforced</h2>
+    <h2>What gets blocked, and what doesn&rsquo;t</h2>
     <ul class="plain">
       <li><strong>Denied before they run:</strong> <code>apply_patch</code> Add File and Update File operations. In a patch with several operations, one violation denies the whole call.</li>
       <li><strong>Checked only at the end of the turn:</strong> shell and script writes. The file exists by then; the Stop check sends Codex back with the violation.</li>
@@ -118,10 +118,10 @@
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let Codex look up the decisions for a file before it patches it.</span></a>
-      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">The workflow and job files, with recorded output.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">MCP lookup server</span><span class="cl-title">MCP lookup server guide</span><span class="cl-sub">Let Codex look up the decisions for a file before it patches it.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">CI check</span><span class="cl-title">CI-only guide</span><span class="cl-sub">The workflow and job files, with recorded output.</span></a>
       <a class="cross-card" href="/integrations/codex-cli/"><span class="cl-label">Integration</span><span class="cl-title">Codex CLI integration</span><span class="cl-sub">Mutation surfaces, trust model and validation evidence.</span></a>
     </div>
     <div class="cta-block-end">

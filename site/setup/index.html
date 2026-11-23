@@ -8,8 +8,8 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
-  <link rel="stylesheet" href="/assets/css/setup-v2.css">
-  <meta name="description" content="Choose where your code gets written and what you want to set up, and get the Mneme configuration that fits: agent hook, required CI check and optional decision MCP server." />
+  <link rel="stylesheet" href="/assets/css/setup-v3.css">
+  <meta name="description" content="Pick your coding agent or CI system and what you want Mneme to do, and get the setup that fits: an agent hook that blocks bad edits, a required CI check, and an optional MCP lookup server." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
   <meta name="mneme:content-segment" content="developer_evaluation" />
@@ -18,7 +18,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Mneme HQ" />
   <meta property="og:title" content="Set Up Mneme: Agent Hooks, CI and Decision MCP | Mneme HQ" />
-  <meta property="og:description" content="Choose where your code gets written and what you want to set up, and get the Mneme configuration that fits: agent hook, required CI check and optional decision MCP server." />
+  <meta property="og:description" content="Pick your coding agent or CI system and what you want Mneme to do, and get the setup that fits: an agent hook that blocks bad edits, a required CI check, and an optional MCP lookup server." />
   <meta property="og:url" content="https://mnemehq.com/setup/" />
   <meta property="og:image" content="https://mnemehq.com/setup/og-v2.png" />
 <meta property="og:image:width" content="1200" />
@@ -26,7 +26,7 @@
 <meta property="og:image:alt" content="Set up Mneme: pick your coding agent and goal, and get the layers to install, with each integration&#x27;s status and coverage limit." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Set Up Mneme: Agent Hooks, CI and Decision MCP | Mneme HQ" />
-  <meta name="twitter:description" content="Choose where your code gets written and what you want to set up, and get the Mneme configuration that fits: agent hook, required CI check and optional decision MCP server." />
+  <meta name="twitter:description" content="Pick your coding agent or CI system and what you want Mneme to do, and get the setup that fits: an agent hook that blocks bad edits, a required CI check, and an optional MCP lookup server." />
   <meta name="twitter:image" content="https://mnemehq.com/setup/og-v2.png" />
 <meta name="twitter:image:alt" content="Set up Mneme: pick your coding agent and goal, and get the layers to install, with each integration&#x27;s status and coverage limit." />
   <!-- Consent defaults -->
@@ -60,11 +60,11 @@
       "@type": "CollectionPage",
       "@id": "https://mnemehq.com/setup/#webpage",
       "name": "Set up Mneme",
-      "description": "Choose where your code gets written and what you want to set up, and get the Mneme configuration that fits: agent hook, required CI check and optional decision MCP server.",
+      "description": "Pick your coding agent or CI system and what you want Mneme to do, and get the setup that fits: an agent hook that blocks bad edits, a required CI check, and an optional MCP lookup server.",
       "url": "https://mnemehq.com/setup/",
       "inLanguage": "en",
       "datePublished": "2026-11-22",
-      "dateModified": "2026-11-22",
+      "dateModified": "2026-11-23",
       "image": {
         "@type": "ImageObject",
         "url": "https://mnemehq.com/setup/og-v2.png",
@@ -102,7 +102,7 @@
         },
         {
           "@type": "TechArticle",
-          "name": "Set up the decision MCP server",
+          "name": "Set up the MCP lookup server",
           "url": "https://mnemehq.com/setup/mcp/"
         },
         {
@@ -284,17 +284,17 @@
 
 <section class="setup-hero">
   <h1>Set up Mneme</h1>
-  <p class="lede">Mneme checks code changes against the architecture decisions your team has recorded. It works in three layers: an optional lookup server so agents can find decisions, a hook that checks your coding agent&rsquo;s edits, and a required check in CI before merge.</p>
+  <p class="lede">Mneme checks code changes against the architecture decisions your team has recorded, and blocks a change that breaks an active rule. It can run in three places: a hook inside your coding agent that refuses a bad edit, a required CI check that fails a bad pull request, and an optional Model Context Protocol (MCP) lookup server that shows agents the decisions before they write.</p>
 </section>
 
 <div class="setup-wrap">
 
-<p class="setup-quick">We recommend starting with <a href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="hero" data-cta-component="context">Claude Code + CI</a>: an agent hook that blocks bad edits, plus a required check before merge.</p>
+<p class="setup-quick">Using Claude Code? Open the <a href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="hero" data-cta-component="context">Claude Code + CI guide</a>, the most complete setup. Otherwise, answer the two questions below.</p>
 
 <section class="chooser" id="chooser" aria-labelledby="chooser-title">
   <div class="chooser-head">
-    <h2 id="chooser-title">Choose your setup</h2>
-    <p>Pick what you want, then where your code gets written. Every tool in the <a href="/integrations/">integration catalogue</a> is here, with the status the catalogue gives it.</p>
+    <h2 id="chooser-title">Find your setup</h2>
+    <p>Answer two questions. The panel shows what you set up, what it misses, the first command to run and the guide to follow.</p>
   </div>
 
 <div class="chooser-fallback" data-chooser-fallback>
@@ -369,40 +369,41 @@
   <form class="chooser-app" data-chooser hidden>
     <div class="chooser-steps">
       <fieldset class="step">
-        <legend><span class="step-n" aria-hidden="true">1</span>What do you want to set up?</legend>
+        <legend><span class="step-n" aria-hidden="true">1</span>What should Mneme do?</legend>
         <div class="goal-seg">
-          <label class="goal-seg-option"><input type="radio" name="goal" value="full" data-desc="An agent hook where your agent has one, a required CI check, and optional decision lookup.">Complete setup</label>
-          <label class="goal-seg-option"><input type="radio" name="goal" value="ci" data-desc="A required check on every pull request, whichever agent or person wrote the change.">CI only</label>
-          <label class="goal-seg-option"><input type="radio" name="goal" value="mcp" data-desc="Let agents look decisions up before they write. Nothing is enforced.">Decision MCP</label>
+          <label class="goal-seg-option"><input type="radio" name="goal" value="full" data-desc="Block bad edits inside your coding agent, where it has a Mneme hook, and fail bad pull requests in CI.">Hook + CI check</label>
+          <label class="goal-seg-option"><input type="radio" name="goal" value="ci" data-desc="Fail any pull request that breaks a decision, whoever wrote it. Nothing runs inside the agent.">CI check only</label>
+          <label class="goal-seg-option"><input type="radio" name="goal" value="mcp" data-desc="Let agents look up the decisions before they write. Nothing is blocked.">Lookup only (MCP)</label>
         </div>
         <p class="goal-desc" data-goal-desc></p>
       </fieldset>
       <fieldset class="step">
-        <legend><span class="step-n" aria-hidden="true">2</span>Where does your code get written?</legend>
-        <p class="env-group-label" id="env-popular-label">Popular</p>
+        <legend><span class="step-n" aria-hidden="true">2</span>Which agent, editor or CI system do you use?</legend>
+        <p class="env-group-label" id="env-popular-label">Most common</p>
         <div class="env-options" role="group" aria-labelledby="env-popular-label" data-env-popular></div>
         <details class="env-all" data-env-all>
           <summary>Show all tools</summary>
           <div class="env-all-body" data-env-groups></div>
         </details>
       </fieldset>
-      <div class="status-legend">
-        <p class="status-legend-title">What the statuses mean</p>
-        <dl>
-          <div><dt><span class="env-dot env-dot--shipped" aria-hidden="true"></span>Shipped</dt><dd>Released in mneme-hq, with tests in the open-source repository.</dd></div>
-          <div><dt><span class="env-dot env-dot--validated" aria-hidden="true"></span>Validated</dt><dd>Unmodified Mneme tested working through the tool, with published evidence. No adapter.</dd></div>
-          <div><dt><span class="env-dot env-dot--experimental" aria-hidden="true"></span>Experimental</dt><dd>Code exists, but coverage or validation is incomplete. Not for production use.</dd></div>
-          <div><dt><span class="env-dot env-dot--planned" aria-hidden="true"></span>Planned</dt><dd>Design or specification work only. Nothing is merged or released.</dd></div>
-          <div><dt><span class="env-dot env-dot--research" aria-hidden="true"></span>Research</dt><dd>We are investigating whether an integration is possible. No adapter.</dd></div>
-          <div><dt><span class="env-dot env-dot--pattern" aria-hidden="true"></span>Pattern</dt><dd>A way to combine shipped checks, not a product. Coverage is whatever each part has.</dd></div>
-          <div><dt><span class="env-dot env-dot--none" aria-hidden="true"></span>No adapter</dt><dd>Nothing for this tool itself; the status names the path that still reaches it, such as CI.</dd></div>
-        </dl>
-      </div>
     </div>
-    <aside class="result" aria-label="Recommended configuration">
-      <p class="result-label">Recommended configuration</p>
+    <aside class="result" aria-label="Your setup">
+      <p class="result-label">Your setup</p>
       <div class="result-live" data-result aria-live="polite" aria-atomic="true"></div>
     </aside>
+    <details class="status-legend">
+      <summary>What the integration status labels mean</summary>
+      <p class="status-legend-note">Each tool&rsquo;s status comes from the <a href="/integrations/">integration catalogue</a>.</p>
+      <dl>
+        <div><dt><span class="env-dot env-dot--shipped" aria-hidden="true"></span>Shipped</dt><dd>Released in mneme-hq, with tests in the open-source repository.</dd></div>
+        <div><dt><span class="env-dot env-dot--validated" aria-hidden="true"></span>Validated</dt><dd>Unmodified Mneme tested working through the tool, with published evidence. No adapter.</dd></div>
+        <div><dt><span class="env-dot env-dot--experimental" aria-hidden="true"></span>Experimental</dt><dd>Code exists, but coverage or validation is incomplete. Not for production use.</dd></div>
+        <div><dt><span class="env-dot env-dot--planned" aria-hidden="true"></span>Planned</dt><dd>Design or specification work only. Nothing is merged or released.</dd></div>
+        <div><dt><span class="env-dot env-dot--research" aria-hidden="true"></span>Research</dt><dd>We are investigating whether an integration is possible. No adapter.</dd></div>
+        <div><dt><span class="env-dot env-dot--pattern" aria-hidden="true"></span>Pattern</dt><dd>A way to combine shipped checks, not a product. Coverage is whatever each part has.</dd></div>
+        <div><dt><span class="env-dot env-dot--none" aria-hidden="true"></span>No adapter</dt><dd>Nothing for this tool itself; the status names the path that still reaches it, such as CI.</dd></div>
+      </dl>
+    </details>
   </form>
 </section>
 
@@ -412,51 +413,51 @@
     <span class="status-badge" data-bar-badge></span>
   </div>
   <div class="chooser-bar-actions">
-    <a class="cta-btn-primary" data-bar-go href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context">Open the setup</a>
+    <a class="cta-btn-primary" data-bar-go href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context">Open the guide</a>
     <button type="button" class="chooser-bar-details" data-bar-details>Details</button>
   </div>
 </div>
 
 <section class="setup-section" id="layers">
-  <h2>The three layers</h2>
-  <p>Each layer does one job. Two of them enforce your decisions; the third helps an agent find them. You can start with any one, and the guides add the others.</p>
+  <h2>The three places Mneme runs</h2>
+  <p>Mneme <strong>checks</strong> a change by comparing it with your active rules. It <strong>blocks</strong> a change by refusing the edit or failing the pull request. The hook and the CI check can block; the lookup server never does. Start with any one, and the guides add the others.</p>
   <ul class="layers-explainer">
+    <li>
+      <div class="le-role"><strong>Agent hook</strong><span class="le-tag">Core</span></div>
+      <p class="le-what">Blocks a bad edit while the agent works</p>
+      <p>A hook is a command your coding agent runs before it edits a file. Mneme&rsquo;s hook refuses an edit that breaks an active rule. What it catches differs by agent, and some agents have no Mneme hook.</p>
+    </li>
+    <li>
+      <div class="le-role"><strong>CI check</strong><span class="le-tag">Core</span></div>
+      <p class="le-what">Fails a bad pull request before merge</p>
+      <p>A job in your pipeline runs <code>mneme check</code> on each file a pull request adds or modifies. It catches what the hook missed, and changes from agents and people with no hook.</p>
+    </li>
     <li class="optional">
-      <div class="le-role"><strong>Discover</strong><span class="le-tag">Optional</span></div>
-      <p class="le-what">Decision MCP server</p>
-      <p>A local server that speaks the Model Context Protocol (MCP), so an agent can search decisions, ask which ones apply to a file, and propose new ones for people to review. It blocks nothing.</p>
-    </li>
-    <li>
-      <div class="le-role"><strong>Enforce</strong><span class="le-tag">Core</span></div>
-      <p class="le-what">Mneme command-line interface (CLI) and agent hook</p>
-      <p>The <code>mneme</code> command runs the checks. A hook is a command your coding agent runs before it edits a file; Mneme&rsquo;s hook blocks an edit that breaks an active rule. Coverage differs by agent.</p>
-    </li>
-    <li>
-      <div class="le-role"><strong>Verify</strong><span class="le-tag">Core</span></div>
-      <p class="le-what">CI check before merge</p>
-      <p>A job in your pipeline runs <code>mneme check</code> on each file a pull request adds or modifies. It catches changes the hook missed, and changes from agents and people with no hook.</p>
+      <div class="le-role"><strong>MCP lookup server</strong><span class="le-tag">Optional</span></div>
+      <p class="le-what">Shows agents the decisions; blocks nothing</p>
+      <p>A local server, <code>mneme decision-mcp</code>, that speaks the Model Context Protocol (MCP). An agent can search decisions, ask which ones apply to a file, and propose new ones for people to review.</p>
     </li>
   </ul>
 </section>
 
 <section class="setup-section" id="install">
   <h2>What you install</h2>
-  <p>Your decisions live in the repository as architecture decision records (ADRs), short Markdown files in <code>docs/adr/</code>. Mneme compiles them into one <strong>memory file</strong>, <code>.mneme/project_memory.json</code>, and every layer reads that file. A decision blocks changes only once it has an <strong>active rule</strong>. You get one in two ways: write a directive such as <code>FORBID_LITERAL</code> under <code>## Constraints</code> in the ADR, which is enforced as soon as you import it, or let Mneme propose a rule, test it with <code>mneme protect validate</code> and switch it on with <code>mneme protect activate</code>.</p>
-  <p>The guides follow the second path: <code>mneme setup</code> creates the memory file and blocks nothing, <code>mneme adr import</code> adds your decisions, <code>mneme protect validate</code> tests a proposed rule without changing anything, and <code>mneme protect activate</code> switches it on. Hooks and CI enforce only active rules.</p>
+  <p>Your decisions are architecture decision records (ADRs): short Markdown files in <code>docs/adr/</code>. Mneme compiles them into one <strong>memory file</strong>, <code>.mneme/project_memory.json</code>, which the hook, the CI check and the lookup server all read.</p>
+  <p>A decision blocks nothing until it has an <strong>active rule</strong>. The guides take one decision through four commands: <code>mneme setup</code> creates the memory file, <code>mneme adr import</code> adds your ADRs, <code>mneme protect validate</code> tests the rule Mneme proposes without changing anything, and <code>mneme protect activate</code> switches it on. You can also write the rule yourself, as a directive such as <code>FORBID_LITERAL</code> under <code>## Constraints</code> in the ADR; it is active as soon as you import it.</p>
   <div class="setup-table">
     <table>
       <thead><tr><th>Component</th><th>Needed</th><th>How</th></tr></thead>
       <tbody>
         <tr><td>Mneme CLI, mneme-hq 0.11.0</td><td><span class="need need--req">Required</span></td><td><code>pipx install "mneme-hq==0.11.0"</code>. Add the <code>[mcp]</code> extra for the lookup server.</td></tr>
         <tr><td>Memory file, committed</td><td><span class="need need--req">Required</span></td><td><code>mneme setup</code> creates <code>.mneme/project_memory.json</code>; <code>mneme adr import</code> fills it from your ADRs.</td></tr>
-        <tr><td>At least one active rule</td><td><span class="need need--req">Required</span></td><td>A <code>## Constraints</code> directive in an ADR, or <code>mneme protect validate</code> then <code>mneme protect activate</code> for a rule Mneme proposes. Setup on its own blocks nothing.</td></tr>
-        <tr><td>Agent hook</td><td><span class="need need--req">Required for agent-side checks</span></td><td>The Claude Code plugin, the Codex CLI hook, or your agent&rsquo;s entry in the <a href="/integrations/">catalogue</a>. Some agents have none.</td></tr>
-        <tr><td>CI check</td><td><span class="need need--req">Required for the full setup</span></td><td>A GitHub Actions workflow or GitLab CI job you own, made a required check.</td></tr>
-        <tr><td>Decision MCP server</td><td><span class="need need--opt">Optional</span></td><td><code>mneme decision-mcp</code>, registered with your agent as a local server.</td></tr>
+        <tr><td>At least one active rule</td><td><span class="need need--req">Required to block</span></td><td><code>mneme protect validate</code> then <code>mneme protect activate</code> for a rule Mneme proposes, or a <code>## Constraints</code> directive in the ADR. Setup on its own blocks nothing.</td></tr>
+        <tr><td>Agent hook</td><td><span class="need need--req">Required to block inside the agent</span></td><td>The Claude Code plugin, the Codex CLI hook, or your agent&rsquo;s entry in the <a href="/integrations/">catalogue</a>. Some agents have none.</td></tr>
+        <tr><td>CI check</td><td><span class="need need--req">Required to block merges</span></td><td>A GitHub Actions workflow or GitLab CI job you own, made a required check.</td></tr>
+        <tr><td>MCP lookup server</td><td><span class="need need--opt">Optional</span></td><td><code>mneme decision-mcp</code>, registered with your agent as a local server.</td></tr>
       </tbody>
     </table>
   </div>
-  <p>The commands and the recorded output for each step are in the guides below. A first install takes one decision from setup to an active rule, as <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> shows.</p>
+  <p>Each guide shows the commands and their recorded output. <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> takes one decision from setup to an active rule. The first command is the same in most guides:</p>
   <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="manual">pipx install "mneme-hq==0.11.0"</pre>
@@ -465,23 +466,23 @@
 
 <section class="setup-section" id="guides">
   <h2>Setup guides</h2>
-  <p>Each guide uses the same example decision, so you can follow one and then add the next layer from another.</p>
+  <p>Every guide uses the same example decision, which bans the Celery library, so you can follow one and then add a part from another.</p>
   <div class="guide-grid">
-    <a class="guide-card" href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Claude Code + CI</strong><span>The reference setup: install, activate one decision, load the plugin, add the required check.</span><span class="guide-layers">Enforce + Verify, Discover optional</span></a>
-    <a class="guide-card" href="/setup/codex-cli/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Codex CLI + CI</strong><span>Register the Codex hook bundle, then add the same required check.</span><span class="guide-layers">Enforce + Verify</span></a>
-    <a class="guide-card" href="/setup/ci/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>CI only</strong><span>GitHub Actions or GitLab CI. Works whichever agent or person wrote the change.</span><span class="guide-layers">Verify</span></a>
-    <a class="guide-card" href="/setup/mcp/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Decision MCP</strong><span>Let agents search decisions, ask which apply to a file, trace replacements and propose new ones.</span><span class="guide-layers">Discover</span></a>
-    <a class="guide-card" href="/setup/opencode/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>OpenCode + CI</strong><span>Experimental and not in the 0.11.0 release. Use CI as the check you rely on.</span><span class="guide-layers">Verify, Enforce experimental</span></a>
-    <a class="guide-card" href="/setup/software-factory/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Software factory</strong><span>Where Mneme&rsquo;s checks sit in a queue, orchestrator, agents, CI and review pipeline.</span><span class="guide-layers">Enforce per agent + Verify</span></a>
+    <a class="guide-card" href="/setup/claude-code/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Claude Code + CI</strong><span>The reference setup: install Mneme, activate one decision, install the Claude Code plugin, add the required CI check.</span><span class="guide-layers">Agent hook + CI check, MCP optional</span></a>
+    <a class="guide-card" href="/setup/codex-cli/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Codex CLI + CI</strong><span>Register Mneme&rsquo;s Codex hook in your repository, trust it in Codex, then add the same required check.</span><span class="guide-layers">Agent hook + CI check, MCP optional</span></a>
+    <a class="guide-card" href="/setup/ci/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>CI only</strong><span>A GitHub Actions workflow or GitLab CI job. Works whichever agent or person wrote the change.</span><span class="guide-layers">CI check</span></a>
+    <a class="guide-card" href="/setup/mcp/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>MCP lookup server</strong><span>Let agents search decisions, ask which apply to a file, see which decision replaced which, and propose new ones.</span><span class="guide-layers">MCP lookup server, blocks nothing</span></a>
+    <a class="guide-card" href="/setup/opencode/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>OpenCode + CI</strong><span>The CI check blocks OpenCode&rsquo;s changes. The OpenCode adapter is experimental and not in the 0.11.0 release.</span><span class="guide-layers">CI check, agent hook experimental</span></a>
+    <a class="guide-card" href="/setup/software-factory/" data-cta-intent="setup" data-cta-position="mid" data-cta-component="context"><strong>Software factory</strong><span>Where Mneme&rsquo;s checks sit when a queue and an orchestrator hand work to several agents.</span><span class="guide-layers">Each agent&rsquo;s hook + CI check</span></a>
   </div>
 </section>
 
 <section class="setup-section" id="limits">
   <h2>What no setup guarantees</h2>
-  <p>Check one allowed change and one blocked change in your own repository before you rely on any layer. Every guide shows both. Three limits apply everywhere:</p>
+  <p>Before you rely on any of it, test one blocked and one allowed change in your own repository. Every guide shows both. Three limits apply everywhere:</p>
   <ul class="setup-limits">
-    <li>Hooks fail open by default: when a check can&rsquo;t run, the change goes through rather than being blocked. Claude Code also has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run, enabled by a reviewed change on your default branch. If a check crashes or times out, the Claude Code hook allows the edit, and the Codex CLI hook marks it unevaluated without blocking.</li>
-    <li>Some writes are not intercepted before they land. Most shell commands and scripts reach disk first; Claude Code and Codex CLI check them when the agent ends its turn, and other agents rely on CI.</li>
+    <li>Hooks fail open by default: when a check can&rsquo;t run, the change goes through. If a check crashes or times out, the Claude Code hook allows the edit, and the Codex CLI hook lets it through with an unevaluated note. Claude Code has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run; turning it on takes a reviewed change on your default branch.</li>
+    <li>Some writes are not stopped before they land. Most shell commands and scripts reach disk first. Claude Code and Codex CLI check them when the agent ends its turn; with other agents, only CI sees them.</li>
     <li>CI covers only what your pipeline runs on: the files a change adds or modifies, in the repositories and branches where the job is required.</li>
   </ul>
 </section>
@@ -820,8 +821,8 @@
   });
 })();
 </script>
-<script src="/assets/js/setup-chooser-data-v1.js"></script>
-<script src="/assets/js/setup-chooser-v2.js"></script>
+<script src="/assets/js/setup-chooser-data-v2.js"></script>
+<script src="/assets/js/setup-chooser-v3.js"></script>
 
 </body>
 </html>
