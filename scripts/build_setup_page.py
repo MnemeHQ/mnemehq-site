@@ -177,7 +177,7 @@ def build(slug: str) -> Path:
         )
         main = hero + '<div class="setup-wrap">\n\n' + body + "\n\n</div>\n\n"
         scripts = ('<script src="/assets/js/setup-chooser-data-v1.js"></script>\n'
-                   '<script src="/assets/js/setup-chooser-v1.js"></script>\n')
+                   '<script src="/assets/js/setup-chooser-v2.js"></script>\n')
         page_tail = tail.replace("</body>", howto.COPY_SCRIPT + scripts + "\n</body>")
     else:
         version = json.loads((W / "scripts" / "core_version.json").read_text())["minimum_version"]

@@ -270,6 +270,20 @@
     void result.offsetWidth; // restart the row transition
     result.classList.add('is-updating');
     try { history.replaceState(null, '', '#setup=' + c.env + '/' + c.goal); } catch (err) { /* file:// or sandboxed */ }
+    track(c.env, c.goal);
+  }
+
+  /* One setup_choice per distinct user selection; cta-analytics.js sends it. */
+  var lastTracked = '';
+  function track(env, goal) {
+    var key = env + '/' + goal;
+    if (!userChose || key === lastTracked) return;
+    lastTracked = key;
+    var o = byId[env] || {};
+    try {
+      document.dispatchEvent(new CustomEvent('mneme:track', { detail: { event: 'setup_choice',
+        params: { setup_goal: goal, setup_env: env, setup_env_status: o.status || 'unknown' } } }));
+    } catch (err) { /* old browser without CustomEvent constructor */ }
   }
 
   var initial = { env: 'claude-code', goal: 'full' };

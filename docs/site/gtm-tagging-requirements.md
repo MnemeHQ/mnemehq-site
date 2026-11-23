@@ -21,6 +21,7 @@ events to measurement ID `G-ZZ9YG12PPX` (property `534820916`).
 |---|---|---|
 | `cta_click` | A tagged conversion-oriented link was clicked | No |
 | `code_copy` | An install/code control was copied | No |
+| `setup_choice` | A visitor picked a goal or tool in the `/setup/` chooser | No |
 | `pilot_form_start` | First interaction with the pilot form | No |
 | `pilot_form_attempt` | A locally valid form was sent to Formspree | No |
 | `pilot_form_error` | Validation or network/server failure | No |
@@ -43,7 +44,7 @@ and page views remain funnel signals rather than GA4 key events.
   link_text: '<visible label, trimmed to 100 chars>',
   source_page: '<pathname of the page the click came from>',
   content_segment: 'developer_evaluation|problem_awareness',   // omitted if unsegmented
-  page_type: 'homepage|docs|demo|audit|integration|use_case|insight|concept|team|pilot|pricing|benchmark|compare|other'
+  page_type: 'homepage|docs|demo|audit|integration|use_case|insight|concept|team|pilot|pricing|benchmark|compare|setup|other'
 }
 ```
 
@@ -58,6 +59,27 @@ and page views remain funnel signals rather than GA4 key events.
   page_type: '<page type>'
 }
 ```
+
+### `setup_choice`
+
+Sent by `site/assets/js/setup-chooser-v2.js` through the `mneme:track` DOM event,
+which `cta-analytics.js` forwards (so the dev-host guard and shared parameters
+apply). One event per distinct user selection; the initial default and
+URL-hash restores are not sent.
+
+```js
+{
+  event: 'setup_choice',
+  setup_goal: 'full|ci|mcp',
+  setup_env: '<chooser id, e.g. claude-code, github-actions, cursor, other>',
+  setup_env_status: '<catalogue status shown, e.g. Shipped, Experimental>',
+  source_page: '/setup',
+  page_type: 'setup'
+}
+```
+
+The chooser's "Open the ... setup" and integration links are ordinary
+`cta_click` events (`cta_intent: setup|integration`).
 
 ### Attribution parameters
 
@@ -112,6 +134,9 @@ Create Data Layer Variables (version 2) with these exact names:
 | `DLV - link_text` | `link_text` |
 | `DLV - source_page` | `source_page` |
 | `DLV - content_segment` | `content_segment` |
+| `DLV - setup_goal` | `setup_goal` |
+| `DLV - setup_env` | `setup_env` |
+| `DLV - setup_env_status` | `setup_env_status` |
 
 Do not rely on Event Settings to discover arbitrary data-layer keys. Each GA4
 event parameter must be explicitly mapped to the corresponding DLV.
@@ -120,7 +145,7 @@ event parameter must be explicitly mapped to the corresponding DLV.
 
 Use one Custom Event trigger named `Custom Event - Canonical Analytics`:
 
-- Event name: `^(cta_click|code_copy|pilot_form_(start|attempt|error|success))$`
+- Event name: `^(cta_click|code_copy|setup_choice|pilot_form_(start|attempt|error|success))$`
 - Use regex matching: enabled
 - Fires on: **All Custom Events**
 
@@ -128,7 +153,7 @@ Attach it to one GA4 Event tag named `GA4 - Canonical dataLayer event`:
 
 - Measurement ID: `G-ZZ9YG12PPX`
 - Event name: `{{Event}}`
-- Event parameters: explicitly map all eleven DLVs listed in section 3
+- Event parameters: explicitly map all fourteen DLVs listed in section 3
 
 Parameters that are not present on an event resolve to `undefined` and are not
 sent. This router preserves the originating event name while keeping one
@@ -148,6 +173,8 @@ Realtime/DebugView:
 | Form ID | `form_id` |
 | Form error type | `error_type` |
 | Content segment | `content_segment` |
+| Setup goal | `setup_goal` |
+| Setup environment | `setup_env` |
 
 Keep raw `cta_destination`, `copy_context`, `link_text` and `source_page` in
 BigQuery. They can have many distinct values and do not need GA4
