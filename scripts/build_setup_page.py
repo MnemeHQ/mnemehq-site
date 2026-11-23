@@ -33,7 +33,7 @@ W = Path(__file__).resolve().parents[1]
 SRC = W / "templates" / "setup"
 FIXTURE = W / "tests" / "setup"
 DATA_JS = W / "site" / "assets" / "js" / "setup-chooser-data-v1.js"
-SETUP_CSS = '  <link rel="stylesheet" href="/assets/css/setup-v1.css">\n'
+SETUP_CSS = '  <link rel="stylesheet" href="/assets/css/setup-v2.css">\n'
 HUB_URL = "https://mnemehq.com/setup/"
 
 
@@ -193,7 +193,7 @@ def build(slug: str) -> Path:
         )
         toc = "".join(f'    <a href="#{a}">{t}</a>\n' for a, t in meta["toc"])
         hero = (
-            '<section class="hero">\n'
+            '<section class="hero hero--panel">\n'
             f'  <div class="section-eyebrow">{meta["eyebrow"]}</div>\n'
             f'  <h1>{meta["h1"]}</h1>\n'
             f'  <p class="lede">{meta["answer"]}</p>\n'
