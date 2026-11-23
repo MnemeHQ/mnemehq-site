@@ -6,6 +6,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [Claude Feature assessment (Claude Ship)](2026-11-23-claude-ship.md) | 2026-11-23 | insight | built, queued 11-29 (#334) |
 | [Atlassian AI SEO response](2026-11-18-atlassian-ai-sdlc-index-response.md) | 2026-11-18 | insight (report response) | built, queued 11-23 (#320) |
 | [Enterprise Architecture Pillar](2026-11-18-enterprise-architecture-pillar.md) | 2026-11-18 | insight cluster (2 now, rest held) | 2 built, queued 11-27 (#323) and 11-28 (#324) |
 | [Databricks AI Assessment](2026-11-16-databricks-ai-assessment.md) | 2026-11-16 | insight (report response) | built, queued 11-24 (#321) |

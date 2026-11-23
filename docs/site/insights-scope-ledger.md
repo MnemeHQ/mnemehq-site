@@ -65,7 +65,7 @@ Notes for the 2026-11-13 catch-up: the scheduled publisher merged nothing from 2
 
 ## In review (drafted, not merged, not yet marked `***`)
 
-None currently.
+- **Post-Assess Claude Feature** (scoped 2026-11-23): `claude-ship-architecture-ai-approved-code`, queued for 2026-11-29 in [#334](https://github.com/MnemeHQ/mnemehq-site/pull/334). Not published; not marked `***`. Brief: `docs/site/scope-briefs/2026-11-23-claude-ship.md`.
 
 ## Partially processed — do not mark done
 
