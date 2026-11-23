@@ -25,7 +25,7 @@
     <ul class="plain">
       <li><strong>Memory file:</strong> <code>.mneme/project_memory.json</code>, the file Mneme compiles your decisions into. The hook and the CI check both read it.</li>
       <li><strong>Active rule:</strong> a check attached to a decision. A decision without one blocks nothing. An ADR can carry its rule under a <code>## Constraints</code> heading, active as soon as it is imported; here Mneme proposes the rule from the ADR&rsquo;s title, so the order is setup, import, validate, then activate. Steps 3 to 7 follow it.</li>
-      <li><strong>Strict and warn mode:</strong> in strict mode, the default, the hook blocks an edit that breaks an active rule. In warn mode it lets the edit through and only reports it.</li>
+      <li><strong>Strict and warn mode:</strong> in strict mode, the default, the hook blocks an edit that breaks an active rule. In warn mode it lets the edit through, and Claude Code doesn&rsquo;t show the finding; run <code>mneme check --mode warn</code> to see findings without blocking.</li>
       <li><strong>Fail open:</strong> when the check itself can&rsquo;t run, for example because it crashed, the hook lets the edit through rather than blocking it. That is the default.</li>
     </ul>
   </section>
@@ -78,7 +78,7 @@
     <h3>8. Install the Claude Code plugin</h3>
     <pre class="term-block" data-fixture="manual">claude plugin install mneme@anthropic-plugin-directory</pre>
     <p>The plugin adds the hook and four slash commands, including <code>/mneme:context</code>, which looks up the decisions for a task. It starts in strict mode. The plugin does not install the command-line tool, so step 1 is still needed: without it the plugin installs cleanly and checks nothing.</p>
-    <p>Most teams install from the directory as above. Only if you need the plugin files fixed at the 0.11.0 release, for example to review them first, load it from a checkout instead:</p>
+    <p>Install from the directory as above unless you need the plugin files fixed at the 0.11.0 release, for example to review them first. In that case, load it from a checkout instead:</p>
     <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src
 claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
 

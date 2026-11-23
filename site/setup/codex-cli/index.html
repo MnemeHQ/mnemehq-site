@@ -342,7 +342,7 @@ Background jobs run on the managed Pub/Sub queue. Celery was retired after
 the 2026 queue incident, and reintroducing it brings back a broker the team
 no longer operates.</pre>
 </div>
-    <p>Then, from the repository root, create the memory file (<code>.mneme/project_memory.json</code>, where Mneme compiles your decisions), import the ADR, and validate and activate its rule. A decision blocks nothing until its rule is activated:</p>
+    <p>Then, from the repository root, create the memory file (<code>.mneme/project_memory.json</code>, where Mneme compiles your decisions), import the ADR, and validate and activate its rule. This decision blocks nothing until its rule is activated:</p>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/mneme setup
@@ -422,7 +422,7 @@ print(f"Hook command: {command}")</pre>
   "tool_use_id": "exec-1"
 }</pre>
 </div>
-    <p>To see the hook&rsquo;s answer without Codex, pipe the event to it with the interpreter and hook file from step 1:</p>
+    <p>To see the hook&rsquo;s answer without Codex, pipe the event to it with the interpreter from step 1:</p>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
   <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/python -m mneme.integrations.codex_cli.hook &lt; events/codex-celery.json</pre>

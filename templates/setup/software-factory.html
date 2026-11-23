@@ -72,7 +72,7 @@
       <li><strong>Enforced:</strong> the required CI check, on every file a factory pull request adds or modifies; and each agent&rsquo;s hook, with that hook&rsquo;s own coverage.</li>
       <li><strong>Not enforced by Mneme:</strong> the queue, the orchestrator&rsquo;s scheduling, sandbox permissions and network access. Mneme checks code against architectural decisions, not infrastructure policy.</li>
       <li><strong>Coverage is per agent.</strong> Shell writes, custom tools and agents without a hook reach Mneme only at CI. Each agent&rsquo;s limits are on its integration page.</li>
-      <li><strong>Hooks fail open by default:</strong> when a check can&rsquo;t run, the change goes through instead of being blocked. A crashed or slow check lets the agent continue, so CI stays required even for agents with a hook.</li>
+      <li><strong>Hooks fail open by default:</strong> when a check can&rsquo;t run, the change goes through instead of being blocked. Claude Code also has an <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">opt-in mode</a> that refuses direct file writes when the check can&rsquo;t run, enabled by a reviewed change on your default branch. A crashed or slow check lets the agent continue, so CI stays required even for agents with a hook.</li>
       <li><strong>Not tested as a whole:</strong> parallel agents on one repository, subagents and agent teams. Each part is tested on its own.</li>
     </ul>
   </section>

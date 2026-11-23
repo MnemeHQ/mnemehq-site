@@ -46,7 +46,7 @@
     <h3>2. Add one decision with an activated rule</h3>
     <p>Save this architecture decision record as <code>docs/adr/ADR-001-no-celery.md</code>:</p>
     <pre class="term-block" data-fixture="file:docs/adr/ADR-001-no-celery.md"></pre>
-    <p>Then, from the repository root, create the memory file (<code>.mneme/project_memory.json</code>, where Mneme compiles your decisions), import the ADR, and validate and activate its rule. A decision blocks nothing until its rule is activated:</p>
+    <p>Then, from the repository root, create the memory file (<code>.mneme/project_memory.json</code>, where Mneme compiles your decisions), import the ADR, and validate and activate its rule. This decision blocks nothing until its rule is activated:</p>
     <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/mneme setup
 ~/.mneme-venv/bin/mneme adr import docs/adr --memory .mneme/project_memory.json --apply
 ~/.mneme-venv/bin/mneme protect validate ADR-001 --memory .mneme/project_memory.json
@@ -76,7 +76,7 @@
     <h2>Run</h2>
     <p>Ask Codex for a worker in <code>workers/jobs.py</code> that uses Celery. Before the patch runs, Codex sends the hook an event like this one, saved as <code>events/codex-celery.json</code>:</p>
     <pre class="term-block" data-fixture="file:events/codex-celery.json"></pre>
-    <p>To see the hook&rsquo;s answer without Codex, pipe the event to it with the interpreter and hook file from step 1:</p>
+    <p>To see the hook&rsquo;s answer without Codex, pipe the event to it with the interpreter from step 1:</p>
     <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/python -m mneme.integrations.codex_cli.hook &lt; events/codex-celery.json</pre>
     <p>Then the allowed version, <code>events/codex-pubsub.json</code>, which writes the same worker on Pub/Sub:</p>
     <pre class="term-block" data-fixture="file:events/codex-pubsub.json"></pre>
