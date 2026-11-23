@@ -6,6 +6,10 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [Atlassian AI SEO response](2026-11-18-atlassian-ai-sdlc-index-response.md) | 2026-11-18 | insight (report response) | built, queued 11-23 (#320) |
+| [Enterprise Architecture Pillar](2026-11-18-enterprise-architecture-pillar.md) | 2026-11-18 | insight cluster (2 now, rest held) | 2 built, queued 11-27 (#323) and 11-28 (#324) |
+| [Databricks AI Assessment](2026-11-16-databricks-ai-assessment.md) | 2026-11-16 | insight (report response) | built, queued 11-24 (#321) |
+| [Research assessment](2026-11-13-research-assessment.md) | 2026-11-13 | insight cluster (2 now, 1 held for evidence) | 2 built, queued 11-25 (#322) and 11-26 (#325); C held |
 | [AI code comprehension](2026-11-12-ai-code-comprehension.md) | 2026-11-12 | insight (re-angled); concept page held | built, queued 11-16 |
 | [EnvOpt assessment (self-evolving harnesses)](2026-11-06-envopt-self-evolving-harness.md) | 2026-11-06 | insight | built, queued 11-14 |
 | [Angular Framework Recommendation](2026-11-05-angular-framework-recommendation.md) | 2026-11-05 | insight cluster (A now, B after A, C evidence-gated) | A built, queued 11-17; B held; C evidence-gated |
