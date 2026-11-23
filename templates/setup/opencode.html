@@ -10,11 +10,11 @@
   "crumb": "OpenCode + CI",
   "surface": "OpenCode terminal CLI (experimental), GitHub Actions or GitLab CI",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Verify: CI check"], ["exp", "Enforce: OpenCode adapter, experimental"], ["opt", "Discover: MCP, optional"]],
-  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["adapter", "Experimental adapter"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "CI check: required"], ["exp", "Agent hook: OpenCode adapter, experimental"], ["opt", "MCP lookup server: optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["adapter", "Experimental adapter"], ["boundaries", "What gets blocked"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "a required CI check that fails any pull request where OpenCode, or anyone else, adds a file that breaks a decision with an activated rule.",
-  "answer": "Use the CI check as your enforcement layer: it works on OpenCode&rsquo;s changes today with the released mneme-hq 0.11.0. Mneme&rsquo;s OpenCode adapter is experimental, merged on the main branch after that release, and checks only Python file writes and edits in the terminal CLI. Try it from source if you want to evaluate it, not to rely on it."
+  "answer": "Rely on the CI check: with the released mneme-hq 0.11.0, it fails any pull request, including OpenCode&rsquo;s, that adds or modifies a file breaking an active rule. Mneme&rsquo;s OpenCode adapter is experimental, merged on the main branch after that release, and checks only Python file writes and edits in the terminal CLI. Try it from source if you want to evaluate it, not to rely on it."
 }
 -->
   <section class="prose-section" id="goal">
@@ -36,9 +36,9 @@
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
     <h3>1. Add the required CI check</h3>
-    <p>Copy the <a href="/setup/ci/#github-actions">GitHub Actions workflow</a> or <a href="/setup/ci/#gitlab-ci">GitLab CI job</a>, commit it with the ADR and the memory file, and make it a required check. This is the layer that enforces ADR-001 on OpenCode&rsquo;s changes.</p>
+    <p>Copy the <a href="/setup/ci/#github-actions">GitHub Actions workflow</a> or <a href="/setup/ci/#gitlab-ci">GitLab CI job</a>, commit it with the ADR and the memory file, and make it a required check. This is the check that blocks an OpenCode change that breaks ADR-001.</p>
     <h3>2. Optional: give OpenCode the decisions</h3>
-    <p>If your OpenCode setup can start local Model Context Protocol (MCP) servers, register Mneme&rsquo;s decision server so the agent can look decisions up before it writes. <a href="/setup/mcp/">The decision MCP setup</a> has the command and arguments. We have not tested it inside OpenCode.</p>
+    <p>If your OpenCode setup can start local Model Context Protocol (MCP) servers, register Mneme&rsquo;s MCP lookup server so the agent can look decisions up before it writes. <a href="/setup/mcp/">The MCP lookup server guide</a> has the command and arguments. We have not tested it inside OpenCode.</p>
   </section>
 
   <section class="prose-section" id="expected-result">
@@ -69,7 +69,7 @@
   </section>
 
   <section class="prose-section" id="boundaries">
-    <h2>What is and isn&rsquo;t enforced</h2>
+    <h2>What gets blocked, and what doesn&rsquo;t</h2>
     <ul class="plain">
       <li><strong>Enforced, with the released package:</strong> the CI check, on every file a pull request adds or modifies.</li>
       <li><strong>Experimental adapter, when installed from source:</strong> new <code>.py</code> file writes and existing <code>.py</code> file edits in the terminal CLI, for <code>FORBID_LITERAL</code> rules only.</li>
@@ -91,11 +91,11 @@
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
       <a class="cross-card" href="/integrations/opencode/"><span class="cl-label">Integration</span><span class="cl-title">OpenCode integration</span><span class="cl-sub">What the adapter covers, and the compaction experiment that returned no effect.</span></a>
-      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">The agent with Mneme&rsquo;s most complete released hook.</span></a>
-      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let the agent find decisions before it writes.</span></a>
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Agent hook</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">The agent with Mneme&rsquo;s most complete released hook.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">MCP lookup server</span><span class="cl-title">MCP lookup server guide</span><span class="cl-sub">Let the agent find decisions before it writes.</span></a>
     </div>
     <div class="cta-block-end">
       <h3>Follow the adapter&rsquo;s progress</h3>

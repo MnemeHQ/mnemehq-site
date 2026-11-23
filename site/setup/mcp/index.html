@@ -8,7 +8,7 @@
   <link rel="preload" href="/assets/fonts/Inter-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/fonts.css">
   <link rel="stylesheet" href="/assets/css/base.css?v=20261031">
-  <link rel="stylesheet" href="/assets/css/setup-v2.css">
+  <link rel="stylesheet" href="/assets/css/setup-v3.css">
   <meta name="description" content="Run mneme decision-mcp locally so an MCP-capable coding agent can search your recorded decisions, ask which apply to a file, trace them and propose new ones for people to review." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0c0c0d" />
@@ -57,7 +57,7 @@
         {
           "@type": "ListItem",
           "position": 3,
-          "name": "Decision MCP",
+          "name": "MCP lookup server",
           "item": "https://mnemehq.com/setup/mcp/"
         }
       ]
@@ -68,7 +68,7 @@
         "TechArticle"
       ],
       "@id": "https://mnemehq.com/setup/mcp/#article",
-      "headline": "Set up the decision MCP server",
+      "headline": "Set up the MCP lookup server",
       "description": "Run mneme decision-mcp locally so an MCP-capable coding agent can search your recorded decisions, ask which apply to a file, trace them and propose new ones for people to review.",
       "url": "https://mnemehq.com/setup/mcp/",
       "mainEntityOfPage": {
@@ -83,7 +83,7 @@
       },
       "inLanguage": "en",
       "datePublished": "2026-11-22",
-      "dateModified": "2026-11-22",
+      "dateModified": "2026-11-23",
       "image": {
         "@type": "ImageObject",
         "url": "https://mnemehq.com/setup/mcp/og-v2.png",
@@ -270,16 +270,16 @@
   <ol class="breadcrumb">
     <li><a href="/">Home</a></li>
     <li><a href="/setup/">Setup</a></li>
-    <li><span aria-current="page">Decision MCP</span></li>
+    <li><span aria-current="page">MCP lookup server</span></li>
   </ol>
 </nav>
 
 <section class="hero hero--panel">
   <div class="section-eyebrow">Setup guide</div>
-  <h1>Set up the decision MCP server</h1>
-  <p class="lede">Install mneme-hq with the <code>[mcp]</code> extra and register <code>mneme decision-mcp</code> with your agent as a local server. The agent can then search your decisions, ask which ones apply to a file, trace a decision&rsquo;s history and propose new ones for people to review. The server informs the agent; it blocks nothing.</p>
-  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-11-22">Nov 22, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Any MCP host that starts local stdio servers</p>
-  <div class="layer-strip" aria-label="Layers this guide sets up"><span class="layer-chip layer-chip--req">Discover: decision MCP server</span><span class="layer-chip layer-chip--off">Enforce: not included</span><span class="layer-chip layer-chip--off">Verify: not included</span></div>
+  <h1>Set up the MCP lookup server</h1>
+  <p class="lede">Install mneme-hq with the <code>[mcp]</code> extra and register the MCP lookup server, <code>mneme decision-mcp</code>, with your agent as a local server. The agent can then search your decisions, ask which ones apply to a file, trace a decision&rsquo;s history and propose new ones for people to review. The server informs the agent; it blocks nothing.</p>
+  <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-11-23">Nov 23, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; Any MCP host that starts local stdio servers</p>
+  <div class="layer-strip" aria-label="What this guide sets up"><span class="layer-chip layer-chip--req">MCP lookup server: included</span><span class="layer-chip layer-chip--off">Agent hook: not included</span><span class="layer-chip layer-chip--off">CI check: not included</span></div>
   <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a local server your agent can ask which recorded decisions apply to the file it is about to edit, before it writes anything.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
@@ -296,8 +296,8 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s decision server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
-    <p>This layer is optional in a complete setup and enforces nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
+    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s MCP lookup server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
+    <p>The server is optional in a full setup and blocks nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
@@ -433,7 +433,7 @@ decision.trace</pre>
   "proposal_hint_matches": []
 }</pre>
 </div>
-    <p>This layer has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
+    <p>The server has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
     <p>Matching uses the scope word. Give each decision a scope that appears in the paths it governs; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> shows how scopes match and which words fail.</p>
   </section>
 
@@ -463,15 +463,15 @@ decision.trace</pre>
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Block an edit that breaks a decision before it reaches disk.</span></a>
-      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">A required check that works with any agent.</span></a>
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Agent hook</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Block an edit that breaks a decision before it reaches disk.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">CI check</span><span class="cl-title">CI-only guide</span><span class="cl-sub">A required check that works with any agent.</span></a>
       <a class="cross-card" href="/integrations/mcp/"><span class="cl-label">Integration</span><span class="cl-title">MCP integration</span><span class="cl-sub">How retrieval, authority and enforcement stay separate.</span></a>
     </div>
     <div class="cta-block-end">
       <h3>Read the server&rsquo;s source</h3>
-      <p>The decision server ships in the open-source mneme-hq package.</p>
+      <p>The MCP lookup server ships in the open-source mneme-hq package.</p>
       <div class="cta-row">
         <a href="https://github.com/MnemeHQ/mneme" class="cta-btn-outline" data-cta-intent="github" data-cta-position="end" data-cta-component="end_block">View source on GitHub</a>
       </div>

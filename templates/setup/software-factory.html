@@ -10,9 +10,9 @@
   "crumb": "Software factory",
   "surface": "Any work queue and orchestrator, supported agents, GitHub Actions or GitLab CI",
   "date": "2026-11-22",
-  "modified": "2026-11-22",
-  "layers": [["req", "Verify: CI check on every pull request"], ["req", "Enforce: each agent's hook, where it has one"], ["opt", "Discover: MCP, optional"]],
-  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "modified": "2026-11-23",
+  "layers": [["req", "CI check: on every pull request"], ["req", "Agent hook: each agent's own, where it has one"], ["opt", "MCP lookup server: optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["expected-result", "Expected result"], ["boundaries", "What gets blocked"], ["troubleshooting", "Troubleshooting"]],
   "end_up": "a factory pipeline in which every pull request, whichever agent opened it, passes a required check against the same recorded decisions, and agents with a Mneme hook are stopped earlier.",
   "answer": "Mneme has no adapter for a software factory as a whole. You set it up per repository and per agent: commit the decisions and the memory file, give each agent its own Mneme hook where one exists, and require the CI check on every pull request the factory opens. Keep changes to the decisions themselves behind human review."
 }
@@ -42,7 +42,7 @@
     <p>The factory&rsquo;s orchestrator doesn&rsquo;t run Mneme; the agents it launches do. Set up each agent as if a person were running it:</p>
     <ul class="plain">
       <li>Claude Code: the <a href="/setup/claude-code/">plugin hook</a>. <a href="/integrations/paperclip/">Paperclip</a>, which launches Claude Code in your workspace, keeps that hook (validated on paperclipai 2026.817.0). Other orchestrators that launch Claude Code are untested; check that they load your Claude Code plugins.</li>
-      <li>Codex CLI: the <a href="/setup/codex-cli/">hook bundle</a>.</li>
+      <li>Codex CLI: the <a href="/setup/codex-cli/">Codex CLI hook</a>.</li>
       <li>Claude Agent SDK, LangChain agents, Kiro CLI 3.0 and Google Antigravity: the adapter on each <a href="/integrations/#coding-agents">integration page</a>.</li>
       <li>Hermes Agent and OpenCode: experimental adapters with narrow coverage (OpenCode&rsquo;s is not in mneme-hq 0.11.0); see each <a href="/integrations/#coding-agents">integration page</a> and treat CI as their check.</li>
       <li>Every other agent: no Mneme hook. That includes the Copilot, Claude and Codex sessions GitHub Agent HQ runs, because Mneme has no hook inside them. CI is their check.</li>
@@ -56,7 +56,7 @@
     <p>An agent that can edit an architecture decision record (ADR), the memory file or the CI workflow can change what the check enforces. Put those files behind code owners and a required human review, restrict who can bypass the required check, and don&rsquo;t let the factory approve its own changes to them. <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Fail a pull request that breaks an ADR</a> lists the branch settings.</p>
 
     <h3>5. Optional: let agents look decisions up</h3>
-    <p>Agents that can start a local Model Context Protocol (MCP) server can ask Mneme&rsquo;s decision server which decisions apply to the files in their task, and propose new ones for review. <a href="/setup/mcp/">The decision MCP setup</a> covers it. Proposals stay proposals until a person accepts them.</p>
+    <p>Agents that can start a local Model Context Protocol (MCP) server can ask Mneme&rsquo;s MCP lookup server which decisions apply to the files in their task, and propose new ones for review. <a href="/setup/mcp/">The MCP lookup server guide</a> covers it. Proposals stay proposals until a person accepts them.</p>
   </section>
 
   <section class="prose-section" id="expected-result">
@@ -67,7 +67,7 @@
   </section>
 
   <section class="prose-section" id="boundaries">
-    <h2>What is and isn&rsquo;t enforced</h2>
+    <h2>What gets blocked, and what doesn&rsquo;t</h2>
     <ul class="plain">
       <li><strong>Enforced:</strong> the required CI check, on every file a factory pull request adds or modifies; and each agent&rsquo;s hook, with that hook&rsquo;s own coverage.</li>
       <li><strong>Not enforced by Mneme:</strong> the queue, the orchestrator&rsquo;s scheduling, sandbox permissions and network access. Mneme checks code against architectural decisions, not infrastructure policy.</li>
@@ -88,9 +88,9 @@
   </section>
 
   <section class="prose-section" id="next">
-    <h2>Next layer</h2>
+    <h2>Next steps</h2>
     <div class="next-layer">
-      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">The workflow and job files the factory&rsquo;s pull requests run.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">CI check</span><span class="cl-title">CI-only guide</span><span class="cl-sub">The workflow and job files the factory&rsquo;s pull requests run.</span></a>
       <a class="cross-card" href="/integrations/#agent-orchestrators"><span class="cl-label">Catalogue</span><span class="cl-title">Agent orchestrators</span><span class="cl-sub">What each orchestrator&rsquo;s status means for coverage.</span></a>
       <a class="cross-card" href="/insights/software-factory-governance-layer/"><span class="cl-label">Insight</span><span class="cl-title">The software factory&rsquo;s missing decision layer</span><span class="cl-sub">Why production capacity is not architectural control.</span></a>
     </div>
