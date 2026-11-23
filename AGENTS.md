@@ -15,7 +15,25 @@ guides, concepts, docs, integration, comparison, persona and landing pages) pass
 and the comprehension and slop filter before merge: a `stop-slop` score of at least 35/50,
 `scripts/lint_prose.py` with zero errors, and a cold read of the built page by a reviewer who has
 seen nothing else. The rules are in `PUBLISHING.md`, "Pre-merge review gates (all content)".
-Record the results in the PR body.
+Record the results in the PR body. The claim audit procedure is
+`.claude/skills/claim-audit/SKILL.md`; it also applies to LinkedIn and editorial drafts.
+
+## Publishing other pages
+
+Docs, how-to, integration, comparison, persona, concept, tool and landing pages follow
+`.claude/skills/publish-page/SKILL.md`: the page's contract, metadata and JSON-LD, OG card,
+sitemap and llms.txt, nav sync, validators, review gates, PR and deployment evidence.
+
+## Design and UX
+
+Visual or interactive work extends the existing design system per
+`.claude/skills/site-ux/SKILL.md` (tokens, components, house-style exceptions to the
+`frontend-design` skill, the interactive checklist and a /50 UX rubric).
+
+## After a mneme core release
+
+Follow `.claude/skills/core-release-bump/SKILL.md`, starting from the open
+`core-release-drift` issue.
 
 ## Publishing insights
 

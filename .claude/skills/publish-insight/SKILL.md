@@ -26,7 +26,7 @@ agent that did not produce the thing it checks.
 | B. Sources | `sonnet`, `medium`, one agent | 3.1 (fetch) | transcripts → `sources/` (excerpts, PDFs, rendered chart pages, final URLs) |
 | C. Brief + draft | `opus`, `medium`, one per chat, in parallel | 2, 3.1 (verify) –3.4.2 | transcript + sources → brief, `body.html`, `faq.json`, slop score, lint result |
 | D. Cold read | `sonnet`, `low`, fresh, one per draft | 3.4.3 | `body.html` only → `coldread.md` |
-| E. Claim audit | `opus`, `medium`, fresh, one per draft | 5.1–5.2 | `body.html` + brief + `sources/` → `audit.md` (every Mneme claim classified, every figure re-checked) |
+| E. Claim audit | `opus`, `medium`, fresh, one per draft | 5.1–5.2 (`claim-audit` skill) | `body.html` + brief + `sources/` → `audit.md` (every Mneme claim classified, every figure re-checked) |
 | — | orchestrator | — | loop C ← D/E findings until both pass; confirm titles, count and dates with the user |
 | F. Publish | `sonnet`, `medium`, one agent, articles in sequence | 3.5–4, 5.4 (no label) | approved drafts → page, manifest, registration, OG, validators, one PR per article + the docs PR |
 | — | orchestrator | 5.4 | add `scheduled-publish` labels after the user's go-ahead |
@@ -229,10 +229,10 @@ in body prose. Apply it to new and substantially edited articles only.
 
 ## Stage 5: Audit, PR, ship, close out
 
-1. **Opus audit before merge** (required). Classify every sentence about Mneme as SHIPPED /
-   VALIDATED EXPERIMENT / PLANNED / CONCEPTUAL, calibrated to ADR-001 claim levels: category and
-   vision claims may lead; concrete claims (integrations, enforcement paths, enterprise features)
-   stay literal. Fix everything flagged.
+1. **Opus audit before merge** (required). Run the `claim-audit` skill
+   (`.claude/skills/claim-audit/SKILL.md`) as step E: fresh agent, every Mneme sentence
+   classified, every figure re-checked, `VERDICT: PASS` before the PR opens. Apply its
+   replacement text and re-audit until it passes.
 2. **Citation verification is mandatory before publication.** Scope briefs may carry unverified
    citations; an article may not. Every source row in the brief must read "verified" (checked
    against the live source, with the page or section) before the PR is opened. Unverifiable
