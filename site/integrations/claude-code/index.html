@@ -380,7 +380,7 @@
 
     <h2>How the hook works</h2>
 
-    <p>The plugin at <code>v0.10.0</code> runs <code>mneme-hook</code> on three Claude Code events:</p>
+    <p>The plugin at <code>v0.11.0</code> runs <code>mneme-hook</code> on three Claude Code events:</p>
 
     <ul>
       <li><strong>PreToolUse on Edit, Write and MultiEdit.</strong> The hook works out the file content the change would produce, then checks the content the change introduces against your recorded decisions. Unrelated lines already in the file don&rsquo;t trigger a block.</li>
@@ -399,11 +399,13 @@
   else:
     exit 0   # allow (also when no verdict could be produced)</code></pre>
 
-    <p>The <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">how-to guide</a> replays each of these events against mneme-hq 0.10.0, with the recorded output.</p>
+    <p>The <a href="/docs/how-to/stop-agent-crossing-architectural-boundary/">how-to guide</a> replays each of these events against mneme-hq 0.11.0, with the recorded output.</p>
 
     <div class="callout">
       <p><strong>Fail-open by design.</strong> The hook never blocks on Mneme malfunction. If <code>mneme</code> is not found, an edited file can't be read, or a <code>mneme check</code> call takes longer than 10 seconds, the hook exits 0 and allows the edit. Its notes go to Claude Code&rsquo;s debug log only, so neither you nor the agent sees them in the session. If <code>mneme-hook</code> itself isn&rsquo;t on <code>PATH</code>, Claude Code shows a hook error instead.</p>
     </div>
+
+    <p><strong>Opt-in fail-closed mode for direct writes.</strong> A repository can choose the opposite for Edit, Write and MultiEdit. It adds <code>.mneme/availability.json</code>, and the declaration counts only once a reviewed change has authorized it on the default branch of <code>origin</code>. From then on the hook refuses a direct write when the check can&rsquo;t run or can&rsquo;t be trusted, and says that the refusal is not a decision violation. Without that file, nothing changes: failing open stays the default. If the hook can&rsquo;t verify the authorization, for example because the network is down, it allows the edit and tells the agent so. Deleting the local file can silently turn the mode off, and only repositories whose <code>origin</code> can be read anonymously over HTTPS can enroll. The <a href="https://github.com/MnemeHQ/mneme/blob/v0.11.0/docs/integrations/claude-code.md#opt-in-fail-closed-availability-adr-033" target="_blank" rel="noopener">integration reference at v0.11.0</a> has the commands and the full limits (ADR-033).</p>
 
     <h2 id="install">Install</h2>
 
@@ -426,7 +428,7 @@
         <p>The plugin bundles the enforcement hook, the <code>mneme</code> skill, and the namespaced slash commands (<code>/mneme:check</code>, <code>/mneme:context</code>, <code>/mneme:record</code>, <code>/mneme:review</code>). It starts in <code>strict</code> mode. To report violations without blocking, add <code>--config mode=warn</code> to the install command, or change the option later with <code>/plugin configure</code>.</p>
         <p>Enforcement runs in Claude Code. The Claude web, desktop and mobile apps don&rsquo;t run plugin hooks, so the plugin blocks nothing there.</p>
         <p><strong>To load a fixed version from a checkout</strong>, for example to pin it or to work on the plugin:</p>
-        <pre tabindex="0"><code>git clone --branch v0.10.0 --depth 1 https://github.com/MnemeHQ/mneme
+        <pre tabindex="0"><code>git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme
 claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
         <p>Reload in-session with <code>/reload-plugins</code> after changes.</p>
         <p>A legacy flat installer (<code>python scripts/install_claude_code.py</code>, with hyphenated <code>/mneme-check</code> commands) still works from a git clone, but <code>scripts/</code> is not shipped in the PyPI wheel.</p>
@@ -599,9 +601,9 @@ claude --plugin-dir ./mneme/integrations/claude-code-plugin</code></pre>
     <div class="cta-block integration-end-cta">
   <span class="integration-end-cta__eyebrow">Continue</span>
   <h2>Ready to govern Claude Code?</h2>
-  <p>Complete the quickstart, then apply the integration-specific setup above in your repository.</p>
+  <p>The setup guide takes you from install to a first blocked change in your repository.</p>
   <div class="integration-end-cta__actions">
-    <a href="/docs/#quickstart" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the setup guide</a>
+    <a href="/setup/claude-code/" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the Claude Code + CI setup</a>
     <a href="/pilot/" class="integration-end-cta__secondary" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Planning a team rollout? Request a pilot <span aria-hidden="true">&rarr;</span></a>
   </div>
 </div>
