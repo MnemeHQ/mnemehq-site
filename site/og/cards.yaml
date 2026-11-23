@@ -1624,3 +1624,59 @@ works-with/devin/:
   headline: Mneme Works Alongside Devin
   name: Devin
   sup: Devin executes. Mneme preserves architectural intent across that execution.
+setup/:
+  alt: 'Set up Mneme: pick your coding agent and goal, and get the layers to install, with each integration''s status and coverage limit.'
+  family: proof
+  headline: Set up Mneme in three layers.
+  rows:
+    - [DISCOVER, MCP finds decisions. Optional., neutral]
+    - [ENFORCE, CLI and agent hooks., held]
+    - [VERIFY, Required CI check before merge., held]
+setup/claude-code/:
+  alt: 'Set up Mneme with Claude Code and CI: install, activate one decision, load the plugin, require the CI check, test a blocked and an allowed change.'
+  family: proof
+  headline: Claude Code plus a required check.
+  rows:
+    - [HOOK, Refuses the Celery write., denied]
+    - [CI, Fails the pull request too., denied]
+    - [ALLOWED, The Pub/Sub worker passes., held]
+setup/ci/:
+  alt: 'Set up Mneme in CI: a GitHub Actions workflow or GitLab CI job that fails a pull request when a changed file breaks a recorded decision.'
+  family: proof
+  headline: One required check, any agent.
+  rows:
+    - [CHANGE, Written by any agent or person., neutral]
+    - [CHECK, Each added or modified file., neutral]
+    - [VERDICT, Celery fails. Pub/Sub passes., held]
+setup/mcp/:
+  alt: 'Set up the Mneme decision MCP server: register a local stdio server so agents can look up which architectural decisions apply before they write.'
+  family: proof
+  headline: Show agents the decisions first.
+  rows:
+    - [SERVER, 'Local, over stdio.', neutral]
+    - [ASK, 'Which decisions apply here?', neutral]
+    - [ENFORCES, Nothing. Hooks and CI do., held]
+setup/codex-cli/:
+  alt: 'Set up Mneme with Codex CLI and CI: register the hook bundle, trust it, deny an apply_patch change that breaks a decision, require the CI check.'
+  family: proof
+  headline: Deny the patch before it runs.
+  rows:
+    - [PATCH, apply_patch adds Celery., neutral]
+    - [HOOK, Denied before it reaches disk., denied]
+    - [STOP, Changed files audited whole., held]
+setup/opencode/:
+  alt: 'Set up Mneme with OpenCode and CI: the CI check is the dependable layer; the OpenCode adapter is experimental, source-only and narrow.'
+  family: proof
+  headline: 'OpenCode: CI first, adapter experimental.'
+  rows:
+    - [CI, Required check. Released., held]
+    - [ADAPTER, Python only. Not in 0.11.0., neutral]
+    - [SHELL, Not intercepted., denied]
+setup/software-factory/:
+  alt: 'Set up Mneme in a software factory: decisions in the repository, each agent''s hook, a required CI check and human review, with no factory-level adapter.'
+  family: proof
+  headline: Every factory pull request gets checked.
+  rows:
+    - [QUEUE, No factory-level adapter., neutral]
+    - [AGENTS, Each hook where one exists., neutral]
+    - [CI, Required on every merge., held]

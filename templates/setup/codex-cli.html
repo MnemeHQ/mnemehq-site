@@ -1,0 +1,122 @@
+<!--meta
+{
+  "order": 2,
+  "title": "Set Up Mneme with Codex CLI and CI | Mneme HQ",
+  "description": "Register Mneme's Codex CLI hook bundle from mneme-hq 0.11.0 so apply_patch changes that break a decision are denied, audit the turn at Stop, and add a required CI check.",
+  "og_alt": "Set up Mneme with Codex CLI and CI: register the hook bundle, trust it, deny an apply_patch change that breaks a decision, require the CI check.",
+  "eyebrow": "Setup guide",
+  "h1": "Set up Mneme with Codex CLI and CI",
+  "h1_plain": "Set up Mneme with Codex CLI and CI",
+  "crumb": "Codex CLI + CI",
+  "surface": "Codex CLI, GitHub Actions or GitLab CI",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Enforce: CLI + Codex hook"], ["req", "Verify: CI check"], ["opt", "Discover: MCP, optional"]],
+  "toc": [["prerequisites", "Prerequisites"], ["configure", "Configure"], ["run", "Run"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "Codex CLI denying an apply_patch change that breaks an active decision before it runs, an end-of-turn audit of every file the session changed, and a required CI check behind both.",
+  "answer": "Install mneme-hq 0.11.0 into a Python environment you control, activate one decision, and register its Codex hook in your repository&rsquo;s <code>.codex/hooks.json</code>. Trust the hooks in Codex with <code>/hooks</code>. Codex then denies <code>apply_patch</code> changes that break the decision and audits the turn when it ends. Add the CI check for everything else."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>Codex CLI writes files mainly through its native <code>apply_patch</code> tool. Mneme&rsquo;s Codex hook checks those patches before they run, and at the end of each turn it checks every file the session changed, which catches shell and script writes. The example decision is ADR-001, an architecture decision record (ADR) that bans the Celery library.</p>
+    <p>Mneme 0.11.0 ships the Codex hook as a Python module, with no installer and no published configuration. You register it yourself, as this guide shows.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>Python 3.11 or newer, and Codex CLI.</li>
+      <li>A git repository with ADR-001 activated: steps 1 to 3 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, which need no agent.</li>
+      <li>Permission to add a CI workflow and make it a required check.</li>
+    </ul>
+    <p>Tested versions: Mneme&rsquo;s own validation ran the hook against Codex CLI 0.149.1 on Windows through <code>codex exec</code>, 10 runs out of 10. Interactive sessions, other platforms and other Codex versions are not separately proven. For this guide we ran the hook commands below against mneme-hq 0.11.0 by piping Codex events to it; we did not run Codex itself.</p>
+  </section>
+
+  <section class="prose-section" id="configure">
+    <h2>Configure</h2>
+    <h3>1. Install Mneme where the hook can find it</h3>
+    <p>The hook runs as a Python file, so Codex needs the path of a Python interpreter that has mneme-hq installed. A dedicated virtual environment makes that path stable:</p>
+    <pre class="term-block" data-fixture="manual">python -m venv ~/.mneme-venv
+~/.mneme-venv/bin/python -m pip install "mneme-hq==0.11.0"</pre>
+    <p>On Windows the interpreter is <code>.mneme-venv\Scripts\python.exe</code>. This environment also gives you the <code>mneme</code> command for the setup steps. Then print the two paths the hook configuration needs:</p>
+    <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/python -c "import sys, mneme.integrations.codex_cli.hook as h; print(sys.executable); print(h.__file__)"</pre>
+    <p>The first line is the interpreter, the second the hook file. On our Windows test machine they ended in <code>venv\Scripts\python.exe</code> and <code>site-packages\mneme\integrations\codex_cli\hook.py</code>.</p>
+
+    <h3>2. Register the hook</h3>
+    <p>Save this as <code>.codex/hooks.json</code> in the repository root, replacing both paths in each command with the ones you printed. The same command handles all three events:</p>
+    <pre class="term-block" data-fixture="file:.codex/hooks.json"></pre>
+    <ul class="plain">
+      <li><strong>SessionStart</strong> records the state of the repository when the session begins.</li>
+      <li><strong>PreToolUse</strong> on <code>apply_patch</code> checks the lines a patch adds and denies the call if they break an active rule.</li>
+      <li><strong>Stop</strong> compares the repository with that starting state and checks each changed file whole.</li>
+    </ul>
+    <p>This follows the hook template in Mneme&rsquo;s Codex validation. On Windows, escape each backslash in the paths as <code>\\</code>.</p>
+
+    <h3>3. Trust the hooks</h3>
+    <p>Start <code>codex</code> in the repository, run <code>/hooks</code>, and review and trust the three definitions. Codex runs only hooks you have trusted, and it keeps one trust record per event slot: if you change a command later, trust it again.</p>
+
+    <h3>4. Add the required CI check</h3>
+    <p>Copy the <a href="/setup/ci/#github-actions">GitHub Actions workflow</a> or <a href="/setup/ci/#gitlab-ci">GitLab CI job</a> and make it required. The CI check covers the deletions and the files outside a Codex session that the hook never sees.</p>
+  </section>
+
+  <section class="prose-section" id="run">
+    <h2>Run</h2>
+    <p>Ask Codex for a worker in <code>workers/jobs.py</code> that uses Celery. Before the patch runs, Codex sends the hook an event like this one, saved as <code>events/codex-celery.json</code>:</p>
+    <pre class="term-block" data-fixture="file:events/codex-celery.json"></pre>
+    <p>To see the hook&rsquo;s answer without Codex, pipe the event to it with the interpreter and hook file from step 1:</p>
+    <pre class="term-block" data-fixture="manual">~/.mneme-venv/bin/python /path/to/hook.py &lt; events/codex-celery.json</pre>
+    <p>Then the allowed version, <code>events/codex-pubsub.json</code>, which writes the same worker on Pub/Sub:</p>
+    <pre class="term-block" data-fixture="file:events/codex-pubsub.json"></pre>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>For the Celery patch the hook prints a deny decision, which Codex applies before the patch touches disk:</p>
+    <pre class="term-block" data-fixture="out:codex-blocked"></pre>
+    <p>The hook always exits 0; Codex reads the decision from this JSON. For the Pub/Sub patch it prints nothing and exits 0, which leaves the patch to Codex&rsquo;s normal approval flow.</p>
+    <p>In CI, a pull request with both workers fails on <code>workers/jobs.py</code> and passes <code>workers/publish.py</code>, as the <a href="/setup/ci/#expected-result">CI-only setup</a> shows with recorded output.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What is and isn&rsquo;t enforced</h2>
+    <ul class="plain">
+      <li><strong>Denied before they run:</strong> <code>apply_patch</code> Add File and Update File operations. In a patch with several operations, one violation denies the whole call.</li>
+      <li><strong>Checked only at the end of the turn:</strong> shell and script writes. The file exists by then; the Stop check sends Codex back with the violation.</li>
+      <li><strong>Not protected:</strong> deleting a file. A deletion adds no content, so the hook skips it; the Stop audit records it.</li>
+      <li><strong>Files already modified before the session</strong> are ignored unless Codex touches them. Once it does, the whole file must pass at Stop, including violations that were there before.</li>
+      <li><strong>Fails open, visibly:</strong> if the check can&rsquo;t run, times out or can&rsquo;t read a file, the hook adds an <code>[mneme] UNEVALUATED</code> note for Codex and does not block.</li>
+      <li><strong>Not yet tested:</strong> changes made through Model Context Protocol (MCP) tools inside Codex.</li>
+    </ul>
+    <p>The <a href="/integrations/codex-cli/">Codex CLI integration page</a> links the validation evidence for each of these.</p>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The hooks never run</h3>
+    <p>They aren&rsquo;t trusted, or a changed command lost its trust. Run <code>/hooks</code> again in Codex and trust all three.</p>
+    <h3>Codex reports a hook error</h3>
+    <p>The interpreter in <code>hooks.json</code> can&rsquo;t import Mneme, or a path is wrong. Run the path command from step 1 with exactly that interpreter, and copy its output again.</p>
+    <h3>A Celery patch goes through with no note</h3>
+    <p>Two causes produce no output at all. The hook found no <code>.mneme/project_memory.json</code> in the session&rsquo;s working directory, and with none it allows every patch silently; start Codex from the repository root. Or the rule isn&rsquo;t active: <code>mneme audit --memory .mneme/project_memory.json --repo-root .</code> should list ADR-001 as protected, and if it says Mneme-ready, repeat the activation in step 3 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>.</p>
+    <h3>Codex shows a WARN note and applies the patch</h3>
+    <p><code>MNEME_HOOK_MODE=warn</code> is set in the environment Codex runs in. The hook then reports the violation without denying it:</p>
+    <pre class="term-block" data-fixture="out:codex-warn"></pre>
+    <p>Unset the variable to deny again.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let Codex look up the decisions for a file before it patches it.</span></a>
+      <a class="cross-card" href="/setup/ci/"><span class="cl-label">Verify</span><span class="cl-title">CI-only setup</span><span class="cl-sub">The workflow and job files, with recorded output.</span></a>
+      <a class="cross-card" href="/integrations/codex-cli/"><span class="cl-label">Integration</span><span class="cl-title">Codex CLI integration</span><span class="cl-sub">Mutation surfaces, trust model and validation evidence.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Rolling this out across a team?</h3>
+      <p>We work with design partners to set up enforcement on a real repository.</p>
+      <div class="cta-row">
+        <a href="/pilot/" class="cta-btn-outline" data-cta-intent="pilot" data-cta-position="end" data-cta-component="end_block">Request a pilot</a>
+      </div>
+    </div>
+  </section>

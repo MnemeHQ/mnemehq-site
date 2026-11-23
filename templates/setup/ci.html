@@ -1,0 +1,103 @@
+<!--meta
+{
+  "order": 3,
+  "title": "Set Up Mneme in CI: GitHub Actions and GitLab CI | Mneme HQ",
+  "description": "Run mneme check on every file a pull request or merge request adds or modifies, whichever agent or person wrote it, and make the check required so a violation blocks the merge.",
+  "og_alt": "Set up Mneme in CI: a GitHub Actions workflow or GitLab CI job that fails a pull request when a changed file breaks a recorded decision.",
+  "eyebrow": "Setup guide",
+  "h1": "Set up Mneme in CI only",
+  "h1_plain": "Set up Mneme in CI only",
+  "crumb": "CI only",
+  "surface": "GitHub Actions or GitLab CI, any agent",
+  "date": "2026-11-22",
+  "modified": "2026-11-22",
+  "layers": [["req", "Verify: CI check"], ["off", "Enforce: no agent hook"], ["off", "Discover: not included"]],
+  "toc": [["prerequisites", "Prerequisites"], ["github-actions", "GitHub Actions"], ["gitlab-ci", "GitLab CI"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
+  "end_up": "a required check that fails any pull request or merge request adding a file that breaks an active decision, whichever tool wrote it.",
+  "answer": "Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks an active decision can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it."
+}
+-->
+  <section class="prose-section" id="goal">
+    <h2>Goal</h2>
+    <p>CI is the one layer that works for every agent. It doesn&rsquo;t need a hook inside the tool, so it covers agents and editors that have none, such as GitHub Copilot, Cursor and JetBrains IDEs, and changes people make by hand. The cost is timing: it finds a violation after the file is written, when the pull request runs.</p>
+    <p>The example decision is ADR-001, an architecture decision record (ADR) that bans the Celery library. Each guide in this section uses it.</p>
+  </section>
+
+  <section class="prose-section" id="prerequisites">
+    <h2>Prerequisites</h2>
+    <ul class="plain">
+      <li>An active rule committed in <code>.mneme/project_memory.json</code>. The <a href="/setup/claude-code/#configure">Claude Code setup</a>, steps 1 to 3, does this for ADR-001 with no agent involved; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> explains each command.</li>
+      <li>Your ADRs in <code>docs/adr/</code>, committed with Unix (LF) line endings: add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>. The memory file records a hash of each ADR&rsquo;s bytes.</li>
+      <li>Permission to add a workflow and to require it before merge.</li>
+    </ul>
+    <p>Tested versions: mneme-hq 0.11.0. We ran each job&rsquo;s check script against a local copy of a pull request (bash for GitHub Actions, <code>sh -e</code> for GitLab CI), not on hosted runners.</p>
+  </section>
+
+  <section class="prose-section" id="github-actions">
+    <h2>GitHub Actions</h2>
+    <p>Save this as <code>.github/workflows/mneme-decisions.yml</code>. <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">Fail a pull request that breaks an ADR</a> explains it line by line.</p>
+    <pre class="term-block" data-fixture="file:.github/workflows/mneme-decisions.yml"></pre>
+    <p>The workflow does two things. It re-imports the ADRs and fails if that changes the memory file, which means someone edited an ADR without re-importing it. Then it runs <code>mneme check</code> on each added or modified text file, keeps the worst exit code, and uploads every JSON verdict.</p>
+    <p>To block merging, add a branch ruleset for <code>main</code> with &ldquo;Require status checks to pass&rdquo; and select the <code>mneme</code> job.</p>
+  </section>
+
+  <section class="prose-section" id="gitlab-ci">
+    <h2>GitLab CI</h2>
+    <p>Add this job to <code>.gitlab-ci.yml</code>. It runs the same loop on merge requests, against <code>$CI_MERGE_REQUEST_DIFF_BASE_SHA</code>:</p>
+    <pre class="term-block" data-fixture="file:.gitlab-ci.yml"></pre>
+    <p>GitLab runs script lines with errexit on, so the loop records each exit code with <code>|| rc=$?</code> instead of stopping at the first violation. To block merging, turn on &ldquo;Pipelines must succeed&rdquo; in the project&rsquo;s merge request settings. Mneme publishes no GitLab template; you own this job. The <a href="/integrations/gitlab/">GitLab CI page</a> covers verdicts and exceptions.</p>
+  </section>
+
+  <section class="prose-section" id="expected-result">
+    <h2>Expected result</h2>
+    <p>Open a pull request that adds two files: <code>workers/jobs.py</code>, which imports Celery, and <code>workers/publish.py</code>, which uses Pub/Sub. The memory check passes, because no ADR changed. The re-import prints a note that ADR-001 already exists; that is expected:</p>
+    <pre class="term-block" data-fixture="out:ci-memory-check" data-lines="11-16"></pre>
+    <p>The check step prints one line per file and exits with code 2, so the job fails:</p>
+    <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
+    <p>The GitLab job printed the same two lines and exited 2. The verdict file for <code>workers/jobs.py</code> names the decision, the rule and the matched text:</p>
+    <pre class="term-block" data-fixture="out:ci-verdict"></pre>
+    <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can&rsquo;t finish reports INCOMPLETE and exits 2, so it fails the job rather than passing it.</p>
+  </section>
+
+  <section class="prose-section" id="boundaries">
+    <h2>What is and isn&rsquo;t enforced</h2>
+    <ul class="plain">
+      <li><strong>Covered:</strong> every text file a pull request adds or modifies, checked whole, in the repositories and branches where you require the job.</li>
+      <li><strong>After the fact:</strong> the file is already written and committed. Nothing stops an agent while it works; an agent hook does that, where the agent has one.</li>
+      <li><strong>Not covered:</strong> deleted files, binary files, pushes that skip pull requests, and branches where the check isn&rsquo;t required.</li>
+      <li><strong>Whole files:</strong> a file that already broke a decision fails as soon as someone touches it.</li>
+      <li><strong>The check can be weakened.</strong> An agent that can edit the ADRs, the memory file or this workflow can change what the check enforces. Protect them with code owners and required review, as the <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">how-to guide</a> describes.</li>
+    </ul>
+  </section>
+
+  <section class="prose-section" id="troubleshooting">
+    <h2>Troubleshooting</h2>
+    <h3>The memory check fails after an ADR edit</h3>
+    <p>The ADR changed but the committed memory file didn&rsquo;t. Re-import locally and commit the result:</p>
+    <pre class="term-block" data-fixture="manual">mneme adr import docs/adr --memory .mneme/project_memory.json --apply --update-existing</pre>
+    <p>If you edited an ADR whose rule you activated, the import refuses rather than drop that rule silently, and names the flag to pass. <a href="/docs/how-to/install-mneme-and-activate-protection/#troubleshooting">The install how-to</a> shows the message and the fix.</p>
+    <h3>The memory check fails on every pull request</h3>
+    <p>Check the ADRs&rsquo; line endings. Add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>.</p>
+    <h3>The check step fails before checking any file</h3>
+    <p>The checkout is shallow, so git can&rsquo;t compare against the base branch. Keep <code>fetch-depth: 0</code> on GitHub, or <code>GIT_DEPTH: "0"</code> on GitLab.</p>
+    <h3>You want findings without failing pull requests yet</h3>
+    <p>Add <code>--mode warn</code> to the <code>mneme check</code> line. Verdicts still print, but WARN and FAIL exit 0:</p>
+    <pre class="term-block" data-fixture="out:check-warn"></pre>
+    <p>That output exited 0. Remove the flag once the findings look right.</p>
+  </section>
+
+  <section class="prose-section" id="next">
+    <h2>Next layer</h2>
+    <div class="next-layer">
+      <a class="cross-card" href="/setup/claude-code/"><span class="cl-label">Enforce</span><span class="cl-title">Claude Code + CI</span><span class="cl-sub">Stop the violation while the agent works, before CI sees it.</span></a>
+      <a class="cross-card" href="/setup/codex-cli/"><span class="cl-label">Enforce</span><span class="cl-title">Codex CLI + CI</span><span class="cl-sub">The Codex hook bundle, with this check behind it.</span></a>
+      <a class="cross-card" href="/setup/mcp/"><span class="cl-label">Discover</span><span class="cl-title">Decision MCP setup</span><span class="cl-sub">Let agents find the decisions before they write.</span></a>
+    </div>
+    <div class="cta-block-end">
+      <h3>Which of your decisions can CI enforce?</h3>
+      <p>The Architecture Audit reads your repository&rsquo;s decision records and reports which ones Mneme can protect today.</p>
+      <div class="cta-row">
+        <a href="/audit/" class="cta-btn-outline" data-cta-intent="audit" data-cta-position="end" data-cta-component="end_block">Run Architecture Audit</a>
+      </div>
+    </div>
+  </section>

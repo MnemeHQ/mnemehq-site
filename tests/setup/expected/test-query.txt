@@ -1,0 +1,16 @@
+Query: edit to workers/jobs.py
+
+All decisions (ranked by score):
+  [ADR-001] score=2.50 matched=scope, rationale
+
+Injected (top 3):
+[Mneme decisions applied]
+
+DECISION [ADR-001]: No Celery
+  Why:          Background jobs run on the managed Pub/Sub queue. Celery was retired after
+the 2026 queue incident, and reintroducing it brings back a broker the team
+no longer operates.
+
+  Scope:        workers
+  Typed rules:
+    - FORBID_LITERAL: celery
