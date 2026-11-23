@@ -145,7 +145,8 @@ event parameter must be explicitly mapped to the corresponding DLV.
 
 Use one Custom Event trigger named `Custom Event - Canonical Analytics`:
 
-- Event name: `^(cta_click|code_copy|setup_choice|pilot_form_(start|attempt|error|success))$`
+- Event name: `^(cta_click|code_copy|setup_choice|pilot_form_(start|attempt|error|success)|audit_(screen_view|input_selected|start|complete|error|baseline_saved|reaudit_(start|complete)|comparison_view|decision_(toggle|view)|rule_copy|export))$`
+  (the `audit_*` branch carries the hosted Audit's events, added in container version 7)
 - Use regex matching: enabled
 - Fires on: **All Custom Events**
 
