@@ -392,23 +392,30 @@ and tenancy handling that lives in app/repositories.
   <pre class="term-block">pipx install "mneme-hq==0.11.0"</pre>
 </div>
     <ul class="plain">
-      <li>Claude Code. The plugin isn't in the Claude Code marketplace yet, so you load it from a checkout of the Mneme repository. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
+      <li>Claude Code. You install the Mneme plugin from Claude&rsquo;s plugin directory in the first step below. The <a href="/integrations/claude-code/">Claude Code integration page</a> lists what the plugin contains.</li>
     </ul>
   </section>
 
   <section class="prose-section" id="configure">
     <h2>Configure</h2>
-    <h3>1. Get the plugin at the release tag</h3>
+    <h3>1. Install the plugin from the directory</h3>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src</pre>
+  <pre class="term-block" data-fixture="manual">claude plugin install mneme@anthropic-plugin-directory</pre>
 </div>
-    <h3>2. Start Claude Code with the plugin, from your repository root</h3>
+    <p>The plugin adds the hook and four slash commands. It does not install the <code>mneme</code> command, which the pipx step above already did.</p>
+    <h3>2. Start Claude Code from your repository root</h3>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block" data-fixture="manual">claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+  <pre class="term-block" data-fixture="manual">claude</pre>
 </div>
     <p>Keep the default strict mode. Warn mode (<code>MNEME_HOOK_MODE=warn</code>) stops the hook from blocking edits, and Claude Code then shows neither you nor the agent why an edit broke a decision. See Troubleshooting.</p>
+    <p>To fix the plugin files at the 0.11.0 release instead, for example to review them first, skip step 1 and load them from a checkout:</p>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="manual">git clone --branch v0.11.0 --depth 1 https://github.com/MnemeHQ/mneme mneme-src
+claude --plugin-dir ./mneme-src/integrations/claude-code-plugin</pre>
+</div>
   </section>
 
   <section class="prose-section" id="run">

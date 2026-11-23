@@ -63,7 +63,7 @@
         "image": "https://mnemehq.com/integrations/mcp/og-v2.png",
         "mainEntityOfPage": "https://mnemehq.com/integrations/mcp/",
         "proficiencyLevel": "Intermediate",
-        "dependencies": "mneme-hq 0.10.0 with the mcp extra"
+        "dependencies": "mneme-hq 0.11.0 with the mcp extra"
       }
     ]
   }
@@ -190,7 +190,7 @@
       <div class="article-eyebrow">
         <span class="eyebrow-tag">Integration &middot; MCP</span>
         <span class="eyebrow-dot"></span>
-        <span class="eyebrow-meta">mneme-hq 0.10.0 &nbsp;&middot;&nbsp; Local stdio</span>
+        <span class="eyebrow-meta">mneme-hq 0.11.0 &nbsp;&middot;&nbsp; Local stdio</span>
       </div>
       <h1>Mneme MCP integration</h1>
       <p class="article-lede"><strong>Give compatible agents access to the same Mneme decisions and decision context.</strong> Mneme exposes its Decision Index through a small, fixed MCP surface so coding agents and architecture producers can work with the same decision layer. They can retrieve context or submit candidates without receiving the authority to turn a suggestion into an enforced rule.</p>
@@ -207,12 +207,12 @@
         <div class="boundary-card"><span class="boundary-label">Enforcement</span><strong>What must a change obey?</strong><p>Typed rules, applicability, hooks, and CI gates deterministically evaluate work. MCP does not replace them.</p></div>
       </div>
 
-      <h2>What ships in 0.10.0</h2>
+      <h2>What ships in 0.11.0</h2>
       <p>The local server starts with <code>mneme decision-mcp</code> and communicates over stdio. It exposes exactly six tools, unchanged since 0.9.0:</p>
       <div class="tool-strip" aria-label="MCP tool inventory">
         <code>decision.propose</code><code>decision.propose_batch</code><code>decision.get</code><code>decision.search</code><code>decision.applicable_to</code><code>decision.trace</code>
       </div>
-      <p>The first two create non-authoritative proposal records. The remaining four are read-only. The server reads canonical decisions from the Decision Index in project memory (<code>--memory</code>, default <code>.mneme/project_memory.json</code>), and it will not start until that file has been migrated with <code>mneme decision-index migrate</code>. Projects created with <code>mneme init</code> on 0.10.0 already are. Proposal persistence defaults to <code>.mneme/decision_proposals.json</code>.</p>
+      <p>The first two create non-authoritative proposal records. The remaining four are read-only. The server reads canonical decisions from the Decision Index in project memory (<code>--memory</code>, default <code>.mneme/project_memory.json</code>), and it will not start until that file has been migrated with <code>mneme decision-index migrate</code>. Projects created with <code>mneme init</code> on 0.10.0 or later already are. Proposal persistence defaults to <code>.mneme/decision_proposals.json</code>.</p>
       <p>For installation, configuration, exact input fields, result shapes, and error behavior, use the <a href="/docs/mcp/">MCP server reference</a>. For a task-shaped walkthrough of <code>decision.applicable_to</code>, follow <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a>.</p>
 
       <h2>Proposals are not canonical decisions</h2>
@@ -255,7 +255,7 @@ Audit, modelling, protection, enforcement</code></pre>
       <h2>Upgrading from 0.9.x</h2>
       <ul>
         <li><strong>Migrate first:</strong> run <code>mneme decision-index migrate</code> to preview, then again with <code>--apply</code>. Until then the server exits with code 2 and prints those two commands.</li>
-        <li><strong>Upgrade every writer:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 then refuses to read. Move CI jobs, hooks, and teammates to 0.10.0 before you apply. If it happens anyway, restore the file from version control; migrate won&rsquo;t repair it.</li>
+        <li><strong>Upgrade every writer:</strong> once memory is migrated, a 0.9.2 or earlier process that writes it succeeds silently and leaves a file that 0.10.0 or later refuses to read. Move CI jobs, hooks, and teammates to 0.11.0 before you apply. If it happens anyway, restore the file from version control; migrate won&rsquo;t repair it.</li>
         <li><strong><code>--adr-dir</code> is validation only:</strong> it no longer supplies canonical reads. Import ADR changes with <code>mneme adr import</code>.</li>
       </ul>
       <p>Missing canonical records and links are still returned as typed not-found data. The server doesn&rsquo;t watch files; it re-reads the Decision Index and the proposal file when a tool reads them. The <a href="/docs/mcp/#limitations">MCP reference</a> covers memory that can&rsquo;t migrate.</p>
@@ -290,7 +290,7 @@ agent / review system / change-management system
       <div class="cta-block integration-end-cta">
         <span class="integration-end-cta__eyebrow">Reference</span>
         <h2>Connect to the Decision Index.</h2>
-        <p>Install the 0.10.0 MCP extra, configure the local stdio process, and inspect the exact six-tool contract.</p>
+        <p>Install the 0.11.0 MCP extra, configure the local stdio process, and inspect the exact six-tool contract.</p>
         <div class="integration-end-cta__actions">
           <a href="/docs/mcp/" class="cta-btn-primary" data-cta-intent="setup" data-cta-position="end" data-cta-component="end_block">Open the MCP reference</a>
           <a href="/docs/decision-proposals/" class="integration-end-cta__secondary" data-cta-intent="learn" data-cta-position="end" data-cta-component="end_block">Review the proposal workflow <span aria-hidden="true">&rarr;</span></a>
