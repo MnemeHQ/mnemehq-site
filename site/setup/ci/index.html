@@ -277,10 +277,10 @@
 <section class="hero">
   <div class="section-eyebrow">Setup guide</div>
   <h1>Set up Mneme in CI only</h1>
-  <p class="lede">Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks an active decision can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it.</p>
+  <p class="lede">Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks a decision with an activated rule can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it.</p>
   <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-11-22">Nov 22, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; GitHub Actions or GitLab CI, any agent</p>
   <div class="layer-strip" aria-label="Layers this guide sets up"><span class="layer-chip layer-chip--req">Verify: CI check</span><span class="layer-chip layer-chip--off">Enforce: no agent hook</span><span class="layer-chip layer-chip--off">Discover: not included</span></div>
-  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a required check that fails any pull request or merge request adding a file that breaks an active decision, whichever tool wrote it.</p>
+  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a required check that fails any pull request or merge request adding a file that breaks a decision with an activated rule, whichever tool wrote it.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
     <a href="#prerequisites">Prerequisites</a>
@@ -303,7 +303,7 @@
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>An active rule committed in <code>.mneme/project_memory.json</code>. The <a href="/setup/claude-code/#configure">Claude Code setup</a>, steps 1 to 3, does this for ADR-001 with no agent involved; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> explains each command.</li>
+      <li>A decision with an activated rule, committed in <code>.mneme/project_memory.json</code>, the memory file Mneme compiles your decisions into. A decision imported without any rule blocks nothing. Steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a> do this for ADR-001 with no agent involved; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> explains each command.</li>
       <li>Your ADRs in <code>docs/adr/</code>, committed with Unix (LF) line endings: add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>. The memory file records a hash of each ADR&rsquo;s bytes.</li>
       <li>Permission to add a workflow and to require it before merge.</li>
     </ul>
@@ -427,7 +427,7 @@ mneme-decisions:
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
-    <p>Open a pull request that adds two files: <code>workers/jobs.py</code>, which imports Celery, and <code>workers/publish.py</code>, which uses Pub/Sub. The memory check passes, because no ADR changed. The re-import prints a note that ADR-001 already exists; that is expected:</p>
+    <p>Open a pull request that adds two files: <code>workers/jobs.py</code>, which imports Celery, and <code>workers/publish.py</code>, which uses Pub/Sub. The memory check passes, because no ADR changed. The re-import prints a conflict note saying ADR-001 already exists. That is the expected, passing result, not an error: the step passes when <code>git diff</code> then finds no change. An excerpt of the recorded output:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:ci-memory-check">Conflicts vs existing memory:
@@ -437,13 +437,13 @@ mneme-decisions:
 
 Wrote 1 decisions to .mneme\project_memory.json</pre>
 </div>
-    <p>The check step prints one line per file and exits with code 2, so the job fails:</p>
+    <p>This is the blocked result. The GitHub check step prints one line per file and exits with code 2, so the job fails:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
-  <pre class="term-block" data-fixture="out:ci-loop">exit=2 workers/jobs.py
-exit=0 workers/publish.py</pre>
+  <pre class="term-block" data-fixture="out:ci-loop-github">exit=2  workers/jobs.py
+exit=0  workers/publish.py</pre>
 </div>
-    <p>The GitLab job printed the same two lines and exited 2. The verdict file for <code>workers/jobs.py</code> names the decision, the rule and the matched text:</p>
+    <p>The GitLab job printed the same two lines, with one space after the exit code, and exited 2. The verdict file for <code>workers/jobs.py</code> names the decision, the rule and the matched text:</p>
     <div class="howto-code howto-code--output">
   <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
   <pre class="term-block" data-fixture="out:ci-verdict">{"schema": "mneme.check/v1", "verdict": "FAIL", "mode": "strict", "evaluation_complete": true, "applicability": [{"decision_id": "ADR-001", "rule_type": "FORBID_LITERAL", "rule_value": "celery", "rule_index": 0, "path_scoped": false, "input_path": "workers/jobs.py", "outcome": "APPLIED", "selector": null, "reason": "the rule has global applicability", "rule_id": "ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7", "decision_version_id": "dver-a1bfce306d1af69b5ff3deecdc6f5a6a"}], "violations": [{"decision_id": "ADR-001", "decision_text": "No Celery", "severity": "FAIL", "rule": "celery", "trigger": "celery", "kind": "typed_rule", "rule_type": "FORBID_LITERAL", "input_path": "workers/jobs.py", "selector": null, "rule_id": "ADR-001:FORBID_LITERAL:9e170833e847f7b3c7143e0d2be5d4b7", "decision_version_id": "dver-a1bfce306d1af69b5ff3deecdc6f5a6a"}], "freshness": []}</pre>
@@ -456,7 +456,7 @@ exit=0 workers/publish.py</pre>
     <ul class="plain">
       <li><strong>Covered:</strong> every text file a pull request adds or modifies, checked whole, in the repositories and branches where you require the job.</li>
       <li><strong>After the fact:</strong> the file is already written and committed. Nothing stops an agent while it works; an agent hook does that, where the agent has one.</li>
-      <li><strong>Not covered:</strong> deleted files, binary files, pushes that skip pull requests, and branches where the check isn&rsquo;t required.</li>
+      <li><strong>Not covered:</strong> decisions imported with no rule, deleted files, binary files, pushes that skip pull requests, and branches where the check isn&rsquo;t required.</li>
       <li><strong>Whole files:</strong> a file that already broke a decision fails as soon as someone touches it.</li>
       <li><strong>The check can be weakened.</strong> An agent that can edit the ADRs, the memory file or this workflow can change what the check enforces. Protect them with code owners and required review, as the <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">how-to guide</a> describes.</li>
     </ul>

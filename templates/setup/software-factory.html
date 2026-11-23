@@ -19,7 +19,7 @@
 -->
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>A software factory combines a work queue, an orchestrator that hands tasks to coding agents, the agents themselves, CI and human review. Mneme is not a factory platform, and nothing in it knows about your queue or orchestrator. It reaches the factory&rsquo;s output at two points it already ships: an agent&rsquo;s hook, and the CI check on the pull request.</p>
+    <p>A software factory combines a work queue, an orchestrator (the program that hands tasks to coding agents, runs them and retries failures), the agents themselves, CI and human review. Mneme is not a factory platform, and nothing in it knows about your queue or orchestrator. It reaches the factory&rsquo;s output at two points it already ships: an agent&rsquo;s hook, and the CI check on the pull request.</p>
     <p>This guide places those two points in the pipeline, using only shipped checks. For the argument behind it, read <a href="/insights/software-factory-governance-layer/">the software factory&rsquo;s missing decision layer</a>.</p>
   </section>
 
@@ -27,7 +27,7 @@
     <h2>Prerequisites</h2>
     <ul class="plain">
       <li>A factory whose agents commit to git repositories and open pull requests or merge requests.</li>
-      <li>At least one active decision in each repository: steps 1 to 3 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, run once per repository.</li>
+      <li>At least one decision with an activated rule in each repository: steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, run once per repository.</li>
       <li>Control over branch rules, so the CI check can be required and decision files can need a human approval.</li>
     </ul>
     <p>Tested versions: the checks named here ran against mneme-hq 0.11.0 in the other setup guides. We have not tested a complete factory. The catalogue lists the smallest version of this, a <a href="/integrations/#software-factories">one-issue factory</a>, as a proposed workflow.</p>
@@ -41,10 +41,11 @@
     <h3>2. Give each agent its own hook, where one exists</h3>
     <p>The factory&rsquo;s orchestrator doesn&rsquo;t run Mneme; the agents it launches do. Set up each agent as if a person were running it:</p>
     <ul class="plain">
-      <li>Claude Code: the <a href="/setup/claude-code/">plugin hook</a>. Orchestrators that launch Claude Code in your workspace, such as <a href="/integrations/paperclip/">Paperclip</a>, keep that hook.</li>
+      <li>Claude Code: the <a href="/setup/claude-code/">plugin hook</a>. <a href="/integrations/paperclip/">Paperclip</a>, which launches Claude Code in your workspace, keeps that hook (validated on paperclipai 2026.817.0). Other orchestrators that launch Claude Code are untested; check that they load your Claude Code plugins.</li>
       <li>Codex CLI: the <a href="/setup/codex-cli/">hook bundle</a>.</li>
       <li>Claude Agent SDK, LangChain agents, Kiro CLI 3.0 and Google Antigravity: the adapter on each <a href="/integrations/#coding-agents">integration page</a>.</li>
-      <li>Every other agent: no hook. That includes the Copilot, Claude and Codex sessions GitHub Agent HQ runs, because Mneme has no hook inside them. CI is their check.</li>
+      <li>Hermes Agent and OpenCode: experimental adapters with narrow coverage (OpenCode&rsquo;s is not in mneme-hq 0.11.0); see each <a href="/integrations/#coding-agents">integration page</a> and treat CI as their check.</li>
+      <li>Every other agent: no Mneme hook. That includes the Copilot, Claude and Codex sessions GitHub Agent HQ runs, because Mneme has no hook inside them. CI is their check.</li>
     </ul>
     <p>Make sure each agent process starts in the repository root, or can find the memory file, and that its hook is in strict mode. An agent launched from another directory with no memory file in reach runs with no checks at all.</p>
 
@@ -62,7 +63,7 @@
     <h2>Expected result</h2>
     <p>For the example decision, ADR-001, which bans the Celery library, a factory pull request that adds a Celery worker fails the required check, whichever agent wrote it:</p>
     <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
-    <p>The Celery file exits 2 and fails the job; the Pub/Sub file passes. If the agent was Claude Code or Codex CLI with its hook, the write was refused earlier, while the agent was working, and the pull request never contained it. The <a href="/setup/claude-code/#expected-result">Claude Code</a> and <a href="/setup/codex-cli/#expected-result">Codex CLI</a> guides show those refusals.</p>
+    <p>The Celery file exits 2 and fails the job; the Pub/Sub file passes. If the agent was Claude Code or Codex CLI with its hook in strict mode, a native file edit adding Celery was refused earlier, while the agent was working. A shell write, a check that failed open, or warn mode still lets the file reach the pull request, where this check fails it. The <a href="/setup/claude-code/#expected-result">Claude Code</a> and <a href="/setup/codex-cli/#expected-result">Codex CLI</a> guides show those refusals.</p>
   </section>
 
   <section class="prose-section" id="boundaries">
@@ -71,7 +72,7 @@
       <li><strong>Enforced:</strong> the required CI check, on every file a factory pull request adds or modifies; and each agent&rsquo;s hook, with that hook&rsquo;s own coverage.</li>
       <li><strong>Not enforced by Mneme:</strong> the queue, the orchestrator&rsquo;s scheduling, sandbox permissions and network access. Mneme checks code against architectural decisions, not infrastructure policy.</li>
       <li><strong>Coverage is per agent.</strong> Shell writes, custom tools and agents without a hook reach Mneme only at CI. Each agent&rsquo;s limits are on its integration page.</li>
-      <li><strong>Hooks fail open.</strong> A crashed or slow check lets the agent continue, so CI stays required even for agents with a hook.</li>
+      <li><strong>Hooks fail open by default:</strong> when a check can&rsquo;t run, the change goes through instead of being blocked. A crashed or slow check lets the agent continue, so CI stays required even for agents with a hook.</li>
       <li><strong>Not tested as a whole:</strong> parallel agents on one repository, subagents and agent teams. Each part is tested on its own.</li>
     </ul>
   </section>

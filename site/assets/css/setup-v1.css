@@ -35,7 +35,7 @@
     radial-gradient(circle at 88% 0%, rgba(181, 204, 122, 0.06), transparent 34%),
     radial-gradient(circle at 0% 100%, rgba(139, 224, 200, 0.035), transparent 30%),
     var(--surface);
-  overflow: hidden;
+  overflow: clip; /* clip, not hidden: hidden would break the sticky result panel */
 }
 .chooser::before {
   content: '';
@@ -113,7 +113,7 @@
 .goal-option:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
 
 /* Result panel */
-.result { position: sticky; top: 5.5rem; min-width: 0; }
+.result { position: sticky; top: 6rem; min-width: 0; max-height: calc(100vh - 7rem); overflow-y: auto; }
 .result-live {
   border: 1px solid var(--border2);
   border-radius: 14px;
@@ -229,9 +229,11 @@
 .next-layer { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.85rem; margin-top: 1rem; }
 
 @media (max-width: 900px) {
+  .layers-explainer, .guide-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
   .chooser-app { grid-template-columns: 1fr; }
   .result { position: static; }
-  .layers-explainer, .guide-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .setup-hero { padding: 2.25rem 1rem 1rem; }
@@ -240,4 +242,54 @@
   .goal-options { grid-template-columns: 1fr; }
   .result-live { padding: 1.05rem; }
   .layer-row-top { flex-direction: column; gap: 0.15rem; }
+}
+
+/* ── Round 1: quick link, goal control, catalogue disclosure, legend, bar ── */
+.setup-quick { margin: 0 0 1.25rem; font-size: 0.95rem; color: #d4d4dc; }
+.setup-quick a { color: var(--accent); font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(181, 204, 122, 0.45); }
+.setup-quick a:hover { border-bottom-color: var(--accent); }
+
+.goal-seg { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; padding: 0.25rem; border: 1px solid var(--border2); border-radius: 999px; background: rgba(12, 12, 13, 0.6); }
+.goal-seg-option { position: relative; display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0.4rem 1rem; border-radius: 999px; font-size: 0.86rem; font-weight: 500; color: #c8c8d0; cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease; }
+.goal-seg-option:hover { color: var(--text); }
+.goal-seg-option input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.goal-seg-option:has(input:checked) { background: var(--accent); color: #0c0c0d; }
+.goal-seg-option:has(input:focus-visible) { outline: 2px solid var(--teal); outline-offset: 2px; }
+.goal-desc { margin-top: 0.6rem; font-size: 0.82rem; line-height: 1.6; color: var(--muted); min-height: 1.3em; }
+
+.env-all { margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 0.85rem; }
+.env-all > summary { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; cursor: pointer; font-size: 0.86rem; color: var(--teal); list-style: none; }
+.env-all > summary::-webkit-details-marker { display: none; }
+.env-all > summary::before { content: ''; width: 0.45rem; height: 0.45rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s ease; }
+.env-all[open] > summary::before { transform: rotate(45deg); }
+.env-all > summary:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
+.env-all-body { margin-top: 0.75rem; }
+.env-option--alias.selected { border-color: var(--accent); background: rgba(181, 204, 122, 0.1); color: var(--text); }
+
+.status-legend { border-top: 1px solid var(--border); padding-top: 1rem; }
+.status-legend-title { font-size: 0.8rem; font-weight: 600; color: var(--text); margin-bottom: 0.55rem; }
+.status-legend dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.45rem 1.25rem; }
+.status-legend dt { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 600; color: #d4d4dc; }
+.status-legend dd { font-size: 0.76rem; line-height: 1.5; color: var(--quiet); margin-top: 0.1rem; }
+.result-title:focus { outline: none; }
+.result-title:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+
+.chooser-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom)); background: rgba(16, 16, 18, 0.97); border-top: 1px solid var(--border2); box-shadow: 0 -12px 30px -18px rgba(0, 0, 0, 0.9); }
+.chooser-bar[hidden] { display: none; }
+.chooser-bar-info { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+.chooser-bar-name { font-size: 0.9rem; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chooser-bar .status-badge { align-self: flex-start; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chooser-bar-actions { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.chooser-bar .cta-btn-primary { min-height: 44px; padding: 0.55rem 0.85rem; font-size: 0.76rem; max-width: 12.5rem; white-space: normal; text-align: center; line-height: 1.25; }
+.chooser-bar-details { min-height: 44px; padding: 0.5rem 0.75rem; border: 1px solid var(--border2); border-radius: 8px; background: transparent; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.74rem; cursor: pointer; }
+.chooser-bar-details:focus-visible, .chooser-bar .cta-btn-primary:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .chooser-bar:not([hidden]) { animation: setup-bar-in 0.2s ease both; }
+  @keyframes setup-bar-in { from { transform: translateY(100%); } to { transform: none; } }
+}
+@media (min-width: 768px) { .chooser-bar { display: none !important; } }
+@media (max-width: 767px) { .result { max-height: none; overflow: visible; } }
+@media (max-width: 640px) {
+  .goal-seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; border-radius: 12px; }
+  .goal-seg-option { justify-content: center; text-align: center; padding: 0.4rem 0.4rem; border-radius: 9px; font-size: 0.8rem; line-height: 1.25; }
 }

@@ -42,8 +42,28 @@
     return { key: key, text: status };
   }
 
-  /* ---- Step 1: options grouped as the catalogue groups them ---- */
+  /* ---- Step 2: a Popular row, then every tool grouped as the catalogue
+   * groups them, behind a disclosure. A popular tool appears in its group as
+   * a second label for the same radio, so each tool has exactly one input. */
+  var POPULAR = DATA.popular || [];
+  var popularHost = app.querySelector('[data-env-popular]');
   var groupsHost = app.querySelector('[data-env-groups]');
+  var allBox = app.querySelector('[data-env-all]');
+
+  /* Popular radios and catalogue radios are two radio groups (one Tab stop
+   * each); choosing in one clears the other, so exactly one tool is selected. */
+  function chip(o, withInput, groupName) {
+    var b = badge(o.status);
+    var id = 'env-' + o.id;
+    var label = el('label', { 'class': 'env-option' + (withInput ? '' : ' env-option--alias'), 'for': id, 'data-env': o.id });
+    if (withInput) label.appendChild(el('input', { type: 'radio', name: groupName, value: o.id, id: id }));
+    label.appendChild(el('span', { 'class': 'env-dot env-dot--' + b.key, 'aria-hidden': 'true' }));
+    label.appendChild(el('span', { 'class': 'env-name' }, o.name));
+    label.appendChild(el('span', { 'class': 'sr-only' }, ', ' + b.text));
+    return label;
+  }
+
+  POPULAR.forEach(function (id) { if (byId[id]) popularHost.appendChild(chip(byId[id], true, 'env')); });
   DATA.groups.forEach(function (g) {
     var opts = DATA.options.filter(function (o) { return o.group === g.id; });
     if (!opts.length) return;
@@ -51,20 +71,12 @@
     var gid = 'env-group-' + g.id;
     wrap.appendChild(el('p', { 'class': 'env-group-label', id: gid }, g.label));
     var row = el('div', { 'class': 'env-options', role: 'group', 'aria-labelledby': gid });
-    opts.forEach(function (o) {
-      var b = badge(o.status);
-      var id = 'env-' + o.id;
-      var label = el('label', { 'class': 'env-option', 'for': id });
-      var input = el('input', { type: 'radio', name: 'env', value: o.id, id: id });
-      var dot = el('span', { 'class': 'env-dot env-dot--' + b.key, 'aria-hidden': 'true' });
-      var name = el('span', { 'class': 'env-name' }, o.name);
-      var sr = el('span', { 'class': 'sr-only' }, ', ' + b.text);
-      label.appendChild(input); label.appendChild(dot); label.appendChild(name); label.appendChild(sr);
-      row.appendChild(label);
-    });
+    opts.forEach(function (o) { row.appendChild(chip(o, POPULAR.indexOf(o.id) === -1, 'env-all')); });
     wrap.appendChild(row);
     groupsHost.appendChild(wrap);
   });
+  var allSummary = allBox.querySelector('summary');
+  allSummary.textContent = 'Show all ' + DATA.options.length + ' tools, grouped as in the catalogue';
 
   /* ---- Result ---- */
   function hookLayer(o, goal) {
@@ -122,7 +134,7 @@
     result.textContent = '';
     var head = el('div', { 'class': 'result-head' });
     var titleRow = el('div', { 'class': 'result-title-row' });
-    titleRow.appendChild(el('h3', { 'class': 'result-title' }, o.name));
+    titleRow.appendChild(el('h3', { 'class': 'result-title', id: 'result-title-anchor', tabindex: '-1' }, o.name));
     titleRow.appendChild(el('span', { 'class': 'status-badge status-badge--' + b.key }, b.text));
     head.appendChild(titleRow);
     head.appendChild(el('p', { 'class': 'result-goal' }, GOALS[goal]));
@@ -151,7 +163,7 @@
     var limit = el('div', { 'class': 'result-limit' });
     limit.appendChild(el('p', { 'class': 'result-limit-label' }, goal === 'mcp' ? 'What this does not do' : 'Coverage limit'));
     limit.appendChild(el('p', null, goal === 'mcp'
-      ? 'The MCP server can search and explain decisions and accept proposals for people to review. It cannot accept, activate or enforce a decision.'
+      ? 'The MCP server can search and explain decisions and take proposals for people to review. It cannot accept, activate or enforce a decision.'
       : (goal === 'ci' ? 'CI checks the files a change adds or modifies, after they are written. It covers only what your pipeline runs on.' : o.limit)));
     result.appendChild(limit);
 
@@ -166,19 +178,94 @@
   }
 
   function current() {
-    var e = app.querySelector('input[name="env"]:checked');
+    var e = app.querySelector('input[name="env"]:checked, input[name="env-all"]:checked');
     var g = app.querySelector('input[name="goal"]:checked');
     return { env: e ? e.value : 'claude-code', goal: g ? g.value : 'full' };
   }
   function select(envId, goal) {
     var e = document.getElementById('env-' + envId);
     var g = app.querySelector('input[name="goal"][value="' + goal + '"]');
-    if (e) e.checked = true;
+    if (e) { clearOther(e.name); e.checked = true; }
     if (g) g.checked = true;
   }
+  function clearOther(name) {
+    var other = name === 'env' ? 'env-all' : 'env';
+    app.querySelectorAll('input[name="' + other + '"]').forEach(function (r) { r.checked = false; });
+  }
+  /* A popular tool's second label, inside the catalogue list, mirrors the
+   * selection state of its one radio. */
+  function syncAliases(envId) {
+    app.querySelectorAll('.env-option--alias').forEach(function (a) {
+      a.classList.toggle('selected', a.getAttribute('data-env') === envId);
+    });
+  }
+  var goalDesc = app.querySelector('[data-goal-desc]');
+  function syncGoal(goal) {
+    var src = app.querySelector('input[name="goal"][value="' + goal + '"]');
+    if (goalDesc && src) goalDesc.textContent = src.getAttribute('data-desc') || '';
+  }
+
+  /* ---- Mobile bar: below 768px the result sits under the whole list, so a
+   * selection shows a compact summary pinned to the bottom of the screen. ---- */
+  var bar = document.querySelector('[data-chooser-bar]');
+  var mobile = window.matchMedia('(max-width: 767px)');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var resultInView = false;
+  var userChose = false;
+
+  function fillBar(envId, goal) {
+    if (!bar) return;
+    var o = byId[envId];
+    var b = badge(o.status);
+    var l = links(o, goal);
+    bar.querySelector('[data-bar-name]').textContent = o.name;
+    var bb = bar.querySelector('[data-bar-badge]');
+    bb.className = 'status-badge status-badge--' + b.key;
+    bb.textContent = b.text || 'Not in the catalogue';
+    var go = bar.querySelector('[data-bar-go]');
+    go.setAttribute('href', l.primary);
+    go.setAttribute('data-cta-intent', intentFor(l.primary));
+    go.textContent = linkLabel(l.primary, o, true);
+  }
+  function showBar() {
+    if (!bar) return;
+    var on = userChose && mobile.matches && !resultInView;
+    bar.hidden = !on;
+    document.body.classList.toggle('chooser-bar-on', on);
+    var h = on ? bar.offsetHeight : 0;
+    document.documentElement.style.scrollPaddingBottom = h ? (h + 16) + 'px' : '';
+    document.body.style.paddingBottom = h ? h + 'px' : '';
+  }
+  if (bar) {
+    bar.querySelector('[data-bar-details]').addEventListener('click', function () {
+      var target = document.getElementById('result-title-anchor');
+      if (target) target.focus({ preventScroll: true });
+      var panel = app.querySelector('.result');
+      var y = panel.getBoundingClientRect().top + window.pageYOffset - 80; // below the sticky nav
+      window.scrollTo({ top: y, behavior: reduced.matches ? 'auto' : 'smooth' });
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        resultInView = entries[0].isIntersecting;
+        showBar();
+      }, { threshold: 0.15 }).observe(result);
+    }
+    (mobile.addEventListener ? mobile.addEventListener('change', showBar) : mobile.addListener(showBar));
+    /* Never let the bar cover the element that has focus. */
+    document.addEventListener('focusin', function (e) {
+      if (bar.hidden || bar.contains(e.target)) return;
+      var r = e.target.getBoundingClientRect();
+      var top = bar.getBoundingClientRect().top;
+      if (r.bottom > top - 8) window.scrollBy(0, r.bottom - top + 16);
+    });
+  }
+
   function update() {
     var c = current();
     render(c.env, c.goal);
+    syncAliases(c.env);
+    syncGoal(c.goal);
+    fillBar(c.env, c.goal);
     result.classList.remove('is-updating');
     void result.offsetWidth; // restart the row transition
     result.classList.add('is-updating');
@@ -188,10 +275,17 @@
   var initial = { env: 'claude-code', goal: 'full' };
   var m = /#setup=([a-z0-9-]+)\/(full|ci|mcp)$/.exec(window.location.hash);
   if (m && byId[m[1]]) initial = { env: m[1], goal: m[2] };
+  if (POPULAR.indexOf(initial.env) === -1) allBox.open = true;
   select(initial.env, initial.goal);
   render(initial.env, initial.goal);
+  syncAliases(initial.env);
+  syncGoal(initial.goal);
+  fillBar(initial.env, initial.goal);
 
-  app.addEventListener('change', update);
+  app.addEventListener('change', function (e) {
+    if (e.target.name === 'env' || e.target.name === 'env-all') clearOther(e.target.name);
+    userChose = true; update(); showBar();
+  });
   app.addEventListener('submit', function (e) { e.preventDefault(); });
 
   var fallback = document.querySelector('[data-chooser-fallback]');

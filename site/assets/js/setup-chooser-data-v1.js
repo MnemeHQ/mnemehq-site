@@ -12,6 +12,7 @@
  */
 window.MNEME_SETUP_CHOOSER = {
   "release": "0.11.0",
+  "popular": ["claude-code", "codex-cli", "github-actions", "gitlab-ci", "cursor", "opencode"],
   "groups": [
     {"id": "agents", "label": "Coding agents and harnesses", "catalogue": "coding-agents"},
     {"id": "editors", "label": "Editors and hosts without a Mneme hook", "catalogue": "coding-agents"},
@@ -26,7 +27,7 @@ window.MNEME_SETUP_CHOOSER = {
      "page": "/integrations/claude-code/", "guide": "/setup/claude-code/",
      "hook": "shipped",
      "hook_text": "The Mneme plugin's hook blocks Edit, Write and MultiEdit calls that break a decision before they reach disk, and checks the turn's changes when the agent stops.",
-     "limit": "Most shell writes are checked only when the agent ends its turn, after the file exists. The hook allows the change if a check crashes or takes longer than 10 seconds.",
+     "limit": "Most shell writes are checked only when the agent ends its turn, after the file exists. By default the hook allows the change if a check crashes or takes longer than 10 seconds.",
      "mcp_note": "The plugin's /mneme:context command already looks up decisions for a task. The server adds lookup by file path, tracing and proposals."},
     {"id": "claude-agent-sdk", "group": "agents", "name": "Claude Agent SDK", "status": "Shipped",
      "page": "/integrations/claude-agent-sdk/", "guide": "",

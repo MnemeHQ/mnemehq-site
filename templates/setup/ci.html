@@ -13,8 +13,8 @@
   "modified": "2026-11-22",
   "layers": [["req", "Verify: CI check"], ["off", "Enforce: no agent hook"], ["off", "Discover: not included"]],
   "toc": [["prerequisites", "Prerequisites"], ["github-actions", "GitHub Actions"], ["gitlab-ci", "GitLab CI"], ["expected-result", "Expected result"], ["boundaries", "What is enforced"], ["troubleshooting", "Troubleshooting"]],
-  "end_up": "a required check that fails any pull request or merge request adding a file that breaks an active decision, whichever tool wrote it.",
-  "answer": "Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks an active decision can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it."
+  "end_up": "a required check that fails any pull request or merge request adding a file that breaks a decision with an activated rule, whichever tool wrote it.",
+  "answer": "Commit your decisions and the memory file, then add a CI job that runs <code>mneme check</code> on each file a pull request adds or modifies. Make the job a required check, and a change that breaks a decision with an activated rule can&rsquo;t merge, whether Copilot, Cursor, another agent or a person wrote it."
 }
 -->
   <section class="prose-section" id="goal">
@@ -26,7 +26,7 @@
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>An active rule committed in <code>.mneme/project_memory.json</code>. The <a href="/setup/claude-code/#configure">Claude Code setup</a>, steps 1 to 3, does this for ADR-001 with no agent involved; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> explains each command.</li>
+      <li>A decision with an activated rule, committed in <code>.mneme/project_memory.json</code>, the memory file Mneme compiles your decisions into. A decision imported without any rule blocks nothing. Steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a> do this for ADR-001 with no agent involved; <a href="/docs/how-to/install-mneme-and-activate-protection/">Install Mneme and activate your first protection</a> explains each command.</li>
       <li>Your ADRs in <code>docs/adr/</code>, committed with Unix (LF) line endings: add <code>docs/adr/*.md text eol=lf</code> to <code>.gitattributes</code>. The memory file records a hash of each ADR&rsquo;s bytes.</li>
       <li>Permission to add a workflow and to require it before merge.</li>
     </ul>
@@ -50,11 +50,11 @@
 
   <section class="prose-section" id="expected-result">
     <h2>Expected result</h2>
-    <p>Open a pull request that adds two files: <code>workers/jobs.py</code>, which imports Celery, and <code>workers/publish.py</code>, which uses Pub/Sub. The memory check passes, because no ADR changed. The re-import prints a note that ADR-001 already exists; that is expected:</p>
+    <p>Open a pull request that adds two files: <code>workers/jobs.py</code>, which imports Celery, and <code>workers/publish.py</code>, which uses Pub/Sub. The memory check passes, because no ADR changed. The re-import prints a conflict note saying ADR-001 already exists. That is the expected, passing result, not an error: the step passes when <code>git diff</code> then finds no change. An excerpt of the recorded output:</p>
     <pre class="term-block" data-fixture="out:ci-memory-check" data-lines="11-16"></pre>
-    <p>The check step prints one line per file and exits with code 2, so the job fails:</p>
-    <pre class="term-block" data-fixture="out:ci-loop" data-lines="1-2"></pre>
-    <p>The GitLab job printed the same two lines and exited 2. The verdict file for <code>workers/jobs.py</code> names the decision, the rule and the matched text:</p>
+    <p>This is the blocked result. The GitHub check step prints one line per file and exits with code 2, so the job fails:</p>
+    <pre class="term-block" data-fixture="out:ci-loop-github"></pre>
+    <p>The GitLab job printed the same two lines, with one space after the exit code, and exited 2. The verdict file for <code>workers/jobs.py</code> names the decision, the rule and the matched text:</p>
     <pre class="term-block" data-fixture="out:ci-verdict"></pre>
     <p>Trust a verdict only when <code>evaluation_complete</code> is <code>true</code>. An evaluation that can&rsquo;t finish reports INCOMPLETE and exits 2, so it fails the job rather than passing it.</p>
   </section>
@@ -64,7 +64,7 @@
     <ul class="plain">
       <li><strong>Covered:</strong> every text file a pull request adds or modifies, checked whole, in the repositories and branches where you require the job.</li>
       <li><strong>After the fact:</strong> the file is already written and committed. Nothing stops an agent while it works; an agent hook does that, where the agent has one.</li>
-      <li><strong>Not covered:</strong> deleted files, binary files, pushes that skip pull requests, and branches where the check isn&rsquo;t required.</li>
+      <li><strong>Not covered:</strong> decisions imported with no rule, deleted files, binary files, pushes that skip pull requests, and branches where the check isn&rsquo;t required.</li>
       <li><strong>Whole files:</strong> a file that already broke a decision fails as soon as someone touches it.</li>
       <li><strong>The check can be weakened.</strong> An agent that can edit the ADRs, the memory file or this workflow can change what the check enforces. Protect them with code owners and required review, as the <a href="/docs/how-to/fail-pull-request-that-breaks-adr/">how-to guide</a> describes.</li>
     </ul>

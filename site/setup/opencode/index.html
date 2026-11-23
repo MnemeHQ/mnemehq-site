@@ -280,7 +280,7 @@
   <p class="lede">Use the CI check as your enforcement layer: it works on OpenCode&rsquo;s changes today with the released mneme-hq 0.11.0. Mneme&rsquo;s OpenCode adapter is experimental, merged on the main branch after that release, and checks only Python file writes and edits in the terminal CLI. Try it from source if you want to evaluate it, not to rely on it.</p>
   <p class="howto-meta byline">Tested with mneme-hq 0.11.0 &middot; Updated <time datetime="2026-11-22">Nov 22, 2026</time> &middot; By <a href="/founder/">Theo Valmis</a> &middot; OpenCode terminal CLI (experimental), GitHub Actions or GitLab CI</p>
   <div class="layer-strip" aria-label="Layers this guide sets up"><span class="layer-chip layer-chip--req">Verify: CI check</span><span class="layer-chip layer-chip--exp">Enforce: OpenCode adapter, experimental</span><span class="layer-chip layer-chip--opt">Discover: MCP, optional</span></div>
-  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a required CI check that fails any pull request where OpenCode, or anyone else, adds a file that breaks an active decision.</p>
+  <p class="end-up"><strong>You&rsquo;ll end up with:</strong> a required CI check that fails any pull request where OpenCode, or anyone else, adds a file that breaks a decision with an activated rule.</p>
   <nav class="howto-toc" aria-label="On this page">
     <span class="howto-toc-label">On this page</span>
     <a href="#prerequisites">Prerequisites</a>
@@ -303,7 +303,7 @@
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>A git repository with ADR-001 activated: steps 1 to 3 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, which need no agent.</li>
+      <li>A git repository with ADR-001&rsquo;s rule activated: steps 1 to 7 of the <a href="/setup/claude-code/#configure">Claude Code setup</a>, which need no agent.</li>
       <li>Permission to add a CI workflow and make it a required check.</li>
       <li>For the adapter only: OpenCode 2.3.0, the version the adapter was validated on, and a Python codebase.</li>
     </ul>
@@ -332,7 +332,7 @@ exit=0 workers/publish.py</pre>
   <section class="prose-section" id="adapter">
     <h2>Experimental adapter</h2>
     <div class="setup-callout"><strong>Experimental.</strong> Merged on Mneme&rsquo;s main branch on November 18, 2026, after the 0.11.0 release, and not a supported integration. Installing mneme-hq 0.11.0 does not include it.</div>
-    <p>The adapter is a plugin for OpenCode&rsquo;s tool hook in the terminal CLI. In strict mode it makes OpenCode refuse two operations when they break a <code>FORBID_LITERAL</code> rule: writing a new <code>.py</code> file, and editing an existing one, where only the added text is checked.</p>
+    <p>The adapter is a plugin for OpenCode&rsquo;s tool hook, the point where a plugin can inspect a tool call before it runs, in the terminal CLI. In strict mode it makes OpenCode refuse two operations when they break a <code>FORBID_LITERAL</code> rule: writing a new <code>.py</code> file, and editing an existing one, where only the added text is checked.</p>
     <p>To evaluate it, you need Mneme&rsquo;s source at the main branch, both for the plugin in <code>integrations/opencode-plugin</code> and for the Python code it calls. The plugin&rsquo;s <code>README.md</code> configures it in <code>opencode.json</code> with an absolute <code>authorityPath</code>:</p>
     <div class="howto-code howto-code--config">
   <div class="howto-code-head"><span class="howto-code-label">Configuration</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to config" data-label="Copy config" aria-live="polite">Copy config</button></div>
@@ -348,7 +348,8 @@ exit=0 workers/publish.py</pre>
   ]
 }</pre>
 </div>
-    <p><code>authority.json</code> pins the exact decision version and rule you expect the adapter to apply. The decision version and rule identifiers appear in the JSON verdict of <code>mneme check --json</code>, shown in the <a href="/setup/ci/#expected-result">CI-only setup</a>. The <a href="https://github.com/MnemeHQ/mneme/blob/main/integrations/opencode-plugin/README.md" target="_blank" rel="noopener">plugin&rsquo;s README file</a> describes every field; follow it rather than this summary, because main moves.</p>
+    <p><code>authorityPath</code> is the absolute path to a file you write, <code>authority.json</code>. It names the one decision, decision version and rule you expect the adapter to enforce, so the adapter can tell when the memory file no longer matches what you approved. It is a check on the adapter, not a place to define rules.</p>
+    <p>To create it, run <code>mneme check --json</code> on a file that breaks the rule and copy five fields from the verdict, like the one in the <a href="/setup/ci/#expected-result">CI-only setup</a>: <code>decision_id</code>, <code>decision_version_id</code>, <code>rule_id</code>, <code>rule_value</code>, and the path pattern the rule applies to as <code>rule_scope</code>. The plugin README shows the file&rsquo;s shape with a path-scoped rule; we have not tested it with a rule like ADR-001&rsquo;s that has no path pattern. The <a href="https://github.com/MnemeHQ/mneme/blob/main/integrations/opencode-plugin/README.md" target="_blank" rel="noopener">plugin&rsquo;s README file</a> describes every field; follow it rather than this summary, because main moves.</p>
   </section>
 
   <section class="prose-section" id="boundaries">
@@ -356,8 +357,8 @@ exit=0 workers/publish.py</pre>
     <ul class="plain">
       <li><strong>Enforced, with the released package:</strong> the CI check, on every file a pull request adds or modifies.</li>
       <li><strong>Experimental adapter, when installed from source:</strong> new <code>.py</code> file writes and existing <code>.py</code> file edits in the terminal CLI, for <code>FORBID_LITERAL</code> rules only.</li>
-      <li><strong>Not intercepted by the adapter:</strong> overwriting an existing file, non-Python files, shell commands, MCP and custom tools, deletion and rename. It has no end-of-turn check.</li>
-      <li><strong>Fails open:</strong> when the adapter can&rsquo;t evaluate a change, OpenCode proceeds.</li>
+      <li><strong>Not intercepted by the adapter:</strong> overwriting an existing file, non-Python files, multi-edit and patch payloads, shell commands, MCP and custom tools, deletion and rename. It has no end-of-turn check.</li>
+      <li><strong>Fails open:</strong> when the adapter can&rsquo;t evaluate a change, it lets the change through instead of blocking it.</li>
       <li><strong>Not race-resistant:</strong> a file created or swapped between the check and the write is a known bypass.</li>
       <li><strong>Not covered:</strong> the OpenCode editor extension and desktop app.</li>
     </ul>

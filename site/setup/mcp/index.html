@@ -296,15 +296,15 @@
 
   <section class="prose-section" id="goal">
     <h2>Goal</h2>
-    <p>A hook stops a bad edit after the agent has written it, and the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s decision server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
+    <p>A hook refuses a bad edit after the agent has produced it: native file edits are stopped before they reach disk, shell writes only when the turn ends. Either way the agent then redoes the work. Showing the agent the relevant decision before it starts avoids that. Mneme&rsquo;s decision server speaks the Model Context Protocol (MCP), the standard many coding agents use to call outside tools, and serves the decisions in your memory file.</p>
     <p>This layer is optional in a complete setup and enforces nothing on its own. Pair it with an agent hook and a CI check when you want violations stopped.</p>
   </section>
 
   <section class="prose-section" id="prerequisites">
     <h2>Prerequisites</h2>
     <ul class="plain">
-      <li>A memory file, <code>.mneme/project_memory.json</code>, with at least one imported decision. Steps 1 to 3 of the <a href="/setup/claude-code/#configure">Claude Code setup</a> create one for ADR-001, the example architecture decision record (ADR) that bans Celery. An imported decision is enough here; it doesn&rsquo;t need an active rule.</li>
-      <li>An agent or MCP host that can start a local server over standard input and output (stdio). Mneme ships the server command, not a configuration for each host, and we have not tested every host.</li>
+      <li>A memory file, <code>.mneme/project_memory.json</code>, with at least one imported decision. Steps 1 to 4 of the <a href="/setup/claude-code/#configure">Claude Code setup</a> create one for ADR-001, the example architecture decision record (ADR) that bans Celery. An imported decision is enough here; it doesn&rsquo;t need an active rule.</li>
+      <li>An agent or MCP host that can start a local server over standard input and output (stdio), meaning the host launches <code>mneme</code> as a process on your machine and talks to it through its input and output streams. Mneme ships the server command, not a configuration for each host, and we have not tested every host.</li>
     </ul>
     <p>Tested versions: mneme-hq 0.11.0 with the <code>[mcp]</code> extra. We started the server from a Python MCP client, as a host does, and called its tools. Registering it inside a named agent was not part of that run.</p>
   </section>
@@ -341,7 +341,13 @@
 
   <section class="prose-section" id="run">
     <h2>Run</h2>
-    <p>Restart your agent so it picks up the server, then ask it which decisions apply to <code>workers/jobs.py</code>. To check the server without an agent, this small client starts it the way a host does and calls one tool. Run it from a virtual environment where you installed <code>mneme-hq[mcp]==0.11.0</code> with pip, because it imports the <code>mcp</code> package:</p>
+    <p>Restart your agent so it picks up the server, then ask it which decisions apply to <code>workers/jobs.py</code>. To check the server without an agent, this small client starts it the way a host does and calls one tool. It imports the <code>mcp</code> package, and pipx keeps that package inside Mneme&rsquo;s own isolated environment, where your Python can&rsquo;t import it. So for this one check, make a throwaway virtual environment with pip. Your pipx install stays what the agent uses:</p>
+    <div class="howto-code howto-code--command">
+  <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
+  <pre class="term-block" data-fixture="manual">python -m venv .probe-venv
+.probe-venv/bin/python -m pip install "mneme-hq[mcp]==0.11.0"</pre>
+</div>
+    <p>On Windows, use <code>.probe-venv\Scripts\python</code>. Save the client as <code>mcp_probe.py</code>:</p>
     <div class="howto-code howto-code--file">
   <div class="howto-code-head"><span class="howto-code-label">File &middot; <code>mcp_probe.py</code></span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to file" data-label="Copy file" aria-live="polite">Copy file</button></div>
   <pre class="term-block" data-fixture="file:mcp_probe.py">"""Call Mneme's decision-mcp server over stdio, the way an MCP host does.
@@ -382,8 +388,8 @@ asyncio.run(main(sys.argv[1], sys.argv[2] if len(sys.argv) &gt; 2 else "{}"))</p
 </div>
     <div class="howto-code howto-code--command">
   <div class="howto-code-head"><span class="howto-code-label">Command</span><button type="button" class="howto-copy" data-howto-copy data-code-copy data-copy-text="how-to command" data-label="Copy command" aria-live="polite">Copy command</button></div>
-  <pre class="term-block" data-fixture="cmd">python mcp_probe.py list
-python mcp_probe.py decision.applicable_to '{"paths": ["workers/jobs.py"]}'</pre>
+  <pre class="term-block" data-fixture="manual">.probe-venv/bin/python mcp_probe.py list
+.probe-venv/bin/python mcp_probe.py decision.applicable_to '{"paths": ["workers/jobs.py"]}'</pre>
 </div>
     <p>The client passes <code>--proposals ""</code>, which keeps proposals in memory, so it writes no file.</p>
   </section>
@@ -419,7 +425,15 @@ decision.trace</pre>
   "proposal_hint_matches": []
 }</pre>
 </div>
-    <p>A path no decision&rsquo;s scope matches returns empty lists. That is the &ldquo;blocked&rdquo; case for this layer: the server tells the agent nothing applies, and nothing stops the write. Only the hook and the CI check stop it.</p>
+    <p>A path that no decision&rsquo;s scope matches, such as <code>app/handlers/invoices.py</code> here, returns empty lists, so the agent learns that nothing applies:</p>
+    <div class="howto-code howto-code--output">
+  <div class="howto-code-head"><span class="howto-code-label">Recorded output</span></div>
+  <pre class="term-block" data-fixture="out:mcp-applicable-none">{
+  "canonical_scope_matches": [],
+  "proposal_hint_matches": []
+}</pre>
+</div>
+    <p>This layer has no blocked case. Even when a decision applies, the server only tells the agent; the hook and the CI check are what stop a write.</p>
     <p>Matching uses the scope word. Give each decision a scope that appears in the paths it governs; <a href="/docs/how-to/give-agents-applicable-decisions/">Give coding agents the decisions that apply to a task</a> shows how scopes match and which words fail.</p>
   </section>
 
@@ -445,7 +459,7 @@ decision.trace</pre>
     <h3>The agent says it has no Mneme tools</h3>
     <p>The host couldn&rsquo;t start <code>mneme</code>. Check that the command is on the <code>PATH</code> the host uses, or put its full path in <code>command</code>. With pipx, run <code>pipx list</code> to see where it installed Mneme.</p>
     <h3>A decision you expected isn&rsquo;t returned</h3>
-    <p>Its scope doesn&rsquo;t overlap the path you asked about, or it was never imported. <code>decision.search</code> with a word from the decision finds it either way.</p>
+    <p>Its scope doesn&rsquo;t overlap the path you asked about, or it was never imported. <code>decision.search</code> with a word from the decision tells the two apart: it finds an imported decision whatever its scope, and returns nothing for one that was never imported.</p>
   </section>
 
   <section class="prose-section" id="next">
