@@ -30,6 +30,7 @@ agent that did not produce the thing it checks.
 | — | orchestrator | — | loop C ← D/E findings until both pass; confirm titles, count and dates with the user |
 | F. Publish | `sonnet`, `medium`, one agent, articles in sequence | 3.5–4, 5.4 (no label) | approved drafts → page, manifest, registration, OG, validators, one PR per article + the docs PR |
 | — | orchestrator | 5.4 | add `scheduled-publish` labels after the user's go-ahead |
+| H. Schedule check | orchestrator, or `sonnet`, `low` | 5.5, 5.7 | at the start of every run, and daily while a queue is open → queue state, publisher runs, deploy SHA, index status of the last 14 days' articles |
 | G. Close out | `sonnet`, `medium` | 5.5–5.6 | after verified deploys and the user's confirmation of the exact chats → ledger, `***` marks, verification |
 
 Why this split, beyond "cheap model for cheap work":
@@ -237,8 +238,13 @@ in body prose. Apply it to new and substantially edited articles only.
    against the live source, with the page or section) before the PR is opened. Unverifiable
    claims are cut, not softened.
 3. Category or tagline changes need ADR-001/013/014 amendments in `MnemeHQ/mneme` first.
-4. **One PR per article, queued for a date.** Insights publish one per day at 13:07 UTC through
-   `.github/workflows/scheduled-publish.yml` (PUBLISHING.md, "Scheduled publishing"). Give each
+4. **One PR per article, queued for a date.** Insights publish one per day through
+   `.github/workflows/scheduled-publish.yml` (PUBLISHING.md, "Scheduled publishing"). The crons
+   say 13:07 UTC, but GitHub fires them hours late: in 2026-11-18 to 11-21 the five daily slots ran
+   between 20:00 and 23:30 UTC. Treat the publish date as reliable and the hour as not.
+   Do not bypass the cadence with `catch_up` or hand merges to clear a backlog: of the seven
+   articles merged together on 2026-11-13, three had no search impressions a week later, while
+   every daily-published article from 11-14 to 11-16 showed impressions within four days. Give each
    article its own `site/` branch and PR containing the article directory (with its rendered
    `og-v2.png`), its manifest and its registration, labelled `scheduled-publish`. Set `publish_on`
    to consecutive days after the last date already queued (`python scripts/publish_queue.py list`).
@@ -267,3 +273,25 @@ in body prose. Apply it to new and substantially edited articles only.
    3. Verify each mark: re-list the project's conversations and confirm the new titles start with
       `***`. Report the marked chats, and any that stayed unmarked with why, in the close-out
       message.
+7. **Schedule and index check (Step H).** Run it at the start of every "draft insights" run, so a
+   new batch is queued behind the right date, and again each day while a queue is open:
+   1. Queue: `python scripts/publish_queue.py list` and
+      `gh pr list --label scheduled-publish --state open`. Flag any PR labelled `publish-blocked`
+      or showing CONFLICTING. GitHub runs no checks on a conflicting head, so the publisher blocks
+      it. Never push a fix onto a queued branch: rebuild it from current `main` (article directory
+      and manifest from the old head, `register_insight.py <slug>`, validators, force-push with
+      lease).
+   2. Publisher: `gh run list --workflow scheduled-publish.yml -L 10`. If a day with a due
+      article has no successful run that merged it, `gh workflow run scheduled-publish.yml` is safe
+      (the one-per-day guard holds).
+   3. Deploy: for each publish merge SHA, a successful "Deploy site to mnemehq.com" run, and
+      `git ls-remote --tags origin site-deployed` at or after it. Use `ls-remote`: a local
+      `site-deployed` tag is not refreshed by a plain `git fetch` and goes stale.
+   4. Index: Search Console impressions per article from BigQuery
+      (`mneme-hq-prod.searchconsole.searchdata_url_impression`, `url LIKE '%/insights/<slug>/%'`;
+      check `MAX(data_date)` first, the export lags about two days). For any article with no
+      impressions seven or more days after publishing, confirm the page returns 200, carries
+      `index, follow`, a self canonical, and appears in `sitemap.xml`, then ask the user to run
+      URL Inspection → Request indexing in Search Console. That needs their sign-in and is theirs
+      to do. Zero impressions is not proof of "not indexed", only the signal to inspect.
+   Report the four results in one short table before starting Step A.
