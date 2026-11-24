@@ -5,6 +5,7 @@ Skips og-*.html templates, site/_snippets/, and the generated audit SPA shell.
 Run before deploy or any time snippets change.
 """
 import re
+import sys
 from pathlib import Path
 
 from link_insight_editorial import stamp as stamp_insight_editorial
@@ -74,7 +75,12 @@ updated = []
 skipped_og = []
 skipped_snippet = []
 
-for html in sorted(SITE.rglob("*.html")) + TEMPLATE_PAGES:
+# Optional paths limit the sync to those pages (the scheduled publisher re-syncs
+# only the article it composes, so unrelated pages never ride along).
+ONLY = [Path(a).resolve() for a in sys.argv[1:]]
+PAGES = ONLY if ONLY else sorted(SITE.rglob("*.html")) + TEMPLATE_PAGES
+
+for html in PAGES:
     # Vite owns this shell; its nav is rendered by React at runtime.
     if rel(html).as_posix() == "audit/workspace/index.html":
         continue

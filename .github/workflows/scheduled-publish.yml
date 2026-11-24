@@ -118,6 +118,9 @@ jobs:
           git checkout -b "publish/$SLUG" origin/main
           git checkout "origin/$HEAD_REF" -- "site/insights/$SLUG" "publish-queue/$SLUG.json"
           python scripts/register_insight.py "$SLUG" --date "$DATE"
+          # The article was built when it was queued; re-sync its nav and footer to the
+          # current _snippets so a queued page never ships stale site chrome (2026-11-23).
+          python scripts/sync_shared.py "site/insights/$SLUG/index.html"
           git rm --quiet -f "publish-queue/$SLUG.json"
           git add -A site
           git commit --quiet -m "site: publish insight $SLUG ($DATE)"
@@ -133,6 +136,7 @@ jobs:
           python scripts/sync_insights_catalog.py --check
           python scripts/check_insight_types.py
           python scripts/check_insights.py
+          python scripts/check_nav_footer.py
           python scripts/check_encoding.py site scripts
           python scripts/lint_prose.py "site/insights/$SLUG/index.html"
 
