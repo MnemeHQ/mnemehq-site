@@ -341,6 +341,7 @@
     <a href="/audit/" data-cta-intent="audit" data-cta-position="nav" data-cta-component="nav">Architecture Audit</a>
     <a href="/insights/">Insights</a>
     <a href="/docs/">Docs</a>
+    <a href="/setup/">Setup</a>
     <a href="/pricing/">Pricing</a>
     <a href="https://github.com/MnemeHQ/mneme">GitHub</a>
     <a href="/pilot/" class="btn-nav-cta" data-cta-intent="pilot" data-cta-position="nav" data-cta-component="nav">Request a pilot</a>
@@ -675,7 +676,8 @@
       ['/for', 'team'],
       ['/pilot', 'pilot'],
       ['/pricing', 'pricing'],
-      ['/benchmark', 'benchmark']
+      ['/benchmark', 'benchmark'],
+      ['/setup', 'setup']
     ];
     for (var i = 0; i < map.length; i++) {
       if (p.indexOf(map[i][0]) === 0) return map[i][1];
@@ -709,6 +711,21 @@
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push(Object.assign({ event: event }, params));
   }
+
+  /* Interactive components report through a DOM event instead of writing to
+   * dataLayer themselves, so the dev-host guard and the shared parameters
+   * above apply to them too. Only allowlisted event names pass. */
+  var COMPONENT_EVENTS = { setup_choice: ['setup_goal', 'setup_env', 'setup_env_status'] };
+  document.addEventListener('mneme:track', function(e){
+    var d = (e && e.detail) || {};
+    var keys = COMPONENT_EVENTS[d.event];
+    if (!keys || !d.params) return;
+    var params = {};
+    for (var i = 0; i < keys.length; i++) {
+      if (d.params[keys[i]] != null) params[keys[i]] = String(d.params[keys[i]]).slice(0, 100);
+    }
+    push(d.event, params);
+  });
 
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
