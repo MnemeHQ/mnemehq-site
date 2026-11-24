@@ -43,6 +43,12 @@ not every chat in the project.
 | ***Post-Assess OpenAI Modernization Announcement | 2026-10-20 | `openai-cobol-migration-benchmark-behavioral-parity` queued 10-26, `ai-legacy-modernization-what-must-survive` queued 10-27 | [#242](https://github.com/MnemeHQ/mnemehq-site/pull/242), [#243](https://github.com/MnemeHQ/mnemehq-site/pull/243) | queued |
 | ***Post-Research migration strategies | 2026-10-13 | `nodejs-to-go-migration-architectural-decisions` queued 10-28 | [#244](https://github.com/MnemeHQ/mnemehq-site/pull/244) | queued |
 | ***Post-Agent orchestrators and factories | 2026-10-20 | Integrations hub regrouped by function (#246) | [#246](https://github.com/MnemeHQ/mnemehq-site/pull/246) | 2026-10-23 |
+| ***Post-Scope Atlassian AI SEO Response | 2026-11-18 | `atlassian-ai-sdlc-index-code-governance` | [#320](https://github.com/MnemeHQ/mnemehq-site/pull/320) | 2026-11-23 |
+| ***Post-Research assessment | 2026-11-13 | `teleport-beams-agent-runtime-architectural-decisions` queued 11-25, `ibm-winning-agentic-frontier-enterprise-decision-rights` queued 11-26 | [#322](https://github.com/MnemeHQ/mnemehq-site/pull/322), [#325](https://github.com/MnemeHQ/mnemehq-site/pull/325) | queued |
+| ***Post-Enterprise Architecture Pillar | 2026-11-18 | `will-ai-replace-enterprise-architects` queued 11-27, `architecture-principles-to-enforceable-decisions` queued 11-28 | [#323](https://github.com/MnemeHQ/mnemehq-site/pull/323), [#324](https://github.com/MnemeHQ/mnemehq-site/pull/324) | queued |
+| ***Post-Databricks AI Assessment | 2026-11-16 | `databricks-ai-index-architectural-conformance` queued 11-29 | [#321](https://github.com/MnemeHQ/mnemehq-site/pull/321) | queued |
+| ***Post-Assess Claude Feature | 2026-11-23 | `claude-ship-architecture-ai-approved-code` queued 11-24 | [#334](https://github.com/MnemeHQ/mnemehq-site/pull/334) | queued |
+| ***Post-Setup Pages Recommendation | 2026-11-22 | `/setup/` section: hub, setup chooser and six setup guides | [#328](https://github.com/MnemeHQ/mnemehq-site/pull/328) | 2026-11-23 |
 
 Notes for batches 4 and 5 (2026-10-22/23): from this batch on, insights publish one per day at 13:07 UTC through the scheduled publisher (#236, #237, #245, #247; PUBLISHING.md, "Scheduled publishing"). The briefs are in #234. OpenShell was published by hand on 2026-10-22 (deploy verified at `c6c1ed46`). The integrations restructure deployed at `71d1f9b9`, and Policy as Code was the publisher's first real merge (deploy verified at `014f8476`). Pre-merge Opus audits found 4 blockers and 11 should-fix items in batch 4, and 2 blockers and 3 should-fix items in batch 5, all fixed. All six chats were renamed with the `***` marker on 2026-10-23 and verified by re-listing the project. By owner decision (2026-10-22), chats are marked once their batch ships even if later phases are open. Their remaining items are listed under "Partially processed" below, and articles still queued are tracked by their PRs.
 
@@ -63,11 +69,20 @@ All three chats were renamed with the `***` marker on 2026-09-25 after #150 depl
 
 Notes for the 2026-11-13 catch-up: the scheduled publisher merged nothing from 2026-10-30 to 11-12. Each publish edits the archive, hubs and sitemap, so the queued PRs went conflicting, GitHub ran no checks on them, and the "Require green checks" step labelled all seven `publish-blocked`. #298 fixed the gate (a conflicting PR with no failing checks is validated on the composed result plus its provenance block), added a `catch_up` dispatch input, and made `register_insight.py` card Research and Report Response articles on `/insights/research/`. The seven branches were rebuilt on main (contextual CTA swept per #274, shared nav and footer re-synced, no prose changed) and published by seven catch-up dispatches on 2026-11-13: #250 (`platform-engineering-enterprise-architecture-decisions`), #251 (`strangler-vs-big-bang-migration`), #252 (`ai-code-translation-go-source-language-patterns`), #253 (`when-not-to-rewrite-migration-economics`), #258, #259, #260. Deploy verified: every deploy run succeeded and `site-deployed` = `main` = `e1c0ca0c`; all seven URLs return 200. Batch 6 (#293 to #296, briefs in #297) is queued 2026-11-14 to 11-17.
 
+Notes for the 2026-11-22/23 batch: the briefs are in #326 and #335. The Atlassian insight published on 2026-11-23 through a manual publisher run after the scheduled run did not fire (deploy verified at `2967f81f`). It went live with a stale nav, because the publisher copied the page as queued; #336 re-syncs each article's nav at publish time and fixed the page (deploy verified at `f360baff`). The Claude Ship insight took the 11-24 slot and the Databricks insight moved to 11-29. The `/setup/` section shipped in #328 to #333. All six chats were renamed with the `***` marker on 2026-11-23 at the owner's request, before the queued articles publish, and verified by re-listing the project. Articles still queued are tracked by their PRs; open items are under "Partially processed".
+
 ## In review (drafted, not merged, not yet marked `***`)
 
-- **Post-Assess Claude Feature** (scoped 2026-11-23): `claude-ship-architecture-ai-approved-code`, queued for 2026-11-29 in [#334](https://github.com/MnemeHQ/mnemehq-site/pull/334). Not published; not marked `***`. Brief: `docs/site/scope-briefs/2026-11-23-claude-ship.md`.
+None.
 
 ## Partially processed — do not mark done
+
+**Marked `***` on 2026-11-23 with open items (owner decision; full scope in the briefs):**
+
+- **Post-Enterprise Architecture Pillar:** pillar page `/enterprise-architecture/` (separate page contract, not an insight); Phase 2 articles "TOGAF, ArchiMate and ADRs" and "Governing Legacy Modernisation When AI Agents Rewrite Applications", held until Search Console data on the cluster.
+- **Post-Research assessment:** article C, `ai-agent-pilot-production-readiness-checklist`, held until a reproducible worked example exists.
+- **Post-Databricks AI Assessment:** optional version-pinned cross-model run, so a later update can add real numbers.
+- **Post-Assess Claude Feature:** a "Using Claude Approvals?" section in `/setup/ci/`, after the owner's Claude Ship integration tests; and an update to the article if the tests produce results worth publishing.
 
 **Marked `***` on 2026-10-23 with open items (owner decision; full scope in the briefs):**
 
