@@ -54,7 +54,7 @@
         "description": "A precise guide to what Mneme enforces today, what requires explicit modelling, and what needs richer rule types.",
         "url": "https://mnemehq.com/docs/governance-violations/",
         "datePublished": "2026-05-10",
-        "dateModified": "2026-10-01",
+        "dateModified": "2026-11-27",
         "author": {"@type": "Person", "name": "Theo Valmis", "url": "https://mnemehq.com/founder/"},
         "publisher": {"@type": "Organization", "name": "Mneme HQ", "url": "https://mnemehq.com/", "logo": {"@type": "ImageObject", "url": "https://mnemehq.com/logo-v3.png"}}
       }
@@ -387,7 +387,7 @@
   </ol>
 </nav>
 
-<div class="answer-capsule"><strong>Current mechanical contract:</strong> exact, case-sensitive <code>FORBID_LITERAL</code> rules with optional path applicability.</div>
+<div class="answer-capsule"><strong>Current mechanical contract:</strong> exact, case-sensitive <code>FORBID_LITERAL</code> rules with optional path applicability. Since mneme-hq 0.11.0, a <code>FORBID_NUMERIC_ABOVE</code> rule can also cap a Python number at an inclusive maximum, but only a whole-file audit decides it.</div>
 
 <section class="hero">
   <div class="section-eyebrow">Capability map &middot; current release</div>
@@ -415,6 +415,7 @@
     </a>
   </section>
   <p class="capability-intro"><strong>How to read the cards.</strong> Each badge describes the example's present enforcement status. “Explicit modelling” means Mneme can enforce a deliberately named literal; it does not mean Mneme understands the policy semantically.</p>
+  <p class="capability-intro"><strong>Numeric upper bounds.</strong> mneme-hq 0.11.0 adds a second typed rule kind, <code>FORBID_NUMERIC_ABOVE</code>. It caps a Python number at an inclusive maximum: a module-level constant such as <code>ROUTER_DEADLINE_S</code>, or a positional argument of a direct bare-name call such as <code>classify(text, 30)</code>. It requires <code>include_paths</code>. Only a whole-file audit decides it: <code>mneme check --source-file &lt;file.py&gt;</code> reads the complete file and returns FAIL for a value above the bound. If Mneme cannot resolve a value, for example because the constant is reassigned, the rule is reported unevaluated, which makes the result incomplete, never PASS. Any other input, including the pre-write hooks and CI, also reports the rule unevaluated. There is one exception: when Claude Code writes a new <code>.py</code> file in an existing directory, the hook checks the complete proposed file. That path has not passed independent validation, so do not rely on it as enforcement. None of the twelve examples below uses a numeric rule.</p>
 
   <nav class="toc" aria-label="Table of contents">
     <div class="toc-title">Twelve policies &middot; three enforcement states</div>
@@ -666,7 +667,7 @@ def create_app():
 
   <section class="next-step">
     <h2>Start with one literal rule.</h2>
-    <p><strong>Today:</strong> use exact, case-sensitive <code>FORBID_LITERAL</code> rules and optional <code>include_paths</code>/<code>exclude_paths</code> applicability for deterministic checks. Treat structural analysis, agent identity ACLs, license metadata, and required-presence rules as roadmap capabilities.</p>
+    <p><strong>Today:</strong> use exact, case-sensitive <code>FORBID_LITERAL</code> rules and optional <code>include_paths</code>/<code>exclude_paths</code> applicability for deterministic checks. For a Python number that must stay at or below a limit, <code>FORBID_NUMERIC_ABOVE</code> is decided only by a whole-file audit with <code>mneme check --source-file</code>. Treat structural analysis, agent identity ACLs, license metadata, and required-presence rules as roadmap capabilities.</p>
     <p>Mneme can represent more governance knowledge than its current typed-rule vocabulary can mechanically prove. Representation does not imply automatic detection.</p>
     <div class="next-links">
       <a class="primary" href="/docs/protection-activation/">Activate a rule &rarr;</a>
