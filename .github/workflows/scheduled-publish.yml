@@ -17,6 +17,15 @@ name: Scheduled insight publish
 # A merge by GITHUB_TOKEN does not fire push-triggered workflows, so the job
 # dispatches the deploy workflow explicitly. Deployment evidence is unchanged:
 # a successful deploy run for the merged main SHA and site-deployed at that SHA.
+#
+# The rebuilt commit pushed to the PR branch carries "[skip ci]" (2026-11-27).
+# From PR #336 (2026-11-23) that bot push fired every pull_request workflow;
+# GitHub held those runs for approval, they expired, and each publish left
+# ~18 failed checks on the merged PR. The PR's own checks passed before it was
+# picked, and the Validate step runs the content validators plus the cheap
+# PR-suite checks on the rebuilt commit, so skipping the suite loses no gate.
+# The squash merge sets its own --subject and --body, so the main commit does
+# not carry [skip ci]; the deploy is dispatched explicitly either way.
 
 on:
   schedule:
@@ -123,7 +132,9 @@ jobs:
           python scripts/sync_shared.py "site/insights/$SLUG/index.html"
           git rm --quiet -f "publish-queue/$SLUG.json"
           git add -A site
-          git commit --quiet -m "site: publish insight $SLUG ($DATE)"
+          # [skip ci] stops the bot push to the PR branch from firing the PR suite, whose
+          # runs GitHub holds for approval and then reports as failed (2026-11-26).
+          git commit --quiet -m "site: publish insight $SLUG ($DATE)" -m "[skip ci]"
 
       - name: Validate
         if: steps.pick.outputs.pr != ''
@@ -139,6 +150,11 @@ jobs:
           python scripts/check_nav_footer.py
           python scripts/check_encoding.py site scripts
           python scripts/lint_prose.py "site/insights/$SLUG/index.html"
+          # The rebuilt commit carries [skip ci], so the cheap PR-suite checks run here.
+          python scripts/check_line_endings.py origin/main
+          python scripts/check_install_command.py
+          python scripts/check_sticky_nav.py
+          python scripts/check_funnel_wiring.py
 
       - name: Push and squash-merge
         if: steps.pick.outputs.pr != '' && inputs.dry_run != true
