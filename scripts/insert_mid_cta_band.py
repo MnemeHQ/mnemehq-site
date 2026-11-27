@@ -42,6 +42,7 @@ BAND = """<aside class="cta-band" aria-label="Try Mneme">
 </aside>"""
 
 BODY_OPEN = re.compile(r'<div class="article-body"[^>]*>')
+ARTICLE_OPEN = re.compile(r'<article class="article-wrap"[^>]*>')
 PROSE_END_MARKERS = ('<section class="article-faq"', 'data-mneme-cta="context"',
                      '<section class="related-panel"', "</article>")
 
@@ -55,6 +56,24 @@ def prose_end(text: str, start: int) -> int:
     return min(ends) if ends else len(text)
 
 
+def body_start(text: str):
+    """Offset where the article prose begins, or None if it cannot be found.
+
+    Older articles wrap their prose in <div class="article-body">. Articles
+    built from templates/article.html have no wrapper: new_article.py puts
+    the body file straight after the header inside <article class=
+    "article-wrap">, so the prose starts at that </header>.
+    """
+    body = BODY_OPEN.search(text)
+    if body:
+        return body.end()
+    article = ARTICLE_OPEN.search(text)
+    if not article:
+        return None
+    header = text.find("</header>", article.end())
+    return header + len("</header>") if header != -1 else None
+
+
 def words(fragment: str) -> int:
     return len(re.sub(r"<[^>]+>", " ", fragment).split())
 
@@ -62,14 +81,13 @@ def words(fragment: str) -> int:
 def stamp(text: str) -> str:
     if 'class="cta-band"' in text:
         return text
-    body = BODY_OPEN.search(text)
-    if not body:
+    start = body_start(text)
+    if start is None:
         return text
-    end = prose_end(text, body.end())
-    heads = [m.start() for m in re.finditer(r"<h2\b", text[body.end():end])]
-    heads = [body.end() + h for h in heads]
+    end = prose_end(text, start)
+    heads = [start + m.start() for m in re.finditer(r"<h2\b", text[start:end])]
     # Never before the first section heading; first boundary with enough prose.
-    target = next((h for h in heads[1:] if words(text[body.end():h]) >= MIN_WORDS), None)
+    target = next((h for h in heads[1:] if words(text[start:h]) >= MIN_WORDS), None)
     if target is None:
         return text
     nl = "\r\n" if "\r\n" in text else "\n"
