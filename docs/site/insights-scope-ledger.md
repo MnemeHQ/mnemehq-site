@@ -73,9 +73,30 @@ Notes for the 2026-11-22/23 batch: the briefs are in #326 and #335. The Atlassia
 
 ## In review (drafted, not merged, not yet marked `***`)
 
-None.
+Opened 2026-11-26 and queued behind the scheduled publisher (no `scheduled-publish` label until the owner confirms). Briefs are in the docs PR for the 2026-11-26 batch.
+
+| Scope chat (ChatGPT title) | Scoped | Shipping as | PR | Publish on |
+|---|---|---|---|---|
+| Post-Rust Migration Assessment | 2026-11-25 | `anthropic-rust-migration-ai-verification` | [#338](https://github.com/MnemeHQ/mnemehq-site/pull/338) | 2026-11-30 |
+| Post-Assess Healthcare AI Report | 2026-11-26 | `menlo-state-of-ai-in-healthcare-2026-code-governance` (HC-A01) | [#339](https://github.com/MnemeHQ/mnemehq-site/pull/339) | 2026-12-01 |
+| Post-Assess Healthcare AI Report | 2026-11-26 | `preventing-patient-data-boundary-violations-ai-generated-code` (HC-A03) | [#340](https://github.com/MnemeHQ/mnemehq-site/pull/340) | 2026-12-02 |
+| Post-Assess Healthcare AI Report | 2026-11-26 | `architectural-fitness-functions-medical-device-software` (HC-A04) | [#341](https://github.com/MnemeHQ/mnemehq-site/pull/341) | 2026-12-03 |
+| Post-Assess Healthcare AI Report | 2026-11-26 | `governing-fhir-integrations-ai-assisted-development` (HC-A07) | [#342](https://github.com/MnemeHQ/mnemehq-site/pull/342) | 2026-12-04 |
+| Post-Assess Healthcare AI Report | 2026-11-26 | `iec-62304-ai-assisted-software-engineering` (HC-A08) | [#343](https://github.com/MnemeHQ/mnemehq-site/pull/343) | 2026-12-05 |
 
 ## Partially processed — do not mark done
+
+**2026-11-26 batch (not yet marked `***`; mark after the articles deploy and the owner confirms the chats):**
+
+- **Post-Assess Healthcare AI Report:**
+  - HC-A02, the healthcare use-case page `/use-cases/healthcare-software-governance/`: a separate page-contract PR (`.claude/skills/publish-page/SKILL.md`), not an insight.
+  - HC-A05, HC-A06 and HC-A10: deferred pending re-angle.
+  - HC-A09: dropped, covered by `/use-cases/data-platform-governance/`.
+  - The proposed healthcare topic hub is not created; it needs its own PR and an owner decision.
+- **Post-Decision Architecture** (Decision Engineering): waiting on an ADR-014/001 amendment in `MnemeHQ/mneme` before any site copy uses the category.
+- **Post-Assess GR00T 2:** roadmap-only, no article.
+- **Post-Strategic AI Assessment:** pending the owner's decision on the CAIO article.
+- **Site docs drift (separate fix):** `site/docs/how-enforcement-works/` says FORBID_LITERAL is the only typed rule form, which is wrong for core 0.11.0.
 
 **Marked `***` on 2026-11-23 with open items (owner decision; full scope in the briefs):**
 
