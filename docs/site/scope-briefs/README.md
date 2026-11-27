@@ -6,6 +6,7 @@ Build by following the `publish-insight` skill ([`.claude/skills/publish-insight
 
 | Brief | Chat date (UTC created) | Kind | Status |
 |---|---|---|---|
+| [Strategic AI Assessment (IBM CAIO study)](2026-11-26-strategic-ai-assessment.md) | 2026-11-26 | insight (report response; 1 of 6 ideas, 5 held) | built, queued 12-06 (#347) |
 | [Assess Healthcare AI Report](2026-11-26-healthcare-ai-report.md) | 2026-11-26 | insight cluster (5 now; use-case page separate; 3 deferred; 1 dropped) | 5 built, queued 12-01 (#339), 12-02 (#340), 12-03 (#341), 12-04 (#342), 12-05 (#343) |
 | [Rust Migration Assessment](2026-11-25-rust-migration-assessment.md) | 2026-11-25 | insight (report-anchored) | built, queued 11-30 (#338) |
 | [Claude Feature assessment (Claude Ship)](2026-11-23-claude-ship.md) | 2026-11-23 | insight | built, queued 11-29 (#334) |
