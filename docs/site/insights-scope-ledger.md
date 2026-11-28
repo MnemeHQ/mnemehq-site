@@ -83,6 +83,7 @@ Opened 2026-11-26 and queued behind the scheduled publisher (no `scheduled-publi
 | Post-Assess Healthcare AI Report | 2026-11-26 | `architectural-fitness-functions-medical-device-software` (HC-A04) | [#341](https://github.com/MnemeHQ/mnemehq-site/pull/341) | 2026-12-03 |
 | Post-Assess Healthcare AI Report | 2026-11-26 | `governing-fhir-integrations-ai-assisted-development` (HC-A07) | [#342](https://github.com/MnemeHQ/mnemehq-site/pull/342) | 2026-12-04 |
 | Post-Assess Healthcare AI Report | 2026-11-26 | `iec-62304-ai-assisted-software-engineering` (HC-A08) | [#343](https://github.com/MnemeHQ/mnemehq-site/pull/343) | 2026-12-05 |
+| Post-Strategic AI Assessment | 2026-11-26 | `ibm-2026-caio-study-decision-rights` | [#347](https://github.com/MnemeHQ/mnemehq-site/pull/347) | 2026-12-06 |
 
 ## Partially processed — do not mark done
 
@@ -95,7 +96,7 @@ Opened 2026-11-26 and queued behind the scheduled publisher (no `scheduled-publi
   - The proposed healthcare topic hub is not created; it needs its own PR and an owner decision.
 - **Post-Decision Architecture** (Decision Engineering): waiting on an ADR-014/001 amendment in `MnemeHQ/mneme` before any site copy uses the category.
 - **Post-Assess GR00T 2:** roadmap-only, no article.
-- **Post-Strategic AI Assessment:** pending the owner's decision on the CAIO article.
+- **Post-Strategic AI Assessment:** CAIO article built (#347). The other five ideas are held as listed in the brief: one off-site, one merged into the Decision Engineering flagship (waits on the ADR-014/001 amendment), one needing a terminology decision, and two waiting on evidence.
 - **Site docs drift (separate fix):** `site/docs/how-enforcement-works/` says FORBID_LITERAL is the only typed rule form, which is wrong for core 0.11.0.
 
 **Marked `***` on 2026-11-23 with open items (owner decision; full scope in the briefs):**
